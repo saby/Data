@@ -1,0 +1,14 @@
+.idea
+.vscode
+.genie
+.nyc_output
+.project
+.settings
+/package-lock.json
+/tsconfig.base.json
+/node_modules
+/artifacts
+/Core
+/View
+/WS.Core
+/Types/**/*.js
