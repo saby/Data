@@ -1,0 +1,22 @@
+/// <amd-module name="Types/formatter" />
+/**
+ * Библиотека для форматирования.
+ * @library Types/object
+ * @includes cyrTranslit Types/_object/cyrTranslit
+ * @includes date Types/_object/date
+ * @includes jsonReplacer Types/_object/jsonReplacer
+ * @includes jsonReviver Types/_object/jsonReviver
+ * @includes numberRoman Types/_object/numberRoman
+ * @includes numberWords Types/_object/numberWords
+ * @includes string Types/_object/number
+ * @public
+ * @author Мальцев А.А.
+ */
+
+export {default as cyrTranslit} from './_formatter/cyrTranslit';
+export {default as date} from './_formatter/date';
+export {default as jsonReplacer} from './_formatter/jsonReplacer';
+export {default as jsonReviver} from './_formatter/jsonReviver';
+export {default as numberRoman} from './_formatter/numberRoman';
+export {default as numberWords} from './_formatter/numberWords';
+export {default as number} from './_formatter/number';
