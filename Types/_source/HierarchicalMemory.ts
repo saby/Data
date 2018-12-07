@@ -155,11 +155,11 @@ export default class HierarchicalMemory extends mixin(
                let startFromId = query.getWhere()[this._$parentProperty];
                let startFromNode = sourceRecords.getRecordById(startFromId);
                if (startFromNode) {
-                  breadcrumbs.push(startFromNode);
+                  breadcrumbs.unshift(startFromNode);
                   let node;
-                  while((node = hierarchy.getParent(startFromNode, sourceRecords))) {
-                     breadcrumbs.push(node);
-                     startFromNode = node.get(this._$parentProperty);
+                  while(startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
+                     breadcrumbs.unshift(node);
+                     startFromNode = node.get(this._$idProperty);
                   }
                }
 
