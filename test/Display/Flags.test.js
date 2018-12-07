@@ -84,12 +84,12 @@ define([
       });
 
       describe('.subscribe()', function() {
-         it('should trigger "onCollectionChange" if the Flags changed', function() {
-            var given = {},
-               handler = function(event, action, newItems, newItemsIndex) {
-                  given.item = newItems[0];
-                  given.index = newItemsIndex;
-               };
+         it('should trigger "onCollectionChange" if flag changed', function() {
+            var given = {};
+            var handler = function(event, action, newItems, newItemsIndex) {
+               given.item = newItems[0];
+               given.index = newItemsIndex;
+            };
 
             display.subscribe('onCollectionChange', handler);
             collection.set('one', true);
@@ -98,6 +98,31 @@ define([
             assert.strictEqual(given.item.getContents(), 'one');
             assert.strictEqual(given.index, 0);
          });
+      });
+
+      it('should trigger "onCollectionChange" if flag with string index changed', function() {
+         var dict = {'1': 'one', '2': 'two', '3': 'three'};
+
+         var collection = new FlagsType({
+            dictionary: dict
+         });
+
+         var display = new FlagsDisplay({
+            collection: collection
+         });
+
+         var given = {};
+         var handler = function(event, action, newItems, newItemsIndex) {
+            given.item = newItems[0];
+            given.index = newItemsIndex;
+         };
+
+         display.subscribe('onCollectionChange', handler);
+         collection.set('two', true);
+         display.unsubscribe('onCollectionChange', handler);
+
+         assert.strictEqual(given.item.getContents(), 'two');
+         assert.strictEqual(given.index, 1);
       });
    });
 });
