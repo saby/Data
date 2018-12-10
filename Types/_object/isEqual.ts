@@ -30,7 +30,7 @@
  * @author Мальцев А.А.
  */
 
-let isTraversable = function (v) {
+let isTraversable = function (v): boolean {
    let proto;
    if (v && typeof v === 'object') {
       if (v instanceof Date) {
@@ -42,7 +42,7 @@ let isTraversable = function (v) {
 
    return false;
 };
-let isEqualArrays = function (arr1, arr2) {
+let isEqualArrays = function (arr1, arr2): boolean {
    if (arr1.length !== arr2.length) {
       return false;
    }
@@ -51,7 +51,7 @@ let isEqualArrays = function (arr1, arr2) {
       return !isEqual(item, arr2[index]);
    });
 };
-let isEqualObjects = function (obj1, obj2) {
+let isEqualObjects = function (obj1, obj2): boolean {
    let keys1 = Object.keys(obj1),
       keys2 = Object.keys(obj2);
 
@@ -61,9 +61,12 @@ let isEqualObjects = function (obj1, obj2) {
 
    keys1.sort();
    keys2.sort();
-   return !keys1.some(function (key, index) {
-      return !(keys2[index] === key && isEqual(obj1[key], obj2[key]));
-   });
+   if (keys1.length > 0) {
+      return !keys1.some(function (key, index) {
+         return !(keys2[index] === key && isEqual(obj1[key], obj2[key]));
+      });
+   }
+   return Object.getPrototypeOf(obj1) === Object.getPrototypeOf(obj2);
 };
 
 export default function isEqual(obj1, obj2): boolean {
