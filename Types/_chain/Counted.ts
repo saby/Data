@@ -1,0 +1,61 @@
+/// <amd-module name="Types/_chain/Counted" />
+/**
+ * Агрегирующее звено цепочки, подсчитывающие количество элементов, объединенных по какому-то принципу.
+ * @class Types/Chain/Counted
+ * @extends Types/Chain/Abstract
+ * @public
+ * @author Мальцев А.А.
+ */
+
+import Abstract from './Abstract';
+import {enumerator} from '../collection';
+import {Map} from '../shim';
+
+interface KeyFunc {
+   (key: any): string;
+}
+
+export default class Counted<T> extends Abstract<T> /** @lends Types/Chain/Counted.prototype */{
+   /**
+    * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
+    */
+   protected _key: string|KeyFunc;
+
+   /**
+    * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
+    * @param {Types/Chain/Abstract} source Предыдущее звено.
+    * @param {String|function(*): String} key Поле агрегации или функция агрегации для каждого элемента.
+    */
+   constructor(source: Abstract<T>, key: string|KeyFunc) {
+      super(source);
+      this._key = key;
+   }
+
+   destroy() {
+      this._key = null;
+      super.destroy();
+   }
+
+   // region Types/Collection/IEnumerable
+
+   getEnumerator(): enumerator.Mapwise<T> {
+      const toKey = Abstract.propertyMapper(this._key);
+
+      return new enumerator.Mapwise(
+         this._previous.reduce((memo, item, index) => {
+            const key = toKey(item, index);
+            const count = memo.has(key) ? memo.get(key) : 0;
+            memo.set(key, count + 1);
+            return memo;
+         },
+         new Map())
+      );
+   }
+
+   // endregion Types/Collection/IEnumerable
+}
+
+Counted.prototype['[Types/_chain/Counted]'] = true;
+
+// @ts-ignore
+Counted.prototype._key = null;
