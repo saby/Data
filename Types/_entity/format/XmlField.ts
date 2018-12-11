@@ -1,0 +1,27 @@
+/// <amd-module name="Types/_entity/format/XmlField" />
+/**
+ * Формат поля для строки в формате XML.
+ *
+ * Создадим поле c типом "XML":
+ * <pre>
+ *    var field = {
+ *       name: 'foo',
+ *       type: 'xml'
+ *    };
+ * </pre>
+ * @class Types/Format/XmlField
+ * @extends Types/Format/Field
+ * @public
+ * @author Мальцев А.А.
+ */
+
+import Field from './Field';
+
+export default class XmlField extends Field /** @lends Types/Format/XmlField.prototype */{
+   _$defaultValue: string;
+}
+
+XmlField.prototype['[Types/_entity/format/XmlField]'] = true;
+XmlField.prototype._moduleName = 'Types/entity:format.XmlField';
+XmlField.prototype._typeName = 'Xml';
+XmlField.prototype._$defaultValue = '';

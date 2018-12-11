@@ -6,8 +6,7 @@
       "url": "git@github.com:saby/Types.git"
    },
    "files": [
-      "Data/*",
-      "WS.Data/*",
+      "Types/*",
       "tsconfig.json"
    ],
    "scripts": {
@@ -17,11 +16,8 @@
       "start": "node app",
       "test": "node test --isolated",
       "test:debug": "node node_modules/ws-unit-testing/mocha %NODE_DEBUG_OPTION% --amd test-isolated",
-      "test:esm-debug": "node node_modules/mocha/bin/mocha %NODE_DEBUG_OPTION% --compilers es:babel-core/register testData/**/*.test.*",
-      "coverage": "node test --isolated --coverage",
-      "eslint": "eslint --config=.eslintrc.json ./WS.Data",
-      "eslint:es": "eslint --config=.eslintrc.json ./Data",
-      "eslint:test": "eslint --config=.eslintrc.json ./test"
+      "test:esm-debug": "node node_modules/mocha/bin/mocha %NODE_DEBUG_OPTION% --compilers es:babel-core/register testTypes/**/*.test.*",
+      "coverage": "node test --isolated --coverage"
    },
    "config": {
       "app_port": 1024,
@@ -42,7 +38,7 @@
    },
    "nyc": {
       "include": [
-         "Data/**/*.js"
+         "Types/**/*.js"
       ],
       "reporter": [
          "text",
@@ -61,6 +57,7 @@
       "eslint": "^5.3.0",
       "serve-static": "1.13.x",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.19.100",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.700"
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.700",
+      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100"
    }
 }
