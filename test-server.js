@@ -6,7 +6,7 @@
  * node test-server
  */
 
-let app = require('ws-unit-testing/server');
+let app = require('saby-units/server');
 let pckg = require('./package.json');
 let options = {
    moduleType: pckg.config.moduleType,
