@@ -81,7 +81,7 @@ let testingArgs = [];
 
 if (options.browser) {
    if (options.server) {
-      testingArgs.push('node_modules/ws-unit-testing/queue', 'test-server');
+      testingArgs.push('node_modules/saby-units/queue', 'test-server');
    }
 
    testingArgs.push('test-browser');
@@ -93,9 +93,9 @@ if (options.browser) {
 
 if (options.isolated) {
    if (options.coverage) {
-      testingArgs.push('node_modules/ws-unit-testing/cover');
+      testingArgs.push('node_modules/saby-units/cover');
    } else {
-      testingArgs.push('node_modules/ws-unit-testing/mocha');
+      testingArgs.push('node_modules/saby-units/mocha');
    }
 
    testingArgs.push('-t', timeout);

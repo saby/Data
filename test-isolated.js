@@ -3,10 +3,10 @@
 /**
  * Runs testing in Node.js.
  * Usage:
- * node node_modules/ws-unit-testing/mocha --amd -t 10000 test-isolated
+ * node node_modules/saby-units/mocha --amd -t 10000 test-isolated
  */
 
-let app = require('ws-unit-testing/isolated');
+let app = require('saby-units/isolated');
 let config = require('./package.json').config;
 let options = {
    moduleType: config.moduleType,
