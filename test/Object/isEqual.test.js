@@ -102,5 +102,9 @@ define([
 
          assert.isFalse(isEqual(fooA, fooB));
       });
+
+      it('should return false when compare an empty object and a date', function () {
+         assert.isFalse(isEqual({dt: {}}, {dt: new Date()}));
+      });
    });
 });
