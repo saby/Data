@@ -75,22 +75,23 @@ define([
          it('should return items and path in metadata', function() {
             var source = new dataSource.HierarchicalMemory({
                data: [
-                  {id: 1, parent: null, name: 'Laptops'},
-                  {id: 10, parent: 1, name: 'Apple MacBook Pro'},
-                  {id: 11, parent: 1, name: 'Xiaomi Mi Notebook Air'},
-                  {id: 2, parent: null, name: 'Smartphones'},
-                  {id: 20, parent: 2, name: 'Apple iPhone'},
-                  {id: 21, parent: 2, name: 'Samsung Galaxy'}
+                  {id: 1, parent: null, name: 'Catalogue'},
+                  {id: 10, parent: 1, name: 'Computers'},
+                  {id: 100, parent: 10, name: 'Laptops'},
+                  {id: 1000, parent: 100, name: 'Apple MacBook Pro'},
+                  {id: 1001, parent: 100, name: 'Xiaomi Mi Notebook Air'},
+                  {id: 11, parent: 1, name: 'Smartphones'},
+                  {id: 110, parent: 11, name: 'Apple iPhone'}
                ],
                idProperty: 'id',
                parentProperty: 'parent'
             });
 
             var query = new dataSource.Query();
-            query.where({parent: 1});
+            query.where({parent: 100});
 
             var expectItems = ['Apple MacBook Pro', 'Xiaomi Mi Notebook Air'];
-            var expectPath = ['Laptops'];
+            var expectPath = ['Catalogue', 'Computers', 'Laptops'];
 
             return source.query(query).then(function(result) {
                var items = [];
