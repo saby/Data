@@ -89,13 +89,13 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
    //region SerializableMixin
 
    _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
       state._original = this._original;
       return state;
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._original = state._original;

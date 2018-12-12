@@ -346,11 +346,11 @@ export default class List<T> extends mixin(
    // SerializableMixin
 
    _getSerializableState(state) {
-      return SerializableMixin._getSerializableState.call(this, state);
+      return SerializableMixin.prototype._getSerializableState.call(this, state);
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._clearIndexer();

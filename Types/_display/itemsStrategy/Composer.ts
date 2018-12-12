@@ -142,7 +142,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    //region Types/Entity/SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       state.$options = {};
       state._modules = this._modules;
@@ -153,7 +153,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
 

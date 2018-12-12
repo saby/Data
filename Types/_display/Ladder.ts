@@ -117,7 +117,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    //region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       if (this._collection) {
          state.$options = this._collection;
@@ -137,7 +137,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
 

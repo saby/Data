@@ -68,7 +68,7 @@ export default class CollectionItem extends mixin(
    //region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       if (state.$options.owner) {
          //save element index if collections implements Types/Collection/IList
@@ -89,7 +89,7 @@ export default class CollectionItem extends mixin(
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          if (state.hasOwnProperty('ci')) {
