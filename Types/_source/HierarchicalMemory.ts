@@ -46,7 +46,7 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import Memory, {IOptions as IMemoryOptions} from './Memory';
-import {DestroyableMixin, SerializableMixin, adapter, relation} from '../entity';
+import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter, relation} from '../entity';
 import {mixin} from '../util';
 // @ts-ignore
 import req = require('require');
@@ -58,8 +58,8 @@ interface IOptions extends IMemoryOptions {
 }
 
 export default class HierarchicalMemory extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements ICrud, ICrudPlus /** @lends Types/_source/HierarchicalMemory.prototype */{
+   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
+) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
     * @cfg {String|Types/Adapter/IAdapter} See {@link Types/Source/Memory#adapter}.
     * @name Types/_source/HierarchicalMemory#adapter
@@ -106,10 +106,8 @@ export default class HierarchicalMemory extends mixin(
 
    constructor(options?: IOptions) {
       super();
+      OptionsToPropertyMixin.call(this, options);
       SerializableMixin.constructor.call(this);
-      this._$data = options && options.data;
-      this._$idProperty = options && options.idProperty;
-      this._$parentProperty = options && options.parentProperty;
       this._source = new Memory(options);
    }
 
@@ -207,14 +205,14 @@ export default class HierarchicalMemory extends mixin(
    // region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
       state._source = this._source;
 
       return state;
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._source = state._source;
@@ -226,3 +224,17 @@ export default class HierarchicalMemory extends mixin(
 
 HierarchicalMemory.prototype._moduleName = 'Types/source:HierarchicalMemory';
 HierarchicalMemory.prototype['[Types/_source/HierarchicalMemory]'] = true;
+// @ts-ignore
+HierarchicalMemory.prototype._$adapter = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$model = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$listModule = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$idProperty = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$parentProperty = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$data = null;
+// @ts-ignore
+HierarchicalMemory.prototype._$filter = null;

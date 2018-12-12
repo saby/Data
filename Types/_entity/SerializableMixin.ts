@@ -20,19 +20,12 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
-import requirejs = require('require');
 import {protect, logger} from '../util';
 
 /**
  * @const {Symbol} Свойство, хранящее признак десериализованного экземпляра
  */
 const $unserialized = protect('unserialized');
-
-/**
- * {Number} Счетчик экземляров
- */
-let instanceCounter = 0;
 
 /**
  * {Boolean} Поддерживается ли свойство __proto__ экземпляром Object
@@ -46,15 +39,27 @@ const isProtoSupported = typeof ({}).__proto__ === 'object';
 // @ts-ignore
 const isFunctionDefinitionSupported = typeof getFunctionDefinition === 'function';
 
+/**
+ * {Number} Счетчик экземляров
+ */
+let instanceCounter = 0;
+
 interface IState {
-   $options: Object
+   $options?: Object
+}
+
+interface ISignature {
+   '$serialized$': string;
+   module: string;
+   id: number;
+   state: IState
 }
 
 /**
  * Возвращает уникальный номер инстанса
  * @return {Number}
  */
-function getInstanceId() {
+function getInstanceId(): number {
    return this._instanceNumber || (this._instanceNumber = ++instanceCounter);
 }
 
@@ -62,7 +67,7 @@ function getInstanceId() {
  * Сериализует код модуля, чтобы его можно было идентифицировать.
  * @param {Object} instance Экземпляр модуля
  */
-function serializeCode(instance) {
+function serializeCode(instance): string {
    let proto = Object.getPrototypeOf(instance);
    let processed = [];
 
@@ -95,7 +100,7 @@ function serializeCode(instance) {
  * @param {Boolean} [critical=false] Выбросить исключение либо предупредить
  * @param {Number} [skip=3] Сколько уровней пропустить при выводе стека вызова метода
  */
-function createModuleNameError(instance, critical, skip) {
+function createModuleNameError(instance, critical?: boolean, skip?: number) {
    let text = `Property "_moduleName" with module name for RequireJS's define() is not found in this prototype: "${serializeCode(instance)}"`;
    if (critical) {
       throw new ReferenceError(text);
@@ -104,18 +109,30 @@ function createModuleNameError(instance, critical, skip) {
    }
 }
 
-const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */{
-   '[Types/_entity/SerializableMixin]': true,
+export default class SerializableMixin /** @lends Types/Entity/SerializableMixin.prototype */{
+   /**
+    * Уникальный номер инстанса
+    */
+   protected _instanceNumber: number;
 
    /**
-    * @member {Number} Уникальный номер инстанса
+    * Class module name
     */
-   _instanceNumber: 0,
+   protected _moduleName: string;
+
+   /**
+    * Nonstandard prototype getter
+    */
+   private __proto__: this;
+
+   /**
+    * Method implemented in OptionsToPropertyMixin
+    */
+   private _getOptions: () => Object;
 
    //region Public methods
 
-   constructor() {
-   },
+   constructor(options?) {};
 
    /**
     * Возвращает сериализованный экземпляр класса
@@ -127,7 +144,7 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
     *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
     * </pre>
     */
-   toJSON() {
+   toJSON(): ISignature {
       this._checkModuleName(true);
 
       return {
@@ -136,7 +153,7 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
          id: getInstanceId.call(this),
          state: this._getSerializableState({})
       };
-   },
+   }
 
    /**
     * Конструирует экземпляр класса из сериализованного состояния
@@ -151,14 +168,14 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
     *    instance instanceof Entity;//true
     * </pre>
     */
-   fromJSON(data) {
+   static fromJSON(data: ISignature): SerializableMixin {
       let initializer = this.prototype._setSerializableState(data.state);
       let instance = new this(data.state.$options);
       if (initializer) {
          initializer.call(instance);
       }
       return instance;
-   },
+   }
 
    //endregion Public methods
 
@@ -166,11 +183,11 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
 
    /**
     * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
-    * @param {Boolean} critical Отсутствие имени модуля критично
-    * @param {Number} [skip] Сколько уровней пропустить при выводе стека вызова метода
+    * @param critical Отсутствие имени модуля критично
+    * @param [skip] Сколько уровней пропустить при выводе стека вызова метода
     * @protected
     */
-   _checkModuleName(critical, skip) {
+   protected _checkModuleName(critical: boolean, skip?: number) {
       let proto = this;
       if (!proto._moduleName) {
          createModuleNameError(this, critical, skip);
@@ -185,7 +202,7 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
       if (!proto.hasOwnProperty('_moduleName')) {
          createModuleNameError(this, critical, skip);
       }
-   },
+   }
 
    /**
     * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
@@ -193,10 +210,10 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
     * @return {Object}
     * @protected
     */
-   _getSerializableState(state: IState) {
-      state.$options = this._getOptions ? this._getOptions() : {};
+   _getSerializableState(state: IState): IState {
+      state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {};
       return state;
-   },
+   }
 
    /**
     * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
@@ -211,10 +228,11 @@ const SerializableMixin = /** @lends Types/Entity/SerializableMixin.prototype */
    }
 
    //endregion Protected methods
-};
-
-if (!requirejs.defined('Core/patchRequireJS')) {
-   throw new Error('Module "Core/patchRequireJS" should be required to use serialization.');
 }
 
-export default SerializableMixin;
+SerializableMixin.prototype['[Types/_entity/SerializableMixin]'] = true;
+//FIXME: Core/Serializer is looking for dynamic method
+// @ts-ignore
+SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;
+// @ts-ignore
+SerializableMixin.prototype._instanceNumber = null;
