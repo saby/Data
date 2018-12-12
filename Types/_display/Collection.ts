@@ -1138,10 +1138,12 @@ export default class Collection extends mixin(
       if (collection && collection['[Types/_collection/IList]']) {
          sourceIndex = collection.getIndex(item);
       } else {
-         collection.each((value, index) => {
+         let index = 0;
+         collection.each((value) => {
             if (sourceIndex === -1 && value === item) {
                sourceIndex = index;
             }
+            index++;
          }, this, this._localize);
       }
       return sourceIndex === -1 ? -1 : this.getIndexBySourceIndex(sourceIndex);

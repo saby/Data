@@ -18,10 +18,9 @@ interface IOptions {
  * Обрабатывает событие об изменении состояния Flags
  * @param event Дескриптор события
  * @param name Название флага
- * @param index Индекс флага
  */
-function onSourceChange (event: EventObject, name: string, index: number) {
-   let item = this.at(this.getIndexBySourceIndex(index));
+function onSourceChange (event: EventObject, name: string) {
+   let item = this.getItemBySourceItem(name);
    this.notifyItemChange(item, 'selected');
 }
 
