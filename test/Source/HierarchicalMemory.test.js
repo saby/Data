@@ -101,7 +101,7 @@ define([
                assert.deepEqual(items, expectItems);
 
                var path = [];
-               result.getAll().getMetaData().path.forEach(function(item) {
+               result.getAll().getMetaData().path.each(function(item) {
                   path.push(item.get('name'));
                });
                assert.deepEqual(path, expectPath);

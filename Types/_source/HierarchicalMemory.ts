@@ -150,15 +150,19 @@ export default class HierarchicalMemory extends mixin(
                   idProperty: this._$idProperty,
                });
 
+               let breadcrumbs = new collection.RecordSet({
+                  adapter: this._source.getAdapter(),
+                  idProperty: this._$idProperty,
+               });
+
                // Extract breadcrumbs as path from filtered node to the root
-               let breadcrumbs = [];
                let startFromId = query.getWhere()[this._$parentProperty];
                let startFromNode = sourceRecords.getRecordById(startFromId);
                if (startFromNode) {
-                  breadcrumbs.unshift(startFromNode);
+                  breadcrumbs.add(startFromNode, 0);
                   let node;
                   while(startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
-                     breadcrumbs.unshift(node);
+                     breadcrumbs.add(node, 0);
                      startFromNode = node.get(this._$idProperty);
                   }
                }
