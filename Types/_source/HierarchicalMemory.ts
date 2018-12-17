@@ -242,3 +242,5 @@ HierarchicalMemory.prototype._$parentProperty = null;
 HierarchicalMemory.prototype._$data = null;
 // @ts-ignore
 HierarchicalMemory.prototype._$filter = null;
+//FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
+HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;
