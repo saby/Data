@@ -132,7 +132,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    //region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       state.$options = this._options;
       state._itemsOrder = this._itemsOrder;
@@ -146,7 +146,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          this._itemsOrder = state._itemsOrder;
          fromSerializableMixin.call(this);

@@ -197,14 +197,14 @@ export default class PrefetchProxy extends mixin(
    // region SerializableMixin
 
    _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
       state._done = this._done;
 
       return state;
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._done = state._done;

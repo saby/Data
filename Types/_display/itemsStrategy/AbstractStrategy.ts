@@ -101,7 +101,7 @@ export default abstract class Abstract extends mixin(
    //region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       state.$options = this._options;
       state._items = this._items;
@@ -110,7 +110,7 @@ export default abstract class Abstract extends mixin(
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
 
       return function() {
          fromSerializableMixin.call(this);

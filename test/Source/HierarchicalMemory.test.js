@@ -132,5 +132,19 @@ define([
             });
          });
       });
+
+      describe('.toJSON()', function() {
+         it('should serialize options', function() {
+            var data = {foo: 'bar'};
+            var options = {
+               data: data,
+               idProperty: 'id'
+            };
+            var source = new HierarchicalMemory(options);
+            var serialized = source.toJSON();
+
+            assert.deepEqual(serialized.state.$options, options);
+         });
+      });
    });
 });

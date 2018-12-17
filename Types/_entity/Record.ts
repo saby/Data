@@ -667,7 +667,7 @@ export default class Record extends mixin(
    //region SerializableMixin
 
    _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
       state = FormattableMixin._getSerializableState.call(this, state);
       // @ts-ignore
       state._changedFields = this[$changedFields];
@@ -683,7 +683,7 @@ export default class Record extends mixin(
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       let fromFormattableMixin = FormattableMixin._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);

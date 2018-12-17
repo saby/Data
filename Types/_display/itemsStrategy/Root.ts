@@ -104,7 +104,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
    //region SerializableMixin
 
    protected _getSerializableState(state) {
-      state = SerializableMixin._getSerializableState.call(this, state);
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       state.$options = this._options;
 
@@ -112,7 +112,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
    }
 
    protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin._setSerializableState(state);
+      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
       };
