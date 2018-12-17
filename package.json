@@ -20,21 +20,17 @@
       "coverage": "node test --isolated --coverage"
    },
    "config": {
-      "app_port": 1024,
+      "port": 1024
+   },
+   "saby-units": {
       "moduleType": "amd",
-      "root": ".",
       "tests": "test",
-      "test_server_port": 1025,
-      "test_report": "artifacts/xunit-report.xml",
-      "test_url": {
-         "scheme": "http",
-         "host": "localhost",
-         "port": 1025,
-         "path": "",
-         "query": "reporter=XUnit"
-      },
-      "html_coverage_report": "/artifacts/coverage/index.html",
-      "json_coverage_report": "artifacts/coverage.json"
+      "report": "artifacts/xunit-report.xml",
+      "htmlCoverageReport": "/artifacts/coverage/index.html",
+      "jsonCoverageReport": "artifacts/coverage.json",
+      "url": {
+         "port": 1025
+      }
    },
    "nyc": {
       "include": [
@@ -57,7 +53,7 @@
       "eslint": "^5.3.0",
       "serve-static": "1.13.x",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.19.100",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.19.100",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100"
    }
 }

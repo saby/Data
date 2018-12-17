@@ -23,4 +23,4 @@ app.use(
 
 http
    .createServer(app)
-   .listen(process.env.app_port || config.app_port);
+   .listen(process.env['saby-types-port'] || config.port);
