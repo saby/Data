@@ -12,22 +12,17 @@
    "scripts": {
       "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json && tsc",
       "prepare": "node prepare",
-      "compile": "tsc",
-      "start": "node app",
-      "test": "node test --isolated",
-      "test:debug": "node node_modules/saby-units/mocha %NODE_DEBUG_OPTION% --amd test-isolated",
+      "build": "tsc",
+      "start": "node node_modules/saby-units/cli/server",
+      "test": "saby-units --isolated",
+      "test:debug": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:esm-debug": "node node_modules/mocha/bin/mocha %NODE_DEBUG_OPTION% --compilers es:babel-core/register testTypes/**/*.test.*",
-      "coverage": "node test --isolated --coverage"
-   },
-   "config": {
-      "port": 1024
+      "coverage": "saby-units --isolated --coverage"
    },
    "saby-units": {
       "moduleType": "amd",
       "tests": "test",
-      "report": "artifacts/xunit-report.xml",
-      "htmlCoverageReport": "/artifacts/coverage/index.html",
-      "jsonCoverageReport": "artifacts/coverage.json",
+      "initializer": "testing-init.js",
       "url": {
          "port": 1025
       }
