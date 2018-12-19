@@ -10,7 +10,7 @@
       "tsconfig.json"
    ],
    "scripts": {
-      "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json && tsc",
+      "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json",
       "build": "node build && tsc",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units --isolated",
