@@ -11,13 +11,12 @@
    ],
    "scripts": {
       "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json && tsc",
-      "prepare": "node prepare",
-      "build": "tsc",
+      "build": "node build && tsc",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units --isolated",
       "test:debug": "saby-units %NODE_DEBUG_OPTION% --isolated",
-      "test:esm-debug": "node node_modules/mocha/bin/mocha %NODE_DEBUG_OPTION% --compilers es:babel-core/register testTypes/**/*.test.*",
-      "coverage": "saby-units --isolated --coverage"
+      "test:coverage": "saby-units --isolated --coverage",
+      "test:ci": "saby-units --isolated --browser --report --coverage"
    },
    "saby-units": {
       "moduleType": "amd",
