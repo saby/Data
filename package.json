@@ -15,8 +15,8 @@
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units --isolated",
       "test:debug": "saby-units %NODE_DEBUG_OPTION% --isolated",
-      "test:coverage": "saby-units --isolated --coverage",
-      "test:ci": "saby-units --isolated --browser --report --coverage"
+      "test:node": "saby-units --isolated --report --coverage",
+      "test:browser": "saby-units --browser --report --coverage"
    },
    "saby-units": {
       "moduleType": "amd",
