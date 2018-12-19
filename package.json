@@ -22,7 +22,7 @@
    "saby-units": {
       "moduleType": "amd",
       "tests": "test",
-      "initializer": "testing-init.js",
+      "initializer": "init-testing.js",
       "url": {
          "port": 1025
       }
