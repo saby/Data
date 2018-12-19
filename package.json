@@ -1,6 +1,6 @@
 {
    "name": "saby-types",
-   "version": "3.18.700",
+   "version": "3.19.100",
    "repository": {
       "type": "git",
       "url": "git@github.com:saby/Types.git"
@@ -10,31 +10,21 @@
       "tsconfig.json"
    ],
    "scripts": {
-      "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json && tsc",
-      "prepare": "node prepare",
-      "compile": "tsc",
-      "start": "node app",
-      "test": "node test --isolated",
-      "test:debug": "node node_modules/saby-units/mocha %NODE_DEBUG_OPTION% --amd test-isolated",
-      "test:esm-debug": "node node_modules/mocha/bin/mocha %NODE_DEBUG_OPTION% --compilers es:babel-core/register testTypes/**/*.test.*",
-      "coverage": "node test --isolated --coverage"
+      "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json",
+      "build": "node build && tsc",
+      "start": "node node_modules/saby-units/cli/server",
+      "test": "saby-units --isolated",
+      "test:debug": "saby-units %NODE_DEBUG_OPTION% --isolated",
+      "test:node": "saby-units --isolated --report --coverage",
+      "test:browser": "saby-units --browser --report --coverage"
    },
-   "config": {
-      "app_port": 1024,
+   "saby-units": {
       "moduleType": "amd",
-      "root": ".",
       "tests": "test",
-      "test_server_port": 1025,
-      "test_report": "artifacts/xunit-report.xml",
-      "test_url": {
-         "scheme": "http",
-         "host": "localhost",
-         "port": 1025,
-         "path": "",
-         "query": "reporter=XUnit"
-      },
-      "html_coverage_report": "/artifacts/coverage/index.html",
-      "json_coverage_report": "artifacts/coverage.json"
+      "initializer": "init-testing.js",
+      "url": {
+         "port": 1025
+      }
    },
    "nyc": {
       "include": [
@@ -57,7 +47,7 @@
       "eslint": "^5.3.0",
       "serve-static": "1.13.x",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.19.100",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.19.100",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100"
    }
 }
