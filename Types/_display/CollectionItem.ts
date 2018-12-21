@@ -225,6 +225,6 @@ CollectionItem.prototype._instancePrefix = 'collection-item-';
 CollectionItem.prototype._contentsIndex = undefined;
 
 // Deprecated
-CollectionItem.prototype['[Types/Display/CollectionItem]'] = true;
+CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
 
 di.register('Types/display:CollectionItem', CollectionItem);

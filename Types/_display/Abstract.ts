@@ -130,4 +130,4 @@ export default abstract class Abstract extends mixin(
 Abstract.prototype['[Types/_display/Abstract]'] = true;
 
 // Deprecated
-Abstract.prototype['[Types/Display/Display]'] = true;
+Abstract.prototype['[WS.Data/Display/Display]'] = true;

@@ -1510,9 +1510,9 @@ Record.prototype._$owner = null;
 Record.prototype._acceptedState = undefined;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Record.prototype['[Types/Entity/Record]'] = true;
+Record.prototype['[WS.Data/Entity/Record]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Record.prototype['[Types/Collection/IEnumerable]'] = true;
-Record.prototype['[Types/Entity/ICloneable]'] = true;
+Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
+Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
 di.register('Types/entity:Record', Record, {instantiate: false});

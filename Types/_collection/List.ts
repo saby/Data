@@ -476,6 +476,8 @@ export default class List<T> extends mixin(
    //endregion Protected methods
 }
 
+List.prototype._moduleName = 'Types/collection:List';
+
 //Properties defaults
 List.prototype['[Types/_collection/List]'] = true;
 // @ts-ignore
@@ -499,12 +501,11 @@ List.prototype._indexer = null;
 List.prototype.forEach = List.prototype.each;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-List.prototype['[Types/Collection/List]'] = true;
+List.prototype['[WS.Data/Collection/List]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-List.prototype['[Types/Collection/IEnumerable]'] = true;
-List.prototype['[Types/Collection/IList]'] = true;
-List.prototype['[Types/Collection/IIndexedCollection]'] = true;
-List.prototype['[Types/Entity/ICloneable]'] = true;
-List.prototype._moduleName = 'Types/collection:List';
+List.prototype['[WS.Data/Collection/IEnumerable]'] = true;
+List.prototype['[WS.Data/Collection/IList]'] = true;
+List.prototype['[WS.Data/Collection/IIndexedCollection]'] = true;
+List.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
 di.register('Types/collection:List', List, {instantiate: false});

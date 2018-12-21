@@ -2908,6 +2908,6 @@ Collection.prototype._onCollectionItemChange = null;
 Collection.prototype._oEventRaisingChange = null;
 
 // Deprecated
-Collection.prototype['[Types/Display/Collection]'] = true;
+Collection.prototype['[WS.Data/Display/Collection]'] = true;
 
 di.register('Types/display:Collection', Collection);

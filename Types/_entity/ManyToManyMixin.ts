@@ -12,7 +12,7 @@ const ManyToManyMixin = /** @lends Types/Entity/ManyToManyMixin.prototype */{
    '[Types/_entity/ManyToManyMixin]': true,
 
    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[Types/Entity/ManyToManyMixin]': true,
+   '[WS.Data/Entity/ManyToManyMixin]': true,
 
    /**
     * @property {Types/Mediator/ManyToMany} Медиатор, отвечающий за связи между сущностями

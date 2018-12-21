@@ -298,5 +298,5 @@ SbisTable.prototype['[Types/_entity/ICloneable]'] = true;
 SbisTable.prototype._type = 'recordset';
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-SbisTable.prototype['[Types/Entity/ICloneable]'] = true;
+SbisTable.prototype['[WS.Data/Entity/ICloneable]'] = true;
 

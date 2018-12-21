@@ -900,7 +900,7 @@ Model.prototype._propertiesDependencyGathering = '';
 Model.prototype._nowCalculatingProperties = null;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Model.prototype['[Types/Entity/Model]'] = true;
+Model.prototype['[WS.Data/Entity/Model]'] = true;
 //FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;

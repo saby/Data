@@ -46,7 +46,7 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/Chain/
 
 Concatenated.prototype['[Types/_chain/Concatenated]'] = true;
 
-   // @ts-ignore
+// @ts-ignore
 Concatenated.prototype._items = null;
 
 Object.defineProperty(Concatenated.prototype, 'shouldSaveIndices', { value: false });

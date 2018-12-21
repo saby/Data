@@ -153,4 +153,4 @@ SbisRecord.prototype._type = 'record';
 SbisRecord.prototype._castSeparator = ',';
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-SbisRecord.prototype['[Types/Entity/ICloneable]'] = true;
+SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;
