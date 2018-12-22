@@ -61,6 +61,6 @@ GroupItem.prototype._instancePrefix = 'group-item-';
 GroupItem.prototype._$expanded = true;
 
 // Deprecated
-GroupItem.prototype['[Types/Display/GroupItem]'] = true;
+GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
 
 di.register('Types/display:GroupItem', GroupItem);

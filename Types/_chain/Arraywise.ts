@@ -49,4 +49,4 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/Chain/Arr
 
 Arraywise.prototype['[Types/_chain/Arraywise]'] = true;
 
-   Object.defineProperty(Arraywise.prototype, 'shouldSaveIndices', { value: false });
+Object.defineProperty(Arraywise.prototype, 'shouldSaveIndices', { value: false });

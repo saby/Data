@@ -1571,6 +1571,6 @@ RecordSet.prototype._metaData = null;
 RecordSet.prototype.forEach = RecordSet.prototype.each;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-RecordSet.prototype['[Types/Collection/RecordSet]'] = true;
+RecordSet.prototype['[WS.Data/Collection/RecordSet]'] = true;
 
 di.register('Types/collection:RecordSet', RecordSet, {instantiate: false});

@@ -206,4 +206,4 @@ Dictionary.prototype._$localeDictionary = undefined;
 Dictionary.prototype._type = undefined;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Dictionary.prototype['[Types/Collection/IEnumerable]'] = true;
+Dictionary.prototype['[WS.Data/Collection/IEnumerable]'] = true;

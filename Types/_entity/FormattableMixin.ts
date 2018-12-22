@@ -99,7 +99,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
    '[Types/_entity/FormattableMixin]': true,
 
    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[Types/Entity/FormattableMixin]': true,
+   '[WS.Data/Entity/FormattableMixin]': true,
 
    /**
     * @cfg {Object} Данные в "сыром" виде.

@@ -251,6 +251,6 @@ TreeItem.prototype._$childrenProperty = '';
 TreeItem.prototype._instancePrefix = 'tree-item-';
 
 // Deprecated
-TreeItem.prototype['[Types/Display/TreeItem]'] = true;
+TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
 
 di.register('Types/display:TreeItem', TreeItem);

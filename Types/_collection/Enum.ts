@@ -199,8 +199,8 @@ Enum.prototype._$index = null;
 Enum.prototype._type = 'enum';
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Enum.prototype['[Types/Type/Enum]'] = true;
+Enum.prototype['[WS.Data/Type/Enum]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Enum.prototype['[Types/Entity/ICloneable]'] = true;
+Enum.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
 di.register('Types/collection:Enum', Enum, {instantiate: false});

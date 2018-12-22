@@ -661,6 +661,6 @@ Tree.prototype._$rootEnumerable = false;
 Tree.prototype._root = null;
 
 // Deprecated
-Tree.prototype['[Types/Display/Tree]'] = true;
+Tree.prototype['[WS.Data/Display/Tree]'] = true;
 
 di.register('Types/display:Tree', Tree);
