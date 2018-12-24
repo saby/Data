@@ -2,9 +2,5 @@
     "ui-modules":
     [
          "Types"
-    ],
-    "bl-modules":
-    [
-         "Types"
     ]
 }
