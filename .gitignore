@@ -8,9 +8,6 @@
 /tsconfig.base.json
 /node_modules
 /artifacts
-/Core
-/Data
 /View
 /WS.Core
-/WS.Data
 /Types/**/*.js
