@@ -1,6 +1,6 @@
 {
    "name": "saby-types",
-   "version": "19.100",
+   "version": "19.100.0",
    "repository": {
       "type": "git",
       "url": "git@github.com:saby/Types.git"
