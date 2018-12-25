@@ -16,8 +16,7 @@ import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
 import {mixin} from '../../util';
-// @ts-ignore
-import toSql = require('Core/helpers/Date/toSql');
+import toSql, {MODE as toSqlMode} from '../date/toSql';
 
 const serializer = (function() {
    let serialize = function(data) {
@@ -41,15 +40,15 @@ const serializer = (function() {
          //Instance of Types/Entity/Record || Types/Collection/RecordSet || Types/Source/DataSet
          return obj.getRawData(true);
       } else if (obj instanceof Date) {
-         let mode = toSql.MODE_DATETIME;
+         let mode = toSqlMode.DATETIME;
          obj = <ExtendDate>obj;
          if (obj.getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
                case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE:
-                  mode = toSql.MODE_DATE;
+                  mode = toSqlMode.DATE;
                   break;
                case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME:
-                  mode = toSql.MODE_TIME;
+                  mode = toSqlMode.TIME;
                   break;
             }
          }

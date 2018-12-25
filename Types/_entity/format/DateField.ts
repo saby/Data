@@ -16,15 +16,14 @@
  */
 
 import Field from './Field';
-// @ts-ignore
-import toSql = require('Core/helpers/Date/toSql');
+import toSql, {MODE as toSqlMode} from '../date/toSql';
 
 export default class DateField extends Field /** @lends Types/Format/DateField.prototype */{
       //region Public methods
 
       getDefaultValue() {
          if (this._$defaultValue instanceof Date) {
-            return toSql(this._$defaultValue, toSql.MODE_DATE);
+            return toSql(this._$defaultValue, toSqlMode.DATE);
          }
          return this._$defaultValue;
       }
