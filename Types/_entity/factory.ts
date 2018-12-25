@@ -14,13 +14,12 @@
 import IProducible, {IProducibleConstructor} from './IProducible';
 import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
 import di from '../di';
+import toSql, {MODE as toSqlMode} from './date/toSql';
+import fromSql from './date/fromSql';
 
 // @ts-ignore
 import coreInstance = require('Core/core-instance');
-// @ts-ignore
-import toSql = require('Core/helpers/Date/toSql');
-// @ts-ignore
-import fromSql = require('Core/helpers/Date/fromSql');
+
 // @ts-ignore
 import CoreTimeInterval = require('Core/TimeInterval');
 // @ts-ignore
@@ -401,15 +400,15 @@ const factory = {
          case 'time':
          case 'datetime':
             value = toScalar(value);
-            let serializeMode = toSql.MODE_DATE,
+            let serializeMode = toSqlMode.DATE,
                withoutTimeZone = false;
             switch (type) {
                case 'datetime':
-                  serializeMode = toSql.MODE_DATETIME;
+                  serializeMode = toSqlMode.DATETIME;
                   withoutTimeZone = isWithoutTimeZone(options.format);
                   break;
                case 'time':
-                  serializeMode = toSql.MODE_TIME;
+                  serializeMode = toSqlMode.TIME;
                   break;
             }
             if (!value) {
