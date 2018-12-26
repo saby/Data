@@ -25,6 +25,11 @@ define([
          assert.equal(toSql.default(dt, toSql.MODE.DATETIME), '2010-02-20 23:59:09' + getTimeZone(dt));
       });
 
+      it('should return date and time whith milisenconds when time has it', function() {
+         var dt =new Date(1443099268981);
+         assert.equal(toSql.default(dt, toSql.MODE.DATETIME), '2015-09-24 15:54:28.981' + getTimeZone(dt));
+      });
+
       it('should return date', function() {
          var dt = new Date(2010, 1, 20, 23, 59, 9);
          assert.equal(toSql.default(dt, toSql.MODE.DATE), '2010-02-20');
