@@ -45,6 +45,9 @@ function getTimeZone(date:Date):string {
 export default function toSQL(date: Date, mode: string = 'datetime') {
    let result = dateFormatter(date, modeFormat[mode]);
    if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {
+      if (date.getMilliseconds() > 0) {
+         result += `.${date.getMilliseconds()}`
+      }
       result += getTimeZone(date);
    }
    return result;
