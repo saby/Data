@@ -1,6 +1,6 @@
 /// <amd-module name="Types/_formatter/_numberWords/ru" />
 
-import {iterateNumber} from 'utils';
+import {iterateNumber} from './utils';
 
 const DIGITS = {
    '0': 'ноль',
