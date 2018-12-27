@@ -53,3 +53,5 @@ import * as relation from './_entity/relation';
 export {relation};
 export {default as SerializableMixin} from './_entity/SerializableMixin';
 export {default as VersionableMixin} from './_entity/VersionableMixin';
+export {default as TimeInterval} from './_entity/TimeInterval';
+export {default as Guid} from './_entity/Guid';
