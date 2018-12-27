@@ -6,8 +6,7 @@
       "url": "git@github.com:saby/Types.git"
    },
    "files": [
-      "Types/*",
-      "tsconfig.json"
+      "Types/*"
    ],
    "scripts": {
       "prepare": "saby-typescript --install --tsconfig=tsconfig.base.json",
