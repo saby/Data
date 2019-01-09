@@ -88,6 +88,9 @@ import {IEnumerable} from '../collection';
 import di from '../di';
 import {mixin} from '../util';
 import {Map} from '../shim';
+import {logger} from '../util';
+//@ts-ignore
+import coreExtend = require('Core/core-extend');
 
 interface IOptions {
    adapter?: IAdapter,
@@ -1475,8 +1478,19 @@ export default class Record extends mixin(
       });
    }
 
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList:any, classExtender:any) {
+      logger.error('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
+   };
    //endregion
+
+
 }
+
+
 
 Record.prototype['[Types/_entity/Record]'] = true;
 // @ts-ignore
