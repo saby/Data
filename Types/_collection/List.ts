@@ -61,7 +61,9 @@ import {
    VersionableMixin
 } from '../entity'
 import di from '../_di';
-import {mixin, object} from '../util';
+import {logger, mixin, object} from '../util';
+//@ts-ignore
+import coreExtend = require('Core/core-extend');
 
 export default class List<T> extends mixin(
    DestroyableMixin,
@@ -474,6 +476,14 @@ export default class List<T> extends mixin(
    }
 
    //endregion Protected methods
+
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList:any, classExtender:any) {
+      logger.error('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
+   };
 }
 
 List.prototype._moduleName = 'Types/collection:List';
