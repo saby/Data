@@ -25,7 +25,7 @@ import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
 import {DestroyableMixin, SerializableMixin, functor} from '../entity';
 import {EnumeratorCallback, IList, EventRaisingMixin,} from '../collection';
-import di from '../_di';
+import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 
@@ -504,7 +504,7 @@ export default class Collection extends mixin(
          throw new Error(`${this._moduleName}: source collection is empty`);
       }
       if (this._$collection instanceof Array) {
-         this._$collection = di.create('Types/collection:List', {items: this._$collection});
+         this._$collection = create('Types/collection:List', {items: this._$collection});
       }
       if (!this._$collection['[Types/_collection/IEnumerable]']) {
          throw new TypeError(`${this._moduleName}: source collection should implement Types/collection:IEnumerable`);
@@ -2091,7 +2091,7 @@ export default class Collection extends mixin(
    protected _getItemsFactory(): ItemsFactory {
       return function CollectionItemsFactory(options) {
          options.owner = this;
-         return di.resolve(this._itemModule, options);
+         return resolve(this._itemModule, options);
       };
    }
 
@@ -2910,4 +2910,4 @@ Collection.prototype._oEventRaisingChange = null;
 // Deprecated
 Collection.prototype['[WS.Data/Display/Collection]'] = true;
 
-di.register('Types/display:Collection', Collection);
+register('Types/display:Collection', Collection);

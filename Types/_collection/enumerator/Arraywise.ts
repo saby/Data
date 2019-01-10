@@ -10,7 +10,7 @@
 
 import IEnumerator from '../IEnumerator';
 import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
-import di from '../../_di';
+import {register} from '../../di';
 import {mixin} from '../../util';
 
 export default class Arraywise<T> extends mixin(
@@ -113,4 +113,4 @@ Arraywise.prototype._resolver = null;
  */
 Arraywise.prototype._filter = null;
 
-di.register('Types/collection:enumerator.Arraywise', Arraywise, {instantiate: false});
+register('Types/collection:enumerator.Arraywise', Arraywise, {instantiate: false});

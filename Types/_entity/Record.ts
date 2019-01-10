@@ -85,7 +85,7 @@ import Factory from './factory';
 import {IReceiver} from './relation';
 import {IAdapter} from './adapter';
 import {IEnumerable} from '../collection';
-import di from '../_di';
+import {resolve, register} from '../di';
 import {mixin} from '../util';
 import {Map} from '../shim';
 import {logger} from '../util';
@@ -504,7 +504,7 @@ export default class Record extends mixin(
     * </pre>
     */
    getEnumerator() {
-      const ArrayEnumerator = di.resolve('Types/collection:enumerator.Arraywise');
+      const ArrayEnumerator = resolve('Types/collection:enumerator.Arraywise');
       return new ArrayEnumerator(this._getRawDataFields());
    }
 
@@ -1529,4 +1529,4 @@ Record.prototype['[WS.Data/Entity/Record]'] = true;
 Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
 Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/entity:Record', Record, {instantiate: false});
+register('Types/entity:Record', Record, {instantiate: false});

@@ -138,7 +138,7 @@ import DataMixin from './DataMixin';
 import Query from './Query';
 import {RecordSet} from '../collection';
 import {Record} from '../entity';
-import di from '../_di';
+import {resolve, register} from '../di';
 import {logger, object} from '../util';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
@@ -261,7 +261,7 @@ function callDestroyWithComplexId(instance, ids, name, meta) {
  * @return {Types/Entity/Record|null}
  */
 export function buildRecord(data, adapter) {
-   const Record = di.resolve('Types/entity:Record');
+   const Record = resolve('Types/entity:Record');
    return Record.fromObject(data, adapter);
 }
 
@@ -280,7 +280,7 @@ export function buildRecordSet(data, adapter, idProperty) {
       return data;
    }
 
-   const RecordSet = di.resolve('Types/collection:RecordSet');
+   const RecordSet = resolve('Types/collection:RecordSet');
    let records = new RecordSet({
       adapter: adapter,
       idProperty: idProperty
@@ -493,7 +493,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
  * @protected
  */
 function passUpdateBatch(items: RecordSet<Record>, meta?: Object): Object {
-   const RecordSet = di.resolve('Types/collection:RecordSet');
+   const RecordSet = resolve('Types/collection:RecordSet');
    let patch = RecordSet.patch(items);
    return {
       changed: patch.get('changed'),
@@ -1198,4 +1198,4 @@ SbisService.prototype._$options = OptionsMixin.addOptions(Rpc, {
 SbisService.prototype._additionalDependencies = Rpc.prototype._additionalDependencies.slice();
 //SbisService.prototype._additionalDependencies.push('Types/Adapter/Sbis');
 
-di.register('Types/source:SbisService', SbisService, {instantiate: false});
+register('Types/source:SbisService', SbisService, {instantiate: false});

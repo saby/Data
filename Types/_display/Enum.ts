@@ -10,7 +10,7 @@
 import CollectionItem from './CollectionItem';
 import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
-import di from '../_di';
+import {register} from '../di';
 
 function onSourceChange(event: EventObject, index: number) {
    this.setCurrentPosition(this.getIndexBySourceIndex(index));
@@ -109,4 +109,4 @@ Enum.prototype._localize = true;
 // @ts-ignore
 Enum.prototype._onSourceChange = null;
 
-di.register('Types/display:Enum', Enum);
+register('Types/display:Enum', Enum);
