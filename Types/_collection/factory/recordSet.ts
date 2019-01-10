@@ -9,7 +9,7 @@
 import IEnumerable from '../IEnumerable';
 import RecordSet from '../RecordSet';
 import {Record} from '../../entity';
-import di from '../../di';
+import di from '../../_di';
 
 interface IOptions {
    rawData?: any

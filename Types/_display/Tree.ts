@@ -19,7 +19,7 @@ import DirectItemsStrategy from './itemsStrategy/Direct';
 import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import RootStrategy from './itemsStrategy/Root';
-import di from '../di';
+import di from '../_di';
 import {object} from '../util';
 
 /**

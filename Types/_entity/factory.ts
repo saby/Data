@@ -13,7 +13,7 @@
 
 import IProducible, {IProducibleConstructor} from './IProducible';
 import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
-import di from '../di';
+import di from '../_di';
 import toSql, {MODE as toSqlMode} from './date/toSql';
 import fromSql from './date/fromSql';
 

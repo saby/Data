@@ -12,7 +12,7 @@
 import Abstract from './Abstract';
 import JsonTable from './JsonTable';
 import JsonRecord from './JsonRecord';
-import di from '../../di';
+import di from '../../_di';
 
 export default class Json extends Abstract /** @lends Types/Adapter/Json.prototype */{
    forTable(data) {

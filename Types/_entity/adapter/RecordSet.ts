@@ -12,7 +12,7 @@
 import Abstract from './Abstract';
 import RecordSetTable from './RecordSetTable';
 import RecordSetRecord from './RecordSetRecord';
-import di from '../../di';
+import di from '../../_di';
 import {object} from '../../util';
 
 export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordSet.prototype */{

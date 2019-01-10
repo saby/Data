@@ -10,7 +10,7 @@
 
 import IEnumerator from '../IEnumerator';
 import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
-import di from '../../di';
+import di from '../../_di';
 import {mixin} from '../../util';
 
 export default class Arraywise<T> extends mixin(

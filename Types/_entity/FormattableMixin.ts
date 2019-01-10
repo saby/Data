@@ -8,7 +8,7 @@
 
 import {Field, fieldsFactory} from './format';
 import {Cow as CowAdapter, Json as JsonAdapter} from './adapter';
-import di from '../di';
+import di from '../_di';
 import {object, logger} from '../util';
 
 const defaultAdapter = 'Types/entity:adapter.Json';

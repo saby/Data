@@ -118,7 +118,7 @@
  */
 
 import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, Model, adapter} from '../entity';
-import di from '../di';
+import di from '../_di';
 import {mixin} from '../util';
 import {RecordSet} from '../collection';
 

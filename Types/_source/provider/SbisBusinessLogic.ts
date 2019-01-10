@@ -10,7 +10,7 @@
 
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
-import di from '../../di';
+import di from '../../_di';
 import {mixin} from '../../util';
 // @ts-ignore
 import RpcJson = require('Transport/RPCJSON');
