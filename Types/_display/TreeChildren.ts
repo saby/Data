@@ -9,7 +9,7 @@
 
 import TreeItem from './TreeItem';
 import {List} from '../collection';
-import di from '../_di';
+import {register} from '../di';
 
 interface IOptions {
 }
@@ -45,4 +45,4 @@ export default class TreeChildren extends List<TreeItem> /** @lends Types/Displa
 TreeChildren.prototype['[Types/_display/TreeChildren]'] = true;
 TreeChildren.prototype._$owner = null;
 
-di.register('Types/display:TreeChildren', TreeChildren);
+register('Types/display:TreeChildren', TreeChildren);

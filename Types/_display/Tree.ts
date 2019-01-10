@@ -19,7 +19,7 @@ import DirectItemsStrategy from './itemsStrategy/Direct';
 import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import RootStrategy from './itemsStrategy/Root';
-import di from '../_di';
+import {register} from '../di';
 import {object} from '../util';
 
 /**
@@ -663,4 +663,4 @@ Tree.prototype._root = null;
 // Deprecated
 Tree.prototype['[WS.Data/Display/Tree]'] = true;
 
-di.register('Types/display:Tree', Tree);
+register('Types/display:Tree', Tree);

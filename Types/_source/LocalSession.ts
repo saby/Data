@@ -40,7 +40,7 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {DestroyableMixin, Record, Model, OptionsToPropertyMixin, ReadWriteMixin, adapter as libAdapter} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../_di';
+import {create, register} from '../di';
 import {mixin, object} from '../util';
 // @ts-ignore
 import coreMerge = require('Core/core-merge');
@@ -466,7 +466,7 @@ class ModelManager {
          case 'adapter.recordset':
             return new Model({
                rawData: new Record({rawData: data}),
-               adapter: di.create(this.adapter),
+               adapter: create(this.adapter),
                idProperty: this.idProperty
             });
 
@@ -477,7 +477,7 @@ class ModelManager {
          default:
             return new Model({
                rawData: data,
-               adapter: di.create(this.adapter),
+               adapter: create(this.adapter),
                idProperty: this.idProperty
             });
       }
@@ -490,7 +490,7 @@ class ModelManager {
 
       let model = new Model({
          format: format,
-         adapter: di.create(this.adapter),
+         adapter: create(this.adapter),
          idProperty: this.idProperty
       });
 
@@ -944,7 +944,7 @@ export default class LocalSession extends mixin(
    }
 
    getAdapter() {
-      return di.create(this._$adapter);
+      return create(this._$adapter);
    }
 
    getListModule() {
@@ -999,7 +999,7 @@ export default class LocalSession extends mixin(
     * @protected
     */
    protected _getDataSet(rawData: any) {
-      return <DataSet>di.create(// eslint-disable-line new-cap
+      return <DataSet>create(// eslint-disable-line new-cap
          this._dataSetModule,
          coreMerge({
             writable: this._writable,
@@ -1086,4 +1086,4 @@ LocalSession.prototype._options = {
    data: []
 };
 
-di.register('Types/source:LocalSession', LocalSession, {instantiate: false});
+register('Types/source:LocalSession', LocalSession, {instantiate: false});

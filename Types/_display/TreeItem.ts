@@ -8,7 +8,7 @@
  */
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import di from '../_di';
+import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
    node?: boolean;
@@ -253,4 +253,4 @@ TreeItem.prototype._instancePrefix = 'tree-item-';
 // Deprecated
 TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
 
-di.register('Types/display:TreeItem', TreeItem);
+register('Types/display:TreeItem', TreeItem);

@@ -8,7 +8,7 @@
 
 import DataSet from './DataSet';
 import {ReadWriteMixin, adapter, Model} from '../entity';
-import di from '../_di';
+import {create} from '../di';
 
 export interface IOptions {
    adapter?: string | Function;
@@ -185,7 +185,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
 
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
-         this._$adapter = di.create(this._$adapter);
+         this._$adapter = create(this._$adapter);
       }
       return this._$adapter;
    },
@@ -239,7 +239,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
     * @protected
     */
    _getModelInstance(data): Model {
-      return di.create(this._$model, {
+      return create(this._$model, {
          writable: this._writable,
          rawData: data,
          adapter: this.getAdapter(),
@@ -254,7 +254,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
     * @protected
     */
    _getDataSetInstance(cfg): DataSet {
-      return di.create(// eslint-disable-line new-cap
+      return create(// eslint-disable-line new-cap
          this._dataSetModule,
          Object.assign({
             writable: this._writable,

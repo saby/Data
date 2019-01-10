@@ -25,7 +25,7 @@ import UuidField from './UuidField';
 import RpcFileField from './RpcFileField';
 import ObjectField from './ObjectField';
 import ArrayField from './ArrayField';
-import di from '../../_di';
+import {isRegistered, resolve} from '../../di';
 import {logger} from '../../util';
 
 /**
@@ -128,8 +128,8 @@ export default function (declaration) {
             return new ArrayField(declaration);
       }
 
-      if (di.isRegistered(type)) {
-         type = di.resolve(type);
+      if (isRegistered(type)) {
+         type = resolve(type);
       }
    }
 

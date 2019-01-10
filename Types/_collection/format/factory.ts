@@ -6,7 +6,7 @@
 
 import Format from './Format';
 import {format} from '../../entity';
-import di from '../../_di';
+import {register} from '../../di';
 
 /**
  * Конструирует формат полей по декларативному описанию
@@ -24,4 +24,4 @@ export default function factory(declaration) {
    return instance;
 }
 
-di.register('Types/collection:format.factory', factory, {instantiate: false});
+register('Types/collection:format.factory', factory, {instantiate: false});

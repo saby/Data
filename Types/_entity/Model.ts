@@ -113,7 +113,7 @@ import IInstantiable from './IInstantiable';
 import InstantiableMixin from './InstantiableMixin';
 import {Compute} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
-import di from '../_di';
+import {resolve, register} from '../di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
 
@@ -427,7 +427,7 @@ export default class Model extends mixin(
     * Смотри пример {@link Types/Entity/Record#getEnumerator для записи}:
     */
    getEnumerator(): enumerator.Arraywise<any> {
-      const ArrayEnumerator = di.resolve('Types/collection:enumerator.Arraywise');
+      const ArrayEnumerator = resolve('Types/collection:enumerator.Arraywise');
       return new ArrayEnumerator(this._getAllProperties());
    }
 
@@ -905,6 +905,6 @@ Model.prototype['[WS.Data/Entity/Model]'] = true;
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;
 
-di.register('Types/entity:Model', Model, {instantiate: false});
+register('Types/entity:Model', Model, {instantiate: false});
 // FIXME: deprecated
-di.register('entity.model', Model);
+register('entity.model', Model);

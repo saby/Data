@@ -57,7 +57,7 @@
  * @return {Types/Chain/Abstract}
  */
 
-import di from '../_di';
+import {register} from '../di';
 import Abstract from './Abstract';
 import Arraywise from './Arraywise';
 import Objectwise from './Objectwise';
@@ -74,21 +74,21 @@ import Sorted from './Sorted';
 import Uniquely from './Uniquely';
 import Zipped from './Zipped';
 
-di.register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
-di.register('Types/chain:Arraywise', Arraywise, { instantiate: false });
-di.register('Types/chain:Concatenated', Concatenated, { instantiate: false });
-di.register('Types/chain:Counted', Counted, { instantiate: false });
-di.register('Types/chain:Enumerable', Enumerable, { instantiate: false });
-di.register('Types/chain:Filtered', Filtered, { instantiate: false });
-di.register('Types/chain:Flattened', Flattened, { instantiate: false });
-di.register('Types/chain:Grouped', Grouped, { instantiate: false });
-di.register('Types/chain:Mapped', Mapped, { instantiate: false });
-di.register('Types/chain:Objectwise', Objectwise, { instantiate: false });
-di.register('Types/chain:Reversed', Reversed, { instantiate: false });
-di.register('Types/chain:Sliced', Sliced, { instantiate: false });
-di.register('Types/chain:Sorted', Sorted, { instantiate: false });
-di.register('Types/chain:Uniquely', Uniquely, { instantiate: false });
-di.register('Types/chain:Zipped', Zipped, { instantiate: false });
+register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
+register('Types/chain:Arraywise', Arraywise, { instantiate: false });
+register('Types/chain:Concatenated', Concatenated, { instantiate: false });
+register('Types/chain:Counted', Counted, { instantiate: false });
+register('Types/chain:Enumerable', Enumerable, { instantiate: false });
+register('Types/chain:Filtered', Filtered, { instantiate: false });
+register('Types/chain:Flattened', Flattened, { instantiate: false });
+register('Types/chain:Grouped', Grouped, { instantiate: false });
+register('Types/chain:Mapped', Mapped, { instantiate: false });
+register('Types/chain:Objectwise', Objectwise, { instantiate: false });
+register('Types/chain:Reversed', Reversed, { instantiate: false });
+register('Types/chain:Sliced', Sliced, { instantiate: false });
+register('Types/chain:Sorted', Sorted, { instantiate: false });
+register('Types/chain:Uniquely', Uniquely, { instantiate: false });
+register('Types/chain:Zipped', Zipped, { instantiate: false });
 
 export default function factory(source: any): Abstract<any> {
    if (source instanceof Abstract) {
