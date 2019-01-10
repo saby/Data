@@ -14,7 +14,7 @@
 import Abstract from './Abstract';
 import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
 import {IEnumerable} from '../collection';
-import di from '../_di';
+import {register} from '../di';
 import {mixin} from '../util';
 import Collection from './Collection';
 
@@ -227,4 +227,4 @@ CollectionItem.prototype._contentsIndex = undefined;
 // Deprecated
 CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
 
-di.register('Types/display:CollectionItem', CollectionItem);
+register('Types/display:CollectionItem', CollectionItem);

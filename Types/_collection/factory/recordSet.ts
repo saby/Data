@@ -9,7 +9,7 @@
 import IEnumerable from '../IEnumerable';
 import RecordSet from '../RecordSet';
 import {Record} from '../../entity';
-import di from '../../_di';
+import {resolve, isRegistered} from '../../di';
 
 interface IOptions {
    rawData?: any
@@ -26,8 +26,8 @@ export default function recordSet(items: IEnumerable<Record>, options?: IOptions
       throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
    }
 
-   const Factory = di.resolve(
-      di.isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet'
+   const Factory = resolve(
+      isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet'
    );
 
    options = options || {};

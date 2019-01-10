@@ -16,7 +16,7 @@
 import IEnum, {IIndex} from './IEnum';
 import Dictionary from './Dictionary';
 import {ICloneable, IProducible, ManyToManyMixin, SerializableMixin, CloneableMixin} from '../entity';
-import di from '../_di';
+import {register} from '../di';
 import {applyMixins} from '../util';
 
 interface ProduceOptions {
@@ -203,4 +203,4 @@ Enum.prototype['[WS.Data/Type/Enum]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Enum.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/collection:Enum', Enum, {instantiate: false});
+register('Types/collection:Enum', Enum, {instantiate: false});

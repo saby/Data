@@ -68,7 +68,7 @@ import {
    factory,
    Record
 } from '../entity';
-import di from '../_di';
+import {create, register} from '../di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import isEqualObject = require('Core/helpers/Object/isEqual');
@@ -1440,7 +1440,7 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _buildRecord(data) {
-      let record = di.create(this._$model, {
+      let record = create(this._$model, {
          owner: this,
          writable: this.writable,
          state: RECORD_STATE.UNCHANGED,
@@ -1573,4 +1573,4 @@ RecordSet.prototype.forEach = RecordSet.prototype.each;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 RecordSet.prototype['[WS.Data/Collection/RecordSet]'] = true;
 
-di.register('Types/collection:RecordSet', RecordSet, {instantiate: false});
+register('Types/collection:RecordSet', RecordSet, {instantiate: false});

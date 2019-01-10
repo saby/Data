@@ -29,7 +29,7 @@ import Query from './Query';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../_di';
+import {create} from '../di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import req = require('require');
@@ -361,7 +361,7 @@ export default abstract class Remote extends mixin(
          throw new Error('Remote access provider is not defined');
       }
       if (typeof provider === 'string') {
-         provider = <IAbstract>di.create(provider, options);
+         provider = <IAbstract>create(provider, options);
       }
 
       return provider;

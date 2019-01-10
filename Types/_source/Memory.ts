@@ -72,7 +72,7 @@ import Local, {IOptions as ILocalOptions} from './Local';
 import DataSet from './DataSet';
 import Query, {Join} from './Query';
 import {adapter} from '../entity';
-import di from '../_di';
+import {register} from '../di';
 import {protect, object} from '../util';
 import {Map} from '../shim';
 
@@ -255,4 +255,4 @@ Memory.prototype._dataSetMetaProperty = 'meta';
 // @ts-ignore
 Memory.prototype._emptyData = null;
 
-di.register('Types/source:Memory', Memory, {instantiate: false});
+register('Types/source:Memory', Memory, {instantiate: false});

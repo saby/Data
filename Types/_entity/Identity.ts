@@ -15,7 +15,7 @@
  * </pre>
  */
 
-import di from '../_di';
+import {register} from '../di';
 
 export default class Identity /** @lends Types/Type/Identity.prototype */{
    /**
@@ -76,4 +76,4 @@ Identity.prototype['[Types/_entity/Identity]'] = true;
 Identity.prototype._separator = ',';
 Identity.prototype._value = null;
 
-di.register('Types/entity:Identity', Identity, {instantiate: false});
+register('Types/entity:Identity', Identity, {instantiate: false});

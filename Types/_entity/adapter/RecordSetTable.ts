@@ -30,7 +30,7 @@ import ITable from './ITable';
 import IAdapter from './IAdapter';
 import GenericFormatMixin from './GenericFormatMixin';
 import {UniversalField} from '../format';
-import di from '../../_di';
+import {create} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
 import RecordSet = require('Types/Collection/RecordSet');
@@ -191,7 +191,7 @@ export default class RecordSetTable extends mixin(
                config.idProperty = sample.getIdProperty();
             }
          }
-         this._data = di.create('Types/collection:RecordSet', config);
+         this._data = create('Types/collection:RecordSet', config);
       }
    }
 

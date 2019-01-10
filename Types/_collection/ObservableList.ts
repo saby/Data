@@ -30,8 +30,8 @@ import IObservable from './IObservable';
 import List from './List';
 import EventRaisingMixin from './EventRaisingMixin';
 import {IReceiver} from '../_entity/relation';
-import di from '../_di';
-import {mixin, object} from '../util';
+import {register} from '../di';
+import {mixin} from '../util';
 
 let arraySlice = Array.prototype.slice;
 
@@ -312,4 +312,4 @@ ObservableList.prototype['[Types/_entity/relation/IReceiver]'] = true;
 ObservableList.prototype._moduleName = 'Types/collection:ObservableList';
 ObservableList.prototype._resetChangesCount = 100;
 
-di.register('Types/collection:ObservableList', ObservableList, {instantiate: false});
+register('Types/collection:ObservableList', ObservableList, {instantiate: false});

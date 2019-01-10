@@ -9,7 +9,7 @@
 
 import Tree from './Tree';
 import SearchStrategy from './itemsStrategy/Search';
-import di from '../_di';
+import {register} from '../di';
 
 export default class Search extends Tree /** @lends Types/Display/Search.prototype */{
    _createComposer() {
@@ -23,4 +23,4 @@ export default class Search extends Tree /** @lends Types/Display/Search.prototy
 Search.prototype._moduleName = 'Types/display:Search';
 Search.prototype['[Types/_display/Search]'] = true;
 
-di.register('Types/display:Search', Search);
+register('Types/display:Search', Search);
