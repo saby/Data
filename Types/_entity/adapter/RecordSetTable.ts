@@ -30,7 +30,7 @@ import ITable from './ITable';
 import IAdapter from './IAdapter';
 import GenericFormatMixin from './GenericFormatMixin';
 import {UniversalField} from '../format';
-import di from '../../di';
+import di from '../../_di';
 import {mixin} from '../../util';
 // @ts-ignore
 import RecordSet = require('Types/Collection/RecordSet');

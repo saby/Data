@@ -25,7 +25,7 @@ import UuidField from './UuidField';
 import RpcFileField from './RpcFileField';
 import ObjectField from './ObjectField';
 import ArrayField from './ArrayField';
-import di from '../../di';
+import di from '../../_di';
 import {logger} from '../../util';
 
 /**

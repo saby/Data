@@ -9,7 +9,7 @@
 
 import TreeItem from './TreeItem';
 import {List} from '../collection';
-import di from '../di';
+import di from '../_di';
 
 interface IOptions {
 }

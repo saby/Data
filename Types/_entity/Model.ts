@@ -113,7 +113,7 @@ import IInstantiable from './IInstantiable';
 import InstantiableMixin from './InstantiableMixin';
 import {Compute} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
 

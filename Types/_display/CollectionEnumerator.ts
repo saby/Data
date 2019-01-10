@@ -13,7 +13,7 @@
 import CollectionItem from './CollectionItem';
 import {DestroyableMixin, OptionsToPropertyMixin} from '../entity';
 import {IEnumerator, IndexedEnumeratorMixin} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin} from '../util';
 
 interface IOptions {

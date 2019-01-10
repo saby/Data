@@ -6,7 +6,6 @@ define([
 ) {
    'use strict';
 
-   Di = Di.default;
 
    describe('Types/Di', function() {
       describe('.register()', function() {
@@ -220,7 +219,7 @@ define([
             assert.instanceOf(instB, Module);
             assert.notEqual(instA, instB);
          });
-            
+
          it('should accept an instance as alias', function() {
             var inst = {},
                instA = Di.resolve(inst),

@@ -85,7 +85,7 @@ import Factory from './factory';
 import {IReceiver} from './relation';
 import {IAdapter} from './adapter';
 import {IEnumerable} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin} from '../util';
 import {Map} from '../shim';
 

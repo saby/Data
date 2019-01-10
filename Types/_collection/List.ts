@@ -60,7 +60,7 @@ import {
    ReadWriteMixin,
    VersionableMixin
 } from '../entity'
-import di from '../di';
+import di from '../_di';
 import {mixin, object} from '../util';
 
 export default class List<T> extends mixin(

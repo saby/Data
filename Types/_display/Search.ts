@@ -9,7 +9,7 @@
 
 import Tree from './Tree';
 import SearchStrategy from './itemsStrategy/Search';
-import di from '../di';
+import di from '../_di';
 
 export default class Search extends Tree /** @lends Types/Display/Search.prototype */{
    _createComposer() {

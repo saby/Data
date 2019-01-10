@@ -12,7 +12,7 @@
 
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
 import {IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin} from '../util';
 
 /**

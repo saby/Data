@@ -68,7 +68,7 @@ import {
    factory,
    Record
 } from '../entity';
-import di from '../di';
+import di from '../_di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import isEqualObject = require('Core/helpers/Object/isEqual');

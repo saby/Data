@@ -30,7 +30,7 @@ import IObservable from './IObservable';
 import List from './List';
 import EventRaisingMixin from './EventRaisingMixin';
 import {IReceiver} from '../_entity/relation';
-import di from '../di';
+import di from '../_di';
 import {mixin, object} from '../util';
 
 let arraySlice = Array.prototype.slice;

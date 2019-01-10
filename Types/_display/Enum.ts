@@ -10,7 +10,7 @@
 import CollectionItem from './CollectionItem';
 import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
-import di from '../di';
+import di from '../_di';
 
 function onSourceChange(event: EventObject, index: number) {
    this.setCurrentPosition(this.getIndexBySourceIndex(index));

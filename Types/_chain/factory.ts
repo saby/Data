@@ -57,7 +57,7 @@
  * @return {Types/Chain/Abstract}
  */
 
-import di from '../di';
+import di from '../_di';
 import Abstract from './Abstract';
 import Arraywise from './Arraywise';
 import Objectwise from './Objectwise';

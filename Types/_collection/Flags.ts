@@ -16,7 +16,7 @@
 import IFlags, {IValue} from './IFlags';
 import Dictionary from './Dictionary';
 import {ICloneable, IProducible, ManyToManyMixin, SerializableMixin, CloneableMixin} from '../entity';
-import di from '../di';
+import di from '../_di';
 import {applyMixins} from '../util';
 
 interface ProduceOptions {

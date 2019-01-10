@@ -25,7 +25,7 @@ import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
 import {DestroyableMixin, SerializableMixin, functor} from '../entity';
 import {EnumeratorCallback, IList, EventRaisingMixin,} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 
@@ -1776,7 +1776,7 @@ export default class Collection extends mixin(
    notifyItemChange(item: CollectionItem, properties?: Object) {
       let isFiltered = this._isFiltered();
       let isGrouped = this._isGrouped();
-      
+
       if (isFiltered || isGrouped) {
          let session = this._startUpdateSession();
          if (isGrouped) {

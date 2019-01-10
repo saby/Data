@@ -20,7 +20,7 @@ import IDecorator from './IDecorator';
 import CowTable from './CowTable';
 import CowRecord from './CowRecord';
 import SerializableMixin from '../SerializableMixin';
-import di from '../../di';
+import di from '../../_di';
 import {mixin} from '../../util';
 
 export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator /** @lends Types/Adapter/Cow.prototype */{

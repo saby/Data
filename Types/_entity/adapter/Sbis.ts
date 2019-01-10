@@ -13,7 +13,7 @@ import Abstract from './Abstract';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
-import di from '../../di';
+import di from '../../_di';
 
 export default class Sbis extends Abstract /** @lends Types/Adapter/Sbis.prototype */{
 
