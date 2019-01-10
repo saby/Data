@@ -1,7 +1,6 @@
 /// <amd-module name="Types/_di" />
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
- * @public
  * @author Мальцев А.А.
  */
 
@@ -182,4 +181,3 @@ const di = {
 };
 
 export default di;
-
