@@ -8,7 +8,7 @@
 
 import DataSet from './DataSet';
 import {ReadWriteMixin, adapter, Model} from '../entity';
-import di from '../di';
+import di from '../_di';
 
 export interface IOptions {
    adapter?: string | Function;

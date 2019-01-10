@@ -40,7 +40,7 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {DestroyableMixin, Record, Model, OptionsToPropertyMixin, ReadWriteMixin, adapter as libAdapter} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin, object} from '../util';
 // @ts-ignore
 import coreMerge = require('Core/core-merge');

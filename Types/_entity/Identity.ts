@@ -15,7 +15,7 @@
  * </pre>
  */
 
-import di from '../di';
+import di from '../_di';
 
 export default class Identity /** @lends Types/Type/Identity.prototype */{
    /**

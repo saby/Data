@@ -8,7 +8,7 @@
  */
 
 import CollectionItem from './CollectionItem';
-import di from '../di';
+import di from '../_di';
 
 export default class GroupItem extends CollectionItem /** @lends Types/Display/GroupItem.prototype */{
    /**

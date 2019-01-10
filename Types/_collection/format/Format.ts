@@ -11,7 +11,7 @@
 import {IEquatable} from '../../entity';
 import {format} from '../../entity';
 import List from '../List';
-import di from  '../../di';
+import di from '../../_di';
 
 export default class Format<T> extends List<T> implements IEquatable /** @lends Types/Format/Format.prototype */{
    _$items: Array<any>;

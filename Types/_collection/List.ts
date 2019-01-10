@@ -60,7 +60,7 @@ import {
    ReadWriteMixin,
    VersionableMixin
 } from '../entity'
-import di from '../di';
+import di from '../_di';
 import {logger, mixin, object} from '../util';
 //@ts-ignore
 import coreExtend = require('Core/core-extend');

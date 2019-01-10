@@ -29,7 +29,7 @@ import Query from './Query';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import req = require('require');

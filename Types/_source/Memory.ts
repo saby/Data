@@ -72,7 +72,7 @@ import Local, {IOptions as ILocalOptions} from './Local';
 import DataSet from './DataSet';
 import Query, {Join} from './Query';
 import {adapter} from '../entity';
-import di from '../di';
+import di from '../_di';
 import {protect, object} from '../util';
 import {Map} from '../shim';
 

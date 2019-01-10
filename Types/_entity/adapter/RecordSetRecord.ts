@@ -26,7 +26,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
 import {Field, UniversalField} from '../format';
-import di from '../../di';
+import di from '../../_di';
 import {mixin} from '../../util';
 // @ts-ignore
 import Record = require('Types/Entity/Record');

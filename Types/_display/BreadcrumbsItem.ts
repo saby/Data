@@ -9,7 +9,7 @@
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import TreeItem from './TreeItem';
-import di from '../di';
+import di from '../_di';
 
 export interface IOptions extends ICollectionItemOptions {
    last: CollectionItem;

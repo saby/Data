@@ -6,7 +6,7 @@
 
 import Format from './Format';
 import {format} from '../../entity';
-import di from  '../../di';
+import di from '../../_di';
 
 /**
  * Конструирует формат полей по декларативному описанию

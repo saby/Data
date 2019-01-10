@@ -14,7 +14,7 @@
 import Abstract from './Abstract';
 import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
 import {IEnumerable} from '../collection';
-import di from '../di';
+import di from '../_di';
 import {mixin} from '../util';
 import Collection from './Collection';
 

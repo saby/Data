@@ -8,7 +8,7 @@
  */
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import di from '../di';
+import di from '../_di';
 
 export interface IOptions extends ICollectionItemOptions {
    node?: boolean;

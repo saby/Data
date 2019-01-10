@@ -9,7 +9,7 @@
 
 import Collection from './Collection';
 import './FlagsItem';
-import di from '../di';
+import di from '../_di';
 
 interface IOptions {
 }

@@ -24,7 +24,6 @@ define([
 ) {
    'use strict';
 
-   Di = Di.default;
    IRpc = IRpc.default;
    DataSet = DataSet.default;
    Model = Model.default;

@@ -138,7 +138,7 @@ import DataMixin from './DataMixin';
 import Query from './Query';
 import {RecordSet} from '../collection';
 import {Record} from '../entity';
-import di from '../di';
+import di from '../_di';
 import {logger, object} from '../util';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
