@@ -18,6 +18,9 @@ define([
          i18n.setEnable(true);
          i18n.setDict(ruRU, 'formatter', 'ru-RU');
          i18n.setDict(enUS, 'formatter', 'en-US');
+         if (typeof window  === undefined) {
+            this.skip();
+         }
       });
       after(function () {
          i18n.setLang('ru-RU');

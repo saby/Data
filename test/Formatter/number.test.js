@@ -12,6 +12,9 @@ define([
       before(function () {
          i18n.setLang('ru-RU');
          i18n.setEnable(true);
+         if (typeof window  === undefined) {
+            this.skip();
+         }
       });
       after(function () {
          i18n.setLang('ru-RU');
