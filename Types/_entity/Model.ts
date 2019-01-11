@@ -300,6 +300,22 @@ export default class Model extends mixin(
       //TODO: don't allow to inject properties through constructor
       this._propertiesInjected = options && 'properties' in options;
 
+      // FIXME: backward compatibility for _options
+      if (this._options) {
+         // for _$properties
+         if (this._options.properties) {
+            let properties = {};
+            Object.assign(properties, this._$properties);
+            Object.assign(properties, this._options.properties);
+            this._$properties = properties;
+         }
+
+         // for _$idProperty
+         if (this._options.idProperty) {
+            this._$idProperty = this._options.idProperty;
+         }
+      }
+
       if (!this._$idProperty) {
          this._$idProperty = this._getAdapter().getKeyField(this._getRawData()) || '';
       }
