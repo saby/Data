@@ -24,7 +24,7 @@
       "moduleType": "amd",
       "tests": "test",
       "links": {
-         "node_modules/sbis3-ws/ws": "WS.Core",
+         "node_modules/sbis3-ws/WS.Core": "WS.Core",
          "node_modules/sbis3-ws/View": "View"
       },
       "initializer": "init-testing.js",
