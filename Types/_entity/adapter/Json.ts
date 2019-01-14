@@ -12,7 +12,7 @@
 import Abstract from './Abstract';
 import JsonTable from './JsonTable';
 import JsonRecord from './JsonRecord';
-import di from '../../di';
+import {register} from '../../di';
 
 export default class Json extends Abstract /** @lends Types/Adapter/Json.prototype */{
    forTable(data) {
@@ -31,6 +31,6 @@ export default class Json extends Abstract /** @lends Types/Adapter/Json.prototy
 Json.prototype['[Types/_entity/adapter/Json]'] = true;
 Json.prototype._moduleName = 'Types/entity:adapter.Json';
 
-di.register('Types/entity:adapter.Json', Json, {instantiate: false});
+register('Types/entity:adapter.Json', Json, {instantiate: false});
 //FIXME: deprecated
-di.register('adapter.json', Json);
+register('adapter.json', Json);

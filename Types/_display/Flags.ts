@@ -9,7 +9,7 @@
 
 import Collection from './Collection';
 import './FlagsItem';
-import di from '../di';
+import {register} from '../di';
 
 interface IOptions {
 }
@@ -62,4 +62,4 @@ Flags.prototype._itemModule = 'Types/display:FlagsItem';
 // @ts-ignore
 Flags.prototype._localize = true;
 
-di.register('Types/display:Flags', Flags);
+register('Types/display:Flags', Flags);

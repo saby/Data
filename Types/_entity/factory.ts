@@ -13,7 +13,7 @@
 
 import IProducible, {IProducibleConstructor} from './IProducible';
 import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
-import di from '../di';
+import {create, resolve, isRegistered} from '../di';
 import toSql, {MODE as toSqlMode} from './date/toSql';
 import fromSql from './date/fromSql';
 
@@ -191,7 +191,7 @@ function convertListToRecordSet(list) {
       }
    }
 
-   let rs = di.create('Types/collection:RecordSet', {
+   let rs = create('Types/collection:RecordSet', {
       adapter: adapter
    });
    for (i = 0; i < count; i++) {
@@ -236,19 +236,19 @@ const factory = {
          Type = Type.toLowerCase();
          switch (Type) {
             case 'recordset':
-               Type = di.resolve(di.isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
+               Type = resolve(isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
                break;
 
             case 'record':
-               Type = di.resolve(di.isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
+               Type = resolve(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
                break;
 
             case 'enum':
-               Type = di.resolve('Types/collection:Enum');
+               Type = resolve('Types/collection:Enum');
                break;
 
             case 'flags':
-               Type = di.resolve('Types/collection:Flags');
+               Type = resolve('Types/collection:Flags');
                break;
 
             case 'link':

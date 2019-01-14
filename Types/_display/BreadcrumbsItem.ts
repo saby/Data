@@ -9,7 +9,7 @@
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import TreeItem from './TreeItem';
-import di from '../di';
+import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
    last: CollectionItem;
@@ -59,4 +59,4 @@ BreadcrumbsItem.prototype['[Types/_display/BreadcrumbsItem]'] = true;
 // @ts-ignore
 BreadcrumbsItem.prototype._$last = null;
 
-di.register('Types/display:BreadcrumbsItem', BreadcrumbsItem);
+register('Types/display:BreadcrumbsItem', BreadcrumbsItem);

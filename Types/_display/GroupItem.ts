@@ -8,7 +8,7 @@
  */
 
 import CollectionItem from './CollectionItem';
-import di from '../di';
+import {register} from '../di';
 
 export default class GroupItem extends CollectionItem /** @lends Types/Display/GroupItem.prototype */{
    /**
@@ -63,4 +63,4 @@ GroupItem.prototype._$expanded = true;
 // Deprecated
 GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
 
-di.register('Types/display:GroupItem', GroupItem);
+register('Types/display:GroupItem', GroupItem);

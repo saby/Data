@@ -10,7 +10,7 @@
 
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
-import di from '../../di';
+import {register} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
 import RpcJson = require('Transport/RPCJSON');
@@ -80,4 +80,4 @@ SbisBusinessLogic.prototype['[Types/_source/provider/SbisBusinessLogic]'] = true
 SbisBusinessLogic.prototype._$transport = RpcJson;
 SbisBusinessLogic.prototype._nameSpaceSeparator = '.';
 
-di.register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});
+register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});

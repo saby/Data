@@ -22,7 +22,6 @@ define([
    Record = Record.default;
    Model = Model.default;
    RecordSet = RecordSet.default;
-   Di = Di.default;
 
    var IAbstractProvider = {
       '[Types/_source/provider/IAbstract]': true
@@ -261,7 +260,7 @@ define([
                   rawData: {a: 1, b: 2, c: 3}
                }),
                sent;
-            
+
             model.set('b', 20);
             dataSource.update(model).addCallbacks(function() {
                checkDone(function() {
@@ -286,7 +285,7 @@ define([
                   rawData: {a: 1, b: 2, c: 3}
                }),
                sent;
-            
+
             dataSource.update(model).addCallbacks(function() {
                checkDone(function() {
                   sent = provider.lastArgs[0];

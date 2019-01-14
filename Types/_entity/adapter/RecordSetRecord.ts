@@ -26,7 +26,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
 import {Field, UniversalField} from '../format';
-import di from '../../di';
+import {create} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
 import Record = require('Types/Entity/Record');
@@ -158,7 +158,7 @@ export default class RecordSetRecord extends mixin(
          let model = this._tableData.getModel();
          let adapter = this._tableData.getAdapter();
 
-         this._data = di.create(model, {
+         this._data = create(model, {
             adapter: adapter
          });
       }
@@ -169,7 +169,7 @@ export default class RecordSetRecord extends mixin(
    }
 
    _getFieldsFormat() {
-      return this._isValidData() ? this._data.getFormat() : di.create('Types/collection:format.Format');
+      return this._isValidData() ? this._data.getFormat() : create('Types/collection:format.Format');
    }
 
    //endregion Protected methods

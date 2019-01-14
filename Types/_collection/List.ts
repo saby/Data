@@ -60,7 +60,7 @@ import {
    ReadWriteMixin,
    VersionableMixin
 } from '../entity'
-import di from '../di';
+import {register} from '../di';
 import {logger, mixin, object} from '../util';
 //@ts-ignore
 import coreExtend = require('Core/core-extend');
@@ -518,4 +518,4 @@ List.prototype['[WS.Data/Collection/IList]'] = true;
 List.prototype['[WS.Data/Collection/IIndexedCollection]'] = true;
 List.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/collection:List', List, {instantiate: false});
+register('Types/collection:List', List, {instantiate: false});

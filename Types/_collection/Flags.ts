@@ -16,7 +16,7 @@
 import IFlags, {IValue} from './IFlags';
 import Dictionary from './Dictionary';
 import {ICloneable, IProducible, ManyToManyMixin, SerializableMixin, CloneableMixin} from '../entity';
-import di from '../di';
+import {register} from '../di';
 import {applyMixins} from '../util';
 
 interface ProduceOptions {
@@ -254,4 +254,4 @@ Flags.prototype['[WS.Data/Type/Flags]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Flags.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/collection:Flags', Flags, {instantiate: false});
+register('Types/collection:Flags', Flags, {instantiate: false});

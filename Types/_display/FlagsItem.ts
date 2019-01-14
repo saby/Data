@@ -8,7 +8,7 @@
  */
 
 import CollectionItem from './CollectionItem';
-import di from '../di';
+import {register} from '../di';
 
 export default class FlagsItem extends CollectionItem /** @lends Types/Display/FlagsItem.prototype */{
    isSelected(): boolean {
@@ -30,4 +30,4 @@ export default class FlagsItem extends CollectionItem /** @lends Types/Display/F
 FlagsItem.prototype._moduleName = 'Types/display:FlagsItem';
 FlagsItem.prototype['[Types/_display/FlagsItem]'] = true;
 
-di.register('Types/display:FlagsItem', FlagsItem);
+register('Types/display:FlagsItem', FlagsItem);

@@ -12,7 +12,7 @@
 import Abstract from './Abstract';
 import RecordSetTable from './RecordSetTable';
 import RecordSetRecord from './RecordSetRecord';
-import di from '../../di';
+import {register} from '../../di';
 import {object} from '../../util';
 
 export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordSet.prototype */{
@@ -54,4 +54,4 @@ export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordS
 RecordSet.prototype['[Types/_entity/adapter/RecordSet]'] = true;
 RecordSet.prototype._moduleName = 'Types/entity:adapter.RecordSet';
 
-di.register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});
+register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});

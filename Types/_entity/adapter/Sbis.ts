@@ -13,7 +13,7 @@ import Abstract from './Abstract';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
-import di from '../../di';
+import {register} from '../../di';
 
 export default class Sbis extends Abstract /** @lends Types/Adapter/Sbis.prototype */{
 
@@ -52,6 +52,6 @@ export default class Sbis extends Abstract /** @lends Types/Adapter/Sbis.prototy
 Sbis.prototype['[Types/_entity/adapter/Sbis]'] = true;
 Sbis.prototype._moduleName = 'Types/entity:adapter.Sbis';
 
-di.register('Types/entity:adapter.Sbis', Sbis, {instantiate: false});
+register('Types/entity:adapter.Sbis', Sbis, {instantiate: false});
 // Deprecated
-di.register('adapter.sbis', Sbis);
+register('adapter.sbis', Sbis);

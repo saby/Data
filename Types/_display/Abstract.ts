@@ -12,7 +12,7 @@
 
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
 import {IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
-import di from '../di';
+import {create} from '../di';
 import {mixin} from '../util';
 
 /**
@@ -75,13 +75,13 @@ export default abstract class Abstract extends mixin(
          let instance;
 
          if (collection && collection['[Types/_collection/IEnum]']) {
-            instance = di.create('Types/display:Enum', options);
+            instance = create('Types/display:Enum', options);
          } else if (collection && collection['[Types/_collection/IFlags]']) {
-            instance = di.create('Types/display:Flags', options);
+            instance = create('Types/display:Flags', options);
          } else if (collection && collection['[Types/_collection/IEnumerable]']) {
-            instance = di.create('Types/display:Collection', options);
+            instance = create('Types/display:Collection', options);
          } else if (collection instanceof Array) {
-            instance = di.create('Types/display:Collection', options);
+            instance = create('Types/display:Collection', options);
          } else {
             throw new TypeError(`Argument "collection" should implement Types/Collection/IEnumerable or be an instance of Array, but "${collection}" given.`);
          }

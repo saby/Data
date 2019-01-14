@@ -11,7 +11,7 @@
 import {IEquatable} from '../../entity';
 import {format} from '../../entity';
 import List from '../List';
-import di from  '../../di';
+import {register} from '../../di';
 
 export default class Format<T> extends List<T> implements IEquatable /** @lends Types/Format/Format.prototype */{
    _$items: Array<any>;
@@ -199,4 +199,4 @@ Format.prototype['[Types/_entity/IEquatable]'] = true;
 // @ts-ignore
 Format.prototype._moduleName = 'Types/collection:format.Format';
 
-di.register('Types/collection:format.Format', Format, {instantiate: false});
+register('Types/collection:format.Format', Format, {instantiate: false});

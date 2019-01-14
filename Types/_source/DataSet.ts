@@ -118,7 +118,7 @@
  */
 
 import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, Model, adapter} from '../entity';
-import di from '../di';
+import {create, register} from '../di';
 import {mixin} from '../util';
 import {RecordSet} from '../collection';
 
@@ -331,7 +331,7 @@ export default class DataSet extends mixin(
     */
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
-         this._$adapter = <adapter.IAdapter>di.create(this._$adapter);
+         this._$adapter = <adapter.IAdapter>create(this._$adapter);
       }
       return this._$adapter;
    }
@@ -835,7 +835,7 @@ export default class DataSet extends mixin(
       if (!this._$model) {
          throw new Error('Model is not defined');
       }
-      return <Model>di.create(this._$model, {
+      return <Model>create(this._$model, {
          writable: this._$writable,
          rawData: rawData,
          adapter: this._$adapter,
@@ -850,7 +850,7 @@ export default class DataSet extends mixin(
     * @protected
     */
    protected _getListInstance(rawData: any): RecordSet<Model> {
-      return <RecordSet<Model>>di.create(this._$listModule, {
+      return <RecordSet<Model>>create(this._$listModule, {
          writable: this._$writable,
          rawData: rawData,
          adapter: this._$adapter,
@@ -891,4 +891,4 @@ DataSet.prototype._$metaProperty = '';
 // @ts-ignore
 DataSet.prototype._$writable = true;
 
-di.register('Types/source:DataSet', DataSet, {instantiate: false});
+register('Types/source:DataSet', DataSet, {instantiate: false});

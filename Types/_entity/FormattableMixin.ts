@@ -8,7 +8,7 @@
 
 import {Field, fieldsFactory} from './format';
 import {Cow as CowAdapter, Json as JsonAdapter} from './adapter';
-import di from '../di';
+import {resolve, create, isRegistered} from '../di';
 import {object, logger} from '../util';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
@@ -52,7 +52,7 @@ function buildFormatFromObject(sliceFormat, rawDataFormat) {
  * @return {Types/Format/Format}
  */
 function buildFormatByRawData() {
-   const Format = di.resolve('Types/collection:format.Format');
+   const Format = resolve('Types/collection:format.Format');
    let format = new Format();
    let adapter = this._getRawDataAdapter();
    let fields = this._getRawDataFields();
@@ -658,7 +658,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
       }
 
       if (this._$adapter && !(this._$adapter instanceof Object)) {
-         this._$adapter = di.create(this._$adapter);
+         this._$adapter = create(this._$adapter);
       }
 
       if (this._$cow && !this._$adapter['[Types/_entity/adapter/IDecorator]']) {
@@ -832,8 +832,8 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
    _getFieldType(format) {
       let Type = format.getType ? format.getType() : format.type;
       if (Type && typeof Type === 'string') {
-         if (di.isRegistered(Type)) {
-            Type = di.resolve(Type);
+         if (isRegistered(Type)) {
+            Type = resolve(Type);
          }
       }
       return Type;
@@ -867,12 +867,12 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
     * @protected
     */
    _buildFormat(format, fullFormatCallback?: Function) {
-      const Format = di.resolve('Types/collection:format.Format');
+      const Format = resolve('Types/collection:format.Format');
 
       if (format) {
          let formatProto = Object.getPrototypeOf(format);
          if (formatProto === Array.prototype) {
-            let factory = di.resolve('Types/collection:format.factory');
+            let factory = resolve('Types/collection:format.factory');
             //All of the fields in Array
             format = factory(format);
          } else if (formatProto === Object.prototype) {

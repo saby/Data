@@ -12,7 +12,7 @@
 import {DestroyableMixin} from '../entity';
 import {IEnumerable} from '../collection';
 import {object} from '../util';
-import di from '../di';
+import {resolve} from '../di';
 import IEnumerator from '../_collection/IEnumerator';
 import Zipped from './Zipped';
 import Mapped from './Mapped';
@@ -365,7 +365,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    map(callback: (item: any, index: number) => any, thisArg?: Object): Mapped<T> {
-      const Next = di.resolve('Types/chain:Mapped');
+      const Next = resolve('Types/chain:Mapped');
       return new Next(
          this,
          callback,
@@ -392,7 +392,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    zip(...args): Zipped<T> {
-      const Next = di.resolve('Types/chain:Zipped');
+      const Next = resolve('Types/chain:Zipped');
       return new Next(
          this,
          args
@@ -517,7 +517,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    concat(...args: Array<Array<T>|IEnumerable<T>>): Concatenated<T> {
-      const Next = di.resolve('Types/chain:Concatenated');
+      const Next = resolve('Types/chain:Concatenated');
       return new Next(this, args);
    }
 
@@ -534,7 +534,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    flatten(): Flattened<T> {
-      const Next = di.resolve('Types/chain:Flattened');
+      const Next = resolve('Types/chain:Flattened');
       return new Next(this);
    }
 
@@ -566,7 +566,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    group(key: string|((item: any) => string), value: string|((item: any) => any)): Grouped<T> {
-      const Next = di.resolve('Types/chain:Grouped');
+      const Next = resolve('Types/chain:Grouped');
       return new Next(
          this,
          key,
@@ -612,7 +612,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
          return this.reduce(memo => memo + 1, 0);
       }
 
-      const Next = di.resolve('Types/chain:Counted');
+      const Next = resolve('Types/chain:Counted');
       return new Next(this, by);
    }
 
@@ -673,7 +673,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    uniq(idExtractor?: (item: any) => string|number): Uniquely<T> {
-      const Next = di.resolve('Types/chain:Uniquely');
+      const Next = resolve('Types/chain:Uniquely');
       return new Next(this, idExtractor);
    }
 
@@ -715,7 +715,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    filter(callback: (item: any, index: number) => boolean, thisArg?: Object): Filtered<T> {
-      const Next = di.resolve('Types/chain:Filtered');
+      const Next = resolve('Types/chain:Filtered');
       return new Next(
          this,
          callback,
@@ -805,7 +805,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
          return enumerator.moveNext() ? <T>enumerator.getCurrent() : undefined;
       }
 
-      const Next = di.resolve('Types/chain:Sliced');
+      const Next = resolve('Types/chain:Sliced');
       return new Next(this, 0, n);
    }
 
@@ -851,7 +851,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    reverse(): Reversed<T> {
-      const Next = di.resolve('Types/chain:Reversed');
+      const Next = resolve('Types/chain:Reversed');
       return new Next(this);
    }
 
@@ -872,7 +872,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * </pre>
     */
    sort(compareFunction: CompareFunction): Sorted<T> {
-      const Next = di.resolve('Types/chain:Sorted');
+      const Next = resolve('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }
 
