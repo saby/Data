@@ -1486,7 +1486,7 @@ export default class Record extends mixin(
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      logger.error('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
    }
 
