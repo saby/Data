@@ -1478,19 +1478,20 @@ export default class Record extends mixin(
       });
    }
 
+   //endregion
+
+   //region Deprecated
+
    /**
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
       logger.error('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
-   };
+   }
+
    //endregion
-
-
 }
-
-
 
 Record.prototype['[Types/_entity/Record]'] = true;
 // @ts-ignore
