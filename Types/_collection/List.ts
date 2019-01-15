@@ -481,7 +481,7 @@ export default class List<T> extends mixin(
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      logger.error('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
    };
 }
