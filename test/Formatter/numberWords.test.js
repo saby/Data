@@ -90,7 +90,7 @@ define([
             it('should format 2123 to words', function() {
                var expect = {
                   'en-US': 'two thousand, one hundred and twenty-three',
-                  'ru-RU': 'две тысячи сто двадцать три'
+                  'ru-RU': 'две тысяча сто двадцать три'
                };
                assert.equal(expect[locale], formatter.numberWords(2123));
             });
@@ -98,7 +98,7 @@ define([
             it('should format 23015000 to words', function() {
                var expect = {
                   'en-US': 'twenty-three million, fifteen thousand',
-                  'ru-RU': 'двадцать три миллиона пятнадцать тысяч'
+                  'ru-RU': 'двадцать три миллион пятнадцать тысяча'
                };
                assert.equal(expect[locale], formatter.numberWords(23015000));
             });
