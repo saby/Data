@@ -55,3 +55,5 @@ RecordSet.prototype['[Types/_entity/adapter/RecordSet]'] = true;
 RecordSet.prototype._moduleName = 'Types/entity:adapter.RecordSet';
 
 register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});
+//FIXME: deprecated
+register('adapter.recordset', RecordSet, {instantiate: false});
