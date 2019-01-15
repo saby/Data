@@ -8,20 +8,37 @@ define([
 ) {
    'use strict';
 
-   describe('Types/formatter.number', function() {
-      before(function () {
-         i18n.setLang('ru-RU');
-         i18n.setEnable(true);
-      });
-      after(function () {
-         i18n.setLang('ru-RU');
-      });
-      it('should format 1234.5 in ru locale', function() {
-         assert.equal('1 234,5', formatter.number(1234.5));
-      });
-      it('should format 1234.5 in en locale', function() {
-         i18n.setLang('en-US');
-         assert.equal('1,234.5', formatter.number(1234.5));
+   describe('Types/formatter:number', function() {
+      var locales = ['en-US', 'ru-RU'];
+
+      locales.forEach(function(locale) {
+         describe('if locale "' + locale + '" is enabled', function() {
+            var stub;
+
+            beforeEach(function() {
+               var opts = new Intl.NumberFormat(locale).resolvedOptions();
+               if (opts.locale === locale) {
+                  stub = sinon.stub(i18n, 'getLang');
+                  stub.returns(locale);
+               } else {
+                  this.skip();
+               }
+            });
+
+            afterEach(function() {
+               stub.restore();
+               stub = undefined;
+            });
+
+            it('should format Number', function() {
+               var given = 1234.5;
+               var expect = {
+                  'en-US': '1,234.5',
+                  'ru-RU': '1 234,5'
+               };
+               assert.equal(expect[locale], formatter.number(given));
+            });
+         });
       });
    });
 });
