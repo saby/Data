@@ -900,6 +900,17 @@ export default class Model extends mixin(
    }
 
    //endregion
+
+   //region Deprecated
+
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList:any, classExtender:any) {
+      return Record.extend(mixinsList, classExtender);
+   }
+
+   //endregion
 }
 
 Model.prototype['[Types/_entity/Model]'] = true;
