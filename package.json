@@ -25,6 +25,7 @@
       "tests": "test",
       "links": {
          "node_modules/sbis3-ws/WS.Core": "WS.Core",
+         "node_modules/sbis3-ws/Inferno": "Inferno",
          "node_modules/sbis3-ws/View": "View"
       },
       "initializer": "init-testing.js",

@@ -15,16 +15,16 @@ define([
    describe('Types/formatter:numberWords', function() {
       var locales = ['en-US', 'ru-RU'];
 
-      before(function () {
+      before(function() {
          i18n.setDict(ruRU, 'formatter', 'ru-RU');
          i18n.setDict(enUS, 'formatter', 'en-US');
       });
 
-      locales.forEach(function (locale) {
+      locales.forEach(function(locale) {
          describe('if locale "' + locale + '" is enabled', function() {
             var stub;
 
-            beforeEach(function () {
+            beforeEach(function() {
                var opts = new Intl.NumberFormat(locale).resolvedOptions();
                if (opts.locale === locale) {
                   stub = sinon.stub(i18n, 'getLang');
@@ -34,7 +34,7 @@ define([
                }
             });
 
-            afterEach(function () {
+            afterEach(function() {
                stub.restore();
                stub = undefined;
             });
