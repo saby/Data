@@ -907,7 +907,7 @@ export default class Model extends mixin(
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      return Record.extend(mixinsList, classExtender);
+      return Record.extend.call(Model, mixinsList, classExtender);
    }
 
    //endregion
