@@ -116,6 +116,8 @@ import {enumerator, EnumeratorCallback} from '../collection';
 import {resolve, register} from '../di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
+//@ts-ignore
+import coreExtend = require('Core/core-extend');
 
 /**
  * Separator for path in object
@@ -907,7 +909,7 @@ export default class Model extends mixin(
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      return Record.extend.call(Model, mixinsList, classExtender);
+      return coreExtend(this, mixinsList, classExtender);
    }
 
    //endregion
