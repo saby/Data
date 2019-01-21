@@ -8,7 +8,7 @@
 
 import {IAbstract} from './provider';
 
-interface IEndpoint {
+export interface IEndpoint {
    contract: string,
    address?: string
 }
