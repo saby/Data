@@ -59,7 +59,7 @@ export default abstract class Field extends mixin(
    _$nullable: boolean;
 
    /**
-    * @member {String} Название типа поля
+    * Название типа поля
     */
    _typeName: string;
 
@@ -67,6 +67,14 @@ export default abstract class Field extends mixin(
       super(options);
       OptionsToPropertyMixin.call(this, options);
    }
+
+   //region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
+   clone: (shallow?: boolean) => Field;
+
+   //endregion
 
    //region Types/Entity/IEquatable
 
