@@ -150,9 +150,9 @@ export default abstract class Local extends mixin(
    protected _index: GenericObject<Number>;
 
    /**
-    * Данные, с которыми работает источник
+    * Data which source work with
     */
-   protected get _data(): any {
+   get data(): any {
       return this._getTableAdapter().getData();
    }
 
@@ -410,7 +410,7 @@ export default abstract class Local extends mixin(
    protected _reIndex() {
       this._index = {};
       let adapter = this.getAdapter();
-      this._each(this._data, (item, index) => {
+      this._each(this.data, (item, index) => {
          let key = adapter.forRecord(item).get(this._$idProperty);
          this._index[key] = index;
       });

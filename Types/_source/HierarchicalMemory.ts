@@ -61,28 +61,34 @@ export default class HierarchicalMemory extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
+    * @cfg {Object} See {@link Types/Source/Memory#data}.
+    * @name Types/_source/HierarchicalMemory#data
+    */
+
+   /**
     * @cfg {String|Types/Adapter/IAdapter} See {@link Types/Source/Memory#adapter}.
     * @name Types/_source/HierarchicalMemory#adapter
     */
-   protected _$adapter: string | Function;
 
    /**
     * @cfg {String|Function} See {@link Types/Source/Memory#model}.
     * @name Types/_source/HierarchicalMemory#model
     */
-   protected _$model: string | Function;
 
    /**
     * @cfg {String|Function} See {@link Types/Source/Memory#listModule}.
     * @name Types/_source/HierarchicalMemory#listModule
     */
-   protected _$listModule: string | Function;
+
+   /**
+    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} See {@link Types/Source/Memory#filter}.
+    * @name Types/_source/HierarchicalMemory#filter
+    */
 
    /**
     * @cfg {String} See {@link Types/Source/Memory#idProperty}.
     * @name Types/_source/HierarchicalMemory#idProperty
     */
-   protected _$idProperty: string;
 
    /**
     * @cfg {String} Record's property name that contains identity of the node another node or leaf belongs to.
@@ -90,19 +96,11 @@ export default class HierarchicalMemory extends mixin(
     */
    protected _$parentProperty: string;
 
-   /**
-    * @cfg {Object} See {@link Types/Source/Memory#data}.
-    * @name Types/_source/HierarchicalMemory#data
-    */
-   protected _$data: any;
-
-   /**
-    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} See {@link Types/Source/Memory#filter}.
-    * @name Types/_source/HierarchicalMemory#filter
-    */
-   protected _$filter: (item: adapter.IRecord, query: Object) => boolean;
-
    protected _source: Memory;
+
+   protected get _idProperty(): string {
+      return this._source.getIdProperty();
+   }
 
    constructor(options?: IOptions) {
       super();
@@ -138,19 +136,19 @@ export default class HierarchicalMemory extends mixin(
          this._source.query(query).addCallbacks((response) => {
             if (this._$parentProperty) {
                let hierarchy = new relation.Hierarchy({
-                  idProperty: this._$idProperty,
+                  idProperty: this._idProperty,
                   parentProperty: this._$parentProperty
                });
 
                let sourceRecords = new collection.RecordSet({
-                  rawData: this._$data,
+                  rawData: this._source.data,
                   adapter: this._source.getAdapter(),
-                  idProperty: this._$idProperty,
+                  idProperty: this._idProperty,
                });
 
                let breadcrumbs = new collection.RecordSet({
                   adapter: this._source.getAdapter(),
-                  idProperty: this._$idProperty,
+                  idProperty: this._idProperty,
                });
 
                // Extract breadcrumbs as path from filtered node to the root
@@ -161,7 +159,7 @@ export default class HierarchicalMemory extends mixin(
                   let node;
                   while(startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
                      breadcrumbs.add(node, 0);
-                     startFromNode = node.get(this._$idProperty);
+                     startFromNode = node.get(this._idProperty);
                   }
                }
 
@@ -229,18 +227,6 @@ export default class HierarchicalMemory extends mixin(
 HierarchicalMemory.prototype._moduleName = 'Types/source:HierarchicalMemory';
 HierarchicalMemory.prototype['[Types/_source/HierarchicalMemory]'] = true;
 // @ts-ignore
-HierarchicalMemory.prototype._$adapter = null;
-// @ts-ignore
-HierarchicalMemory.prototype._$model = null;
-// @ts-ignore
-HierarchicalMemory.prototype._$listModule = null;
-// @ts-ignore
-HierarchicalMemory.prototype._$idProperty = null;
-// @ts-ignore
 HierarchicalMemory.prototype._$parentProperty = null;
-// @ts-ignore
-HierarchicalMemory.prototype._$data = null;
-// @ts-ignore
-HierarchicalMemory.prototype._$filter = null;
 //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
 HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;
