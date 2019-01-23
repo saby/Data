@@ -6,7 +6,7 @@ define([
 ) {
    'use strict';
 
-   describe('Types/Utils', function() {
+   describe('Types/_util', function() {
       describe('.getItemPropertyValue()', function() {
          it('should return undefined for not an Object', function() {
             var foo = 'bar';

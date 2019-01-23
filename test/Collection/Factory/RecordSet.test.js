@@ -12,7 +12,7 @@ define([
 
    var recordSetFactory = recordSetFactoryEs.default;
 
-   describe('Types/Collection/Factory/RecordSet', function() {
+   describe('Types/_collection/Factory/RecordSet', function() {
       var List = collection.List;
       var Record = type.Record;
       var items;

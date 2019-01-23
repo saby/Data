@@ -36,7 +36,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
       super.destroy();
    }
 
-   // region Types/Collection/IEnumerable
+   // region Types/_collection/IEnumerable
 
    getEnumerator(): enumerator.Mapwise<T> {
       const toKey = Abstract.propertyMapper(this._key);
@@ -52,7 +52,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
       );
    }
 
-   // endregion Types/Collection/IEnumerable
+   // endregion Types/_collection/IEnumerable
 }
 
 Counted.prototype['[Types/_chain/Counted]'] = true;

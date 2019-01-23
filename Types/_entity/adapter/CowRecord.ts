@@ -2,7 +2,7 @@
 /**
  * Адаптер записи таблицы для работы в режиме Copy-on-write.
  * @class Types/_entity/adapter/CowRecord
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IRecord
  * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.

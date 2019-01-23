@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/IProducible" />
 /**
  * Интерфейс получения экземпляра класса через фабричный метод
- * @interface Types/Entity/IProducible
+ * @interface Types/_entity/IProducible
  * @author Мальцев А.А.
  */
 
@@ -11,7 +11,7 @@ export default interface IProducible extends Object {
 
 export interface IProducibleConstructor extends Function {
    /**
-    * @name Types/Entity/IProducible#produceInstance
+    * @name Types/_entity/IProducible#produceInstance
     * @function
     * Создает экземпляр класса.
     * @param {*} [data] Исходные данные.

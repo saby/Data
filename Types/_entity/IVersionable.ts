@@ -2,12 +2,12 @@
 /**
  * Интерфейс изменения версий объекта.
  * Позволяет быстро проверить изменилось ли что либо в объекте.
- * @interface Types/Entity/IVersionable
+ * @interface Types/_entity/IVersionable
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IVersionable /** @lends Types/Entity/IVersionable.prototype */{
+export default interface IVersionable /** @lends Types/_entity/IVersionable.prototype */{
    readonly '[Types/_entity/IVersionable]': boolean;
 
    /**

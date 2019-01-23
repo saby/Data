@@ -8,7 +8,7 @@ define([
 
    Root = Root.default;
 
-   describe('Types/Display/ItemsStrategy/Root', function() {
+   describe('Types/_display/ItemsStrategy/Root', function() {
       var getSource = function(items) {
             return {
                options: {foo: 'bar'},

@@ -122,7 +122,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
     *       });
     *    });
     * </pre>
-    * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/Collection/RecordSet рекордсета}:
+    * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/_collection/RecordSet рекордсета}:
     * <pre>
     *    require([
     *       'Types/Source/Memory',
@@ -222,7 +222,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
 
    /**
     * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
-    * @param {Types/Query/Query} [query] Запрос
+    * @param {Types/_source/Query} [query] Запрос
     * @return {*}
     * @protected
     */

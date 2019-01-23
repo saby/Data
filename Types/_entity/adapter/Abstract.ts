@@ -3,9 +3,9 @@
  * Абстрактный адаптер для данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_entity/adapter/Abstract
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IAdapter
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */

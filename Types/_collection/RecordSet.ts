@@ -2,12 +2,12 @@
 /**
  * Рекордсет - список записей, имеющих общий формат полей.
  *
- * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/Collection/ObservableList}):
+ * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/_collection/ObservableList}):
  * <ul>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin}.</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
  * </ul>
- * Элементами рекордсета могут быть только {@link Types/Entity/Record записи}, причем формат полей всех записей должен совпадать.
+ * Элементами рекордсета могут быть только {@link Types/_entity/Record записи}, причем формат полей всех записей должен совпадать.
  *
  * Создадим рекордсет, в котором в качестве сырых данных используется JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
@@ -43,13 +43,13 @@
  *       });
  *    });
  * </pre>
- * @class Types/Collection/RecordSet
- * @extends Types/Collection/ObservableList
- * @implements Types/Entity/IObjectNotify
- * @implements Types/Entity/IInstantiable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/FormattableMixin
- * @mixes Types/Entity/InstantiableMixin
+ * @class Types/_collection/RecordSet
+ * @extends Types/_collection/ObservableList
+ * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/IInstantiable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/FormattableMixin
+ * @mixes Types/_entity/InstantiableMixin
  * @ignoreOptions items
  * @author Мальцев А.А.
  * @public
@@ -84,7 +84,7 @@ let developerMode = false;
 function checkNullId(value, idProperty) {
    if (developerMode && idProperty) {
       if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
-         logger.info('Types/Collection/RecordSet: Id propery must not be null');
+         logger.info('Types/_collection/RecordSet: Id propery must not be null');
       } else if (value instanceof RecordSet) {
          value.each((item) => {
             checkNullId(item, idProperty);
@@ -97,7 +97,7 @@ export default class RecordSet<Record> extends mixin(
    ObservableList,
    FormattableMixin,
    InstantiableMixin,
-) implements IObservableObject, IInstantiable, IProducible /** @lends Types/Collection/RecordSet.prototype */{
+) implements IObservableObject, IInstantiable, IProducible /** @lends Types/_collection/RecordSet.prototype */{
 
    /**
     * @typedef {Object} MergeOptions
@@ -108,11 +108,11 @@ export default class RecordSet<Record> extends mixin(
     */
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых рекордсетом. По умолчанию {@link Types/Entity/Model}.
-    * @name Types/Collection/RecordSet#model
+    * @cfg {String|Function} Конструктор записей, порождаемых рекордсетом. По умолчанию {@link Types/_entity/Model}.
+    * @name Types/_collection/RecordSet#model
     * @see getModel
-    * @see Types/Entity/Record
-    * @see Types/Entity/Model
+    * @see Types/_entity/Record
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Внедрим конструктор пользовательской модели в виде названия зарегистрированной зависимости:
@@ -183,7 +183,7 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/Collection/RecordSet#idProperty
+    * @name Types/_collection/RecordSet#idProperty
     * @see getIdProperty
     * @example
     * Создадим рекордсет, получим запись по первичному ключу:
@@ -212,17 +212,17 @@ export default class RecordSet<Record> extends mixin(
     * Она используется механизмами списков для построения строки итогов, "хлебных крошек" и постраничной навигации.
     * Существуют три служебных поля в метаданных:
     * <ul>
-    * <li>path - путь для "хлебных крошек", возвращается как {@link Types/Collection/RecordSet};</li>
-    * <li>results - строка итогов, возвращается как {@link Types/Entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+    * <li>path - путь для "хлебных крошек", возвращается как {@link Types/_collection/RecordSet};</li>
+    * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
     * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
     * </ul>
-    * @name Types/Collection/RecordSet#metaData
+    * @name Types/_collection/RecordSet#metaData
     * @see getMetaData
     * @see setMetaData
     * @example
     * Создадим рекордсет c "хлебными крошками":
     * <pre>
-    *    require(['Types/Collection/RecordSet'], function (RecordSet) {
+    *    require(['Types/_collection/RecordSet'], function (RecordSet) {
     *       var rs = new RecordSet({
     *          metaData: {
     *             crumbs: [{
@@ -243,8 +243,8 @@ export default class RecordSet<Record> extends mixin(
    protected _$metaData: any;
 
    /**
-    * @cfg {Types/Format/Format|Array.<Types/Format/FieldsFactory/FieldDeclaration.typedef>} Формат всех полей метаданных.
-    * @name Types/Collection/RecordSet#metaFormat
+    * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} Формат всех полей метаданных.
+    * @name Types/_collection/RecordSet#metaFormat
     * @example
     * Создадим рекордсет с метаданным, поле created которых имеет тип Date
     * <pre>
@@ -278,7 +278,7 @@ export default class RecordSet<Record> extends mixin(
    constructor(options?) {
       if (options) {
          if ('items' in options) {
-            logger.stack('Types/Collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
+            logger.stack('Types/_collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
          }
       }
 
@@ -413,13 +413,13 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Возвращает энумератор для перебора записей рекордсета.
-    * Пример использования можно посмотреть в модуле {@link Types/Collection/IEnumerable}.
-    * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
-    * @return {Types/Collection/ArrayEnumerator.<Types/Entity/Record>}
+    * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
+    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+    * @return {Types/_collection/ArrayEnumerator.<Types/_entity/Record>}
     * @example
     * Получим сначала все, а затем - измененные записи:
     * <pre>
-    *    require(['Types/Entity/Record'], function(Record) {
+    *    require(['Types/_entity/Record'], function(Record) {
     *       var fruits = new RecordSet({
     *             rawData: [
     *                {name: 'Apple'},
@@ -464,8 +464,8 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Перебирает записи рекордсета.
-    * @param {Function(Types/Entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
-    * @param {Types/Entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+    * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
+    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
     * @param {Object} [context] Контекст вызова callback
     * @example
     * Получим сначала все, а затем - измененные записи:
@@ -547,10 +547,10 @@ export default class RecordSet<Record> extends mixin(
     * Добавляет запись в рекордсет путем создания новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
     * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
     * При недопустимом at генерируется исключение.
-    * @param {Types/Entity/Record} item Запись, из которой будут извлечены сырые данные.
+    * @param {Types/_entity/Record} item Запись, из которой будут извлечены сырые данные.
     * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
-    * @return {Types/Entity/Record} Добавленная запись.
-    * @see Types/Collection/ObservableList#add
+    * @return {Types/_entity/Record} Добавленная запись.
+    * @see Types/_collection/ObservableList#add
     * @example
     * Добавим запись в рекордсет:
     * <pre>
@@ -605,10 +605,10 @@ export default class RecordSet<Record> extends mixin(
     * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
     * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
     * При недопустимом at генерируется исключение.
-    * @param {Types/Entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
+    * @param {Types/_entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
     * @param {Number} at Позиция, в которой будет произведена замена
-    * @return {Array.<Types/Entity/Record>} Добавленная запись
-    * @see Types/Collection/ObservableList#replace
+    * @return {Array.<Types/_entity/Record>} Добавленная запись
+    * @see Types/_collection/ObservableList#replace
     * @example
     * Заменим вторую запись:
     * <pre>
@@ -662,9 +662,9 @@ export default class RecordSet<Record> extends mixin(
    /**
     * Заменяет записи рекордсета копиями записей другой коллекции.
     * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для замены
-    * @return {Array.<Types/Entity/Record>} Добавленные записи
-    * @see Types/Collection/ObservableList#assign
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для замены
+    * @return {Array.<Types/_entity/Record>} Добавленные записи
+    * @see Types/_collection/ObservableList#assign
     */
    assign(items) {
       if (items === this) {
@@ -705,9 +705,9 @@ export default class RecordSet<Record> extends mixin(
    /**
     * Добавляет копии записей другой коллекции в конец рекордсета.
     * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-    * @return {Array.<Types/Entity/Record>} Добавленные записи
-    * @see Types/Collection/ObservableList#append
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+    * @return {Array.<Types/_entity/Record>} Добавленные записи
+    * @see Types/_collection/ObservableList#append
     */
    append(items) {
       items = this._itemsToArray(items);
@@ -721,9 +721,9 @@ export default class RecordSet<Record> extends mixin(
    /**
     * Добавляет копии записей другой коллекции в начало рекордсета.
     * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/Collection/IEnumerable.<Types/Entity/Record>|Array.<Types/Entity/Record>} [items] Коллекция с записями для добавления
-    * @return {Array.<Types/Entity/Record>} Добавленные записи
-    * @see Types/Collection/ObservableList#prepend
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+    * @return {Array.<Types/_entity/Record>} Добавленные записи
+    * @see Types/_collection/ObservableList#prepend
     */
    prepend(items) {
       items = this._itemsToArray(items);
@@ -736,7 +736,7 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Возвращает индексатор коллекции
-    * @return {Types/Collection/Indexer}
+    * @return {Types/_collection/Indexer}
     * @protected
     */
    _getIndexer() {
@@ -898,7 +898,7 @@ export default class RecordSet<Record> extends mixin(
     * Возвращает конструктор записей, порождаемых рекордсетом.
     * @return {String|Function}
     * @see model
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Получим конструктор записепй, внедренный в рекордсет в виде названия зарегистрированной зависимости:
@@ -1088,7 +1088,7 @@ export default class RecordSet<Record> extends mixin(
     * Возвращает запись по ключу.
     * Если записи с таким ключом нет - возвращает undefined.
     * @param {String|Number} id Значение первичного ключа.
-    * @return {Types/Entity/Record}
+    * @return {Types/_entity/Record}
     * @example
     * Создадим рекордсет, получим запись по первичному ключу:
     * <pre>
@@ -1192,8 +1192,8 @@ export default class RecordSet<Record> extends mixin(
     * Устанавливает метаданные RecordSet'а.
     * Подробнее о метаданных смотрите в описании опции {@link metaData}.
     * <ul>
-    * <li>path - путь для хлебных крошек, возвращается как {@link Types/Collection/RecordSet};</li>
-    * <li>results - строка итогов, возвращается как {@link Types/Entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+    * <li>path - путь для хлебных крошек, возвращается как {@link Types/_collection/RecordSet};</li>
+    * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
     * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
     * </ul>
     * @param {Object} meta Метаданные.
@@ -1225,7 +1225,7 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Объединяет два рекордсета.
-    * @param {Types/Collection/RecordSet} recordSet Рекордсет, с которым объединить
+    * @param {Types/_collection/RecordSet} recordSet Рекордсет, с которым объединить
     * @param {MergeOptions} options Опции операций
     * @see assign
     * @see append
@@ -1330,7 +1330,7 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Вставляет сырые данные записей в сырые данные рекордсета
-    * @param {Types/Collection/IEnumerable|Array} items Коллекция записей
+    * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
     * @param {Number} [at] Позиция вставки
     * @return {Array}
     * @protected
@@ -1353,9 +1353,9 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Нормализует записи при добавлении в рекордсет: клонирует и приводит к формату рекордсета
-    * @param {Array.<Types/Entity/Record>} items Записи
+    * @param {Array.<Types/_entity/Record>} items Записи
     * @param {RecordState} [state] С каким состояним создать
-    * @return {Array.<Types/Entity/Record>}
+    * @return {Array.<Types/_entity/Record>}
     * @protected
     */
    _normalizeItems(items, state) {
@@ -1389,9 +1389,9 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Возращает копию записи с сырыми данными, приведенными к нужному формату
-    * @param {Array.<Types/Entity/Record>} item Запись
-    * @param {Types/Format/Format} format Формат, к которому следует привести данные
-    * @return {Array.<Types/Entity/Record>}
+    * @param {Array.<Types/_entity/Record>} item Запись
+    * @param {Types/_entity/format/Format} format Формат, к которому следует привести данные
+    * @return {Array.<Types/_entity/Record>}
     * @protected
     */
    _normalizeItemData(item, format) {
@@ -1435,7 +1435,7 @@ export default class RecordSet<Record> extends mixin(
    /**
     * Создает новый экземпляр модели
     * @param {*} data Данные модели
-    * @return {Types/Entity/Record}
+    * @return {Types/_entity/Record}
     * @protected
     */
    _buildRecord(data) {
@@ -1454,7 +1454,7 @@ export default class RecordSet<Record> extends mixin(
    /**
     * Возвращает запись по индексу
     * @param {Number} at Индекс
-    * @return {Types/Entity/Record}
+    * @return {Types/_entity/Record}
     * @protected
     */
    _getRecord(at) {
@@ -1492,9 +1492,9 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-    * @param {Types/Collection/RecordSet} items Исходный рекордсет
+    * @param {Types/_collection/RecordSet} items Исходный рекордсет
     * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-    * @return {Types/Entity/Record} Патч
+    * @return {Types/_entity/Record} Патч
     */
    static patch(items: RecordSet<any>, names?: string[]) {
       names = names || ['changed', 'added', 'removed'];

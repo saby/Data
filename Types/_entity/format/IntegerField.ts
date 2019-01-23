@@ -9,15 +9,15 @@
  *       type: 'integer'
  *    };
  * </pre>
- * @class Types/Format/IntegerField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/IntegerField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class IntegerField extends Field /** @lends Types/Format/IntegerField.prototype */{
+export default class IntegerField extends Field /** @lends Types/_entity/format/IntegerField.prototype */{
    _$defaultValue: number;
 }
 

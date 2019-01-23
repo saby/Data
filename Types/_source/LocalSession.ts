@@ -5,11 +5,11 @@
  * Во всех вкладках будут одни и те же данные.
  *
  * @class Types/_source/LocalSession
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @implements Types/_source/IData
- * @mixes Types/Entity/OptionsMixin
+ * @mixes Types/_entity/OptionsMixin
  * @author Санников Кирилл
  * @public
  * @example
@@ -590,10 +590,10 @@ export default class LocalSession extends mixin(
    protected _$adapter: string | libAdapter.IAdapter;
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
     * @name Types/_source/LocalSession#listModule
     * @see getListModule
-    * @see Types/Collection/RecordSet
+    * @see Types/_collection/RecordSet
     * @see Types/Di
     * @example
     * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
@@ -611,10 +611,10 @@ export default class LocalSession extends mixin(
    protected _$listModule: string | Function;
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
+    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
     * @name Types/_source/LocalSession#model
     * @see getModel
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
@@ -683,9 +683,9 @@ export default class LocalSession extends mixin(
 
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-    * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model}.
-    * @see Types/Entity/Model
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
+    * @see Types/_entity/Model
     * @example
     * Создадим новый объект:
     * <pre>
@@ -708,7 +708,7 @@ export default class LocalSession extends mixin(
     * Читает модель из источника данных
     * @param {String|Number} key Первичный ключ модели
     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * Прочитаем данные о Солнце:
     * <pre>
     *    solarSystem.read(1).addCallback(function(star) {
@@ -727,7 +727,7 @@ export default class LocalSession extends mixin(
    /**
     *
     * Обновляет модель в источнике данных
-    * @param {Types/Entity/Model|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+    * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
     * @return {Core/Deferred} Асинхронный результат выполнения
     * @example
     * Вернем Плутону статус планеты:
@@ -805,9 +805,9 @@ export default class LocalSession extends mixin(
 
    /**
     * Выполняет запрос на выборку
-    * @param {Types/Query/Query} [query] Запрос
+    * @param {Types/_source/Query} [query] Запрос
     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
-    * @see Types/Query/Query
+    * @see Types/_source/Query
     * @see Types/_source/DataSet
     * @example
     * <pre>
@@ -875,7 +875,7 @@ export default class LocalSession extends mixin(
    /**
     * Создает копию модели
     * @param {String} key Первичный ключ модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model копия модели}.
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
     * @example
     * <pre>
     *   solarSystem.copy('5').addCallbacks(function (copy) {

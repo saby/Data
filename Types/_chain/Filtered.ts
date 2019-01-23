@@ -43,7 +43,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Fil
       super.destroy();
    }
 
-   // region Types/Collection/IEnumerable
+   // region Types/_collection/IEnumerable
 
    getEnumerator(): FilteredEnumerator<T> {
       return new FilteredEnumerator(
@@ -53,7 +53,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Fil
       );
    }
 
-   // endregion Types/Collection/IEnumerable
+   // endregion Types/_collection/IEnumerable
 
    // region Types/_chain/DestroyableMixin
 

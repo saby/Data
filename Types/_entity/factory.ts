@@ -31,7 +31,7 @@ const SQL_TIME_ZONE: RegExp = /[+-][0-9]+$/;
 
 /**
  * Возвращает словарь для поля типа "Словарь"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Array}
  */
 function getDictionary(format: DictionaryField | UniversalField): Array<any> {
@@ -96,7 +96,7 @@ function toScalar(value: Array<any>): any {
 
 /**
  * Возвращает название типа поля
- * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
  * @return {String}
  */
 function getTypeName(format: Field | UniversalField): string {
@@ -111,7 +111,7 @@ function getTypeName(format: Field | UniversalField): string {
 
 /**
  * Возвращает признак указания временной зоны для поля типа "Дата и время"
- * @param {Types/Format/DateTimeField|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/DateTimeField|Types/_entity/format/UniversalField} format Формат поля
  * @return {Number}
  */
 function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
@@ -123,7 +123,7 @@ function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
 
 /**
  * Возвращает признак "Большие деньги"
- * @param {Types/Format/MoneyField|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/MoneyField|Types/_entity/format/UniversalField} format Формат поля
  * @return {Boolean}
  */
 function isLargeMoney(format: MoneyField | UniversalField): boolean {
@@ -135,7 +135,7 @@ function isLargeMoney(format: MoneyField | UniversalField): boolean {
 
 /**
  * Возвращает точность для поля типа "Вещественное число"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Number}
  */
 function getPrecision(format: RealField): number {
@@ -147,7 +147,7 @@ function getPrecision(format: RealField): number {
 
 /**
  * Возвращает тип элементов для поля типа "Массив"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {String}
  */
 function getKind(format: ArrayField): string {
@@ -156,7 +156,7 @@ function getKind(format: ArrayField): string {
 
 /**
  * Сериализует поле флагов
- * @param {Types/Type/Flags} data
+ * @param {Types/_collectionFlags} data
  * @return {Array.<Boolean>}
  */
 function serializeFlags(data: any): Array<boolean> {
@@ -169,8 +169,8 @@ function serializeFlags(data: any): Array<boolean> {
 
 /**
  * Конвертирует список записей в рекордсет
- * @param {Types/Collection/List} list Список
- * @return {Types/Collection/RecordSet}
+ * @param {Types/_collection/List} list Список
+ * @return {Types/_collection/RecordSet}
  */
 function convertListToRecordSet(list) {
    let adapter = 'Types/entity:adapter.Json',
@@ -181,7 +181,7 @@ function convertListToRecordSet(list) {
    for (i = 0; i < count; i++) {
       record = list.at(i);
 
-      //Check for Types/Entity/Record
+      //Check for Types/_entity/Record
       if (record && record['[Types/_entity/IObject]'] && record['[Types/_entity/FormattableMixin]']) {
          adapter = record.getAdapter();
          break;

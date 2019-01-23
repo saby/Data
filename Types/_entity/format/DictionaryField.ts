@@ -1,25 +1,25 @@
 /// <amd-module name="Types/_entity/format/DictionaryField" />
 /**
  * Формат поля со словарём (абстрактный класс)
- * @class Types/Format/DictionaryField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/DictionaryField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class DictionaryField extends Field /** @lends Types/Format/DictionaryField.prototype */{
+export default class DictionaryField extends Field /** @lends Types/_entity/format/DictionaryField.prototype */{
       /**
        * @cfg {Array.<String>} Словарь возможных значений
-       * @name Types/Format/DictionaryField#dictionary
+       * @name Types/_entity/format/DictionaryField#dictionary
        * @see getDictionary
        */
       _$dictionary: Array<string>;
 
       /**
        * @cfg {Array.<String>} Локализованный словарь возможных значений
-       * @name Types/Format/DictionaryField#localeDictionary
+       * @name Types/_entity/format/DictionaryField#localeDictionary
        * @see getDictionary
        */
       _$localeDictionary: Array<string>;

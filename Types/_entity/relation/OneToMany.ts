@@ -2,7 +2,7 @@
 /**
  * Посредник, реализующий отношения "один ко многим".
  * @class Types/Mediator/OneToMany
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
 

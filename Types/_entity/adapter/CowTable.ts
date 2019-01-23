@@ -2,7 +2,7 @@
 /**
  * Адаптер таблицы для работы в режиме Copy-on-write.
  * @class Types/_entity/adapter/CowTable
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/ITable
  * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.

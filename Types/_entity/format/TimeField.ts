@@ -9,8 +9,8 @@
  *       type: 'time'
  *    };
  * </pre>
- * @class Types/Format/TimeField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/TimeField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -18,7 +18,7 @@
 import Field from './Field';
 import toSql, {MODE} from '../date/toSql';
 
-export default class TimeField extends Field /** @lends Types/Format/TimeField.prototype */{
+export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
    //region Public methods
 

@@ -2,14 +2,14 @@
 /**
  * Интерфейс тип "перечисляемое".
  * Работает на основе словаря, хранящего соотвествие индексов и их значений.
- * @interface Types/Type/IEnum
+ * @interface Types/_collectionIEnum
  * @public
  * @author Мальцев А.А.
  */
 
 export type IIndex = number | string | null;
 
-export default interface IEnum<T> /** @lends Types/Type/IEnum.prototype */{
+export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
 
    /**
@@ -19,7 +19,7 @@ export default interface IEnum<T> /** @lends Types/Type/IEnum.prototype */{
     * @param {String} value Новое значение
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Enum'], function(Enum) {
+    *    requirejs(['Types/_collectionEnum'], function(Enum) {
     *       var colors = new Enum({
     *          dictionary: ['Red', 'Green', 'Blue']
     *       });

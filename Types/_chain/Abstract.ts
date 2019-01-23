@@ -3,8 +3,8 @@
  * Абстрактная цепочка.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_chain/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Collection/IEnumerable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_collection/IEnumerable
  * @public
  * @author Мальцев А.А.
  */
@@ -124,8 +124,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Запускает вычисление цепочки и возвращает полученное значение. Большинство цепочек возвращает массив, но
     * некоторые могут вернуть другой тип, в зависимости от вида исходной коллекции.
     * При передаче аргумента factory вернется тип значения, сконструированный фабрикой. Доступные стандартные фабрики
-    * можно посмотреть в разделе {@link Types/Collection/Factory}.
-    * @param {function(Types/Collection/IEnumerable): *} [factory] Фабрика для преобразования коллекции.
+    * можно посмотреть в разделе {@link Types/_collection/Factory}.
+    * @param {function(Types/_collection/IEnumerable): *} [factory] Фабрика для преобразования коллекции.
     * @param {...*} [optional] Дополнительные аргументы фабрики, придут в factory вторым, третьим и т.д аргументами.
     * @return {*}
     * @example
@@ -506,7 +506,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Соединяет коллекцию с другими коллекциями, добавляя их элементы в конец.
-    * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, с которыми объединить.
+    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, с которыми объединить.
     * @return {Types/_chain/Concatenated}
     * @example
     * Объединим коллекцию с двумя массивами:
@@ -679,7 +679,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Преобразует коллекцию, добавляя в нее элементы других коллекций, которых в ней еще нет.
-    * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
+    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
     * @return {Types/_chain/Uniquely}
     * @example
     * Оставим уникальные значения массива:

@@ -53,7 +53,7 @@
 
 /**
  * @alias Types/_chain
- * @param {Array|Object|Types/Collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
+ * @param {Array|Object|Types/_collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
  * @return {Types/_chain/Abstract}
  */
 

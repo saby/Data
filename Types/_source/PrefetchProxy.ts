@@ -45,11 +45,11 @@
  *    });
  * </pre>
  * @class Types/_source/PrefetchProxy
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -93,7 +93,7 @@ export default class PrefetchProxy extends mixin(
    _$data: IData = {
 
       /**
-       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
+       * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
        * @name Types/_source/PrefetchProxy#data.read
        */
       read: null,
@@ -105,7 +105,7 @@ export default class PrefetchProxy extends mixin(
       query: null,
 
       /**
-       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#copy}.
+       * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#copy}.
        * @name Types/_source/PrefetchProxy#data.copy
        */
       copy: null

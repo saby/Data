@@ -12,7 +12,7 @@
  *    adapter.get('title');//'Test'
  * </pre>
  * @class Types/_entity/adapter/JsonRecord
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IRecord
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @mixes Types/_entity/adapter/JsonFormatMixin

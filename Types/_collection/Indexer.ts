@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/Indexer" />
 /**
  * Индексатор коллекции
- * @class Types/Collection/Indexer
+ * @class Types/_collection/Indexer
  * @public
  * @author Мальцев А.А.
  */
@@ -30,7 +30,7 @@ function getPosition(items: Array<any>, value: number): number {
    return position;
 }
 
-export default class Indexer /** @lends Types/Collection/Indexer.prototype */{
+export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
    /**
     * @property {Object} Коллекция
     */

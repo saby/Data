@@ -13,7 +13,7 @@ define([
    FlagsDisplay = FlagsDisplay.default;
    FlagsType = FlagsType.default;
 
-   describe('Types/Display/Flags', function() {
+   describe('Types/_display/Flags', function() {
       var dict, collection, display;
 
       beforeEach(function() {

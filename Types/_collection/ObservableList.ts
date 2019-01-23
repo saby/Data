@@ -17,11 +17,11 @@
  *       list.removeAt(0);
  *    });
  * </pre>
- * @class Types/Collection/ObservableList
- * @extends Types/Collection/List
- * @implements Types/Collection/IBind
+ * @class Types/_collection/ObservableList
+ * @extends Types/_collection/List
+ * @implements Types/_collection/IBind
  * @implements Types/Mediator/IReceiver
- * @mixes Types/Collection/EventRaisingMixin
+ * @mixes Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -39,7 +39,7 @@ export default class ObservableList<T> extends mixin(
    List,
    IObservable,
    EventRaisingMixin,
-) implements IReceiver /** @lends Types/Collection/ObservableList.prototype */{
+) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
 
    /**
     * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие onCollectionChange с ACTION_RESET, вместо нескольких c другими action

@@ -23,7 +23,7 @@ define([
    List = List.default;
    Enum = Enum.default;
 
-   describe('Types/Display/ItemsStrategy/Direct', function() {
+   describe('Types/_display/ItemsStrategy/Direct', function() {
       var getStrategy = function(display) {
             return new Direct({
                display: display

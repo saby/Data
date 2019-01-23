@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/enumerator/Arraywise" />
 /**
  * Энумератор для массива
- * @class Types/Collection/ArrayEnumerator
- * @implements Types/Collection/IEnumerator
- * @mixes Types/Collection/IndexedEnumeratorMixin
+ * @class Types/_collection/ArrayEnumerator
+ * @implements Types/_collection/IEnumerator
+ * @mixes Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -16,7 +16,7 @@ import {mixin} from '../../util';
 export default class Arraywise<T> extends mixin(
    Object,
    IndexedEnumeratorMixin
-) implements IEnumerator<T> /** @lends Types/Collection/ArrayEnumerator.prototype */{
+) implements IEnumerator<T> /** @lends Types/_collection/ArrayEnumerator.prototype */{
    /**
     * Конструктор
     * @param {Array} items Массив
@@ -34,7 +34,7 @@ export default class Arraywise<T> extends mixin(
       IndexedEnumeratorMixin.constructor.call(this);
    }
 
-   // region Types/Collection/IEnumerator
+   // region Types/_collection/IEnumerator
 
    readonly '[Types/_collection/IEnumerator]': true;
 
@@ -67,7 +67,7 @@ export default class Arraywise<T> extends mixin(
       this._index = -1;
    }
 
-   // endregion Types/Collection/IEnumerator
+   // endregion Types/_collection/IEnumerator
 
    // region Public methods
 

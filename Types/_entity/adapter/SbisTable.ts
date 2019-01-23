@@ -23,10 +23,10 @@
  *    adapter.at(0);//{d: [1, 'Test 1'], s: [{n: 'id', t: 'Число целое'}, {n: 'title', t: 'Строка'}]}
  * </pre>
  * @class Types/_entity/adapter/SbisTable
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/ITable
  * @implements Types/_entity/adapter/IMetaData
- * @implements Types/Entity/ICloneable
+ * @implements Types/_entity/ICloneable
  * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.

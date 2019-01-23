@@ -10,20 +10,20 @@
  *       precision: 4
  *    };
  * </pre>
- * @class Types/Format/RealField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RealField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class RealField extends Field /** @lends Types/Format/RealField.prototype */{
+export default class RealField extends Field /** @lends Types/_entity/format/RealField.prototype */{
    _$defaultValue: number;
 
    /**
     * @cfg {Number} Максимальное количество знаков в дробной части
-    * @name Types/Format/RealField#precision
+    * @name Types/_entity/format/RealField#precision
     * @see getPrecision
     * @see setPrecision
     */

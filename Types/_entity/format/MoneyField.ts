@@ -9,20 +9,20 @@
  *       type: 'money'
  *    };
  * </pre>
- * @class Types/Format/MoneyField
- * @extends Types/Format/RealField
+ * @class Types/_entity/format/MoneyField
+ * @extends Types/_entity/format/RealField
  * @public
  * @author Мальцев А.А.
  */
 
 import RealField from './RealField';
 
-export default class MoneyField extends RealField /** @lends Types/Format/MoneyField.prototype */{
+export default class MoneyField extends RealField /** @lends Types/_entity/format/MoneyField.prototype */{
    _$precision: number;
 
    /**
     * @cfg {Boolean} Большие деньги (значение передается строкой, чтобы избежать погрешностей выполнения операций с плавающей запятой)
-    * @name Types/Format/MoneyField#large
+    * @name Types/_entity/format/MoneyField#large
     * @see isLarge
     */
    _$large: boolean;

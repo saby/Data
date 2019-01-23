@@ -31,7 +31,7 @@
  *    });
  *    hdd.getVendor();//Seagate
  * </pre>
- * @class Types/Entity/OptionsToPropertyMixin
+ * @class Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -54,7 +54,7 @@ function defineProperty(instance: Object, name: string, key: string, scope: Obje
    });
 }
 
-export default abstract class OptionsToPropertyMixin /** @lends Types/Entity/OptionsMixin.prototype */{
+export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/OptionsMixin.prototype */{
    protected _options: any;
 
    /**

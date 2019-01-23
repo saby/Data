@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Group" />
 /**
  * Стратегия-декоратор для формирования групп элементов
- * @class Types/Display/ItemsStrategy/Group
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Group
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -31,11 +31,11 @@ interface ISortOptions {
    groups: Array<GroupItem>;
 }
 
-export default class Group extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/Group.prototype */{
+export default class Group extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Group.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/ItemsStrategy/Abstract} source Декорирумая стратегия
-    * @property {Function(Types/Collection/Item, Number, *)} handler Метод, возвращающий группу элемента
+    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Function(Types/_collection/Item, Number, *)} handler Метод, возвращающий группу элемента
     */
 
    /**
@@ -224,11 +224,11 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
 
    /**
     * Создает индекс сортировки в порядке группировки
-    * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
     * @param {Object} options Опции
-    * @param {Array.<Types/Display/GroupItem>} options.groups Группы
-    * @param {Types/Display/Display} options.display Проекция
-    * @param {Function(Types/Display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
+    * @param {Array.<Types/_display/GroupItem>} options.groups Группы
+    * @param {Types/_display/Display} options.display Проекция
+    * @param {Function(Types/_display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
     * @return {Array.<Number>}
     */
    static sortItems(items: Array<CollectionItem>, options: ISortOptions) {

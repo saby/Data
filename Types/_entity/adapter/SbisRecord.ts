@@ -20,9 +20,9 @@
  *    adapter.get('title');//'Test'
  * </pre>
  * @class Types/_entity/adapter/SbisRecord
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IRecord
- * @implements Types/Entity/ICloneable
+ * @implements Types/_entity/ICloneable
  * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.

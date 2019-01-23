@@ -7,10 +7,10 @@
  *       ||w--||     \|/
  *   \|/
  * @class Types/_entity/adapter/Cow
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IAdapter
  * @implements Types/_entity/adapter/IDecorator
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 

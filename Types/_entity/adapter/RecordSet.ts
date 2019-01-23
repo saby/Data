@@ -18,7 +18,7 @@ import {object} from '../../util';
 export default class RecordSet extends Abstract /** @lends Types/_entity/adapter/RecordSet.prototype */{
    /**
     * Возвращает интерфейс доступа к рекордсету в виде таблицы
-    * @param {Types/Collection/RecordSet} data Рекордсет
+    * @param {Types/_collection/RecordSet} data Рекордсет
     * @return {Types/_entity/adapter/ITable}
     */
    forTable(data) {
@@ -27,8 +27,8 @@ export default class RecordSet extends Abstract /** @lends Types/_entity/adapter
 
    /**
     * Возвращает интерфейс доступа к record-у в виде записи
-    * @param {Types/Entity/Record} data Запись
-    * @param {Types/Collection/RecordSet} [tableData] Таблица
+    * @param {Types/_entity/Record} data Запись
+    * @param {Types/_collection/RecordSet} [tableData] Таблица
     * @return {Types/_entity/adapter/IRecord}
     */
    forRecord(data, tableData?) {

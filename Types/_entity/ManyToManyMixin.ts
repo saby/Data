@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_entity/ManyToManyMixin" />
 /**
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
- * @mixin Types/Entity/ManyToManyMixin
+ * @mixin Types/_entity/ManyToManyMixin
  * @public
  * @author Мальцев А.А.
  */
 
 import ManyToMany from './relation/ManyToMany';
 
-const ManyToManyMixin = /** @lends Types/Entity/ManyToManyMixin.prototype */{
+const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
    '[Types/_entity/ManyToManyMixin]': true,
 
    //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()

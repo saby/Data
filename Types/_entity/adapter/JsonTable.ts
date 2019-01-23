@@ -15,7 +15,7 @@
  *    adapter.at(0);//{id: 1, title: 'Test 1'}
  * </pre>
  * @class Types/_entity/adapter/JsonTable
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/ITable
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @mixes Types/_entity/adapter/JsonFormatMixin

@@ -3,10 +3,10 @@
  * Базовый источник данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Base
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/IData
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_source/OptionsMixin
  * @mixes Types/_source/LazyMixin
  * @mixes Types/_source/DataMixin

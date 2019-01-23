@@ -2,12 +2,12 @@
 /**
  * Интерфейс доступа к свойствам объекта.
  * Позволяет читать и записывать значения свойств, а также проверять их наличие.
- * @interface Types/Entity/IObject
+ * @interface Types/_entity/IObject
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IObject /** @lends Types/Entity/IObject.prototype */{
+export default interface IObject /** @lends Types/_entity/IObject.prototype */{
    readonly '[Types/_entity/IObject]': boolean;
 
    /**

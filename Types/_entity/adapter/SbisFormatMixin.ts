@@ -52,7 +52,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
    _fieldIndices: null,
 
    /**
-    * @member {Object.<Types/Format/Field>} Форматы полей
+    * @member {Object.<Types/_entity/format/Field>} Форматы полей
     */
    _format: null,
 

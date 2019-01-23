@@ -20,9 +20,9 @@
  *          .limit(100);
  *    });
  * </pre>
- * @class Types/Query/Query
- * @implements Types/Entity/ICloneable
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/Query
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -77,7 +77,7 @@ function parseSelectExpression(expression: Expression) {
 /**
  * Объект, задающий способ объединения множеств.
  * @class Types/Query/Join
- * @mixes Types/Entity/OptionsMixin
+ * @mixes Types/_entity/OptionsMixin
  * @public
  */
 export class Join extends mixin(Object, OptionsToPropertyMixin) {
@@ -160,7 +160,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
 /**
  * Объект, задающий способ сортировки множества
  * @class Types/Query/Order
- * @mixes Types/Entity/OptionsMixin
+ * @mixes Types/_entity/OptionsMixin
  * @public
  */
 export class Order extends mixin(Object, OptionsToPropertyMixin) {
@@ -252,7 +252,7 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
 /**
  * Query implementation
  */
-export default class Query extends mixin(Object, OptionsToPropertyMixin) implements ICloneable /** @lends Types/Query/Query.prototype */{
+export default class Query extends mixin(Object, OptionsToPropertyMixin) implements ICloneable /** @lends Types/_source/Query.prototype */{
    /**
     * Выбираемые поля
     */
@@ -335,7 +335,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    /**
     * Сбрасывает все параметры запроса
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     */
    clear(): Query {
       this._select = {};
@@ -372,7 +372,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Устанавливает поля выборки
     * @param {Array.<String>|Object.<String>|String} expression Выбираемые поля
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Выбираем все заказы с определенным набором полей:
     * <pre>
@@ -437,7 +437,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * Устанавливает объект выборки
     * @param {String} resource Объект выборки
     * @param {String} [as] Псеводним объекта выборки
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Выбираем заказы с указанием полей через псеводним:
     * <pre>
@@ -487,7 +487,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @param {Object} on Правило объединения
     * @param {Object|Array|String} expression Выбираемые поля
     * @param {Boolean} [inner=true] Внутреннее или внешнее объединение
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * <pre>
     *    require(['Types/Query/Query'], function (Query) {
@@ -556,7 +556,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @remark
     * Если expression передан в виде функции, то она принимает аргументы: элемент коллекции и его порядковый номер.
     * @param {Object.<String>|Function(*, Number): Boolean} expression Условие фильтрации
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Выберем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
     * <pre>
@@ -620,7 +620,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * Устанавливает порядок сортировки выборки
     * @param {String|Array.<Object.<Types/Query/Order/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
     * @param {Types/Query/Order/Order.typedef} [desc=false] По убыванию
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Отсортируем заказы по полю id по возрастанию:
     * <pre>
@@ -715,7 +715,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Устанавливает способ группировки выборки
     * @param {String|Array.<String>} expression Способ группировки элементов
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * <pre>
     *    require(['Types/Query/Query'], function (Query) {
@@ -768,7 +768,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Устанавливает смещение первого элемента выборки
     * @param {Number} start Смещение первого элемента выборки
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Выберем все заказы, начиная с пятидесятого:
     * <pre>
@@ -809,7 +809,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Устанавливает ограничение кол-ва элементов выборки
     * @param {Number} count Максимальное кол-во элементов выборки
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Выберем первые десять заказов:
     * <pre>
@@ -850,7 +850,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Устанавливает мета-данные выборки
     * @param {Object} data Мета-данные
-    * @return {Types/Query/Query}
+    * @return {Types/_source/Query}
     * @example
     * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
     * <pre>

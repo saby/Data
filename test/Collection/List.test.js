@@ -13,7 +13,7 @@ define([
    List = List.default;
    Record = Record.default;
 
-   describe('Types/Collection/List', function() {
+   describe('Types/_collection/List', function() {
       var getItems = function() {
             return [{
                id: 1,

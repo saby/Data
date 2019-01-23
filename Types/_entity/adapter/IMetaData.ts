@@ -13,7 +13,7 @@ export default interface IMetaData /** @lends Types/_entity/adapter/IMetaData.pr
 
    /**
     * Возвращает описание метаданных
-    * @return {Array.<Types/Format/Field>}
+    * @return {Array.<Types/_entity/format/Field>}
     */
    getMetaDataDescriptor(): Array<Field>;
 

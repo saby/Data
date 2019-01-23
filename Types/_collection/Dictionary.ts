@@ -2,11 +2,11 @@
 /**
  * Тип данных словарь.
  * Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
- * @class Types/Type/Dictionary
- * @implements Types/Collection/IEnumerable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
+ * @class Types/_collectionDictionary
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -23,16 +23,16 @@ interface GenericObject<T> {}
 
 declare type DictionaryValues = Array<string> | GenericObject<string>;
 
-export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/Type/Dictionary.prototype */{
+export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collectionDictionary.prototype */{
    /**
     * @cfg {Array.<String>|Object.<String>} Словарь возможных значений
-    * @name Types/Type/Dictionary#dictionary
+    * @name Types/_collectionDictionary#dictionary
     */
    protected _$dictionary: DictionaryValues;
 
    /**
     * @cfg {Array.<String>|Object.<String>} Локализованный словарь возможных значений
-    * @name Types/Type/Dictionary#localeDictionary
+    * @name Types/_collectionDictionary#localeDictionary
     */
    protected _$localeDictionary: DictionaryValues;
 
@@ -160,7 +160,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
 
    /**
     * Возвращает словарь из формата
-    * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+    * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
     * @return {Array}
     * @protected
     */
@@ -175,7 +175,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
 
    /**
     * Возвращает локализованный словарь из формата
-    * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+    * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
     * @return {Array|undefined}
     * @protected
     */

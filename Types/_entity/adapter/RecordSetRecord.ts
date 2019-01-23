@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetRecord" />
 /**
  * Адаптер для записи таблицы данных в формате записи.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Entity/Record}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_entity/Record}.
  *
  * Создадим адаптер для записи:
  * <pre>
@@ -15,7 +15,7 @@
  *    adapter.get('title');//'Test'
  * </pre>
  * @class Types/_entity/adapter/RecordSetRecord
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/IRecord
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
@@ -28,10 +28,8 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {Field, UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
-import Record = require('Types/Entity/Record');
-// @ts-ignore
-import RecordSet = require('Types/Collection/RecordSet');
+import Record = require('Types/_entity/Record');
+import RecordSet = require('Types/_collection/RecordSet');
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
@@ -48,8 +46,8 @@ export default class RecordSetRecord extends mixin(
 
    /**
     * Конструктор
-    * @param {Types/Entity/Record} data Сырые данные
-    * @param {Types/Collection/RecordSet} [tableData] Таблица
+    * @param {Types/_entity/Record} data Сырые данные
+    * @param {Types/_collection/RecordSet} [tableData] Таблица
     */
    constructor(data, tableData?) {
       if (data && !data['[Types/_entity/Record]']) {

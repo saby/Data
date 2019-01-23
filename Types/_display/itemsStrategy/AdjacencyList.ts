@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/AdjacencyList" />
 /**
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
- * @class Types/Display/ItemsStrategy/AdjacencyList
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/AdjacencyList
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -83,8 +83,8 @@ function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string)
 
 /**
  * Создает список "элемент - индекс группы".
- * @param {Array.<Types/Display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
- * @return {Map.<Types/Display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
+ * @param {Array.<Types/_display/CollectionItem>} sourceItems Массив элементов декорируемой стратегии
+ * @return {Map.<Types/_display/CollectionItem, Number>} Элемент -> индекс группы в sourceItems
  * @static
  */
 function buildGroupsMap(sourceItems: CollectionItem[]): Map<CollectionItem, number> {
@@ -105,9 +105,9 @@ function buildGroupsMap(sourceItems: CollectionItem[]): Map<CollectionItem, numb
 /**
  * Создает индекс следования элементов исходной коллекции в древовидной структуре.
  * @param {Object} options Опции
- * @param {Array.<Types/Display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
+ * @param {Array.<Types/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
  * @param {Map.<Number>} options.childrenMap Cписок "родитель - дети".
- * @param {Array.<Types/Display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
+ * @param {Array.<Types/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
  * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
  * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
  * @param {String} options.idProperty Имя свойства, в котором хранится идентификатор элемента.
@@ -197,10 +197,10 @@ interface IOptions {
    source: AbstractStrategy;
 }
 
-export default class AdjacencyList extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/AdjacencyList.prototype */{
+export default class AdjacencyList extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/AdjacencyList.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     * @property {String} idProperty Имя свойства, хранящего первичный ключ
     * @property {String} parentProperty Имя свойства, хранящего первичный ключ родителя
     */
@@ -432,7 +432,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
 
    /**
     * Возвращает элементы проекции
-    * @return Array.<Types/Display/CollectionItem>
+    * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
    protected _getItems(): Array<CollectionItem> {
@@ -557,7 +557,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    /**
     * Возращает родителя элемента проекции.
     * @param {Number} index Индекс элемента
-    * @return {Types/Display/CollectionItem} Родитель
+    * @return {Types/_display/CollectionItem} Родитель
     */
    protected _getParent(index: number): CollectionItem {
       let parentsMap = this._parentsMap;

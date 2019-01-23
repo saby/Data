@@ -256,9 +256,9 @@ function callDestroyWithComplexId(instance, ids, name, meta) {
 
 /**
  * Строит запись из объекта
- * @param {Object|Types/Entity/Record} data Данные полей записи
+ * @param {Object|Types/_entity/Record} data Данные полей записи
  * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
- * @return {Types/Entity/Record|null}
+ * @return {Types/_entity/Record|null}
  */
 export function buildRecord(data, adapter) {
    const Record = resolve('Types/entity:Record');
@@ -267,10 +267,10 @@ export function buildRecord(data, adapter) {
 
 /**
  * Строит рекодсет из массива
- * @param {Array.<Object>|Types/Collection/RecordSet} data Данные рекордсета
+ * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
  * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
  * @param {String} idProperty
- * @return {Types/Collection/RecordSet|null}
+ * @return {Types/_collection/RecordSet|null}
  */
 export function buildRecordSet(data, adapter, idProperty) {
    if (data === null) {
@@ -296,7 +296,7 @@ export function buildRecordSet(data, adapter, idProperty) {
 
 /**
  * Возвращает параметры сортировки
- * @param {Types/Query/Query} query Запрос
+ * @param {Types/_source/Query} query Запрос
  * @return {Array|null}
  */
 export function getSortingParams(query) {
@@ -323,7 +323,7 @@ export function getSortingParams(query) {
 
 /**
  * Возвращает параметры навигации
- * @param {Types/Query/Query} query Запрос
+ * @param {Types/_source/Query} query Запрос
  * @param {Object} options Опции источника
  * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
  * @return {Object|null}
@@ -415,7 +415,7 @@ export function getPagingParams(query, options, adapter) {
 
 /**
  * Возвращает дополнительные параметры
- * @param {Types/Query/Query} query Запрос
+ * @param {Types/_source/Query} query Запрос
  * @return {Array}
  */
 export function getAdditionalParams(query: Query) {
@@ -488,7 +488,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
 
 /**
  * Возвращает аргументы метода пакетного обновления рекордсета
- * @param {Types/Collection/RecordSet} items Обновляемый рекордсет
+ * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
  * @return {Object}
  * @protected
  */
@@ -736,8 +736,8 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
    /**
     * Создает пустую модель через источник данных
-    * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Entity/Model}, в случае ошибки - Error.
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
     * @see Types/_source/ICrud#create
     * @example
     * Создадим нового сотрудника:
@@ -1188,7 +1188,7 @@ SbisService.prototype._$orderProperty = 'ПорНомер';
 // @ts-ignore
 SbisService.prototype._$options = OptionsMixin.addOptions(Rpc, {
    /**
-    * @cfg {String} Название свойства мета-данных {@link Types/Query/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
+    * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
     * @name Types/_source/SbisService#options.hasMoreProperty
     */
    hasMoreProperty: 'hasMore'

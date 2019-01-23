@@ -8,7 +8,7 @@ define([
 
    DisplayEnumerator = DisplayEnumerator.default;
 
-   describe('Types/Display/CollectionEnumerator', function() {
+   describe('Types/_display/CollectionEnumerator', function() {
       var items,
          filterMap,
          sortMap,

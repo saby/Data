@@ -10,15 +10,15 @@
  *       dictionary: ['one', 'two', 'three']
  *    };
  * </pre>
- * @class Types/Format/EnumField
- * @extends Types/Format/DictionaryField
+ * @class Types/_entity/format/EnumField
+ * @extends Types/_entity/format/DictionaryField
  * @public
  * @author Мальцев А.А.
  */
 
 import DictionaryField from './DictionaryField';
 
-export default class EnumField extends DictionaryField /** @lends Types/Format/EnumField.prototype */{
+export default class EnumField extends DictionaryField /** @lends Types/_entity/format/EnumField.prototype */{
 }
 
 EnumField.prototype['[Types/_entity/format/EnumField]'] = true;

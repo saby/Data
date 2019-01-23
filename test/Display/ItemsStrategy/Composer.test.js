@@ -8,7 +8,7 @@ define([
 
    Composer = Composer.default;
 
-   describe('Types/Display/ItemsStrategy/Composer', function() {
+   describe('Types/_display/ItemsStrategy/Composer', function() {
       var getStrategy = function() {
          return function(options) {
             Object.assign(this, options || {});

@@ -2,12 +2,12 @@
 /**
  * Интерфейс привязки к коллекции.
  * Позволяет узнавать об изменения, происходящих с элементами коллекции.
- * @interface Types/Collection/IBind
+ * @interface Types/_collection/IBind
  * @public
  * @author Мальцев А.А.
  */
 
-const IObservable = /** @lends Types/Collection/IBind.prototype */{
+const IObservable = /** @lends Types/_collection/IBind.prototype */{
    '[Types/_collection/IObservable]': true,
 
    /**

@@ -7,7 +7,7 @@
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @implements Types/_source/IProvider
- * @mixes Types/Entity/ObservableMixin
+ * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_source/DataCrudMixin
  * @mixes Types/_source/BindingMixin
  * @mixes Types/_source/EndpointMixin
@@ -83,7 +83,7 @@ function passCreate(meta?: Object) {
 /**
  * Формирует данные, передваемые в провайдер при вызове read().
  * @param {String} key Первичный ключ записи
- * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные
+ * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
  * @return {Object}
  */
 function passRead(key, meta?: Object) {
@@ -92,7 +92,7 @@ function passRead(key, meta?: Object) {
 
 /**
  * Формирует данные, передваемые в провайдер при вызове update().
- * @param {Types/Entity/Record|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+ * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
  * @param {Object} [meta] Дополнительные мета данные
  * @return {Object}
  */
@@ -132,7 +132,7 @@ function passUpdate(data, meta?: Object) {
 /**
  * Формирует данные, передваемые в провайдер при вызове destroy().
  * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
- * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные
+ * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
  * @return {Object}
  */
 function passDestroy(keys, meta?: Object) {
@@ -141,7 +141,7 @@ function passDestroy(keys, meta?: Object) {
 
 /**
  * Формирует данные, передваемые в провайдер при вызове query().
- * @param {Types/Query/Query} [query] Запрос
+ * @param {Types/_source/Query} [query] Запрос
  * @return {Object}
  */
 function passQuery(query) {

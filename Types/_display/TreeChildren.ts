@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/TreeChildren" />
 /**
  * Список дочерних элементов узла дерева.
- * @class Types/Display/TreeChildren
- * @extends Types/Collection/List
+ * @class Types/_display/TreeChildren
+ * @extends Types/_collection/List
  * @public
  * @author Мальцев А.А.
  */
@@ -14,10 +14,10 @@ import {register} from '../di';
 interface IOptions {
 }
 
-export default class TreeChildren extends List<TreeItem> /** @lends Types/Display/TreeChildren.prototype */{
+export default class TreeChildren extends List<TreeItem> /** @lends Types/_display/TreeChildren.prototype */{
    /**
-    * @cfg {Types/Display/TreeItem} Узел-владелец
-    * @name Types/Display/TreeChildren#owner
+    * @cfg {Types/_display/TreeItem} Узел-владелец
+    * @name Types/_display/TreeChildren#owner
     */
    _$owner: TreeItem;
 
@@ -34,7 +34,7 @@ export default class TreeChildren extends List<TreeItem> /** @lends Types/Displa
 
    /**
     * Возвращает узел-владелец
-    * @return {Types/Display/TreeItem}
+    * @return {Types/_display/TreeItem}
     */
    getOwner() {
       return this._$owner;

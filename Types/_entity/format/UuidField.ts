@@ -9,15 +9,15 @@
  *       type: 'uuid'
  *    };
  * </pre>
- * @class Types/Format/UuidField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/UuidField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class UuidField extends Field /** @lends Types/Format/UuidField.prototype */{
+export default class UuidField extends Field /** @lends Types/_entity/format/UuidField.prototype */{
 }
 
 UuidField.prototype['[Types/_entity/format/UuidField]'] = true;

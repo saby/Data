@@ -32,7 +32,7 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
     * Возвращает конструктор записей, порождаемых источником данных.
     * @return {String|Function}
     * @see model
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Получим конструктор записей, используемый по умолчанию:
@@ -68,7 +68,7 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
     * Возвращает название свойства записи, содержащего первичный ключ
     * @return {String}
     * @see idProperty
-    * @see Types/Entity/Model#idProperty
+    * @see Types/_entity/Model#idProperty
     * @example
     * Получим название свойства записи, содержащего первичный ключ:
     * <pre>

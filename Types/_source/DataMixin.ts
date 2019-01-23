@@ -76,10 +76,10 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    _$adapter: 'Types/entity:adapter.Json',
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
+    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
     * @name Types/_source/DataMixin#model
     * @see getModel
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Конструктор пользовательской модели, внедренный в виде класса:
@@ -109,10 +109,10 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    _$model: 'Types/entity:Model',
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
     * @name Types/_source/DataMixin#listModule
     * @see getListModule
-    * @see Types/Collection/RecordSet
+    * @see Types/_collection/RecordSet
     * @see Types/Di
     * @example
     * Конструктор рекордсета, внедренный в виде класса:
@@ -145,7 +145,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
     * @name Types/_source/DataMixin#idProperty
     * @see getIdProperty
-    * @see Types/Entity/Model#idProperty
+    * @see Types/_entity/Model#idProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
@@ -235,7 +235,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    /**
     * Создает новый экземпляр модели
     * @param {*} data Данные модели
-    * @return {Types/Entity/Model}
+    * @return {Types/_entity/Model}
     * @protected
     */
    _getModelInstance(data): Model {

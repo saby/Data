@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_source/DataSet" />
 /**
  * Набор данных, полученный из источника.
- * Представляет собой набор {@link Types/Collection/RecordSet выборок}, {@link Types/Entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
- * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/Source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
+ * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
+ * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
  * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
  * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
  * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
@@ -108,9 +108,9 @@
  *    });
  * </pre>
  * @class Types/_source/DataSet
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
  * @ignoreOptions totalProperty writable
  * @ignoreMethods getTotal getTotalProperty setTotalProperty
  * @public
@@ -195,10 +195,10 @@ export default class DataSet extends mixin(
    protected _$rawData: any;
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых набором данных. По умолчанию {@link Types/Entity/Model}.
+    * @cfg {String|Function} Конструктор записей, порождаемых набором данных. По умолчанию {@link Types/_entity/Model}.
     * @name Types/_source/DataSet#model
     * @see getModel
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Установим модель "Пользователь":
@@ -213,10 +213,10 @@ export default class DataSet extends mixin(
    protected _$model: TypeDeclaration;
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию {@link Types/Collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию {@link Types/_collection/RecordSet}.
     * @name Types/_source/DataSet#listModule
     * @see getListModule
-    * @see Types/Collection/RecordSet
+    * @see Types/_collection/RecordSet
     * @see Types/Di
     * @example
     * Установим рекодсет "Пользователи":
@@ -234,7 +234,7 @@ export default class DataSet extends mixin(
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
     * @name Types/_source/DataSet#idProperty
     * @see getIdProperty
-    * @see Types/Entity/Model#idProperty
+    * @see Types/_entity/Model#idProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
@@ -340,7 +340,7 @@ export default class DataSet extends mixin(
     * Возвращает конструктор записей, порождаемых набором данных.
     * @return {String|Function}
     * @see model
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Получим конструктор записей, используемый по умолчанию:
@@ -360,7 +360,7 @@ export default class DataSet extends mixin(
     * @param {String|Function} model
     * @see model
     * @see getModel
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * @see Types/Di
     * @example
     * Установим конструктор пользовательской модели:
@@ -416,7 +416,7 @@ export default class DataSet extends mixin(
     * Возвращает название свойства модели, содержащего первичный ключ
     * @return {String}
     * @see idProperty
-    * @see Types/Entity/Model#idProperty
+    * @see Types/_entity/Model#idProperty
     * @example
     * Получим название свойства модели, содержащего первичный ключ:
     * <pre>
@@ -437,7 +437,7 @@ export default class DataSet extends mixin(
     * @param {String} name
     * @see getIdProperty
     * @see idProperty
-    * @see Types/Entity/Model#idProperty
+    * @see Types/_entity/Model#idProperty
     * @example
     * Установим название свойства модели, содержащего первичный ключ:
     * <pre>
@@ -492,7 +492,7 @@ export default class DataSet extends mixin(
    /**
     * Возвращает выборку
     * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
-    * @return {Types/Collection/RecordSet}
+    * @return {Types/_collection/RecordSet}
     * @see itemsProperty
     * @example
     * Получим основную выборку из набора данных, представляющего выборку:
@@ -586,7 +586,7 @@ export default class DataSet extends mixin(
    /**
     * Возвращает запись
     * @param {String} [property] Свойство данных, в которых находится модель
-    * @return {Types/Entity/Model|undefined}
+    * @return {Types/_entity/Model|undefined}
     * @see itemsProperty
     * @example
     * Получим запись из набора данных, который содержит только ее:
@@ -828,7 +828,7 @@ export default class DataSet extends mixin(
    /**
     * Возвращает инстанс модели
     * @param {*} rawData Данные модели
-    * @return {Types/Entity/Model}
+    * @return {Types/_entity/Model}
     * @protected
     */
    protected _getModelInstance(rawData: any): Model {
@@ -846,7 +846,7 @@ export default class DataSet extends mixin(
    /**
     * Возвращает инстанс рекордсета
     * @param {*} rawData Данные рекордсета
-    * @return {Types/Collection/RecordSet}
+    * @return {Types/_collection/RecordSet}
     * @protected
     */
    protected _getListInstance(rawData: any): RecordSet<Model> {

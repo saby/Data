@@ -17,7 +17,7 @@
  *       console.log(getTax.properties);//['amount']
  *    });
  * </pre>
- * @class Types/Functor/Compute
+ * @class Types/_entity/functor/Compute
  * @public
  * @author Мальцев А.А.
  */

@@ -14,7 +14,7 @@ define([
    FlagsDisplay = FlagsDisplay.default;
    FlagsType = FlagsType.default;
 
-   describe('Types/Display/FlagsItem', function() {
+   describe('Types/_display/FlagsItem', function() {
       var dict, collection, display;
 
       beforeEach(function() {

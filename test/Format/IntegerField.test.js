@@ -8,7 +8,7 @@ define([
 
    IntegerField = IntegerField.default;
 
-   describe('Types/Format/IntegerField', function() {
+   describe('Types/_entity/format/IntegerField', function() {
       var field;
 
       beforeEach(function() {

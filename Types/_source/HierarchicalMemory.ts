@@ -36,10 +36,10 @@
  *    });
  * </pre>
  * @class Types/_source/HierarchicalMemory
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 

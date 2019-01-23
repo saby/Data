@@ -8,7 +8,7 @@ define([
 
    RealField = RealField.default;
 
-   describe('Types/Format/RealField', function() {
+   describe('Types/_entity/format/RealField', function() {
       var field;
 
       beforeEach(function() {

@@ -8,7 +8,7 @@ define([
 
    MoneyField = MoneyField.default;
 
-   describe('Types/Format/MoneyField', function() {
+   describe('Types/_entity/format/MoneyField', function() {
       var field;
 
       beforeEach(function() {

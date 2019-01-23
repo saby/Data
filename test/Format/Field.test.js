@@ -8,7 +8,7 @@ define([
 
    Field = Field.default;
 
-   describe('Types/Format/Field', function() {
+   describe('Types/_entity/format/Field', function() {
       var field;
 
       beforeEach(function() {

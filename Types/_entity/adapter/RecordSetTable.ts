@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetTable" />
 /**
  * Адаптер для таблицы данных в формате рекордсета.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Collection/RecordSet}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_collection/RecordSet}.
  *
  * Создадим адаптер для таблицы:
  * <pre>
@@ -18,7 +18,7 @@
  *    });
  * </pre>
  * @class Types/_entity/adapter/RecordSetTable
- * @mixes Types/Entity/DestroyableMixin
+ * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/ITable
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
@@ -32,8 +32,7 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
-import RecordSet = require('Types/Collection/RecordSet');
+import RecordSet = require('Types/_collection/RecordSet');
 
 interface RecordSetOptions {
    adapter?: string | IAdapter
@@ -50,7 +49,7 @@ export default class RecordSetTable extends mixin(
 
    /**
     * Конструктор
-    * @param {Types/Collection/RecordSet} data Таблица
+    * @param {Types/_collection/RecordSet} data Таблица
     */
    constructor(data) {
       if (data && !data['[Types/_collection/RecordSet]']) {

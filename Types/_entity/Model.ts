@@ -4,7 +4,7 @@
  * Модели обеспечивают доступ к данным и поведению объектов предметной области (сущностям).
  * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира, которые вы моделируете в своем приложении.
  *
- * В основе абстрактной модели лежит {@link Types/Entity/Record запись}.
+ * В основе абстрактной модели лежит {@link Types/_entity/Record запись}.
  * Основные аспекты модели (дополнительно к аспектам записи):
  * <ul>
  *    <li>определение {@link properties собственных свойств} сущности;</li>
@@ -99,10 +99,10 @@
  *   myCar.get('transmissionType');//'Manual'
  *   myCar.get('color');//'Red'
  * </pre>
- * @class Types/Entity/Model
- * @extends Types/Entity/Record
- * @implements Types/Entity/IInstantiable
- * @mixes Types/Entity/InstantiableMixin
+ * @class Types/_entity/Model
+ * @extends Types/_entity/Record
+ * @implements Types/_entity/IInstantiable
+ * @mixes Types/_entity/InstantiableMixin
  * @public
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
@@ -126,7 +126,7 @@ const ROUTE_SEPEARTOR = '.';
 
 export default class Model extends mixin(
    Record, InstantiableMixin
-) implements IInstantiable /** @lends Types/Entity/Model.prototype */{
+) implements IInstantiable /** @lends Types/_entity/Model.prototype */{
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
@@ -136,7 +136,7 @@ export default class Model extends mixin(
 
    /**
     * @cfg {Object.<Property>} Описание собственных свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
-    * @name Types/Entity/Model#properties
+    * @name Types/_entity/Model#properties
     * @see Property
     * @see getProperties
     * @example
@@ -252,7 +252,7 @@ export default class Model extends mixin(
 
    /**
     * @cfg {String} Название свойства, содержащего первичный ключ
-    * @name Types/Entity/Model#idProperty
+    * @name Types/_entity/Model#idProperty
     * @see getIdProperty
     * @see setIdProperty
     * @see getId
@@ -440,9 +440,9 @@ export default class Model extends mixin(
 
    /**
     * Возвращает энумератор для перебора названий свойств модели
-    * @return {Types/Collection/ArrayEnumerator}
+    * @return {Types/_collection/ArrayEnumerator}
     * @example
-    * Смотри пример {@link Types/Entity/Record#getEnumerator для записи}:
+    * Смотри пример {@link Types/_entity/Record#getEnumerator для записи}:
     */
    getEnumerator(): enumerator.Arraywise<any> {
       const ArrayEnumerator = resolve('Types/collection:enumerator.Arraywise');
@@ -454,7 +454,7 @@ export default class Model extends mixin(
     * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
     * @param {Object} [context] Контекст вызова callback.
     * @example
-    * Смотри пример {@link Types/Entity/Record#each для записи}:
+    * Смотри пример {@link Types/_entity/Record#each для записи}:
     */
    each(callback: EnumeratorCallback<any>, context?: Object) {
       return super.each(callback, context);
@@ -639,7 +639,7 @@ export default class Model extends mixin(
 
    /**
     * Объединяет модель с данными другой модели
-    * @param {Types/Entity/Model} model Модель, с которой будет произведено объединение
+    * @param {Types/_entity/Model} model Модель, с которой будет произведено объединение
     * @example
     * Объединим модели пользователя и группы пользователей:
     * <pre>

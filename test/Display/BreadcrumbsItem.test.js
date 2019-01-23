@@ -11,7 +11,7 @@ define([
    BreadcrumbsItem = BreadcrumbsItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/Display/BreadcrumbsItem', function() {
+   describe('Types/_display/BreadcrumbsItem', function() {
       describe('.getContents()', function() {
          it('should return tree branch', function() {
             var items = [];
