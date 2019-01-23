@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Objectwise" />
 /**
  * Цепочка по объекту.
- * @class Types/Chain/Object
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Object
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import Abstract from './Abstract';
 import {enumerator} from '../collection';
 
-export default class Objectwise<T> extends Abstract<T> /** @lends Types/Chain/Object.prototype */{
+export default class Objectwise<T> extends Abstract<T> /** @lends Types/_chain/Object.prototype */{
    protected _source: Object;
 
    constructor(source: Object) {

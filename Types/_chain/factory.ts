@@ -44,17 +44,17 @@
  *    //[Model(Amy Wong), Model(Turanga Leela)]
  * });
  * </pre>
- * Другие примеры смотрите в описании методов класса {@link Types/Chain/Abstract}.
+ * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
- * @class Types/Chain
+ * @class Types/_chain
  * @public
  * @author Мальцев А.А.
  */
 
 /**
- * @alias Types/Chain
- * @param {Array|Object|Types/Collection/IEnumerable|Types/Chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
- * @return {Types/Chain/Abstract}
+ * @alias Types/_chain
+ * @param {Array|Object|Types/Collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
+ * @return {Types/_chain/Abstract}
  */
 
 import {register} from '../di';

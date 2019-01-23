@@ -17,7 +17,7 @@ export default class ZippedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор объединяющего энумератора.
-    * @param {Types/Chain/Abstract} previous Предыдущее звено.
+    * @param {Types/_chain/Abstract} previous Предыдущее звено.
     * @param {Array.<Array>|Array.<Types/Collection/IEnumerable>} items Коллекции для объединения.
     * @protected
     */

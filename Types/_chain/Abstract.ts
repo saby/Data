@@ -2,7 +2,7 @@
 /**
  * Абстрактная цепочка.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Chain/Abstract
+ * @class Types/_chain/Abstract
  * @mixes Types/Entity/DestroyableMixin
  * @implements Types/Collection/IEnumerable
  * @public
@@ -34,7 +34,7 @@ interface ReduceFunc {
    (memo: any, item: any, index: number): any
 }
 
-export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> /** @lends Types/Chain/Abstract.prototype */{
+export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */{
    readonly '[Types/_collection/IEnumerable]' = true;
 
    /**
@@ -43,12 +43,12 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    protected _source: any;
 
    /**
-    * @property {Types/Chain/Abstract|null>} Предыдущий элемент цепочки
+    * @property {Types/_chain/Abstract|null>} Предыдущий элемент цепочки
     */
    protected _previous: Abstract<T>;
 
    /**
-    * @property {Types/Chain/Abstract} Первый элемент цепочки
+    * @property {Types/_chain/Abstract} Первый элемент цепочки
     */
    get start(): Abstract<T> {
       return this._previous ? this._previous.start : this;
@@ -63,7 +63,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Конструктор цепочки
-    * @param {Types/Chain/Abstract|*} source Данные, обрабатываемые цепочкой
+    * @param {Types/_chain/Abstract|*} source Данные, обрабатываемые цепочкой
     */
    constructor(source: Abstract<T>|any) {
       super();
@@ -344,7 +344,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @param {function(*, Number): *} callback Функция, возвращающая новый элемент.
     * Принимает аргументы: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Преобразуем массив в записи:
     * <pre>
@@ -377,7 +377,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Перекомбинирует коллекцию, каждый n-ый элемент которой является массивом, первым элементом которого является n-ый
     * элемент исходной коллекции, вторым - n-ый элемент второй коллекции и т.д.
     * @param {...Array} [args] Коллекции для комбинирования.
-    * @return {Types/Chain/Zipped}
+    * @return {Types/_chain/Zipped}
     * @example
     * Скомбинируем массивы:
     * <pre>
@@ -428,7 +428,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Преобразует коллекцию, возвращая значение свойства для каждого элемента.
     * @param {String} propertyName Название свойства.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Получим имена персонажей из массива:
     * <pre>
@@ -469,7 +469,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Преобразует коллекцию, вызывая метод каждого элемента.
     * @param {String} methodName Название метода.
     * @param {...*} [args] Аргументы метода.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Получим список названий фруктов в верхнем регистре:
     * <pre>
@@ -507,7 +507,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Соединяет коллекцию с другими коллекциями, добавляя их элементы в конец.
     * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, с которыми объединить.
-    * @return {Types/Chain/Concatenated}
+    * @return {Types/_chain/Concatenated}
     * @example
     * Объединим коллекцию с двумя массивами:
     * <pre>
@@ -524,7 +524,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Разворачивает иерархическую коллекцию в плоскую: каждый итерируемый элемент коллекции рекрурсивно вставляется
     * в виде коллекции.
-    * @return {Types/Chain/Flattened}
+    * @return {Types/_chain/Flattened}
     * @example
     * Развернем массив:
     * <pre>
@@ -542,7 +542,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Группирует коллекцию, создавая новую из элементов, сгруппированных в массивы.
     * @param {String|Function(*): String} key Поле группировки или функция, группировки для каждого элемента.
     * @param {String|Function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
-    * @return {Types/Chain/Grouped}
+    * @return {Types/_chain/Grouped}
     * @example
     * Сгруппируем четные и нечетные значения массива:
     * <pre>
@@ -578,7 +578,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Агрегирует коллекцию, подсчитывая число элементов, объединенных по заданному критерию.
     * @param {String|function(*): String} [by] Поле агрегации или функция агрегации для каждого элемента.
     * Если не указан, возвращается общее количество элементов.
-    * @return {Number|Types/Chain/Counted}
+    * @return {Number|Types/_chain/Counted}
     * @example
     * Подсчитаем число элементов массива:
     * <pre>
@@ -649,7 +649,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Преобразует коллекцию, удаляя из нее повторяющиеся элементы (используется строгое сравнение ===).
     * @param {function(*): String|Number>} [idExtractor] Функция, возвращающая уникальный идентификатор элемента.
-    * @return {Types/Chain/Uniquely}
+    * @return {Types/_chain/Uniquely}
     * @example
     * Оставим уникальные значения массива:
     * <pre>
@@ -680,7 +680,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Преобразует коллекцию, добавляя в нее элементы других коллекций, которых в ней еще нет.
     * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
-    * @return {Types/Chain/Uniquely}
+    * @return {Types/_chain/Uniquely}
     * @example
     * Оставим уникальные значения массива:
     * <pre>
@@ -703,7 +703,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Фильтрует коллекцию, оставляя в ней те элементы, которые прошли фильтр.
     * @param {function(*, Number): Boolean} callback Фильтр c аргументами: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Выберем четные значения массива:
     * <pre>
@@ -727,7 +727,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Фильтрует коллекцию, исключая из нее те элементы, которые прошли фильтр.
     * @param {function(*, Number): Boolean} callback Функция c аргументами: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Исключим значения от 2 до 4:
     * <pre>
@@ -745,7 +745,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Фильтрует коллекцию, оставляя в ней элементы, имеющие указанный набор значений свойств.
     * @param {Object} properties Объект, с набором проверяемых свойств и их значений.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Получим персонажей мужского пола из дома Старков:
     * <pre>
@@ -784,7 +784,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Возвращает первый элемент коллекции или фильтрует ее, оставляя в ней первые n элементов.
     * @param {Number} [n] Количество элементов, которые нужно выбрать. Если не указан, то возвращается первый элемент.
-    * @return {Types/Chain/Sliced|*}
+    * @return {Types/_chain/Sliced|*}
     * @example
     * Выберем первый элемент:
     * <pre>
@@ -812,7 +812,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Возвращает последний элемент коллекции или фильтрует ее, оставляя в ней последние n элементов.
     * @param {Number} [n] Количество выбираемых элементов. Если не указано, то возвращается последний элемент.
-    * @return {Types/Chain/Reversed|*}
+    * @return {Types/_chain/Reversed|*}
     * @example
     * Выберем последний элемент:
     * <pre>
@@ -841,7 +841,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Меняет порядок элементов коллекции на обратный
-    * @return {Types/Chain/Reversed}
+    * @return {Types/_chain/Reversed}
     * @example
     * Изменим порядок элементов:
     * <pre>
@@ -860,7 +860,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * методу {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.prototype.sort}.
     * @param {function(*, *): Number} [compareFunction] Функция сортировки. Принимает аргументами два элемента
     * коллекции, которые нужно сравнить.
-    * @return {Types/Chain/Sorted}
+    * @return {Types/_chain/Sorted}
     * @example
     * Отсортируем массив чисел по возрастанию:
     * <pre>
