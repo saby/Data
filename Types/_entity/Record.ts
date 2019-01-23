@@ -354,7 +354,7 @@ export default class Record extends mixin(
 
    readonly '[Types/_entity/IObject]': boolean;
 
-   get(name) {
+   get(name: string): any {
       if (this._fieldsCache.has(name)) {
          return this._fieldsCache.get(name);
       }
@@ -371,7 +371,7 @@ export default class Record extends mixin(
       return value;
    }
 
-   set(name, value?) {
+   set(name: string | Object, value?: any): void {
       let map = this._getHashMap(name, value);
       let errors = [];
 
@@ -386,7 +386,7 @@ export default class Record extends mixin(
       this._checkErrors(errors);
    }
 
-   has(name) {
+   has(name: string): boolean {
       return this._getRawDataFields().indexOf(name) > -1;
    }
 
@@ -655,7 +655,7 @@ export default class Record extends mixin(
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone: (shallow?: boolean) => Object;
+   clone: (shallow?: boolean) => Record;
 
    //endregion
 

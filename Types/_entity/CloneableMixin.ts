@@ -17,7 +17,7 @@ const CloneableMixin = /** @lends Types/Entity/CloneableMixin.prototype */{
 
    '[Types/_entity/ICloneable]': true,
 
-   clone(shallow) {
+   clone(shallow?: boolean): Object {
       let clone;
 
       if (shallow) {
