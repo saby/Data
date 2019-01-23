@@ -32,7 +32,8 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-import RecordSet = require('Types/_collection/RecordSet');
+import Record from '../Record';
+import {RecordSet} from '../../collection';
 
 interface RecordSetOptions {
    adapter?: string | IAdapter
@@ -45,7 +46,7 @@ export default class RecordSetTable extends mixin(
    /**
     * @property Список
     */
-   _data: RecordSet;
+   _data: RecordSet<Record>;
 
    /**
     * Конструктор

@@ -839,7 +839,7 @@ export default class RecordSet<Record> extends mixin(
       );
    }
 
-   addField(format, at, value) {
+   addField(format, at, value?) {
       format = this._buildField(format);
       FormattableMixin.addField.call(this, format, at);
 

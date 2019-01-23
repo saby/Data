@@ -28,8 +28,8 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {Field, UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-import Record = require('Types/_entity/Record');
-import RecordSet = require('Types/_collection/RecordSet');
+import Record from '../Record';
+import {RecordSet} from '../../collection';
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
@@ -42,7 +42,7 @@ export default class RecordSetRecord extends mixin(
    /**
     * @property Таблица
     */
-   _tableData: RecordSet;
+   _tableData: RecordSet<Record>;
 
    /**
     * Конструктор
