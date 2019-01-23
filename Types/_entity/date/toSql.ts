@@ -1,5 +1,4 @@
 ///<amd-module name="Types/_entity/date/toSql" />
-import {date as dateFormatter} from '../../formatter';
 /**
  * @public
  * @author Мальцев А.А.
@@ -12,11 +11,13 @@ import {date as dateFormatter} from '../../formatter';
  * @variant MODE_TIME Время
  */
 
+import {date as dateFormatter} from '../../formatter';
+
 const MODE = {
    'TIME': 'time',
    'DATE': 'date',
    'DATETIME': 'datetime'
-}
+};
 
 const modeFormat = {
    'time': 'HH:mm:ss',
@@ -24,7 +25,8 @@ const modeFormat = {
    'datetime': 'YYYY-MM-DD HH:mm:ss'
 };
 
-var UNIX_EPOCH_START = new Date(0);
+const UNIX_EPOCH_START = new Date(0);
+
 /**
  * Приводит объект Date() к строке, содержащей дату в формате SQL.
  * @function
@@ -40,9 +42,9 @@ function getTimeZone(date:Date):string {
       tz = -tz;
    }
    return (isNegative ? '-' : '+') + (tz < 10 ? '0' : '') + tz;
-};
+}
 
-export default function toSQL(date: Date, mode: string = 'datetime') {
+export default function toSQL(date: Date, mode: string = MODE.DATETIME) {
    let result = dateFormatter(date, modeFormat[mode]);
    if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {
       if (date.getMilliseconds() > 0) {

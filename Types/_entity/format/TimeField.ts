@@ -16,8 +16,7 @@
  */
 
 import Field from './Field';
-// @ts-ignore
-import toSql = require('Core/helpers/Date/toSql');
+import toSql, {MODE} from '../date/toSql';
 
 export default class TimeField extends Field /** @lends Types/Format/TimeField.prototype */{
 
@@ -25,7 +24,7 @@ export default class TimeField extends Field /** @lends Types/Format/TimeField.p
 
    getDefaultValue() {
       if (this._$defaultValue instanceof Date) {
-         return toSql(this._$defaultValue, toSql.MODE_TIME);
+         return toSql(this._$defaultValue, MODE.TIME);
       }
       return this._$defaultValue;
    }

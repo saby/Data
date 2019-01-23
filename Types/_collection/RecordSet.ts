@@ -70,8 +70,7 @@ import {
 } from '../entity';
 import {create, register} from '../di';
 import {mixin, logger} from '../util';
-// @ts-ignore
-import isEqualObject = require('Core/helpers/Object/isEqual');
+import {isEqual} from '../object';
 
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
@@ -402,7 +401,7 @@ export default class RecordSet<Record> extends mixin(
       }
 
       //TODO: compare using formats
-      return isEqualObject(
+      return isEqual(
          this._getRawData(),
          to.getRawData(true)
       );

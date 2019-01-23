@@ -31,8 +31,7 @@ import JsonRecord from './JsonRecord';
 import {UniversalField} from '../format';
 import {Set} from '../../shim';
 import {mixin} from '../../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../../object';
 
 export default class JsonTable extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
@@ -163,7 +162,7 @@ export default class JsonTable extends mixin(
       let extention = this.at(donor);
       let adapter = new JsonRecord(first);
       let id = adapter.get(idProperty);
-      coreMerge(first, extention);
+      merge(first, extention);
       adapter.set(idProperty, id);
       this.remove(donor);
    }
@@ -172,8 +171,7 @@ export default class JsonTable extends mixin(
       this._touchData();
 
       let source = this.at(index);
-      let clone = {};
-      coreMerge(clone, source, {clone: true});
+      let clone = merge({}, source);
       this.add(clone, 1 + index);
       return clone;
    }

@@ -20,8 +20,7 @@ import IEquatable from '../IEquatable';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
-// @ts-ignore
-import isEqualObject = require('Core/helpers/Object/isEqual');
+import {isEqual} from '../../object';
 
 // @ts-ignore
 export default abstract class Field extends mixin(
@@ -86,7 +85,7 @@ export default abstract class Field extends mixin(
 
       return selfProto === toProto &&
          this.getName() === to.getName() &&
-         isEqualObject(this.getDefaultValue(), to.getDefaultValue()) &&
+         isEqual(this.getDefaultValue(), to.getDefaultValue()) &&
          this.isNullable() === to.isNullable();
    }
 

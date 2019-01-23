@@ -42,8 +42,7 @@ import {DestroyableMixin, Record, Model, OptionsToPropertyMixin, ReadWriteMixin,
 import {RecordSet} from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../object';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
@@ -867,7 +866,7 @@ export default class LocalSession extends mixin(
       if (fromData === null || toData === null) {
          return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
       }
-      let data = coreMerge(fromData, toData);
+      let data = merge(fromData, toData);
       this.rawManager.set(from, data);
       this.rawManager.remove(to);
       return Deferred.success(true);
@@ -890,7 +889,7 @@ export default class LocalSession extends mixin(
       if (from === null) {
          return Deferred.fail('Record with key ' + from + ' isn\'t exists');
       }
-      let to = coreMerge({}, from);
+      let to = merge({}, from);
       this.rawManager.set(myId, to);
       return Deferred.success(this.modelManager.get(to));
    }
@@ -1001,7 +1000,7 @@ export default class LocalSession extends mixin(
    protected _getDataSet(rawData: any) {
       return <DataSet>create(// eslint-disable-line new-cap
          this._dataSetModule,
-         coreMerge({
+         Object.assign({
             writable: this._writable,
             adapter: this.getAdapter(),
             model: this.getModel(),
@@ -1011,7 +1010,7 @@ export default class LocalSession extends mixin(
             rawData: rawData,
             itemsProperty: this._dataSetItemsProperty,
             metaProperty: this._dataSetMetaProperty
-         }, {rec: false})
+         })
       );
    }
 

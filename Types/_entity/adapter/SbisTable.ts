@@ -40,8 +40,7 @@ import SbisFormatMixin from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import {fieldsFactory, Field, UniversalField} from '../format';
 import {mixin} from '../../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../../object';
 
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin
@@ -130,7 +129,7 @@ export default class SbisTable extends mixin(
       this._touchData();
       this._checkRowIndex(acceptor);
       this._checkRowIndex(donor);
-      coreMerge(
+      merge(
          this._data.d[acceptor],
          this._data.d[donor]
       );
@@ -141,8 +140,7 @@ export default class SbisTable extends mixin(
       this._touchData();
       this._checkRowIndex(index);
       let source = this._data.d[index];
-      let clone = [];
-      coreMerge(clone, source, {clone: true});
+      let clone = merge([], source);
       this._data.d.splice(1 + index, 0, clone);
       return clone;
    }

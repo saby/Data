@@ -18,9 +18,6 @@ import toSql, {MODE as toSqlMode} from './date/toSql';
 import fromSql from './date/fromSql';
 
 // @ts-ignore
-import coreInstance = require('Core/core-instance');
-
-// @ts-ignore
 import CoreTimeInterval = require('Core/TimeInterval');
 // @ts-ignore
 import renders = require('Core/defaultRenders');
@@ -363,11 +360,11 @@ const factory = {
             value = value.get();
          } else if (value['[Types/_collection/IList]'] && type === 'recordset') {
             value = convertListToRecordSet(value);
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/Record')) {
+         } else if (value._moduleName === 'Deprecated/Record') {
             throw new TypeError('Deprecated/Record can\'t be used with "Data"');
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/RecordSet')) {
+         } else if (value._moduleName === 'Deprecated/RecordSet') {
             throw new TypeError('Deprecated/RecordSet can\'t be used with "Data"');
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/Enum')) {
+         } else if (value._moduleName === 'Deprecated/Enum') {
             throw new TypeError('Deprecated/Enum can\'t be used with "Data"');
          }
       }

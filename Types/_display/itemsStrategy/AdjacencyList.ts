@@ -15,8 +15,7 @@ import GroupItem from '../GroupItem';
 import {DestroyableMixin, SerializableMixin} from '../../entity';
 import {mixin, protect, object, logger} from '../../util';
 import {Map} from '../../shim';
-// @ts-ignore
-import throttle = require('Core/helpers/Function/throttle');
+import {throttle} from '../../function';
 
 /**
  * Свойство, хранящее признак, что список элементов проинициализирован
