@@ -19,13 +19,14 @@
 import Base, {IOptions as IBaseOptions} from './Base';
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
-import IProvider from './IProvider';
+import IProvider, {IEndpoint} from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import BindingMixin from './BindingMixin';
 import EndpointMixin from './EndpointMixin';
 import OptionsMixin from './OptionsMixin';
 import Query from './Query';
+import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
@@ -246,7 +247,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta) {
+   create(meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.create,
          this._$passing.create.call(this, meta)
@@ -257,7 +258,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   read(key, meta) {
+   read(key: any, meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.read,
          this._$passing.read.call(this, key, meta)
@@ -268,7 +269,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   update(data, meta) {
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.update,
          this._$passing.update.call(this, data, meta)
@@ -277,14 +278,14 @@ export default abstract class Remote extends mixin(
       )
    }
 
-   destroy(keys, meta) {
+   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.destroy,
          this._$passing.destroy.call(this, keys, meta)
       );
    }
 
-   query(query) {
+   query(query: Query): ExtendPromise<DataSet> {
       return this._callProvider(
          this._$binding.query,
          this._$passing.query.call(this, query)
@@ -301,14 +302,14 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from, to) {
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.merge,
          this._$passing.merge.call(this, from, to)
       );
    }
 
-   copy(key, meta) {
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.copy,
          this._$passing.copy.call(this, key, meta)
@@ -317,10 +318,10 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   move(from, to, meta) {
+   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.move,
-         this._$passing.move.call(this, from, to, meta)
+         this._$passing.move.call(this, items, target, meta)
       );
    }
 
@@ -330,7 +331,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/IProvider]': boolean = true;
 
-   getEndpoint(): any {
+   getEndpoint(): IEndpoint {
       return EndpointMixin.getEndpoint.call(this);
    }
 

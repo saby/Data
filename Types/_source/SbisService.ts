@@ -142,6 +142,8 @@ import {resolve, register} from '../di';
 import {logger, object} from '../util';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
+import DataSet from "./DataSet";
+import {IAbstract} from "./provider";
 
 /**
  * Типы навигации для query()
@@ -492,7 +494,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
  * @return {Object}
  * @protected
  */
-function passUpdateBatch(items: RecordSet<Record>, meta?: Object): Object {
+function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Object {
    const RecordSet = resolve('Types/collection:RecordSet');
    let patch = RecordSet.patch(items);
    return {
@@ -772,7 +774,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
     *     });
     * </pre>
     */
-   create(meta) {
+   create(meta?: Object): ExtendPromise<Record> {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies((def) => {
          this._connectAdditionalDependencies(
@@ -782,7 +784,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
       });
    }
 
-   update(data, meta) {
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
       if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
          return this._loadAdditionalDependencies((def) => {
             this._connectAdditionalDependencies(
@@ -800,7 +802,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
       return super.update(data, meta);
    }
 
-   destroy(keys, meta) {
+   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
       if (!(keys instanceof Array)) {
          return callDestroyWithComplexId(
             this,
@@ -826,7 +828,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
       return pd.done().getResult();
    }
 
-   query(query) {
+   query(query: Query): ExtendPromise<DataSet> {
       query = object.clonePlain(query, true);
       return this._loadAdditionalDependencies((def) => {
          this._connectAdditionalDependencies(
@@ -840,7 +842,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    //region ICrudPlus
 
-   move(items, target, meta) {
+   move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): ExtendPromise<any> {
       meta = meta || {};
       if (this._$binding.moveBefore) {
          //TODO: поддерживаем старый способ с двумя методами
@@ -881,7 +883,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    //region Remote
 
-   getProvider() {
+   getProvider(): IAbstract {
       if (!this._provider) {
          this._provider = this._createProvider(this._$provider, {
             endpoint: this._$endpoint,
