@@ -16,7 +16,7 @@ define([
    fieldsFactory = fieldsFactory.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Adapter/SbisRecord', function() {
+   describe('Types/_entity/adapter/SbisRecord', function() {
       var data,
          adapter;
 

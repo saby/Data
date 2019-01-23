@@ -14,9 +14,9 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
 
    /**
     * Возвращает адаптер для работы с данными.
-    * @return {Types/Adapter/IAdapter}
+    * @return {Types/_entity/adapter/IAdapter}
     * @see adapter
-    * @see Types/Adapter/IAdapter
+    * @see Types/_entity/adapter/IAdapter
     * @example
     * Получим адаптер источника, используемый по умолчанию:
     * <pre>

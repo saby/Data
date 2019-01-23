@@ -6,10 +6,10 @@
  *       ||    (__)
  *       ||w--||     \|/
  *   \|/
- * @class Types/Adapter/Cow
+ * @class Types/_entity/adapter/Cow
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IAdapter
- * @implements Types/Adapter/IDecorator
+ * @implements Types/_entity/adapter/IAdapter
+ * @implements Types/_entity/adapter/IDecorator
  * @mixes Types/Entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -23,9 +23,9 @@ import SerializableMixin from '../SerializableMixin';
 import {register} from '../../di';
 import {mixin} from '../../util';
 
-export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator /** @lends Types/Adapter/Cow.prototype */{
+export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator /** @lends Types/_entity/adapter/Cow.prototype */{
    /**
-    * @property {Types/Adapter/IAdapter} Оригинальный адаптер
+    * @property {Types/_entity/adapter/IAdapter} Оригинальный адаптер
     */
    _original: IAdapter;
 
@@ -36,7 +36,7 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
 
    /**
     * Конструктор
-    * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
     * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(original: IAdapter, writeCallback?: Function) {

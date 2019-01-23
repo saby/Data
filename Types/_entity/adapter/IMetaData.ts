@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_entity/adapter/IMetaData" />
 /**
  * Интерфейс адаптера для работы с метаданными
- * @interface Types/Adapter/IMetaData
+ * @interface Types/_entity/adapter/IMetaData
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from '../format/Field';
 
-export default interface IMetaData /** @lends Types/Adapter/IMetaData.prototype */{
+export default interface IMetaData /** @lends Types/_entity/adapter/IMetaData.prototype */{
    readonly '[Types/_entity/adapter/IMetaData]': boolean;
 
    /**

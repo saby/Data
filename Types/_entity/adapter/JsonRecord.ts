@@ -11,11 +11,11 @@
  *    });
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/JsonRecord
+ * @class Types/_entity/adapter/JsonRecord
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @mixes Types/Adapter/GenericFormatMixin
- * @mixes Types/Adapter/JsonFormatMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @mixes Types/_entity/adapter/GenericFormatMixin
+ * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -29,7 +29,7 @@ import {mixin} from '../../util';
 
 export default class JsonRecord extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
-) implements IRecord /** @lends Types/Adapter/JsonRecord.prototype */{
+) implements IRecord /** @lends Types/_entity/adapter/JsonRecord.prototype */{
    /**
     * @property {Object} Сырые данные
     */
@@ -56,7 +56,7 @@ export default class JsonRecord extends mixin(
 
    //endregion IRecord
 
-   //region Types/Adapter/JsonFormatMixin
+   //region Types/_entity/adapter/JsonFormatMixin
 
    addField(format, at) {
       if (!format || !(format instanceof Field)) {
@@ -76,7 +76,7 @@ export default class JsonRecord extends mixin(
       delete this._data[name];
    }
 
-   //endregion Types/Adapter/JsonFormatMixin
+   //endregion Types/_entity/adapter/JsonFormatMixin
 
    //region Public methods
 

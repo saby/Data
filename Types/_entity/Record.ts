@@ -775,7 +775,7 @@ export default class Record extends mixin(
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/Adapter/IRecord}
+    * @return {Types/_entity/adapter/IRecord}
     * @protected
     */
    protected _createRawDataAdapter() {
@@ -1391,7 +1391,7 @@ export default class Record extends mixin(
     * //output: 'id: Integer', 'title: String'
     * </pre>
     * @param {Object} data Объект вида "имя поля" -> "значение поля"
-    * @param {String|Types/Adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
+    * @param {String|Types/_entity/adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
     * @return {Types/Entity/Record}
     * @static
     */

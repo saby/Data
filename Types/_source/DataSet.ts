@@ -4,7 +4,7 @@
  * Представляет собой набор {@link Types/Collection/RecordSet выборок}, {@link Types/Entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
  * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/Source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
  * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
- * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/Adapter/Json}.
+ * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
  * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
  *
  * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
@@ -128,10 +128,10 @@ export default class DataSet extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) /** @lends Types/_source/DataSet.prototype */{
    /**
-    * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы данными, по умолчанию {@link Types/Adapter/Json}
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию {@link Types/_entity/adapter/Json}
     * @name Types/_source/DataSet#adapter
     * @see getAdapter
-    * @see Types/Adapter/IAdapter
+    * @see Types/_entity/adapter/IAdapter
     * @see Types/Di
     * @example
     * <pre>
@@ -317,9 +317,9 @@ export default class DataSet extends mixin(
 
    /**
     * Возвращает адаптер для работы с данными
-    * @return {Types/Adapter/IAdapter}
+    * @return {Types/_entity/adapter/IAdapter}
     * @see adapter
-    * @see Types/Adapter/IAdapter
+    * @see Types/_entity/adapter/IAdapter
     * @example
     * Получим адаптер набора данных, используемый по умолчанию:
     * <pre>

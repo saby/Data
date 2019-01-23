@@ -2,9 +2,9 @@
 /**
  * Абстрактный адаптер для данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Adapter/Abstract
+ * @class Types/_entity/adapter/Abstract
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IAdapter
+ * @implements Types/_entity/adapter/IAdapter
  * @mixes Types/Entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
@@ -89,7 +89,7 @@ const serializer = (function() {
 
 export default abstract class Abstract extends mixin(
    DestroyableMixin, SerializableMixin
-) implements IAdapter /** @lends Types/Adapter/Abstract.prototype */{
+) implements IAdapter /** @lends Types/_entity/adapter/Abstract.prototype */{
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
    /**

@@ -14,10 +14,10 @@
  *       adapter = new RecordSetRecord(record);
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/RecordSetRecord
+ * @class Types/_entity/adapter/RecordSetRecord
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @mixes Types/Adapter/GenericFormatMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -35,7 +35,7 @@ import RecordSet = require('Types/Collection/RecordSet');
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
-) implements IRecord /** @lends Types/Adapter/RecordSetRecord.prototype */{
+) implements IRecord /** @lends Types/_entity/adapter/RecordSetRecord.prototype */{
    /**
     * @property Запись
     */

@@ -14,11 +14,11 @@
  *    }]);
  *    adapter.at(0);//{id: 1, title: 'Test 1'}
  * </pre>
- * @class Types/Adapter/JsonTable
+ * @class Types/_entity/adapter/JsonTable
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
- * @mixes Types/Adapter/JsonFormatMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
+ * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -35,7 +35,7 @@ import {merge} from '../../object';
 
 export default class JsonTable extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
-) implements ITable /** @lends Types/Adapter/JsonTable.prototype */{
+) implements ITable /** @lends Types/_entity/adapter/JsonTable.prototype */{
    /**
     * @property {Array.<Object>} Сырые данные
     */
@@ -62,7 +62,7 @@ export default class JsonTable extends mixin(
 
    //region ITable
 
-   //region Types/Adapter/JsonFormatMixin
+   //region Types/_entity/adapter/JsonFormatMixin
 
    addField(format, at) {
       JsonFormatMixin.addField.call(this, format, at);
@@ -85,7 +85,7 @@ export default class JsonTable extends mixin(
       }
    }
 
-   //endregion Types/Adapter/JsonFormatMixin
+   //endregion Types/_entity/adapter/JsonFormatMixin
 
    //region Public methods
 

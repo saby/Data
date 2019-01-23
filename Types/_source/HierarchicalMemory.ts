@@ -61,7 +61,7 @@ export default class HierarchicalMemory extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
-    * @cfg {String|Types/Adapter/IAdapter} See {@link Types/_source/Memory#adapter}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} See {@link Types/_source/Memory#adapter}.
     * @name Types/_source/HierarchicalMemory#adapter
     */
    protected _$adapter: string | Function;
@@ -97,7 +97,7 @@ export default class HierarchicalMemory extends mixin(
    protected _$data: any;
 
    /**
-    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} See {@link Types/_source/Memory#filter}.
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} See {@link Types/_source/Memory#filter}.
     * @name Types/_source/HierarchicalMemory#filter
     */
    protected _$filter: (item: adapter.IRecord, query: Object) => boolean;

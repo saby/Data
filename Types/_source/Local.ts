@@ -71,7 +71,7 @@ export default abstract class Local extends mixin(
    Base, DataCrudMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
    /**
-    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
     * @name Types/_source/Local#filter
     * @remark
     * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода query().
@@ -375,7 +375,7 @@ export default abstract class Local extends mixin(
 
    /**
     * Возвращает адаптер для работы с таблицей
-    * @return {Types/Adapter/ITable}
+    * @return {Types/_entity/adapter/ITable}
     * @protected
     */
    protected abstract _getTableAdapter(): adapter.ITable

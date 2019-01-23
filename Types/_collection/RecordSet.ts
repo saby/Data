@@ -868,7 +868,7 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/Adapter/ITable}
+    * @return {Types/_entity/adapter/ITable}
     * @protected
     */
    _createRawDataAdapter() {

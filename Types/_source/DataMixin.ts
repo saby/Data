@@ -22,10 +22,10 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    '[Types/_source/DataMixin]': true,
 
    /**
-    * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/Adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
     * @name Types/_source/DataMixin#adapter
     * @see getAdapter
-    * @see Types/Adapter/IAdapter
+    * @see Types/_entity/adapter/IAdapter
     * @see Types/Di
     * @example
     * Адаптер для данных в формате БЛ СБИС, внедренный в виде готового экземпляра:
@@ -33,7 +33,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     *    require([
     *       'Types/Source/Provider/SbisBusinessLogic',
     *       'Types/Source/Memory',
-    *       'Types/Adapter/Sbis'
+    *       'Types/_entity/adapter/Sbis'
     *    ], function (Provider, MemorySource, SbisAdapter) {
     *       new Provider({
     *          address: '/service/',

@@ -17,10 +17,10 @@
  *       console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
  *    });
  * </pre>
- * @class Types/Adapter/RecordSetTable
+ * @class Types/_entity/adapter/RecordSetTable
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -42,7 +42,7 @@ interface RecordSetOptions {
 
 export default class RecordSetTable extends mixin(
    DestroyableMixin, GenericFormatMixin
-) implements ITable /** @lends Types/Adapter/RecordSetTable.prototype */{
+) implements ITable /** @lends Types/_entity/adapter/RecordSetTable.prototype */{
    /**
     * @property Список
     */

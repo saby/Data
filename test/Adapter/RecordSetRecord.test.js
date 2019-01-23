@@ -20,7 +20,7 @@ define([
    RecordSet = RecordSet.default;
    fieldsFactory = fieldsFactory.default;
 
-   describe('Types/Adapter/RecordSetRecord', function() {
+   describe('Types/_entity/adapter/RecordSetRecord', function() {
       var data;
       var format;
       var adapter;

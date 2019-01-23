@@ -8,7 +8,7 @@ define([
 
    var CowTableAdapter = CowTableAdapterEs.default;
 
-   describe('Types/Adapter/CowTable', function() {
+   describe('Types/_entity/adapter/CowTable', function() {
       var Mock,
          MockTable,
          data,

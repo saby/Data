@@ -2,7 +2,7 @@
 /**
  * Интерфейс адаптера, осуществляющиего операции с "сырыми" данными.
  * Назначение адаптера - предоставить общий интерфейс для работы различными форматами данных.
- * @interface Types/Adapter/IAdapter
+ * @interface Types/_entity/adapter/IAdapter
  * @public
  * @author Мальцев А.А.
  */
@@ -10,13 +10,13 @@
 import ITable from './ITable';
 import IRecord from './IRecord';
 
-export default interface IAdapter /** @lends Types/Adapter/IAdapter.prototype */{
+export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prototype */{
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
    /**
     * Возвращает интерфейс доступа к данным в виде таблицы
     * @param {*} data Сырые данные
-    * @return {Types/Adapter/ITable}
+    * @return {Types/_entity/adapter/ITable}
     */
    forTable(data: any): ITable;
 
@@ -24,7 +24,7 @@ export default interface IAdapter /** @lends Types/Adapter/IAdapter.prototype */
     * Возвращает интерфейс доступа к данным в виде записи
     * @param {*} data Сырые данные
     * @param {*} [tableData] Сырые данные таблицы (передаются, когда data пустой)
-    * @return {Types/Adapter/IRecord}
+    * @return {Types/_entity/adapter/IRecord}
     */
    forRecord(data: any, tableData?): IRecord;
 

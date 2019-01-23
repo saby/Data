@@ -162,10 +162,10 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
    _$cow: false,
 
    /**
-    * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с данными, по умолчанию {@link Types/Adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с данными, по умолчанию {@link Types/_entity/adapter/Json}.
     * @name Types/Entity/FormattableMixin#adapter
     * @see getAdapter
-    * @see Types/Adapter/Json
+    * @see Types/_entity/adapter/Json
     * @see Types/Di
     * @remark
     * Адаптер должен быть предназначен для формата, в котором получены сырые данные {@link rawData}.
@@ -388,7 +388,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
    _formatClone: null,
 
    /**
-    * @member {Types/Adapter/ITable|Types/Adapter/IRecord} Адаптер для данных в "сыром" виде
+    * @member {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} Адаптер для данных в "сыром" виде
     */
    _rawDataAdapter: null,
 
@@ -469,7 +469,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
 
    /**
     * Возвращает адаптер для работы с данными в "сыром" виде.
-    * @return {Types/Adapter/IAdapter}
+    * @return {Types/_entity/adapter/IAdapter}
     * @see adapter
     * @example
     * Проверим, что по умолчанию используется адаптер для формата JSON:
@@ -646,7 +646,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
 
    /**
     * Возвращает адаптерр для сырых данных
-    * @return {Types/Adapter/IAdapter}
+    * @return {Types/_entity/adapter/IAdapter}
     * @protected
     */
    _getAdapter() {
@@ -670,7 +670,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
 
    /**
     * Возвращает адаптер для сырых данных заданного вида
-    * @return {Types/Adapter/ITable|Types/Adapter/IRecord}
+    * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
    _getRawDataAdapter() {
@@ -683,7 +683,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/Adapter/ITable|Types/Adapter/IRecord}
+    * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
    _createRawDataAdapter() {
@@ -710,7 +710,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
 
    /**
     * Проверяет совместимость адаптеров
-    * @param {Types/Adapter/IAdapter} foreign Адаптер внешнего объекта
+    * @param {Types/_entity/adapter/IAdapter} foreign Адаптер внешнего объекта
     * @protected
     */
    _checkAdapterCompatibility(foreign) {
@@ -807,7 +807,7 @@ const FormattableMixin = /** @lends Types/Entity/FormattableMixin.prototype */{
    /**
     * Возвращает формат поля с указанным названием
     * @param {String} name Название поля
-    * @param {Types/Adapter/ITable|Types/Adapter/IRecord} adapter Адаптер
+    * @param {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} adapter Адаптер
     * @return {Types/Format/Field|Types/Format/UniversalField}
     * @protected
     */

@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_entity/adapter/CowTable" />
 /**
  * Адаптер таблицы для работы в режиме Copy-on-write.
- * @class Types/Adapter/CowTable
+ * @class Types/_entity/adapter/CowTable
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @implements Types/Adapter/IDecorator
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
 
@@ -14,14 +14,14 @@ import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import {object} from '../../util';
 
-export default class CowTable extends DestroyableMixin implements ITable, IDecorator /** @lends Types/Adapter/CowTable.prototype */{
+export default class CowTable extends DestroyableMixin implements ITable, IDecorator /** @lends Types/_entity/adapter/CowTable.prototype */{
    /**
-    * @property {Types/Adapter/IAdapter} Оригинальный адаптер
+    * @property {Types/_entity/adapter/IAdapter} Оригинальный адаптер
     */
    _original: IAdapter;
 
    /**
-    * @property {Types/Adapter/ITable} Оригинальный адаптер таблицы
+    * @property {Types/_entity/adapter/ITable} Оригинальный адаптер таблицы
     */
    _originalTable: ITable;
 
@@ -38,7 +38,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
    /**
     * Конструктор
     * @param {*} data Сырые данные
-    * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
     * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(data: any, original: IAdapter, writeCallback?: Function) {
@@ -50,7 +50,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       }
    }
 
-   //region Types/Adapter/ITable
+   //region Types/_entity/adapter/ITable
 
    readonly '[Types/_entity/adapter/ITable]': boolean;
 
@@ -128,9 +128,9 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       return this._originalTable.removeFieldAt(index);
    }
 
-   //endregion Types/Adapter/ITable
+   //endregion Types/_entity/adapter/ITable
 
-   //region Types/Adapter/IDecorator
+   //region Types/_entity/adapter/IDecorator
 
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
 
@@ -138,7 +138,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       return this._originalTable;
    }
 
-   //endregion Types/Adapter/IDecorator
+   //endregion Types/_entity/adapter/IDecorator
 
    //region Protected methods
 

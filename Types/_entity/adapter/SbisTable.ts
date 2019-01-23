@@ -22,12 +22,12 @@
  *    });
  *    adapter.at(0);//{d: [1, 'Test 1'], s: [{n: 'id', t: 'Число целое'}, {n: 'title', t: 'Строка'}]}
  * </pre>
- * @class Types/Adapter/SbisTable
+ * @class Types/_entity/adapter/SbisTable
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @implements Types/Adapter/IMetaData
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IMetaData
  * @implements Types/Entity/ICloneable
- * @mixes Types/Adapter/SbisFormatMixin
+ * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -44,7 +44,7 @@ import {merge} from '../../object';
 
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin
-) implements ITable, IMetaData, ICloneable /** @lends Types/Adapter/SbisTable.prototype */{
+) implements ITable, IMetaData, ICloneable /** @lends Types/_entity/adapter/SbisTable.prototype */{
    _type: string;
 
    /**

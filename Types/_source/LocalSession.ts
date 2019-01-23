@@ -585,7 +585,7 @@ export default class LocalSession extends mixin(
    protected _dataSetModule: string | Function;
 
    /**
-    * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/Adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
     */
    protected _$adapter: string | libAdapter.IAdapter;
 

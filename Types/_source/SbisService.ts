@@ -257,7 +257,7 @@ function callDestroyWithComplexId(instance, ids, name, meta) {
 /**
  * Строит запись из объекта
  * @param {Object|Types/Entity/Record} data Данные полей записи
- * @param {Types/Adapter/IAdapter} adapter Адаптер
+ * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
  * @return {Types/Entity/Record|null}
  */
 export function buildRecord(data, adapter) {
@@ -268,7 +268,7 @@ export function buildRecord(data, adapter) {
 /**
  * Строит рекодсет из массива
  * @param {Array.<Object>|Types/Collection/RecordSet} data Данные рекордсета
- * @param {Types/Adapter/IAdapter} adapter Адаптер
+ * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
  * @param {String} idProperty
  * @return {Types/Collection/RecordSet|null}
  */
@@ -325,7 +325,7 @@ export function getSortingParams(query) {
  * Возвращает параметры навигации
  * @param {Types/Query/Query} query Запрос
  * @param {Object} options Опции источника
- * @param {Types/Adapter/IAdapter} adapter Адаптер
+ * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
  * @return {Object|null}
  */
 export function getPagingParams(query, options, adapter) {
@@ -676,10 +676,10 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    protected _$passing: IPassing;
 
    /**
-    * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
     * @name Types/_source/SbisService#adapter
     * @see getAdapter
-    * @see Types/Adapter/Sbis
+    * @see Types/_entity/adapter/Sbis
     * @see Types/Di
     */
    protected _$adapter: string;
@@ -1148,10 +1148,10 @@ SbisService.prototype._$passing = {
 };
 
 /**
- * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
+ * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
  * @name Types/_source/SbisService#adapter
  * @see getAdapter
- * @see Types/Adapter/Sbis
+ * @see Types/_entity/adapter/Sbis
  * @see Types/Di
  */
 // @ts-ignore
@@ -1196,6 +1196,6 @@ SbisService.prototype._$options = OptionsMixin.addOptions(Rpc, {
 
 //Also add SBIS adapter to lazy loaded dependencies
 SbisService.prototype._additionalDependencies = Rpc.prototype._additionalDependencies.slice();
-//SbisService.prototype._additionalDependencies.push('Types/Adapter/Sbis');
+//SbisService.prototype._additionalDependencies.push('Types/_entity/adapter/Sbis');
 
 register('Types/source:SbisService', SbisService, {instantiate: false});
