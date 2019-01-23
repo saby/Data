@@ -4,7 +4,8 @@ def workspace = "/home/sbis/workspace/types_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            branches: [[name: "rc-${version}"]],
+            //branches: [[name: "rc-${version}"]],
+            branches: [[name: "19.100/bugfix/variables"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
@@ -16,6 +17,6 @@ def workspace = "/home/sbis/workspace/types_${version}/${BRANCH_NAME}"
                     url: "${GIT}:sbis-ci/jenkins_pipeline.git"]]
                                     ])
         start = load "./jenkins_pipeline/platforma/branch/JenkinsfileTypes"
-        start.start(version, BRANCH_NAME, env)
+        start.start(version, workspace)
     }
 }
