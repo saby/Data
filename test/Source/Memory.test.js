@@ -110,6 +110,12 @@ define([
          source = undefined;
       });
 
+      describe('.data', function() {
+         it('should return data passed to constructor', function() {
+            assert.strictEqual(source.data, data);
+         });
+      });
+
       describe('.create()', function() {
          it('should return an empty model', function(done) {
             source.create().addCallbacks(function(model) {

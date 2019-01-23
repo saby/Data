@@ -194,7 +194,7 @@ export default class Memory extends Local /** @lends Types/Source/Memory.prototy
    }
 
    protected _applyFrom(from?: string): any {
-      return from ? contracts[from] : this._data;
+      return from ? contracts[from] : this.data;
    }
 
    protected _applyJoin(data: any, join: Join[]): any {
