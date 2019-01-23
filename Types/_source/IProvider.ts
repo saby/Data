@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/IProvider" />
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
- * @interface Types/Source/IProvider
+ * @interface Types/_source/IProvider
  * @public
  * @author Мальцев А.А.
  */
@@ -13,7 +13,7 @@ interface IEndpoint {
    address?: string
 }
 
-export default interface IProvider /** @lends Types/Source/IProvider.prototype */{
+export default interface IProvider /** @lends Types/_source/IProvider.prototype */{
    readonly '[Types/_source/IProvider]': boolean;
 
    /**
@@ -51,7 +51,7 @@ export default interface IProvider /** @lends Types/Source/IProvider.prototype *
 
    /**
     * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-    * @return {Types/Source/Provider/IAbstract}
+    * @return {Types/_source/Provider/IAbstract}
     * @see provider
     */
    getProvider(): IAbstract;

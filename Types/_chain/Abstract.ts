@@ -167,17 +167,17 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Получим рекордсет с адаптером для БЛ СБИС:
     * <pre>
     * requirejs([
-    *    'Types/Chain',
-    *    'Types/Source/SbisService',
-    *    'Types/Collection/Factory/RecordSet'
+    *    'Types/chain',
+    *    'Types/source',
+    *    'Types/collection'
     * ], function(
-    *    Chain,
-    *    SbisService,
-    *    recordSetFactory
+    *    chain,
+    *    source,
+    *    collection
     * ) {
-    *    var dataSource = new SbisService({endpoint: 'Employee'});
+    *    var dataSource = new source.SbisService({endpoint: 'Employee'});
     *    dataSource.query().addCallback(function(response) {
-    *       var items = Chain(response.getAll()).first(10).value(recordSetFactory, {
+    *       var items = chain.factory(response.getAll()).first(10).value(collection.factory.recordSet, {
     *          adapter: response.getAdapter()
     *       });
     *       //Do something with items

@@ -32,7 +32,7 @@ define([
    SbisAdapter = SbisAdapter.default;
    Query = Query.default;
 
-   return function(SbisService, provider) {//Mock of Types/Source/Provider/SbisBusinessLogic
+   return function(SbisService, provider) {//Mock of Types/_source/provider/SbisBusinessLogic
       var meta = [
             {n: 'Фамилия', t: 'Строка'},
             {n: 'Имя', t: 'Строка'},

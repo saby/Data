@@ -44,10 +44,10 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/PrefetchProxy
+ * @class Types/_source/PrefetchProxy
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
  * @mixes Types/Entity/OptionsMixin
  * @mixes Types/Entity/SerializableMixin
  * @public
@@ -79,34 +79,34 @@ declare type ITarget = ICrud | ICrudPlus | Base
 
 export default class PrefetchProxy extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
-) implements ICrud, ICrudPlus /** @lends Types/Source/PrefetchProxy.prototype */{
+) implements ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
    /**
-    * @cfg {Types/Source/ICrud|Types/Source/ICrudPlus} Целевой источник данных.
-    * @name Types/Source/PrefetchProxy#target
+    * @cfg {Types/_source/ICrud} Целевой источник данных.
+    * @name Types/_source/PrefetchProxy#target
     */
    _$target: ITarget = null;
 
    /**
-    * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/Source/ICrud} и {@link Types/Source/ICrudPlus}.
-    * @name Types/Source/PrefetchProxy#data
+    * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+    * @name Types/_source/PrefetchProxy#data
     */
    _$data: IData = {
 
       /**
-       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/Source/ICrud#read}.
-       * @name Types/Source/PrefetchProxy#data.read
+       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
+       * @name Types/_source/PrefetchProxy#data.read
        */
       read: null,
 
       /**
-       * @cfg {Types/Source/DataSet} Предварительно загруженные данные для метода {@link Types/Source/ICrud#query}.
-       * @name Types/Source/PrefetchProxy#data.query
+       * @cfg {Types/_source/DataSet} Предварительно загруженные данные для метода {@link Types/_source/ICrud#query}.
+       * @name Types/_source/PrefetchProxy#data.query
        */
       query: null,
 
       /**
-       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/Source/ICrud#copy}.
-       * @name Types/Source/PrefetchProxy#data.copy
+       * @cfg {Types/Entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#copy}.
+       * @name Types/_source/PrefetchProxy#data.copy
        */
       copy: null
    };

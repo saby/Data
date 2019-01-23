@@ -48,7 +48,7 @@ define([
       {id: '10', title: 'Plutonis', kind: 'Da planet', material: null}
    ];
 
-   describe('Types/Source/LocalSession', function() {
+   describe('Types/_source/LocalSession', function() {
 
       beforeEach(function() {
          source = new LocalSession({

@@ -37,7 +37,7 @@ const serializer = (function() {
 
    let serializeObject = function(obj) {
       if (typeof obj.getRawData === 'function') {
-         //Instance of Types/Entity/Record || Types/Collection/RecordSet || Types/Source/DataSet
+         //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
          return obj.getRawData(true);
       } else if (obj instanceof Date) {
          let mode = toSqlMode.DATETIME;

@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/provider/INotify" />
 /**
  * Интерфейс провайдера c доступом к серверным событиям
- * @interface Types/Source/Provider/INotify
+ * @interface Types/_source/provider/INotify
  * @public
  * @author Мальцев А.А.
  * @example
@@ -28,13 +28,13 @@
 
 import IChannel from './IChannel';
 
-export default interface INotify /** @lends Types/Source/Provider/INotify.prototype */{
+export default interface INotify /** @lends Types/_source/provider/INotify.prototype */{
    readonly '[Types/_source/provider/INotify]': boolean;
 
    /**
     * Возвращает канал серверных событий
     * @param {String} [name] Имя канала событий
-    * @return {Types/Source/Provider/IChannel}
+    * @return {Types/_source/provider/IChannel}
     */
    getEventsChannel(name: string): IChannel;
 }

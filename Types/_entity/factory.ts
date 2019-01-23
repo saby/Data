@@ -8,7 +8,7 @@
 
 /**
  * @faq Почему я вижу ошибки от Types/Di::resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/Entity/Model} и {@link Types/Source/RecordSet}, а уже потом {@link Types/Factory}
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  */
 
 import IProducible, {IProducibleConstructor} from './IProducible';

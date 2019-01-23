@@ -2,14 +2,14 @@
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию работы с данными.
  *
- * @interface Types/Source/IData
+ * @interface Types/_source/IData
  * @public
  * @author Мальцев А.А.
  */
 
 import {adapter} from '../entity';
 
-export default interface IData /** @lends Types/Source/IData.prototype */{
+export default interface IData /** @lends Types/_source/IData.prototype */{
    readonly '[Types/_source/IData]': boolean;
 
    /**

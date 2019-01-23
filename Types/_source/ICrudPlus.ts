@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_source/ICrudPlus" />
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
- * @interface Types/Source/ICrudPlus
+ * @interface Types/_source/ICrudPlus
  * @public
  * @author Мальцев А.А.
  */
 
 import {Record} from '../entity';
 
-export default interface ICrudPlus /** @lends Types/Source/ICrudPlus.prototype */{
+export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype */{
    readonly '[Types/_source/ICrudPlus]': boolean;
 
    /** @typedef {String} MovePosition

@@ -2,14 +2,14 @@
 /**
  * Базовый источник данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Base
+ * @class Types/_source/Base
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/IData
+ * @implements Types/_source/IData
  * @mixes Types/Entity/OptionsMixin
  * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Source/OptionsMixin
- * @mixes Types/Source/LazyMixin
- * @mixes Types/Source/DataMixin
+ * @mixes Types/_source/OptionsMixin
+ * @mixes Types/_source/LazyMixin
+ * @mixes Types/_source/DataMixin
  * @ignoreOptions options.writable
  * @public
  * @author Мальцев А.А.
@@ -29,7 +29,7 @@ export interface IOptions extends IDefaultOptions, IDataOptions {
 
 export default abstract class Base extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
-) implements IData /** @lends Types/Source/Base.prototype */{
+) implements IData /** @lends Types/_source/Base.prototype */{
    protected constructor(options?: IOptions) {
       options = Object.assign({}, options || {});
 

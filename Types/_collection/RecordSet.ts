@@ -30,12 +30,12 @@
  * Создадим рекордсет, в котором в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
- *       'Types/Collection/RecordSet',
- *       'Types/Source/SbisService'
- *    ], function (RecordSet, SbisService) {
- *       var source = new SbisService({endpoint: 'Employee'});
- *       source.call('list', {department: 'designers'}).addCallback(function(response) {
- *          var designers = new RecordSet({
+ *       'Types/collection',
+ *       'Types/source'
+ *    ], function (collection, source) {
+ *       var ds = new source.SbisService({endpoint: 'Employee'});
+ *       ds.call('list', {department: 'designers'}).addCallback(function(response) {
+ *          var designers = new collection.RecordSet({
  *             rawData: response.getRawData(),
  *             adapter: response.getAdapter()
  *          });

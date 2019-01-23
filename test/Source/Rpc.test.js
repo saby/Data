@@ -18,7 +18,7 @@ define([
    IRpc = IRpc.default;
    DataSet = DataSet.default;
 
-   describe('Types/Source/Rpc', function() {
+   describe('Types/_source/Rpc', function() {
       var dataSource,
          checkDone = function(callback, done) {
             try {

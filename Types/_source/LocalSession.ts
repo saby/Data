@@ -4,11 +4,11 @@
  * Источник позволяет хранить данные в локальной сессии браузера.
  * Во всех вкладках будут одни и те же данные.
  *
- * @class Types/Source/LocalSession
+ * @class Types/_source/LocalSession
  * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @implements Types/Source/IData
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IData
  * @mixes Types/Entity/OptionsMixin
  * @author Санников Кирилл
  * @public
@@ -576,7 +576,7 @@ class Converter {
 
 export default class LocalSession extends mixin(
    DestroyableMixin, OptionsToPropertyMixin
-) implements ICrud, ICrudPlus, IData /** @lends Types/Source/LocalSession.prototype */{
+) implements ICrud, ICrudPlus, IData /** @lends Types/_source/LocalSession.prototype */{
    protected _writable: boolean;
 
    /**
@@ -591,7 +591,7 @@ export default class LocalSession extends mixin(
 
    /**
     * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
-    * @name Types/Source/LocalSession#listModule
+    * @name Types/_source/LocalSession#listModule
     * @see getListModule
     * @see Types/Collection/RecordSet
     * @see Types/Di
@@ -612,7 +612,7 @@ export default class LocalSession extends mixin(
 
    /**
     * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
-    * @name Types/Source/LocalSession#model
+    * @name Types/_source/LocalSession#model
     * @see getModel
     * @see Types/Entity/Model
     * @see Types/Di
@@ -634,7 +634,7 @@ export default class LocalSession extends mixin(
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/Source/LocalSession#idProperty
+    * @name Types/_source/LocalSession#idProperty
     * @see getIdProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
@@ -806,9 +806,9 @@ export default class LocalSession extends mixin(
    /**
     * Выполняет запрос на выборку
     * @param {Types/Query/Query} [query] Запрос
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Source/DataSet}.
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
     * @see Types/Query/Query
-    * @see Types/Source/DataSet
+    * @see Types/_source/DataSet
     * @example
     * <pre>
     *   solarSystem.query().addCallbacks(function (ds) {
@@ -843,7 +843,7 @@ export default class LocalSession extends mixin(
 
    ///endregion
 
-   ///region {Types/Source/ICrudPlus}
+   ///region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
@@ -994,7 +994,7 @@ export default class LocalSession extends mixin(
    /**
     * Создает новый экземпляр dataSet
     * @param {Object} rawData данные
-    * @return {Types/Source/DataSet}
+    * @return {Types/_source/DataSet}
     * @protected
     */
    protected _getDataSet(rawData: any) {

@@ -62,8 +62,8 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/Memory
- * @extends Types/Source/Local
+ * @class Types/_source/Memory
+ * @extends Types/_source/Local
  * @public
  * @author Мальцев А.А.
  */
@@ -95,10 +95,10 @@ export interface IOptions extends ILocalOptions {
    endpoint?: IEndpoint
 }
 
-export default class Memory extends Local /** @lends Types/Source/Memory.prototype */{
+export default class Memory extends Local /** @lends Types/_source/Memory.prototype */{
    /**
     * @cfg {Object} Данные, с которыми работает источник.
-    * @name Types/Source/Memory#data
+    * @name Types/_source/Memory#data
     * @remark
     * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
     * @example

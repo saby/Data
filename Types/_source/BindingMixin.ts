@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/BindingMixin" />
 /**
  * Миксин, позволяющий задавать привязку CRUD к контракту источника.
- * @mixin Types/Source/BindingMixin
+ * @mixin Types/_source/BindingMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -21,12 +21,12 @@ export interface IOptions {
    binding?: IBinding
 }
 
-const BindingMixin = /** @lends Types/Source/BindingMixin.prototype */{
+const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
    '[Types/_source/BindingMixin]': true,
 
    /**
     * @cfg {Object} Соответствие методов CRUD контракту. Определяет, как именно источник реализует каждый метод CRUD.
-    * @name Types/Source/BindingMixin#binding
+    * @name Types/_source/BindingMixin#binding
     * @see getBinding
     * @see create
     * @see read
@@ -72,49 +72,49 @@ const BindingMixin = /** @lends Types/Source/BindingMixin.prototype */{
 
       /**
        * @cfg {String} Операция создания записи через метод {@link create}.
-       * @name Types/Source/BindingMixin#binding.create
+       * @name Types/_source/BindingMixin#binding.create
        */
       create: 'create',
 
       /**
        * @cfg {String} Операция чтения записи через метод {@link read}.
-       * @name Types/Source/BindingMixin#binding.read
+       * @name Types/_source/BindingMixin#binding.read
        */
       read: 'read',
 
       /**
        * @cfg {String} Операция обновления записи через метод {@link update}.
-       * @name Types/Source/BindingMixin#binding.update
+       * @name Types/_source/BindingMixin#binding.update
        */
       update: 'update',
 
       /**
        * @cfg {String} Операция удаления записи через метод {@link destroy}.
-       * @name Types/Source/BindingMixin#binding.destroy
+       * @name Types/_source/BindingMixin#binding.destroy
        */
       destroy: 'delete',
 
       /**
        * @cfg {String} Операция получения списка записей через метод {@link query}.
-       * @name Types/Source/BindingMixin#binding.query
+       * @name Types/_source/BindingMixin#binding.query
        */
       query: 'query',
 
       /**
        * @cfg {String} Операция копирования записей через метод {@link copy}.
-       * @name Types/Source/BindingMixin#binding.copy
+       * @name Types/_source/BindingMixin#binding.copy
        */
       copy: 'copy',
 
       /**
        * @cfg {String} Операция объединения записей через метод {@link merge}.
-       * @name Types/Source/BindingMixin#binding.merge
+       * @name Types/_source/BindingMixin#binding.merge
        */
       merge: 'merge',
 
       /**
        * @cfg {String} Операция перемещения записи через метод {@link move}.
-       * @name Types/Source/BindingMixin#binding.move
+       * @name Types/_source/BindingMixin#binding.move
        */
       move: 'move'
    },

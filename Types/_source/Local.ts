@@ -2,11 +2,11 @@
 /**
  * Источник данных, работающий локально.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Local
- * @extends Types/Source/Base
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Source/DataCrudMixin
+ * @class Types/_source/Local
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_source/DataCrudMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -69,10 +69,10 @@ export interface IOptions extends IBaseOptions {
 
 export default abstract class Local extends mixin(
    Base, DataCrudMixin
-) implements ICrud, ICrudPlus /** @lends Types/Source/Local.prototype */{
+) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
    /**
     * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
-    * @name Types/Source/Local#filter
+    * @name Types/_source/Local#filter
     * @remark
     * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода query().
     * Функция должна вернуть Boolean: true - запись прошла фильтр и попадет в итоговую выборку, false - не  прошла.

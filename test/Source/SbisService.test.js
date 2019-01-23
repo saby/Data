@@ -6,7 +6,7 @@ define([
    SbisService,
    testCases
 ) {
-   describe('Types/Source/SbisService', function() {
+   describe('Types/_source/SbisService', function() {
       testCases(SbisService.default, 'Types/source:provider.SbisBusinessLogic');
    });
 });

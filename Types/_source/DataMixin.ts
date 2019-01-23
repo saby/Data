@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/DataMixin" />
 /**
- * Миксин, позволяющий реализовать интерфейс {@link Types/Source/IData}.
- * @mixin Types/Source/DataMixin
+ * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
+ * @mixin Types/_source/DataMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -11,19 +11,19 @@ import {ReadWriteMixin, adapter, Model} from '../entity';
 import {create} from '../di';
 
 export interface IOptions {
-   adapter?: string | Function;
+   adapter?: string | adapter.IAdapter;
    model?: string | Function;
    listModule?: string | Function;
    idProperty?: string;
    dataSetMetaProperty?: string;
 }
 
-const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
+const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    '[Types/_source/DataMixin]': true,
 
    /**
     * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/Adapter/Json}.
-    * @name Types/Source/DataMixin#adapter
+    * @name Types/_source/DataMixin#adapter
     * @see getAdapter
     * @see Types/Adapter/IAdapter
     * @see Types/Di
@@ -77,7 +77,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
 
    /**
     * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
-    * @name Types/Source/DataMixin#model
+    * @name Types/_source/DataMixin#model
     * @see getModel
     * @see Types/Entity/Model
     * @see Types/Di
@@ -110,7 +110,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
 
    /**
     * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
-    * @name Types/Source/DataMixin#listModule
+    * @name Types/_source/DataMixin#listModule
     * @see getListModule
     * @see Types/Collection/RecordSet
     * @see Types/Di
@@ -143,7 +143,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/Source/DataMixin#idProperty
+    * @name Types/_source/DataMixin#idProperty
     * @see getIdProperty
     * @see Types/Entity/Model#idProperty
     * @example
@@ -250,7 +250,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
    /**
     * Создает новый экземпляр DataSet
     * @param {Object} cfg Опции конструктора
-    * @return {Types/Source/DataSet}
+    * @return {Types/_source/DataSet}
     * @protected
     */
    _getDataSetInstance(cfg): DataSet {
@@ -269,7 +269,7 @@ const DataMixin = /** @lends Types/Source/DataMixin.prototype */{
    /**
     * Оборачивает данные в DataSet
     * @param {Object} data Данные
-    * @return {Types/Source/DataSet}
+    * @return {Types/_source/DataSet}
     * @protected
     */
    _wrapToDataSet(data): DataSet {

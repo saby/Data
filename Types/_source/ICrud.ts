@@ -45,7 +45,7 @@
  *       console.error(error);
  *    });
  * </pre>
- * @interface Types/Source/ICrud
+ * @interface Types/_source/ICrud
  * @public
  * @author Мальцев А.А.
  */
@@ -55,7 +55,7 @@ import DataSet from './DataSet';
 import {Record} from '../entity';
 import {RecordSet} from '../collection';
 
-export default interface ICrud /** @lends Types/Source/ICrud.prototype */{
+export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
    readonly '[Types/_source/ICrud]': boolean;
 
    /**
@@ -216,9 +216,9 @@ export default interface ICrud /** @lends Types/Source/ICrud.prototype */{
    /**
     * Выполняет запрос на выборку
     * @param {Types/Query/Query} [query] Запрос
-    * @return {Promise.<Types/Source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Source/DataSet} - прочитаннные данные, в случае ошибки - Error.
+    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
     * @see Types/Query/Query
-    * @see Types/Source/DataSet
+    * @see Types/_source/DataSet
     * @example
     * Выберем новые книги опредленного жанра:
     * <pre>

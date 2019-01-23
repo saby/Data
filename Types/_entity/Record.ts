@@ -27,12 +27,12 @@
  * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
- *       'Types/Entity/Record',
- *       'Types/Source/SbisService'
- *    ], function (Record, SbisService) {
- *       var source = new SbisService({endpoint: 'Employee'});
+ *       'Types/entity',
+ *       'Types/source'
+ *    ], function (entity, source) {
+ *       var source = new source.SbisService({endpoint: 'Employee'});
  *       source.call('read', {login: 'root'}).addCallback(function(response) {
- *          var employee = new Record({
+ *          var employee = new entity.Record({
  *             rawData: response.getRawData(),
  *             adapter: response.getAdapter()
  *          });

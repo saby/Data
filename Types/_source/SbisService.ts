@@ -125,8 +125,8 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/SbisService
- * @extends Types/Source/Rpc
+ * @class Types/_source/SbisService
+ * @extends Types/_source/Rpc
  * @public
  * @author Мальцев А.А.
  */
@@ -241,7 +241,7 @@ function getGroupsByComplexIds(ids, defaults) {
 
 /**
  * Calls destroy method for some BL-Object
- * @param {Types/Source/SbisService} instance Экземпляр SbisService
+ * @param {Types/_source/SbisService} instance Экземпляр SbisService
  * @param {Array.<String>} ids Идентификаторы удаляемых записей
  * @param {String} name Имя объекта БЛ
  * @param {Object} meta Дополнительные данные
@@ -439,7 +439,7 @@ export function getAdditionalParams(query: Query) {
          meta = arr;
       }
       if (!(meta instanceof Array)) {
-         throw new TypeError('Types/Source/SbisService::getAdditionalParams(): unsupported metadata type: only Array, Types/Entity/Record or Object allowed');
+         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type: only Array, Types/_entity/Record or Object allowed');
       }
    }
 
@@ -559,7 +559,7 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
 
 /**
  * Calls move method in old style
- * @param {Types/Source/SbisService} instance Экземпляр SbisService
+ * @param {Types/_source/SbisService} instance Экземпляр SbisService
  * @param {String} from Идентификатор перемещаемой записи
  * @param {String} to Идентификатор целевой записи
  * @param {Object} meta Дополнительные данные
@@ -584,7 +584,7 @@ function oldMove(instance, from, to, meta) {
    );
 }
 
-export default class SbisService extends Rpc /** @lends Types/Source/SbisService.prototype */{
+export default class SbisService extends Rpc /** @lends Types/_source/SbisService.prototype */{
    /**
     * @typedef {Object} Endpoint
     * @property {String} contract Контракт - определяет доступные операции
@@ -605,7 +605,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    /**
     * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
-    * @name Types/Source/SbisService#endpoint
+    * @name Types/_source/SbisService#endpoint
     * @remark
     * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
     * интерпретироваться как контракт (endpoint.contract).
@@ -634,7 +634,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    /**
     * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому методу CRUD.
-    * @name Types/Source/SbisService#binding
+    * @name Types/_source/SbisService#binding
     * @remark
     * По умолчанию используются стандартные методы.
     * Можно переопределить имя объекта БЛ, указанное в endpont.contract, прописав его имя через точку.
@@ -677,7 +677,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    /**
     * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
-    * @name Types/Source/SbisService#adapter
+    * @name Types/_source/SbisService#adapter
     * @see getAdapter
     * @see Types/Adapter/Sbis
     * @see Types/Di
@@ -685,9 +685,9 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
    protected _$adapter: string;
 
    /**
-    * @cfg {String|Function|Types/Source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/Source/Provider/SbisBusinessLogic}.
-    * @name Types/Source/SbisService#provider
-    * @see Types/Source/Rpc#provider
+    * @cfg {String|Function|Types/_source/provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/provider/SbisBusinessLogic}.
+    * @name Types/_source/SbisService#provider
+    * @see Types/_source/Rpc#provider
     * @see getProvider
     * @see Types/Di
     * @example
@@ -705,7 +705,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
 
    /**
     * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
-    * @name Types/Source/SbisService#orderProperty
+    * @name Types/_source/SbisService#orderProperty
     * @see move
     */
    protected _$orderProperty: string;
@@ -738,7 +738,7 @@ export default class SbisService extends Rpc /** @lends Types/Source/SbisService
     * Создает пустую модель через источник данных
     * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
     * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Entity/Model}, в случае ошибки - Error.
-    * @see Types/Source/ICrud#create
+    * @see Types/_source/ICrud#create
     * @example
     * Создадим нового сотрудника:
     * <pre>
@@ -914,7 +914,7 @@ SbisService.prototype._moduleName = 'Types/source:SbisService';
 SbisService.prototype._$binding = {
    /**
     * @cfg {String} Имя метода для создания записи через {@link create}.
-    * @name Types/Source/SbisService#binding.create
+    * @name Types/_source/SbisService#binding.create
     * @example
     * Зададим свою реализацию для метода create:
     * <pre>
@@ -943,7 +943,7 @@ SbisService.prototype._$binding = {
 
    /**
     * @cfg {String} Имя метода для чтения записи через {@link read}.
-    * @name Types/Source/SbisService#binding.read
+    * @name Types/_source/SbisService#binding.read
     * @example
     * Зададим свою реализацию для метода read:
     * <pre>
@@ -972,7 +972,7 @@ SbisService.prototype._$binding = {
 
    /**
     * @cfg {String} Имя метода для обновления записи или рекордсета через {@link update}.
-    * @name Types/Source/SbisService#binding.update
+    * @name Types/_source/SbisService#binding.update
     * @example
     * Зададим свою реализацию для метода update:
     * <pre>
@@ -1007,13 +1007,13 @@ SbisService.prototype._$binding = {
     * RecordSet added,
     * Array<Sting|Number> removed
     * Где changed - измененные записи, added - добавленные записи, removed - ключи удаленных записей.
-    * @name Types/Source/SbisService#binding.updateBatch
+    * @name Types/_source/SbisService#binding.updateBatch
     */
    updateBatch: '',
 
    /**
     * @cfg {String} Имя метода для удаления записи через {@link destroy}.
-    * @name Types/Source/SbisService#binding.destroy
+    * @name Types/_source/SbisService#binding.destroy
     * @example
     * Зададим свою реализацию для метода destroy:
     * <pre>
@@ -1042,7 +1042,7 @@ SbisService.prototype._$binding = {
 
    /**
     * @cfg {String} Имя метода для получения списка записей через {@link query}.
-    * @name Types/Source/SbisService#binding.query
+    * @name Types/_source/SbisService#binding.query
     * @example
     * Зададим свою реализацию для метода query:
     * <pre>
@@ -1071,13 +1071,13 @@ SbisService.prototype._$binding = {
 
    /**
     * @cfg {String} Имя метода для копирования записей через {@link copy}.
-    * @name Types/Source/SbisService#binding.copy
+    * @name Types/_source/SbisService#binding.copy
     */
    copy: 'Копировать',
 
    /**
     * @cfg {String} Имя метода для объединения записей через {@link merge}.
-    * @name Types/Source/SbisService#binding.merge
+    * @name Types/_source/SbisService#binding.merge
     */
    merge: 'Объединить',
 
@@ -1085,13 +1085,13 @@ SbisService.prototype._$binding = {
     * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
     * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update)
     * они обязательно должны быть у объекта БЛ.
-    * @name Types/Source/SbisService#binding.move
+    * @name Types/_source/SbisService#binding.move
     */
    move: 'Move',
 
    /**
     * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
-    * @name Types/Source/SbisService#binding.format
+    * @name Types/_source/SbisService#binding.format
     */
    format: ''
 };
@@ -1100,56 +1100,56 @@ SbisService.prototype._$binding = {
 SbisService.prototype._$passing = {
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-    * @name Types/Source/BindingMixin#passing.create
+    * @name Types/_source/BindingMixin#passing.create
     */
    create: passCreate,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-    * @name Types/Source/BindingMixin#passing.read
+    * @name Types/_source/BindingMixin#passing.read
     */
    read: passRead,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-    * @name Types/Source/BindingMixin#passing.update
+    * @name Types/_source/BindingMixin#passing.update
     */
    update: passUpdate,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-    * @name Types/Source/BindingMixin#passing.destroy
+    * @name Types/_source/BindingMixin#passing.destroy
     */
    destroy: passDestroy,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-    * @name Types/Source/BindingMixin#passing.query
+    * @name Types/_source/BindingMixin#passing.query
     */
    query: passQuery,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-    * @name Types/Source/BindingMixin#passing.copy
+    * @name Types/_source/BindingMixin#passing.copy
     */
    copy: passCopy,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-    * @name Types/Source/BindingMixin#passing.merge
+    * @name Types/_source/BindingMixin#passing.merge
     */
    merge: passMerge,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-    * @name Types/Source/BindingMixin#passing.move
+    * @name Types/_source/BindingMixin#passing.move
     */
    move: passMove
 };
 
 /**
  * @cfg {String|Function|Types/Adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/Adapter/Sbis}.
- * @name Types/Source/SbisService#adapter
+ * @name Types/_source/SbisService#adapter
  * @see getAdapter
  * @see Types/Adapter/Sbis
  * @see Types/Di
@@ -1158,9 +1158,9 @@ SbisService.prototype._$passing = {
 SbisService.prototype._$adapter = 'Types/entity:adapter.Sbis';
 
 /**
- * @cfg {String|Function|Types/Source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/Source/Provider/SbisBusinessLogic}.
- * @name Types/Source/SbisService#provider
- * @see Types/Source/Rpc#provider
+ * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+ * @name Types/_source/SbisService#provider
+ * @see Types/_source/Rpc#provider
  * @see getProvider
  * @see Types/Di
  * @example
@@ -1179,7 +1179,7 @@ SbisService.prototype._$provider = 'Types/source:provider.SbisBusinessLogic';
 
 /**
  * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
- * @name Types/Source/SbisService#orderProperty
+ * @name Types/_source/SbisService#orderProperty
  * @see move
  */
 // @ts-ignore
@@ -1189,7 +1189,7 @@ SbisService.prototype._$orderProperty = 'ПорНомер';
 SbisService.prototype._$options = OptionsMixin.addOptions(Rpc, {
    /**
     * @cfg {String} Название свойства мета-данных {@link Types/Query/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
-    * @name Types/Source/SbisService#options.hasMoreProperty
+    * @name Types/_source/SbisService#options.hasMoreProperty
     */
    hasMoreProperty: 'hasMore'
 });

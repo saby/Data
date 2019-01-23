@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_source/provider/SbisBusinessLogic" />
 /**
  * JSON-RPC Провайдер для бизнес-логики СБиС
- * @class Types/Source/Provider/SbisBusinessLogic
- * @implements Types/Source/Provider/IAbstract
+ * @class Types/_source/provider/SbisBusinessLogic
+ * @implements Types/_source/provider/IAbstract
  * @mixes Types/Entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
@@ -20,7 +20,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
 
    /**
     * @cfg {Endpoint} Конечная точка, обеспечивающая доступ клиента к БЛ
-    * @name Types/Source/Provider/SbisBusinessLogic#endpoint
+    * @name Types/_source/provider/SbisBusinessLogic#endpoint
     * @see getEndPoint
     * @example
     * <pre>

@@ -2,7 +2,7 @@
 /**
  * Набор данных, полученный из источника.
  * Представляет собой набор {@link Types/Collection/RecordSet выборок}, {@link Types/Entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
- * Использование таких комплексных наборов позволяет за один вызов {@link Types/Source/ICrud#query списочного} либо {@link Types/Source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
+ * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/Source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
  * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
  * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/Adapter/Json}.
  * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
@@ -107,7 +107,7 @@
  *       console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
  *    });
  * </pre>
- * @class Types/Source/DataSet
+ * @class Types/_source/DataSet
  * @mixes Types/Entity/DestroyableMixin
  * @mixes Types/Entity/OptionsMixin
  * @mixes Types/Entity/SerializableMixin
@@ -126,10 +126,10 @@ declare type TypeDeclaration = Function | string;
 
 export default class DataSet extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
-) /** @lends Types/Source/DataSet.prototype */{
+) /** @lends Types/_source/DataSet.prototype */{
    /**
     * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы данными, по умолчанию {@link Types/Adapter/Json}
-    * @name Types/Source/DataSet#adapter
+    * @name Types/_source/DataSet#adapter
     * @see getAdapter
     * @see Types/Adapter/IAdapter
     * @see Types/Di
@@ -158,7 +158,7 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {*} Данные в "сыром" виде
-    * @name Types/Source/DataSet#rawData
+    * @name Types/_source/DataSet#rawData
     * @remark
     * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
     * @see getRawData
@@ -196,7 +196,7 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {String|Function} Конструктор записей, порождаемых набором данных. По умолчанию {@link Types/Entity/Model}.
-    * @name Types/Source/DataSet#model
+    * @name Types/_source/DataSet#model
     * @see getModel
     * @see Types/Entity/Model
     * @see Types/Di
@@ -214,7 +214,7 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию {@link Types/Collection/RecordSet}.
-    * @name Types/Source/DataSet#listModule
+    * @name Types/_source/DataSet#listModule
     * @see getListModule
     * @see Types/Collection/RecordSet
     * @see Types/Di
@@ -232,7 +232,7 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/Source/DataSet#idProperty
+    * @name Types/_source/DataSet#idProperty
     * @see getIdProperty
     * @see Types/Entity/Model#idProperty
     * @example
@@ -249,7 +249,7 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {String} Название свойства сырых данных, в котором находится основная выборка
-    * @name Types/Source/DataSet#itemsProperty
+    * @name Types/_source/DataSet#itemsProperty
     * @see getItemsProperty
     * @see setItemsProperty
     * @example
@@ -282,14 +282,14 @@ export default class DataSet extends mixin(
 
    /**
     * @cfg {String} Свойство данных, в которых находятся мета-данные выборки
-    * @name Types/Source/DataSet#metaProperty
+    * @name Types/_source/DataSet#metaProperty
     * @see getMetaProperty
     */
    protected _$metaProperty: string;
 
    /**
     * @cfg {Boolean} Можно модифицировать. Признак передается объектам, которые инстанциирует DataSet.
-    * @name Types/Source/DataSet#writable
+    * @name Types/_source/DataSet#writable
     */
    protected _$writable: boolean;
 
