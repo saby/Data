@@ -14,7 +14,7 @@ define([
    BreadcrumbsItem = BreadcrumbsItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/Display/ItemsStrategy/Search', function() {
+   describe('Types/_display/ItemsStrategy/Search', function() {
       var getSource = function(items) {
             return {
                options: {foo: 'bar'},

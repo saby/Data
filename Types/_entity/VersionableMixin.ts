@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/VersionableMixin" />
 /**
  * Миксин, позволяющий получать и измениять номер версии объекта.
- * @mixin Types/Entity/VersionableMixin
+ * @mixin Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
  */
 
-const VersionableMixin = /** @lends Types/Entity/VersionableMixin.prototype */{
+const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
    '[Types/_entity/VersionableMixin]': true,
 
    //region IVersionable

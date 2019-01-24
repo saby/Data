@@ -9,15 +9,15 @@
  *       type: 'rpcfile'
  *    };
  * </pre>
- * @class Types/Format/RpcFileField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RpcFileField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class RpcFileField extends Field /** @lends Types/Format/RpcFileField.prototype */{
+export default class RpcFileField extends Field /** @lends Types/_entity/format/RpcFileField.prototype */{
 }
 
 RpcFileField.prototype['[Types/_entity/format/RpcFileField]'] = true;

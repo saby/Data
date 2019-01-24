@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/ITable" />
 /**
  * Интерфейс адаптера для таблицы данных
- * @interface Types/Adapter/ITable
+ * @interface Types/_entity/adapter/ITable
  * @public
  * @author Мальцев А.А.
  */
@@ -9,7 +9,7 @@
 import UniversalField from '../format/UniversalField';
 import Field from '../format/Field';
 
-export default interface ITable /** @lends Types/Adapter/ITable.prototype */{
+export default interface ITable /** @lends Types/_entity/adapter/ITable.prototype */{
    readonly '[Types/_entity/adapter/ITable]': boolean;
 
    /**
@@ -89,7 +89,7 @@ export default interface ITable /** @lends Types/Adapter/ITable.prototype */{
    /**
     * Возвращает формат поля (в режиме только для чтения)
     * @param {String} name Поле записи
-    * @return {Types/Format/Field}
+    * @return {Types/_entity/format/Field}
     */
    getFormat(name: string): any;
 
@@ -98,7 +98,7 @@ export default interface ITable /** @lends Types/Adapter/ITable.prototype */{
     * Метод каждый раз возвращает один и тот же объект, заменяя только его данные - подобный подход обеспечивает
     * ускорение и уменьшение расхода памяти.
     * @param {String} name Поле записи
-    * @return {Types/Format/UniversalField}
+    * @return {Types/_entity/format/UniversalField}
     */
    getSharedFormat(name: string): UniversalField;
 
@@ -106,7 +106,7 @@ export default interface ITable /** @lends Types/Adapter/ITable.prototype */{
     * Добавляет поле в таблицу.
     * Если позиция не указана (или указана как -1), поле добавляется в конец.
     * Если поле с таким форматом уже есть, генерирует исключение.
-    * @param {Types/Format/Field} format Формат поля
+    * @param {Types/_entity/format/Field} format Формат поля
     * @param {Number} [at] Позиция поля
     */
    addField(format: Field, at: number);

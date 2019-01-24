@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/AbstractStrategy" />
 /**
  * Абстрактная стратегия получения элементов проекции
- * @class Types/Display/ItemsStrategy/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -21,11 +21,11 @@ export interface IOptions extends  IItemsStrategyOptions {
 
 export default abstract class Abstract extends mixin(
    DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/Abstract.prototype */{
+) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Abstract.prototype */{
    /**
     * @typedef {Object} Options
     * @property {Boolean} localize Алиас зависимости или конструктора элементов проекции
-    * @property {Types/Display/Collection} display Проекция
+    * @property {Types/_display/Collection} display Проекция
     */
 
    /**
@@ -124,7 +124,7 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает исходную коллекцию
-    * @return {Types/Collection/IEnumerable}
+    * @return {Types/_collection/IEnumerable}
     * @protected
     */
    protected _getCollection(): Collection {
@@ -133,7 +133,7 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает энумератор коллекции
-    * @return {Types/Collection/IEnumerator}
+    * @return {Types/_collection/IEnumerator}
     * @protected
     */
    protected _getCollectionEnumerator(): IEnumerator<any> {
@@ -142,7 +142,7 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает элементы проекции
-    * @return Array.<Types/Display/CollectionItem>
+    * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
    protected _getItems(): Array<CollectionItem> {
@@ -182,7 +182,7 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Создает элемент проекции
-    * @return Types/Display/CollectionItem
+    * @return Types/_display/CollectionItem
     * @protected
     */
    protected _createItem(contents: any): CollectionItem {

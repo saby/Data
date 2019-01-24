@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/Enum" />
 /**
  * Тип данных "перечисляемое".
- * @class Types/Type/Enum
- * @extends Types/Type/Dictionary
- * @implements Types/Type/IEnum
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * @class Types/_collectionEnum
+ * @extends Types/_collectionDictionary
+ * @implements Types/_collectionIEnum
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -23,7 +23,7 @@ interface ProduceOptions {
    format?: Object
 }
 
-export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/Type/Enum.prototype */{
+export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collectionEnum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
    readonly '[Types/_entity/ICloneable]': boolean;
    readonly '[Types/_entity/IProducible]': boolean;
@@ -31,7 +31,7 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
 
    /**
     * @cfg {Number|Null} Индекс выбранного значения
-    * @name Types/Type/Enum#index
+    * @name Types/_collectionEnum#index
     */
    protected _$index: IIndex;
 

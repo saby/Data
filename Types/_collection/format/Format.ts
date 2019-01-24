@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/format/Format" />
 /**
  * Формат полей.
- * Представляет собой список полей записи: Types/Collection/List.<Types/Format/Field>
- * @class Types/Format/Format
- * @extends Types/Collection/List
+ * Представляет собой список полей записи: Types/_collection/List.<Types/_entity/format/Field>
+ * @class Types/_entity/format/Format
+ * @extends Types/_collection/List
  * @public
  * @author Мальцев А.А.
  */
@@ -13,14 +13,14 @@ import {format} from '../../entity';
 import List from '../List';
 import {register} from '../../di';
 
-export default class Format<T> extends List<T> implements IEquatable /** @lends Types/Format/Format.prototype */{
+export default class Format<T> extends List<T> implements IEquatable /** @lends Types/_entity/format/Format.prototype */{
    _$items: Array<any>;
 
    protected _moduleName: string;
 
    /**
-    * @cfg {Array.<Types/Format/Field>} Элементы списка
-    * @name Types/Format/Format#items
+    * @cfg {Array.<Types/_entity/format/Field>} Элементы списка
+    * @name Types/_entity/format/Format#items
     */
 
    constructor(options?: Object) {

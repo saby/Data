@@ -27,7 +27,7 @@ define([
       '[Types/_source/provider/IAbstract]': true
    };
 
-   describe('Types/Source/Remote', function() {
+   describe('Types/_source/Remote', function() {
       var checkDone = function(callback, done) {
          try {
             callback();

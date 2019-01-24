@@ -4,57 +4,47 @@
  *
  * Выберем из массива имена персонажей женского пола, отсортированные по имени:
  * <pre>
- * requirejs(['Types/Chain'], function(chain) {
- *    chain([
- *       {name: 'Philip J. Fry', gender: 'M'},
- *       {name: 'Turanga Leela', gender: 'F'},
- *       {name: 'Professor Farnsworth', gender: 'M'},
- *       {name: 'Amy Wong', gender: 'F'},
- *       {name: 'Bender Bending Rodriguez', gender: 'R'}
- *    ]).filter(function(item) {
- *       return item.gender === 'F';
- *    }).map(function(item) {
- *       return item.name;
- *    }).sort(function(a, b) {
- *       return a > b;
- *    }).value();
- *    //['Amy Wong', 'Turanga Leela']
- * });
+ * import {factory} from 'Types/chain';
+ * factory([
+ *    {name: 'Philip J. Fry', gender: 'M'},
+ *    {name: 'Turanga Leela', gender: 'F'},
+ *    {name: 'Professor Farnsworth', gender: 'M'},
+ *    {name: 'Amy Wong', gender: 'F'},
+ *    {name: 'Bender Bending Rodriguez', gender: 'R'}
+ * ])
+ *    .filter((item) => item.gender === 'F')
+ *    .map((item) => item.name)
+ *    .sort((a, b) => a - b)
+ *    .value();
+ * //['Amy Wong', 'Turanga Leela']
  * </pre>
  * Выберем из рекордсета персонажей женского пола, отсортированных по имени:
  * <pre>
- * requirejs([
- *    'Types/Chain',
- *    'Types/Collection/RecordSet'
- * ], function(
- *    chain,
- *    RecordSet
- * ) {
- *    chain(new RecordSet({rawData: [
- *       {name: 'Philip J. Fry', gender: 'M'},
- *       {name: 'Turanga Leela', gender: 'F'},
- *       {name: 'Professor Farnsworth', gender: 'M'},
- *       {name: 'Amy Wong', gender: 'F'},
- *       {name: 'Bender Bending Rodriguez', gender: 'R'}
- *    ]})).filter(function(item) {
- *       return item.get('gender') === 'F';
- *    }).sort(function(a, b) {
- *       return a.get('name') > b.get('name');
- *    }).value();
- *    //[Model(Amy Wong), Model(Turanga Leela)]
- * });
+ * import {factory} from 'Types/chain';
+ * import {RecordSet} from 'Types/collection';
+ * factory(new RecordSet({rawData: [
+ *    {name: 'Philip J. Fry', gender: 'M'},
+ *    {name: 'Turanga Leela', gender: 'F'},
+ *    {name: 'Professor Farnsworth', gender: 'M'},
+ *    {name: 'Amy Wong', gender: 'F'},
+ *    {name: 'Bender Bending Rodriguez', gender: 'R'}
+ * ]}))
+ *    .filter((item) => item.get('gender') === 'F')
+ *    .sort((a, b) => a.get('name') - b.get('name'))
+ *    .value();
+ * //[Model(Amy Wong), Model(Turanga Leela)]
  * </pre>
- * Другие примеры смотрите в описании методов класса {@link Types/Chain/Abstract}.
+ * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
- * @class Types/Chain
+ * @class Types/_chain
  * @public
  * @author Мальцев А.А.
  */
 
 /**
- * @alias Types/Chain
- * @param {Array|Object|Types/Collection/IEnumerable|Types/Chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
- * @return {Types/Chain/Abstract}
+ * @alias Types/_chain
+ * @param {Array|Object|Types/_collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая цепочкой
+ * @return {Types/_chain/Abstract}
  */
 
 import {register} from '../di';

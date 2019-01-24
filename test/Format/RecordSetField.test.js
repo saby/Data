@@ -6,7 +6,7 @@ define([
 
    RecordSetField = RecordSetField.default;
 
-   describe('Types/Format/RecordSetField', function() {
+   describe('Types/_entity/format/RecordSetField', function() {
       var field;
 
       beforeEach(function() {

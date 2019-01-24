@@ -12,7 +12,7 @@ define([
 
    var GroupedChain = GroupedChainEs.default;
 
-   describe('Types/Chain/Grouped', function() {
+   describe('Types/_chain/Grouped', function() {
       describe('.getEnumerator()', function() {
          it('should return a valid enumerator', function() {
             var prev = new ArrayMock([]),

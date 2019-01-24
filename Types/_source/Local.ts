@@ -2,11 +2,11 @@
 /**
  * Источник данных, работающий локально.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Local
- * @extends Types/Source/Base
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Source/DataCrudMixin
+ * @class Types/_source/Local
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_source/DataCrudMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -69,18 +69,18 @@ export interface IOptions extends IBaseOptions {
 
 export default abstract class Local extends mixin(
    Base, DataCrudMixin
-) implements ICrud, ICrudPlus /** @lends Types/Source/Local.prototype */{
+) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
    /**
-    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
-    * @name Types/Source/Local#filter
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
+    * @name Types/_source/Local#filter
     * @remark
     * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода query().
     * Функция должна вернуть Boolean: true - запись прошла фильтр и попадет в итоговую выборку, false - не  прошла.
     * @example
     * Спрячем Землю из результатов выборки:
     * <pre>
-    *    require(['Types/Source/Memory'], function (MemorySource) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -108,8 +108,8 @@ export default abstract class Local extends mixin(
     * </pre>
     * Выберем все объекты, имена которых начинаются на 'S':
     * <pre>
-    *    require(['Types/Source/Memory', 'Types/Query/Query'], function (MemorySource, Query) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -132,7 +132,7 @@ export default abstract class Local extends mixin(
     *          idProperty: 'id'
     *       });
     *
-    *       var query = new Query();
+    *       var query = new source.Query();
     *       query.where({name: 'S'});
     *       solarSystem.query(query).addCallback(function(result) {
     *          result.getAll().each(function(record) {
@@ -375,7 +375,7 @@ export default abstract class Local extends mixin(
 
    /**
     * Возвращает адаптер для работы с таблицей
-    * @return {Types/Adapter/ITable}
+    * @return {Types/_entity/adapter/ITable}
     * @protected
     */
    protected abstract _getTableAdapter(): adapter.ITable
@@ -427,7 +427,7 @@ export default abstract class Local extends mixin(
    /**
     * Применяет объединение
     * @param {*} data Данные
-    * @param {Types/Query/Join[]} join Выборки для объединения
+    * @param {Types/_source/Query#Join[]} join Выборки для объединения
     * @return {*}
     * @protected
     */
@@ -489,7 +489,7 @@ export default abstract class Local extends mixin(
    /**
     * Применяет сортировку
     * @param {*} data Данные
-    * @param {Array.<Types/Query/Order>} order Параметры сортировки
+    * @param {Array.<Types/_source/Query#Order>} order Параметры сортировки
     * @return {*}
     * @protected
     */

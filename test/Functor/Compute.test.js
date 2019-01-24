@@ -8,7 +8,7 @@ define([
 
    Compute = Compute.default;
 
-   describe('Types/Functor/Compute', function() {
+   describe('Types/_entity/functor/Compute', function() {
       describe('.constructor()', function() {
          it('should throw TypeError on invalid arguments', function() {
             assert.throws(function() {

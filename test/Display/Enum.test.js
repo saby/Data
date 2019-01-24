@@ -11,7 +11,7 @@ define([
    EnumDisplay = EnumDisplay.default;
    EnumType = EnumType.default;
 
-   describe('Types/Display/Enum', function() {
+   describe('Types/_display/Enum', function() {
       var dict,
          localeDict,
          collection,

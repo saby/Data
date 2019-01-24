@@ -9,15 +9,15 @@
  *       type: 'boolean'
  *    };
  * </pre>
- * @class Types/Format/BooleanField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/BooleanField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class BooleanField extends Field /** @lends Types/Format/BooleanField.prototype */{
+export default class BooleanField extends Field /** @lends Types/_entity/format/BooleanField.prototype */{
 }
 
 BooleanField.prototype['[Types/_entity/format/BooleanField]'] = true;

@@ -10,7 +10,7 @@ define([
 
    var FilteredChain = FilteredChainEs.default;
 
-   describe('Types/Chain/Filtered', function() {
+   describe('Types/_chain/Filtered', function() {
       var prev,
          items;
 

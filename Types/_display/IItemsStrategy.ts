@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_display/IItemsStrategy" />
 /**
  * Интерфейс стратегии получения элементов проекции.
- * @interface Types/Display/IItemsStrategy
+ * @interface Types/_display/IItemsStrategy
  * @public
  * @author Мальцев А.А.
  */
@@ -13,7 +13,7 @@ export interface IOptions {
    display: Abstract;
 }
 
-export default interface IItemsStrategy /** @lends Types/Display/IItemsStrategy.prototype */ {
+export default interface IItemsStrategy /** @lends Types/_display/IItemsStrategy.prototype */ {
    readonly '[Types/_display/IItemsStrategy]': boolean;
 
    /**
@@ -39,7 +39,7 @@ export default interface IItemsStrategy /** @lends Types/Display/IItemsStrategy.
    /**
     * Возвращает элемент по позиции
     * @param {Number} index Позиция
-    * @return {Types/Display/CollectionItem}
+    * @return {Types/_display/CollectionItem}
     */
    at(index: number): CollectionItem;
 
@@ -48,7 +48,7 @@ export default interface IItemsStrategy /** @lends Types/Display/IItemsStrategy.
     * @param {Number} start Позиция в коллекции
     * @param {Number} deleteCount Количество удаляемых элементов
     * @param {Array} [added] Добавляемые элементы
-    * @return {Types/Display/CollectionItem} Удаленные элементы
+    * @return {Types/_display/CollectionItem} Удаленные элементы
     */
    splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem>;
 

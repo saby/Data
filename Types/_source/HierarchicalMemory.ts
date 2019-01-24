@@ -36,10 +36,10 @@
  *    });
  * </pre>
  * @class Types/_source/HierarchicalMemory
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @mixes Types/Entity/SerializableMixin
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -61,25 +61,25 @@ export default class HierarchicalMemory extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
-    * @cfg {String|Types/Adapter/IAdapter} See {@link Types/Source/Memory#adapter}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} See {@link Types/_source/Memory#adapter}.
     * @name Types/_source/HierarchicalMemory#adapter
     */
    protected _$adapter: string | Function;
 
    /**
-    * @cfg {String|Function} See {@link Types/Source/Memory#model}.
+    * @cfg {String|Function} See {@link Types/_source/Memory#model}.
     * @name Types/_source/HierarchicalMemory#model
     */
    protected _$model: string | Function;
 
    /**
-    * @cfg {String|Function} See {@link Types/Source/Memory#listModule}.
+    * @cfg {String|Function} See {@link Types/_source/Memory#listModule}.
     * @name Types/_source/HierarchicalMemory#listModule
     */
    protected _$listModule: string | Function;
 
    /**
-    * @cfg {String} See {@link Types/Source/Memory#idProperty}.
+    * @cfg {String} See {@link Types/_source/Memory#idProperty}.
     * @name Types/_source/HierarchicalMemory#idProperty
     */
    protected _$idProperty: string;
@@ -91,13 +91,13 @@ export default class HierarchicalMemory extends mixin(
    protected _$parentProperty: string;
 
    /**
-    * @cfg {Object} See {@link Types/Source/Memory#data}.
+    * @cfg {Object} See {@link Types/_source/Memory#data}.
     * @name Types/_source/HierarchicalMemory#data
     */
    protected _$data: any;
 
    /**
-    * @cfg {Function(Types/Adapter/IRecord, Object):Boolean} See {@link Types/Source/Memory#filter}.
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} See {@link Types/_source/Memory#filter}.
     * @name Types/_source/HierarchicalMemory#filter
     */
    protected _$filter: (item: adapter.IRecord, query: Object) => boolean;

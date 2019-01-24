@@ -12,7 +12,7 @@ define([
 
    var MappedChain = MappedChainEs.default;
 
-   describe('Types/Chain/Mapped', function() {
+   describe('Types/_chain/Mapped', function() {
       var prev,
          items;
 

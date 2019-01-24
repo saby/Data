@@ -8,7 +8,7 @@ define([
 
    Set = Set.default;
 
-   describe('Types/Shim/Set', function() {
+   describe('Types/_shim/Set', function() {
       var global = (0, eval)('this'), // eslint-disable-line no-eval
          isNative = Set === global.Set,
          set;

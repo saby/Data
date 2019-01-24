@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/LazyMixin" />
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
- * @mixin Types/Source/LazyMixin
+ * @mixin Types/_source/LazyMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -14,7 +14,7 @@ import req = require('require');
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
-const LazyMixin = /** @lends Types/Source/LazyMixin.prototype */{
+const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
    '[Types/_source/LazyMixin]': true,
 
    /**

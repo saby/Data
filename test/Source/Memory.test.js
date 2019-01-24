@@ -28,7 +28,7 @@ define([
    RecordSet = RecordSet.default;
    SbisAdapter = SbisAdapter.default;
 
-   describe('Types/Source/Memory', function() {
+   describe('Types/_source/Memory', function() {
       var existsId = 5,
          existsIdIndex = 6,
          existsId2 = 6,

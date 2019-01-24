@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/itemsStrategy/MaterializedPath" />
 /**
  * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
- * @class Types/Display/ItemsStrategy/MaterializedPath
- * @extends Types/Display/ItemsStrategy/Abstract
+ * @class Types/_display/ItemsStrategy/MaterializedPath
+ * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 
@@ -24,13 +24,13 @@ interface ISorter {
 
 }
 
-export default class MaterializedPath extends AbstractStrategy /** @lends Types/Display/ItemsStrategy/MaterializedPath.prototype */{
+export default class MaterializedPath extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/Collection} display Проекция
+    * @property {Types/_display/Collection} display Проекция
     * @property {String} childrenProperty Имя свойства, хранящего вложенных детей узла
     * @property {String} nodeProperty Имя свойства, хранящего признак "узел/лист"
-    * @property {Types/Display/TreeItem} root Корень
+    * @property {Types/_display/TreeItem} root Корень
     */
 
    protected _options: IOptions;
@@ -111,7 +111,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
 
    /**
     * Возвращает путь до элемента с порядковым номером
-    * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
     * @param {Number} index Порядковый номер
     * @return {Array.<Number>}
     * @protected
@@ -154,7 +154,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
                item = enumerator.moveNext() ? enumerator.getCurrent() : undefined;
                isLast = item === undefined;
             } else {
-               throw new TypeError('Unsupported object type: only Array, Types/Collection/IList or Types/Collection/IEnumerable are supported.');
+               throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
             }
 
             if (isLast) {
@@ -191,7 +191,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
 
    /**
     * Возвращает элемент, находящийся по указанному пути
-    * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Коллекция
+    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
     * @param {Array.<Number>} path Путь до элемента
     * @return {*}
     * @protected
@@ -214,7 +214,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
     * Возвращает родителя элемента с указанными порядковым номером и путем
     * @param {Number} index Порядковый номер элемента
     * @param {Array.<Number>} path Путь до элемента
-    * @return {Types/Display/CollectionItem} Родитель элемента
+    * @return {Types/_display/CollectionItem} Родитель элемента
     * @protected
     */
    protected _getParent(index: number, path: number[]): CollectionItem {
@@ -236,7 +236,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
 
    /**
     * Возвращает элемент по индексу в родителе
-    * @param {Array|Types/Collection/IList|Types/Collection/IEnumerable} collection Родитель
+    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Родитель
     * @param {Number} at Индекс элемента
     * @return {*}
     * @protected
@@ -264,7 +264,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
             index++;
          }
       } else {
-         throw new TypeError('Unsupported object type: only Array, Types/Collection/IList or Types/Collection/IEnumerable are supported.');
+         throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
       }
 
       if (item === undefined) {
@@ -280,7 +280,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
 
    /**
     * Создает индекс сортировки по материализованному пути - от корневой вершины вглубь до конечных вершин
-    * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
     * @param {Array.<Number>} current Текущий индекс сортировки
     * @param {Object} options Опции
     * @return {Array.<Number>}

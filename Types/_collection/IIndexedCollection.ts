@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_collection/IIndexedCollection" />
 /**
  * Интерфейс коллекции с поиском элементов по значению свойств.
- * @interface Types/Collection/IIndexedCollection
+ * @interface Types/_collection/IIndexedCollection
  * @author Мальцев А.А.
  * @public
  */
 
-export default interface IIndexedCollection /** @lends Types/Collection/IIndexedCollection.prototype */{
+export default interface IIndexedCollection /** @lends Types/_collection/IIndexedCollection.prototype */{
    readonly '[Types/_collection/IIndexedCollection]': boolean;
 
    /**

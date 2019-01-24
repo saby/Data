@@ -11,7 +11,7 @@ define([
    BaseSource = BaseSource.default;
    JsonAdapter = JsonAdapter.default;
 
-   describe('Types/Source/Base', function() {
+   describe('Types/_source/Base', function() {
       var source;
 
       beforeEach(function() {

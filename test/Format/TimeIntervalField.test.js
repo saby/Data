@@ -8,7 +8,7 @@ define([
 
    TimeIntervalField = TimeIntervalField.default;
 
-   describe('Types/Format/TimeIntervalField', function() {
+   describe('Types/_entity/format/TimeIntervalField', function() {
       var field;
 
       beforeEach(function() {

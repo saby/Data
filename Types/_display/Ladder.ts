@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_display/Ladder" />
 /**
  * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
- * @class Types/Display/Ladder
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/Ladder
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А. Александрович
  */
@@ -44,7 +44,7 @@ interface Converter {
    (item: any): string
 }
 
-export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/Display/Ladder.prototype */{
+export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/_display/Ladder.prototype */{
    /**
     * Проекция, по которой строится лесенка
     */
@@ -92,7 +92,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
    /**
     * Конструктор лесенки.
-    * @param {Types/Display/Collection} collection Проекция, по которой строится лесенка.
+    * @param {Types/_display/Collection} collection Проекция, по которой строится лесенка.
     */
    constructor(collection: Collection) {
       super();
@@ -162,7 +162,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
    /**
     * Возвращает проекцию коллекции, по которой строится лесенка.
-    * @return {Types/Display/Collection|null}
+    * @return {Types/_display/Collection|null}
     */
    getCollection(): Collection {
       return this._collection;
@@ -170,11 +170,11 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
    /**
     * Устанавливает проекцию коллекции, по которой строится лесенка.
-    * @param {Types/Display/Collection|null} collection Проекция, по которой строится лесенка.
+    * @param {Types/_display/Collection|null} collection Проекция, по которой строится лесенка.
     */
    setCollection(collection: Collection) {
       if (collection !== null && !(collection instanceof Collection)) {
-         throw new TypeError('Argument "collection" should be an instance of Types/Display/Collection');
+         throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
       }
 
       //Reset for  the new collection

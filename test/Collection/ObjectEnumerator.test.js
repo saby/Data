@@ -8,7 +8,7 @@ define([
 
    var ObjectEnumerator = ObjectEnumeratorEs.default;
 
-   describe('Types/Collection/ObjectEnumerator', function() {
+   describe('Types/_collection/ObjectEnumerator', function() {
       var items;
 
       beforeEach(function() {

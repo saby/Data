@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/EventRaisingMixin" />
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния
- * @mixin Types/Collection/EventRaisingMixin
+ * @mixin Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
 
 import enumerableComparator from './enumerableComparator';
 
-const EventRaisingMixin = /** @lends Types/Entity/EventRaisingMixin.prototype */{
+const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype */{
    '[Types/_entity/EventRaisingMixin]': true,
 
    /**
@@ -45,13 +45,13 @@ const EventRaisingMixin = /** @lends Types/Entity/EventRaisingMixin.prototype */
     * @example
     * Сгенерируем событие о перемещении элемента c позиции 1 на позицию 3:
     * <pre>
-    *    define(['Types/Collection/ObservableList', 'Types/Collection/IBind'], function(ObservableList, IBindCollection) {
-    *       var list = new ObservableList({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var list = new collection.ObservableList({
     *          items: ['one', 'two', 'three', 'four', 'five']
     *       });
     *
     *      list.subscribe('onCollectionChange', function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-    *         action === IBindCollection.ACTION_MOVE;//true
+    *         action === collection.IObservable.ACTION_MOVE;//true
     *
     *         oldItems[0] === 'two';//true
     *         oldItems[0] === item;//true
@@ -189,7 +189,7 @@ const EventRaisingMixin = /** @lends Types/Entity/EventRaisingMixin.prototype */
 
    /**
     * Разбивает элементы списка на пачки в порядке их следования в списке.
-    * @param {Types/Collection/IList} list Список, в котором содержатся элементы.
+    * @param {Types/_collection/IList} list Список, в котором содержатся элементы.
     * @param {Array} items Элементы в произвольном порядке.
     * @param {Function} callback Функция обратного вызова для каждой пачки
     * @protected

@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/CloneableMixin" />
 /**
  * Миксин, позволяющий клонировать объекты.
- * Для корректной работы требуется подмешать {@link Types/Entity/SerializableMixin}.
- * @mixin Types/Entity/CloneableMixin
+ * Для корректной работы требуется подмешать {@link Types/_entity/SerializableMixin}.
+ * @mixin Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -10,10 +10,10 @@
 // @ts-ignore
 import Serializer = require('Core/Serializer');
 
-const CloneableMixin = /** @lends Types/Entity/CloneableMixin.prototype */{
+const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
    '[Types/_entity/CloneableMixin]': true,
 
-   //region Types/Entity/ICloneable
+   //region Types/_entity/ICloneable
 
    '[Types/_entity/ICloneable]': true,
 
@@ -45,7 +45,7 @@ const CloneableMixin = /** @lends Types/Entity/CloneableMixin.prototype */{
       return clone;
    },
 
-   //endregion Types/Entity/ICloneable
+   //endregion Types/_entity/ICloneable
 
    //region Protected methods
 

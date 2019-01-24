@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/SbisFormatMixin" />
 /**
  * Миксин для работы с СБИС-форматом в адаптерах
- * @mixin Types/Adapter/SbisFormatMixin
+ * @mixin Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -33,7 +33,7 @@ function getFieldInnerTypeNameByOuter(outerName) {
    return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
-const SbisFormatMixin = /** @lends Types/Adapter/SbisFormatMixin.prototype */{
+const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototype */{
    '[Types/_entity/adapter/SbisFormatMixin]': true,
 
    /**
@@ -52,7 +52,7 @@ const SbisFormatMixin = /** @lends Types/Adapter/SbisFormatMixin.prototype */{
    _fieldIndices: null,
 
    /**
-    * @member {Object.<Types/Format/Field>} Форматы полей
+    * @member {Object.<Types/_entity/format/Field>} Форматы полей
     */
    _format: null,
 

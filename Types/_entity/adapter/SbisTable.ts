@@ -22,12 +22,12 @@
  *    });
  *    adapter.at(0);//{d: [1, 'Test 1'], s: [{n: 'id', t: 'Число целое'}, {n: 'title', t: 'Строка'}]}
  * </pre>
- * @class Types/Adapter/SbisTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @implements Types/Adapter/IMetaData
- * @implements Types/Entity/ICloneable
- * @mixes Types/Adapter/SbisFormatMixin
+ * @class Types/_entity/adapter/SbisTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IMetaData
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -40,12 +40,11 @@ import SbisFormatMixin from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import {fieldsFactory, Field, UniversalField} from '../format';
 import {mixin} from '../../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../../object';
 
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin
-) implements ITable, IMetaData, ICloneable /** @lends Types/Adapter/SbisTable.prototype */{
+) implements ITable, IMetaData, ICloneable /** @lends Types/_entity/adapter/SbisTable.prototype */{
    _type: string;
 
    /**
@@ -130,7 +129,7 @@ export default class SbisTable extends mixin(
       this._touchData();
       this._checkRowIndex(acceptor);
       this._checkRowIndex(donor);
-      coreMerge(
+      merge(
          this._data.d[acceptor],
          this._data.d[donor]
       );
@@ -141,8 +140,7 @@ export default class SbisTable extends mixin(
       this._touchData();
       this._checkRowIndex(index);
       let source = this._data.d[index];
-      let clone = [];
-      coreMerge(clone, source, {clone: true});
+      let clone = merge([], source);
       this._data.d.splice(1 + index, 0, clone);
       return clone;
    }

@@ -26,7 +26,7 @@ define([
    IBindCollectionDisplay = IBindCollectionDisplay.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Display/Tree', function() {
+   describe('Types/_display/Tree', function() {
       var getData = function() {
             return [{
                id: 10,

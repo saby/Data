@@ -69,7 +69,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default function throttle(original: Function, delay: number, last: boolean) {
+export default function throttle(original: Function, delay: number, last?: boolean) {
    let state = true,
       next;
 

@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/OptionsMixin" />
 /**
  * Миксин, позволяющий задавать опциональные настройки источника данных.
- * @mixin Types/Source/OptionsMixin
+ * @mixin Types/_source/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -14,18 +14,18 @@ interface IConstructorOptions {
    options?: IOptions
 }
 
-const OptionsMixin = /** @lends Types/Source/OptionsMixin.prototype */{
+const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
    '[Types/_source/OptionsMixin]': true,
 
    /**
     * @cfg {Object} Дополнительные настройки источника данных.
-    * @name Types/Source/OptionsMixin#options
+    * @name Types/_source/OptionsMixin#options
     */
    _$options: {
 
       /**
        * @cfg {Boolean} Режим отладки.
-       * @name Types/Source/OptionsMixin#options.debug
+       * @name Types/_source/OptionsMixin#options.debug
        */
       debug: false
    },
@@ -52,7 +52,7 @@ const OptionsMixin = /** @lends Types/Source/OptionsMixin.prototype */{
 
    /**
     * Объединяет набор опций суперкласса с наследником
-    * @param {Types/Source/OptionsMixin} Super Суперкласс
+    * @param {Types/_source/OptionsMixin} Super Суперкласс
     * @param {Object} options Опции наследника
     * @return {Object}
     * @static

@@ -8,7 +8,7 @@ define([
 
    DateTimeField = DateTimeField.default;
 
-   describe('Types/Format/DateTimeField', function() {
+   describe('Types/_entity/format/DateTimeField', function() {
       var field;
 
       beforeEach(function() {

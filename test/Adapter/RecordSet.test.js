@@ -25,7 +25,7 @@ define([
    Record = Record.default;
    Model = Model.default;
 
-   describe('Types/Adapter/RecordSet', function() {
+   describe('Types/_entity/adapter/RecordSet', function() {
       var data,
          adapter;
 

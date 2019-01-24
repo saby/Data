@@ -8,7 +8,7 @@ define([
 
    GroupItem = GroupItem.default;
 
-   describe('Types/Display/GroupItem', function() {
+   describe('Types/_display/GroupItem', function() {
       var getOwnerMock = function() {
          return {
             notifyItemChange: function(item, property) {

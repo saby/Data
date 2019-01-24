@@ -1,7 +1,7 @@
 ///<amd-module name="Types/_entity/Guid" />
 /**
  * Guid
- * @class Types/Entity/Guid
+ * @class Types/_entity/Guid
  * @public
  * @author Мальцев А.А.
  */

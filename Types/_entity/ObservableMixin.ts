@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/ObservableMixin" />
 /**
  * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
- * @class Types/Entity/ObservableMixin
+ * @class Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -13,7 +13,7 @@ interface IOptions {
    handlers?: Object
 }
 
-export default abstract class ObservableMixin /**@lends Types/Entity/ObservableMixin.prototype */{
+export default abstract class ObservableMixin /**@lends Types/_entity/ObservableMixin.prototype */{
    /**
     * @cfg {Object.<Function>} handlers Обработчики событий
     */

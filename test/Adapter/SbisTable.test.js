@@ -20,7 +20,7 @@ define([
    IntegerField = IntegerField.default;
    StringField = StringField.default;
 
-   describe('Types/Adapter/SbisTable', function() {
+   describe('Types/_entity/adapter/SbisTable', function() {
       var getFormat = function() {
             return [
                {'n': 'Ид', 't': 'Число целое'},
@@ -269,7 +269,7 @@ define([
                data.d[0][0]
             );
          });
-            
+
          it('should insert the last record', function() {
             var format = [{'n': 'id', 't': 'Число целое'}],
                data = {
@@ -287,7 +287,7 @@ define([
                data.d[2][0]
             );
          });
-            
+
          it('should throw an error on invalid position', function() {
             assert.throws(function() {
                adapter.add({d: [30, 'aaa'], s: getFormat()}, 100);

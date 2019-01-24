@@ -8,7 +8,7 @@ define([
 ) {
    'use strict';
 
-   describe('Types/Source/HierarchicalMemory', function() {
+   describe('Types/_source/HierarchicalMemory', function() {
       var HierarchicalMemory = dataSource.HierarchicalMemory;
       var data;
       var source;

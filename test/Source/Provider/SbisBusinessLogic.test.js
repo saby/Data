@@ -8,7 +8,7 @@ define([
 ) {
    'use strict';
 
-   describe('Types/Source/Provider/SbisBusinessLogic', function() {
+   describe('Types/_source/provider/SbisBusinessLogic', function() {
       testCases(SbisBusinessLogic.default);
    });
 });

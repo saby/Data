@@ -10,7 +10,7 @@ define([
 
    var SlicedChain = SlicedChainEs.default;
 
-   describe('Types/Chain/Sliced', function() {
+   describe('Types/_chain/Sliced', function() {
       var prev,
          items;
 

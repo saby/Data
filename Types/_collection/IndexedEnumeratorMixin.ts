@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_collection/IndexedEnumeratorMixin" />
 /**
  * Миксин, позволящий использовать индексацию элементов в экземплярах,
- * реализующих интерфейс Types/Collection/IEnumerator.
- * @mixin Types/Collection/IndexedEnumeratorMixin
+ * реализующих интерфейс Types/_collection/IEnumerator.
+ * @mixin Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import { object } from '../util';
 import IObservable from './IObservable';
 
-const IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixin.prototype */{
+const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMixin.prototype */{
    '[Types/_collection/IndexedEnumeratorMixin]': true,
 
    /**
@@ -27,7 +27,7 @@ const IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixi
 
    /**
     * Переиндексирует энумератор
-    * @param {Types/Collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+    * @param {Types/_collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
     * @param {Number} [start=0] С какой позиции переиндексировать
     * @param {Number} [count=0] Число переиндексируемых элементов
     */
@@ -72,7 +72,7 @@ const IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixi
 
    /**
     * Устанавливает коллекцию при изменении которой поисходит переиндексация энумератора
-    * @param {Types/Collection/IBind} collection
+    * @param {Types/_collection/IBind} collection
     */
    setObservableCollection(collection) {
       collection.subscribe('onCollectionChange', this._onCollectionChange);
@@ -80,7 +80,7 @@ const IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixi
 
    /**
     * Сбрасывает коллекцию при изменении которой поисходит переиндексация энумератора
-    * @param {Types/Collection/IBind} collection
+    * @param {Types/_collection/IBind} collection
     */
    unsetObservableCollection(collection) {
       collection.unsubscribe('onCollectionChange', this._onCollectionChange);
@@ -280,7 +280,7 @@ const IndexedEnumeratorMixin = /** @lends Types/Collection/IndexedEnumeratorMixi
          item instanceof Object &&
          typeof item.getContents === 'function'
       ) {
-         // item is instance of Types/Display/CollectionItem
+         // item is instance of Types/_display/CollectionItem
          value = object.getPropertyValue(item.getContents(), property);
       }
 

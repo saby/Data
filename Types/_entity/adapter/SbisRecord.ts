@@ -19,11 +19,11 @@
  *    });
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/SbisRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @implements Types/Entity/ICloneable
- * @mixes Types/Adapter/SbisFormatMixin
+ * @class Types/_entity/adapter/SbisRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -37,7 +37,7 @@ import {mixin} from '../../util';
 
 export default class SbisRecord extends mixin(
    DestroyableMixin, SbisFormatMixin
-) implements IRecord, ICloneable /** @lends Types/Adapter/SbisRecord.prototype */{
+) implements IRecord, ICloneable /** @lends Types/_entity/adapter/SbisRecord.prototype */{
    _type: string;
 
    /**
