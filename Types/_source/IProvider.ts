@@ -30,8 +30,8 @@ export default interface IProvider /** @lends Types/_source/IProvider.prototype 
     * @example
     * Добавляем в фильтр выборки поле enabled со значением true:
     * <pre>
-    *    require(['Types/Source/SbisService'], function(SbisService) {
-    *       var dataSource = new SbisService({endpoint: 'Pickles'});
+    *    require(['Types/source'], function(source) {
+    *       var dataSource = new source.SbisService({endpoint: 'Pickles'});
     *       dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args) {
     *          args = Object.assign({}, args);
     *          switch (name) {

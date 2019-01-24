@@ -1,11 +1,11 @@
 /// <amd-module name="Types/_entity/relation/IReceiver" />
 /**
  * Интерфейс сущности, взаимодействующей с посредником
- * @interface Types/Mediator/IReceiver
+ * @interface Types/_entity/relation/IReceiver
  * @author Мальцев А.А.
  */
 
-export default interface IReceiver /** @lends Types/Mediator/IReceiver.prototype */{
+export default interface IReceiver /** @lends Types/_entity/relation/IReceiver.prototype */{
    readonly '[Types/_entity/relation/IReceiver]': boolean;
 
    /**

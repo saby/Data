@@ -6,11 +6,11 @@
  * @author Мальцев А.А.
  * @example
  * <pre>
- *    require(['Types/Source/Remote', 'Core/core-instance'], function(RemoteSource, coreInstance) {
+ *    require(['Types/source', 'Core/core-instance'], function(source, coreInstance) {
  *       //...
- *       if (dataSource instanceof RemoteSource) {
+ *       if (dataSource instanceof source.Remote) {
  *          var provider = dataSource.getProvider();
- *          if (coreInstance.instanceOfMixin(provider, 'Types/Source/Provider/INotify') {
+ *          if (coreInstance.instanceOfMixin(provider, 'Types/_source/provider/INotify') {
  *             provider.getEventsChannel().subscribe('onMessage', function(event, message) {
  *                console.log('A message from the server: ' + message);
  *             });

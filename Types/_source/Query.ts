@@ -4,8 +4,8 @@
  *
  * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
  * <pre>
- *    require(['Types/Query/Query'], function (Query) {
- *       var query = new Query(),
+ *    require(['Types/source'], function (source) {
+ *       var query = new source.Query(),
  *          date = new Date();
  *
  *       date.setDate(date.getDate() - 1);
@@ -76,38 +76,38 @@ function parseSelectExpression(expression: Expression) {
 
 /**
  * Объект, задающий способ объединения множеств.
- * @class Types/Query/Join
+ * @class Types/_source/Query/Join
  * @mixes Types/_entity/OptionsMixin
  * @public
  */
 export class Join extends mixin(Object, OptionsToPropertyMixin) {
    /**
     * @cfg {String} Правое множество
-    * @name Types/Query/Join#resource
+    * @name Types/_source/Query/Join#resource
     */
    protected _$resource: string = '';
 
    /**
     * @cfg {String} Синоним правого множества
-    * @name Types/Query/Join#as
+    * @name Types/_source/Query/Join#as
     */
    protected _$as: string = '';
 
    /**
     * @cfg {Object} Правило объединения
-    * @name Types/Query/Join#on
+    * @name Types/_source/_source/Query/Join#on
     */
    protected _$on: Object = {};
 
    /**
     * @cfg {Object} Выбираемые поля
-    * @name Types/Query/Join#select
+    * @name Types/_source/Query/Join#select
     */
    protected _$select: Object = {};
 
    /**
     * @cfg {Boolean} Внутреннее объединение
-    * @name Types/Query/Join#inner
+    * @name Types/_source/Query/Join#inner
     */
    protected _$inner: boolean = true;
 
@@ -159,7 +159,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
 
 /**
  * Объект, задающий способ сортировки множества
- * @class Types/Query/Order
+ * @class Types/_source/Query/Order
  * @mixes Types/_entity/OptionsMixin
  * @public
  */
@@ -172,13 +172,13 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
 
    /**
     * @cfg {String} Объект сортировки
-    * @name Types/Query/Order#selector
+    * @name Types/_source/Query/Order#selector
     */
    protected _$selector: string = '';
 
    /**
     * @cfg {Order} Порядок сортировки
-    * @name Types/Query/Order#order
+    * @name Types/_source/Query/Order#order
     */
    protected _$order: boolean | string = false;
 
@@ -358,8 +358,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим поля выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select(['id', 'date']);
     *       console.log(query.getSelect());//{id: 'id', date: 'date'}
     *    });
@@ -376,16 +376,16 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Выбираем все заказы с определенным набором полей:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select(['id', 'date', 'customerId' ])
     *          .from('Orders');
     *    });
     * </pre>
     * Выбираем все заказы со всеми полями:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders');
     *    });
@@ -403,8 +403,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим объект выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select(['id', 'date'])
     *          .from('Orders');
     *       console.log(query.getFrom());//'Orders'
@@ -421,8 +421,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим псеводним выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select(['id', 'date'])
     *          .from('Orders', 'o');
     *       console.log(query.getAs());//'o'
@@ -441,8 +441,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Выбираем заказы с указанием полей через псеводним:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select(['o.id', 'o.date', 'o.customerId'])
     *          .from('Orders', 'o');
     *    });
@@ -457,12 +457,12 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    /**
     * Возвращает способы объединения
-    * @return {Types/Query/Join[]}
+    * @return {Types/_source/Query/Join[]}
     * @example
     * Получим способ объединения c объектом Customers:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .join(
@@ -490,8 +490,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @return {Types/_source/Query}
     * @example
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .join(
@@ -500,7 +500,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *             '*'
     *          );
     *
-    *       var query = new Query()
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .join(
@@ -537,8 +537,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим способ фильтрации выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .where({host: 'my.store.com'});
@@ -572,8 +572,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * </pre>
     * Выберем все заказы с номером больше 10, сделанные до текущего момента:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .where(function(order) {
@@ -596,12 +596,12 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    /**
     * Возвращает способы сортировки
-    * @return {Array.<Types/Query/Order>}
+    * @return {Array.<Types/_source/Query/Order>}
     * @example
     * Получим способы сортировки выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .orderBy('id');
@@ -618,14 +618,14 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    /**
     * Устанавливает порядок сортировки выборки
-    * @param {String|Array.<Object.<Types/Query/Order/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
-    * @param {Types/Query/Order/Order.typedef} [desc=false] По убыванию
+    * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+    * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
     * @return {Types/_source/Query}
     * @example
     * Отсортируем заказы по полю id по возрастанию:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .orderBy('id');
@@ -633,8 +633,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * </pre>
     * Отсортируем заказы по полю id по убыванию:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .orderBy('id', true);
@@ -642,8 +642,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * </pre>
     * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .orderBy([
@@ -698,8 +698,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим способ группировки выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .groupBy('customerId');
@@ -718,8 +718,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @return {Types/_source/Query}
     * @example
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .groupBy('customerId');
@@ -751,8 +751,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим смещение выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .offset(50);
@@ -772,8 +772,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Выберем все заказы, начиная с пятидесятого:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .offset(50);
@@ -792,8 +792,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим максимальное количество записей выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .limit(10);
@@ -813,8 +813,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Выберем первые десять заказов:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Orders')
     *          .limit(10);
@@ -833,8 +833,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Получим мета-данные выборки:
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Catalogue')
     *          .meta({selectBreadCrumbs: true});
@@ -854,8 +854,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * @example
     * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
     * <pre>
-    *    require(['Types/Query/Query'], function (Query) {
-    *       var query = new Query()
+    *    require(['Types/source'], function (source) {
+    *       var query = new source.Query()
     *          .select('*')
     *          .from('Catalogue')
     *          .where({'parentId': 10})

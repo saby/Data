@@ -152,12 +152,12 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     * </pre>
     * Обновим данные сотрудника с идентификатором 123321:
     * <pre>
-    *    require(['Types/Source/SbisService', Types/_entity/Record], function(SbisService, Record) {
-    *       var dataSource = new SbisService({
+    *    require(['Types/source', Types/entity], function(source, entity) {
+    *       var dataSource = new source.SbisService({
     *             endpoint: 'Employee'
     *             idProperty: '@Employee'
     *          }),
-    *          employee = new Record({
+    *          employee = new entity.Record({
     *             format: [
     *                {name: '@Employee', type: 'identity'},
     *                {name: 'Position', type: 'string'}

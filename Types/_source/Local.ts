@@ -79,8 +79,8 @@ export default abstract class Local extends mixin(
     * @example
     * Спрячем Землю из результатов выборки:
     * <pre>
-    *    require(['Types/Source/Memory'], function (MemorySource) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -108,8 +108,8 @@ export default abstract class Local extends mixin(
     * </pre>
     * Выберем все объекты, имена которых начинаются на 'S':
     * <pre>
-    *    require(['Types/Source/Memory', 'Types/Query/Query'], function (MemorySource, Query) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -132,7 +132,7 @@ export default abstract class Local extends mixin(
     *          idProperty: 'id'
     *       });
     *
-    *       var query = new Query();
+    *       var query = new source.Query();
     *       query.where({name: 'S'});
     *       solarSystem.query(query).addCallback(function(result) {
     *          result.getAll().each(function(record) {
@@ -427,7 +427,7 @@ export default abstract class Local extends mixin(
    /**
     * Применяет объединение
     * @param {*} data Данные
-    * @param {Types/Query/Join[]} join Выборки для объединения
+    * @param {Types/_source/Query#Join[]} join Выборки для объединения
     * @return {*}
     * @protected
     */
@@ -489,7 +489,7 @@ export default abstract class Local extends mixin(
    /**
     * Применяет сортировку
     * @param {*} data Данные
-    * @param {Array.<Types/Query/Order>} order Параметры сортировки
+    * @param {Array.<Types/_source/Query#Order>} order Параметры сортировки
     * @return {*}
     * @protected
     */

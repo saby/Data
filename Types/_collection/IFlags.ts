@@ -20,8 +20,8 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * @param {Boolean|Null} value Новое значение флага
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Flags'], function(Flags) {
-    *       var colors = new Flags({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
     *          dictionary: ['Red', 'Green', 'Blue']
     *       });
     *
@@ -42,8 +42,8 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * @return {Boolean|Null}
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Flags'], function(Flags) {
-    *       var colors = new Flags({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          values: [false, true, false]
     *       });
@@ -62,8 +62,8 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * @param {Boolean} [localize=false] Название флага локализовано
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Flags'], function(Flags) {
-    *       var colors = new Flags({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
     *          dictionary: ['Red', 'Green', 'Blue']
     *       });
     *
@@ -83,8 +83,8 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * @return {Boolean|Null}
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Flags'], function(Flags) {
-    *       var colors = new Flags({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          values: [false, true, false]
     *       });
@@ -102,8 +102,8 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * @param {Boolean|Null} value Значение флага
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Flags'], function(Flags) {
-    *       var colors = new Flags({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          values: [false, true, false]
     *       });

@@ -128,8 +128,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Создадим рекордсет с персонажами фильма:
     * <pre>
-    *    require(['Types/Collection/RecordSet'], function (RecordSet) {
-    *       var characters = new RecordSet({
+    *    require(['Types/collection'], function (collection) {
+    *       var characters = new collection.RecordSet({
     *          rawData: [{
     *             id: 1,
     *             firstName: 'John',
@@ -166,32 +166,16 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @name Types/_entity/FormattableMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Json
-    * @see Types/Di
+    * @see Types/di
     * @remark
     * Адаптер должен быть предназначен для формата, в котором получены сырые данные {@link rawData}.
     * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
     * @example
-    * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде названия зарегистрированной зависимости:
+    * Создадим запись с адаптером для данных в формате БЛ СБИС:
     * <pre>
-    *    require(['Types/Entity/Record', 'Types/Adapter/Sbis'], function (Record) {
-    *       var user = new Record({
-    *          adapter: 'Types/entity:adapter.Sbis',
-    *          format: [
-    *             {name: 'login', type: 'string'},
-    *             {name: 'email', type: 'string'}
-    *          ]
-    *       });
-    *       user.set({
-    *          login: 'root',
-    *          email: 'root@server.name'
-    *       });
-    *    });
-    * </pre>
-    * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде готового экземпляра:
-    * <pre>
-    *    require(['Types/Entity/Record', 'Types/Adapter/Sbis'], function (Record, SbisAdapter) {
-    *       var user = new Record({
-    *          adapter: new SbisAdapter(),
+    *    require(['Types/entity'], function (entity) {
+    *       var user = new entity.Record({
+    *          adapter: new entity.adapter.Sbis(),
     *          format: [
     *             {name: 'login', type: 'string'},
     *             {name: 'email', type: 'string'}
@@ -218,8 +202,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Создадим запись с указанием формата полей, внедренным в декларативном виде:
     * <pre>
-    *    require(['Types/Entity/Record'], function(Record) {
-    *       var user = new Record({
+    *    require(['Types/entity'], function(entity) {
+    *       var user = new entity.Record({
     *          format: [{
     *             name: 'id',
     *             type: 'integer'
@@ -236,34 +220,33 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Создадим рекордсет с указанием формата полей, внедренным в виде готового экземпляра:
     * <pre>
-    *    //My.Format.User.module.js
-    *    define('My.Format.User', [
-    *       'Types/Format/Format',
-    *       'Types/Format/IntegerField',
-    *       'Types/Format/StringField'
-    *    ], function(Format, IntegerField, StringField) {
-    *       var format = new Format();
-    *       format.add(new IntegerField({name: 'id'}));
-    *       format.add(new StringField({name: 'login'}));
-    *       format.add(new StringField({name: 'email'}));
+    *    //My/Format/User.js
+    *    define('My/Format/User', [
+    *       'Types/collection',
+    *       'Types/entity'
+    *    ], function(collection, entity) {
+    *       var format = new collection.format.Format();
+    *       format.add(new entity.format.IntegerField({name: 'id'}));
+    *       format.add(new entity.format.StringField({name: 'login'}));
+    *       format.add(new entity.format.StringField({name: 'email'}));
     *
     *       return format;
     *    });
     *
-    *    //Users.js
+    *    ///My/Models/Users.js
     *    require([
-    *       'Types/Collection/RecordSet',
-    *       'My.Format.User'
-    *    ], function (RecordSet, userFormat) {
-    *       var users = new RecordSet({
+    *       'Types/collection',
+    *       'My/Format/User'
+    *    ], function (collection, userFormat) {
+    *       var users = new collection.RecordSet({
     *          format: userFormat
     *       });
     *    });
     * </pre>
     * Создадим запись, для которой зададим формат полей 'id' и 'amount', внедренный в декларативном виде:
     * <pre>
-    *    require(['Types/Entity/Record'], function(Record) {
-    *       var user = new Record({
+    *    require(['Types/entity'], function(entity) {
+    *       var user = new entity.Record({
     *          rawData: {
     *             id: 256,
     *             login: 'dr.strange',
@@ -279,11 +262,10 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * Создадим запись, для которой зададим формат поля 'amount', внедренный в виде готового экземпляра:
     * <pre>
     *    require([
-    *       'Types/Entity/Record',
-    *       'Types/Format/MoneyField'
-    *    ], function(Record, MoneyField) {
-    *       var amountField = new MoneyField({precision: 4}),
-    *          user = new Record({
+    *       'Types/entity'
+    *    ], function(entity) {
+    *       var amountField = new entity.format.MoneyField({precision: 4}),
+    *          user = new entity.Record({
     *             format: {
     *                amount: amountField
     *             }]
@@ -292,8 +274,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Укажем тип Number для поля "Идентификатор" и тип Date для поля "Время последнего входа" учетной записи пользователя:
     * <pre>
-    *    require(['Types/Entity/Record'], function(Record) {
-    *       var user = new Record({
+    *    require(['Types/entity'], function(entity) {
+    *       var user = new entity.Record({
     *          format: {
     *             id: Number,
     *             lastLogin: Date
@@ -303,72 +285,61 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Внедрим рекордсет со своей моделью в одно из полей записи:
     * <pre>
-    *    //ActivityModel.js
-    *    require('MyApplication/Models/ActivityModel', [
-    *       'Types/Entity/Model'
-    *    ], function(Model) {
-    *       return Model.extend({
-    *          //...
-    *       });
-    *    });
-    *
-    *    //ActivityRecordSet.js
-    *    require('MyApplication/ViewModels/ActivityRecordSet', [
-    *       'Types/Collection/RecordSet'
-    *       'MyApplication/Models/ActivityModel'
-    *    ], function(RecordSet, ActivityModel) {
-    *       return RecordSet.extend({
-    *          _$model: ActivityModel
-    *       });
-    *    });
-    *
-    *    //ActivityController.js
-    *    require('MyApplication/Controllers/ActivityController', [
-    *       'Types/Entity/Record'
-    *       'MyApplication/ViewModels/ActivityRecordSet'
-    *    ], function(Record, ActivityRecordSet) {
-    *       var user = new Record({
-    *          format: {
-    *             activity: ActivityRecordSet
-    *          }
-    *       });
+    *    //MyApplication/Models/ActivityModel.js
+    *    import {Model} from 'Types/entity';
+    *    export default class ActivityModel extends Model{
     *       //...
+    *    }
+    *
+    *    //MyApplication/Models/ActivityRecordSet.js
+    *    import ActivityModel from './ActivityModel';
+    *    import {RecordSet} from 'Types/collection';
+    *    export default class ActivityRecordSet extends RecordSet {
+    *       _$model: ActivityModel
+    *    }
+    *
+    *    //MyApplication/Controllers/ActivityController.js
+    *    import ActivityRecordSet from '../Models/ActivityRecordSet';
+    *    import {Record} from 'Types/entity';
+    *    const user = new Record({
+    *       format: {
+    *          activity: ActivityRecordSet
+    *       }
     *    });
     * </pre>
     * Создадим запись заказа в магазине с полем типа "рекордсет", содержащим список позиций. Сырые данные будут в формате БЛ СБИС:
     * <pre>
     *    require([
-    *       'Types/Entity/Record',
-    *       'Types/Collection/RecordSet',
-    *       'Types/Adapter/Sbis'
-    *    ], function (Record, RecordSet) {
-    *       var order = new Record({
-    *             adapter: 'Types/entity:adapter.Sbis',
-    *             format:[{
-    *                name: 'id',
-    *                type: 'integer',
-    *                defaultValue: 0
-    *             }, {
-    *                name: 'items',
-    *                type: 'recordset'
-    *             }]
-    *          }),
-    *          orderItems = new RecordSet({
-    *             adapter: 'Types/entity:adapter.Sbis',
-    *             format: [{
-    *                name: 'goods_id',
-    *                type: 'integer',
-    *                defaultValue: 0
-    *             },{
-    *                name: 'price',
-    *                type: 'real',
-    *                defaultValue: 0
-    *             },{
-    *               name: 'count',
-    *               type: 'integer',
-    *               defaultValue: 0
-    *             }]
-    *          });
+    *       'Types/entity',
+    *       'Types/collection'
+    *    ], function (entity, collection) {
+    *       var order = new entity.Record({
+    *          adapter: new entity.adapter.Sbis(),
+    *          format:[{
+    *             name: 'id',
+    *             type: 'integer',
+    *             defaultValue: 0
+    *          }, {
+    *             name: 'items',
+    *             type: 'recordset'
+    *          }]
+    *       });
+    *       var orderItems = new RecordSet({
+    *          adapter: new entity.adapter.Sbis(),
+    *          format: [{
+    *             name: 'goods_id',
+    *             type: 'integer',
+    *             defaultValue: 0
+    *          }, {
+    *             name: 'price',
+    *             type: 'real',
+    *             defaultValue: 0
+    *          }, {
+    *            name: 'count',
+    *            type: 'integer',
+    *            defaultValue: 0
+    *          }]
+    *       });
     *
     *       order.set('items', orderItems);
     *    });
@@ -429,11 +400,11 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Получим сырые данные статьи:
     * <pre>
-    *    require(['Types/Entity/Record'], function (Record) {
-    *       var data = {id: 1, title: 'Article 1'},
-    *          article = new Record({
-    *             rawData: data
-    *        });
+    *    require(['Types/entity'], function (entity) {
+    *       var data = {id: 1, title: 'Article 1'};
+    *       var article = new entity.Record({
+    *          rawData: data
+    *       });
     *
     *       console.log(article.getRawData());// {id: 1, title: 'Article 1'}
     *       console.log(article.getRawData() === data);// false
@@ -453,8 +424,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Установим сырые данные статьи:
     * <pre>
-    *    require(['Types/Entity/Record'], function (Record) {
-    *       var article = new Record();
+    *    require(['Types/entity'], function (entity) {
+    *       var article = new entity.Record();
     *       article.setRawData({id: 1, title: 'Article 1'});
     *       console.log(article.get('title'));// Article 1
     *    });
@@ -474,9 +445,9 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Проверим, что по умолчанию используется адаптер для формата JSON:
     * <pre>
-    *    require(['Types/Entity/Record', 'Types/Adapter/Json'], function (Record, JsonAdapter) {
-    *       var article = new Record();
-    *       console.log(article.getAdapter() instanceof JsonAdapter);// true
+    *    require(['Types/entity'], function (entity) {
+    *       var article = new entity.Record();
+    *       console.log(article.getAdapter() instanceof entity.adapter.Json);// true
     *    });
     * </pre>
     */
@@ -495,14 +466,14 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Получим формат, сконструированный из декларативного описания:
     * <pre>
-    *    require(['Types/Entity/Record'], function (Record) {
-    *       var article = new Record({
-    *             format: [
-    *                {name: 'id', type: 'integer'},
-    *                {name: 'title', type: 'string'}
-    *             ]
-    *          }),
-    *          format = article.getFormat();
+    *    require(['Types/entity'], function (entity) {
+    *       var article = new entity.Record({
+    *          format: [
+    *             {name: 'id', type: 'integer'},
+    *             {name: 'title', type: 'string'}
+    *           ]
+    *       });
+    *       var format = article.getFormat();
     *
     *       console.log(format.at(0).getName());// 'id'
     *       console.log(format.at(1).getName());// 'title'
@@ -510,14 +481,14 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Получим формат, сконструированный из сырых данных:
     * <pre>
-    *    require(['Types/Entity/Record'], function (Record) {
-    *       var article = new Record({
-    *             rawData: {
-    *                id: 1,
-    *                title: 'What About Livingstone'
-    *             }
-    *          }),
-    *          format = article.getFormat();
+    *    require(['Types/entity'], function (entity) {
+    *       var article = new entity.Record({
+    *          rawData: {
+    *             id: 1,
+    *             title: 'What About Livingstone'
+    *          }
+    *       });
+    *       var format = article.getFormat();
     *
     *       console.log(format.at(0).getName());// 'id'
     *       console.log(format.at(1).getName());// 'title'
@@ -546,8 +517,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @example
     * Добавим поля в виде декларативного описания:
     * <pre>
-    *    require(['Types/Entity/Record'], function (Record) {
-    *       var record = new Record();
+    *    require(['Types/entity'], function (entity) {
+    *       var record = new entity.Record();
     *       record.addField({name: 'login', type: 'string'});
     *       record.addField({name: 'amount', type: 'money', precision: 3});
     *    });
@@ -555,13 +526,12 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * Добавим поля в виде экземпляров:
     * <pre>
     *    require([
-    *       'Types/Collection/RecordSet',
-    *       'Types/Format/StringField',
-    *       'Types/_entity/format/MoneyField'
-    *    ], function (RecordSet, StringField, MoneyField) {
-    *       var recordset = new RecordSet();
-    *       recordset.addField(new StringField({name: 'login'}));
-    *       recordset.addField(new MoneyField({name: 'amount', precision: 3}));
+    *       'Types/collection',
+    *       'Types/entity'
+    *    ], function (collection, entity) {
+    *       var recordset = new collection.RecordSet();
+    *       recordset.addField(new entity.format.StringField({name: 'login'}));
+    *       recordset.addField(new entity.format.MoneyField({name: 'amount', precision: 3}));
     *    });
     * </pre>
     */

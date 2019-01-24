@@ -16,13 +16,13 @@ export default interface IEquatable /** @lends Types/_entity/IEquatable.prototyp
     * @example
     * Проверим идентичность записей до и после изменения поля:
     * <pre>
-    * requirejs(['Types/Entity/Record'], function(Record) {
-    *    var articleA = new Record({
-    *          rawData: {
-    *             foo: 'bar'
-    *          }
-    *       }),
-    *       articleB = articleA.clone();
+    * requirejs(['Types/entity'], function(entity) {
+    *    var articleA = new entity.Record({
+    *       rawData: {
+    *          foo: 'bar'
+    *       }
+    *    });
+    *    var articleB = articleA.clone();
     *
     *    articleA.isEqual(articleB);//true
     *    articleA.set('title', 'New Title');

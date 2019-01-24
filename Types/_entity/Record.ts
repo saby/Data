@@ -12,8 +12,8 @@
  *
  * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *    require(['Types/Entity/Record'], function (Record) {
- *       var employee = new Record({
+ *    require(['Types/entity'], function (entity) {
+ *       var employee = new entity.Record({
  *          rawData: {
  *             id: 1,
  *             firstName: 'John',
@@ -49,7 +49,7 @@
  * @implements Types/_entity/IProducible
  * @implements Types/_entity/IEquatable
  * @implements Types/_collection/IEnumerable
- * @implements Types/Mediator/IReceiver
+ * @implements Types/_entity/relation/IReceiver
  * @implements Types/_entity/IVersionable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin

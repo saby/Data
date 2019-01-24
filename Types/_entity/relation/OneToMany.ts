@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/relation/OneToMany" />
 /**
  * Посредник, реализующий отношения "один ко многим".
- * @class Types/Mediator/OneToMany
+ * @class Types/_entity/relation/OneToMany
  * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
@@ -18,7 +18,7 @@ function isAlive(item): boolean {
    return item instanceof Object && item['[Types/_entity/DestroyableMixin]'] ? !item.destroyed : true;
 }
 
-export default class OneToMany extends DestroyableMixin /** @lends Types/Mediator/OneToMany.prototype */{
+export default class OneToMany extends DestroyableMixin /** @lends Types/_entity/relation/OneToMany.prototype */{
    /**
     * @property {Map<Object, Set<Object>>} Родитель -> [Ребенок, Ребенок, ...]
     */
@@ -47,10 +47,6 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/Mediato
       this._childToRelation = null;
       super.destroy();
    }
-
-   //region Types/Mediator/IMediator
-
-   //endregion Types/Mediator/IMediator
 
    //region Public methods
 

@@ -594,7 +594,7 @@ export default class LocalSession extends mixin(
     * @name Types/_source/LocalSession#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
     * <pre>
@@ -615,7 +615,7 @@ export default class LocalSession extends mixin(
     * @name Types/_source/LocalSession#model
     * @see getModel
     * @see Types/_entity/Model
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
     * <pre>

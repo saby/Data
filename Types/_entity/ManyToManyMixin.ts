@@ -15,7 +15,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
    '[WS.Data/Entity/ManyToManyMixin]': true,
 
    /**
-    * @property {Types/Mediator/ManyToMany} Медиатор, отвечающий за связи между сущностями
+    * @property {Types/_entity/relation/ManyToMany} Медиатор, отвечающий за связи между сущностями
     */
    _mediator: null,
 
@@ -48,7 +48,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Добавляет отношение с другой сущностью
-    * @param {Types/Mediator/IReceiver} child Другая сущность
+    * @param {Types/_entity/relation/IReceiver} child Другая сущность
     * @param {String} [name] Название отношения
     * @protected
     */
@@ -71,7 +71,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Удаляет отношение с другой сущностью
-    * @param {Types/Mediator/IReceiver} child Другая сущность
+    * @param {Types/_entity/relation/IReceiver} child Другая сущность
     * @protected
     */
    _removeChild(child) {
@@ -151,7 +151,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Возвращает признак наличия одинакового посредника
-    * @param {Types/Mediator/ManyToMany} mediator
+    * @param {Types/_entity/relation/ManyToMany} mediator
     * @return {Boolean}
     * @protected
     */
@@ -161,7 +161,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Создает посредника для установления отношений с детьми
-    * @return {Types/Mediator/ManyToMany}
+    * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
    _createMediator() {
@@ -170,7 +170,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Возвращает посредника для установления отношений с детьми
-    * @return {Types/Mediator/ManyToMany}
+    * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
    _getMediator() {
@@ -179,7 +179,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
 
    /**
     * Устанавливает посредника для установления отношений с детьми
-    * @param {Types/Mediator/ManyToMany|null} mediator
+    * @param {Types/_entity/relation/ManyToMany|null} mediator
     * @protected
     */
    _setMediator(mediator) {

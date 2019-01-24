@@ -61,16 +61,16 @@ const IObservable = /** @lends Types/_collection/IBind.prototype */{
     * @example
     * <pre>
     * define([
-    *    'Types/Collection/ObservableList', 'Types/Collection/IBind'
-    * ], function(ObservableList, IBindCollection) {
-    *    var list = new ObservableList({
+    *    'Types/collection'
+    * ], function(collection) {
+    *    var list = new collection.ObservableList({
     *       items: [1, 2, 3]
     *    });
     *
     *    list.subscribe(
     *       'onCollectionChange',
     *      function(eventObject, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-    *          if (action == IBindCollection.ACTION_REMOVE){
+    *          if (action == collection.IObservable.ACTION_REMOVE){
     *             console.log(oldItems);//[1]
     *             console.log(oldItemsIndex);//0
     *          }

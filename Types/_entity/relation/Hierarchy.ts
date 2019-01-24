@@ -60,7 +60,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import {mixin} from '../../util';
 
-export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) /** @lends Types/Mediator/Hierarchy.prototype */{
+export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) /** @lends Types/_entity/relation/Hierarchy.prototype */{
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
     * @name Types/_entity/relation/Hierarchy#idProperty

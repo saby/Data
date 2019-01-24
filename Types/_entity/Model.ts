@@ -18,46 +18,43 @@
  *
  * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
  * <pre>
- * define('My.Awesome.Model', ['Types/Entity/Model'], function (Model) {
- *    'use strict';
- *
- *    var AwesomeModel = Model.extend({
- *      _moduleName: 'My.Awesome.Model'
- *      //...
+ *    //My/Awesome/Model.ts
+ *    import {Model} from 'Types/entity';
+ *    export default class AwesomeModel extends Model {
+ *       _moduleName: string = 'My/Awesome/Model';
+ *       //...
  *    });
  *
  *    return AwesomeModel;
- * });
  * </pre>
  *
  * Определим модель пользователя:
  * <pre>
- *    define('Application/Model/User', ['Types/Entity/Model', 'Application/Lib/Salt'], function (Model, Salt) {
- *       var User = Model.extend({
- *          _moduleName: 'Application/Model/User'
- *          _$format: [
- *             {name: 'login', type: 'string'},
- *             {name: 'salt', type: 'string'}
- *          ],
- *          _$idProperty: 'login',
- *          authenticate: function(password) {
- *             return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
- *          }
- *       });
- *
- *       return User;
- *    });
+ *    //My/Awesome/Model.ts
+ *    import {Salt} from 'Application/Lib';
+ *    import {Model} from 'Types/entity';
+ *    export default class User extends Model{
+ *       _moduleName: string = 'Application/Model/User';
+ *       _$format: Array = [
+ *          {name: 'login', type: 'string'},
+ *          {name: 'salt', type: 'string'}
+ *       ];
+ *       _$idProperty: string = 'login';
+ *       authenticate(password: string): boolean {
+ *          return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
+ *       }
+ *     });
  * </pre>
  * Создадим модель пользователя:
  * <pre>
- *    define('Application/Controller/Test/Auth', ['Application/Model/User'], function (User) {
- *       var user = new User();
- *       user.set({
- *          login: 'i.c.wiener',
- *          salt: 'grhS2Nys345fsSW3mL9'
- *       });
- *       var testOk = user.authenticate('its pizza time!');
+ *    //Application/Controller/Test/Auth.ts
+ *    import User from 'Application/Model/User';
+ *    const user = new User();
+ *    user.set({
+ *       login: 'i.c.wiener',
+ *       salt: 'grhS2Nys345fsSW3mL9'
  *    });
+ *    const testOk = user.authenticate('its pizza time!');
  * </pre>
  *
  * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
@@ -147,105 +144,110 @@ export default class Model extends mixin(
     *    <li>guid (только чтение, значение по умолчанию генерируется динамически)</li>
     * </ul>
     * <pre>
-    *    require(['Types/Entity/Model'], function(Model) {
-    *       var User = Model.extend({
-    *          _$properties: {
-    *             id: {
-    *                get: function(value) {
-    *                   return '№' + value;
-    *                },
-    *                set: function(value) {
-    *                   return (value + '')[0] === '№' ? value.substr(1) : value;
-    *                }
+    *    import {Model} from 'Types/entity';
+    *
+    *    interface IGroup {
+    *       id: sting
+    *       name: sting
+    *    }
+    *
+    *    export default class User extends Model {
+    *       _$properties: Object = {
+    *          id: {
+    *             get(value) {
+    *                return '№' + value;
     *             },
-    *             group: {
-    *                get: function() {
-    *                   return this._group;
-    *                },
-    *                set: function(value) {
-    *                   this._group = value;
-    *                }
-    *             },
-    *             guid: {
-    *                def: function() {
-    *                   return Math.random() * 999999999999999;
-    *                },
-    *                get: function(value) {
-    *                   return value;
-    *                }
+    *             set(value) {
+    *                return (value + '')[0] === '№' ? value.substr(1) : value;
     *             }
     *          },
-    *          _group: null
-    *       });
-    *
-    *       var user = new User({
-    *          rawData: {
-    *             id: 5,
-    *             login: 'Keanu',
-    *             firstName: 'Johnny',
-    *             lastName: 'Mnemonic',
-    *             job: 'Memory stick'
+    *          group: {
+    *             get() {
+    *                return this._group;
+    *             },
+    *             set(value) {
+    *                this._group = value;
+    *             }
+    *          },
+    *          guid: {
+    *             def() {
+    *                return Math.random() * 999999999999999;
+    *             },
+    *             get(value) {
+    *                return value;
+    *             }
     *          }
-    *       });
+    *       },
+    *       _group: IGroup = null
+    *    }
     *
-    *       console.log(user.get('id'));//№5
-    *       console.log(user.get('group'));//null
-    *       console.log(user.get('guid'));//010a151c-1160-d31d-11b3-18189155cc13
-    *       console.log(user.get('job'));//Memory stick
-    *       console.log(user.get('uptime'));//undefined
-    *
-    *       user.set('id', '№6');
-    *       console.log(user.getRawData().id);//6
-    *
-    *       user.set('group', {id: 1, name: 'The One'});
-    *       console.log(user.get('group'));//{id: 1, name: 'The One'}
-    *
-    *       user.set('guid', 'new-one');//ReferenceError 'Model::set(): property "guid" is read only'
+    *    const user = new User({
+    *       rawData: {
+    *          id: 5,
+    *          login: 'Keanu',
+    *          firstName: 'Johnny',
+    *          lastName: 'Mnemonic',
+    *          job: 'Memory stick'
+    *       }
     *    });
+    *
+    *    console.log(user.get('id'));//№5
+    *    console.log(user.get('group'));//null
+    *    console.log(user.get('guid'));//010a151c-1160-d31d-11b3-18189155cc13
+    *    console.log(user.get('job'));//Memory stick
+    *    console.log(user.get('uptime'));//undefined
+    *
+    *    user.set('id', '№6');
+    *    console.log(user.getRawData().id);//6
+    *
+    *    user.set('group', {id: 1, name: 'The One'});
+    *    console.log(user.get('group'));//{id: 1, name: 'The One'}
+    *
+    *    user.set('guid', 'new-one');//ReferenceError 'Model::set(): property "guid" is read only'
     * </pre>
     * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других свойств:
     * <pre>
-    *    require(['Types/Entity/Model'], function(Model) {
-    *       var User = Model.extend({
-    *          _$properties: {
-    *             displayName: {
-    *                get: function() {
-    *                   return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
-    *                }
+    *    import {Model} from 'Types/entity';
+    *
+    *    export default class User extends {
+    *       _$properties: Object = {
+    *          displayName: {
+    *             get() {
+    *               return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
     *             }
     *          }
-    *       });
-    *
-    *       var user = new User({
-    *          rawData: {
-    *             login: 'Keanu',
-    *             firstName: 'Johnny',
-    *             lastName: 'Mnemonic',
-    *          }
-    *       });
-    *       console.log(user.get('displayName'));//Johnny a.k.a "Keanu" Mnemonic
+    *       }
     *    });
+    *
+    *    const user = new User({
+    *       rawData: {
+    *          login: 'Keanu',
+    *          firstName: 'Johnny',
+    *          lastName: 'Mnemonic'
+    *       }
+    *    });
+    *    console.log(user.get('displayName'));//Johnny a.k.a "Keanu" Mnemonic
     * </pre>
     * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет сбрасываться кэш, хранящий результат предыдущего вычисления:
     * <pre>
-    *    require(['Types/Entity/Model', 'Types/Functor/Compute'], function(Model, Compute) {
-    *       var User = Model.extend({
-    *          _$properties: {
-    *             birthDay: {
-    *                get: new Compute(function() {
-    *                   return this.get('facebookBirthDay') || this.get('linkedInBirthDay');
-    *                }, ['facebookBirthDay', 'linkedInBirthDay'])
-    *             }
+    *    import {Model, functor} from 'Types/entity';
+    *
+    *    export default class User extends {
+    *       _$properties: any = {
+    *          birthDay: {
+    *             get: new functor.Compute(function() {
+    *                return this.get('facebookBirthDay') || this.get('linkedInBirthDay');
+    *             }, ['facebookBirthDay', 'linkedInBirthDay'])
     *          }
-    *       });
+    *       }
+    *    }
     *
-    *       var user = new User();
-    *       user.set('linkedInBirthDay', new Date(2010, 1, 2));
-    *       console.log(user.get('birthDay'));//Tue Feb 02 2010 00:00:00
+    *    const user = new User();
+    *    user.set('linkedInBirthDay', new Date(2010, 1, 2));
+    *    console.log(user.get('birthDay'));//Tue Feb 02 2010 00:00:00
     *
-    *       user.set('facebookBirthDay', new Date(2011, 3, 4));
-    *       console.log(user.get('birthDay'));//Mon Apr 04 2011 00:00:00
-    *    });
+    *    user.set('facebookBirthDay', new Date(2011, 3, 4));
+    *    console.log(user.get('birthDay'));//Mon Apr 04 2011 00:00:00
     * </pre>
     */
    _$properties: Object;

@@ -26,49 +26,25 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @name Types/_source/DataMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/IAdapter
-    * @see Types/Di
+    * @see Types/di
     * @example
-    * Адаптер для данных в формате БЛ СБИС, внедренный в виде готового экземпляра:
+    * Адаптер для данных в формате БЛ СБИС:
     * <pre>
     *    require([
-    *       'Types/Source/Provider/SbisBusinessLogic',
-    *       'Types/Source/Memory',
-    *       'Types/_entity/adapter/Sbis'
-    *    ], function (Provider, MemorySource, SbisAdapter) {
-    *       new Provider({
-    *          address: '/service/',
-    *          contract: 'Employee'
+    *       'Types/source',
+    *       'Types/entity'
+    *    ], function (source, entity) {
+    *       new source.SbisService({
+    *          endpoint: 'Employee'
     *       })
     *       .call('getList', {department: 'Management'})
     *       .addCallbacks(function(data) {
-    *          var dataSource = new MemorySource({
-    *             adapter: new SbisAdapter(),
+    *          var dataSource = new source.Memory({
+    *             adapter: new entity.adapter.Sbis(),
     *             data: data
     *          });
     *       }, function(error) {
-    *          console.error('Can\'t call "Employee::getList"', error);
-    *       });
-    *    });
-    * </pre>
-    * Адаптер для данных в формате БЛ СБИС, внедренный в виде названия зарегистрированной зависимости:
-    * <pre>
-    *    require([
-    *       'Types/Source/Provider/SbisBusinessLogic',
-    *       'Types/Source/Memory',
-    *       'Types/Adapter/Sbis'
-    *    ], function (Provider, MemorySource) {
-    *       new Provider({
-    *          address: '/service/',
-    *          contract: 'Employee'
-    *       })
-    *       .call('getList', {department: 'Management'})
-    *       .addCallbacks(function(data) {
-    *          var dataSource = new MemorySource({
-    *             adapter: 'Types/entity:adapter.Sbis',
-    *             data: data
-    *          });
-    *       }, function(error) {
-    *          console.error('Can\'t call "Employee::getList"', error);
+    *          console.error('Can\'t call "Employee.getList()"', error);
     *       });
     *    });
     * </pre>
@@ -80,7 +56,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @name Types/_source/DataMixin#model
     * @see getModel
     * @see Types/_entity/Model
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Конструктор пользовательской модели, внедренный в виде класса:
     * <pre>
@@ -113,7 +89,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @name Types/_source/DataMixin#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Конструктор рекордсета, внедренный в виде класса:
     * <pre>

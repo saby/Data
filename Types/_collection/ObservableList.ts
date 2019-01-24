@@ -2,13 +2,13 @@
 /**
  * Список, в котором можно отслеживать изменения.
  * <pre>
- *    define(['Types/Collection/ObservableList', 'Types/Collection/IBind'], function(ObservableList, IBindCollection) {
- *       var list = new ObservableList({
+ *    define(['Types/collection'], function(collection) {
+ *       var list = new collection.ObservableList({
  *          items: [1, 2, 3]
  *       });
  *
  *       list.subscribe('onCollectionChange', function(eventObject, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
- *          if (action == IBindCollection.ACTION_REMOVE){
+ *          if (action == collection.IObservable.ACTION_REMOVE) {
  *             console.log(oldItems);//[1]
  *             console.log(oldItemsIndex);//0
  *          }
@@ -20,7 +20,7 @@
  * @class Types/_collection/ObservableList
  * @extends Types/_collection/List
  * @implements Types/_collection/IBind
- * @implements Types/Mediator/IReceiver
+ * @implements Types/_entity/relation/IReceiver
  * @mixes Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.

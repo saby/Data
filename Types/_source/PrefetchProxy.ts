@@ -4,9 +4,9 @@
  *
  * Создадим источник с заранее загруженным результатом списочного метода:
  * <pre>
- *    require(['Types/Source/PrefetchProxy', 'Types/Source/Memory', 'Types/Source/DataSet'], function (PrefetchProxy, MemorySource, DataSet) {
- *       var fastFoods = new PrefetchProxy({
- *          target: new MemorySource({
+ *    require(['Types/source'], function (source) {
+ *       var fastFoods = new source.PrefetchProxy({
+ *          target: new source.Memory({
  *             data: [
  *                {id: 1, name: 'Kurger Bing'},
  *                {id: 2, name: 'DcMonald\'s'},
@@ -15,7 +15,7 @@
  *             ],
  *          }),
  *          data: {
- *             query: new DataSet({
+ *             query: new source.DataSet({
  *                rawData: [
  *                   {id: 1, name: 'Mret a Panger'},
  *                   {id: 2, name: 'Cofta Cosfee'},

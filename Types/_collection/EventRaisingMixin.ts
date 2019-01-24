@@ -45,13 +45,13 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @example
     * Сгенерируем событие о перемещении элемента c позиции 1 на позицию 3:
     * <pre>
-    *    define(['Types/Collection/ObservableList', 'Types/Collection/IBind'], function(ObservableList, IBindCollection) {
-    *       var list = new ObservableList({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var list = new collection.ObservableList({
     *          items: ['one', 'two', 'three', 'four', 'five']
     *       });
     *
     *      list.subscribe('onCollectionChange', function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-    *         action === IBindCollection.ACTION_MOVE;//true
+    *         action === collection.IObservable.ACTION_MOVE;//true
     *
     *         oldItems[0] === 'two';//true
     *         oldItems[0] === item;//true

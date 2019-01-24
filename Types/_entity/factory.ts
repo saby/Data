@@ -1,13 +1,13 @@
 /// <amd-module name="Types/_entity/factory" />
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
- * @class Types/Factory
+ * @class Types/_entity/factory
  * @public
  * @author Мальцев А.А.
  */
 
 /**
- * @faq Почему я вижу ошибки от Types/Di::resolve?
+ * @faq Почему я вижу ошибки от Types/di:resolve?
  * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  */
 

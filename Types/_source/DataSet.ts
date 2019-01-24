@@ -9,8 +9,8 @@
  *
  * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
  * <pre>
- *    require(['Types/Source/DataSet'], function (DataSet) {
- *       var data = new DataSet({
+ *    require(['Types/source'], function (source) {
+ *       var data = new source.DataSet({
  *          rawData: {
  *             orders: [
  *                {id: 1, buyer_id: 1, date: '2016-06-02 14:12:45', amount: 96},
@@ -53,9 +53,9 @@
  * </pre>
  * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения запроса:
  * <pre>
- *    require(['Types/Source/DataSet', 'Types/Adapter/Xml'], function (DataSet) {
- *       var data = new DataSet({
- *          adapter: 'adapter.xml',
+ *    require(['Types/source', 'Types/entity'], function (source, entity) {
+ *       var data = new source.DataSet({
+ *          adapter: new entity.adapter.Xml(),
  *          rawData: '<?xml version="1.0"?>' +
  *             '<response>' +
  *             '   <orders>' +
@@ -132,27 +132,7 @@ export default class DataSet extends mixin(
     * @name Types/_source/DataSet#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/IAdapter
-    * @see Types/Di
-    * @example
-    * <pre>
-    *    require([
-    *       'Types/Source/Provider/SbisBusinessLogic',
-    *       'Types/Source/DataSet',
-    *       'Types/Adapter/Sbis'
-    *    ], function (Provider, DataSet, SbisAdapter) {
-    *       new Provider({
-    *          address: '/service/',
-    *          contract: 'Employee'
-    *       })
-    *       .call('getReport', {type: 'Salary'})
-    *       .addCallback(function(data) {
-    *          var dataSet = new DataSet({
-    *             adapter: new SbisAdapter(),
-    *             data: data
-    *          });
-    *       });
-    *    });
-    * </pre>
+    * @see Types/di
     */
    protected _$adapter: adapter.IAdapter | string;
 
@@ -166,8 +146,8 @@ export default class DataSet extends mixin(
     * @example
     * Создадим набор данных с персонажами фильма:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *             rawData: [{
     *                id: 1,
     *                firstName: 'John',
@@ -199,12 +179,12 @@ export default class DataSet extends mixin(
     * @name Types/_source/DataSet#model
     * @see getModel
     * @see Types/_entity/Model
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Установим модель "Пользователь":
     * <pre>
-    *    require(['Types/Source/DataSet', 'Application/Models/User'], function (DataSet, UserModel) {
-    *       var data = new DataSet({
+    *    require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
+    *       var data = new source.DataSet({
     *          model: UserModel
     *       });
     *    });
@@ -217,12 +197,12 @@ export default class DataSet extends mixin(
     * @name Types/_source/DataSet#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Установим рекодсет "Пользователи":
     * <pre>
-    *    require(['Types/Source/DataSet', 'Application/Collections/Users'], function (DataSet, UsersCollection) {
-    *       var data = new DataSet({
+    *    require(['Types/source', 'Application/Collections/Users'], function (source, UsersCollection) {
+    *       var data = new source.DataSet({
     *          listModule: UsersCollection
     *       });
     *    });
@@ -238,8 +218,8 @@ export default class DataSet extends mixin(
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          idProperty: 'primaryId'
     *       });
     *    });
@@ -255,8 +235,8 @@ export default class DataSet extends mixin(
     * @example
     * Установим свойство 'orders' как содержащее основную выборку:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          rawData: {
     *             orders: [
     *                {id: 1, date: '2016-06-02 14:12:45', amount: 96},
@@ -323,9 +303,9 @@ export default class DataSet extends mixin(
     * @example
     * Получим адаптер набора данных, используемый по умолчанию:
     * <pre>
-    *    require(['Types/Source/DataSet', 'Types/Adapter/Json'], function (DataSet, JsonAdapter) {
-    *       var data = new DataSet();
-    *       console.log(data.getAdapter() instanceof JsonAdapter);//true
+    *    require(['Types/source', 'Types/entity'], function (source, entity) {
+    *       var data = new source.DataSet();
+    *       console.log(data.getAdapter() instanceof entity.adapter.Json);//true
     *    });
     * </pre>
     */
@@ -341,12 +321,12 @@ export default class DataSet extends mixin(
     * @return {String|Function}
     * @see model
     * @see Types/_entity/Model
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Получим конструктор записей, используемый по умолчанию:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet();
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet();
     *       console.log(data.getModel());//'Types/entity:Model'
     *    });
     * </pre>
@@ -361,12 +341,12 @@ export default class DataSet extends mixin(
     * @see model
     * @see getModel
     * @see Types/_entity/Model
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Установим конструктор пользовательской модели:
     * <pre>
-    *    require(['Types/Source/DataSet', 'Application/Models/User'], function (DataSet, UserModel) {
-    *       var data = new DataSet();
+    *    require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
+    *       var data = new source.DataSet();
     *       data.setModel(UserModel);
     *    });
     * </pre>
@@ -379,12 +359,12 @@ export default class DataSet extends mixin(
     * Возвращает конструктор списка моделей
     * @return {String|Function}
     * @see listModule
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Получим конструктор рекордсетов, используемый по умолчанию:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet();
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet();
     *       console.log(data.getListModule());//'Types/collection:RecordSet'
     *    });
     * </pre>
@@ -398,12 +378,12 @@ export default class DataSet extends mixin(
     * @param {String|Function} listModule
     * @see getListModule
     * @see listModule
-    * @see Types/Di
+    * @see Types/di
     * @example
     * Установим конструктор рекордсетов:
     * <pre>
-    *    require(['Types/Source/DataSet', 'Application/Collection/Users'], function (DataSet, UsersCollection) {
-    *       var data = new DataSet();
+    *    require(['Types/source', 'Application/Collection/Users'], function (source, UsersCollection) {
+    *       var data = new source.DataSet();
     *       data.setListModule(UsersCollection);
     *    });
     * </pre>
@@ -420,8 +400,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим название свойства модели, содержащего первичный ключ:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          idProperty: 'id'
     *       });
     *       console.log(data.getIdProperty());//'id'
@@ -441,8 +421,8 @@ export default class DataSet extends mixin(
     * @example
     * Установим название свойства модели, содержащего первичный ключ:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet();
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet();
     *       data.setIdProperty('id');
     *    });
     * </pre>
@@ -459,8 +439,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим название свойства, в котором находится основная выборка:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          itemsProperty: 'items'
     *       });
     *       console.log(data.getItemsProperty());//'items'
@@ -479,8 +459,8 @@ export default class DataSet extends mixin(
     * @example
     * Установим название свойства, в котором находится основная выборка:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet();
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet();
     *       data.setItemsProperty('items');
     *    });
     * </pre>
@@ -497,8 +477,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим основную выборку из набора данных, представляющего выборку:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *             rawData: [
     *                {id: 1, title: 'How to build a Home'},
     *                {id: 2, title: 'How to plant a Tree'},
@@ -513,8 +493,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим основную и дополнительную выборки из набора данных, представляющего несколько выборок:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *             rawData: {
     *                articles: [{
     *                   id: 1,
@@ -591,8 +571,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим запись из набора данных, который содержит только ее:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *             rawData: {
     *                id: 1,
     *                title: 'C++ Beginners Tutorial'
@@ -606,8 +586,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим записи статьи и темы из набора данных, который содержит несколько записей:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *             rawData: {
     *                article: {
     *                   id: 2,
@@ -657,8 +637,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим количество открытых задач:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var statOpen = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var statOpen = new source.DataSet({
     *          rawData: 234
     *       });
     *
@@ -668,8 +648,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим количество открытых и закрытых задач:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var stat = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var stat = new source.DataSet({
     *          rawData: {
     *             total: 500,
     *             open: 234,
@@ -716,8 +696,8 @@ export default class DataSet extends mixin(
     * @example
     * Проверим наличие свойств 'articles' и 'topics':
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          rawData: {
     *             articles: [{
     *                id: 1,
@@ -743,8 +723,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим значение свойства 'article':
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          rawData: {
     *             article: {
     *                id: 1,
@@ -769,8 +749,8 @@ export default class DataSet extends mixin(
     * @example
     * Получим данные в сыром виде:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet({
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet({
     *          rawData: {
     *             id: 1,
     *             title: 'C++ Beginners Tutorial'
@@ -793,8 +773,8 @@ export default class DataSet extends mixin(
     * @example
     * Установим данные в сыром виде:
     * <pre>
-    *    require(['Types/Source/DataSet'], function (DataSet) {
-    *       var data = new DataSet();
+    *    require(['Types/source'], function (source) {
+    *       var data = new source.DataSet();
     *
     *       data.setRawData({
     *          id: 1,

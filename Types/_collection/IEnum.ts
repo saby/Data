@@ -19,8 +19,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     * @param {String} value Новое значение
     * @example
     * <pre>
-    *    requirejs(['Types/_collectionEnum'], function(Enum) {
-    *       var colors = new Enum({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Enum({
     *          dictionary: ['Red', 'Green', 'Blue']
     *       });
     *
@@ -40,8 +40,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     * @return {Number|Null}
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Enum'], function(Enum) {
-    *       var colors = new Enum({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Enum({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          index: 1
     *       });
@@ -57,8 +57,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     * @param {Number|Null} index Индекс выбранного значения
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Enum'], function(Enum) {
-    *       var colors = new Enum({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Enum({
     *          dictionary: ['Red', 'Green', 'Blue']
     *       });
     *
@@ -75,8 +75,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     * @return {String}
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Enum'], function(Enum) {
-    *       var colors = new Enum({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Enum({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          index: 1
     *       });
@@ -93,8 +93,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     * @param {Boolean} [localize=false] Установить локализованное значение
     * @example
     * <pre>
-    *    requirejs(['Types/Type/Enum'], function(Enum) {
-    *       var colors = new Enum({
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Enum({
     *          dictionary: ['Red', 'Green', 'Blue'],
     *          index: 1
     *       });

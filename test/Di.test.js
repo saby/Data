@@ -7,7 +7,7 @@ define([
    'use strict';
 
 
-   describe('Types/Di', function() {
+   describe('Types/di', function() {
       describe('.register()', function() {
          it('should work with object', function() {
             Di.register('test.module', {});

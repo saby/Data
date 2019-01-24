@@ -320,28 +320,27 @@ export default class Collection extends mixin(
     * Сгруппируем персонажей по полу:
     * <pre>
     *    require([
-    *       'Types/Collection/List',
-    *       'Types/_display/Collection',
-    *       'Types/_display/GroupItem'
-    *    ], function(List, CollectionDisplay, GroupItem) {
-    *       var list = new List({
-    *             items: [
-    *                {name: 'Philip J. Fry', gender: 'M'},
-    *                {name: 'Turanga Leela', gender: 'F'},
-    *                {name: 'Professor Farnsworth', gender: 'M'},
-    *                {name: 'Amy Wong', gender: 'F'},
-    *                {name: 'Bender Bending Rodriguez', gender: 'R'}
-    *             ]
-    *          }),
-    *          display = new CollectionDisplay({
-    *             collection: list
-    *             group: function(collectionItem, index, item) {
-    *                return collectionItem.gender;
-    *             }
-    *          });
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
+    *          items: [
+    *             {name: 'Philip J. Fry', gender: 'M'},
+    *             {name: 'Turanga Leela', gender: 'F'},
+    *             {name: 'Professor Farnsworth', gender: 'M'},
+    *             {name: 'Amy Wong', gender: 'F'},
+    *             {name: 'Bender Bending Rodriguez', gender: 'R'}
+    *          ]
+    *       });
+    *       var display = new display.Collection({
+    *          collection: list
+    *          group: function(collectionItem, index, item) {
+    *             return collectionItem.gender;
+    *          }
+    *       });
     *
     *       display.each(function(item, index) {
-    *          if (item instanceof GroupItem) {
+    *          if (item instanceof display.GroupItem) {
     *             console.log('[' + item.getContents() + ']';
     *          } else {
     *             console.log(item.getContents().name);
@@ -362,11 +361,11 @@ export default class Collection extends mixin(
     * Отсортируем коллекцию по возрастанию значения поля title:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var display = new CollectionDisplay({
-    *          collection: new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var display = new display.Collection({
+    *          collection: new collection.List({
     *             items: [
     *                {id: 1, title: 'foo'},
     *                {id: 2, title: 'bar'}
@@ -602,22 +601,21 @@ export default class Collection extends mixin(
     * Сгруппируем персонажей по полу:
     * <pre>
     *    require([
-    *       'Types/Collection/List',
-    *       'Types/_display/Collection',
-    *       'Types/_display/GroupItem'
-    *    ], function(List, CollectionDisplay, GroupItem) {
-    *       var list = new List({
-    *             items: [
-    *                {name: 'Philip J. Fry', gender: 'M'},
-    *                {name: 'Turanga Leela', gender: 'F'},
-    *                {name: 'Professor Farnsworth', gender: 'M'},
-    *                {name: 'Amy Wong', gender: 'F'},
-    *                {name: 'Bender Bending Rodriguez', gender: 'R'}
-    *             ]
-    *          }),
-    *          display = new CollectionDisplay({
-    *             collection: list
-    *          });
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
+    *          items: [
+    *             {name: 'Philip J. Fry', gender: 'M'},
+    *             {name: 'Turanga Leela', gender: 'F'},
+    *             {name: 'Professor Farnsworth', gender: 'M'},
+    *             {name: 'Amy Wong', gender: 'F'},
+    *             {name: 'Bender Bending Rodriguez', gender: 'R'}
+    *          ]
+    *       });
+    *       var display = new display.Collection({
+    *          collection: list
+    *       });
     *
     *       display.setGroup(function(collectionItem, index, item) {
     *          return collectionItem.gender;
@@ -1196,10 +1194,10 @@ export default class Collection extends mixin(
     * Отберем персонажей женского пола:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var list = new List({
+    *       'Types/collection'
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
     *             items: [
     *                {name: 'Philip J. Fry', gender: 'M'},
     *                {name: 'Turanga Leela', gender: 'F'},
@@ -1208,7 +1206,7 @@ export default class Collection extends mixin(
     *                {name: 'Bender Bending Rodriguez', gender: 'R'}
     *             ]
     *          }),
-    *          display = new CollectionDisplay({
+    *          display = new display.Collection({
     *             collection: list
     *          });
     *
@@ -1264,10 +1262,10 @@ export default class Collection extends mixin(
     * Отберем персонажей женского пола:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var list = new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
     *             items: [
     *                {name: 'Philip J. Fry', gender: 'M'},
     *                {name: 'Turanga Leela', gender: 'F'},
@@ -1276,7 +1274,7 @@ export default class Collection extends mixin(
     *                {name: 'Bender Bending Rodriguez', gender: 'R'}
     *             ]
     *          }),
-    *          display = new CollectionDisplay({
+    *          display = new display.Collection({
     *             collection: list
     *          });
     *
@@ -1318,13 +1316,13 @@ export default class Collection extends mixin(
     * Уберем фильтрацию персонажей по полу:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
+    *       'Types/collection'
+    *       'Types/display'
+    *    ], function(collection, display) {
     *       var filter = function(collectionItem, index, item) {
     *             return collectionItem.gender === 'F';
     *          }),
-    *          list = new List({
+    *          list = new collection.List({
     *             items: [
     *                {name: 'Philip J. Fry', gender: 'M'},
     *                {name: 'Turanga Leela', gender: 'F'},
@@ -1333,7 +1331,7 @@ export default class Collection extends mixin(
     *                {name: 'Bender Bending Rodriguez', gender: 'R'}
     *             ]
     *          }),
-    *          display = new CollectionDisplay({
+    *          display = new display.Collection({
     *             collection: list,
     *             filter: filter
     *          });
@@ -1415,10 +1413,10 @@ export default class Collection extends mixin(
     * Получим персонажей мужского пола:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var list = new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
     *             items: [
     *                {name: 'Philip J. Fry', gender: 'M'},
     *                {name: 'Turanga Leela', gender: 'F'},
@@ -1427,7 +1425,7 @@ export default class Collection extends mixin(
     *                {name: 'Bender Bending Rodriguez', gender: 'R'}
     *             ]
     *          }),
-    *          display = new CollectionDisplay({
+    *          display = new display.Collection({
     *             collection: list
     *          });
     *
@@ -1469,10 +1467,10 @@ export default class Collection extends mixin(
     * Сгруппируем персонажей по полу:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var list = new List({
+    *       'Types/collection'
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var list = new collection.List({
     *             items: [
     *                {name: 'Philip J. Fry', gender: 'M'},
     *                {name: 'Turanga Leela', gender: 'F'},
@@ -1481,7 +1479,7 @@ export default class Collection extends mixin(
     *                {name: 'Bender Bending Rodriguez', gender: 'R'}
     *             ]
     *          }),
-    *          display = new CollectionDisplay({
+    *          display = new display.Collection({
     *             collection: list
     *          });
     *
@@ -1538,11 +1536,11 @@ export default class Collection extends mixin(
     * Отсортируем коллекцию по возрастанию значения поля title:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var display = new CollectionDisplay({
-    *          collection: new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var display = new display.Collection({
+    *          collection: new collection.List({
     *             items: [
     *                {id: 1, title: 'foo'},
     *                {id: 2, title: 'bar'}
@@ -1563,11 +1561,11 @@ export default class Collection extends mixin(
     * Отсортируем коллекцию сначала по title, а потом - по id:
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var display = new CollectionDisplay({
-    *          collection: new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var display = new display.Collection({
+    *          collection: new collection.List({
     *             items: [
     *                {id: 4, title: 'foo'},
     *                {id: 3, title: 'bar'},
@@ -1577,7 +1575,7 @@ export default class Collection extends mixin(
     *       });
     *
     *       display.setSort(function(a, b) {
-    *          return a.collectionItem.title > b.collectionItem.title;
+    *          return a.collectionItem.title -> b.collectionItem.title;
     *       }, function(a, b) {
     *          return a.collectionItem.id - b.collectionItem.id;
     *       });
@@ -1634,11 +1632,11 @@ export default class Collection extends mixin(
     * Отсортируем коллекцию по возрастанию значения поля id
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
-    *       var display = new CollectionDisplay({
-    *          collection: new List({
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
+    *       var display = new display.Collection({
+    *          collection: new collection.List({
     *             items: [
     *                {id: 1, title: 'foo'},
     *                {id: 2, title: 'bar'}
@@ -1689,21 +1687,21 @@ export default class Collection extends mixin(
     * Отсортируем коллекцию по возрастанию значения поля id
     * <pre>
     *    require([
-    *       'Types/Collection/List'
-    *       'Types/_display/Collection'
-    *    ], function(List, CollectionDisplay) {
+    *       'Types/collection',
+    *       'Types/display'
+    *    ], function(collection, display) {
     *       var handler = function(a, b) {
-    *             return a.item.id - b.item.id
-    *          },
-    *          display = new CollectionDisplay({
-    *             collection: new List({
-    *                items: [
-    *                   {id: 1, title: 'foo'},
-    *                   {id: 2, title: 'bar'}
-    *                ]
-    *             }),
-    *             sort: handler
-    *          });
+    *          return a.item.id - b.item.id
+    *       };
+    *       var display = new display.Collection({
+    *          collection: new collection.List({
+    *             items: [
+    *                {id: 1, title: 'foo'},
+    *                {id: 2, title: 'bar'}
+    *             ]
+    *          }),
+    *          sort: handler
+    *       });
     *
     *       //...
     *       display.removeSort(handler);

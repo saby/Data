@@ -5,15 +5,15 @@
  *
  * Создадим адаптер для таблицы:
  * <pre>
- *    requirejs(['Types/Collection/RecordSet', 'Types/Adapter/RecordSetTable'], function(RecordSet, RecordSetTable) {
- *       var ibizasClubs = new RecordSet({
- *             rawData: [
- *                {id: 1, title: 'Amnesia Ibiza'},
- *                {id: 2, title: 'DC-10'},
- *                {id: 3, title: 'Pacha Ibiza'}
- *             ]
- *          }),
- *          clubsAdapter = new RecordSetTable(ibizasClubs);
+ *    requirejs(['Types/collection', 'Types/entity'], function(collection, entity) {
+ *       var ibizasClubs = new collection.RecordSet({
+ *          rawData: [
+ *             {id: 1, title: 'Amnesia Ibiza'},
+ *             {id: 2, title: 'DC-10'},
+ *             {id: 3, title: 'Pacha Ibiza'}
+ *          ]
+ *       });
+ *       var clubsAdapter = new entity.adapter.RecordSet(ibizasClubs);
  *       console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
  *    });
  * </pre>

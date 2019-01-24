@@ -192,7 +192,7 @@ export default abstract class Remote extends mixin(
     * @cfg {Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
     * @name Types/_source/Remote#provider
     * @see getProvider
-    * @see Types/Di
+    * @see Types/di
     * @example
     * <pre>
     *    var dataSource = new RemoteSource({

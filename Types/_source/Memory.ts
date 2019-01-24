@@ -5,8 +5,8 @@
  *
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *    require(['Types/Source/Memory', 'Types/Query/Query'], function (MemorySource, Query) {
- *       var solarSystem = new MemorySource({
+ *    require(['Types/source'], function (source) {
+ *       var solarSystem = new source.Memory({
  *          data: [
  *             {id: 1, name: 'Sun', kind: 'Star'},
  *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -104,8 +104,8 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
     * @example
     * Создадим источник с данными объектов солнечной системы, данные представлены в виде массива:
     * <pre>
-    *    require(['Types/Source/Memory'], function (MemorySource) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -125,15 +125,15 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
     * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/_collection/RecordSet рекордсета}:
     * <pre>
     *    require([
-    *       'Types/Source/Memory',
-    *       'Types/Collection/RecordSet',
-    *       'Types/Adapter/RecordSet'
+    *       'Types/source',
+    *       'Types/collection',
+    *       'Types/entity'
     *    ], function (
-    *       MemorySource,
-    *       RecordSet,
-    *       RecordSetAdapter
+    *       source,
+    *       collection,
+    *       entity
     *    ) {
-    *       var solarData = new RecordSet({
+    *       var solarData = new collection.RecordSet({
     *          rawData: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -147,9 +147,9 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
     *          ]
     *       });
-    *       var solarSystem = new MemorySource({
+    *       var solarSystem = new source.Memory({
     *          data: solarData,
-    *          adapter: new RecordSetAdapter(),
+    *          adapter: new entity.adapter.RecordSet(),
     *          idProperty: 'id'
     *       });
     *    });
