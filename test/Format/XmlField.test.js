@@ -8,7 +8,7 @@ define([
 
    XmlField = XmlField.default;
 
-   describe('Types/Format/XmlField', function() {
+   describe('Types/_entity/format/XmlField', function() {
       var field;
 
       beforeEach(function() {

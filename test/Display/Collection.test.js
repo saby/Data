@@ -42,7 +42,7 @@ define([
    JsonAdapter = JsonAdapter.default;
    Model = Model.default;
 
-   describe('Types/Display/Collection', function() {
+   describe('Types/_display/Collection', function() {
       var getItems = function() {
             return [{
                id: 1,

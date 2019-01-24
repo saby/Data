@@ -1,33 +1,62 @@
-# Система типов
+# Types system
 
-## [Документация](doc/)
+## Setup in development mode
 
-## Настройка окружения
+1. Clone the repository (saby-Types for example):
 
-1. Клонировать репозиторий:
+        git clone git@github.com:saby/Types.git ./saby-Types
 
-        git clone git@git.sbis.ru:ws/data.git /path/to/ws/data
+1. Change current dir to the saby-Types:
 
-2. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
+        cd ./saby-Types
 
-3. Установить пакет:
+1. Install development dependencies:
 
         npm install
 
-## Команды
+1. Build the project:
 
-- `node app` - поднять локальный веб-сервер на 1024-м порту для [тестирования в браузере](http://localhost:1024/).
-- `npm run compile` - скомпилировать файлы проекта;
+        npm run build
 
-# Интеграция с Jenkins
-В пункте "Среда сборки" можно вндерить переменные окружения, которые переопределят значения по умолчанию:
-✓ Inject environment variables to the build process
+## Available scripts
 
-Доступные переменные окружения:
-- `test_server_port` - порт, на котором будет запущен http-сервер (по умолчанию `1025`);
-- `test_url_scheme` - протокол, по которому доступен http сервер со страницей тестов (по умолчанию `http`);
-- `test_url_host` - хост, на котором запущен http server со страницей тестов (по умолчанию - `localhost`, при использовании Selenium webdriver требуется указать имя машины, на которой осуществляется сборка);
-- `test_url_port` - port, на котором запущен http server со страницей тестов (должен совпадать с `test_server_port`);
-- `test_report` - имя файла, в который сохранить отчет о прохождении тестов (по умолчанию `artifacts/xunit-report.xml`).
+- Compile TypeScript:
 
-Отчет о покрытии будет лежать в папке `/artifacts/coverage`.
+        npm run build:compile
+
+- Run unit tests in Node.js:
+
+        npm test
+
+- Start local HTTP server and check [unit tests in browser](http://localhost:1024/):
+
+        npm start
+
+- Run unit tests in Node.js and save report in XUnit format to /artifacts/ folder:
+
+        npm test:node
+
+- Run unit tests in Node.js and save coverage report to /artifacts/ folder:
+
+        npm test:node-coverage
+
+- Run unit tests in Chrome and save report in XUnit format to /artifacts/ folder:
+
+        npm test:browser
+
+- Run unit tests in Chrome and save coverage report to /artifacts/ folder:
+
+        npm test:browser-coverage
+
+# Integration with Jenkins
+
+With checkbox
+
+*✓ Inject environment variables to the build process*
+
+you can use these environment variables:
+
+- `test_server_port` - port for local HTTP server (`1025` by default);
+- `test_url_host` - hostname which HTTP server running on (`localhost` by default). You should setup this variable if Selenium grid on another host is used;
+- `test_url_port` - the same as `test_server_port`;
+- `test_report` - XUnit report filename to save report to `artifacts/xunit-report.xml` by default).

@@ -8,7 +8,7 @@ define([
 
    TreeItem = TreeItem.default;
 
-   describe('Types/Display/TreeItem', function() {
+   describe('Types/_display/TreeItem', function() {
       var getOwnerMock = function() {
          return {
             notifyItemChange: function(item, property) {

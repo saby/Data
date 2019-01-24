@@ -10,7 +10,7 @@ define([
 
    var listFactory = listFactoryEs.default;
 
-   describe('Types/Collection/Factory/List', function() {
+   describe('Types/_collection/Factory/List', function() {
       var List = collection.List;
       var items;
       var itemsList;

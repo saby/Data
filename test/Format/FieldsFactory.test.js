@@ -20,7 +20,7 @@ define([
    Enum = Enum.default;
    Flags = Flags.default;
 
-   describe('Types/Format/FieldsFactory', function() {
+   describe('Types/_entity/format/FieldsFactory', function() {
       it('should throw an error if not simple object passed', function() {
          assert.throws(function() {
             fieldsFactory();

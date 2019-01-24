@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_collection/IEnumerator" />
 /**
  * Интерфейс коллекции c последовательным доступом
- * @interface Types/Collection/IEnumerator
+ * @interface Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IEnumerator<T> /** @lends Types/Collection/IEnumerator.prototype */{
+export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator.prototype */{
    readonly '[Types/_collection/IEnumerator]': boolean;
 
    /**

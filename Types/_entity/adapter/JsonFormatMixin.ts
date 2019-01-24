@@ -1,18 +1,18 @@
 /// <amd-module name="Types/_entity/adapter/JsonFormatMixin" />
 /**
  * Миксин для работы с JSON-форматом в адаптерах
- * @mixin Types/Adapter/JsonFormatMixin
+ * @mixin Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
 
 import {fieldsFactory, Field, UniversalField} from '../format'
 
-const JsonFormatMixin = /** @lends Types/Adapter/JsonFormatMixin.prototype */{
+const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 
    /**
-    * @property {Object.<Types/Format/Field>} Форматы полей
+    * @property {Object.<Types/_entity/format/Field>} Форматы полей
     */
    _format: null,
 

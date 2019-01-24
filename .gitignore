@@ -8,6 +8,7 @@
 /tsconfig.base.json
 /node_modules
 /artifacts
+/Inferno
 /View
 /WS.Core
 /Types/**/*.js

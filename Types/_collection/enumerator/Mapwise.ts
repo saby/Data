@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_collection/enumerator/Mapwise" />
 /**
  * Энумератор для Map
- * @class Types/Collection/MapEnumerator
- * @implements Types/Collection/IEnumerator
+ * @class Types/_collection/MapEnumerator
+ * @implements Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import IEnumerator from '../IEnumerator';
 import {Map} from '../../shim';
 
-export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/Collection/MapEnumerator.prototype */{
+export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_collection/MapEnumerator.prototype */{
    readonly '[Types/_collection/IEnumerator]' = true;
 
    /**

@@ -8,7 +8,7 @@ define([
 
    BooleanField = BooleanField.default;
 
-   describe('Types/Format/BooleanField', function() {
+   describe('Types/_entity/format/BooleanField', function() {
       var field;
 
       beforeEach(function() {

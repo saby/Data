@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/Flags" />
 /**
  * Тип данных "флаги".
- * @class Types/Type/Flags
- * @extends Types/Type/Dictionary
- * @implements Types/Type/IFlags
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * @class Types/_collectionFlags
+ * @extends Types/_collectionDictionary
+ * @implements Types/_collectionIFlags
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -27,7 +27,7 @@ function prepareValue(value): IValue {
    return value === null || value === undefined ? null : !!value;
 }
 
-export default class Flags<T> extends Dictionary<T> implements IFlags<T>, ICloneable, IProducible /** @lends Types/Type/Flags.prototype */{
+export default class Flags<T> extends Dictionary<T> implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collectionFlags.prototype */{
    readonly '[Types/_collection/IFlags]': boolean;
    readonly '[Types/_entity/ICloneable]': boolean;
    readonly '[Types/_entity/IProducible]': boolean;
@@ -35,7 +35,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
 
    /**
     * @cfg {Array.<Boolean|Null>} Индексы выбранных значений в словаре
-    * @name Types/Type/Flags#values
+    * @name Types/_collectionFlags#values
     */
    protected _$values: Array<IValue>;
 

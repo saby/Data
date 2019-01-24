@@ -8,7 +8,7 @@ define([
 
    var Order = source.QueryExt.Order;
 
-   describe('Types/Query/Order', function() {
+   describe('Types/_source/Query.Order', function() {
       describe('.getSelector', function() {
          it('should return empty string by default', function() {
             var order = new Order();

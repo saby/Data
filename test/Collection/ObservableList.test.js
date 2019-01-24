@@ -18,7 +18,7 @@ define([
    IBindCollection = IBindCollection.default;
    Record = Record.default;
 
-   describe('Types/Collection/ObservableList', function() {
+   describe('Types/_collection/ObservableList', function() {
       var items,
          checkEvent = function(
             action, newItems, newItemsIndex, oldItems, oldItemsIndex,

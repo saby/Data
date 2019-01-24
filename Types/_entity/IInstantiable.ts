@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/IInstantiable" />
 /**
  * Интерфейс получения уникального идентификатора для экземпляра класса
- * @interface Types/Entity/IInstantiable
+ * @interface Types/_entity/IInstantiable
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IInstantiable /** @lends Types/Entity/IInstantiable.prototype */{
+export default interface IInstantiable /** @lends Types/_entity/IInstantiable.prototype */{
    readonly '[Types/_entity/IInstantiable]': boolean;
 
    /**

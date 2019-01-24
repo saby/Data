@@ -10,7 +10,7 @@ define([
 
    descriptor = descriptor.default;
 
-   describe('Types/Types/descriptor', function() {
+   describe('Types/_entity/descriptor', function() {
       it('should return Function', function() {
          assert.instanceOf(descriptor(Number), Function);
       });

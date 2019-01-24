@@ -8,7 +8,7 @@ define([
 
    LinkField = LinkField.default;
 
-   describe('Types/Format/LinkField', function() {
+   describe('Types/_entity/format/LinkField', function() {
       var field;
 
       beforeEach(function() {

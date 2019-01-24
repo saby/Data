@@ -10,8 +10,8 @@ import {register} from '../../di';
 
 /**
  * Конструирует формат полей по декларативному описанию
- * @param {Array.<Types/Format/FieldsFactory/FieldDeclaration.typedef>} declaration Декларативное описание
- * @return {Types/Format/Format}
+ * @param {Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} declaration Декларативное описание
+ * @return {Types/_entity/format/Format}
  */
 export default function factory(declaration) {
    if (!declaration || !(declaration instanceof Array)) {

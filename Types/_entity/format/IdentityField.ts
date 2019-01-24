@@ -9,18 +9,18 @@
  *       type: 'identity'
  *    };
  * </pre>
- * @class Types/Format/IdentityField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/IdentityField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class IdentityField extends Field /** @lends Types/Format/IdentityField.prototype */{
+export default class IdentityField extends Field /** @lends Types/_entity/format/IdentityField.prototype */{
    /**
     * @cfg {Array.<Number>} Значение поля по умолчанию
-    * @name Types/Format/IdentityField#defaultValue
+    * @name Types/_entity/format/IdentityField#defaultValue
     * @see getDefaultValue
     * @see setDefaultValue
     */

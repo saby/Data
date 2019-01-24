@@ -9,7 +9,7 @@ define([
 
    ManyToMany = ManyToMany.default;
 
-   describe('Types/Mediator/ManyToMany', function() {
+   describe('Types/_entity/relation/ManyToMany', function() {
       var addRelationship = function(mediator, master, slaves) {
             for (var i = 0; i < slaves.length; i++) {
                mediator.addRelationship(master, slaves[i], 'rel' + i);

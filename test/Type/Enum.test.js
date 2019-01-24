@@ -8,7 +8,7 @@ define([
 
    Enum = Enum.default;
 
-   describe('Types/Types/Enum', function() {
+   describe('Types/_collection/Enum', function() {
       var getDict = function() {
             return ['one', 'two', 'three'];
          },

@@ -1,11 +1,11 @@
 /// <amd-module name="Types/_display/CollectionEnumerator" />
 /**
  * Энумератор для проекции коллекции
- * @class Types/Display/CollectionEnumerator
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @implements Types/Collection/IEnumerator
- * @mixes Types/Collection/IndexedEnumeratorMixin
+ * @class Types/_display/CollectionEnumerator
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @implements Types/_collection/IEnumerator
+ * @mixes Types/_collection/IndexedEnumeratorMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -20,22 +20,22 @@ interface IOptions {
 
 export default class CollectionEnumerator extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, IndexedEnumeratorMixin
-) implements IEnumerator<CollectionItem> /** @lends Types/Display/CollectionEnumerator.prototype */{
+) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{
    /**
-    * @cfg {Array.<Types/Display/CollectionItem>|Function} Элементы проекции
-    * @name Types/Display/CollectionEnumerator#items
+    * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
+    * @name Types/_display/CollectionEnumerator#items
     */
    protected _$items: CollectionItem[] | Function = [];
 
    /**
     * @cfg {Array.<Boolean>} Результат применения фильтра
-    * @name Types/Display/CollectionEnumerator#filterMap
+    * @name Types/_display/CollectionEnumerator#filterMap
     */
    protected _$filterMap: boolean[] = [];
 
    /**
     * @cfg {Array.<Number>} Результат применения сортировки
-    * @name Types/Display/CollectionEnumerator#sortMap
+    * @name Types/_display/CollectionEnumerator#sortMap
     */
    protected _$sortMap: number[] = [];
 
@@ -135,7 +135,7 @@ export default class CollectionEnumerator extends mixin(
    /**
     * Возвращает элемент по индексу
     * @param {Number} index Индекс
-    * @return {Types/Display/CollectionItem}
+    * @return {Types/_display/CollectionItem}
     * @state mutable
     */
    at(index: number): CollectionItem {
@@ -155,7 +155,7 @@ export default class CollectionEnumerator extends mixin(
 
    /**
     * Устанавливает текущий элемент
-    * @param {Types/Display/CollectionItem} item Текущий элемент
+    * @param {Types/_display/CollectionItem} item Текущий элемент
     */
    setCurrent(item: CollectionItem) {
       this._itemsCache = null;

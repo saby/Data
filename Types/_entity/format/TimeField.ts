@@ -9,23 +9,22 @@
  *       type: 'time'
  *    };
  * </pre>
- * @class Types/Format/TimeField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/TimeField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
-// @ts-ignore
-import toSql = require('Core/helpers/Date/toSql');
+import toSql, {MODE} from '../date/toSql';
 
-export default class TimeField extends Field /** @lends Types/Format/TimeField.prototype */{
+export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
    //region Public methods
 
    getDefaultValue() {
       if (this._$defaultValue instanceof Date) {
-         return toSql(this._$defaultValue, toSql.MODE_TIME);
+         return toSql(this._$defaultValue, MODE.TIME);
       }
       return this._$defaultValue;
    }

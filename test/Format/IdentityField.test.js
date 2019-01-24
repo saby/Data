@@ -8,7 +8,7 @@ define([
 
    IdentityField = IdentityField.default;
 
-   describe('Types/Format/IdentityField', function() {
+   describe('Types/_entity/format/IdentityField', function() {
       var field;
 
       beforeEach(function() {

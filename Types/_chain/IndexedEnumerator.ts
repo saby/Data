@@ -14,7 +14,7 @@ export default class IndexedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор.
-    * @param {Types/Chain/Abstract} previous Предыдущее звено.
+    * @param {Types/_chain/Abstract} previous Предыдущее звено.
     */
    constructor(previous: Abstract<T>) {
       this.previous = previous;

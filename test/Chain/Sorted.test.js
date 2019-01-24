@@ -12,7 +12,7 @@ define([
 
    var SortedChain = SortedChainEs.default;
 
-   describe('Types/Chain/Sorted', function() {
+   describe('Types/_chain/Sorted', function() {
       var itemsArray,
          itemsObject,
          prevArray,

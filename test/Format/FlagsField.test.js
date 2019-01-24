@@ -6,7 +6,7 @@ define([
 
    FlagsField = FlagsField.default;
 
-   describe('Types/Format/FlagsField', function() {
+   describe('Types/_entity/format/FlagsField', function() {
       var field;
 
       beforeEach(function() {

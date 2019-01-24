@@ -9,15 +9,15 @@
  *       type: 'record'
  *    };
  * </pre>
- * @class Types/Format/RecordField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/RecordField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class RecordField extends Field /** @lends Types/Format/RecordField.prototype */{
+export default class RecordField extends Field /** @lends Types/_entity/format/RecordField.prototype */{
 }
 
 RecordField.prototype['[Types/_entity/format/RecordField]'] = true;

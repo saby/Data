@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/factory/recordSet" />
 /**
- * Фабрика для получения рекордсета из Types/Collection/IEnumerable.
- * @class Types/Collection/Factory/RecordSet
+ * Фабрика для получения рекордсета из Types/_collection/IEnumerable.
+ * @class Types/_collection/Factory/RecordSet
  * @public
  * @author Мальцев А.А.
  */
@@ -16,10 +16,10 @@ interface IOptions {
 }
 
 /**
- * @alias Types/Collection/Factory/RecordSet
- * @param {Types/Collection/IEnumerable.<Types/Entity/Record>} items Коллекция записей
+ * @alias Types/_collection/Factory/RecordSet
+ * @param {Types/_collection/IEnumerable.<Types/_entity/Record>} items Коллекция записей
  * @param {Object} [options] Опции конструктора рекордсета
- * @return {Types/Collection/RecordSet}
+ * @return {Types/_collection/RecordSet}
  */
 export default function recordSet(items: IEnumerable<Record>, options?: IOptions): RecordSet<Record> {
    if (!items || !(items['[Types/_collection/IEnumerable]'])) {

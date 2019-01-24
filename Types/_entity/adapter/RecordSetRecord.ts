@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetRecord" />
 /**
  * Адаптер для записи таблицы данных в формате записи.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Entity/Record}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_entity/Record}.
  *
  * Создадим адаптер для записи:
  * <pre>
@@ -14,10 +14,10 @@
  *       adapter = new RecordSetRecord(record);
  *    adapter.get('title');//'Test'
  * </pre>
- * @class Types/Adapter/RecordSetRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @mixes Types/Adapter/GenericFormatMixin
+ * @class Types/_entity/adapter/RecordSetRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -28,14 +28,12 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {Field, UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
-import Record = require('Types/Entity/Record');
-// @ts-ignore
-import RecordSet = require('Types/Collection/RecordSet');
+import Record from '../Record';
+import {RecordSet} from '../../collection';
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
-) implements IRecord /** @lends Types/Adapter/RecordSetRecord.prototype */{
+) implements IRecord /** @lends Types/_entity/adapter/RecordSetRecord.prototype */{
    /**
     * @property Запись
     */
@@ -44,12 +42,12 @@ export default class RecordSetRecord extends mixin(
    /**
     * @property Таблица
     */
-   _tableData: RecordSet;
+   _tableData: RecordSet<Record>;
 
    /**
     * Конструктор
-    * @param {Types/Entity/Record} data Сырые данные
-    * @param {Types/Collection/RecordSet} [tableData] Таблица
+    * @param {Types/_entity/Record} data Сырые данные
+    * @param {Types/_collection/RecordSet} [tableData] Таблица
     */
    constructor(data, tableData?) {
       if (data && !data['[Types/_entity/Record]']) {

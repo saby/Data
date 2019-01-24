@@ -11,7 +11,7 @@ define([
    User = User.default;
    CollectionItem = CollectionItem.default;
 
-   describe('Types/Display/ItemsStrategy/User', function() {
+   describe('Types/_display/ItemsStrategy/User', function() {
       var wrapItem = function(item) {
             return new CollectionItem({
                contents: item

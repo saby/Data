@@ -1,26 +1,26 @@
 /// <amd-module name="Types/_entity/adapter/RecordSetTable" />
 /**
  * Адаптер для таблицы данных в формате рекордсета.
- * Работает с данными, представленными в виде экземлпяра {@link Types/Collection/RecordSet}.
+ * Работает с данными, представленными в виде экземлпяра {@link Types/_collection/RecordSet}.
  *
  * Создадим адаптер для таблицы:
  * <pre>
- *    requirejs(['Types/Collection/RecordSet', 'Types/Adapter/RecordSetTable'], function(RecordSet, RecordSetTable) {
- *       var ibizasClubs = new RecordSet({
- *             rawData: [
- *                {id: 1, title: 'Amnesia Ibiza'},
- *                {id: 2, title: 'DC-10'},
- *                {id: 3, title: 'Pacha Ibiza'}
- *             ]
- *          }),
- *          clubsAdapter = new RecordSetTable(ibizasClubs);
+ *    requirejs(['Types/collection', 'Types/entity'], function(collection, entity) {
+ *       var ibizasClubs = new collection.RecordSet({
+ *          rawData: [
+ *             {id: 1, title: 'Amnesia Ibiza'},
+ *             {id: 2, title: 'DC-10'},
+ *             {id: 3, title: 'Pacha Ibiza'}
+ *          ]
+ *       });
+ *       var clubsAdapter = new entity.adapter.RecordSet(ibizasClubs);
  *       console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
  *    });
  * </pre>
- * @class Types/Adapter/RecordSetTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
+ * @class Types/_entity/adapter/RecordSetTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -32,8 +32,8 @@ import GenericFormatMixin from './GenericFormatMixin';
 import {UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
-import RecordSet = require('Types/Collection/RecordSet');
+import Record from '../Record';
+import {RecordSet} from '../../collection';
 
 interface RecordSetOptions {
    adapter?: string | IAdapter
@@ -42,15 +42,15 @@ interface RecordSetOptions {
 
 export default class RecordSetTable extends mixin(
    DestroyableMixin, GenericFormatMixin
-) implements ITable /** @lends Types/Adapter/RecordSetTable.prototype */{
+) implements ITable /** @lends Types/_entity/adapter/RecordSetTable.prototype */{
    /**
     * @property Список
     */
-   _data: RecordSet;
+   _data: RecordSet<Record>;
 
    /**
     * Конструктор
-    * @param {Types/Collection/RecordSet} data Таблица
+    * @param {Types/_collection/RecordSet} data Таблица
     */
    constructor(data) {
       if (data && !data['[Types/_collection/RecordSet]']) {

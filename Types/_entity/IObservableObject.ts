@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/IObservableObject" />
 /**
  * Интерфейс уведомлений об изменении к свойств объекта.
- * @interface Types/Entity/IObservableObject
+ * @interface Types/_entity/IObservableObject
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IObservableObject /** @lends Types/Entity/IObservableObject.prototype */{
+export default interface IObservableObject /** @lends Types/_entity/IObservableObject.prototype */{
    readonly '[Types/_entity/IObservableObject]': boolean;
 
    /**

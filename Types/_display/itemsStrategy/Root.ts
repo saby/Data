@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Root" />
 /**
  * Стратегия-декоратор для формирования корня дерева
- * @class Types/Display/ItemsStrategy/Root
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Root
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -19,11 +19,11 @@ interface IOptions {
    root: Function;
 }
 
-export default class Root extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/Root.prototype */{
+export default class Root extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Root.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/ItemsStrategy/Abstract} source Декорирумая стратегия
-    * @property {Function:Types/Display/TreeItem} root Функция, возвращающая корень дерева
+    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Function:Types/_display/TreeItem} root Функция, возвращающая корень дерева
     */
 
    /**

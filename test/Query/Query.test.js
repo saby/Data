@@ -11,7 +11,7 @@ define([
    Query = Query.default;
    Record = Record.default;
 
-   describe('Types/Query/Query', function() {
+   describe('Types/_source/Query', function() {
       var query;
 
       beforeEach(function() {

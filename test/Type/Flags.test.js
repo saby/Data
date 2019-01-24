@@ -8,7 +8,7 @@ define([
 
    Flags = Flags.default;
 
-   describe('Types/Types/Flags', function() {
+   describe('Types/_collection/Flags', function() {
       var getDict = function() {
             return ['one', 'two', 'three'];
          },
