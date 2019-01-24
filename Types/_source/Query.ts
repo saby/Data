@@ -876,5 +876,6 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    //endregion Public methods
 }
+Query.prototype._moduleName = 'Types/source:Query';
 
 Query.prototype['[Types/_source/Query]'] = true;
