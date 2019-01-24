@@ -11,7 +11,7 @@ define([
    Local = Local.default;
    JsonTable = JsonTable.default;
 
-   describe('Types/Source/Local', function() {
+   describe('Types/_source/Local', function() {
       var source;
       var adapterResolver = Local.prototype._getTableAdapter;
 

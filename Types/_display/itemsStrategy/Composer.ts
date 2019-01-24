@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_display/itemsStrategy/Composer" />
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
- * @class Types/Display/ItemsStrategy/Composer
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Composer
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -11,7 +11,7 @@ import IItemsStrategy from '../IItemsStrategy';
 import {DestroyableMixin, SerializableMixin} from '../../entity';
 import {mixin} from '../../util';
 
-export default class Composer extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/Display/ItemsStrategy/Composer.prototype */{
+export default class Composer extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/_display/ItemsStrategy/Composer.prototype */{
    /**
     * Композируемые модули
     */
@@ -47,7 +47,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * @param {Function} Module Конструктор стратегии
     * @param {Object} [options] Опции конструктора
     * @param {Function} [after] После какой стратегии добавить (по умолчанию в конец)
-    * @return {Types/Display/ItemsStrategy/Composer}
+    * @return {Types/_display/ItemsStrategy/Composer}
     */
    append(Module: Function, options?: Object, after?: Function): Composer {
       let index = this._modules.indexOf(after);
@@ -69,7 +69,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * @param {Function} Module Конструктор стратегии
     * @param {Object} options Опции конструктора
     * @param {Function} [before] Перед какой стратегией добавить (по умолчанию в начало)
-    * @return {Types/Display/ItemsStrategy/Composer}
+    * @return {Types/_display/ItemsStrategy/Composer}
     */
    prepend(Module: Function, options: Object, before?: Function): Composer {
       let index = this._modules.indexOf(before);
@@ -87,7 +87,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    /**
     * Удалает стратегию
     * @param {Function} Module Конструктор стратегии
-    * @return {Types/Display/IItemsStrategy} Удаленный экземпляр стратегии
+    * @return {Types/_display/IItemsStrategy} Удаленный экземпляр стратегии
     */
    remove(Module: Function): IItemsStrategy {
       let index = this._modules.indexOf(Module);
@@ -105,7 +105,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
 
    /**
     * Сбрасывает компоновщик
-    * @return {Types/Display/ItemsStrategy/Composer}
+    * @return {Types/_display/ItemsStrategy/Composer}
     */
    reset(): Composer {
       this._modules.length = 0;
@@ -118,7 +118,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    /**
     * Возвращает экземпляр стратегии
     * @param {Function} Module Конструктор стратегии
-    * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+    * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
     */
    getInstance(Module: Function): IItemsStrategy {
       let index = this._modules.indexOf(Module);
@@ -131,7 +131,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
 
    /**
     * Возвращает результат компоновки
-    * @return {Types/Display/IItemsStrategy} Экземпляр стратегии
+    * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
     */
    getResult(): IItemsStrategy {
       return this._result;
@@ -139,7 +139,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
 
    //endregion Public members
 
-   //region Types/Entity/SerializableMixin
+   //region Types/_entity/SerializableMixin
 
    protected _getSerializableState(state) {
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
@@ -163,7 +163,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       };
    }
 
-   //endregion Types/Entity/SerializableMixin
+   //endregion Types/_entity/SerializableMixin
 
    //region Protected members
 

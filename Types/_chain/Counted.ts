@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Counted" />
 /**
  * Агрегирующее звено цепочки, подсчитывающие количество элементов, объединенных по какому-то принципу.
- * @class Types/Chain/Counted
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Counted
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -15,7 +15,7 @@ interface KeyFunc {
    (key: any): string;
 }
 
-export default class Counted<T> extends Abstract<T> /** @lends Types/Chain/Counted.prototype */{
+export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Counted.prototype */{
    /**
     * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
     */
@@ -23,7 +23,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/Chain/Count
 
    /**
     * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
-    * @param {Types/Chain/Abstract} source Предыдущее звено.
+    * @param {Types/_chain/Abstract} source Предыдущее звено.
     * @param {String|function(*): String} key Поле агрегации или функция агрегации для каждого элемента.
     */
    constructor(source: Abstract<T>, key: string|KeyFunc) {
@@ -36,7 +36,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/Chain/Count
       super.destroy();
    }
 
-   // region Types/Collection/IEnumerable
+   // region Types/_collection/IEnumerable
 
    getEnumerator(): enumerator.Mapwise<T> {
       const toKey = Abstract.propertyMapper(this._key);
@@ -52,7 +52,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/Chain/Count
       );
    }
 
-   // endregion Types/Collection/IEnumerable
+   // endregion Types/_collection/IEnumerable
 }
 
 Counted.prototype['[Types/_chain/Counted]'] = true;

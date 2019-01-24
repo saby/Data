@@ -23,7 +23,7 @@ define([
    var EnumerableChain = EnumerableChainEs.default;
    var List = ListEs.default;
 
-   describe('Types/Chain', function() {
+   describe('Types/_chain', function() {
       describe('.constructor()', function() {
          it('should return chain back', function() {
             var abstractChain = new AbstractChain({});

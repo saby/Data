@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/Flags" />
 /**
  * Проекция типа "Флаги".
- * @class Types/Display/Flags
- * @extends Types/Display/Collection
+ * @class Types/_display/Flags
+ * @extends Types/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -24,12 +24,12 @@ function onSourceChange (event: EventObject, name: string) {
    this.notifyItemChange(item, 'selected');
 }
 
-export default class Flags extends Collection /** @lends Types/Display/Flags.prototype */{
+export default class Flags extends Collection /** @lends Types/_display/Flags.prototype */{
    constructor(options: IOptions) {
       super(options);
 
       if (!this._$collection['[Types/_collection/IFlags]']) {
-         throw new TypeError(this._moduleName + ': source collection should implement Types/Type/IFlags');
+         throw new TypeError(this._moduleName + ': source collection should implement Types/_collectionIFlags');
       }
 
       if (this._$collection['[Types/_entity/ObservableMixin]']) {

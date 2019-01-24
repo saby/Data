@@ -11,7 +11,7 @@ export default class FlattenedMover {
    private current: FlattenedMover | IEnumerable<any> | Array<any>;
 
    /**
-    * @param {Types/Collection/IEnumerator|Array} parent
+    * @param {Types/_collection/IEnumerator|Array} parent
     */
    constructor(parent: IEnumerator<any> | Array<any>) {
       if (parent instanceof Array) {

@@ -9,15 +9,15 @@
  *       type: 'object'
  *    };
  * </pre>
- * @class Types/Format/ObjectField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/ObjectField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class ObjectField extends Field /** @lends Types/Format/ObjectField.prototype */{
+export default class ObjectField extends Field /** @lends Types/_entity/format/ObjectField.prototype */{
 }
 
 ObjectField.prototype['[Types/_entity/format/ObjectField]'] = true;

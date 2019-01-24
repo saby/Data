@@ -1,6 +1,5 @@
 /// <amd-module name="Types/_formatter/jsonReviver" />
-//@ts-ignore
-import IoC = require("Core/IoC");
+import {logger} from '../util';
 
 const DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 let unresolvedInstances = [];
@@ -22,17 +21,17 @@ function resolveInstances() {
             //@ts-ignore
             Module = requirejs(name);
             if (!Module) {
-               throw new Error('The module "' + name + '" is not loaded yet.');
+               throw new Error(`The module "${name}" is not loaded yet.`);
             }
             if (!Module.prototype) {
-               throw new Error('The module "' + name + '" is not a constructor.');
+               throw new Error(`The module "${name}" is not a constructor.`);
             }
             if (typeof Module.prototype.fromJSON !== 'function') {
-               throw new Error('The prototype of module "' + name + '" don\'t have fromJSON() method.');
+               throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
             }
             instance = Module.fromJSON ? Module.fromJSON.call(Module, item.value) : Module.prototype.fromJSON.call(Module, item.value);
          } catch (e) {
-            IoC.resolve('ILogger').error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
+            logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
             instance = null;
          }
          instanceStorage[item.value.id] = instance;
@@ -70,7 +69,7 @@ export default function jsonReviver(name: string, value: any) {
             result = NaN;
             break;
          default:
-            throw new Error('Unknown serialized type "' + value.$serialized$ + '" detected');
+            throw new Error(`Unknown serialized type "${value.$serialized$}" detected`);
       }
    }
 

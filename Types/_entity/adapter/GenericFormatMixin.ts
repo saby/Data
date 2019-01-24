@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_entity/adapter/GenericFormatMixin" />
 /**
  * Миксин для работы с форматом в адаптерах
- * @mixin Types/Adapter/GenericFormatMixin
+ * @mixin Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
 
 import {Field, UniversalField} from '../format'
 
-const GenericFormatMixin = /** @lends Types/Adapter/GenericFormatMixin.prototype */{
+const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 
    /**

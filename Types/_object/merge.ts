@@ -1,9 +1,4 @@
 /// <amd-module name="Types/_object/merge" />
-
-function isObject(obj:any):boolean {
-   return obj !== null && typeof(obj) === "object"
-}
-
 /**
  *
  * Модуль, в котором описана функция <b>merge.ts(obj1[, obj2, ...])</b>,
@@ -33,23 +28,27 @@ function isObject(obj:any):boolean {
  * @author Мальцев А.А.
  */
 
-export default function merge(target:any, ...sources:any[]): any {
-   if (!sources.length) {
-      return target;
-   }
-   const source = sources.shift();
+function isObject(obj: any): boolean {
+   return obj !== null && typeof obj === 'object';
+}
 
-   if (isObject(target) && isObject(source)) {
-      for (const key in source) {
-         if (isObject(source[key])) {
-            if (!target[key]) {
-               Object.assign(target, { [key]: {} });
-            }
-            merge(target[key], source[key]);
-         } else {
-            Object.assign(target, { [key]: source[key] });
+export default function merge(target: any, ...sources: any[]): any {
+   if (isObject(target)) {
+      sources.forEach((source) => {
+         if (isObject(source)) {
+            const overrides = {};
+            Object.keys(source).forEach((key) => {
+               if (isObject(source[key])) {
+                  if (target.hasOwnProperty(key)) {
+                     overrides[key] = merge(target[key], source[key]);
+                  }
+               }
+            });
+
+            Object.assign(target, source, overrides);
          }
-      }
+      });
    }
-   return merge(target, ...sources);
+
+   return target;
 }

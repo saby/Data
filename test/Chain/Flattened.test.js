@@ -13,7 +13,7 @@ define([
    FlattenedChain = FlattenedChain.default;
    List = List.default;
 
-   describe('Types/Chain/Flattened', function() {
+   describe('Types/_chain/Flattened', function() {
       var prev,
          items;
 

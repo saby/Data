@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/enumerableComparator" />
 /**
  * Позволяет сравнить две коллекции до и после набора изменений
- * @class Types/Collection/Comparer
+ * @class Types/_collection/Comparer
  * @author Мальцев А.А.
  */
 
@@ -22,7 +22,7 @@ function getId() {
 
 /**
  * Извлекает элементы коллекции
- * @param {Types/Collection/IEnumerable} collection Коллекция
+ * @param {Types/_collection/IEnumerable} collection Коллекция
  * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
  * @return {Object}
  */
@@ -50,7 +50,7 @@ function extractItems(collection, contentsWrapper) {
  * Возвращает изменения группы
  * @param {String} groupName Название группы
  * @param {Object} session Сессия изменений
- * @param {Types/Collection/IEnumerable} collection Коллекция
+ * @param {Types/_collection/IEnumerable} collection Коллекция
  * @param {Number} [startFrom=0] Начать с элемента номер
  * @param {Number} [offset=0] Смещение элеметов в after относительно before
  * @return {Object}
@@ -315,7 +315,7 @@ const enumerableComparator = {
 
    /**
     * Запускает сессию изменений коллекции (фиксирует ее состояние до изменений)
-    * @param {Types/Collection/IEnumerable} collection Коллекция
+    * @param {Types/_collection/IEnumerable} collection Коллекция
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     * @return {Object}
     */
@@ -332,7 +332,7 @@ const enumerableComparator = {
    /**
     * Завершает сессию изменений коллекции (фиксирует ее состояние после изменений)
     * @param {Object} session Сессия изменений
-    * @param {Types/Collection/IEnumerable} collection Коллекция
+    * @param {Types/_collection/IEnumerable} collection Коллекция
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     */
    finishSession(session, collection, contentsWrapper) {
@@ -345,7 +345,7 @@ const enumerableComparator = {
    /**
     * Анализирует изменения в коллекции по завершенной сессии
     * @param {Object} session Сессия изменений
-    * @param {Types/Collection/IEnumerable} collection Коллекция
+    * @param {Types/_collection/IEnumerable} collection Коллекция
     * @param {Function} callback Функция обратного вызова для каждой пачки изменений
     */
    analizeSession(session, collection, callback) {

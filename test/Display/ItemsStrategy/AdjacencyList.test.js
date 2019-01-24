@@ -17,7 +17,7 @@ define([
    TreeItem = TreeItem.default;
    GroupItem = GroupItem.default;
 
-   describe('Types/Display/ItemsStrategy/AdjacencyList', function() {
+   describe('Types/_display/ItemsStrategy/AdjacencyList', function() {
       var getDisplay = function(root) {
             return {
                getRoot: function() {

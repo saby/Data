@@ -3,8 +3,8 @@
  * Функтор, хранящий информацию о свойствах, от значения которых зависит результат вычислений.
  * Создадим и выполним функтор, вычисляющий 20% налог на заказ в магазине:
  * <pre>
- *    requirejs(['Types/Functor/Compute'], function(ComputeFunctor) {
- *       var getTax = new ComputeFunctor(function(totals, percent) {
+ *    requirejs(['Types/entity'], function(entity) {
+ *       var getTax = new entity.functor.Compute(function(totals, percent) {
  *             return totals.amount * percent / 100;
  *          }, ['amount']),
  *          tax;
@@ -17,7 +17,7 @@
  *       console.log(getTax.properties);//['amount']
  *    });
  * </pre>
- * @class Types/Functor/Compute
+ * @class Types/_entity/functor/Compute
  * @public
  * @author Мальцев А.А.
  */

@@ -9,15 +9,15 @@
  *       type: 'xml'
  *    };
  * </pre>
- * @class Types/Format/XmlField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/XmlField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class XmlField extends Field /** @lends Types/Format/XmlField.prototype */{
+export default class XmlField extends Field /** @lends Types/_entity/format/XmlField.prototype */{
    _$defaultValue: string;
 }
 

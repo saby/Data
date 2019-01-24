@@ -11,7 +11,7 @@ define([
    MapEnumerator = MapEnumerator.default;
    Map = Map.default;
 
-   describe('Types/Collection/MapEnumerator', function() {
+   describe('Types/_collection/MapEnumerator', function() {
       var keys,
          values,
          items;

@@ -9,8 +9,8 @@
  *       type: 'date'
  *    };
  * </pre>
- * @class Types/Format/DateField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/DateField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
@@ -18,7 +18,7 @@
 import Field from './Field';
 import toSql, {MODE as toSqlMode} from '../date/toSql';
 
-export default class DateField extends Field /** @lends Types/Format/DateField.prototype */{
+export default class DateField extends Field /** @lends Types/_entity/format/DateField.prototype */{
       //region Public methods
 
       getDefaultValue() {

@@ -11,7 +11,7 @@ define([
    formatsFactory = formatsFactory.default;
    Format = Format.default;
 
-   describe('Types/Format/FormatsFactory', function() {
+   describe('Types/_entity/format/FormatsFactory', function() {
       it('should throw an error if not simple array passed', function() {
          assert.throws(function() {
             formatsFactory();

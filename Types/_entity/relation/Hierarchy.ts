@@ -49,9 +49,9 @@
  *    hierarchy.hasDeclaredChildren(catalogue.at(1));//false
  * </pre>
  *
- * @class Types/Relation/Hierarchy
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_entity/relation/Hierarchy
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -60,10 +60,10 @@ import DestroyableMixin from '../DestroyableMixin';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import {mixin} from '../../util';
 
-export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) /** @lends Types/Mediator/Hierarchy.prototype */{
+export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) /** @lends Types/_entity/relation/Hierarchy.prototype */{
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
-    * @name Types/Relation/Hierarchy#idProperty
+    * @name Types/_entity/relation/Hierarchy#idProperty
     * @see getIdProperty
     * @see setIdProperty
     */
@@ -71,7 +71,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
-    * @name Types/Relation/Hierarchy#parentProperty
+    * @name Types/_entity/relation/Hierarchy#parentProperty
     * @see getIdProperty
     * @see setIdProperty
     */
@@ -79,7 +79,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * @cfg {String} Название свойства, содержащего признак узла.
-    * @name Types/Relation/Hierarchy#nodeProperty
+    * @name Types/_entity/relation/Hierarchy#nodeProperty
     * @see getIdProperty
     * @see setIdProperty
     */
@@ -87,7 +87,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * @cfg {String} Название свойства, содержащего декларируемый признак наличия детей.
-    * @name Types/Relation/Hierarchy#declaredChildrenProperty
+    * @name Types/_entity/relation/Hierarchy#declaredChildrenProperty
     * @see getIdProperty
     * @see setIdProperty
     */
@@ -189,7 +189,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     *   <li><em>false</em>: запись скрытым листом</li>
     *   <li><em>null</em>: запись является листом</li>
     * </ul>
-    * @param {Types/Entity/Record} record
+    * @param {Types/_entity/Record} record
     * @return {Boolean|null}
     * @see nodeProperty
     */
@@ -199,9 +199,9 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * Возвращает список детей для указанного родителя.
-    * @param {Types/Entity/Record|Sting|Number} parent Родительский узел или его идентификатор
-    * @param {Types/Collection/RecordSet} rs Рекордсет
-    * @return {Array.<Types/Entity/Record>}
+    * @param {Types/_entity/Record|Sting|Number} parent Родительский узел или его идентификатор
+    * @param {Types/_collection/RecordSet} rs Рекордсет
+    * @return {Array.<Types/_entity/Record>}
     * @see nodeProperty
     */
    getChildren(parent, rs) {
@@ -234,7 +234,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
    /**
     *
     * Возвращает признак наличия декларируемых детей.
-    * @param {Types/Entity/Record} record
+    * @param {Types/_entity/Record} record
     * @return {Boolean}
     * @see declaredChildrenProperty
     */
@@ -244,8 +244,8 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * Возвращает признак наличия родителя для указанного дочернего узла.
-    * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-    * @param {Types/Collection/RecordSet} rs Рекордсет
+    * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+    * @param {Types/_collection/RecordSet} rs Рекордсет
     * @return {Boolean}
     * @see nodeProperty
     */
@@ -262,9 +262,9 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * Возвращает родителя для указанного дочернего узла.
     * Если записи с указанным идентификатором нет - кидает исключение.
     * Если узел является корневым, возвращает null.
-    * @param {Types/Entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-    * @param {Types/Collection/RecordSet} rs Рекордсет
-    * @return {Types/Entity/Record|Null}
+    * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+    * @param {Types/_collection/RecordSet} rs Рекордсет
+    * @return {Types/_entity/Record|Null}
     * @see nodeProperty
     */
    getParent(child, rs) {
@@ -280,9 +280,9 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * Возвращает инстанс записи
-    * @param {Types/Entity/Record|Sting|Number} value Запись или ее ПК
-    * @param {Types/Collection/RecordSet} rs Рекордсет
-    * @return {Types/Entity/Record}
+    * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК
+    * @param {Types/_collection/RecordSet} rs Рекордсет
+    * @return {Types/_entity/Record}
     * @protected
     */
    _asRecord(value, rs) {
@@ -302,7 +302,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
 
    /**
     * Возвращает значение поля записи
-    * @param {Types/Entity/Record|Sting|Number} value Запись или значение ее поля
+    * @param {Types/_entity/Record|Sting|Number} value Запись или значение ее поля
     * @param {String} field Имя поля
     * @return {*}
     * @protected

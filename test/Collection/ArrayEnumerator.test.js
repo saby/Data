@@ -8,7 +8,7 @@ define([
 
    var ArrayEnumerator = ArrayEnumeratorEs.default;
 
-   describe('Types/Collection/ArrayEnumerator', function() {
+   describe('Types/_collection/ArrayEnumerator', function() {
       var items;
 
       beforeEach(function() {

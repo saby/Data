@@ -13,7 +13,7 @@ define([
    ConcatenatedChain = ConcatenatedChain.default;
    List = List.default;
 
-   describe('Types/Chain/Concatenated', function() {
+   describe('Types/_chain/Concatenated', function() {
       var prev,
          items;
 

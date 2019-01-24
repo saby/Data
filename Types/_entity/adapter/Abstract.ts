@@ -2,10 +2,10 @@
 /**
  * Абстрактный адаптер для данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Adapter/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IAdapter
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_entity/adapter/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IAdapter
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -37,7 +37,7 @@ const serializer = (function() {
 
    let serializeObject = function(obj) {
       if (typeof obj.getRawData === 'function') {
-         //Instance of Types/Entity/Record || Types/Collection/RecordSet || Types/Source/DataSet
+         //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
          return obj.getRawData(true);
       } else if (obj instanceof Date) {
          let mode = toSqlMode.DATETIME;
@@ -89,7 +89,7 @@ const serializer = (function() {
 
 export default abstract class Abstract extends mixin(
    DestroyableMixin, SerializableMixin
-) implements IAdapter /** @lends Types/Adapter/Abstract.prototype */{
+) implements IAdapter /** @lends Types/_entity/adapter/Abstract.prototype */{
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
    /**

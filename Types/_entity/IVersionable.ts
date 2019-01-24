@@ -2,12 +2,12 @@
 /**
  * Интерфейс изменения версий объекта.
  * Позволяет быстро проверить изменилось ли что либо в объекте.
- * @interface Types/Entity/IVersionable
+ * @interface Types/_entity/IVersionable
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IVersionable /** @lends Types/Entity/IVersionable.prototype */{
+export default interface IVersionable /** @lends Types/_entity/IVersionable.prototype */{
    readonly '[Types/_entity/IVersionable]': boolean;
 
    /**
@@ -18,22 +18,22 @@ export default interface IVersionable /** @lends Types/Entity/IVersionable.proto
     * @example
     * Проверим изменился ли рекорд:
     * <pre>
-    *    require(['Types/Entity/Record'], function(Record) {
-    *       var record = new Record({
-    *             rawData: {
-    *                id: 1
-    *             }
-    *          }),
-    *          method = function (record) {
-    *             if (Math.round(Math.random() * 1000) % 2 === 0) {
-    *                record.set('id', 2);
-    *             }
-    *          };
+    *    require(['Types/entity'], function(entity) {
+    *       var record = new entity.Record({
+    *          rawData: {
+    *             id: 1
+    *          }
+    *       });
+    *       var method = function (record) {
+    *          if (Math.round(Math.random() * 1000) % 2 === 0) {
+    *             record.set('id', 2);
+    *          }
+    *       };
     *
-    *       version = record.getVersion();
+    *       var version = record.getVersion();
     *       method(record);
     *       if (version != record.getVersion()) {
-    *          console.log('Изменился');
+    *          console.log('Changed!');
     *       }
     *    });
     * </pre>

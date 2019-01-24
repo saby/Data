@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Filtered" />
 /**
  * Фильтрующее звено цепочки.
- * @class Types/Chain/Filtered
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Filtered
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -14,7 +14,7 @@ interface CallbackFunc {
    (item: any, index: number): boolean;
 }
 
-export default class Filtered<T> extends Abstract<T> /** @lends Types/Chain/Filtered.prototype */{
+export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Filtered.prototype */{
    /**
     * @property {Function(*, Number): Boolean} Фильтр
     */
@@ -27,7 +27,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/Chain/Filt
 
    /**
     * Конструктор фильтрующего звена цепочки.
-    * @param {Types/Chain/Abstract} source Предыдущее звено.
+    * @param {Types/_chain/Abstract} source Предыдущее звено.
     * @param {Function(*, Number): Boolean} callback Фильтр
     * @param {Object} [callbackContext] Контекст вызова callback
     */
@@ -43,7 +43,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/Chain/Filt
       super.destroy();
    }
 
-   // region Types/Collection/IEnumerable
+   // region Types/_collection/IEnumerable
 
    getEnumerator(): FilteredEnumerator<T> {
       return new FilteredEnumerator(
@@ -53,11 +53,11 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/Chain/Filt
       );
    }
 
-   // endregion Types/Collection/IEnumerable
+   // endregion Types/_collection/IEnumerable
 
-   // region Types/Chain/DestroyableMixin
+   // region Types/_chain/DestroyableMixin
 
-   // endregion Types/Chain/DestroyableMixin
+   // endregion Types/_chain/DestroyableMixin
 }
 
 Filtered.prototype['[Types/_chain/Filtered]'] = true;

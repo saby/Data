@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/InstantiableMixin" />
 /**
  * Миксин, позволяющий генерировать уникальный (в рамках миксина) идентификатор для каждого экземпляра класса.
- * @mixin Types/Entity/InstantiableMixin
+ * @mixin Types/_entity/InstantiableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -12,7 +12,7 @@ import constants = require('Core/constants');
 const MAX_VALUE = Number.MAX_SAFE_INTEGER || (Math.pow(2, 53) - 1);
 let counter = 0;
 
-const InstantiableMixin = /** @lends Types/Entity/InstantiableMixin.prototype */{
+const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype */{
    '[Types/_entity/InstantiableMixin]': true,
 
    /**

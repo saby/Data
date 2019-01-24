@@ -9,15 +9,15 @@
  *       type: 'string'
  *    };
  * </pre>
- * @class Types/Format/StringField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/StringField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class StringField extends Field /** @lends Types/Format/StringField.prototype */{
+export default class StringField extends Field /** @lends Types/_entity/format/StringField.prototype */{
 }
 
 StringField.prototype['[Types/_entity/format/StringField]'] = true;

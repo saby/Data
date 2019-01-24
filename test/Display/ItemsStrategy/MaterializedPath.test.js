@@ -15,7 +15,7 @@ define([
    TreeDisplay = TreeDisplay.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/Display/ItemsStrategy/MaterializedPath', function() {
+   describe('Types/_display/ItemsStrategy/MaterializedPath', function() {
       var getOptions = function(display) {
             return {
                display: display,

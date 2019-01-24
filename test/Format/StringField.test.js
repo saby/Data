@@ -8,7 +8,7 @@ define([
 
    StringField = StringField.default;
 
-   describe('Types/Format/StringField', function() {
+   describe('Types/_entity/format/StringField', function() {
       var field;
 
       beforeEach(function() {

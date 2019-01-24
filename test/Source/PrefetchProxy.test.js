@@ -8,7 +8,7 @@ define([
 
    PrefetchProxy = PrefetchProxy.default;
 
-   describe('Types/Source/PrefetchProxy', function() {
+   describe('Types/_source/PrefetchProxy', function() {
       var getTarget = function(data) {
             return {
                data: data,

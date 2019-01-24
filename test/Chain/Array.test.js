@@ -8,7 +8,7 @@ define([
 
    var ArrayChain = ArrayChainEs.default;
 
-   describe('Types/Chain/Array', function() {
+   describe('Types/_chain/Array', function() {
       var items,
          chain;
 

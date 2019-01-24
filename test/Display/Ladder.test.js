@@ -23,7 +23,7 @@ define([
    Record = Record.default;
    Model = Model.default;
 
-   describe('Types/Display/Ladder', function() {
+   describe('Types/_display/Ladder', function() {
       var getItems = function() {
             return [{
                id: 1,

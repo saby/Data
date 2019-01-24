@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Enumerable" />
 /**
  * Цепочка по IEnumerable.
- * @class Types/Chain/Enumerable
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Enumerable
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import Abstract from './Abstract';
 import {IEnumerator} from '../collection';
 
-export default class Enumerable<T> extends Abstract<T> /** @lends Types/Chain/Enumerable.prototype */{
+export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/Enumerable.prototype */{
    constructor(source) {
       if (!source || !source['[Types/_collection/IEnumerable]']) {
          throw new TypeError('Source must implement Types/collection:IEnumerable');

@@ -14,7 +14,7 @@ define([
    var List = ListEs.default;
    var IBindCollection = IBindCollectionEs.default;
 
-   describe('Types/Collection/Comparer', function() {
+   describe('Types/_collection/Comparer', function() {
       var items,
          list;
 

@@ -14,11 +14,11 @@
  *    }]);
  *    adapter.at(0);//{id: 1, title: 'Test 1'}
  * </pre>
- * @class Types/Adapter/JsonTable
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/ITable
- * @mixes Types/Adapter/GenericFormatMixin
- * @mixes Types/Adapter/JsonFormatMixin
+ * @class Types/_entity/adapter/JsonTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @mixes Types/_entity/adapter/GenericFormatMixin
+ * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -31,12 +31,11 @@ import JsonRecord from './JsonRecord';
 import {UniversalField} from '../format';
 import {Set} from '../../shim';
 import {mixin} from '../../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../../object';
 
 export default class JsonTable extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
-) implements ITable /** @lends Types/Adapter/JsonTable.prototype */{
+) implements ITable /** @lends Types/_entity/adapter/JsonTable.prototype */{
    /**
     * @property {Array.<Object>} Сырые данные
     */
@@ -63,7 +62,7 @@ export default class JsonTable extends mixin(
 
    //region ITable
 
-   //region Types/Adapter/JsonFormatMixin
+   //region Types/_entity/adapter/JsonFormatMixin
 
    addField(format, at) {
       JsonFormatMixin.addField.call(this, format, at);
@@ -86,7 +85,7 @@ export default class JsonTable extends mixin(
       }
    }
 
-   //endregion Types/Adapter/JsonFormatMixin
+   //endregion Types/_entity/adapter/JsonFormatMixin
 
    //region Public methods
 
@@ -163,7 +162,7 @@ export default class JsonTable extends mixin(
       let extention = this.at(donor);
       let adapter = new JsonRecord(first);
       let id = adapter.get(idProperty);
-      coreMerge(first, extention);
+      merge(first, extention);
       adapter.set(idProperty, id);
       this.remove(donor);
    }
@@ -172,8 +171,7 @@ export default class JsonTable extends mixin(
       this._touchData();
 
       let source = this.at(index);
-      let clone = {};
-      coreMerge(clone, source, {clone: true});
+      let clone = merge({}, source);
       this.add(clone, 1 + index);
       return clone;
    }

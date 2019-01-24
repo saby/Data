@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/Search" />
 /**
  * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
- * @class Types/Display/ItemsStrategy/Search
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/Search
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -23,10 +23,10 @@ interface ISortOptions {
    display: Collection;
 }
 
-export default class Search extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/Search.prototype */{
+export default class Search extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Search.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     */
 
    /**
@@ -122,7 +122,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
 
    /**
     * Возвращает элементы проекции
-    * @return Array.<Types/Display/CollectionItem>
+    * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
    protected _getItems(): Array<CollectionItem> {
@@ -137,10 +137,10 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
 
    /**
     * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
-    * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
     * @param {Object} options Опции
-    * @param {Types/Display/Collection} options.display Проекция
-    * @return {Array.<Types/Display/CollectionItem>}
+    * @param {Types/_display/Collection} options.display Проекция
+    * @return {Array.<Types/_display/CollectionItem>}
     * @static
     */
    static sortItems(items: Array<CollectionItem>, options: ISortOptions): Array<CollectionItem> {

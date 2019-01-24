@@ -8,7 +8,7 @@ define([
 
    DictionaryField = DictionaryField.default;
 
-   describe('Types/Format/DictionaryField', function() {
+   describe('Types/_entity/format/DictionaryField', function() {
       var field;
 
       beforeEach(function() {

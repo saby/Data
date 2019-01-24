@@ -1,15 +1,15 @@
 /// <amd-module name="Types/_collection/enumerator/Objectwise" />
 /**
  * Энумератор для собственных свойств объекта
- * @class Types/Collection/ObjectEnumerator
- * @implements Types/Collection/IEnumerator
+ * @class Types/_collection/ObjectEnumerator
+ * @implements Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.
  */
 
 import IEnumerator from '../IEnumerator';
 
-export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/Collection/ObjectEnumerator.prototype */{
+export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_collection/ObjectEnumerator.prototype */{
    readonly '[Types/_collection/IEnumerator]' = true;
 
    /**

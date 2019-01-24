@@ -2,10 +2,10 @@
 /**
  * Абстрактная проекция данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Display/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
+ * @class Types/_display/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -40,7 +40,7 @@ interface IOptions {
 
 export default abstract class Abstract extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
-) /** @lends Types/Display/Abstract.prototype */{
+) /** @lends Types/_display/Abstract.prototype */{
    constructor(options?: IOptions) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
@@ -56,10 +56,10 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает проекцию по умолчанию
-    * @param {Types/Collection/IEnumerable} collection Объект, для которого требуется получить проекцию
+    * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
     * @param {Object} [options] Опции конструктора проекции
     * @param {Boolean} [single=false] Возвращать singleton для каждой collection
-    * @return {Types/Display/Abstract}
+    * @return {Types/_display/Abstract}
     * @static
     */
    static getDefaultDisplay(collection: IEnumerable<any>, options?: IOptions, single?: boolean) {
@@ -83,7 +83,7 @@ export default abstract class Abstract extends mixin(
          } else if (collection instanceof Array) {
             instance = create('Types/display:Collection', options);
          } else {
-            throw new TypeError(`Argument "collection" should implement Types/Collection/IEnumerable or be an instance of Array, but "${collection}" given.`);
+            throw new TypeError(`Argument "collection" should implement Types/_collection/IEnumerable or be an instance of Array, but "${collection}" given.`);
          }
 
          if (single) {
@@ -101,7 +101,7 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Освобождает проекцию, которую запрашивали через getDefaultDisplay как singleton
-    * @param {Types/Display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
+    * @param {Types/_display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
     * @return {Boolean} Ссылка на проекцию была освобождена
     * @static
     */

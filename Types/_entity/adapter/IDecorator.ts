@@ -4,11 +4,11 @@ import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
 
-export default interface IDecorator /** @lends Types/Adapter/IDecorator.prototype */{
+export default interface IDecorator /** @lends Types/_entity/adapter/IDecorator.prototype */{
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
    /**
     * Возвращает оригинальный адаптер
-    * @return {Types/Adapter/IAdapter|Types/Adapter/IRecord|Types/Adapter/ITable}
+    * @return {Types/_entity/adapter/IAdapter|Types/_entity/adapter/IRecord|Types/_entity/adapter/ITable}
     */
    getOriginal(): IAdapter | ITable | IRecord
 }

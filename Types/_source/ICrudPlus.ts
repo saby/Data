@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_source/ICrudPlus" />
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
- * @interface Types/Source/ICrudPlus
+ * @interface Types/_source/ICrudPlus
  * @public
  * @author Мальцев А.А.
  */
 
 import {Record} from '../entity';
 
-export default interface ICrudPlus /** @lends Types/Source/ICrudPlus.prototype */{
+export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype */{
    readonly '[Types/_source/ICrudPlus]': boolean;
 
    /** @typedef {String} MovePosition
@@ -47,7 +47,7 @@ export default interface ICrudPlus /** @lends Types/Source/ICrudPlus.prototype *
     * Создает копию записи
     * @param {String} key Первичный ключ записи
     * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<Types/Entity/Record>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Entity/Record} - скопированную запись, в случае ошибки - Error.
+    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - скопированную запись, в случае ошибки - Error.
     * @example
     * Скопируем статью с ключом 'what-about-to-copy-me':
     * <pre>

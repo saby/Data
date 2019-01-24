@@ -21,7 +21,7 @@ define([
    fieldsFactory = fieldsFactory.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Adapter/RecordSetTable', function() {
+   describe('Types/_entity/adapter/RecordSetTable', function() {
       var data,
          format,
          adapter;

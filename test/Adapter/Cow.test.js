@@ -14,7 +14,7 @@ define([
    var CowTable = CowTableEs.default;
    var CowRecord = CowRecordEs.default;
 
-   describe('Types/Adapter/Cow', function() {
+   describe('Types/_entity/adapter/Cow', function() {
       var Mock,
          original,
          adapter;

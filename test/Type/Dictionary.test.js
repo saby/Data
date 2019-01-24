@@ -14,7 +14,7 @@ define([
    ArrayEnumerator = ArrayEnumerator.default;
    ObjectEnumerator = ObjectEnumerator.default;
 
-   describe('Types/Types/Dictionary', function() {
+   describe('Types/_collection/Dictionary', function() {
       var getDict = function() {
          return ['one', 'two', 'three'];
       };

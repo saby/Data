@@ -10,7 +10,7 @@ define([
 
    var CountedChain = CountedChainEs.default;
 
-   describe('Types/Chain/Counted', function() {
+   describe('Types/_chain/Counted', function() {
       describe('.getEnumerator()', function() {
          it('should return a valid enumerator', function() {
             var prev = new ArrayMock([]),

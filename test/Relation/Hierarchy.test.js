@@ -11,7 +11,7 @@ define([
    Hierarchy = Hierarchy.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Relation/Hierarchy', function() {
+   describe('Types/_entity/relation/Hierarchy', function() {
       var data,
          rs,
          hierarchy;

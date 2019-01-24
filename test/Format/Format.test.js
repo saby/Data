@@ -11,7 +11,7 @@ define([
    Format = Format.default;
    fieldsFactory = fieldsFactory.default;
 
-   describe('Types/Format/Format', function() {
+   describe('Types/_entity/format/Format', function() {
       var format;
 
       beforeEach(function() {

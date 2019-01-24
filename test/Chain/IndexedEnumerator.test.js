@@ -10,7 +10,7 @@ define([
 
    var IndexedEnumerator = IndexedEnumeratorEs.default;
 
-   describe('Types/Chain/IndexedEnumerator', function() {
+   describe('Types/_chain/IndexedEnumerator', function() {
       var prev,
          items;
 

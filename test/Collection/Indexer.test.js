@@ -8,7 +8,7 @@ define([
 
    var Indexer = IndexerEs.default;
 
-   describe('Types/Collection/Indexer', function() {
+   describe('Types/_collection/Indexer', function() {
       var items,
          indexer;
 

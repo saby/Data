@@ -8,7 +8,7 @@ define([
 
    Map = Map.default;
 
-   describe('Types/Shim/Map', function() {
+   describe('Types/_shim/Map', function() {
       var global = (0, eval)('this'), // eslint-disable-line no-eval
          isNative = Map === global.Map,
          map;

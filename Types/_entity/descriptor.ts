@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/descriptor" />
 /**
  * Модуль описания типа.
- * @class Types/Type/descriptor
+ * @class Types/_entity/descriptor
  * @public
  * @author Мальцев А.А.
  */
@@ -47,7 +47,7 @@ function normalizeType(type: Descriptor): Descriptor {
 
 /**
  * Returns validator for certain type.
- * @name Types/Type/descriptor#validate
+ * @name Types/_entity/descriptor#validate
  * @param {Function|String} type Type descriptor.
  * @returns {Function} Validator.
  */
@@ -92,7 +92,7 @@ function validate(type: Descriptor): ValidateFunc {
 
 /**
  * Returns validator for required value.
- * @name Types/Type/descriptor#required
+ * @name Types/_entity/descriptor#required
  * @returns {Chained} Validator
  */
 function required(): Chained {
@@ -108,7 +108,7 @@ function required(): Chained {
 
 /**
  * Returns validator for "One of" restriction.
- * @name Types/Type/descriptor#oneOf
+ * @name Types/_entity/descriptor#oneOf
  * @param {Array} values Allowed values.
  * @returns {Chained} Validator.
  */
@@ -129,7 +129,7 @@ function oneOf(values: Array<any>): Chained {
 
 /**
  * Returns validator for Array<T> restriction.
- * @name Types/Type/descriptor#oneOf
+ * @name Types/_entity/descriptor#oneOf
  * @param {Function|String} type Type descriptor.
  * @returns {Chained} Validator.
  */
@@ -157,7 +157,7 @@ function arrayOf(type: Descriptor): Chained {
 
 /**
  * Creates chain element with all available validators.
- * @name Types/Type/descriptor#chain
+ * @name Types/_entity/descriptor#chain
  * @param {Chained} parent Previous chain element.
  * @returns {Chained} New chain element.
  */
@@ -186,7 +186,7 @@ function chain(parent: Chained): Chained {
 
 /**
  * Creates type descriptor for given value type.
- * @name Types/Type/descriptor#chain
+ * @name Types/_entity/descriptor#chain
  * @param {Descriptor} type Value type.
  * @returns {Chained} Type descriptor.
  */

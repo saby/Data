@@ -20,7 +20,7 @@ define([
    RecordSet = RecordSet.default;
    DataSet = DataSet.default;
 
-   describe('Types/Adapter/Abstract', function() {
+   describe('Types/_entity/adapter/Abstract', function() {
       var adapter;
 
       beforeEach(function() {

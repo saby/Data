@@ -29,7 +29,7 @@ define([
    SbisAdapter = SbisAdapter.default;
    CowAdapter = CowAdapter.default;
 
-   describe('Types/Collection/RecordSet', function() {
+   describe('Types/_collection/RecordSet', function() {
       var Record = type.Record;
       var Model = type.Model;
       var rs;

@@ -8,7 +8,7 @@ define([
 
    Identity = Identity.default;
 
-   describe('Types/Types/Identity', function() {
+   describe('Types/_entity/Identity', function() {
       describe('.constructor()', function() {
          it('should create Identity', function() {
             var instance = new Identity([]);
