@@ -11,7 +11,7 @@ define([
    OneToMany = OneToMany.default;
    Model = Model.default;
 
-   describe('Types/Mediator/OneToMany', function() {
+   describe('Types/_entity/relation/OneToMany', function() {
       var addChildren = function(mediator, parent, children) {
             for (var i = 0; i < children.length; i++) {
                mediator.addTo(parent, children[i], 'rel' + i);

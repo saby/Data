@@ -8,7 +8,7 @@ define([
 
    var QueryJoin = source.QueryExt.Join;
 
-   describe('Types/Query/Join', function() {
+   describe('Types/_source/Query.Join', function() {
       var select,
          on,
          as,
