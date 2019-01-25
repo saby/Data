@@ -14,9 +14,9 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
    /**
     * @event onChange Triggers after change the selection
     * @param {Core/EventObject} event Event descriptor
-    * @param {String} name Name of the flag
-    * @param {Number} index Index of the flag
-    * @param {Boolean|Null} value New value of selection of the flag
+    * @param {String|Array.<Boolean|Null>} name Name of the flag or whole flags selection in case of mass operation
+    * @param {Number} [index] Index of the flag
+    * @param {Boolean|Null} [value] New value of selection of the flag
     * @example
     * <pre>
     *    requirejs(['Types/collection'], function(collection) {
@@ -116,6 +116,26 @@ export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype 
     * </pre>
     */
    setByIndex(index: number, value: IValue);
+
+   /**
+    * Sets flags selection from array. Indices which not present in that array are going to be set to null.
+    * @param {Array.<Boolean|Null>} source Array of flags selection
+    * @example
+    * <pre>
+    *    requirejs(['Types/collection'], function(collection) {
+    *       var colors = new collection.Flags({
+    *          dictionary: ['Red', 'Green', 'Blue']
+    *       });
+    *
+    *       colors.fromArray([false, true]);
+    *
+    *       colors.get('Red');//false
+    *       colors.get('Green');//true
+    *       colors.get('Blue');//null
+    *    });
+    * </pre>
+    */
+   fromArray(source: Array<IValue>);
 
    /**
     * Sets selection state of all the flags to false

@@ -113,6 +113,21 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       this._notifyChange(name, index, value);
    }
 
+   fromArray(source: Array<IValue>) {
+      let values = this._$values;
+      let enumerator = this.getEnumerator();
+      let ordinalIndex = 0;
+      let selection = [];
+      while (enumerator.moveNext()) {
+         let value = source[ordinalIndex] === undefined ? null : source[ordinalIndex];
+         values[ordinalIndex] = value;
+         let dictionaryIndex = enumerator.getCurrentIndex();
+         selection[dictionaryIndex] = value;
+         ordinalIndex++;
+      }
+      this._notifyChanges(selection);
+   }
+
    setFalseAll() {
       this._setAll(false);
    }
@@ -228,6 +243,16 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       data[String(name)] = value;
       this._childChanged(data);
       this._notify('onChange', name, index, value);
+   }
+
+   /**
+    * Triggers a mass change event
+    * @param {Array.<Boolean|Null>} values Selection
+    * @protected
+    */
+   protected _notifyChanges(values: Array<IValue>) {
+      this._childChanged(values);
+      this._notify('onChange', values);
    }
 
    //endregion
