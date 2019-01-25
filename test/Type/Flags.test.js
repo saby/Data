@@ -230,25 +230,42 @@ define([
          });
       });
 
-      describe('.setAll()', function() {
+      describe('.fromArray()', function() {
+         it('should set all flags', function() {
+            var flags = new Flags({
+               dictionary: dict
+            });
+            var expected = [null, false, true];
+
+            flags.fromArray([null, false, true]);
+            var index = 0;
+            flags.each(function(name) {
+               assert.strictEqual(flags.get(name), expected[index], name);
+               index++
+            });
+         });
+
+         it('should set rest of the flags to null', function() {
+            var flags = new Flags({
+               dictionary: dict,
+               values: [true, true, true]
+            });
+            var expected = [false, null, null];
+
+            flags.fromArray([false]);
+            var index = 0;
+            flags.each(function(name) {
+               assert.strictEqual(flags.get(name), expected[index], name);
+               index++
+            });
+         });
+      });
+
+      describe('.setFalseAll()', function() {
          it('should set false to all flags', function() {
             testFlags.setFalseAll();
             testFlags.each(function(name) {
                assert.isFalse(testFlags.get(name));
-            });
-         });
-
-         it('should set true to all flags', function() {
-            testFlags.setTrueAll();
-            testFlags.each(function(name) {
-               assert.isTrue(testFlags.get(name));
-            });
-         });
-
-         it('should set null to all flags', function() {
-            testFlags.setNullAll();
-            testFlags.each(function(name) {
-               assert.isNull(testFlags.get(name));
             });
          });
 
@@ -276,6 +293,15 @@ define([
             assert.strictEqual(fired[1].index, 2);
             assert.isFalse(fired[1].value);
          });
+      });
+
+      describe('.setTrueAll()', function() {
+         it('should set true to all flags', function() {
+            testFlags.setTrueAll();
+            testFlags.each(function(name) {
+               assert.isTrue(testFlags.get(name));
+            });
+         });
 
          it('should set false to all flags with intervals', function() {
             flagsInterval.setFalseAll();
@@ -285,7 +311,16 @@ define([
          });
       });
 
-      describe('.produceInstance()', function() {
+      describe('.setNullAll()', function() {
+         it('should set null to all flags', function() {
+            testFlags.setNullAll();
+            testFlags.each(function(name) {
+               assert.isNull(testFlags.get(name));
+            });
+         });
+      });
+
+      describe(':produceInstance()', function() {
          it('should return instance of Flags', function() {
             assert.instanceOf(
                Flags.produceInstance(),

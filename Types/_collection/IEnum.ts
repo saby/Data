@@ -1,7 +1,6 @@
 /// <amd-module name="Types/_collection/IEnum" />
 /**
- * Интерфейс тип "перечисляемое".
- * Работает на основе словаря, хранящего соотвествие индексов и их значений.
+ * Enumerable interface. It's an enumerable collection of keys and values one of which can be selected or not.
  * @interface Types/_collectionIEnum
  * @public
  * @author Мальцев А.А.
@@ -13,10 +12,10 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
    readonly '[Types/_collection/IEnum]': boolean;
 
    /**
-    * @event onChange После изменения выбранного значения.
-    * @param {Core/EventObject} event Дескриптор события
-    * @param {Number} index Новый индекс
-    * @param {String} value Новое значение
+    * @event onChange Triggers after change the selected item
+    * @param {Core/EventObject} event Event descriptor
+    * @param {Number} index Key of selected item
+    * @param {String} value Value of selected item
     * @example
     * <pre>
     *    requirejs(['Types/collection'], function(collection) {
@@ -36,7 +35,7 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
     */
 
    /**
-    * Возвращает индекс выбранного значения.
+    * Returns key of selected item
     * @return {Number|Null}
     * @example
     * <pre>
@@ -53,8 +52,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
    get(): IIndex;
 
    /**
-    * Устанавливает индекс выбранного значения. Если индекс недопустим, кидает исключение.
-    * @param {Number|Null} index Индекс выбранного значения
+    * Sets item with given key as selected. If such key is not defined it throws an exception.
+    * @param {Number|Null} index Key of selected item
     * @example
     * <pre>
     *    requirejs(['Types/collection'], function(collection) {
@@ -70,8 +69,8 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
    set(index: IIndex);
 
    /**
-    * Возвращает выбранное значение.
-    * @param {Boolean} [localize=false] Вернуть локализованное значение
+    * Returns value of selected item
+    * @param {Boolean} [localize=false] Should return the localized value
     * @return {String}
     * @example
     * <pre>
@@ -88,9 +87,9 @@ export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */
    getAsValue(): T;
 
    /**
-    * Устанавливает выбранное значение. Если значение недопустимо, кидает исключение.
-    * @param {String} value Выбраноое значение
-    * @param {Boolean} [localize=false] Установить локализованное значение
+    * Sets item with given value as selected. If such key is not defined it throws an exception.
+    * @param {String} value Value of selected item
+    * @param {Boolean} [localize=false] It's the localized value
     * @example
     * <pre>
     *    requirejs(['Types/collection'], function(collection) {

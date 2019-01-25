@@ -8,20 +8,28 @@
  */
 
 import Collection from './Collection';
-import './FlagsItem';
 import {register} from '../di';
+import './FlagsItem';
+import {IFlagsValue} from '../collection';
 
 interface IOptions {
 }
 
 /**
  * Обрабатывает событие об изменении состояния Flags
- * @param event Дескриптор события
- * @param name Название флага
+ * @param {Core/EventObject} event Дескриптор события
+ * @param {String|Array.<boolean|null>} name Название флага
  */
-function onSourceChange (event: EventObject, name: string) {
-   let item = this.getItemBySourceItem(name);
-   this.notifyItemChange(item, 'selected');
+function onSourceChange (event: EventObject, name: string | Array<IFlagsValue>) {
+   if (Array.isArray(name)) {
+      name.forEach((selected, index) => {
+         let item = this.getItemBySourceIndex(index);
+         this.notifyItemChange(item, 'selected');
+      });
+   } else {
+      let item = this.getItemBySourceItem(name);
+      this.notifyItemChange(item, 'selected');
+   }
 }
 
 export default class Flags extends Collection /** @lends Types/_display/Flags.prototype */{

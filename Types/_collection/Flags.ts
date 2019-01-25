@@ -1,6 +1,6 @@
 /// <amd-module name="Types/_collection/Flags" />
 /**
- * Тип данных "флаги".
+ * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
  * @class Types/_collectionFlags
  * @extends Types/_collectionDictionary
  * @implements Types/_collectionIFlags
@@ -34,7 +34,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    readonly _moduleName: string;
 
    /**
-    * @cfg {Array.<Boolean|Null>} Индексы выбранных значений в словаре
+    * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
     * @name Types/_collectionFlags#values
     */
    protected _$values: Array<IValue>;
@@ -113,6 +113,21 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       this._notifyChange(name, index, value);
    }
 
+   fromArray(source: Array<IValue>) {
+      let values = this._$values;
+      let enumerator = this.getEnumerator();
+      let ordinalIndex = 0;
+      let selection = [];
+      while (enumerator.moveNext()) {
+         let value = source[ordinalIndex] === undefined ? null : source[ordinalIndex];
+         values[ordinalIndex] = value;
+         let dictionaryIndex = enumerator.getCurrentIndex();
+         selection[dictionaryIndex] = value;
+         ordinalIndex++;
+      }
+      this._notifyChanges(selection);
+   }
+
    setFalseAll() {
       this._setAll(false);
    }
@@ -154,13 +169,13 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
 
    //region ICloneable
 
-   clone: (shallow?: boolean) => Object;
+   clone: (shallow?: boolean) => Flags<T>;
 
    //endregion
 
    //region IProducible
 
-   static produceInstance(data?: any, options?: ProduceOptions): any {
+   static produceInstance<T>(data?: any, options?: ProduceOptions): Flags<T> {
       return new this({
          dictionary: this.prototype._getDictionaryByFormat(options && options.format),
          localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
@@ -183,9 +198,9 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    //region Protected methods
 
    /**
-    * Возвращает порядковый номер значения в словаре
-    * @param {String} name Значение в словаре
-    * @param {Boolean} [localize=false] Это локализованное значение
+    * Returns an ordinal index of the flag.
+    * @param {String} name Name of the flag
+    * @param {Boolean} [localize=false] Is the localized flag name
     * @return {Number|undefined}
     * @protected
     */
@@ -217,10 +232,10 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    }
 
    /**
-    * Уведомляет об изменении
-    * @param {String} name Имя флага
-    * @param {Number} index Изменившийся индекс
-    * @param {String} value Значение в индексе
+    * Triggers a change event
+    * @param {String} name Name of the flag
+    * @param {Number} index Index of the flag
+    * @param {String} value New value of selection of the flag
     * @protected
     */
    protected _notifyChange(name: T, index: number | string, value: IValue) {
@@ -228,6 +243,16 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       data[String(name)] = value;
       this._childChanged(data);
       this._notify('onChange', name, index, value);
+   }
+
+   /**
+    * Triggers a mass change event
+    * @param {Array.<Boolean|Null>} values Selection
+    * @protected
+    */
+   protected _notifyChanges(values: Array<IValue>) {
+      this._childChanged(values);
+      this._notify('onChange', values);
    }
 
    //endregion
