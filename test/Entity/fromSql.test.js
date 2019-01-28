@@ -6,7 +6,7 @@ define([
 ) {
    'use strict';
    var fromSql = fromSql.default;
-   describe('Core/helpers/Date/fromSql', function() {
+   describe('Types/_entity/date/fromSql', function() {
       var localTZ = (new Date()).getTimezoneOffset(),
          localTZHours = Math.floor(localTZ / 60),
          localTZMinutes = localTZ - (60 * localTZHours);

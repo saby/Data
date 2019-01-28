@@ -4,7 +4,7 @@ define([
    'Types/_entity/Record',
    'Types/_collection/RecordSet',
    'Types/_source/DataSet',
-   'Core/helpers/Date/toSql',
+   'Types/_entity/date/toSql',
    'Core/Date'
 ], function(
    AbstractAdapter,
@@ -19,7 +19,8 @@ define([
    Record = Record.default;
    RecordSet = RecordSet.default;
    DataSet = DataSet.default;
-
+   var toSqlMode = toSql.MODE;
+   toSql = toSql.default;
    describe('Types/_entity/adapter/Abstract', function() {
       var adapter;
 
