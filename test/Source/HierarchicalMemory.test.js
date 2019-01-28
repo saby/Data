@@ -8,7 +8,7 @@ define([
 ) {
    'use strict';
 
-   describe('Types/Source/HierarchicalMemory', function() {
+   describe('Types/_source/HierarchicalMemory', function() {
       var HierarchicalMemory = dataSource.HierarchicalMemory;
       var data;
       var source;
@@ -134,16 +134,16 @@ define([
       });
 
       describe('.toJSON()', function() {
-         it('should serialize options', function() {
+         it('should serialize its own options', function() {
             var data = {foo: 'bar'};
             var options = {
-               data: data,
-               idProperty: 'id'
+               parentProperty: 'id'
             };
-            var source = new HierarchicalMemory(options);
+            var source = new HierarchicalMemory(Object.assign({data: data}, options));
             var serialized = source.toJSON();
 
             assert.deepEqual(serialized.state.$options, options);
+            assert.deepEqual(serialized.state._source._$data, data);
          });
       });
    });

@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_display/TreeItem" />
 /**
  * Элемент дерева
- * @class Types/Display/TreeItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/TreeItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import di from '../_di';
+import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
    node?: boolean;
@@ -17,34 +17,34 @@ export interface IOptions extends ICollectionItemOptions {
    loaded?: boolean;
 }
 
-export default class TreeItem extends CollectionItem /** @lends Types/Display/TreeItem.prototype */{
+export default class TreeItem extends CollectionItem /** @lends Types/_display/TreeItem.prototype */{
    /**
-    * @cfg {Types/Display/TreeItem} Родительский узел
-    * @name Types/Display/TreeItem#parent
+    * @cfg {Types/_display/TreeItem} Родительский узел
+    * @name Types/_display/TreeItem#parent
     */
    protected _$parent: TreeItem;
 
    /**
     * @cfg {Boolean} Является узлом
-    * @name Types/Display/TreeItem#node
+    * @name Types/_display/TreeItem#node
     */
    protected _$node: boolean;
 
    /**
     * @cfg {Boolean} Развернут или свернут узел. По умолчанию свернут.
-    * @name Types/Display/TreeItem#expanded
+    * @name Types/_display/TreeItem#expanded
     */
    protected _$expanded: boolean;
 
    /**
     * @cfg {Boolean} Есть ли дети у узла. По умолчанию есть.
-    * @name Types/Display/TreeItem#hasChildren
+    * @name Types/_display/TreeItem#hasChildren
     */
    protected _$hasChildren: boolean;
 
    /**
     * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
-    * @name Types/Display/TreeItem#childrenProperty
+    * @name Types/_display/TreeItem#childrenProperty
     */
    protected _$childrenProperty: string;
 
@@ -60,7 +60,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/Display/Tr
       this._$hasChildren = !!this._$hasChildren;
    }
 
-   //region Types/Entity/SerializableMixin
+   //region Types/_entity/SerializableMixin
 
    protected _getSerializableState(state) {
       state =  super._getSerializableState(state);
@@ -80,13 +80,13 @@ export default class TreeItem extends CollectionItem /** @lends Types/Display/Tr
       };
    }
 
-   //endregion Types/Entity/SerializableMixin
+   //endregion Types/_entity/SerializableMixin
 
    //region Public methods
 
    /**
     * Возвращает родительский узел
-    * @return {Types/Display/TreeItem}
+    * @return {Types/_display/TreeItem}
     */
    getParent(): TreeItem {
       return this._$parent;
@@ -94,7 +94,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/Display/Tr
 
    /**
     * Устанавливает родительский узел
-    * @param {Types/Display/TreeItem} parent Новый родительский узел
+    * @param {Types/_display/TreeItem} parent Новый родительский узел
     */
    setParent(parent: TreeItem) {
       this._$parent = parent;
@@ -102,7 +102,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/Display/Tr
 
    /**
     * Возвращает корневой элемент дерева
-    * @return {Types/Display/TreeItem}
+    * @return {Types/_display/TreeItem}
     */
    getRoot(): TreeItem {
       let parent = this.getParent();
@@ -253,4 +253,4 @@ TreeItem.prototype._instancePrefix = 'tree-item-';
 // Deprecated
 TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
 
-di.register('Types/display:TreeItem', TreeItem);
+register('Types/display:TreeItem', TreeItem);

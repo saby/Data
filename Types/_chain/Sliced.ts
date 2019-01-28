@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Sliced" />
 /**
  * Вырезающее звено цепочки.
- * @class Types/Chain/Sliced
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Sliced
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import Abstract from './Abstract';
 import SlicedEnumerator from './SlicedEnumerator';
 
-export default class Sliced<T> extends Abstract<T> /** @lends Types/Chain/Sliced.prototype */{
+export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Sliced.prototype */{
    /**
     * @property {Number} Индекс, по которому начинать извлечение
     */
@@ -22,7 +22,7 @@ export default class Sliced<T> extends Abstract<T> /** @lends Types/Chain/Sliced
 
    /**
     * Конструктор вырезающего звена цепочки.
-    * @param {Types/Chain/Abstract} source Предыдущее звено.
+    * @param {Types/_chain/Abstract} source Предыдущее звено.
     * @param {Number} begin Индекс, по которому начинать извлечение
     * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
     */

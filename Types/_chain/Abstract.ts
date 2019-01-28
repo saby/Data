@@ -2,9 +2,9 @@
 /**
  * Абстрактная цепочка.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Chain/Abstract
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Collection/IEnumerable
+ * @class Types/_chain/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_collection/IEnumerable
  * @public
  * @author Мальцев А.А.
  */
@@ -12,7 +12,7 @@
 import {DestroyableMixin} from '../entity';
 import {IEnumerable} from '../collection';
 import {object} from '../util';
-import di from '../_di';
+import {resolve} from '../di';
 import IEnumerator from '../_collection/IEnumerator';
 import Zipped from './Zipped';
 import Mapped from './Mapped';
@@ -34,7 +34,7 @@ interface ReduceFunc {
    (memo: any, item: any, index: number): any
 }
 
-export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> /** @lends Types/Chain/Abstract.prototype */{
+export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */{
    readonly '[Types/_collection/IEnumerable]' = true;
 
    /**
@@ -43,12 +43,12 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    protected _source: any;
 
    /**
-    * @property {Types/Chain/Abstract|null>} Предыдущий элемент цепочки
+    * @property {Types/_chain/Abstract|null>} Предыдущий элемент цепочки
     */
    protected _previous: Abstract<T>;
 
    /**
-    * @property {Types/Chain/Abstract} Первый элемент цепочки
+    * @property {Types/_chain/Abstract} Первый элемент цепочки
     */
    get start(): Abstract<T> {
       return this._previous ? this._previous.start : this;
@@ -63,7 +63,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Конструктор цепочки
-    * @param {Types/Chain/Abstract|*} source Данные, обрабатываемые цепочкой
+    * @param {Types/_chain/Abstract|*} source Данные, обрабатываемые цепочкой
     */
    constructor(source: Abstract<T>|any) {
       super();
@@ -95,10 +95,9 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Получим элементы коллекции:
     * <pre>
-    * requirejs(['Types/Chain',], function(Chain) {
-    *    Chain({foo: 'Foo', bar: 'Bar'}).each(function(value, key) {
-    *       console.log('key: ' + key + ', value: ' + value);
-    *    });
+    * import {factory} from 'Types/chain';
+    * factory({foo: 'Foo', bar: 'Bar'}).each((value, key) => {
+    *    console.log('key: ' + key + ', value: ' + value);
     * });
     * //'key: foo, value: Foo', 'key: bar, value: Bar'
     * </pre>
@@ -124,64 +123,48 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Запускает вычисление цепочки и возвращает полученное значение. Большинство цепочек возвращает массив, но
     * некоторые могут вернуть другой тип, в зависимости от вида исходной коллекции.
     * При передаче аргумента factory вернется тип значения, сконструированный фабрикой. Доступные стандартные фабрики
-    * можно посмотреть в разделе {@link Types/Collection/Factory}.
-    * @param {function(Types/Collection/IEnumerable): *} [factory] Фабрика для преобразования коллекции.
+    * можно посмотреть в разделе {@link Types/_collection/Factory}.
+    * @param {function(Types/_collection/IEnumerable): *} [factory] Фабрика для преобразования коллекции.
     * @param {...*} [optional] Дополнительные аргументы фабрики, придут в factory вторым, третьим и т.д аргументами.
     * @return {*}
     * @example
     * Получим четные отрицательные числа в виде массива:
     * <pre>
-    * requirejs(['Types/Chain',], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).map(function(item) {
-    *       return -1 * item;
-    *    }.filter(function(item) {
-    *       return item % 2 === 0;
-    *    }).value();//[-2, -4]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .map((item) => -1 * item)
+    *    .filter((item) => item % 2 === 0)
+    *    .value();//[-2, -4]
     * </pre>
     * Получим рекордсет из персонажей женского пола, отсортированных по имени:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Collection/RecordSet',
-    *    'Types/Collection/Factory/RecordSet'
-    * ], function(
-    *    Chain,
-    *    RecordSet,
-    *    recordSetFactory
-    * ) {
-    *    Chain(new RecordSet({rawData: [
-    *       {name: 'Philip J. Fry', gender: 'M'},
-    *       {name: 'Turanga Leela', gender: 'F'},
-    *       {name: 'Professor Farnsworth', gender: 'M'},
-    *       {name: 'Amy Wong', gender: 'F'},
-    *       {name: 'Bender Bending Rodriguez', gender: 'R'}
-    *    ]})).filter(function(item) {
-    *       return item.get('gender') === 'F';
-    *    }).sort(function(a, b) {
-    *       return a.get('name') > b.get('name');
-    *    }).value(recordSetFactory);
-    *    //RecordSet([Model(Amy Wong), Model(Turanga Leela)])
-    * });
+    * import {factory} from 'Types/chain';
+    * import {RecordSet, factory} from 'Types/collection';
+    * factory(new RecordSet({rawData: [
+    *    {name: 'Philip J. Fry', gender: 'M'},
+    *    {name: 'Turanga Leela', gender: 'F'},
+    *    {name: 'Professor Farnsworth', gender: 'M'},
+    *    {name: 'Amy Wong', gender: 'F'},
+    *    {name: 'Bender Bending Rodriguez', gender: 'R'}
+    * ]}))
+    *    .filter((item) => item.get('gender') === 'F')
+    *    .sort((a, b) => a.get('name') - b.get('name'))
+    *    .value(factory.recordSet);
+    * //RecordSet([Model(Amy Wong), Model(Turanga Leela)])
     * </pre>
     * Получим рекордсет с адаптером для БЛ СБИС:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Source/SbisService',
-    *    'Types/Collection/Factory/RecordSet'
-    * ], function(
-    *    Chain,
-    *    SbisService,
-    *    recordSetFactory
-    * ) {
-    *    var dataSource = new SbisService({endpoint: 'Employee'});
-    *    dataSource.query().addCallback(function(response) {
-    *       var items = Chain(response.getAll()).first(10).value(recordSetFactory, {
+    * import {factory} from 'Types/chain';
+    * import {SbisService} from 'Types/source';
+    * import {factory} from 'Types/collection';
+    * const dataSource = new SbisService({endpoint: 'Employee'});
+    * dataSource.query().addCallback((response) => {
+    *    const items = factory(response.getAll())
+    *       .first(10)
+    *       .value(factory.recordSet, {
     *          adapter: response.getAdapter()
     *       });
-    *       //Do something with items
-    *    });
+    *    //Do something with items
     * });
     * </pre>
     */
@@ -200,29 +183,22 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Получим значения полей объекта в виде массива:
     * <pre>
-    * requirejs(['Types/Chain',], function(Chain) {
-    *    Chain({
-    *       email: 'root@server.name',
-    *       login: 'root'
-    *    }).toArray();//['root@server.name', 'root']
-    * });
+    * import {factory} from 'Types/chain';
+    * factory({
+    *    email: 'root@server.name',
+    *    login: 'root'
+    * }).toArray();//['root@server.name', 'root']
     * </pre>
-    * Представим рекордсет в виде массива записей:
+    * Представим список в виде массива:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Collection/RecordSet'
-    * ], function(
-    *    Chain,
-    *    RecordSet
-    * ) {
-    *    Chain(new RecordSet({
-    *       rawData: [
-    *          {id: 1, name: 'SpongeBob SquarePants'},
-    *          {id: 2, name: 'Patrick Star'}
-    *       ]
-    *    })).toArray();//[Model({id: 1, name: 'SpongeBob SquarePants'}), Model({id: 2, name: 'Patrick Star'})]
-    * });
+    * import {factory} from 'Types/chain';
+    * import {List} from 'Types/collection';
+    * factory(new List({
+    *    items: [
+    *       {id: 1, name: 'SpongeBob SquarePants'},
+    *       {id: 2, name: 'Patrick Star'}
+    *    ]
+    * })).toArray();//[{id: 1, name: 'SpongeBob SquarePants'}, {id: 2, name: 'Patrick Star'}]
     * </pre>
     */
    toArray(): Array<any> {
@@ -239,26 +215,17 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Трансформируем массив в объект индекс->значение:
     * <pre>
-    * requirejs(['Types/Chain',], function(Chain) {
-    *    Chain(['root@server.name', 'root']).toObject();//{0: 'root@server.name', 1: 'root']}
-    * });
+    * import {factory} from 'Types/chain';
+    * factory(['root@server.name', 'root']).toObject();//{0: 'root@server.name', 1: 'root']}
     * </pre>
     * Представим запись в виде объекта:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Entity/Record'
-    * ], function(
-    *    Chain,
-    *    Record
-    * ) {
-    *    var record = new Record({
-    *          rawData: {id: 1, title: 'New One'}
-    *       }),
-    *       chain = new Chain(record);
-    *
-    *    chain.toObject();//{id: 1, title: 'New One'}
-    * });
+    * import {factory} from 'Types/chain';
+    * import {Record} from 'Types/entity';
+    * const record = new Record({
+    *    rawData: {id: 1, title: 'New One'}
+    *  });
+    * factory(record).toObject();//{id: 1, title: 'New One'}
     * </pre>
     */
    toObject(): Object {
@@ -280,15 +247,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Просуммируем массив:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    Chain([1, 2, 3, 4, 5]).reduce(function(previousValue, currentValue) {
-    *       return previousValue + currentValue;
-    *    });//15
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).reduce((memo, item) => memo + item);//15
     * </pre>
     */
    reduce(callback: ReduceFunc, initialValue?: any): any {
@@ -317,15 +277,9 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Поделим элементы массива, проходя их справа-налево:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    Chain([2, 5, 2, 100]).reduceRight(function(previousValue, currentValue) {
-    *       return previousValue / currentValue;
-    *    });//5
-    * });
+    * import {factory} from 'Types/chain';
+    * import {Record} from 'Types/entity';
+    * factory([2, 5, 2, 100]).reduceRight((memo, item) => item / memo);//5
     * </pre>
     */
    reduceRight(callback: ReduceFunc, initialValue?: any): any {
@@ -344,28 +298,22 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @param {function(*, Number): *} callback Функция, возвращающая новый элемент.
     * Принимает аргументы: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Преобразуем массив в записи:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Entity/Record'
-    * ], function(
-    *    Chain,
-    *    Record
-    * ) {
-    *    Chain([
-    *       {id: 1, name: 'SpongeBob SquarePants'},
-    *       {id: 2, name: 'Patrick Star'}
-    *    ]).map(function(item) {
-    *       return new Record({rawData: item});
-    *    }).value();//[Record({id: 1, name: 'SpongeBob SquarePants'}), Record({id: 2, name: 'Patrick Star'})]
-    * });
+    * import {factory} from 'Types/chain';
+    * import {Record} from 'Types/entity';
+    * factory([
+    *    {id: 1, name: 'SpongeBob SquarePants'},
+    *    {id: 2, name: 'Patrick Star'}
+    * ]).map(
+    *    (item) => new Record({rawData: item})
+    * ).value();//[Record({id: 1, name: 'SpongeBob SquarePants'}), Record({id: 2, name: 'Patrick Star'})]
     * </pre>
     */
    map(callback: (item: any, index: number) => any, thisArg?: Object): Mapped<T> {
-      const Next = di.resolve('Types/chain:Mapped');
+      const Next = resolve('Types/chain:Mapped');
       return new Next(
          this,
          callback,
@@ -377,22 +325,21 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Перекомбинирует коллекцию, каждый n-ый элемент которой является массивом, первым элементом которого является n-ый
     * элемент исходной коллекции, вторым - n-ый элемент второй коллекции и т.д.
     * @param {...Array} [args] Коллекции для комбинирования.
-    * @return {Types/Chain/Zipped}
+    * @return {Types/_chain/Zipped}
     * @example
     * Скомбинируем массивы:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain(
-    *       [1, 2, 3]
-    *    ).zip(
-    *       ['one', 'two', 'three'],
-    *       [true, true, false]
-    *    ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory(
+    *    [1, 2, 3]
+    * ).zip(
+    *    ['one', 'two', 'three'],
+    *    [true, true, false]
+    * ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
     * </pre>
     */
    zip(...args): Zipped<T> {
-      const Next = di.resolve('Types/chain:Zipped');
+      const Next = resolve('Types/chain:Zipped');
       return new Next(
          this,
          args
@@ -407,13 +354,12 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Получим данные учетной записи:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain(
-    *       ['login', 'password', 'email']
-    *    ).zipObject(
-    *       ['root', '123', 'root@localhost']
-    *    );//{login: 'root', password: '123', email: 'root@localhost'}
-    * });
+    * import {factory} from 'Types/chain';
+    * factory(
+    *    ['login', 'password', 'email']
+    * ).zipObject(
+    *    ['root', '123', 'root@localhost']
+    * );//{login: 'root', password: '123', email: 'root@localhost'}
     * </pre>
     */
    zipObject(values: Array<any>): Object {
@@ -428,37 +374,26 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Преобразует коллекцию, возвращая значение свойства для каждого элемента.
     * @param {String} propertyName Название свойства.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Получим имена персонажей из массива:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    Chain([
-    *       {id: 1, name: 'SpongeBob SquarePants'},
-    *       {id: 2, name: 'Patrick Star'}
-    *    ]).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    {id: 1, name: 'SpongeBob SquarePants'},
+    *    {id: 2, name: 'Patrick Star'}
+    * ]).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
     * </pre>
     * Получим имена персонажей из рекордсета:
     * <pre>
-    * requirejs([
-    *    'Types/Chain',
-    *    'Types/Collection/RecordSet'
-    * ], function(
-    *    Chain,
-    *    RecordSet
-    * ) {
-    *    Chain(new RecordSet({
-    *       rawData: [
-    *          {id: 1, name: 'SpongeBob SquarePants'},
-    *          {id: 2, name: 'Patrick Star'}
-    *       ]
-    *    })).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
-    * });
+    * import {factory} from 'Types/chain';
+    * import {RecordSet} from 'Types/collection';
+    * factory(new RecordSet({
+    *    rawData: [
+    *       {id: 1, name: 'SpongeBob SquarePants'},
+    *       {id: 2, name: 'Patrick Star'}
+    *    ]
+    * })).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
     * </pre>
     */
    pluck(propertyName: string): Mapped<T> {
@@ -469,35 +404,25 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Преобразует коллекцию, вызывая метод каждого элемента.
     * @param {String} methodName Название метода.
     * @param {...*} [args] Аргументы метода.
-    * @return {Types/Chain/Mapped}
+    * @return {Types/_chain/Mapped}
     * @example
     * Получим список названий фруктов в верхнем регистре:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    Chain([
-    *       'apple',
-    *       'cherry',
-    *       'banana'
-    *    ]).invoke('toUpperCase').value();//['APPLE', 'CHERRY', 'BANANA']
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    'apple',
+    *    'cherry',
+    *    'banana'
+    * ]).invoke('toUpperCase').value();//['APPLE', 'CHERRY', 'BANANA']
     * </pre>
     * Получим аббревиатуру из слов:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    Chain(['What', 'you', 'see', 'is', 'what', 'you', 'get'])
-    *       .invoke('substr', 0, 1)
-    *       .invoke('toUpperCase')
-    *       .value()
-    *       .join('');//['WYSIWYG']
-    * });
+    * import {factory} from 'Types/chain';
+    * factory(['What', 'you', 'see', 'is', 'what', 'you', 'get'])
+    *    .invoke('substr', 0, 1)
+    *    .invoke('toUpperCase')
+    *    .value()
+    *    .join('');//['WYSIWYG']
     * </pre>
     */
    invoke(methodName: string, ...args): Mapped<T> {
@@ -506,35 +431,33 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Соединяет коллекцию с другими коллекциями, добавляя их элементы в конец.
-    * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, с которыми объединить.
-    * @return {Types/Chain/Concatenated}
+    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, с которыми объединить.
+    * @return {Types/_chain/Concatenated}
     * @example
     * Объединим коллекцию с двумя массивами:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2]).concat([3, 4], [5]).value();//[1, 2, 3, 4, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2]).concat([3, 4], [5]).value();//[1, 2, 3, 4, 5]
     * </pre>
     */
    concat(...args: Array<Array<T>|IEnumerable<T>>): Concatenated<T> {
-      const Next = di.resolve('Types/chain:Concatenated');
+      const Next = resolve('Types/chain:Concatenated');
       return new Next(this, args);
    }
 
    /**
     * Разворачивает иерархическую коллекцию в плоскую: каждый итерируемый элемент коллекции рекрурсивно вставляется
     * в виде коллекции.
-    * @return {Types/Chain/Flattened}
+    * @return {Types/_chain/Flattened}
     * @example
     * Развернем массив:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, [2], [3, [[4, [5]]]]]).flatten().value();//[1, 2, 3, 4, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, [2], [3, [[4, [5]]]]]).flatten().value();//[1, 2, 3, 4, 5]
     * </pre>
     */
    flatten(): Flattened<T> {
-      const Next = di.resolve('Types/chain:Flattened');
+      const Next = resolve('Types/chain:Flattened');
       return new Next(this);
    }
 
@@ -542,31 +465,29 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Группирует коллекцию, создавая новую из элементов, сгруппированных в массивы.
     * @param {String|Function(*): String} key Поле группировки или функция, группировки для каждого элемента.
     * @param {String|Function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
-    * @return {Types/Chain/Grouped}
+    * @return {Types/_chain/Grouped}
     * @example
     * Сгруппируем четные и нечетные значения массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).group(function(item) {
-    *       return item % 2 === 0;
-    *    }).value();//[[1, 3, 5], [2, 4]]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .group((item) => item % 2 === 0)
+    *    .value();//[[1, 3, 5], [2, 4]]
     * </pre>
     * Сгруппируем значения по полю kind:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([
-    *       {title: 'Apple', kind: 'fruit'},
-    *       {title: 'Cherry', kind: 'fruit'},
-    *       {title: 'Cucumber', kind: 'vegetable'},
-    *       {title: 'Pear', kind: 'fruit'},
-    *       {title: 'Potato', kind: 'vegetable'}
-    *    ]).group('kind', 'title').toObject();//{fruit: ['Apple', 'Cherry', 'Pear'], vegetable: ['Cucumber', 'Potato']}
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    {title: 'Apple', kind: 'fruit'},
+    *    {title: 'Cherry', kind: 'fruit'},
+    *    {title: 'Cucumber', kind: 'vegetable'},
+    *    {title: 'Pear', kind: 'fruit'},
+    *    {title: 'Potato', kind: 'vegetable'}
+    * ]).group('kind', 'title').toObject();//{fruit: ['Apple', 'Cherry', 'Pear'], vegetable: ['Cucumber', 'Potato']}
     * </pre>
     */
    group(key: string|((item: any) => string), value: string|((item: any) => any)): Grouped<T> {
-      const Next = di.resolve('Types/chain:Grouped');
+      const Next = resolve('Types/chain:Grouped');
       return new Next(
          this,
          key,
@@ -578,33 +499,30 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Агрегирует коллекцию, подсчитывая число элементов, объединенных по заданному критерию.
     * @param {String|function(*): String} [by] Поле агрегации или функция агрегации для каждого элемента.
     * Если не указан, возвращается общее количество элементов.
-    * @return {Number|Types/Chain/Counted}
+    * @return {Number|Types/_chain/Counted}
     * @example
     * Подсчитаем число элементов массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).count();//5
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).count();//5
     * </pre>
     * Подсчитаем четные и нечентные значения массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).count(function(item) {
-    *       return item % 2 === 0;
-    *    }).value();//[3, 2]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .count((item) => item % 2 === 0)
+    *    .value();//[3, 2]
     * </pre>
     * Подсчитаем фрукты и овощи:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([
-    *       {title: 'Apple', kind: 'fruit'},
-    *       {title: 'Cherry', kind: 'fruit'},
-    *       {title: 'Cucumber', kind: 'vegetable'},
-    *       {title: 'Pear', kind: 'fruit'},
-    *       {title: 'Potato', kind: 'vegetable'}
-    *    ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    {title: 'Apple', kind: 'fruit'},
+    *    {title: 'Cherry', kind: 'fruit'},
+    *    {title: 'Cucumber', kind: 'vegetable'},
+    *    {title: 'Pear', kind: 'fruit'},
+    *    {title: 'Potato', kind: 'vegetable'}
+    * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
     * </pre>
     */
    count(by?: string|((item: any) => string)): Counted<T>|number {
@@ -612,7 +530,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
          return this.reduce(memo => memo + 1, 0);
       }
 
-      const Next = di.resolve('Types/chain:Counted');
+      const Next = resolve('Types/chain:Counted');
       return new Next(this, by);
    }
 
@@ -622,9 +540,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Найдем максимальный элемент массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).max();//5
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).max();//5
     * </pre>
     */
    max(): number {
@@ -637,9 +554,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * @example
     * Найдем минимальный элемент массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).min();//1
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).min();//1
     * </pre>
     */
    min(): number {
@@ -649,44 +565,41 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Преобразует коллекцию, удаляя из нее повторяющиеся элементы (используется строгое сравнение ===).
     * @param {function(*): String|Number>} [idExtractor] Функция, возвращающая уникальный идентификатор элемента.
-    * @return {Types/Chain/Uniquely}
+    * @return {Types/_chain/Uniquely}
     * @example
     * Оставим уникальные значения массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 2, 1, 0]).uniq().value();//[1, 2, 3, 0]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 2, 1, 0]).uniq().value();//[1, 2, 3, 0]
     * </pre>
     * Оставим элементы с уникальным значением поля kind:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([
-    *       {title: 'Apple', kind: 'fruit'},
-    *       {title: 'Cherry', kind: 'fruit'},
-    *       {title: 'Cucumber', kind: 'vegetable'},
-    *       {title: 'Pear', kind: 'fruit'},
-    *       {title: 'Potato', kind: 'vegetable'}
-    *    ]).uniq(function(item) {
-    *       return item.kind;
-    *    }).value();//[{title: 'Apple', kind: 'fruit'}, {title: 'Cucumber', kind: 'vegetable'}]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    {title: 'Apple', kind: 'fruit'},
+    *    {title: 'Cherry', kind: 'fruit'},
+    *    {title: 'Cucumber', kind: 'vegetable'},
+    *    {title: 'Pear', kind: 'fruit'},
+    *    {title: 'Potato', kind: 'vegetable'}
+    * ]).uniq(
+    *    (item) => item.kind
+    * ).value();//[{title: 'Apple', kind: 'fruit'}, {title: 'Cucumber', kind: 'vegetable'}]
     * </pre>
     */
    uniq(idExtractor?: (item: any) => string|number): Uniquely<T> {
-      const Next = di.resolve('Types/chain:Uniquely');
+      const Next = resolve('Types/chain:Uniquely');
       return new Next(this, idExtractor);
    }
 
    /**
     * Преобразует коллекцию, добавляя в нее элементы других коллекций, которых в ней еще нет.
-    * @param {...Array.<Array>|Array.<Types/Collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
-    * @return {Types/Chain/Uniquely}
+    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
+    * @return {Types/_chain/Uniquely}
     * @example
     * Оставим уникальные значения массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3]).union([0, 1, 2, 3, 4, 5]).value();//[1, 2, 3, 0, 4, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3]).union([0, 1, 2, 3, 4, 5]).value();//[1, 2, 3, 0, 4, 5]
     * </pre>
     */
    union(...args: Array<Array<T>|IEnumerable<T>>): Uniquely<T> {
@@ -703,19 +616,18 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Фильтрует коллекцию, оставляя в ней те элементы, которые прошли фильтр.
     * @param {function(*, Number): Boolean} callback Фильтр c аргументами: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Выберем четные значения массива:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).filter(function(item) {
-    *       return item % 2 === 0;
-    *    }).value();//[2, 4]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .filter((item) => item % 2 === 0)
+    *    .value();//[2, 4]
     * </pre>
     */
    filter(callback: (item: any, index: number) => boolean, thisArg?: Object): Filtered<T> {
-      const Next = di.resolve('Types/chain:Filtered');
+      const Next = resolve('Types/chain:Filtered');
       return new Next(
          this,
          callback,
@@ -727,15 +639,14 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * Фильтрует коллекцию, исключая из нее те элементы, которые прошли фильтр.
     * @param {function(*, Number): Boolean} callback Функция c аргументами: элемент коллекции и его порядковый номер.
     * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Исключим значения от 2 до 4:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).reject(function(item) {
-    *       return item >= 2 && item <= 4;
-    *    }).value();//[1, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .reject((item) => item >= 2 && item <= 4)
+    *    .value();//[1, 5]
     * </pre>
     */
    reject(callback: (item: any, index: number) => boolean, thisArg?: Object): Filtered<T> {
@@ -745,32 +656,27 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Фильтрует коллекцию, оставляя в ней элементы, имеющие указанный набор значений свойств.
     * @param {Object} properties Объект, с набором проверяемых свойств и их значений.
-    * @return {Types/Chain/Filtered}
+    * @return {Types/_chain/Filtered}
     * @example
     * Получим персонажей мужского пола из дома Старков:
     * <pre>
-    * requirejs([
-    *    'Types/Chain'
-    * ], function(
-    *    Chain
-    * ) {
-    *    var stillAliveOrNot = [
-    *       {name: 'Eddard Stark', house: 'House Stark', gender: 'm'},
-    *       {name: 'Catelyn Stark', house: 'House Stark', gender: 'f'},
-    *       {name: 'Jon Snow', house: 'House Stark', gender: 'm'},
-    *       {name: 'Sansa Stark', house: 'House Stark', gender: 'f'},
-    *       {name: 'Arya Stark', house: 'House Stark', gender: 'f'},
-    *       {name: 'Daenerys Targaryen', house: 'House Targaryen', gender: 'f'},
-    *       {name: 'Viserys Targaryen', house: 'House Targaryen', gender: 'm'},
-    *       {name: 'Jorah Mormont', house: 'House Targaryen', gender: 'm'}
-    *    ];
-    *    Chain(stillAliveOrNot).where({
-    *       house: 'House Stark',
-    *       gender: 'm'
-    *    }).value();
-    *    //[{name: 'Eddard Stark', house: 'House Stark', gender: 'm'},
-    *    //{name: 'Jon Snow', house: 'House Stark', gender: 'm'}]
-    * });
+    * import {factory} from 'Types/chain';
+    * const stillAliveOrNot = [
+    *    {name: 'Eddard Stark', house: 'House Stark', gender: 'm'},
+    *    {name: 'Catelyn Stark', house: 'House Stark', gender: 'f'},
+    *    {name: 'Jon Snow', house: 'House Stark', gender: 'm'},
+    *    {name: 'Sansa Stark', house: 'House Stark', gender: 'f'},
+    *    {name: 'Arya Stark', house: 'House Stark', gender: 'f'},
+    *    {name: 'Daenerys Targaryen', house: 'House Targaryen', gender: 'f'},
+    *    {name: 'Viserys Targaryen', house: 'House Targaryen', gender: 'm'},
+    *    {name: 'Jorah Mormont', house: 'House Targaryen', gender: 'm'}
+    * ];
+    * factory(stillAliveOrNot).where({
+    *    house: 'House Stark',
+    *    gender: 'm'
+    * }).value();
+    * //[{name: 'Eddard Stark', house: 'House Stark', gender: 'm'},
+    * //{name: 'Jon Snow', house: 'House Stark', gender: 'm'}]
     * </pre>
     */
    where(properties: Object): Filtered<T> {
@@ -784,19 +690,17 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    /**
     * Возвращает первый элемент коллекции или фильтрует ее, оставляя в ней первые n элементов.
     * @param {Number} [n] Количество элементов, которые нужно выбрать. Если не указан, то возвращается первый элемент.
-    * @return {Types/Chain/Sliced|*}
+    * @return {Types/_chain/Sliced|*}
     * @example
     * Выберем первый элемент:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).first();//1
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).first();//1
     * </pre>
     * Выберем первые 3 элемента:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).first(3).value();//[1, 2, 3]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).first(3).value();//[1, 2, 3]
     * </pre>
     */
    first(n?: number): Sliced<T> | any {
@@ -805,26 +709,24 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
          return enumerator.moveNext() ? <T>enumerator.getCurrent() : undefined;
       }
 
-      const Next = di.resolve('Types/chain:Sliced');
+      const Next = resolve('Types/chain:Sliced');
       return new Next(this, 0, n);
    }
 
    /**
     * Возвращает последний элемент коллекции или фильтрует ее, оставляя в ней последние n элементов.
     * @param {Number} [n] Количество выбираемых элементов. Если не указано, то возвращается последний элемент.
-    * @return {Types/Chain/Reversed|*}
+    * @return {Types/_chain/Reversed|*}
     * @example
     * Выберем последний элемент:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).last();//5
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).last();//5
     * </pre>
     * Выберем последние 3 элемента:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([1, 2, 3, 4, 5]).last(3).value();//[3, 4, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).last(3).value();//[3, 4, 5]
     * </pre>
     */
    last(n?: number): Reversed<T> | any {
@@ -841,17 +743,16 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
    /**
     * Меняет порядок элементов коллекции на обратный
-    * @return {Types/Chain/Reversed}
+    * @return {Types/_chain/Reversed}
     * @example
     * Изменим порядок элементов:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain(['one', 'two', 'three']).reverse().value();//['three', 'two', 'one']
-    * });
+    * import {factory} from 'Types/chain';
+    * factory(['one', 'two', 'three']).reverse().value();//['three', 'two', 'one']
     * </pre>
     */
    reverse(): Reversed<T> {
-      const Next = di.resolve('Types/chain:Reversed');
+      const Next = resolve('Types/chain:Reversed');
       return new Next(this);
    }
 
@@ -860,19 +761,18 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * методу {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.prototype.sort}.
     * @param {function(*, *): Number} [compareFunction] Функция сортировки. Принимает аргументами два элемента
     * коллекции, которые нужно сравнить.
-    * @return {Types/Chain/Sorted}
+    * @return {Types/_chain/Sorted}
     * @example
     * Отсортируем массив чисел по возрастанию:
     * <pre>
-    * requirejs(['Types/Chain'], function(Chain) {
-    *    Chain([2, 4, 3, 1, 5]).sort(function(a, b) {
-    *       return a - b;
-    *    }).value();//[1, 2, 3, 4, 5]
-    * });
+    * import {factory} from 'Types/chain';
+    * factory([2, 4, 3, 1, 5])
+    *    .sort((a, b) => a - b)
+    *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
    sort(compareFunction: CompareFunction): Sorted<T> {
-      const Next = di.resolve('Types/chain:Sorted');
+      const Next = resolve('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }
 

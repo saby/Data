@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/IEnumerable" />
 /**
  * Интерфейс коллекции c последовательным доступом
- * @interface Types/Collection/IEnumerable
+ * @interface Types/_collection/IEnumerable
  * @public
  * @author Мальцев А.А.
  */
@@ -12,12 +12,12 @@ export interface EnumeratorCallback<T> {
    (item: T, index: number): void
 }
 
-export default interface IEnumerable<T> /** @lends Types/Collection/IEnumerable.prototype */{
+export default interface IEnumerable<T> /** @lends Types/_collection/IEnumerable.prototype */{
    readonly '[Types/_collection/IEnumerable]': boolean;
 
    /**
     * Возвращает энумератор для перебора элементов коллекции
-    * @return {Types/Collection/IEnumerator}
+    * @return {Types/_collection/IEnumerator}
     * @example
     * Получим элементы коллекции через энумератор:
     * <pre>

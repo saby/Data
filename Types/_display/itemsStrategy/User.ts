@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_display/itemsStrategy/User" />
 /**
  * Стратегия-декоратор для пользовательского порядка элементов
- * @class Types/Display/ItemsStrategy/User
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Display/IItemsStrategy
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/ItemsStrategy/User
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
 
@@ -21,10 +21,10 @@ interface IOptions {
    source: AbstractStrategy
 }
 
-export default class User extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/Display/ItemsStrategy/User.prototype */{
+export default class User extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/User.prototype */{
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     * @property {Array.<Function>} handlers Пользовательские методы сортировки
     */
 
@@ -192,7 +192,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
 
    /**
     * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
-    * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
     * @param {Array.<Number>} current Текущий индекс сортировки
     * @param {Array.<Function>} handlers Пользовательские обработчики для Array.prototype.sort
     * @return {Array.<Number>}

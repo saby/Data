@@ -15,7 +15,7 @@
  *    return SubModule;
  * });
  * </pre>
- * @mixin Types/Entity/SerializableMixin
+ * @mixin Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -109,7 +109,7 @@ function createModuleNameError(instance, critical?: boolean, skip?: number) {
    }
 }
 
-export default class SerializableMixin /** @lends Types/Entity/SerializableMixin.prototype */{
+export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */{
    /**
     * Уникальный номер инстанса
     */

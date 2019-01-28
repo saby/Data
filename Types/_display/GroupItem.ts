@@ -1,19 +1,19 @@
 /// <amd-module name="Types/_display/GroupItem" />
 /**
  * Группа элементов
- * @class Types/Display/GroupItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/GroupItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
 
 import CollectionItem from './CollectionItem';
-import di from '../_di';
+import {register} from '../di';
 
-export default class GroupItem extends CollectionItem /** @lends Types/Display/GroupItem.prototype */{
+export default class GroupItem extends CollectionItem /** @lends Types/_display/GroupItem.prototype */{
    /**
     * @cfg {Boolean} Развернута или свернута группа. По умолчанию развернута.
-    * @name Types/Display/GroupItem#expanded
+    * @name Types/_display/GroupItem#expanded
     */
    protected _$expanded: boolean;
 
@@ -63,4 +63,4 @@ GroupItem.prototype._$expanded = true;
 // Deprecated
 GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
 
-di.register('Types/display:GroupItem', GroupItem);
+register('Types/display:GroupItem', GroupItem);

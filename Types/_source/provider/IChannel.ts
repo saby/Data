@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_source/provider/IChannel" />
 /**
  * Интерфейс канала серверных событий
- * @interface Types/Source/Provider/IChannel
+ * @interface Types/_source/provider/IChannel
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface IChannel /** @lends Types/Source/Provider/IChannel.prototype */{
+export default interface IChannel /** @lends Types/_source/provider/IChannel.prototype */{
    readonly '[Types/_source/provider/IChannel]': boolean;
 
    /**

@@ -27,7 +27,7 @@ define([
    FlagsType = FlagsType.default;
    FlagsDisplay = FlagsDisplay.default;
 
-   describe('Types/Display/Display', function() {
+   describe('Types/_display/Display', function() {
       describe('.getDefaultDisplay()', function() {
          it('should return a display', function() {
             var list = new List();

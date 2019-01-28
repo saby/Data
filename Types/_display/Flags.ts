@@ -1,35 +1,43 @@
 /// <amd-module name="Types/_display/Flags" />
 /**
  * Проекция типа "Флаги".
- * @class Types/Display/Flags
- * @extends Types/Display/Collection
+ * @class Types/_display/Flags
+ * @extends Types/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
 
 import Collection from './Collection';
+import {register} from '../di';
 import './FlagsItem';
-import di from '../_di';
+import {IFlagsValue} from '../collection';
 
 interface IOptions {
 }
 
 /**
  * Обрабатывает событие об изменении состояния Flags
- * @param event Дескриптор события
- * @param name Название флага
+ * @param {Core/EventObject} event Дескриптор события
+ * @param {String|Array.<boolean|null>} name Название флага
  */
-function onSourceChange (event: EventObject, name: string) {
-   let item = this.getItemBySourceItem(name);
-   this.notifyItemChange(item, 'selected');
+function onSourceChange (event: EventObject, name: string | Array<IFlagsValue>) {
+   if (Array.isArray(name)) {
+      name.forEach((selected, index) => {
+         let item = this.getItemBySourceIndex(index);
+         this.notifyItemChange(item, 'selected');
+      });
+   } else {
+      let item = this.getItemBySourceItem(name);
+      this.notifyItemChange(item, 'selected');
+   }
 }
 
-export default class Flags extends Collection /** @lends Types/Display/Flags.prototype */{
+export default class Flags extends Collection /** @lends Types/_display/Flags.prototype */{
    constructor(options: IOptions) {
       super(options);
 
       if (!this._$collection['[Types/_collection/IFlags]']) {
-         throw new TypeError(this._moduleName + ': source collection should implement Types/Type/IFlags');
+         throw new TypeError(this._moduleName + ': source collection should implement Types/_collectionIFlags');
       }
 
       if (this._$collection['[Types/_entity/ObservableMixin]']) {
@@ -62,4 +70,4 @@ Flags.prototype._itemModule = 'Types/display:FlagsItem';
 // @ts-ignore
 Flags.prototype._localize = true;
 
-di.register('Types/display:Flags', Flags);
+register('Types/display:Flags', Flags);

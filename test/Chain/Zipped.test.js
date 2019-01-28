@@ -13,7 +13,7 @@ define([
    ZippedChain = ZippedChain.default;
    List = List.default;
 
-   describe('Types/Chain/Zipped', function() {
+   describe('Types/_chain/Zipped', function() {
       var prev,
          items;
 

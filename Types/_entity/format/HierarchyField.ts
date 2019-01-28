@@ -2,17 +2,17 @@
 /**
  * Формат поля иерархии
  *
- * @class Types/Format/HierarchyField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/HierarchyField
+ * @extends Types/_entity/format/Field
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class HierarchyField extends Field /** @lends Types/Format/HierarchyField.prototype */{
+export default class HierarchyField extends Field /** @lends Types/_entity/format/HierarchyField.prototype */{
    /**
     * @cfg {String} Тип элементов
-    * @name Types/Format/HierarchyField#kind
+    * @name Types/_entity/format/HierarchyField#kind
     * @see getKind
     */
    _$kind: string;

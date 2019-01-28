@@ -28,7 +28,7 @@ define([
    RecordSet = RecordSet.default;
    SbisAdapter = SbisAdapter.default;
 
-   describe('Types/Source/Memory', function() {
+   describe('Types/_source/Memory', function() {
       var existsId = 5,
          existsIdIndex = 6,
          existsId2 = 6,
@@ -108,6 +108,12 @@ define([
       afterEach(function() {
          data = undefined;
          source = undefined;
+      });
+
+      describe('.data', function() {
+         it('should return data passed to constructor', function() {
+            assert.strictEqual(source.data, data);
+         });
       });
 
       describe('.create()', function() {

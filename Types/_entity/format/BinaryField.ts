@@ -9,15 +9,15 @@
  *       type: 'binary'
  *    };
  * </pre>
- * @class Types/Format/BinaryField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/BinaryField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class BinaryField extends Field /** @lends Types/Format/BinaryField.prototype */{
+export default class BinaryField extends Field /** @lends Types/_entity/format/BinaryField.prototype */{
 }
 
 BinaryField.prototype['[Types/_entity/format/BinaryField]'] = true;

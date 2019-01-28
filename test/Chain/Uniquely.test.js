@@ -10,7 +10,7 @@ define([
 
    var UniquelyChain = UniquelyChainEs.default;
 
-   describe('Types/Chain/Uniquely', function() {
+   describe('Types/_chain/Uniquely', function() {
       var prev,
          items;
 

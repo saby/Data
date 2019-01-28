@@ -13,14 +13,14 @@
  *       console.error(error);
  *    });
  * </pre>
- * @interface Types/Source/IRpc
+ * @interface Types/_source/IRpc
  * @public
  * @author Мальцев А.А.
  */
 
 import DataSet from './DataSet';
 
-export default interface IRpc /** @lends Types/Source/IRpc.prototype */{
+export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
    readonly '[Types/_source/IRpc]': boolean;
 
    /**
@@ -28,8 +28,8 @@ export default interface IRpc /** @lends Types/Source/IRpc.prototype */{
     * Вызывает удаленный метод.
     * @param {String} command Имя метода
     * @param {Object} [data] Аргументы метода
-    * @return {Promise.<Types/Source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/Source/DataSet}, в случае ошибки - Error.
-    * @see Types/Source/DataSet
+    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet}, в случае ошибки - Error.
+    * @see Types/_source/DataSet
     * @example
     * Раздаем подарки сотрудникам, у которых сегодня день рождения. Также посчитаем их количество:
     * <pre>

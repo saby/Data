@@ -8,7 +8,7 @@ define([
 
    CollectionItem = CollectionItem.default;
 
-   describe('Types/Display/CollectionItem', function() {
+   describe('Types/_display/CollectionItem', function() {
       describe('.getOwner()', function() {
          it('should return null by default', function() {
             var item = new CollectionItem();

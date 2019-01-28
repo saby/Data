@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/format/UniversalField" />
 /**
  * Универсальное поле.
- * @class Types/Format/UniversalField
+ * @class Types/_entity/format/UniversalField
  * @author Мальцев А.А.
  */
 
@@ -24,7 +24,7 @@ interface IMoneyMeta extends IRealdMeta {
 interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta {
 }
 
-export default class UniversalField /** @lends Types/Format/UniversalField.prototype */{
+export default class UniversalField /** @lends Types/_entity/format/UniversalField.prototype */{
    /**
     * Field type
     */

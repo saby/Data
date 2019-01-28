@@ -14,7 +14,7 @@ define([
    var JsonTable = JsonTableEs.default;
    var JsonRecord = JsonRecordEs.default;
 
-   describe('Types/Adapter/Json', function() {
+   describe('Types/_entity/adapter/Json', function() {
       var data,
          adapter;
 

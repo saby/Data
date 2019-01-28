@@ -8,7 +8,7 @@ define([
 
    EnumField = EnumField.default;
 
-   describe('Types/Format/EnumField', function() {
+   describe('Types/_entity/format/EnumField', function() {
       var field;
 
       beforeEach(function() {

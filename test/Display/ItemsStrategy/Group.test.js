@@ -17,7 +17,7 @@ define([
    CollectionItem = CollectionItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/Display/ItemsStrategy/Group', function() {
+   describe('Types/_display/ItemsStrategy/Group', function() {
       var getSource = function(items) {
             var wrapItem = function(item) {
                   return new TreeItem({

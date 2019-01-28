@@ -14,7 +14,7 @@ define([
    Record = Record.default;
    List = List.default;
 
-   describe('Types/Chain/Enumerable', function() {
+   describe('Types/_chain/Enumerable', function() {
       var data,
          items,
          chain;

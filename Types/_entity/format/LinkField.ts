@@ -9,15 +9,15 @@
  *       type: 'link'
  *    };
  * </pre>
- * @class Types/Format/LinkField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/LinkField
+ * @extends Types/_entity/format/Field
  * @deprecated Модуль будет удален в 3.18.10
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class LinkField extends Field /** @lends Types/Format/LinkField.prototype */{
+export default class LinkField extends Field /** @lends Types/_entity/format/LinkField.prototype */{
    _$defaultValue: number;
 }
 

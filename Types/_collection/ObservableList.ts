@@ -2,13 +2,13 @@
 /**
  * Список, в котором можно отслеживать изменения.
  * <pre>
- *    define(['Types/Collection/ObservableList', 'Types/Collection/IBind'], function(ObservableList, IBindCollection) {
- *       var list = new ObservableList({
+ *    define(['Types/collection'], function(collection) {
+ *       var list = new collection.ObservableList({
  *          items: [1, 2, 3]
  *       });
  *
  *       list.subscribe('onCollectionChange', function(eventObject, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
- *          if (action == IBindCollection.ACTION_REMOVE){
+ *          if (action == collection.IObservable.ACTION_REMOVE) {
  *             console.log(oldItems);//[1]
  *             console.log(oldItemsIndex);//0
  *          }
@@ -17,11 +17,11 @@
  *       list.removeAt(0);
  *    });
  * </pre>
- * @class Types/Collection/ObservableList
- * @extends Types/Collection/List
- * @implements Types/Collection/IBind
- * @implements Types/Mediator/IReceiver
- * @mixes Types/Collection/EventRaisingMixin
+ * @class Types/_collection/ObservableList
+ * @extends Types/_collection/List
+ * @implements Types/_collection/IBind
+ * @implements Types/_entity/relation/IReceiver
+ * @mixes Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -30,8 +30,8 @@ import IObservable from './IObservable';
 import List from './List';
 import EventRaisingMixin from './EventRaisingMixin';
 import {IReceiver} from '../_entity/relation';
-import di from '../_di';
-import {mixin, object} from '../util';
+import {register} from '../di';
+import {mixin} from '../util';
 
 let arraySlice = Array.prototype.slice;
 
@@ -39,7 +39,7 @@ export default class ObservableList<T> extends mixin(
    List,
    IObservable,
    EventRaisingMixin,
-) implements IReceiver /** @lends Types/Collection/ObservableList.prototype */{
+) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
 
    /**
     * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие onCollectionChange с ACTION_RESET, вместо нескольких c другими action
@@ -312,4 +312,4 @@ ObservableList.prototype['[Types/_entity/relation/IReceiver]'] = true;
 ObservableList.prototype._moduleName = 'Types/collection:ObservableList';
 ObservableList.prototype._resetChangesCount = 100;
 
-di.register('Types/collection:ObservableList', ObservableList, {instantiate: false});
+register('Types/collection:ObservableList', ObservableList, {instantiate: false});

@@ -1,10 +1,10 @@
 /// <amd-module name="Types/_entity/adapter/CowRecord" />
 /**
  * Адаптер записи таблицы для работы в режиме Copy-on-write.
- * @class Types/Adapter/CowRecord
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Adapter/IRecord
- * @implements Types/Adapter/IDecorator
+ * @class Types/_entity/adapter/CowRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
 
@@ -14,7 +14,7 @@ import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import {object} from '../../util';
 
-export default class CowRecord extends DestroyableMixin implements IRecord, IDecorator /** @lends Types/Adapter/CowRecord.prototype */{
+export default class CowRecord extends DestroyableMixin implements IRecord, IDecorator /** @lends Types/_entity/adapter/CowRecord.prototype */{
    /**
     * @property Оригинальный адаптер
     */
@@ -38,7 +38,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
    /**
     * Конструктор
     * @param {*} data Сырые данные
-    * @param {Types/Adapter/IAdapter} original Оригинальный адаптер
+    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
     * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(data: any, original: IAdapter, writeCallback?: Function) {
@@ -50,7 +50,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       }
    }
 
-   //region Types/Adapter/IRecord
+   //region Types/_entity/adapter/IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
@@ -103,9 +103,9 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       return this._originalRecord.removeFieldAt(index);
    }
 
-   //endregion Types/Adapter/IRecord
+   //endregion Types/_entity/adapter/IRecord
 
-   //region Types/Adapter/IDecorator
+   //region Types/_entity/adapter/IDecorator
 
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
 
@@ -113,7 +113,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       return this._originalRecord;
    }
 
-   //endregion Types/Adapter/IDecorator
+   //endregion Types/_entity/adapter/IDecorator
 
    //region Protected methods
 

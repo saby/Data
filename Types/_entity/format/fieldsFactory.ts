@@ -25,7 +25,7 @@ import UuidField from './UuidField';
 import RpcFileField from './RpcFileField';
 import ObjectField from './ObjectField';
 import ArrayField from './ArrayField';
-import di from '../../_di';
+import {isRegistered, resolve} from '../../di';
 import {logger} from '../../util';
 
 /**
@@ -59,13 +59,13 @@ import {logger} from '../../util';
  * @property {FieldType|Function|String} type Тип поля (название или конструктор)
  * @property {*} defaultValue Значение поля по умолчанию
  * @property {Boolean} nullable Значение может быть null
- * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/Format/*Field) данного типа поля. Например опция precision для типа @{link Types/Format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
+ * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}: {name: 'amount', type: 'money', precision: 4}
  */
 
 /**
  * Конструирует формат поля по декларативному описанию
  * @param {FieldDeclaration} declaration Декларативное описание
- * @return {Types/Format/Field}
+ * @return {Types/_entity/format/Field}
  */
 export default function (declaration) {
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {
@@ -128,18 +128,18 @@ export default function (declaration) {
             return new ArrayField(declaration);
       }
 
-      if (di.isRegistered(type)) {
-         type = di.resolve(type);
+      if (isRegistered(type)) {
+         type = resolve(type);
       }
    }
 
    if (typeof type === 'function') {
       let inst = Object.create(type.prototype);
       if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/Entity/Record
+         //Yes it's Types/_entity/Record
          return new RecordField(declaration);
       } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/Collection/RecordSet
+         //Yes it's Types/_collection/RecordSet
          return new RecordSetField(declaration);
       } else if (inst['[Types/_collection/IEnum]']) {
          return new EnumField(declaration);

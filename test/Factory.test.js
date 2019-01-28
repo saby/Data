@@ -15,7 +15,7 @@ define([
 ) {
    'use strict';
    TypesModel = TypesModel.default;
-   describe('Types/Factory', function() {
+   describe('Types/_entity/factory', function() {
       var Factory = type.factory;
       var JsonAdapter = type.adapter.Json;
       var Model = type.Model;

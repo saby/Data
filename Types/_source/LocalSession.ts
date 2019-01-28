@@ -4,12 +4,12 @@
  * Источник позволяет хранить данные в локальной сессии браузера.
  * Во всех вкладках будут одни и те же данные.
  *
- * @class Types/Source/LocalSession
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @implements Types/Source/IData
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/LocalSession
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IData
+ * @mixes Types/_entity/OptionsMixin
  * @author Санников Кирилл
  * @public
  * @example
@@ -40,10 +40,9 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {DestroyableMixin, Record, Model, OptionsToPropertyMixin, ReadWriteMixin, adapter as libAdapter} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../_di';
+import {create, register} from '../di';
 import {mixin, object} from '../util';
-// @ts-ignore
-import coreMerge = require('Core/core-merge');
+import {merge} from '../object';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
@@ -466,7 +465,7 @@ class ModelManager {
          case 'adapter.recordset':
             return new Model({
                rawData: new Record({rawData: data}),
-               adapter: di.create(this.adapter),
+               adapter: create(this.adapter),
                idProperty: this.idProperty
             });
 
@@ -477,7 +476,7 @@ class ModelManager {
          default:
             return new Model({
                rawData: data,
-               adapter: di.create(this.adapter),
+               adapter: create(this.adapter),
                idProperty: this.idProperty
             });
       }
@@ -490,7 +489,7 @@ class ModelManager {
 
       let model = new Model({
          format: format,
-         adapter: di.create(this.adapter),
+         adapter: create(this.adapter),
          idProperty: this.idProperty
       });
 
@@ -577,7 +576,7 @@ class Converter {
 
 export default class LocalSession extends mixin(
    DestroyableMixin, OptionsToPropertyMixin
-) implements ICrud, ICrudPlus, IData /** @lends Types/Source/LocalSession.prototype */{
+) implements ICrud, ICrudPlus, IData /** @lends Types/_source/LocalSession.prototype */{
    protected _writable: boolean;
 
    /**
@@ -586,16 +585,16 @@ export default class LocalSession extends mixin(
    protected _dataSetModule: string | Function;
 
    /**
-    * @cfg {String|Types/Adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/Adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
     */
    protected _$adapter: string | libAdapter.IAdapter;
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/Collection/RecordSet}.
-    * @name Types/Source/LocalSession#listModule
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
+    * @name Types/_source/LocalSession#listModule
     * @see getListModule
-    * @see Types/Collection/RecordSet
-    * @see Types/Di
+    * @see Types/_collection/RecordSet
+    * @see Types/di
     * @example
     * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
     * <pre>
@@ -612,11 +611,11 @@ export default class LocalSession extends mixin(
    protected _$listModule: string | Function;
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/Entity/Model}.
-    * @name Types/Source/LocalSession#model
+    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
+    * @name Types/_source/LocalSession#model
     * @see getModel
-    * @see Types/Entity/Model
-    * @see Types/Di
+    * @see Types/_entity/Model
+    * @see Types/di
     * @example
     * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
     * <pre>
@@ -635,7 +634,7 @@ export default class LocalSession extends mixin(
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/Source/LocalSession#idProperty
+    * @name Types/_source/LocalSession#idProperty
     * @see getIdProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
@@ -684,9 +683,9 @@ export default class LocalSession extends mixin(
 
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-    * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model}.
-    * @see Types/Entity/Model
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
+    * @see Types/_entity/Model
     * @example
     * Создадим новый объект:
     * <pre>
@@ -709,7 +708,7 @@ export default class LocalSession extends mixin(
     * Читает модель из источника данных
     * @param {String|Number} key Первичный ключ модели
     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-    * @see Types/Entity/Model
+    * @see Types/_entity/Model
     * Прочитаем данные о Солнце:
     * <pre>
     *    solarSystem.read(1).addCallback(function(star) {
@@ -728,7 +727,7 @@ export default class LocalSession extends mixin(
    /**
     *
     * Обновляет модель в источнике данных
-    * @param {Types/Entity/Model|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+    * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
     * @return {Core/Deferred} Асинхронный результат выполнения
     * @example
     * Вернем Плутону статус планеты:
@@ -806,10 +805,10 @@ export default class LocalSession extends mixin(
 
    /**
     * Выполняет запрос на выборку
-    * @param {Types/Query/Query} [query] Запрос
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Source/DataSet}.
-    * @see Types/Query/Query
-    * @see Types/Source/DataSet
+    * @param {Types/_source/Query} [query] Запрос
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
+    * @see Types/_source/Query
+    * @see Types/_source/DataSet
     * @example
     * <pre>
     *   solarSystem.query().addCallbacks(function (ds) {
@@ -844,7 +843,7 @@ export default class LocalSession extends mixin(
 
    ///endregion
 
-   ///region {Types/Source/ICrudPlus}
+   ///region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
@@ -867,7 +866,7 @@ export default class LocalSession extends mixin(
       if (fromData === null || toData === null) {
          return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
       }
-      let data = coreMerge(fromData, toData);
+      let data = merge(fromData, toData);
       this.rawManager.set(from, data);
       this.rawManager.remove(to);
       return Deferred.success(true);
@@ -876,7 +875,7 @@ export default class LocalSession extends mixin(
    /**
     * Создает копию модели
     * @param {String} key Первичный ключ модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/Entity/Model копия модели}.
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
     * @example
     * <pre>
     *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -890,7 +889,7 @@ export default class LocalSession extends mixin(
       if (from === null) {
          return Deferred.fail('Record with key ' + from + ' isn\'t exists');
       }
-      let to = coreMerge({}, from);
+      let to = merge({}, from);
       this.rawManager.set(myId, to);
       return Deferred.success(this.modelManager.get(to));
    }
@@ -944,7 +943,7 @@ export default class LocalSession extends mixin(
    }
 
    getAdapter() {
-      return di.create(this._$adapter);
+      return create(this._$adapter);
    }
 
    getListModule() {
@@ -995,13 +994,13 @@ export default class LocalSession extends mixin(
    /**
     * Создает новый экземпляр dataSet
     * @param {Object} rawData данные
-    * @return {Types/Source/DataSet}
+    * @return {Types/_source/DataSet}
     * @protected
     */
    protected _getDataSet(rawData: any) {
-      return <DataSet>di.create(// eslint-disable-line new-cap
+      return <DataSet>create(// eslint-disable-line new-cap
          this._dataSetModule,
-         coreMerge({
+         Object.assign({
             writable: this._writable,
             adapter: this.getAdapter(),
             model: this.getModel(),
@@ -1011,7 +1010,7 @@ export default class LocalSession extends mixin(
             rawData: rawData,
             itemsProperty: this._dataSetItemsProperty,
             metaProperty: this._dataSetMetaProperty
-         }, {rec: false})
+         })
       );
    }
 
@@ -1086,4 +1085,4 @@ LocalSession.prototype._options = {
    data: []
 };
 
-di.register('Types/source:LocalSession', LocalSession, {instantiate: false});
+register('Types/source:LocalSession', LocalSession, {instantiate: false});

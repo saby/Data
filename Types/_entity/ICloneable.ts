@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/ICloneable" />
 /**
  * Интерфейс клонирования объекта.
- * @interface Types/Entity/ICloneable
+ * @interface Types/_entity/ICloneable
  * @public
  * @author Мальцев А.А.
  */
 
-export default interface ICloneable /** @lends Types/Entity/ICloneable.prototype */{
+export default interface ICloneable /** @lends Types/_entity/ICloneable.prototype */{
    readonly '[Types/_entity/ICloneable]': boolean;
 
    /**

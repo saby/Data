@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_source/DataCrudMixin" />
 /**
- * Миксин, совместно с Types/Source/DataMixin дающий возможность обобщить логику вызова CRUD.
- * @mixin Types/Source/DataCrudMixin
+ * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
+ * @mixin Types/_source/DataCrudMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -9,7 +9,7 @@
 import DataSet from './DataSet';
 import {Model} from '../entity';
 
-const DataCrudMixin = /** @lends Types/Source/DataCrudMixin.prototype */{
+const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
    '[Types/_source/DataCrudMixin]': true,
 
    _prepareCreateResult(data): Model {

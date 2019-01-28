@@ -2,13 +2,13 @@
 /**
  * Прототип поля записи.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Format/Field
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * @class Types/_entity/format/Field
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -20,16 +20,15 @@ import IEquatable from '../IEquatable';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
-// @ts-ignore
-import isEqualObject = require('Core/helpers/Object/isEqual');
+import {isEqual} from '../../object';
 
 // @ts-ignore
 export default abstract class Field extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
-) implements ICloneable, IEquatable /** @lends Types/Format/Field.prototype */{
+) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{
    /**
     * @cfg {String} Имя поля
-    * @name Types/Format/Field#name
+    * @name Types/_entity/format/Field#name
     * @see getName
     * @see setName
     */
@@ -37,14 +36,14 @@ export default abstract class Field extends mixin(
 
    /**
     * @cfg {String|Function} Модуль, который является конструктором значения поля
-    * @name Types/Format/Field#type
+    * @name Types/_entity/format/Field#type
     * @see getType
     */
    _$type: any;
 
    /**
     * @cfg {*} Значение поля по умолчанию
-    * @name Types/Format/Field#defaultValue
+    * @name Types/_entity/format/Field#defaultValue
     * @see getDefaultValue
     * @see setDefaultValue
     */
@@ -52,14 +51,14 @@ export default abstract class Field extends mixin(
 
    /**
     * @cfg {Boolean} Значение может быть null
-    * @name Types/Format/Field#nullable
+    * @name Types/_entity/format/Field#nullable
     * @see isNullable
     * @see setNullable
     */
    _$nullable: boolean;
 
    /**
-    * @member {String} Название типа поля
+    * Название типа поля
     */
    _typeName: string;
 
@@ -68,13 +67,21 @@ export default abstract class Field extends mixin(
       OptionsToPropertyMixin.call(this, options);
    }
 
-   //region Types/Entity/IEquatable
+   //region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
+   clone: (shallow?: boolean) => Field;
+
+   //endregion
+
+   //region Types/_entity/IEquatable
 
    readonly '[Types/_entity/IEquatable]': boolean;
 
    /**
     * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
-    * @param {Types/Format/Field} to Формат поля, с которым сравнить
+    * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
     * @return {Boolean}
     */
    isEqual(to: Field): boolean {
@@ -86,11 +93,11 @@ export default abstract class Field extends mixin(
 
       return selfProto === toProto &&
          this.getName() === to.getName() &&
-         isEqualObject(this.getDefaultValue(), to.getDefaultValue()) &&
+         isEqual(this.getDefaultValue(), to.getDefaultValue()) &&
          this.isNullable() === to.isNullable();
    }
 
-   //endregion Types/Entity/IEquatable
+   //endregion Types/_entity/IEquatable
 
    //region Public methods
 
@@ -172,7 +179,7 @@ export default abstract class Field extends mixin(
 
    /**
     * Копирует формат поля из другого формата
-    * @param {Types/Format/Field} format Формат поля, который надо скопировать
+    * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
     */
    copyFrom(format) {
       let formatOptions = format._getOptions();

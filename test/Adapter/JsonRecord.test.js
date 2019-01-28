@@ -11,7 +11,7 @@ define([
    JsonRecord = JsonRecord.default;
    fieldsFactory = fieldsFactory.default;
 
-   describe('Types/Adapter/JsonRecord', function() {
+   describe('Types/_entity/adapter/JsonRecord', function() {
       var data,
          adapter;
 

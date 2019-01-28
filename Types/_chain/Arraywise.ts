@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_chain/Arraywise" />
 /**
  * Цепочка по массиву.
- * @class Types/Chain/Array
- * @extends Types/Chain/Abstract
+ * @class Types/_chain/Array
+ * @extends Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -10,7 +10,7 @@
 import Abstract from './Abstract';
 import {enumerator} from '../collection';
 
-export default class Arraywise<T> extends Abstract<T> /** @lends Types/Chain/Array.prototype */{
+export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Array.prototype */{
    protected _source: Array<any>;
 
    constructor(source: Array<any>) {

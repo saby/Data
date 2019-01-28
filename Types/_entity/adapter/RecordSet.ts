@@ -2,9 +2,9 @@
 /**
  * Адаптер для рекордсета.
  * Работает с данными, представленными в виде рекорда/рекордсета.
- * Примеры можно посмотреть в модулях {@link Types/Adapter/RecordSetRecord} и {@link Types/Adapter/RecordSetTable}.
- * @class Types/Adapter/RecordSet
- * @extends Types/Adapter/Abstract
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/RecordSetRecord} и {@link Types/_entity/adapter/RecordSetTable}.
+ * @class Types/_entity/adapter/RecordSet
+ * @extends Types/_entity/adapter/Abstract
  * @public
  * @author Мальцев А.А.
  */
@@ -12,14 +12,14 @@
 import Abstract from './Abstract';
 import RecordSetTable from './RecordSetTable';
 import RecordSetRecord from './RecordSetRecord';
-import di from '../../_di';
+import {register} from '../../di';
 import {object} from '../../util';
 
-export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordSet.prototype */{
+export default class RecordSet extends Abstract /** @lends Types/_entity/adapter/RecordSet.prototype */{
    /**
     * Возвращает интерфейс доступа к рекордсету в виде таблицы
-    * @param {Types/Collection/RecordSet} data Рекордсет
-    * @return {Types/Adapter/ITable}
+    * @param {Types/_collection/RecordSet} data Рекордсет
+    * @return {Types/_entity/adapter/ITable}
     */
    forTable(data) {
       return new RecordSetTable(data);
@@ -27,9 +27,9 @@ export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordS
 
    /**
     * Возвращает интерфейс доступа к record-у в виде записи
-    * @param {Types/Entity/Record} data Запись
-    * @param {Types/Collection/RecordSet} [tableData] Таблица
-    * @return {Types/Adapter/IRecord}
+    * @param {Types/_entity/Record} data Запись
+    * @param {Types/_collection/RecordSet} [tableData] Таблица
+    * @return {Types/_entity/adapter/IRecord}
     */
    forRecord(data, tableData?) {
       return new RecordSetRecord(data, tableData);
@@ -54,4 +54,6 @@ export default class RecordSet extends Abstract /** @lends Types/Adapter/RecordS
 RecordSet.prototype['[Types/_entity/adapter/RecordSet]'] = true;
 RecordSet.prototype._moduleName = 'Types/entity:adapter.RecordSet';
 
-di.register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});
+register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});
+//FIXME: deprecated
+register('adapter.recordset', RecordSet, {instantiate: false});

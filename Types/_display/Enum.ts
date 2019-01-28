@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/Enum" />
 /**
  * Проекция типа "Перечисляемое".
- * @class Types/Display/Enum
- * @extends Types/Display/Collection
+ * @class Types/_display/Enum
+ * @extends Types/_display/Collection
  * @public
  * @author Ганшнин Ярослав
  */
@@ -10,7 +10,7 @@
 import CollectionItem from './CollectionItem';
 import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
-import di from '../_di';
+import {register} from '../di';
 
 function onSourceChange(event: EventObject, index: number) {
    this.setCurrentPosition(this.getIndexBySourceIndex(index));
@@ -22,7 +22,7 @@ interface IEnumCollection extends ICollection, IEnum<CollectionItem> {
 interface IOptions {
 }
 
-export default class Enum extends Collection /** @lends Types/Display/Enum.prototype */{
+export default class Enum extends Collection /** @lends Types/_display/Enum.prototype */{
    protected _$collection: IEnumCollection;
 
    /**
@@ -34,7 +34,7 @@ export default class Enum extends Collection /** @lends Types/Display/Enum.proto
       super(options);
 
       if (!this._$collection['[Types/_collection/IEnum]']) {
-         throw new TypeError(`${this._moduleName}: source collection should implement Types/Type/IEnum`);
+         throw new TypeError(`${this._moduleName}: source collection should implement Types/_collectionIEnum`);
       }
 
       this._getCursorEnumerator().setPosition(
@@ -109,4 +109,4 @@ Enum.prototype._localize = true;
 // @ts-ignore
 Enum.prototype._onSourceChange = null;
 
-di.register('Types/display:Enum', Enum);
+register('Types/display:Enum', Enum);

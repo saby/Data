@@ -10,18 +10,18 @@
  *       kind: 'integer'
  *    };
  * </pre>
- * @class Types/Format/ArrayField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/ArrayField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class ArrayField extends Field /** @lends Types/Format/ArrayField.prototype */{
+export default class ArrayField extends Field /** @lends Types/_entity/format/ArrayField.prototype */{
     /**
      * @cfg {String} Тип элементов
-     * @name Types/Format/ArrayField#kind
+     * @name Types/_entity/format/ArrayField#kind
      * @see getKind
      */
     _$kind: string;

@@ -2,8 +2,8 @@
 /**
  * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную коллекцию.
  * Дерево может строиться по алгоритму {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}. Выбор алгоритма выполняется в зависимости от настроек.
- * @class Types/Display/Tree
- * @extends Types/Display/Collection
+ * @class Types/_display/Tree
+ * @extends Types/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -19,7 +19,7 @@ import DirectItemsStrategy from './itemsStrategy/Direct';
 import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import RootStrategy from './itemsStrategy/Root';
-import di from '../_di';
+import {register} from '../di';
 import {object} from '../util';
 
 /**
@@ -86,29 +86,29 @@ export interface TreeSessionItemState extends SessionItemState {
 }
 
 
-export default class Tree extends Collection /** @lends Types/Display/Tree.prototype */{
+export default class Tree extends Collection /** @lends Types/_display/Tree.prototype */{
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link idProperty}
-    * @name Types/Display/Tree#parentProperty
+    * @name Types/_display/Tree#parentProperty
     */
    protected _$parentProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак узла. Требуется для различения узлов и листьев.
-    * @name Types/Display/Tree#nodeProperty
+    * @name Types/_display/Tree#nodeProperty
     */
    protected _$nodeProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего дочерние элементы узла. Дерево в этом случае строится по алгоритму Materialized Path (материализованный путь).
     * @remark Если задано, то опция {@link parentProperty} не используется.
-    * @name Types/Display/Tree#childrenProperty
+    * @name Types/_display/Tree#childrenProperty
     */
    protected _$childrenProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак наличия детей у узла
-    * @name Types/Display/Tree#hasChildrenProperty
+    * @name Types/_display/Tree#hasChildrenProperty
     * @example
     * Зададим поле "Раздел$" отвечающим за признак загруженности:
     * <pre>
@@ -122,14 +122,14 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
    protected _$hasChildrenProperty: string;
 
    /**
-    * @cfg {Types/Display/TreeItem|*} Корневой узел или его содержимое
-    * @name Types/Display/Tree#root
+    * @cfg {Types/_display/TreeItem|*} Корневой узел или его содержимое
+    * @name Types/_display/Tree#root
     */
    protected _$root: TreeItem | any;
 
    /**
     * @cfg {Boolean} Включать корневой узел в список элементов
-    * @name Types/Display/Tree#rootEnumerable
+    * @name Types/_display/Tree#rootEnumerable
     * @example
     * Получим корень как первый элемент проекции:
     * <pre>
@@ -149,7 +149,7 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
    protected _root: TreeItem;
 
    /**
-    * {Object.<Array.<Types/Display/TreeItem>>} Соответствие узлов и их потомков
+    * {Object.<Array.<Types/_display/TreeItem>>} Соответствие узлов и их потомков
     */
    protected _childrenMap: Object = {};
 
@@ -286,7 +286,7 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
 
    /**
     * Возвращает корневой узел дерева
-    * @return {Types/Display/TreeItem}
+    * @return {Types/_display/TreeItem}
     */
    getRoot(): TreeItem {
       if (this._root === null) {
@@ -307,7 +307,7 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
 
    /**
     * Устанавливает корневой узел дерева
-    * @param {Types/Display/TreeItem|*} root Корневой узел или его содержимое
+    * @param {Types/_display/TreeItem|*} root Корневой узел или его содержимое
     */
    setRoot(root: TreeItem | any) {
       if (this._$root === root) {
@@ -354,9 +354,9 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
 
    /**
     * Возвращает коллекцию потомков элемента коллекции
-    * @param {Types/Display/TreeItem} parent Родительский узел
+    * @param {Types/_display/TreeItem} parent Родительский узел
     * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-    * @return {Types/Display/TreeChildren}
+    * @return {Types/_display/TreeChildren}
     */
    getChildren(parent: TreeItem, withFilter?: boolean): TreeChildren {
       return new TreeChildren({
@@ -525,15 +525,15 @@ export default class Tree extends Collection /** @lends Types/Display/Tree.proto
     */
    protected _checkItem(item: any) {
       if (!item || !(item instanceof CollectionItem)) {
-         throw new Error(this._moduleName + '::_checkItem(): item should be in instance of Types/Display/CollectionItem');
+         throw new Error(this._moduleName + '::_checkItem(): item should be in instance of Types/_display/CollectionItem');
       }
    }
 
    /**
     * Возвращает массив детей для указанного родителя
-    * @param {Types/Display/TreeItem} parent Родительский узел
+    * @param {Types/_display/TreeItem} parent Родительский узел
     * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-    * @return {Array.<Types/Display/TreeItem>}
+    * @return {Array.<Types/_display/TreeItem>}
     * @protected
     */
    protected _getChildrenArray(parent: TreeItem, withFilter?: boolean): TreeItem[] {
@@ -663,4 +663,4 @@ Tree.prototype._root = null;
 // Deprecated
 Tree.prototype['[WS.Data/Display/Tree]'] = true;
 
-di.register('Types/display:Tree', Tree);
+register('Types/display:Tree', Tree);

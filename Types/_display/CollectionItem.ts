@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_display/CollectionItem" />
 /**
  * Элемент коллекции
- * @class Types/Display/CollectionItem
- * @mixes Types/Entity/DestroyableMixin
- * @mixes Types/Entity/OptionsMixin
- * @implements Types/Entity/IInstantiable
- * @mixes Types/Entity/InstantiableMixin
- * @mixes Types/Entity/SerializableMixin
+ * @class Types/_display/CollectionItem
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @implements Types/_entity/IInstantiable
+ * @mixes Types/_entity/InstantiableMixin
+ * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -14,7 +14,7 @@
 import Abstract from './Abstract';
 import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
 import {IEnumerable} from '../collection';
-import di from '../_di';
+import {register} from '../di';
 import {mixin} from '../util';
 import Collection from './Collection';
 
@@ -25,22 +25,22 @@ export interface IOptions {
 
 export default class CollectionItem extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin
-) implements IInstantiable /** @lends Types/Display/CollectionItem.prototype */{
+) implements IInstantiable /** @lends Types/_display/CollectionItem.prototype */{
    /**
-    * @cfg {Types/Collection/IEnumerable} Коллекция, которой принадлежит элемент
-    * @name Types/Display/CollectionItem#owner
+    * @cfg {Types/_collection/IEnumerable} Коллекция, которой принадлежит элемент
+    * @name Types/_display/CollectionItem#owner
     */
    protected _$owner: Abstract;
 
    /**
     * @cfg {*} Содержимое элемента коллекции
-    * @name Types/Display/CollectionItem#contents
+    * @name Types/_display/CollectionItem#contents
     */
    protected _$contents: any;
 
    /**
     * @cfg {*} Элемент выбран
-    * @name Types/Display/CollectionItem#selected
+    * @name Types/_display/CollectionItem#selected
     */
    protected _$selected: boolean;
 
@@ -71,7 +71,7 @@ export default class CollectionItem extends mixin(
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       if (state.$options.owner) {
-         //save element index if collections implements Types/Collection/IList
+         //save element index if collections implements Types/_collection/IList
          let collection = state.$options.owner.getCollection();
          let index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
          if (index > -1) {
@@ -105,7 +105,7 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает коллекцию, которой принадлежит элемент
-    * @return {Types/Collection/IEnumerable}
+    * @return {Types/_collection/IEnumerable}
     */
    getOwner(): Abstract {
       return this._$owner;
@@ -113,7 +113,7 @@ export default class CollectionItem extends mixin(
 
    /**
     * Устанавливает коллекцию, которой принадлежит элемент
-    * @param {Types/Collection/IEnumerable} owner Коллекция, которой принадлежит элемент
+    * @param {Types/_collection/IEnumerable} owner Коллекция, которой принадлежит элемент
     */
    setOwner(owner: Abstract) {
       this._$owner = owner;
@@ -187,7 +187,7 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает коллекцию проекции
-    * @return {Types/Collection/IEnumerable}
+    * @return {Types/_collection/IEnumerable}
     * @protected
     */
    protected _getSourceCollection(): IEnumerable<any> {
@@ -227,4 +227,4 @@ CollectionItem.prototype._contentsIndex = undefined;
 // Deprecated
 CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
 
-di.register('Types/display:CollectionItem', CollectionItem);
+register('Types/display:CollectionItem', CollectionItem);

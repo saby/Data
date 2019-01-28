@@ -10,19 +10,19 @@
  *    <li>замена элементов: {@link replace}, {@link assign};</li>
  *    <li>подсчет числа элементов: {@link getCount}.</li>
  * </ul>
- * @interface Types/Collection/IList
+ * @interface Types/_collection/IList
  * @public
  * @author Мальцев А.А.
  */
 
 import IEnumerable from './IEnumerable';
 
-export default interface IList<T> /** @lends Types/Collection/IList.prototype */{
+export default interface IList<T> /** @lends Types/_collection/IList.prototype */{
    readonly '[Types/_collection/IList]': boolean;
 
    /**
     * Заменяет список другой коллекцией.
-    * @param {Types/Collection/IEnumerable|Array} [items] Коллекция с элементами для замены
+    * @param {Types/_collection/IEnumerable|Array} [items] Коллекция с элементами для замены
     * @example
     * Заменим элементы в списке, передав массив:
     * <pre>
@@ -55,7 +55,7 @@ export default interface IList<T> /** @lends Types/Collection/IList.prototype */
 
    /**
     * Добавляет элементы другой коллекции к концу списка.
-    * @param {Types/Collection/IEnumerable|Array} [items] Коллекция с элементами для добавления
+    * @param {Types/_collection/IEnumerable|Array} [items] Коллекция с элементами для добавления
     * @example
     * Добавим элементы в конец списка, передав массив:
     * <pre>
@@ -90,7 +90,7 @@ export default interface IList<T> /** @lends Types/Collection/IList.prototype */
 
    /**
     * Добавляет элементы другой коллекции в начало списка.
-    * @param {Types/Collection/IEnumerable|Array} [items] Коллекция с элементами для добавления
+    * @param {Types/_collection/IEnumerable|Array} [items] Коллекция с элементами для добавления
     * @example
     * Добавим элементы в начало списка, передав массив:
     * <pre>

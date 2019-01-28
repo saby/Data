@@ -103,7 +103,7 @@ function clone(original: any): any {
    /**
  * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
  * @param {Object} original Объект для клонирования
- * @param {Boolean} [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/Entity/ICloneable
+ * @param {Boolean} [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
  * @return {Object} Клон объекта
  */
 function clonePlain(original: any, processCloneable?: boolean, processing?: Set<Object>): any {

@@ -21,7 +21,7 @@ define([
    DataSet = DataSet.default;
    var toSqlMode = toSql.MODE;
    toSql = toSql.default;
-   describe('Types/Adapter/Abstract', function() {
+   describe('Types/_entity/adapter/Abstract', function() {
       var adapter;
 
       beforeEach(function() {
@@ -113,7 +113,7 @@ define([
 
             assert.equal(
                adapter.serialize(date),
-               toSql(new Date(year, month, day), toSqlMode.DATE)
+               toSql(new Date(year, month, day), toSql.MODE_DATE)
             );
          });
 
@@ -127,7 +127,7 @@ define([
                date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_DATETIME);
                assert.equal(
                   adapter.serialize(date),
-                  toSql(new Date(year, month, day), toSqlMode.DATETIME)
+                  toSql(new Date(year, month, day), toSql.MODE_DATETIME)
                );
             }
          });

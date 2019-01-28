@@ -1,25 +1,22 @@
 /// <amd-module name="Types/_entity/factory" />
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
- * @class Types/Factory
+ * @class Types/_entity/factory
  * @public
  * @author Мальцев А.А.
  */
 
 /**
- * @faq Почему я вижу ошибки от Types/Di::resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/Entity/Model} и {@link Types/Source/RecordSet}, а уже потом {@link Types/Factory}
+ * @faq Почему я вижу ошибки от Types/di:resolve?
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  */
 
 import IProducible, {IProducibleConstructor} from './IProducible';
 import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
-import di from '../_di';
+import {create, resolve, isRegistered} from '../di';
 import toSql, {MODE as toSqlMode} from './date/toSql';
 import fromSql from './date/fromSql';
 import TimeInterval from './TimeInterval';
-
-// @ts-ignore
-import coreInstance = require('Core/core-instance');
 
 // @ts-ignore
 import renders = require('Core/defaultRenders');
@@ -33,7 +30,7 @@ const SQL_TIME_ZONE: RegExp = /[+-][0-9]+$/;
 
 /**
  * Возвращает словарь для поля типа "Словарь"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Array}
  */
 function getDictionary(format: DictionaryField | UniversalField): Array<any> {
@@ -98,7 +95,7 @@ function toScalar(value: Array<any>): any {
 
 /**
  * Возвращает название типа поля
- * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
  * @return {String}
  */
 function getTypeName(format: Field | UniversalField): string {
@@ -113,7 +110,7 @@ function getTypeName(format: Field | UniversalField): string {
 
 /**
  * Возвращает признак указания временной зоны для поля типа "Дата и время"
- * @param {Types/Format/DateTimeField|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/DateTimeField|Types/_entity/format/UniversalField} format Формат поля
  * @return {Number}
  */
 function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
@@ -125,7 +122,7 @@ function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
 
 /**
  * Возвращает признак "Большие деньги"
- * @param {Types/Format/MoneyField|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/MoneyField|Types/_entity/format/UniversalField} format Формат поля
  * @return {Boolean}
  */
 function isLargeMoney(format: MoneyField | UniversalField): boolean {
@@ -137,7 +134,7 @@ function isLargeMoney(format: MoneyField | UniversalField): boolean {
 
 /**
  * Возвращает точность для поля типа "Вещественное число"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Number}
  */
 function getPrecision(format: RealField): number {
@@ -149,7 +146,7 @@ function getPrecision(format: RealField): number {
 
 /**
  * Возвращает тип элементов для поля типа "Массив"
- * @param {Types/Format/Field|Types/Format/UniversalField} format Формат поля
+ * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {String}
  */
 function getKind(format: ArrayField): string {
@@ -158,7 +155,7 @@ function getKind(format: ArrayField): string {
 
 /**
  * Сериализует поле флагов
- * @param {Types/Type/Flags} data
+ * @param {Types/_collectionFlags} data
  * @return {Array.<Boolean>}
  */
 function serializeFlags(data: any): Array<boolean> {
@@ -171,8 +168,8 @@ function serializeFlags(data: any): Array<boolean> {
 
 /**
  * Конвертирует список записей в рекордсет
- * @param {Types/Collection/List} list Список
- * @return {Types/Collection/RecordSet}
+ * @param {Types/_collection/List} list Список
+ * @return {Types/_collection/RecordSet}
  */
 function convertListToRecordSet(list) {
    let adapter = 'Types/entity:adapter.Json',
@@ -183,14 +180,14 @@ function convertListToRecordSet(list) {
    for (i = 0; i < count; i++) {
       record = list.at(i);
 
-      //Check for Types/Entity/Record
+      //Check for Types/_entity/Record
       if (record && record['[Types/_entity/IObject]'] && record['[Types/_entity/FormattableMixin]']) {
          adapter = record.getAdapter();
          break;
       }
    }
 
-   let rs = di.create('Types/collection:RecordSet', {
+   let rs = create('Types/collection:RecordSet', {
       adapter: adapter
    });
    for (i = 0; i < count; i++) {
@@ -235,19 +232,19 @@ const factory = {
          Type = Type.toLowerCase();
          switch (Type) {
             case 'recordset':
-               Type = di.resolve(di.isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
+               Type = resolve(isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
                break;
 
             case 'record':
-               Type = di.resolve(di.isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
+               Type = resolve(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
                break;
 
             case 'enum':
-               Type = di.resolve('Types/collection:Enum');
+               Type = resolve('Types/collection:Enum');
                break;
 
             case 'flags':
-               Type = di.resolve('Types/collection:Flags');
+               Type = resolve('Types/collection:Flags');
                break;
 
             case 'link':
@@ -362,11 +359,11 @@ const factory = {
             value = value.get();
          } else if (value['[Types/_collection/IList]'] && type === 'recordset') {
             value = convertListToRecordSet(value);
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/Record')) {
+         } else if (value._moduleName === 'Deprecated/Record') {
             throw new TypeError('Deprecated/Record can\'t be used with "Data"');
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/RecordSet')) {
+         } else if (value._moduleName === 'Deprecated/RecordSet') {
             throw new TypeError('Deprecated/RecordSet can\'t be used with "Data"');
-         } else if (coreInstance.instanceOfModule(value, 'Deprecated/Enum')) {
+         } else if (value._moduleName === 'Deprecated/Enum') {
             throw new TypeError('Deprecated/Enum can\'t be used with "Data"');
          }
       }

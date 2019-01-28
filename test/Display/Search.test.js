@@ -11,7 +11,7 @@ define([
    Search = Search.default;
    BreadcrumbsItem = BreadcrumbsItem.default;
 
-   describe('Types/Display/Search', function() {
+   describe('Types/_display/Search', function() {
       describe('.each()', function() {
          it('should group breadcumbs in one item', function() {
             var items = [{

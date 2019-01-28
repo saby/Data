@@ -9,15 +9,15 @@
  *       type: 'timeinterval'
  *    };
  * </pre>
- * @class Types/Format/TimeIntervalField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/TimeIntervalField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class TimeIntervalField extends Field /** @lends Types/Format/TimeIntervalField.prototype */{
+export default class TimeIntervalField extends Field /** @lends Types/_entity/format/TimeIntervalField.prototype */{
    _$defaultValue: number;
 }
 

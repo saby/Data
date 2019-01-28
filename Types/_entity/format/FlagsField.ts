@@ -10,15 +10,15 @@
  *       dictionary: ['one', 'two', 'three']
  *    };
  * </pre>
- * @class Types/Format/FlagsField
- * @extends Types/Format/DictionaryField
+ * @class Types/_entity/format/FlagsField
+ * @extends Types/_entity/format/DictionaryField
  * @public
  * @author Мальцев А.А.
  */
 
 import DictionaryField from './DictionaryField';
 
-export default class FlagsField extends DictionaryField /** @lends Types/Format/FlagsField.prototype */{
+export default class FlagsField extends DictionaryField /** @lends Types/_entity/format/FlagsField.prototype */{
 }
 
 FlagsField.prototype['[Types/_entity/format/FlagsField]'] = true;

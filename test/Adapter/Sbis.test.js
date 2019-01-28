@@ -24,7 +24,7 @@ define([
    Record = Record.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Adapter/Sbis', function() {
+   describe('Types/_entity/adapter/Sbis', function() {
       var data,
          adapter;
 

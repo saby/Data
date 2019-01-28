@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_entity/relation/ManyToMany" />
 /**
  * Посредник, реализующий отношения "многие ко многим".
- * @class Types/Mediator/ManyToMany
- * @mixes Types/Entity/DestroyableMixin
+ * @class Types/_entity/relation/ManyToMany
+ * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
 
@@ -18,7 +18,7 @@ function isAlive(entity): boolean {
    return entity instanceof Object && entity['[Types/_entity/DestroyableMixin]'] ? !entity.destroyed : true;
 }
 
-export default class ManyToMany extends DestroyableMixin /** @lends Types/Mediator/ManyToMany.prototype */{
+export default class ManyToMany extends DestroyableMixin /** @lends Types/_entity/relation/ManyToMany.prototype */{
    /**
     * @property {Map<Object, Set<Object>>} master -> [slave, slave, ...]
     */
@@ -54,10 +54,6 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/Mediat
       this._belongsToName = null;
       super.destroy();
    }
-
-   //region Types/Mediator/IMediator
-
-   //endregion Types/Mediator/IMediator
 
    //region Public methods
 

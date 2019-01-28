@@ -14,7 +14,7 @@ export default class FlattenedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор разворачивающего энумератора.
-    * @param {Types/Chain/Abstract} previous Предыдущее звено.
+    * @param {Types/_chain/Abstract} previous Предыдущее звено.
     * @protected
     */
    constructor(previous: Abstract<T>) {

@@ -4,16 +4,16 @@
  *
  * Основные аспекты записи:
  * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/Entity/IObject};</li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/Collection/IEnumerable};</li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/Entity/FormattableMixin}.</li>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/_entity/IObject};</li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/_collection/IEnumerable};</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
  * </ul>
  *
  * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *    require(['Types/Entity/Record'], function (Record) {
- *       var employee = new Record({
+ *    require(['Types/entity'], function (entity) {
+ *       var employee = new entity.Record({
  *          rawData: {
  *             id: 1,
  *             firstName: 'John',
@@ -27,12 +27,12 @@
  * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
- *       'Types/Entity/Record',
- *       'Types/Source/SbisService'
- *    ], function (Record, SbisService) {
- *       var source = new SbisService({endpoint: 'Employee'});
+ *       'Types/entity',
+ *       'Types/source'
+ *    ], function (entity, source) {
+ *       var source = new source.SbisService({endpoint: 'Employee'});
  *       source.call('read', {login: 'root'}).addCallback(function(response) {
- *          var employee = new Record({
+ *          var employee = new entity.Record({
  *             rawData: response.getRawData(),
  *             adapter: response.getAdapter()
  *          });
@@ -41,24 +41,24 @@
  *       });
  *    });
  * </pre>
- * @class Types/Entity/Record
- * @mixes Types/Entity/DestroyableMixin
- * @implements Types/Entity/IObject
- * @implements Types/Entity/IObjectNotify
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @implements Types/Entity/IEquatable
- * @implements Types/Collection/IEnumerable
- * @implements Types/Mediator/IReceiver
- * @implements Types/Entity/IVersionable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/ReadWriteMixin
- * @mixes Types/Entity/FormattableMixin
- * @mixes Types/Entity/VersionableMixin
+ * @class Types/_entity/Record
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/IObject
+ * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @implements Types/_entity/IEquatable
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/relation/IReceiver
+ * @implements Types/_entity/IVersionable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/ReadWriteMixin
+ * @mixes Types/_entity/FormattableMixin
+ * @mixes Types/_entity/VersionableMixin
  * @ignoreOptions owner cloneChanged
  * @ignoreMethods detach
  * @public
@@ -85,7 +85,7 @@ import Factory from './factory';
 import {IReceiver} from './relation';
 import {IAdapter} from './adapter';
 import {IEnumerable} from '../collection';
-import di from '../_di';
+import {resolve, register} from '../di';
 import {mixin} from '../util';
 import {Map} from '../shim';
 import {logger} from '../util';
@@ -237,7 +237,7 @@ export default class Record extends mixin(
    IEnumerable<any>,
    IReceiver,
    IVersionable
-/** @lends Types/Entity/Record.prototype */{
+/** @lends Types/_entity/Record.prototype */{
 
    /**
     * @typedef {String} RecordState
@@ -250,7 +250,7 @@ export default class Record extends mixin(
 
    /**
     * @cfg {RecordState} Текущее состояние записи по отношению к рекордсету: отражает факт принадлежности записи к рекордсету и сценарий, в результате которого эта принадлежность была сформирована.
-    * @name Types/Entity/Record#state
+    * @name Types/_entity/Record#state
     * @see getState
     * @see setState
     * @see getOwner
@@ -263,15 +263,15 @@ export default class Record extends mixin(
    _$cacheMode: string | symbol;
 
    /**
-    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/Entity/ICloneable}, и при вызове rejectChages восстанавливать клонированные значения.
-    * @name Types/Entity/Record#cloneChanged
+    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при вызове rejectChages восстанавливать клонированные значения.
+    * @name Types/_entity/Record#cloneChanged
     * @see rejectChanges
     */
    _$cloneChanged: boolean;
 
    /**
-    * @cfg {Types/Collection/RecordSet} Рекордсет, которому принадлежит запись
-    * @name Types/Entity/Record#owner
+    * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
+    * @name Types/_entity/Record#owner
     */
    _$owner: any;
 
@@ -354,7 +354,7 @@ export default class Record extends mixin(
 
    readonly '[Types/_entity/IObject]': boolean;
 
-   get(name) {
+   get(name: string): any {
       if (this._fieldsCache.has(name)) {
          return this._fieldsCache.get(name);
       }
@@ -371,7 +371,7 @@ export default class Record extends mixin(
       return value;
    }
 
-   set(name, value?) {
+   set(name: string | Object, value?: any): void {
       let map = this._getHashMap(name, value);
       let errors = [];
 
@@ -386,7 +386,7 @@ export default class Record extends mixin(
       this._checkErrors(errors);
    }
 
-   has(name) {
+   has(name: string): boolean {
       return this._getRawDataFields().indexOf(name) > -1;
    }
 
@@ -483,7 +483,7 @@ export default class Record extends mixin(
 
    /**
     * Возвращает энумератор для перебора названий полей записи
-    * @return {Types/Collection/ArrayEnumerator}
+    * @return {Types/_collection/ArrayEnumerator}
     * @example
     * Переберем все поля записи:
     * <pre>
@@ -504,7 +504,7 @@ export default class Record extends mixin(
     * </pre>
     */
    getEnumerator() {
-      const ArrayEnumerator = di.resolve('Types/collection:enumerator.Arraywise');
+      const ArrayEnumerator = resolve('Types/collection:enumerator.Arraywise');
       return new ArrayEnumerator(this._getRawDataFields());
    }
 
@@ -655,7 +655,7 @@ export default class Record extends mixin(
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone: (shallow?: boolean) => Object;
+   clone: (shallow?: boolean) => Record;
 
    //endregion
 
@@ -775,7 +775,7 @@ export default class Record extends mixin(
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/Adapter/IRecord}
+    * @return {Types/_entity/adapter/IRecord}
     * @protected
     */
    protected _createRawDataAdapter() {
@@ -836,7 +836,7 @@ export default class Record extends mixin(
 
    /**
     * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-    * @return {Types/Collection/RecordSet|null}
+    * @return {Types/_collection/RecordSet|null}
     * @example
     * Проверим владельца записи до и после вставки в рекордсет:
     * <pre>
@@ -1353,10 +1353,10 @@ export default class Record extends mixin(
    }
 
    /**
-    * @name Types/Entity/Record#addFieldTo
+    * @name Types/_entity/Record#addFieldTo
     * @function
     * Добавляет поле в запись. Если формат не указан, то он строится по типу значения поля.
-    * @param {Types/Entity/Record} record Запись
+    * @param {Types/_entity/Record} record Запись
     * @param {String} name Имя поля
     * @param {*} value Значение поля
     * @param {Object} [format] Формат поля
@@ -1375,7 +1375,7 @@ export default class Record extends mixin(
    }
 
    /**
-    * @name Types/Entity/Record#fromObject
+    * @name Types/_entity/Record#fromObject
     * @function
     * Создает запись по объекту c учетом типов значений полей. Поля добавляются в запись в алфавитном порядке.
     * @example
@@ -1391,8 +1391,8 @@ export default class Record extends mixin(
     * //output: 'id: Integer', 'title: String'
     * </pre>
     * @param {Object} data Объект вида "имя поля" -> "значение поля"
-    * @param {String|Types/Adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
-    * @return {Types/Entity/Record}
+    * @param {String|Types/_entity/adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
+    * @return {Types/_entity/Record}
     * @static
     */
    static fromObject(data, adapter?) {
@@ -1431,12 +1431,12 @@ export default class Record extends mixin(
    }
 
    /**
-    * @name Types/Entity/Record#filter
+    * @name Types/_entity/Record#filter
     * @function
     * Создает запись c набором полей, ограниченным фильтром.
-    * @param {Types/Entity/Record} record Исходная запись
+    * @param {Types/_entity/Record} record Исходная запись
     * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
-    * @return {Types/Entity/Record}
+    * @return {Types/_entity/Record}
     * @static
     */
    static filter(record, callback) {
@@ -1460,12 +1460,12 @@ export default class Record extends mixin(
    }
 
    /**
-    * @name Types/Entity/Record#filterFields
+    * @name Types/_entity/Record#filterFields
     * @function
     * Создает запись c указанным набором полей
-    * @param {Types/Entity/Record} record Исходная запись
+    * @param {Types/_entity/Record} record Исходная запись
     * @param {Array.<String>} fields Набор полей, которые следует оставить в записи
-    * @return {Types/Entity/Record}
+    * @return {Types/_entity/Record}
     * @static
     */
    static filterFields(record, fields) {
@@ -1478,19 +1478,20 @@ export default class Record extends mixin(
       });
    }
 
+   //endregion
+
+   //region Deprecated
+
    /**
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      logger.error('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
-   };
+   }
+
    //endregion
-
-
 }
-
-
 
 Record.prototype['[Types/_entity/Record]'] = true;
 // @ts-ignore
@@ -1529,4 +1530,4 @@ Record.prototype['[WS.Data/Entity/Record]'] = true;
 Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
 Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/entity:Record', Record, {instantiate: false});
+register('Types/entity:Record', Record, {instantiate: false});

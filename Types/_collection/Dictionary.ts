@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_collection/Dictionary" />
 /**
- * Тип данных словарь.
- * Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
- * @class Types/Type/Dictionary
- * @implements Types/Collection/IEnumerable
- * @implements Types/Entity/IEquatable
- * @mixes Types/Entity/OptionsMixin
- * @mixes Types/Entity/ObservableMixin
+ * An abstract enity which have the dictionary as collection of keys and values.
+ * It's an abstract class and it's can't have instances.
+ * @class Types/_collectionDictionary
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -23,21 +23,21 @@ interface GenericObject<T> {}
 
 declare type DictionaryValues = Array<string> | GenericObject<string>;
 
-export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/Type/Dictionary.prototype */{
+export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collectionDictionary.prototype */{
    /**
-    * @cfg {Array.<String>|Object.<String>} Словарь возможных значений
-    * @name Types/Type/Dictionary#dictionary
+    * @cfg {Array.<String>|Object.<String>} Collection of keys and values
+    * @name Types/_collectionDictionary#dictionary
     */
    protected _$dictionary: DictionaryValues;
 
    /**
-    * @cfg {Array.<String>|Object.<String>} Локализованный словарь возможных значений
-    * @name Types/Type/Dictionary#localeDictionary
+    * @cfg {Array.<String>|Object.<String>} Localized collection of keys and values
+    * @name Types/_collectionDictionary#localeDictionary
     */
    protected _$localeDictionary: DictionaryValues;
 
    /**
-    * Название типа данных для сериализации в сырой вид
+    * Name of the concrete type which used during the serialization. Should be overrided.
     */
    protected _type: string;
 
@@ -54,8 +54,8 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    }
 
    /**
-    * Возвращает словарь возможных значений
-    * @param {Boolean} [localize=false] Вернуть локализованный словарь
+    * Returns collection of keys and values
+    * @param {Boolean} [localize=false] Should return localized version
     * @return {Array.<String>|Object.<String>}
     * @protected
     */
@@ -131,9 +131,9 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    //region Protected methods
 
    /**
-    * Возвращает индекс значения в словаре
-    * @param {String} name Значение в словаре
-    * @param {Boolean} [localize=false] Это локализованное значение
+    * Returns key of the value in dictionary
+    * @param {String} name Value for lookup
+    * @param {Boolean} [localize=false] Is the localized value
     * @return {Number|String|undefined}
     * @protected
     */
@@ -148,9 +148,9 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    }
 
    /**
-    * Возвращает значение в словаре по индексу
-    * @param {Number|String} index Индекс в словаре
-    * @param {Boolean} [localize=false] Вернуть локализованное значение
+    * Returns value of the key in dictionary
+    * @param {Number|String} index Key for lookup
+    * @param {Boolean} [localize=false] Should return the localized value
     * @return {String}
     * @protected
     */
@@ -159,8 +159,8 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    }
 
    /**
-    * Возвращает словарь из формата
-    * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+    * Extracts dictionary from the field format.
+    * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
     * @return {Array}
     * @protected
     */
@@ -174,8 +174,8 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    }
 
    /**
-    * Возвращает локализованный словарь из формата
-    * @param {Types/Format/Field|Types/Format/UniversalField|String} format Формат поля
+    * Extracts dictionary from the field format.
+    * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
     * @return {Array|undefined}
     * @protected
     */

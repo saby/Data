@@ -1,19 +1,19 @@
 /// <amd-module name="Types/_source/IProvider" />
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
- * @interface Types/Source/IProvider
+ * @interface Types/_source/IProvider
  * @public
  * @author Мальцев А.А.
  */
 
 import {IAbstract} from './provider';
 
-interface IEndpoint {
+export interface IEndpoint {
    contract: string,
    address?: string
 }
 
-export default interface IProvider /** @lends Types/Source/IProvider.prototype */{
+export default interface IProvider /** @lends Types/_source/IProvider.prototype */{
    readonly '[Types/_source/IProvider]': boolean;
 
    /**
@@ -30,8 +30,8 @@ export default interface IProvider /** @lends Types/Source/IProvider.prototype *
     * @example
     * Добавляем в фильтр выборки поле enabled со значением true:
     * <pre>
-    *    require(['Types/Source/SbisService'], function(SbisService) {
-    *       var dataSource = new SbisService({endpoint: 'Pickles'});
+    *    require(['Types/source'], function(source) {
+    *       var dataSource = new source.SbisService({endpoint: 'Pickles'});
     *       dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args) {
     *          args = Object.assign({}, args);
     *          switch (name) {
@@ -51,7 +51,7 @@ export default interface IProvider /** @lends Types/Source/IProvider.prototype *
 
    /**
     * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-    * @return {Types/Source/Provider/IAbstract}
+    * @return {Types/_source/Provider/IAbstract}
     * @see provider
     */
    getProvider(): IAbstract;

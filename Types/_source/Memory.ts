@@ -5,8 +5,8 @@
  *
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *    require(['Types/Source/Memory', 'Types/Query/Query'], function (MemorySource, Query) {
- *       var solarSystem = new MemorySource({
+ *    require(['Types/source'], function (source) {
+ *       var solarSystem = new source.Memory({
  *          data: [
  *             {id: 1, name: 'Sun', kind: 'Star'},
  *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -62,8 +62,8 @@
  *       });
  *    });
  * </pre>
- * @class Types/Source/Memory
- * @extends Types/Source/Local
+ * @class Types/_source/Memory
+ * @extends Types/_source/Local
  * @public
  * @author Мальцев А.А.
  */
@@ -72,7 +72,7 @@ import Local, {IOptions as ILocalOptions} from './Local';
 import DataSet from './DataSet';
 import Query, {Join} from './Query';
 import {adapter} from '../entity';
-import di from '../_di';
+import {register} from '../di';
 import {protect, object} from '../util';
 import {Map} from '../shim';
 
@@ -95,17 +95,17 @@ export interface IOptions extends ILocalOptions {
    endpoint?: IEndpoint
 }
 
-export default class Memory extends Local /** @lends Types/Source/Memory.prototype */{
+export default class Memory extends Local /** @lends Types/_source/Memory.prototype */{
    /**
     * @cfg {Object} Данные, с которыми работает источник.
-    * @name Types/Source/Memory#data
+    * @name Types/_source/Memory#data
     * @remark
     * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
     * @example
     * Создадим источник с данными объектов солнечной системы, данные представлены в виде массива:
     * <pre>
-    *    require(['Types/Source/Memory'], function (MemorySource) {
-    *       var solarSystem = new MemorySource({
+    *    require(['Types/source'], function (source) {
+    *       var solarSystem = new source.Memory({
     *          data: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -122,18 +122,18 @@ export default class Memory extends Local /** @lends Types/Source/Memory.prototy
     *       });
     *    });
     * </pre>
-    * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/Collection/RecordSet рекордсета}:
+    * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/_collection/RecordSet рекордсета}:
     * <pre>
     *    require([
-    *       'Types/Source/Memory',
-    *       'Types/Collection/RecordSet',
-    *       'Types/Adapter/RecordSet'
+    *       'Types/source',
+    *       'Types/collection',
+    *       'Types/entity'
     *    ], function (
-    *       MemorySource,
-    *       RecordSet,
-    *       RecordSetAdapter
+    *       source,
+    *       collection,
+    *       entity
     *    ) {
-    *       var solarData = new RecordSet({
+    *       var solarData = new collection.RecordSet({
     *          rawData: [
     *             {id: 1, name: 'Sun', kind: 'Star'},
     *             {id: 2, name: 'Mercury', kind: 'Planet'},
@@ -147,9 +147,9 @@ export default class Memory extends Local /** @lends Types/Source/Memory.prototy
     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
     *          ]
     *       });
-    *       var solarSystem = new MemorySource({
+    *       var solarSystem = new source.Memory({
     *          data: solarData,
-    *          adapter: new RecordSetAdapter(),
+    *          adapter: new entity.adapter.RecordSet(),
     *          idProperty: 'id'
     *       });
     *    });
@@ -194,7 +194,7 @@ export default class Memory extends Local /** @lends Types/Source/Memory.prototy
    }
 
    protected _applyFrom(from?: string): any {
-      return from ? contracts[from] : this._data;
+      return from ? contracts[from] : this.data;
    }
 
    protected _applyJoin(data: any, join: Join[]): any {
@@ -222,7 +222,7 @@ export default class Memory extends Local /** @lends Types/Source/Memory.prototy
 
    /**
     * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
-    * @param {Types/Query/Query} [query] Запрос
+    * @param {Types/_source/Query} [query] Запрос
     * @return {*}
     * @protected
     */
@@ -255,4 +255,4 @@ Memory.prototype._dataSetMetaProperty = 'meta';
 // @ts-ignore
 Memory.prototype._emptyData = null;
 
-di.register('Types/source:Memory', Memory, {instantiate: false});
+register('Types/source:Memory', Memory, {instantiate: false});

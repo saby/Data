@@ -2,15 +2,15 @@
 /**
  * Источник данных, работающий удаленно.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/Source/Remote
- * @extends Types/Source/Base
- * @implements Types/Source/ICrud
- * @implements Types/Source/ICrudPlus
- * @implements Types/Source/IProvider
- * @mixes Types/Entity/ObservableMixin
- * @mixes Types/Source/DataCrudMixin
- * @mixes Types/Source/BindingMixin
- * @mixes Types/Source/EndpointMixin
+ * @class Types/_source/Remote
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IProvider
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_source/DataCrudMixin
+ * @mixes Types/_source/BindingMixin
+ * @mixes Types/_source/EndpointMixin
  * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy passing.merge passing.move
  * @public
  * @author Мальцев А.А.
@@ -19,17 +19,18 @@
 import Base, {IOptions as IBaseOptions} from './Base';
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
-import IProvider from './IProvider';
+import IProvider, {IEndpoint} from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import BindingMixin from './BindingMixin';
 import EndpointMixin from './EndpointMixin';
 import OptionsMixin from './OptionsMixin';
 import Query from './Query';
+import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
-import di from '../_di';
+import {create} from '../di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import req = require('require');
@@ -83,7 +84,7 @@ function passCreate(meta?: Object) {
 /**
  * Формирует данные, передваемые в провайдер при вызове read().
  * @param {String} key Первичный ключ записи
- * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные
+ * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
  * @return {Object}
  */
 function passRead(key, meta?: Object) {
@@ -92,7 +93,7 @@ function passRead(key, meta?: Object) {
 
 /**
  * Формирует данные, передваемые в провайдер при вызове update().
- * @param {Types/Entity/Record|Types/Collection/RecordSet} data Обновляемая запись или рекордсет
+ * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
  * @param {Object} [meta] Дополнительные мета данные
  * @return {Object}
  */
@@ -132,7 +133,7 @@ function passUpdate(data, meta?: Object) {
 /**
  * Формирует данные, передваемые в провайдер при вызове destroy().
  * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
- * @param {Object|Types/Entity/Record} [meta] Дополнительные мета данные
+ * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
  * @return {Object}
  */
 function passDestroy(keys, meta?: Object) {
@@ -141,7 +142,7 @@ function passDestroy(keys, meta?: Object) {
 
 /**
  * Формирует данные, передваемые в провайдер при вызове query().
- * @param {Types/Query/Query} [query] Запрос
+ * @param {Types/_source/Query} [query] Запрос
  * @return {Object}
  */
 function passQuery(query) {
@@ -181,7 +182,7 @@ function passMove(from, to, meta?: Object) {
 
 export default abstract class Remote extends mixin(
    Base, ObservableMixin, DataCrudMixin, BindingMixin, EndpointMixin
-) implements ICrud, ICrudPlus, IProvider /** @lends Types/Source/Remote.prototype */{
+) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
    /**
     * @typedef {String} NavigationType
     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
@@ -189,10 +190,10 @@ export default abstract class Remote extends mixin(
     */
 
    /**
-    * @cfg {Types/Source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-    * @name Types/Source/Remote#provider
+    * @cfg {Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+    * @name Types/_source/Remote#provider
     * @see getProvider
-    * @see Types/Di
+    * @see Types/di
     * @example
     * <pre>
     *    var dataSource = new RemoteSource({
@@ -205,7 +206,7 @@ export default abstract class Remote extends mixin(
 
    /**
     * @cfg {Object} Методы подготовки аргументов по CRUD контракту.
-    * @name Types/Source/Remote#passing
+    * @name Types/_source/Remote#passing
     * @example
     * Подключаем пользователей через HTTP API, для метода create() передадим данные как объект с полем 'data':
     * <pre>
@@ -246,7 +247,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta) {
+   create(meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.create,
          this._$passing.create.call(this, meta)
@@ -257,7 +258,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   read(key, meta) {
+   read(key: any, meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.read,
          this._$passing.read.call(this, key, meta)
@@ -268,7 +269,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   update(data, meta) {
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.update,
          this._$passing.update.call(this, data, meta)
@@ -277,14 +278,14 @@ export default abstract class Remote extends mixin(
       )
    }
 
-   destroy(keys, meta) {
+   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.destroy,
          this._$passing.destroy.call(this, keys, meta)
       );
    }
 
-   query(query) {
+   query(query: Query): ExtendPromise<DataSet> {
       return this._callProvider(
          this._$binding.query,
          this._$passing.query.call(this, query)
@@ -301,14 +302,14 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from, to) {
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.merge,
          this._$passing.merge.call(this, from, to)
       );
    }
 
-   copy(key, meta) {
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.copy,
          this._$passing.copy.call(this, key, meta)
@@ -317,10 +318,10 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   move(from, to, meta) {
+   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.move,
-         this._$passing.move.call(this, from, to, meta)
+         this._$passing.move.call(this, items, target, meta)
       );
    }
 
@@ -330,7 +331,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/IProvider]': boolean = true;
 
-   getEndpoint(): any {
+   getEndpoint(): IEndpoint {
       return EndpointMixin.getEndpoint.call(this);
    }
 
@@ -351,9 +352,9 @@ export default abstract class Remote extends mixin(
 
    /**
     * Инстанциирует провайдер удаленного доступа
-    * @param {String|Types/Source/Provider/IAbstract} provider Алиас или инстанс
+    * @param {String|Types/_source/Provider/IAbstract} provider Алиас или инстанс
     * @param {Object} options Аргументы конструктора
-    * @return {Types/Source/Provider}
+    * @return {Types/_source/Provider}
     * @protected
     */
    protected _createProvider(provider: IAbstract | string, options): IAbstract {
@@ -361,7 +362,7 @@ export default abstract class Remote extends mixin(
          throw new Error('Remote access provider is not defined');
       }
       if (typeof provider === 'string') {
-         provider = <IAbstract>di.create(provider, options);
+         provider = <IAbstract>create(provider, options);
       }
 
       return provider;
@@ -439,62 +440,62 @@ Remote.prototype['[Types/_source/Remote]'] = true;
 // @ts-ignore
 Remote.prototype._$provider = null;
 // @ts-ignore
-Remote.prototype._$passing = /** @lends Types/Source/Remote.prototype */{
+Remote.prototype._$passing = /** @lends Types/_source/Remote.prototype */{
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-    * @name Types/Source/BindingMixin#passing.create
+    * @name Types/_source/Remote#passing.create
     */
    create: passCreate,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-    * @name Types/Source/BindingMixin#passing.read
+    * @name Types/_source/Remote#passing.read
     */
    read: passRead,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-    * @name Types/Source/BindingMixin#passing.update
+    * @name Types/_source/Remote#passing.update
     */
    update: passUpdate,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-    * @name Types/Source/BindingMixin#passing.destroy
+    * @name Types/_source/Remote#passing.destroy
     */
    destroy: passDestroy,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-    * @name Types/Source/BindingMixin#passing.query
+    * @name Types/_source/Remote#passing.query
     */
    query: passQuery,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-    * @name Types/Source/BindingMixin#passing.copy
+    * @name Types/_source/Remote#passing.copy
     */
    copy: passCopy,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-    * @name Types/Source/BindingMixin#passing.merge
+    * @name Types/_source/Remote#passing.merge
     */
    merge: passMerge,
 
    /**
     * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-    * @name Types/Source/BindingMixin#passing.move
+    * @name Types/_source/Remote#passing.move
     */
    move: passMove
 };
 
 // @ts-ignore
-Remote.prototype._$options = OptionsMixin.addOptions(Base, /** @lends Types/Source/Remote.prototype */{
+Remote.prototype._$options = OptionsMixin.addOptions(Base, /** @lends Types/_source/Remote.prototype */{
    /**
     * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
-    * @name Types/Source/Remote#options.updateOnlyChanged
+    * @name Types/_source/Remote#options.updateOnlyChanged
     * @remark
     * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые записи от уже существующих.
     */
@@ -502,7 +503,7 @@ Remote.prototype._$options = OptionsMixin.addOptions(Base, /** @lends Types/Sour
 
    /**
     * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
-    * @name Types/Source/Remote#options.navigationType
+    * @name Types/_source/Remote#options.navigationType
     * @example
     * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
     * <pre>

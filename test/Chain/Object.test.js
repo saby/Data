@@ -8,7 +8,7 @@ define([
 
    var ObjectChain = ObjectChainEs.default;
 
-   describe('Types/Chain/Object', function() {
+   describe('Types/_chain/Object', function() {
       var items,
          chain;
 

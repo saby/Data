@@ -12,7 +12,7 @@ define([
 
    var ReversedChain = ReversedChainEs.default;
 
-   describe('Types/Chain/Reversed', function() {
+   describe('Types/_chain/Reversed', function() {
       var prevObject,
          prevArray,
          itemsObject,

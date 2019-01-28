@@ -1,26 +1,26 @@
 /// <amd-module name="Types/_source/provider/SbisBusinessLogic" />
 /**
  * JSON-RPC Провайдер для бизнес-логики СБиС
- * @class Types/Source/Provider/SbisBusinessLogic
- * @implements Types/Source/Provider/IAbstract
- * @mixes Types/Entity/OptionsMixin
+ * @class Types/_source/provider/SbisBusinessLogic
+ * @implements Types/_source/provider/IAbstract
+ * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
 
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
-import di from '../../_di';
+import {register} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
 import RpcJson = require('Transport/RPCJSON');
 
-export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/Entity/SbisBusinessLogic.prototype */{
+export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */{
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
 
    /**
     * @cfg {Endpoint} Конечная точка, обеспечивающая доступ клиента к БЛ
-    * @name Types/Source/Provider/SbisBusinessLogic#endpoint
+    * @name Types/_source/provider/SbisBusinessLogic#endpoint
     * @see getEndPoint
     * @example
     * <pre>
@@ -80,4 +80,4 @@ SbisBusinessLogic.prototype['[Types/_source/provider/SbisBusinessLogic]'] = true
 SbisBusinessLogic.prototype._$transport = RpcJson;
 SbisBusinessLogic.prototype._nameSpaceSeparator = '.';
 
-di.register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});
+register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});

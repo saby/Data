@@ -19,7 +19,7 @@ define([
    JsonAdapter = JsonAdapter.default;
    RecordSet = RecordSet.default;
 
-   describe('Types/Source/DataSet', function() {
+   describe('Types/_source/DataSet', function() {
       var list;
 
       beforeEach(function() {

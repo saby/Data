@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_entity/Identity" />
 /**
  * Тип данных "Идентификатор".
- * @class Types/Type/Identity
+ * @class Types/_entity/Identity
  * @public
  * @author Мальцев А.А.
  * @example
  * <pre>
- *    require(['Types/Type/Identity'], function (Identity) {
+ *    require(['Types/_entity/Identity'], function (Identity) {
  *       var id = new Identity([1, 'Employees']);
  *       console.log(id.getValue());//1
  *       console.log(id.getName());//'Employees'
@@ -15,9 +15,9 @@
  * </pre>
  */
 
-import di from '../_di';
+import {register} from '../di';
 
-export default class Identity /** @lends Types/Type/Identity.prototype */{
+export default class Identity /** @lends Types/_entity/Identity.prototype */{
    /**
     * @property {String} Разделитель значений
     */
@@ -76,4 +76,4 @@ Identity.prototype['[Types/_entity/Identity]'] = true;
 Identity.prototype._separator = ',';
 Identity.prototype._value = null;
 
-di.register('Types/entity:Identity', Identity, {instantiate: false});
+register('Types/entity:Identity', Identity, {instantiate: false});

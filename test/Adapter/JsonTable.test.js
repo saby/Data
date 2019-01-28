@@ -11,7 +11,7 @@ define([
    JsonTable = JsonTable.default;
    fieldsFactory = fieldsFactory.default;
 
-   describe('Types/Adapter/JsonTable', function() {
+   describe('Types/_entity/adapter/JsonTable', function() {
       var data,
          adapter;
 

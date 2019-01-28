@@ -1,14 +1,14 @@
 /// <amd-module name="Types/_collection/Enum" />
 /**
- * Тип данных "перечисляемое".
- * @class Types/Type/Enum
- * @extends Types/Type/Dictionary
- * @implements Types/Type/IEnum
- * @implements Types/Entity/ICloneable
- * @implements Types/Entity/IProducible
- * @mixes Types/Entity/ManyToManyMixin
- * @mixes Types/Entity/SerializableMixin
- * @mixes Types/Entity/CloneableMixin
+ * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
+ * @class Types/_collectionEnum
+ * @extends Types/_collectionDictionary
+ * @implements Types/_collectionIEnum
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
  * @public
  * @author Мальцев А.А.
  */
@@ -16,22 +16,22 @@
 import IEnum, {IIndex} from './IEnum';
 import Dictionary from './Dictionary';
 import {ICloneable, IProducible, ManyToManyMixin, SerializableMixin, CloneableMixin} from '../entity';
-import di from '../_di';
+import {register} from '../di';
 import {applyMixins} from '../util';
 
 interface ProduceOptions {
    format?: Object
 }
 
-export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/Type/Enum.prototype */{
+export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collectionEnum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
    readonly '[Types/_entity/ICloneable]': boolean;
    readonly '[Types/_entity/IProducible]': boolean;
    readonly _moduleName: string;
 
    /**
-    * @cfg {Number|Null} Индекс выбранного значения
-    * @name Types/Type/Enum#index
+    * @cfg {Number|sting|null} Key of the selected item
+    * @name Types/_collectionEnum#index
     */
    protected _$index: IIndex;
 
@@ -124,13 +124,13 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
 
    //region ICloneable
 
-   clone: (shallow?: boolean) => Object;
+   clone: (shallow?: boolean) => Enum<T>;
 
    //endregion
 
    //region IProducible
 
-   static produceInstance(data?: any, options?: ProduceOptions): any {
+   static produceInstance<T>(data?: any, options?: ProduceOptions): Enum<T> {
       return new this({
          dictionary: this.prototype._getDictionaryByFormat(options && options.format),
          localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
@@ -156,7 +156,7 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
    //region Protected methods
 
    /**
-    * Приводит индекс у типу Number
+    * Converts key to the Number type
     * @protected
     */
    protected _checkIndex() {
@@ -167,9 +167,9 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
    }
 
    /**
-    * Уведомляет об изменении
-    * @param {Number} index Индекс нового значения
-    * @param {String} value Новое значение
+    * Triggers a change event
+    * @param {Number} index Key of selected item
+    * @param {String} value Value of selected item
     * @protected
     */
    protected _notifyChange(index: IIndex, value: T) {
@@ -203,4 +203,4 @@ Enum.prototype['[WS.Data/Type/Enum]'] = true;
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Enum.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
-di.register('Types/collection:Enum', Enum, {instantiate: false});
+register('Types/collection:Enum', Enum, {instantiate: false});

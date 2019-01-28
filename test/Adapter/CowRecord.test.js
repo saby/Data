@@ -8,7 +8,7 @@ define([
 
    var CowRecordAdapter = CowRecordAdapterEs.default;
 
-   describe('Types/Adapter/CowRecord', function() {
+   describe('Types/_entity/adapter/CowRecord', function() {
       var Mock,
          MockRecord,
          data,

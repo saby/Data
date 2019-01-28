@@ -1,8 +1,8 @@
 /// <amd-module name="Types/_display/itemsStrategy/Direct" />
 /**
  * Стратегия получения элементов проекции напрямую по коллекции
- * @class Types/Display/ItemsStrategy/Direct
- * @extends Types/Display/ItemsStrategy/Abstract
+ * @class Types/_display/ItemsStrategy/Direct
+ * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 
@@ -21,7 +21,7 @@ interface ISortOptions {
    idProperty: string
 }
 
-export default class Direct extends AbstractStrategy /** @lends Types/Display/ItemsStrategy/Direct.prototype */{
+export default class Direct extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/Direct.prototype */{
    protected _options: IOptions;
 
    /**
@@ -31,7 +31,7 @@ export default class Direct extends AbstractStrategy /** @lends Types/Display/It
 
    /**
     * @typedef {Object} Options
-    * @property {Types/Display/Collection} display Проекция
+    * @property {Types/_display/Collection} display Проекция
     * @property {Boolean} unique Признак обеспечения уникальности элементов
     * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
     */
@@ -168,7 +168,7 @@ export default class Direct extends AbstractStrategy /** @lends Types/Display/It
 
    /**
     * Создает индекс сортировки в том же порядке, что и коллекция
-    * @param {Array.<Types/Display/CollectionItem>} items Элементы проекции.
+    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
     * @param {Array.<Number>} current Текущий индекс сортировки
     * @param {Object} options Опции
     * @return {Array.<Number>}

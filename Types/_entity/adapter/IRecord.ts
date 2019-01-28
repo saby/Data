@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_entity/adapter/IRecord" />
 /**
  * Интерфейс адаптера для записи таблицы данных
- * @interface Types/Adapter/IRecord
+ * @interface Types/_entity/adapter/IRecord
  * @public
  * @author Мальцев А.А.
  */
@@ -9,7 +9,7 @@
 import Field from '../format/Field';
 import UniversalField from '../format/UniversalField';
 
-export default interface IRecord /** @lends Types/Adapter/IRecord.prototype */{
+export default interface IRecord /** @lends Types/_entity/adapter/IRecord.prototype */{
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
    /**
@@ -53,7 +53,7 @@ export default interface IRecord /** @lends Types/Adapter/IRecord.prototype */{
    /**
     * Возвращает формат поля (в режиме только для чтения)
     * @param {String} name Поле записи
-    * @return {Types/Format/Field}
+    * @return {Types/_entity/format/Field}
     */
    getFormat(name: string): Field;
 
@@ -62,7 +62,7 @@ export default interface IRecord /** @lends Types/Adapter/IRecord.prototype */{
     * Метод каждый раз возвращает один и тот же объект, заменяя только его данные - подобный подход обеспечивает
     * ускорение и уменьшение расхода памяти.
     * @param {String} name Поле записи
-    * @return {Types/Format/UniversalField}
+    * @return {Types/_entity/format/UniversalField}
     */
    getSharedFormat(name: string): UniversalField;
 
@@ -70,7 +70,7 @@ export default interface IRecord /** @lends Types/Adapter/IRecord.prototype */{
     * Добавляет поле в запись.
     * Если позиция не указана (или указана как -1), поле добавляется в конец.
     * Если поле с таким форматом уже есть, генерирует исключение.
-    * @param {Types/Format/Field} format Формат поля
+    * @param {Types/_entity/format/Field} format Формат поля
     * @param {Number} [at] Позиция поля
     */
    addField(format: Field, at?: number);

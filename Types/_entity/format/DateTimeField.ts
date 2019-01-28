@@ -9,18 +9,18 @@
  *       type: 'dateTime'
  *    };
  * </pre>
- * @class Types/Format/DateTimeField
- * @extends Types/Format/Field
+ * @class Types/_entity/format/DateTimeField
+ * @extends Types/_entity/format/Field
  * @public
  * @author Мальцев А.А.
  */
 
 import Field from './Field';
 
-export default class DateTimeField extends Field /** @lends Types/Format/DateTimeField.prototype */{
+export default class DateTimeField extends Field /** @lends Types/_entity/format/DateTimeField.prototype */{
       /**
        * @cfg {Boolean} Без указания временной зоны
-       * @name Types/Format/DateTimeField#withoutTimeZone
+       * @name Types/_entity/format/DateTimeField#withoutTimeZone
        * @see hasTimeZone
        */
       _$withoutTimeZone: boolean;

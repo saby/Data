@@ -1,7 +1,6 @@
 ///<amd-module name="Types/_entity/date/fromSql" />
 //@ts-ignore
 import constants = require('Core/constants');
-import {number} from "../../formatter";
 
 /**
  * @public

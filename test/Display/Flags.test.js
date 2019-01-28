@@ -13,7 +13,7 @@ define([
    FlagsDisplay = FlagsDisplay.default;
    FlagsType = FlagsType.default;
 
-   describe('Types/Display/Flags', function() {
+   describe('Types/_display/Flags', function() {
       var dict, collection, display;
 
       beforeEach(function() {
@@ -97,6 +97,36 @@ define([
 
             assert.strictEqual(given.item.getContents(), 'one');
             assert.strictEqual(given.index, 0);
+         });
+
+         it('should trigger "onCollectionChange" if all flags changed', function() {
+            var given = [];
+            var handler = function(event, action, items, index) {
+               given.push({
+                  action: action,
+                  items: items,
+                  index: index
+               });
+            };
+
+            display.subscribe('onCollectionChange', handler);
+            collection.fromArray([true, true, true]);
+            display.unsubscribe('onCollectionChange', handler);
+
+            var expected = [{
+               action: 'ch',
+               items: [display.at(0)],
+               index: 0
+            }, {
+               action: 'ch',
+               items: [display.at(1)],
+               index: 1
+            }, {
+               action: 'ch',
+               items: [display.at(2)],
+               index: 2
+            }];
+            assert.deepEqual(given, expected);
          });
       });
 

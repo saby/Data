@@ -1,26 +1,26 @@
 /// <amd-module name="Types/_display/BreadcrumbsItem" />
 /**
  * Хлебная крошка
- * @class Types/Display/BreadcrumbsItem
- * @extends Types/Display/CollectionItem
+ * @class Types/_display/BreadcrumbsItem
+ * @extends Types/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import TreeItem from './TreeItem';
-import di from '../_di';
+import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
    last: CollectionItem;
 }
 
-export default class BreadcrumbsItem extends CollectionItem /** @lends Types/Display/BreadcrumbsItem.prototype */{
+export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_display/BreadcrumbsItem.prototype */{
    _instancePrefix: 'breadcrumbs-item-';
 
    /**
-    * @cfg {Types/Collection/TreeItem} Последний элемент хлебной крошки
-    * @name Types/Display/BreadcrumbsItem#last
+    * @cfg {Types/_collection/TreeItem} Последний элемент хлебной крошки
+    * @name Types/_display/BreadcrumbsItem#last
     */
    protected _$last: CollectionItem;
 
@@ -59,4 +59,4 @@ BreadcrumbsItem.prototype['[Types/_display/BreadcrumbsItem]'] = true;
 // @ts-ignore
 BreadcrumbsItem.prototype._$last = null;
 
-di.register('Types/display:BreadcrumbsItem', BreadcrumbsItem);
+register('Types/display:BreadcrumbsItem', BreadcrumbsItem);
