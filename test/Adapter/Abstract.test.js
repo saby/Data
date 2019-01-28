@@ -4,7 +4,7 @@ define([
    'Types/_entity/Record',
    'Types/_collection/RecordSet',
    'Types/_source/DataSet',
-   'Core/helpers/Date/toSql',
+   'Types/_entity/date/toSql',
    'Core/Date'
 ], function(
    AbstractAdapter,
@@ -19,7 +19,8 @@ define([
    Record = Record.default;
    RecordSet = RecordSet.default;
    DataSet = DataSet.default;
-
+   var toSqlMode = toSql.MODE;
+   toSql = toSql.default;
    describe('Types/Adapter/Abstract', function() {
       var adapter;
 
@@ -112,7 +113,7 @@ define([
 
             assert.equal(
                adapter.serialize(date),
-               toSql(new Date(year, month, day), toSql.MODE_DATE)
+               toSql(new Date(year, month, day), toSqlMode.DATE)
             );
          });
 
@@ -126,7 +127,7 @@ define([
                date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_DATETIME);
                assert.equal(
                   adapter.serialize(date),
-                  toSql(new Date(year, month, day), toSql.MODE_DATETIME)
+                  toSql(new Date(year, month, day), toSqlMode.DATETIME)
                );
             }
          });

@@ -16,12 +16,11 @@ import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField
 import di from '../_di';
 import toSql, {MODE as toSqlMode} from './date/toSql';
 import fromSql from './date/fromSql';
+import TimeInterval from './TimeInterval';
 
 // @ts-ignore
 import coreInstance = require('Core/core-instance');
 
-// @ts-ignore
-import CoreTimeInterval = require('Core/TimeInterval');
 // @ts-ignore
 import renders = require('Core/defaultRenders');
 
@@ -302,10 +301,10 @@ const factory = {
                return value;
 
             case 'timeinterval':
-               if (value instanceof CoreTimeInterval) {
+               if (value instanceof TimeInterval) {
                   return value.toString();
                }
-               return CoreTimeInterval.toString(value);
+               return TimeInterval.toString(value);
 
             case 'array':
                let kind = getKind(options.format);
@@ -428,10 +427,10 @@ const factory = {
 
          case 'timeinterval':
             value = toScalar(value);
-            if (value instanceof CoreTimeInterval) {
+            if (value instanceof TimeInterval) {
                return value.toString();
             }
-            return CoreTimeInterval.toString(value);
+            return TimeInterval.toString(value);
 
          case 'array':
             let kind = getKind(options.format);

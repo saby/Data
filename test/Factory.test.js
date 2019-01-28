@@ -11,8 +11,7 @@ define([
    type,
    collection,
    TypesModel,
-   toSql,
-   TimeInterval
+   toSql
 ) {
    'use strict';
    TypesModel = TypesModel.default;
@@ -24,7 +23,7 @@ define([
       var Flags = collection.Flags;
       var List = collection.List;
       var RecordSet = collection.RecordSet;
-
+      var TimeInterval = type.TimeInterval;
       var getFormatMock = function(type) {
          var format = {};
          format.getType = function() {
