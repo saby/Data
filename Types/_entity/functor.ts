@@ -6,4 +6,4 @@
  * @author Мальцев А.А.
  */
 
-export {default as Compute} from './functor/Compute';
+export {default as Compute, IFunctor as IComputeFunctor} from './functor/Compute';
