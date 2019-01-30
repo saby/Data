@@ -185,7 +185,7 @@ export interface IMoveMeta {
 /**
  * Returns key of the BL Object from its complex id
  */
-function getKeyByComplexId(id: string): string {
+function getKeyByComplexId(id: string | number): string {
    id = String(id || '');
    if (id.match(COMPLEX_ID_MATCH)) {
       return id.split(COMPLEX_ID_SEPARATOR)[0];
@@ -196,7 +196,7 @@ function getKeyByComplexId(id: string): string {
 /**
  * Returns name of the BL Object from its complex id
  */
-function getNameByComplexId(id: string, defaults: string): string {
+function getNameByComplexId(id: string | number, defaults: string): string {
    id = String(id || '');
    if (id.match(COMPLEX_ID_MATCH)) {
       return id.split(COMPLEX_ID_SEPARATOR)[1];
@@ -218,7 +218,7 @@ function createComplexId(id: string, defaults: string): string[] {
 /**
  * Joins BL objects into groups be its names
  */
-function getGroupsByComplexIds(ids: string[], defaults: string): Object {
+function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): Object {
    let groups = {};
    let name;
    for (let i = 0, len = ids.length; i < len; i++) {
@@ -500,7 +500,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
    return args;
 }
 
-function passUpdateBatch(items: RecordSet<Record>, meta?: Object): Object {
+function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Object {
    const RecordSet = resolve('Types/collection:RecordSet');
    let patch = RecordSet.patch(items);
    return {
@@ -577,9 +577,10 @@ interface IOldMoveMeta {
  * @param to Record to move to
  * @param meta Meta data
  */
-function oldMove(instance: SbisService | any, from: string, to: string, meta: IOldMoveMeta): ExtendPromise<any> {
+function oldMove(instance: SbisService | any, from: string | Array<string | number>, to: string, meta: IOldMoveMeta): ExtendPromise<any> {
    logger.info(instance._moduleName, 'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.');
 
+   from = <string> from;
    let moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
    let params = {
       'ПорядковыйНомер': instance._$orderProperty,
@@ -856,7 +857,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       meta = meta || {};
       if (this._$binding.moveBefore) {
          //TODO: поддерживаем старый способ с двумя методами
-         return oldMove(this, items, target, meta);
+         return oldMove(this, items, <string>target, <IOldMoveMeta>meta);
       }
 
       //На БЛ не могут принять массив сложных идентификаторов,
