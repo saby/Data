@@ -121,6 +121,25 @@ import coreExtend = require('Core/core-extend');
  */
 const ROUTE_SEPEARTOR = '.';
 
+interface IGetter extends Function {
+   get: (name: string) => any;
+   properties: Array<string>;
+}
+
+interface ISetter extends Function {
+   set: (name: string, value: any) => any;
+   properties: Array<string>;
+}
+
+interface IProperty {
+   get: IGetter;
+   set?: ISetter;
+   default?: (name: string) => any;
+}
+
+interface IProperties<T> {
+}
+
 export default class Model extends mixin(
    Record, InstantiableMixin
 ) implements IInstantiable /** @lends Types/_entity/Model.prototype */{
@@ -250,7 +269,7 @@ export default class Model extends mixin(
     *    console.log(user.get('birthDay'));//Mon Apr 04 2011 00:00:00
     * </pre>
     */
-   _$properties: Object;
+   _$properties: IProperties<IProperty>;
 
    /**
     * @cfg {String} Название свойства, содержащего первичный ключ
@@ -296,7 +315,12 @@ export default class Model extends mixin(
    /**
     * @property Properties names which calculating right now
     */
-   _nowCalculatingProperties: Set<string>;
+   _calculatingProperties: Set<string>;
+
+   /**
+    * @property Properties names and values which affected during the recurseve set() calls
+    */
+   _deepChangedProperties: Array<Array<any>>;
 
    constructor(options?) {
       super(options);
@@ -328,14 +352,15 @@ export default class Model extends mixin(
    destroy() {
       this._defaultPropertiesValues = null;
       this._propertiesDependency = null;
-      this._nowCalculatingProperties = null;
+      this._calculatingProperties = null;
+      this._deepChangedProperties = null;
 
       super.destroy();
    }
 
    // region IObject
 
-   get(name) {
+   get(name: string): any {
       this._pushDependency(name);
 
       if (this._fieldsCache.has(name)) {
@@ -374,15 +399,16 @@ export default class Model extends mixin(
       return value;
    }
 
-   set(name, value?) {
+   set(name: string | Object, value?: any): void {
       if (!this._$properties) {
          super.set(name, value);
          return;
       }
 
-      let map = this._getHashMap(name, value);
-      let pairs = [];
-      let errors = [];
+      const map = this._getHashMap(name, value);
+      const pairs = [];
+      const propertiesErrors = [];
+      const isCalculating = this._calculatingProperties ? this._calculatingProperties.size > 0 : false;
 
       Object.keys(map).forEach((key) => {
          this._deleteDependencyCache(key);
@@ -393,6 +419,7 @@ export default class Model extends mixin(
             let property = this._$properties && this._$properties[key];
             if (property) {
                if (property.set) {
+                  //Remove cached value
                   if (this._fieldsCache.has(key)) {
                      this._removeChild(
                         this._fieldsCache.get(key)
@@ -405,7 +432,7 @@ export default class Model extends mixin(
                      return;
                   }
                } else if (property.get) {
-                  errors.push(new ReferenceError(`Property "${key}" is read only`));
+                  propertiesErrors.push(new ReferenceError(`Property "${key}" is read only`));
                   return;
                }
             }
@@ -413,26 +440,39 @@ export default class Model extends mixin(
             pairs.push([key, value, Record.prototype.get.call(this, key)]);
          } catch (err) {
             //Collecting errors for every property
-            errors.push(err);
+            propertiesErrors.push(err);
          }
       });
 
-      let superErrors = [];
-      let superChanged = super._setPairs(pairs, superErrors);
-
-      if (superChanged) {
-         let changed = Object.keys(superChanged).reduce((memo, key) => {
-            memo[key] = map[key];
-            return memo;
-         }, {});
-         this._notifyChange(changed);
+      //Collect pairs of properties
+      if (isCalculating && pairs.length) {
+         //Here is the set() that recursive calls from another set() so just accumulate the changes
+         this._deepChangedProperties = this._deepChangedProperties || [];
+         this._deepChangedProperties.push(...pairs);
+      } else if (!isCalculating && this._deepChangedProperties) {
+         //Here is the top level set() so do merge with accumulated changes
+         pairs.push(...this._deepChangedProperties);
+         this._deepChangedProperties.length = 0;
       }
 
-      this._checkErrors(errors);
-      this._checkErrors(superErrors);
+      let pairsErrors = [];
+
+      //It's top level set() so notify changes if have some
+      if (!isCalculating) {
+         let changedProperties = super._setPairs(pairs, pairsErrors);
+         if (changedProperties) {
+            let changed = Object.keys(changedProperties).reduce((memo, key) => {
+               memo[key] = this.get(key);
+               return memo;
+            }, {});
+            this._notifyChange(changed);
+         }
+      }
+
+      this._checkErrors([...propertiesErrors, ...pairsErrors]);
    }
 
-   has(name) {
+   has(name: string): boolean {
       return (this._$properties && this._$properties.hasOwnProperty(name)) || super.has(name);
    }
 
@@ -791,23 +831,24 @@ export default class Model extends mixin(
     * @return {*}
     * @protected
     */
-   protected _processCalculatedValue(name, value, property, isReading) {
-      //Check for recursive calculate
-      let nowCalculatingProperties = this._nowCalculatingProperties;
-      if (!nowCalculatingProperties) {
-         nowCalculatingProperties = this._nowCalculatingProperties = new Set();
+   protected _processCalculatedValue(name: string, value: any, property: IProperty, isReading?: boolean) {
+      //Check for recursive calculating
+      let calculatingProperties = this._calculatingProperties;
+      if (!calculatingProperties) {
+         calculatingProperties = this._calculatingProperties = new Set();
       }
-
-      let checkKey = name + '|' + isReading;
-      if (nowCalculatingProperties.has(checkKey)) {
+      const checkKey = name + '|' + isReading;
+      if (calculatingProperties.has(checkKey)) {
          throw new Error(`Recursive value ${isReading ? 'reading' : 'writing'} detected for property "${name}"`);
       }
 
-      let method = isReading ? property.get : property.set;
-      let isFunctor = isReading && Compute.isFunctor(method);
-      let doGathering = isReading && !isFunctor;
+      //Initial conditions
+      const method = isReading ? property.get : property.set;
+      const isFunctor = isReading && Compute.isFunctor(method);
+      const doGathering = isReading && !isFunctor;
+
+      //Automatic dependencies gathering
       let prevGathering;
-      //Automatic dependency gathering
       if (isReading) {
          prevGathering = this._propertiesDependencyGathering;
          this._propertiesDependencyGathering = doGathering ? name : '';
@@ -822,13 +863,13 @@ export default class Model extends mixin(
 
       //Get or set property value
       try {
-         nowCalculatingProperties.add(checkKey);
+         calculatingProperties.add(checkKey);
          value = method.call(this, value);
       } finally {
          if (isReading) {
             this._propertiesDependencyGathering = prevGathering;
          }
-         nowCalculatingProperties.delete(checkKey);
+         calculatingProperties.delete(checkKey);
       }
 
       return value;
@@ -839,7 +880,7 @@ export default class Model extends mixin(
     * @param {String} name Название свойства.
     * @protected
     */
-   protected _pushDependency(name) {
+   protected _pushDependency(name: string) {
       if (this._propertiesDependencyGathering && this._propertiesDependencyGathering !== name) {
          this._pushDependencyFor(name, this._propertiesDependencyGathering);
       }
@@ -851,7 +892,7 @@ export default class Model extends mixin(
     * @param {String} dependFor Название свойства, котороое зависит от name
     * @protected
     */
-   protected _pushDependencyFor(name, dependFor) {
+   protected _pushDependencyFor(name: string, dependFor: string) {
       let propertiesDependency = this._propertiesDependency;
       if (!propertiesDependency) {
          propertiesDependency = this._propertiesDependency = new Map();
@@ -874,7 +915,7 @@ export default class Model extends mixin(
     * @param {String} name Название свойства.
     * @protected
     */
-   protected _deleteDependencyCache(name) {
+   protected _deleteDependencyCache(name: string) {
       let propertiesDependency = this._propertiesDependency;
 
       if (propertiesDependency && propertiesDependency.has(name)) {
@@ -928,7 +969,8 @@ Model.prototype._isDeleted = false;
 Model.prototype._defaultPropertiesValues = null;
 Model.prototype._propertiesDependency = null;
 Model.prototype._propertiesDependencyGathering = '';
-Model.prototype._nowCalculatingProperties = null;
+Model.prototype._calculatingProperties = null;
+Model.prototype._deepChangedProperties = null;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Model.prototype['[WS.Data/Entity/Model]'] = true;

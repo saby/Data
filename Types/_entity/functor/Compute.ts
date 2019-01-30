@@ -22,7 +22,7 @@
  * @author Мальцев А.А.
  */
 
-interface IFunctor {
+export interface IFunctor {
    readonly functor: Function;
    readonly properties: Array<string>;
 }

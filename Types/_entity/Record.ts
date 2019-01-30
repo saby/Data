@@ -1132,11 +1132,11 @@ export default class Record extends mixin(
 
    //region Protected methods
 
-   protected _getRelationNameForField(name) {
+   protected _getRelationNameForField(name: string): string {
       return FIELD_RELATION_PREFIX + name;
    }
 
-   protected _getFieldFromRelationName(name) {
+   protected _getFieldFromRelationName(name: string): string {
       name += '';
       if (name.substr(0, FIELD_RELATION_PREFIX.length) === FIELD_RELATION_PREFIX) {
          return name.substr(FIELD_RELATION_PREFIX.length);
@@ -1148,7 +1148,7 @@ export default class Record extends mixin(
     * @param {Array.<Error>} errors Массив ошибок
     * @protected
     */
-   protected _checkErrors(errors) {
+   protected _checkErrors(errors: Error[]) {
       if (errors.length) {
          //Looking for simple Error (use compare by >) that has priority to show.
          let error = errors[0];
@@ -1168,11 +1168,11 @@ export default class Record extends mixin(
     * @return {Object}
     * @protected
     */
-   protected _getHashMap(name, value) {
+   protected _getHashMap(name: string | Object, value?: any): Object {
       let map = name;
       if (!(map instanceof Object)) {
          map = {};
-         map[name] = value;
+         map[<string>name] = value;
       }
       return map;
    }
@@ -1193,7 +1193,7 @@ export default class Record extends mixin(
     * @return {Boolean}
     * @protected
     */
-   protected _isFieldValueCacheable(value): boolean {
+   protected _isFieldValueCacheable(value: any): boolean {
       switch (this._$cacheMode) {
          case CACHE_MODE_OBJECTS:
             return value instanceof Object;
@@ -1208,7 +1208,7 @@ export default class Record extends mixin(
     * @param {*} value Значение поля
     * @return {Boolean}
     */
-   protected _haveToClone(value): boolean {
+   protected _haveToClone(value: any): boolean {
       return this._$cloneChanged && value && value['[Types/_entity/ICloneable]'];
    }
 
@@ -1218,7 +1218,7 @@ export default class Record extends mixin(
     * @return {*}
     * @protected
     */
-   protected _getRawDataValue(name) {
+   protected _getRawDataValue(name: string): any {
       let adapter = this._getRawDataAdapter();
       if (!adapter.has(name)) {
          return;

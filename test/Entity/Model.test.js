@@ -268,6 +268,42 @@ define([
             assert.strictEqual(model.getRawData().calcWrite, 7);
          });
 
+         it('should trigger only one event "onPropertyChange" if some propperty calls set() inside itself', function() {
+            var model = new Model({
+               rawData: {
+                  foo: 'one',
+                  bar: 'two'
+               },
+               properties: {
+                  moreFoo: {
+                     get: function(value) {
+                        return value;
+                     },
+                     set: function(value) {
+                        var realValue = '{' + value + '}';
+                        this.set('bar', '[' + value + ']');
+                        this.set('foo', value);
+                        return realValue;
+                     }
+                  }
+               }
+            });
+
+            var changed;
+            var handler = function(event, props) {
+               changed = props;
+            };
+            model.subscribe('onPropertyChange', handler);
+            model.set('moreFoo', 'three');
+            model.unsubscribe('onPropertyChange', handler);
+
+            assert.deepEqual(changed, {
+               foo: 'three',
+               bar: '[three]',
+               moreFoo: '{three}',
+            });
+         });
+
          it('should throw an Error for read only property', function() {
             assert.throws(function() {
                model.set('calcRead', 100);
