@@ -16,7 +16,7 @@ import ICrudPlus from './ICrudPlus';
 import Base, {IOptions as IBaseOptions} from './Base';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
-import Query, {Join, Order} from './Query';
+import Query, {IMeta, Join, Order} from './Query';
 import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
 import {IList, RecordSet} from '../collection';
@@ -253,7 +253,7 @@ export default abstract class Local extends mixin(
 
       if (query) {
          items = this._applyJoin(items, query.getJoin());
-         items = this._applyWhere(items, query.getWhere());
+         items = this._applyWhere(items, query.getWhere(), query.getMeta());
          items = this._applyOrderBy(items, query.getOrderBy());
          total = adapter.forTable(items).getCount();
          items = this._applyPaging(items, query.getOffset(), query.getLimit());
@@ -434,13 +434,15 @@ export default abstract class Local extends mixin(
    protected abstract _applyJoin(data: any, join: Join[]): any;
 
    /**
-    * Применяет фильтр
-    * @param {*} data Данные
-    * @param {Object|Function} where Фильтр
+    * Applies filter
+    * @param data Data to handle
+    * @param where Query filter
+    * @param meta Query metadata
     * @return {*}
     * @protected
     */
-   protected _applyWhere(data: any, where?: Object | Function): any {
+   protected _applyWhere(data: any, where?: Object | Function, meta?: IMeta): any {
+      //TODO: support for IMeta.expand values
       where = where || {};
       if (!this._$filter && typeof where === 'object' && !Object.keys(where).length) {
          return data;
