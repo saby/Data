@@ -33,7 +33,7 @@ export {default as Memory} from './_source/Memory';
 export {default as PrefetchProxy} from './_source/PrefetchProxy';
 import * as provider from './_source/provider';
 export {provider};
-export {default as Query} from './_source/Query';
+export {default as Query, ExpandMode as QueryExpandMode, IMeta as IQueryMeta} from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
 export {default as SbisService} from './_source/SbisService';

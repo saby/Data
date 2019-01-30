@@ -6,10 +6,10 @@ define([
    'Types/_entity/Model',
    'Types/_collection/RecordSet',
    'Types/_collection/List',
-   'Types/_entity/adapter/Sbis',
    'Types/_source/Query',
    'Core/core-extend',
-   'Core/Deferred'
+   'Core/Deferred',
+   'Types/_entity/adapter/Sbis'
 ], function(
    Di,
    IRpc,
@@ -17,8 +17,7 @@ define([
    Model,
    RecordSet,
    List,
-   SbisAdapter,
-   Query,
+   QueryModule,
    coreExtend,
    Deferred
 ) {
@@ -29,8 +28,7 @@ define([
    Model = Model.default;
    RecordSet = RecordSet.default;
    List = List.default;
-   SbisAdapter = SbisAdapter.default;
-   Query = Query.default;
+   var Query = QueryModule.default;
 
    return function(SbisService, provider) {//Mock of Types/_source/provider/SbisBusinessLogic
       var meta = [
@@ -1160,6 +1158,68 @@ define([
                });
             });
 
+            it('should generate a request with expand "None" mode', function() {
+               var query = new Query();
+               query.meta({
+                  expand: QueryModule.ExpandMode.None
+               });
+
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.strictEqual(args['Фильтр'].s.length, 1);
+                  assert.strictEqual(args['Фильтр'].s[0].n, 'Разворот');
+                  assert.strictEqual(args['Фильтр'].d[0], 'Без разворота');
+               });
+            });
+
+            it('should generate a request with expand "Nodes" mode', function() {
+               var query = new Query();
+               query.meta({
+                  expand: QueryModule.ExpandMode.Nodes
+               });
+
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.strictEqual(args['Фильтр'].s.length, 2);
+                  assert.strictEqual(args['Фильтр'].s[0].n, 'ВидДерева');
+                  assert.strictEqual(args['Фильтр'].d[0], 'Только узлы');
+                  assert.strictEqual(args['Фильтр'].s[1].n, 'Разворот');
+                  assert.strictEqual(args['Фильтр'].d[1], 'С разворотом');
+               });
+            });
+
+            it('should generate a request with expand "Leaves" mode', function() {
+               var query = new Query();
+               query.meta({
+                  expand: QueryModule.ExpandMode.Leaves
+               });
+
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.strictEqual(args['Фильтр'].s.length, 2);
+                  assert.strictEqual(args['Фильтр'].s[0].n, 'ВидДерева');
+                  assert.strictEqual(args['Фильтр'].d[0], 'Только листья');
+                  assert.strictEqual(args['Фильтр'].s[1].n, 'Разворот');
+                  assert.strictEqual(args['Фильтр'].d[1], 'С разворотом');
+               });
+            });
+
+            it('should generate a request with expand "All" mode', function() {
+               var query = new Query();
+               query.meta({
+                  expand: QueryModule.ExpandMode.All
+               });
+
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.strictEqual(args['Фильтр'].s.length, 2);
+                  assert.strictEqual(args['Фильтр'].s[0].n, 'ВидДерева');
+                  assert.strictEqual(args['Фильтр'].d[0], 'Узлы и листья');
+                  assert.strictEqual(args['Фильтр'].s[1].n, 'Разворот');
+                  assert.strictEqual(args['Фильтр'].d[1], 'С разворотом');
+               });
+            });
+
             it('should generate a request with valid meta data from record', function(done) {
                var query = new Query(),
                   meta = getSampleModel();
@@ -1233,11 +1293,14 @@ define([
                   try {
                      var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[0], limit);
+                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                     assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Offset');
-                     assert.strictEqual(args['Навигация'].d[1], offset);
+                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                     assert.strictEqual(args['Навигация'].d[1], limit);
+
+                     assert.strictEqual(args['Навигация'].s[2].n, 'Offset');
+                     assert.strictEqual(args['Навигация'].d[2], offset);
 
                      done();
                   } catch (err) {
