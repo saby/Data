@@ -2,7 +2,7 @@
 /**
  * Тип данных словарь.
  * Это абстрактный класс, не предусмотрено создание самостоятельных экземпляров.
- * @class Types/_collectionDictionary
+ * @class Types/_collection/Dictionary
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
@@ -23,16 +23,16 @@ interface GenericObject<T> {}
 
 declare type DictionaryValues = Array<string> | GenericObject<string>;
 
-export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collectionDictionary.prototype */{
+export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */{
    /**
     * @cfg {Array.<String>|Object.<String>} Словарь возможных значений
-    * @name Types/_collectionDictionary#dictionary
+    * @name Types/_collection/Dictionary#dictionary
     */
    protected _$dictionary: DictionaryValues;
 
    /**
     * @cfg {Array.<String>|Object.<String>} Локализованный словарь возможных значений
-    * @name Types/_collectionDictionary#localeDictionary
+    * @name Types/_collection/Dictionary#localeDictionary
     */
    protected _$localeDictionary: DictionaryValues;
 
