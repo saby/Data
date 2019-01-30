@@ -874,7 +874,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *    });
     * </pre>
     */
-   meta(data: Object): Query {
+   meta(data: IMeta): Query {
       data = data || {};
       if (typeof data !== 'object') {
          throw new TypeError('Invalid argument "data"');
