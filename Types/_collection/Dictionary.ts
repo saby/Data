@@ -2,7 +2,7 @@
 /**
  * An abstract enity which have the dictionary as collection of keys and values.
  * It's an abstract class and it's can't have instances.
- * @class Types/_collectionDictionary
+ * @class Types/_collection/Dictionary
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
@@ -26,7 +26,7 @@ declare type DictionaryValues = Array<string> | GenericObject<string>;
 export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */{
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
-    * @name Types/_collectionDictionary#dictionary
+    * @name Types/_collection/Dictionary#dictionary
     */
    protected _$dictionary: DictionaryValues;
 

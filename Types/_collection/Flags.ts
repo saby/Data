@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_collection/Flags" />
 /**
  * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
- * @class Types/_collectionFlags
+ * @class Types/_collection/Flags
  * @extends Types/_collection/Dictionary
  * @implements Types/_collection/IFlags
  * @implements Types/_entity/ICloneable
