@@ -2,8 +2,8 @@
 /**
  * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
  * @class Types/_collectionFlags
- * @extends Types/_collectionDictionary
- * @implements Types/_collectionIFlags
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IFlags
  * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/ManyToManyMixin
@@ -27,7 +27,7 @@ function prepareValue(value): IValue {
    return value === null || value === undefined ? null : !!value;
 }
 
-export default class Flags<T> extends Dictionary<T> implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collectionFlags.prototype */{
+export default class Flags<T> extends Dictionary<T> implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collection/Flags.prototype */{
    readonly '[Types/_collection/IFlags]': boolean;
    readonly '[Types/_entity/ICloneable]': boolean;
    readonly '[Types/_entity/IProducible]': boolean;
@@ -35,7 +35,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
 
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
-    * @name Types/_collectionFlags#values
+    * @name Types/_collection/Flags#values
     */
    protected _$values: Array<IValue>;
 

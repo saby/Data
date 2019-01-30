@@ -155,7 +155,7 @@ function getKind(format: ArrayField): string {
 
 /**
  * Сериализует поле флагов
- * @param {Types/_collectionFlags} data
+ * @param {Types/_collection/Flags} data
  * @return {Array.<Boolean>}
  */
 function serializeFlags(data: any): Array<boolean> {

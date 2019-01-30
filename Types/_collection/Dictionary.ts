@@ -23,7 +23,7 @@ interface GenericObject<T> {}
 
 declare type DictionaryValues = Array<string> | GenericObject<string>;
 
-export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collectionDictionary.prototype */{
+export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */{
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
     * @name Types/_collectionDictionary#dictionary
@@ -32,7 +32,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
 
    /**
     * @cfg {Array.<String>|Object.<String>} Localized collection of keys and values
-    * @name Types/_collectionDictionary#localeDictionary
+    * @name Types/_collection/Dictionary#localeDictionary
     */
    protected _$localeDictionary: DictionaryValues;
 
