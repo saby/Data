@@ -70,7 +70,7 @@
 
 import Local, {IOptions as ILocalOptions} from './Local';
 import DataSet from './DataSet';
-import Query, {Join} from './Query';
+import Query, {IMeta, Join} from './Query';
 import {adapter} from '../entity';
 import {register} from '../di';
 import {protect, object} from '../util';
@@ -204,7 +204,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
       return data;
    }
 
-   protected _applyWhere(data: any, where?: Object | Function): any {
+   protected _applyWhere(data: any, where?: Object | Function, meta?: IMeta): any {
       //FIXME: get rid of this SBIS-specified
       if (where && typeof where === 'object') {
          where = Object.assign({}, where);
@@ -213,7 +213,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
          delete where['usePages'];
       }
 
-      return super._applyWhere(data, where);
+      return super._applyWhere(data, where, meta);
    }
 
    //endregion Local

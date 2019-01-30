@@ -131,14 +131,14 @@
  * @author Мальцев А.А.
  */
 
-import Rpc, {IPassing as IRpcPassing, IOptions as IRpcOptions} from './Rpc';
+import Rpc, {IOptions as IRpcOptions, IPassing as IRpcPassing} from './Rpc';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
-import Query from './Query';
+import Query, {ExpandMode} from './Query';
 import {RecordSet} from '../collection';
-import {Record} from '../entity';
-import {resolve, register} from '../di';
+import {adapter, Record} from '../entity';
+import {register, resolve} from '../di';
 import {logger, object} from '../util';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
@@ -181,11 +181,9 @@ export interface IMoveMeta {
 }
 
 /**
- * Возвращает ключ объекта БЛ из сложного идентификатора
- * @param {String} id Идентификатор
- * @return {String}
+ * Returns key of the BL Object from its complex id
  */
-function getKeyByComplexId(id) {
+function getKeyByComplexId(id: string): string {
    id = String(id || '');
    if (id.match(COMPLEX_ID_MATCH)) {
       return id.split(COMPLEX_ID_SEPARATOR)[0];
@@ -194,12 +192,9 @@ function getKeyByComplexId(id) {
 }
 
 /**
- * Возвращает имя объекта БЛ из сложного идентификатора
- * @param {String} id Идентификатор
- * @param {String} defaults Значение по умолчанию
- * @return {String}
+ * Returns name of the BL Object from its complex id
  */
-function getNameByComplexId(id, defaults) {
+function getNameByComplexId(id: string, defaults: string): string {
    id = String(id || '');
    if (id.match(COMPLEX_ID_MATCH)) {
       return id.split(COMPLEX_ID_SEPARATOR)[1];
@@ -208,12 +203,9 @@ function getNameByComplexId(id, defaults) {
 }
 
 /**
- * Создает сложный идентификатор
- * @param {String} id Идентификатор
- * @param {String} defaults Имя объекта БЛ по умолчанию
- * @return {Array.<String>}
+ * Creates complex id
  */
-function createComplexId(id, defaults) {
+function createComplexId(id: string, defaults: string): string[] {
    id = String(id || '');
    if (id.match(COMPLEX_ID_MATCH)) {
       return id.split(COMPLEX_ID_SEPARATOR, 2);
@@ -222,12 +214,9 @@ function createComplexId(id, defaults) {
 }
 
 /**
- * Собирает группы по именам объектов БЛ
- * @param {Array.<String>} ids Идентификаторы
- * @param {String} defaults Имя объекта БЛ по умолчанию
- * @return {Object.<Array.<String>>}
+ * Joins BL objects into groups be its names
  */
-function getGroupsByComplexIds(ids, defaults) {
+function getGroupsByComplexIds(ids: string[], defaults: string): Object {
    let groups = {};
    let name;
    for (let i = 0, len = ids.length; i < len; i++) {
@@ -241,13 +230,12 @@ function getGroupsByComplexIds(ids, defaults) {
 
 /**
  * Calls destroy method for some BL-Object
- * @param {Types/_source/SbisService} instance Экземпляр SbisService
- * @param {Array.<String>} ids Идентификаторы удаляемых записей
- * @param {String} name Имя объекта БЛ
- * @param {Object} meta Дополнительные данные
- * @return {Core/Deferred}
+ * @param instance Instance
+ * @param ids BL objects ids to delete
+ * @param name BL object name
+ * @param meta Meta data
  */
-function callDestroyWithComplexId(instance, ids, name, meta) {
+function callDestroyWithComplexId(instance: SbisService | any, ids: string[], name: string, meta: Object): ExtendPromise<any> {
    return instance._callProvider(
       instance._$endpoint.contract === name ? instance._$binding.destroy :  name + '.' + instance._$binding.destroy,
       instance._$passing.destroy.call(instance, ids, meta)
@@ -255,24 +243,22 @@ function callDestroyWithComplexId(instance, ids, name, meta) {
 }
 
 /**
- * Строит запись из объекта
- * @param {Object|Types/_entity/Record} data Данные полей записи
- * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
- * @return {Types/_entity/Record|null}
+ * Builds Record from plain object
+ * @param data Данные полей записи
+ * @param adapter
  */
-export function buildRecord(data, adapter) {
+export function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
    const Record = resolve('Types/entity:Record');
    return Record.fromObject(data, adapter);
 }
 
 /**
- * Строит рекодсет из массива
- * @param {Array.<Object>|Types/_collection/RecordSet} data Данные рекордсета
- * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
- * @param {String} idProperty
- * @return {Types/_collection/RecordSet|null}
+ * Builds RecordSet from array of plain objects
+ * @param data Данные рекордсета
+ * @param adapter Адаптер
+ * @param idProperty
  */
-export function buildRecordSet(data, adapter, idProperty) {
+export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet<Record> | null {
    if (data === null) {
       return data;
    }
@@ -295,11 +281,9 @@ export function buildRecordSet(data, adapter, idProperty) {
 }
 
 /**
- * Возвращает параметры сортировки
- * @param {Types/_source/Query} query Запрос
- * @return {Array|null}
+ * Returns sorting params
  */
-export function getSortingParams(query) {
+export function getSortingParams(query: Query): Array<string> | null {
    if (!query) {
       return null;
    }
@@ -322,13 +306,9 @@ export function getSortingParams(query) {
 }
 
 /**
- * Возвращает параметры навигации
- * @param {Types/_source/Query} query Запрос
- * @param {Object} options Опции источника
- * @param {Types/_entity/adapter/IAdapter} adapter Адаптер
- * @return {Object|null}
+ * Returns navigation parameters
  */
-export function getPagingParams(query, options, adapter) {
+export function getPagingParams(query: Query, options: IOptions, adapter: adapter.IAdapter): Object | null {
    if (!query) {
       return null;
    }
@@ -405,7 +385,7 @@ export function getPagingParams(query, options, adapter) {
             params = {
                Offset: offset || 0,
                Limit: limit,
-               'ЕстьЕще': more
+               HaveMore: more
             };
          }
    }
@@ -414,11 +394,43 @@ export function getPagingParams(query, options, adapter) {
 }
 
 /**
- * Возвращает дополнительные параметры
- * @param {Types/_source/Query} query Запрос
+ * Returns filtration parameters
+ */
+function getFilterParams(query: Query): Object | null {
+   let params = null;
+   if (query) {
+      params = query.getWhere();
+
+      let meta = query.getMeta();
+      if (meta) {
+         switch (meta.expand) {
+            case ExpandMode.None:
+               params['Разворот'] = 'Без разворота';
+               break;
+            case ExpandMode.Nodes:
+               params['Разворот'] = 'С разворотом';
+               params['ВидДерева'] = 'Только узлы';
+               break;
+            case ExpandMode.Leaves:
+               params['Разворот'] = 'С разворотом';
+               params['ВидДерева'] = 'Только листья';
+               break;
+            case ExpandMode.All:
+               params['Разворот'] = 'С разворотом';
+               params['ВидДерева'] = 'Узлы и листья';
+               break;
+         }
+      }
+   }
+
+   return params;
+}
+
+/**
+ * Returns additional paramters
  * @return {Array}
  */
-export function getAdditionalParams(query: Query) {
+export function getAdditionalParams(query: Query): Array<any> {
    let meta: any = [];
    if (query) {
       meta = query.getMeta();
@@ -486,12 +498,6 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
    return args;
 }
 
-/**
- * Возвращает аргументы метода пакетного обновления рекордсета
- * @param {Types/_collection/RecordSet} items Обновляемый рекордсет
- * @return {Object}
- * @protected
- */
 function passUpdateBatch(items: RecordSet<Record>, meta?: Object): Object {
    const RecordSet = resolve('Types/collection:RecordSet');
    let patch = RecordSet.patch(items);
@@ -514,7 +520,7 @@ function passDestroy(keys: string | string[], meta?: Object): Object {
 
 function passQuery (query: Query): Object {
    let nav = getPagingParams(query, this._$options, this._$adapter);
-   let filter = query ? query.getWhere() : null;
+   let filter = getFilterParams(query);
    let sort = getSortingParams(query);
    let add = getAdditionalParams(query);
 
@@ -557,15 +563,19 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
    };
 }
 
+interface IOldMoveMeta {
+   before: string;
+   hierField: string;
+}
+
 /**
  * Calls move method in old style
- * @param {Types/_source/SbisService} instance Экземпляр SbisService
- * @param {String} from Идентификатор перемещаемой записи
- * @param {String} to Идентификатор целевой записи
- * @param {Object} meta Дополнительные данные
- * @return {Core/Deferred}
+ * @param instance
+ * @param from Record to move
+ * @param to Record to move to
+ * @param meta Meta data
  */
-function oldMove(instance, from, to, meta) {
+function oldMove(instance: SbisService | any, from: string, to: string, meta: IOldMoveMeta): ExtendPromise<any> {
    logger.info(instance._moduleName, 'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.');
 
    let moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
