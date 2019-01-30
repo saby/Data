@@ -34,7 +34,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       super(options);
 
       if (!this._$collection['[Types/_collection/IEnum]']) {
-         throw new TypeError(`${this._moduleName}: source collection should implement Types/_collectionIEnum`);
+         throw new TypeError(`${this._moduleName}: source collection should implement Types/_collection/IEnum`);
       }
 
       this._getCursorEnumerator().setPosition(
