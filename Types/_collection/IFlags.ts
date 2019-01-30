@@ -2,14 +2,14 @@
 /**
  * Интерфейс типа "флаги".
  * Работает на основе словаря, хранящего соотвествие индексов и их значений.
- * @interface Types/_collectionIFlags
+ * @interface Types/_collection/IFlags
  * @public
  * @author Мальцев А.А.
  */
 
 export type IValue = boolean | null;
 
-export default interface IFlags<T> /** @lends Types/_collectionIFlags.prototype */{
+export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype */{
    readonly '[Types/_collection/IFlags]': boolean;
 
    /**

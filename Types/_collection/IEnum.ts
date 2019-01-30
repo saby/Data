@@ -2,14 +2,14 @@
 /**
  * Интерфейс тип "перечисляемое".
  * Работает на основе словаря, хранящего соотвествие индексов и их значений.
- * @interface Types/_collectionIEnum
+ * @interface Types/_collection/IEnum
  * @public
  * @author Мальцев А.А.
  */
 
 export type IIndex = number | string | null;
 
-export default interface IEnum<T> /** @lends Types/_collectionIEnum.prototype */{
+export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
 
    /**

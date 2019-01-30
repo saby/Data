@@ -1,9 +1,9 @@
 /// <amd-module name="Types/_collection/Enum" />
 /**
  * Тип данных "перечисляемое".
- * @class Types/_collectionEnum
- * @extends Types/_collectionDictionary
- * @implements Types/_collectionIEnum
+ * @class Types/_collection/Enum
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IEnum
  * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/ManyToManyMixin
@@ -23,7 +23,7 @@ interface ProduceOptions {
    format?: Object
 }
 
-export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collectionEnum.prototype */{
+export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
    readonly '[Types/_entity/ICloneable]': boolean;
    readonly '[Types/_entity/IProducible]': boolean;
@@ -31,7 +31,7 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
 
    /**
     * @cfg {Number|Null} Индекс выбранного значения
-    * @name Types/_collectionEnum#index
+    * @name Types/_collection/Enum#index
     */
    protected _$index: IIndex;
 
