@@ -37,7 +37,7 @@ export default class Flags extends Collection /** @lends Types/_display/Flags.pr
       super(options);
 
       if (!this._$collection['[Types/_collection/IFlags]']) {
-         throw new TypeError(this._moduleName + ': source collection should implement Types/_collectionIFlags');
+         throw new TypeError(this._moduleName + ': source collection should implement Types/_collection/IFlags');
       }
 
       if (this._$collection['[Types/_entity/ObservableMixin]']) {

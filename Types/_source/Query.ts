@@ -33,6 +33,17 @@ import {mixin} from '../util';
 declare type Where = Object | ((item: any, index: number) => boolean);
 declare type Expression = Object | Array<string> | string;
 
+export enum ExpandMode {
+   None,
+   Nodes,
+   Leaves,
+   All,
+}
+
+export interface IMeta {
+   expand?: ExpandMode;
+}
+
 /**
  * Clones object
  * @param data Object to clone
@@ -301,7 +312,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
    /**
     * Мета-данные запроса
     */
-   protected _meta: Object = {};
+   protected _meta: IMeta = {};
 
    constructor(options?: Object) {
       super();
@@ -843,7 +854,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *    });
     * </pre>
     */
-   getMeta(): Object {
+   getMeta(): IMeta {
       return this._meta;
    }
 
@@ -863,7 +874,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *    });
     * </pre>
     */
-   meta(data: Object): Query {
+   meta(data: IMeta): Query {
       data = data || {};
       if (typeof data !== 'object') {
          throw new TypeError('Invalid argument "data"');
