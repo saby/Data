@@ -363,7 +363,9 @@ export default class Model extends mixin(
    get(name: string): any {
       this._pushDependency(name);
 
-      if (this._fieldsCache.has(name)) {
+      const isCalculating = this._calculatingProperties ? this._calculatingProperties.has(name) : false;
+
+      if (!isCalculating && this._fieldsCache.has(name)) {
          return this._fieldsCache.get(name);
       }
 
@@ -390,7 +392,7 @@ export default class Model extends mixin(
          this._addChild(value, this._getRelationNameForField(name));
       }
 
-      if (this._isFieldValueCacheable(value)) {
+      if (!isCalculating && this._isFieldValueCacheable(value)) {
          this._fieldsCache.set(name, value);
       } else if (this._fieldsCache.has(name)) {
          this._fieldsCache.delete(name);
