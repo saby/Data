@@ -37,7 +37,7 @@ function getTimeZone(date: Date): string {
    if (totalMinutes < 0) {
       totalMinutes = -totalMinutes;
    }
-   let hours: number | string = Math.ceil(totalMinutes / 60);
+   let hours: number | string = Math.floor(totalMinutes / 60);
    let minutes: number | string = totalMinutes - 60 * hours;
 
    if (hours < 10) {
