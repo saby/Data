@@ -1,5 +1,6 @@
 ///<amd-module name="Types/_entity/date/toSql" />
 /**
+ * Serializes Date to the preferred SQL format.
  * @public
  * @author Мальцев А.А.
  */
@@ -19,7 +20,7 @@ const MODE = {
    'DATETIME': 'datetime'
 };
 
-const modeFormat = {
+const FORMAT = {
    'time': 'HH:mm:ss',
    'date': 'YYYY-MM-DD',
    'datetime': 'YYYY-MM-DD HH:mm:ss'
@@ -28,32 +29,43 @@ const modeFormat = {
 const UNIX_EPOCH_START = new Date(0);
 
 /**
- * Приводит объект Date() к строке, содержащей дату в формате SQL.
- * @function
- * @name Types/_entity/date/toSql
- * @param {Date} date Дата
- * @param {SerializeMode} [mode=MODE_DATETIME] Режим сериализации.
- * @return {String}
+ * Returns time zone offset in [+-]HH or [+-]HH:mm format
  */
-function getTimeZone(date:Date):string {
-   var tz = Math.ceil(-date.getTimezoneOffset() / 60),
-      tzTime = Math.abs(date.getTimezoneOffset()) % 60,
-      isNegative = tz < 0;
-   if (isNegative) {
-      tz = -tz;
+function getTimeZone(date: Date): string {
+   let totalMinutes = date.getTimezoneOffset();
+   const isEast = totalMinutes <= 0;
+   if (totalMinutes < 0) {
+      totalMinutes = -totalMinutes;
    }
-   return (isNegative ? '-' : '+') + (tz < 10 ? '0' : '') + tz + (tzTime ? `:${tzTime}` : '');
+   let hours: number | string = Math.floor(totalMinutes / 60);
+   let minutes: number | string = totalMinutes - 60 * hours;
+
+   if (hours < 10) {
+      hours = '0' + hours;
+   }
+   if (minutes === 0) {
+      minutes = '';
+   } else if (minutes < 10) {
+      minutes = '0' + minutes;
+   }
+
+   return `${isEast ? '+' : '-'}${hours}${minutes ? ':' + minutes : ''}`;
 }
 
 export default function toSQL(date: Date, mode: string = MODE.DATETIME) {
-   let result = dateFormatter(date, modeFormat[mode]);
+   let result = dateFormatter(date, FORMAT[mode]);
+
    if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {
+      //Add milliseconds
       if (date.getMilliseconds() > 0) {
          result += `.${date.getMilliseconds()}`
       }
+
+      //Add time zone offset
       result += getTimeZone(date);
    }
+
    return result;
-};
+}
 
 export {MODE};

@@ -93,5 +93,4 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
    }
 
    return retval;
-};
-
+}
