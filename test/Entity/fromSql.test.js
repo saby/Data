@@ -1,12 +1,12 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_entity/date/fromSql'
+   'Types/_formatter/dateFromSql'
 ], function(
    fromSql
 ) {
    'use strict';
    var fromSql = fromSql.default;
-   describe('Types/_entity/date/fromSql', function() {
+   describe('Types/_formatter/dateFromSql', function() {
       var localTZ = (new Date()).getTimezoneOffset(),
          localTZHours = Math.floor(localTZ / 60),
          localTZMinutes = localTZ - (60 * localTZHours);

@@ -1,4 +1,4 @@
-///<amd-module name="Types/_entity/date/fromSql" />
+///<amd-module name="Types/_formatter/dateFromSql" />
 //@ts-ignore
 import constants = require('Core/constants');
 
@@ -15,7 +15,7 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
 /**
  * Создает дату из строки даты в формате SQL. Если строка содержит информацию о времени, то оно будет приведено к местному.
  * @function
- * @name Types/_entity/date/fromSQL
+ * @name Types/_formatter/dateFromSql
  * @param {String} dateTime Дата и/или время в формате SQL
  * @param {Number} [defaultTimeZone] Использовать указанная временную зону (смещение относительно часового пояса UTC в минутах), если в строке временная зона не задана.
  * @return {Date}
