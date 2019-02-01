@@ -43,9 +43,9 @@ function patchFunction(scope, property, alias) {
 }
 
 function patch() {
-   patchFunction(Record.prototype, 'get', 'WS.Data/Entity/Record::get()');
-   patchFunction(Model.prototype, 'get', 'WS.Data/Entity/Model::get()');
-   patchFunction(Model.prototype, '_processCalculatedValue', 'WS.Data/Entity/Model::_processCalculatedValue()');
+   patchFunction(Record.prototype, 'get', 'Types/entity:Record::get()');
+   patchFunction(Model.prototype, 'get', 'Types/entity:Model::get()');
+   patchFunction(Model.prototype, '_processCalculatedValue', 'Types/entity:Model::_processCalculatedValue()');
 }
 
 function restore() {
