@@ -36,12 +36,13 @@ const UNIX_EPOCH_START = new Date(0);
  * @return {String}
  */
 function getTimeZone(date:Date):string {
-   var tz = -date.getTimezoneOffset() / 60,
+   var tz = Math.ceil(-date.getTimezoneOffset() / 60),
+      tzTime = Math.abs(date.getTimezoneOffset()) % 60,
       isNegative = tz < 0;
    if (isNegative) {
       tz = -tz;
    }
-   return (isNegative ? '-' : '+') + (tz < 10 ? '0' : '') + tz;
+   return (isNegative ? '-' : '+') + (tz < 10 ? '0' : '') + tz + (tzTime ? `:${tzTime}` : '');
 }
 
 export default function toSQL(date: Date, mode: string = MODE.DATETIME) {
