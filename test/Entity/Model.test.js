@@ -304,6 +304,28 @@ define([
             });
          });
 
+         it('should write adn read updated cached value inside set', function() {
+            var updatedValue;
+
+            var model = new Model({
+               rawData: {
+                  foo: [1]
+               },
+               properties: {
+                  bar: {
+                     set: function(value) {
+                        this.set('foo', [value]);
+                        updatedValue = this.get('foo');
+                     }
+                  }
+               }
+            });
+            model.set('bar', 2);
+
+            assert.deepEqual(updatedValue, [2]);
+            assert.deepEqual(model.get('foo'), [2]);
+         });
+
          it('should throw an Error for read only property', function() {
             assert.throws(function() {
                model.set('calcRead', 100);
