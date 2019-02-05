@@ -13,6 +13,7 @@
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
       "build:units": "saby-units --install",
       "build:compile": "tsc -b --verbose",
+      "tslint": "tslint -q -p ./",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:node": "saby-units --isolated --report",
@@ -49,8 +50,8 @@
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.7",
       "eslint": "^5.3.0",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.200",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200"
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200"
    }
 }
