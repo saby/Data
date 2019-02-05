@@ -2866,46 +2866,30 @@ export default class Collection extends mixin(
    //endregion
 }
 
-Collection.prototype._moduleName = 'Types/display:Collection';
-Collection.prototype['[Types/_display/Collection]'] = true;
-// @ts-ignore
-Collection.prototype._$collection = null;
-// @ts-ignore
-Collection.prototype._$filter = null;
-// @ts-ignore
-Collection.prototype._$group = null;
-// @ts-ignore
-Collection.prototype._$sort = null;
-// @ts-ignore
-Collection.prototype._$idProperty = '';
-// @ts-ignore
-Collection.prototype._$unique = false;
-// @ts-ignore
-Collection.prototype._$importantItemProperties = null;
-// @ts-ignore
-Collection.prototype._localize = false;
-// @ts-ignore
-Collection.prototype._itemModule = 'Types/display:CollectionItem';
-// @ts-ignore
-Collection.prototype._itemsFactory = null;
-// @ts-ignore
-Collection.prototype._composer = null;
-// @ts-ignore
-Collection.prototype._sourceCollectionSynchronized = true;
-// @ts-ignore
-Collection.prototype._sourceCollectionDelayedCallbacks = null;
-// @ts-ignore
-Collection.prototype._cursorEnumerator = null;
-// @ts-ignore
-Collection.prototype._utilityEnumerator = null;
-// @ts-ignore
-Collection.prototype._onCollectionChange = null;
-// @ts-ignore
-Collection.prototype._onCollectionItemChange = null;
-// @ts-ignore
-Collection.prototype._oEventRaisingChange = null;
+Object.assign(Collection.prototype, {
+   '[Types/_display/Collection]': true,
+   _moduleName: 'Types/display:Collection',
+   _$collection: null,
+   _$filter: null,
+   _$group: null,
+   _$sort: null,
+   _$idProperty: '',
+   _$unique: false,
+   _$importantItemProperties: null,
+   _localize: false,
+   _itemModule: 'Types/display:CollectionItem',
+   _itemsFactory: null,
+   _composer: null,
+   _sourceCollectionSynchronized: true,
+   _sourceCollectionDelayedCallbacks: null,
+   _cursorEnumerator: null,
+   _utilityEnumerator: null,
+   _onCollectionChange: null,
+   _onCollectionItemChange: null,
+   _oEventRaisingChange: null
+});
 
-// Deprecated
+// FIXME: deprecated
 Collection.prototype['[WS.Data/Display/Collection]'] = true;
 
 register('Types/display:Collection', Collection);

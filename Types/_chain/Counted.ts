@@ -55,7 +55,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
    // endregion Types/_collection/IEnumerable
 }
 
-Counted.prototype['[Types/_chain/Counted]'] = true;
-
-// @ts-ignore
-Counted.prototype._key = null;
+Object.assign(Counted.prototype,{
+   '[Types/_chain/Counted]': true,
+   _key: null
+});

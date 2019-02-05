@@ -286,15 +286,13 @@ export default class SbisTable extends mixin(
    //endregion Protected methods
 }
 
-SbisTable.prototype['[Types/_entity/adapter/SbisTable]'] = true;
-// @ts-ignore
-SbisTable.prototype['[Types/_entity/adapter/ITable]'] = true;
-// @ts-ignore
-SbisTable.prototype['[Types/_entity/adapter/IMetaData]'] = true;
-// @ts-ignore
-SbisTable.prototype['[Types/_entity/ICloneable]'] = true;
-SbisTable.prototype._type = 'recordset';
+Object.assign(SbisTable.prototype, {
+   '[Types/_entity/adapter/SbisTable]': true,
+   '[Types/_entity/adapter/ITable]': true,
+   '[Types/_entity/adapter/IMetaData]': true,
+   '[Types/_entity/ICloneable]': true,
+   _type: 'recordset'
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 SbisTable.prototype['[WS.Data/Entity/ICloneable]'] = true;
-

@@ -61,13 +61,10 @@ export default class SlicedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-SlicedEnumerator.prototype.previous = null;
-// @ts-ignore
-SlicedEnumerator.prototype.now = 0;
-// @ts-ignore
-SlicedEnumerator.prototype.begin = 0;
-// @ts-ignore
-SlicedEnumerator.prototype.end = 0;
-// @ts-ignore
-SlicedEnumerator.prototype.enumerator = null;
+Object.assign(SlicedEnumerator.prototype, {
+   previous: null,
+   now: 0,
+   begin: 0,
+   end: 0,
+   enumerator: null
+});

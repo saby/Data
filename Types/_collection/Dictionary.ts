@@ -193,17 +193,14 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
 
 applyMixins(Dictionary, OptionsToPropertyMixin, ObservableMixin);
 
-Dictionary.prototype['[Types/_collection/Dictionary]'] = true;
-// @ts-ignore
-Dictionary.prototype['[Types/_collection/IEnumerable]'] = true;
-// @ts-ignore
-Dictionary.prototype['[Types/_entity/IEquatable]'] = true;
-// @ts-ignore
-Dictionary.prototype._$dictionary = undefined;
-// @ts-ignore
-Dictionary.prototype._$localeDictionary = undefined;
-// @ts-ignore
-Dictionary.prototype._type = undefined;
+Object.assign(Dictionary.prototype, {
+   '[Types/_collection/Dictionary]': true,
+   '[Types/_collection/IEnumerable]': true,
+   '[Types/_entity/IEquatable]': true,
+   _$dictionary: undefined,
+   _$localeDictionary: undefined,
+   _type: undefined
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Dictionary.prototype['[WS.Data/Collection/IEnumerable]'] = true;

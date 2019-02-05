@@ -77,8 +77,8 @@ export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grou
    // endregion Types/_collection/IEnumerable
 }
 
-Grouped.prototype['[Types/_chain/Grouped]'] = true;
-// @ts-ignore
-Grouped.prototype._key = null;
-// @ts-ignore
-Grouped.prototype._value = null;
+Object.assign(Grouped.prototype, {
+   '[Types/_chain/Grouped]': true,
+   _key: null,
+   _value: null
+});

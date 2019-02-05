@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_formatter/date" />
 
 //@ts-ignore
-import locales = require("Core/helpers/i18n/locales");
+import locales = require('Core/helpers/i18n/locales');
 import toRoman from './numberRoman';
 
 declare type DateFormatOptions = {

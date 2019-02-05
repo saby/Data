@@ -1,6 +1,6 @@
 /// <amd-module name="Types/_formatter/_numberWords/utils" />
 
-export function iterateNumber(numAsStr:string, callBack: Function) {
+export function iterateNumber(numAsStr: string, callBack: Function) {
    let counter = 0;
    let threes = [];
    while (numAsStr.length > 0) {

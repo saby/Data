@@ -641,26 +641,20 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    //endregion
 }
 
-Tree.prototype._moduleName = 'Types/display:Tree';
-Tree.prototype['[Types/_display/Tree]'] = true;
-// @ts-ignore
-Tree.prototype._itemModule = 'Types/display:TreeItem';
-// @ts-ignore
-Tree.prototype._$parentProperty = '';
-// @ts-ignore
-Tree.prototype._$nodeProperty = '';
-// @ts-ignore
-Tree.prototype._$childrenProperty = '';
-// @ts-ignore
-Tree.prototype._$hasChildrenProperty = '';
-// @ts-ignore
-Tree.prototype._$root = undefined;
-// @ts-ignore
-Tree.prototype._$rootEnumerable = false;
-// @ts-ignore
-Tree.prototype._root = null;
+Object.assign(Tree.prototype, {
+   '[Types/_display/Tree]': true,
+   _moduleName: 'Types/display:Tree',
+   _itemModule: 'Types/display:TreeItem',
+   _$parentProperty: '',
+   _$nodeProperty: '',
+   _$childrenProperty: '',
+   _$hasChildrenProperty: '',
+   _$root: undefined,
+   _$rootEnumerable: false,
+   _root: null
+});
 
-// Deprecated
+// DIXME: deprecated
 Tree.prototype['[WS.Data/Display/Tree]'] = true;
 
 register('Types/display:Tree', Tree);

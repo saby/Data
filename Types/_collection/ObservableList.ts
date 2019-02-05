@@ -306,10 +306,11 @@ export default class ObservableList<T> extends mixin(
    //endregion Protected methods
 }
 
-ObservableList.prototype['[Types/_collection/ObservableList]'] = true;
-// @ts-ignore
-ObservableList.prototype['[Types/_entity/relation/IReceiver]'] = true;
-ObservableList.prototype._moduleName = 'Types/collection:ObservableList';
-ObservableList.prototype._resetChangesCount = 100;
+Object.assign(ObservableList.prototype, {
+   '[Types/_collection/ObservableList]': true,
+   '[Types/_entity/relation/IReceiver]': true,
+   _moduleName: 'Types/collection:ObservableList',
+   _resetChangesCount: 100
+});
 
 register('Types/collection:ObservableList', ObservableList, {instantiate: false});

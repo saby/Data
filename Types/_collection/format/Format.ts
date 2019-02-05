@@ -193,10 +193,10 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
    //endregion Protected methods
 }
 
-Format.prototype['[Types/_collection/format/Format]'] = true;
-// @ts-ignore
-Format.prototype['[Types/_entity/IEquatable]'] = true;
-// @ts-ignore
-Format.prototype._moduleName = 'Types/collection:format.Format';
+Object.assign(Format.prototype,{
+   '[Types/_collection/format/Format]': true,
+   '[Types/_entity/IEquatable]': true,
+   _moduleName: 'Types/collection:format.Format'
+});
 
 register('Types/collection:format.Format', Format, {instantiate: false});

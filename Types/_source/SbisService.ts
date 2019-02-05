@@ -920,295 +920,287 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    //endregion Statics
 }
 
-SbisService.prototype['[Types/_source/SbisService]'] = true;
-SbisService.prototype._moduleName = 'Types/source:SbisService';
+Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.prototype */ {
+   '[Types/_source/SbisService]': true,
+   _moduleName: 'Types/source:SbisService',
 
-// @ts-ignore
-SbisService.prototype._$binding = {
+   _$binding: {
+      /**
+       * @cfg {String} Имя метода для создания записи через {@link create}.
+       * @name Types/_source/SbisService#binding.create
+       * @example
+       * Зададим свою реализацию для метода create:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             create: 'МойМетодСоздать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * Зададим реализацию для метода create на другом объекте БЛ:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             create: 'Персонал.Создать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       */
+      create: 'Создать',
+
+      /**
+       * @cfg {String} Имя метода для чтения записи через {@link read}.
+       * @name Types/_source/SbisService#binding.read
+       * @example
+       * Зададим свою реализацию для метода read:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             read: 'МойМетодПрочитать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * Зададим реализацию для метода create на другом объекте БЛ:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             read: 'Персонал.Прочитать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       */
+      read: 'Прочитать',
+
+      /**
+       * @cfg {String} Имя метода для обновления записи или рекордсета через {@link update}.
+       * @name Types/_source/SbisService#binding.update
+       * @example
+       * Зададим свою реализацию для метода update:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             update: 'МойМетодЗаписать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * Зададим реализацию для метода update на другом объекте БЛ:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             update: 'Персонал.Записать'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       */
+      update: 'Записать',
+
+      /**
+       * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных записей.
+       * @remark
+       * Метод должен принимать следующий набор аргументов:
+       * RecordSet changed,
+       * RecordSet added,
+       * Array<Sting|Number> removed
+       * Где changed - измененные записи, added - добавленные записи, removed - ключи удаленных записей.
+       * @name Types/_source/SbisService#binding.updateBatch
+       */
+      updateBatch: '',
+
+      /**
+       * @cfg {String} Имя метода для удаления записи через {@link destroy}.
+       * @name Types/_source/SbisService#binding.destroy
+       * @example
+       * Зададим свою реализацию для метода destroy:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             destroy: 'МойМетодУдалить'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * Зададим реализацию для метода destroy на другом объекте БЛ:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             destroy: 'Персонал.Удалить'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       */
+      destroy: 'Удалить',
+
+      /**
+       * @cfg {String} Имя метода для получения списка записей через {@link query}.
+       * @name Types/_source/SbisService#binding.query
+       * @example
+       * Зададим свою реализацию для метода query:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             query: 'МойСписок'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * Зададим реализацию для метода query на другом объекте БЛ:
+       * <pre>
+       *    require(['Types/source'], function(source) {
+       *       var dataSource = new source.SbisService({
+       *          endpoint: 'Сотрудник',
+       *          binding: {
+       *             query: 'Персонал.Список'
+       *          }
+       *       });
+       *    });
+       * </pre>
+       */
+      query: 'Список',
+
+      /**
+       * @cfg {String} Имя метода для копирования записей через {@link copy}.
+       * @name Types/_source/SbisService#binding.copy
+       */
+      copy: 'Копировать',
+
+      /**
+       * @cfg {String} Имя метода для объединения записей через {@link merge}.
+       * @name Types/_source/SbisService#binding.merge
+       */
+      merge: 'Объединить',
+
+      /**
+       * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
+       * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update)
+       * они обязательно должны быть у объекта БЛ.
+       * @name Types/_source/SbisService#binding.move
+       */
+      move: 'Move',
+
+      /**
+       * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
+       * @name Types/_source/SbisService#binding.format
+       */
+      format: ''
+   },
+
+   _$passing: {
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
+       * @name Types/_source/BindingMixin#passing.create
+       */
+      create: passCreate,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
+       * @name Types/_source/BindingMixin#passing.read
+       */
+      read: passRead,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
+       * @name Types/_source/BindingMixin#passing.update
+       */
+      update: passUpdate,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
+       * @name Types/_source/BindingMixin#passing.destroy
+       */
+      destroy: passDestroy,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
+       * @name Types/_source/BindingMixin#passing.query
+       */
+      query: passQuery,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
+       * @name Types/_source/BindingMixin#passing.copy
+       */
+      copy: passCopy,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
+       * @name Types/_source/BindingMixin#passing.merge
+       */
+      merge: passMerge,
+
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
+       * @name Types/_source/BindingMixin#passing.move
+       */
+      move: passMove
+   },
+
    /**
-    * @cfg {String} Имя метода для создания записи через {@link create}.
-    * @name Types/_source/SbisService#binding.create
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
+    * @name Types/_source/SbisService#adapter
+    * @see getAdapter
+    * @see Types/_entity/adapter/Sbis
+    * @see Types/di
+    */
+   _$adapter: 'Types/entity:adapter.Sbis',
+
+   /**
+    * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+    * @name Types/_source/SbisService#provider
+    * @see Types/_source/Rpc#provider
+    * @see getProvider
+    * @see Types/di
     * @example
-    * Зададим свою реализацию для метода create:
+    * Используем провайдер нотификатора:
     * <pre>
-    *    require(['Types/source'], function(source) {
+    *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source SbisPluginProvider) {
     *       var dataSource = new source.SbisService({
     *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             create: 'МойМетодСоздать'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    * Зададим реализацию для метода create на другом объекте БЛ:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             create: 'Персонал.Создать'
-    *          }
+    *          provider: new SbisPluginProvider()
     *       });
     *    });
     * </pre>
     */
-   create: 'Создать',
+   _$provider: 'Types/source:provider.SbisBusinessLogic',
 
    /**
-    * @cfg {String} Имя метода для чтения записи через {@link read}.
-    * @name Types/_source/SbisService#binding.read
-    * @example
-    * Зададим свою реализацию для метода read:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             read: 'МойМетодПрочитать'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    * Зададим реализацию для метода create на другом объекте БЛ:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             read: 'Персонал.Прочитать'
-    *          }
-    *       });
-    *    });
-    * </pre>
+    * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+    * @name Types/_source/SbisService#orderProperty
+    * @see move
     */
-   read: 'Прочитать',
+   _$orderProperty: 'ПорНомер',
 
-   /**
-    * @cfg {String} Имя метода для обновления записи или рекордсета через {@link update}.
-    * @name Types/_source/SbisService#binding.update
-    * @example
-    * Зададим свою реализацию для метода update:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             update: 'МойМетодЗаписать'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    * Зададим реализацию для метода update на другом объекте БЛ:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             update: 'Персонал.Записать'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    */
-   update: 'Записать',
-
-   /**
-    * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных записей.
-    * @remark
-    * Метод должен принимать следующий набор аргументов:
-    * RecordSet changed,
-    * RecordSet added,
-    * Array<Sting|Number> removed
-    * Где changed - измененные записи, added - добавленные записи, removed - ключи удаленных записей.
-    * @name Types/_source/SbisService#binding.updateBatch
-    */
-   updateBatch: '',
-
-   /**
-    * @cfg {String} Имя метода для удаления записи через {@link destroy}.
-    * @name Types/_source/SbisService#binding.destroy
-    * @example
-    * Зададим свою реализацию для метода destroy:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             destroy: 'МойМетодУдалить'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    * Зададим реализацию для метода destroy на другом объекте БЛ:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             destroy: 'Персонал.Удалить'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    */
-   destroy: 'Удалить',
-
-   /**
-    * @cfg {String} Имя метода для получения списка записей через {@link query}.
-    * @name Types/_source/SbisService#binding.query
-    * @example
-    * Зададим свою реализацию для метода query:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             query: 'МойСписок'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    * Зададим реализацию для метода query на другом объекте БЛ:
-    * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             query: 'Персонал.Список'
-    *          }
-    *       });
-    *    });
-    * </pre>
-    */
-   query: 'Список',
-
-   /**
-    * @cfg {String} Имя метода для копирования записей через {@link copy}.
-    * @name Types/_source/SbisService#binding.copy
-    */
-   copy: 'Копировать',
-
-   /**
-    * @cfg {String} Имя метода для объединения записей через {@link merge}.
-    * @name Types/_source/SbisService#binding.merge
-    */
-   merge: 'Объединить',
-
-   /**
-    * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
-    * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update)
-    * они обязательно должны быть у объекта БЛ.
-    * @name Types/_source/SbisService#binding.move
-    */
-   move: 'Move',
-
-   /**
-    * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
-    * @name Types/_source/SbisService#binding.format
-    */
-   format: ''
-};
-
-// @ts-ignore
-SbisService.prototype._$passing = {
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-    * @name Types/_source/BindingMixin#passing.create
-    */
-   create: passCreate,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-    * @name Types/_source/BindingMixin#passing.read
-    */
-   read: passRead,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-    * @name Types/_source/BindingMixin#passing.update
-    */
-   update: passUpdate,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-    * @name Types/_source/BindingMixin#passing.destroy
-    */
-   destroy: passDestroy,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-    * @name Types/_source/BindingMixin#passing.query
-    */
-   query: passQuery,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-    * @name Types/_source/BindingMixin#passing.copy
-    */
-   copy: passCopy,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-    * @name Types/_source/BindingMixin#passing.merge
-    */
-   merge: passMerge,
-
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-    * @name Types/_source/BindingMixin#passing.move
-    */
-   move: passMove
-};
-
-/**
- * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
- * @name Types/_source/SbisService#adapter
- * @see getAdapter
- * @see Types/_entity/adapter/Sbis
- * @see Types/di
- */
-// @ts-ignore
-SbisService.prototype._$adapter = 'Types/entity:adapter.Sbis';
-
-/**
- * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
- * @name Types/_source/SbisService#provider
- * @see Types/_source/Rpc#provider
- * @see getProvider
- * @see Types/di
- * @example
- * Используем провайдер нотификатора:
- * <pre>
- *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source SbisPluginProvider) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'Сотрудник',
- *          provider: new SbisPluginProvider()
- *       });
- *    });
- * </pre>
- */
-// @ts-ignore
-SbisService.prototype._$provider = 'Types/source:provider.SbisBusinessLogic';
-
-/**
- * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
- * @name Types/_source/SbisService#orderProperty
- * @see move
- */
-// @ts-ignore
-SbisService.prototype._$orderProperty = 'ПорНомер';
-
-// @ts-ignore
-SbisService.prototype._$options = OptionsMixin.addOptions(Rpc, {
-   /**
-    * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
-    * @name Types/_source/SbisService#options.hasMoreProperty
-    */
-   hasMoreProperty: 'hasMore'
+   _$options: OptionsMixin.addOptions(Rpc, {
+      /**
+       * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
+       * @name Types/_source/SbisService#options.hasMoreProperty
+       */
+      hasMoreProperty: 'hasMore'
+   })
 });
-
-//Also add SBIS adapter to lazy loaded dependencies
-SbisService.prototype._additionalDependencies = Rpc.prototype._additionalDependencies.slice();
-//SbisService.prototype._additionalDependencies.push('Types/_entity/adapter/Sbis');
 
 register('Types/source:SbisService', SbisService, {instantiate: false});

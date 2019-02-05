@@ -8,13 +8,11 @@ export default function jsonReplacer(name: string, value: any) {
       return {
          $serialized$: '-inf'
       };
-   }
-   else if (value === undefined) {
+   } else if (value === undefined) {
       return {
          $serialized$: 'undef'
       };
-   }//@ts-ignore
-   else if (Number.isNaN(value)) {
+   } else if (Number.isNaN(value)) {
       return {
          $serialized$: 'NaN'
       };

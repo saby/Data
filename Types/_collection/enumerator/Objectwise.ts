@@ -96,12 +96,10 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
    // endregion Public methods
 }
 
-Objectwise.prototype['[Types/_collection/enumerator/Objectwise]'] = true;
-// @ts-ignore
-Objectwise.prototype._items = null;
-// @ts-ignore
-Objectwise.prototype._keys = null;
-// @ts-ignore
-Objectwise.prototype._index = -1;
-// @ts-ignore
-Objectwise.prototype._filter = null;
+Object.assign(Objectwise.prototype,{
+   '[Types/_collection/enumerator/Objectwise]': true,
+   _items: null,
+   _keys: null,
+   _index: -1,
+   _filter: null
+});

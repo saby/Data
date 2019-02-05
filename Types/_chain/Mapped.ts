@@ -57,8 +57,8 @@ export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mappe
    // endregion Types/_collection/IEnumerable
 }
 
-Mapped.prototype['[Types/_chain/Mapped]'] = true;
-// @ts-ignore
-Mapped.prototype._callback = null;
-// @ts-ignore
-Mapped.prototype._callbackContext = null;
+Object.assign(Mapped.prototype, {
+   ['[Types/_chain/Mapped]']: true,
+   _callback: null,
+   _callbackContext: null
+});

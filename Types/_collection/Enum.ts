@@ -184,19 +184,15 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
 
 applyMixins(Enum, ManyToManyMixin, SerializableMixin, CloneableMixin);
 
-Enum.prototype['[Types/_collection/Enum]'] = true;
-// @ts-ignore
-Enum.prototype['[Types/_collection/IEnum]'] = true;
-// @ts-ignore
-Enum.prototype['[Types/_entity/ICloneable]'] = true;
-// @ts-ignore
-Enum.prototype['[Types/_entity/IProducible]'] = true;
-// @ts-ignore
-Enum.prototype._moduleName = 'Types/collection:Enum';
-// @ts-ignore
-Enum.prototype._$index = null;
-// @ts-ignore
-Enum.prototype._type = 'enum';
+Object.assign(Enum.prototype,{
+   '[Types/_collection/Enum]': true,
+   '[Types/_collection/IEnum]': true,
+   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/IProducible]': true,
+   _moduleName: 'Types/collection:Enum',
+   _$index: null,
+   _type: 'enum'
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Enum.prototype['[WS.Data/Type/Enum]'] = true;

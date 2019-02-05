@@ -22,7 +22,6 @@ import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
 import {isEqual} from '../../object';
 
-// @ts-ignore
 export default abstract class Field extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{

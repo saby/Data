@@ -797,9 +797,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    // endregion Static methods
 }
 
-// @ts-ignore
-Abstract.prototype['[Types/_chain/Abstract]'] = true;
-// @ts-ignore
-Abstract.prototype._source = null;
-// @ts-ignore
-Abstract.prototype._previous = null;
+Object.assign(Abstract.prototype, {
+   '[Types/_chain/Abstract]': true,
+   _source: null,
+   _previous: null
+});

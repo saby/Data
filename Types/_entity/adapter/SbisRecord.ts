@@ -144,13 +144,13 @@ export default class SbisRecord extends mixin(
    //endregion Protected methods
 }
 
-SbisRecord.prototype['[Types/_entity/adapter/SbisRecord]'] = true;
-// @ts-ignore
-SbisRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-// @ts-ignore
-SbisRecord.prototype['[Types/_entity/ICloneable]'] = true;
-SbisRecord.prototype._type = 'record';
-SbisRecord.prototype._castSeparator = ',';
+Object.assign(SbisRecord.prototype, {
+   '[Types/_entity/adapter/SbisRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   '[Types/_entity/ICloneable]': true,
+   _type: 'record',
+   _castSeparator: ','
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;

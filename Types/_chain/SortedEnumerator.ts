@@ -47,5 +47,6 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
    }
 }
 
-// @ts-ignore
-SortedEnumerator.prototype.compareFunction = null;
+Object.assign(SortedEnumerator.prototype, {
+   compareFunction: null
+});
