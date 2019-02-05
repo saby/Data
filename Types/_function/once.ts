@@ -32,14 +32,17 @@
  * @public
  * @author Мальцев А.А.
  */
-let storage = new WeakMap();
 
 export default function once(original:Function): Function {
-   return function (...args):any {
-      if (!storage.has(original)) {
-         const result = original.apply(this, args);
-         storage.set(original, result);
+   let called = false,
+      result;
+   return function() {
+      if (!called) {
+         result = original.apply(this, arguments);
+         called = true;
+      } else {
+         original = null;
       }
-      return storage.get(original);
-   }
+      return result;
+   };
 }
