@@ -16,7 +16,7 @@ import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
 import {mixin} from '../../util';
-import toSql, {MODE as toSqlMode} from '../date/toSql';
+import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 const serializer = (function() {
    let serialize = function(data) {
@@ -40,19 +40,19 @@ const serializer = (function() {
          //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
          return obj.getRawData(true);
       } else if (obj instanceof Date) {
-         let mode = toSqlMode.DATETIME;
+         let mode = TO_SQL_MODE.DATETIME;
          obj = <ExtendDate>obj;
          if (obj.getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
                case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE:
-                  mode = toSqlMode.DATE;
+                  mode = TO_SQL_MODE.DATE;
                   break;
                case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME:
-                  mode = toSqlMode.TIME;
+                  mode = TO_SQL_MODE.TIME;
                   break;
             }
          }
-         return toSql(obj, mode);
+         return dateToSql(obj, mode);
       } else {
          //Check if 'obj' is a scalar value wrapper
          if (obj.valueOf) {

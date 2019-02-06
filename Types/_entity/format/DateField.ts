@@ -16,14 +16,14 @@
  */
 
 import Field from './Field';
-import toSql, {MODE as toSqlMode} from '../date/toSql';
+import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 export default class DateField extends Field /** @lends Types/_entity/format/DateField.prototype */{
       //region Public methods
 
       getDefaultValue() {
          if (this._$defaultValue instanceof Date) {
-            return toSql(this._$defaultValue, toSqlMode.DATE);
+            return dateToSql(this._$defaultValue, TO_SQL_MODE.DATE);
          }
          return this._$defaultValue;
       }
