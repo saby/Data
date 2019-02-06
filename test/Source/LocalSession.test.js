@@ -7,7 +7,7 @@ define([
    'Types/_collection/RecordSet',
    'Types/_collection/List',
    'Core/core-simpleExtend',
-   'Lib/Storage/LocalStorage'
+   'Browser/Storage'
 ], function(
    LocalSession,
    DataSet,
@@ -16,7 +16,7 @@ define([
    RecordSet,
    List,
    coreExtend,
-   CoreLocalStorage
+   Storage
 ) {
    LocalSession = LocalSession.default;
    DataSet = DataSet.default;
@@ -26,10 +26,10 @@ define([
    List = List.default;
 
    var source,
-      ls = new CoreLocalStorage('mdl_solarsystem'),
-      ls5 = new CoreLocalStorage('mdl_solarsystem_5'),
-      ls6 = new CoreLocalStorage('mdl_solarsystem_6'),
-      ls7 = new CoreLocalStorage('mdl_solarsystem_7'),
+      ls = new Storage.LocalStorage('mdl_solarsystem'),
+      ls5 = new Storage.LocalStorage('mdl_solarsystem_5'),
+      ls6 = new Storage.LocalStorage('mdl_solarsystem_6'),
+      ls7 = new Storage.LocalStorage('mdl_solarsystem_7'),
       existsId = 5,
       existsIdIndex = 6,
       existsId2 = '6',

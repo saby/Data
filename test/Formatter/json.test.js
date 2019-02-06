@@ -3,7 +3,7 @@ define([
    'Types/formatter',
    // 'WS.Data/Entity/Model',
    // 'WS.Data/Collection/List',
-   'Core/ConsoleLogger'
+   'Env/Env'
    //'Data/_type/adapter/Json'
 ], function (
    formatter,

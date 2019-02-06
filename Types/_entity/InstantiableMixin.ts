@@ -7,7 +7,7 @@
  */
 
 // @ts-ignore
-import constants = require('Core/constants');
+import { constants } from 'Env/Env';
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER || (Math.pow(2, 53) - 1);
 let counter = 0;

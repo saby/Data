@@ -11,7 +11,7 @@ export default interface IChannel /** @lends Types/_source/provider/IChannel.pro
 
    /**
     * @event onMessage При получении уведомления о серверном событии
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {String|Object} message Сообщение события.
     */
 }

@@ -46,7 +46,7 @@ import {merge} from '../object';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
-import LocalStorage = require('Lib/Storage/LocalStorage');
+import { LocalStorage } from 'Browser/Storage';
 
 const DATA_FIELD_PREFIX = 'd';
 const KEYS_FIELD = 'i';

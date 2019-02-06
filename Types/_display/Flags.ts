@@ -17,7 +17,7 @@ interface IOptions {
 
 /**
  * Обрабатывает событие об изменении состояния Flags
- * @param {Core/EventObject} event Дескриптор события
+ * @param {Env/Event.Object} event Дескриптор события
  * @param {String|Array.<boolean|null>} name Название флага
  */
 function onSourceChange (event: EventObject, name: string | Array<IFlagsValue>) {

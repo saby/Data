@@ -6,7 +6,7 @@ define([
    'Core/helpers/Date/toSql',
    'Core/TimeInterval',
    'Core/Date',
-   'Core/ConsoleLogger'
+   'Env/Env'
 ], function(
    type,
    collection,
