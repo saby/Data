@@ -647,9 +647,9 @@ export default abstract class Local extends mixin(
    //endregion Protected methods
 }
 
-Local.prototype._moduleName = 'Types/source:Local';
-Local.prototype['[Types/_source/Local]'] = true;
-// @ts-ignore
-Local.prototype._$filter = null;
-// @ts-ignore
-Local.prototype._index = null;
+Object.assign(Local.prototype, {
+   '[Types/_source/Local]': true,
+   _moduleName: 'Types/source:Local',
+   _$filter: null,
+   _index: null
+});

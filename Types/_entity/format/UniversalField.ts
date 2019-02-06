@@ -1,4 +1,5 @@
 /// <amd-module name="Types/_entity/format/UniversalField" />
+
 /**
  * Универсальное поле.
  * @class Types/_entity/format/UniversalField
@@ -51,11 +52,12 @@ export default class UniversalField /** @lends Types/_entity/format/UniversalFie
    meta: IMeta;
 }
 
-UniversalField.prototype['[Types/_entity/format/UniversalField]'] = true;
-// @ts-ignore
-UniversalField.prototype._moduleName = 'Types/entity:format.UniversalField';
-UniversalField.prototype.type = '';
-UniversalField.prototype.name = '';
-UniversalField.prototype.defaultValue = null;
-UniversalField.prototype.nullable = false;
-UniversalField.prototype.meta = null;
+Object.assign(UniversalField.prototype, {
+   '[Types/_entity/format/UniversalField]': true,
+   _moduleName: 'Types/entity:format.UniversalField',
+   type: '',
+   name: '',
+   defaultValue: null,
+   nullable: false,
+   meta: null
+});

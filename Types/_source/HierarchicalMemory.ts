@@ -224,9 +224,11 @@ export default class HierarchicalMemory extends mixin(
    // endregion
 }
 
-HierarchicalMemory.prototype._moduleName = 'Types/source:HierarchicalMemory';
-HierarchicalMemory.prototype['[Types/_source/HierarchicalMemory]'] = true;
-// @ts-ignore
-HierarchicalMemory.prototype._$parentProperty = null;
+Object.assign(HierarchicalMemory.prototype, {
+   '[Types/_source/HierarchicalMemory]': true,
+   _moduleName: 'Types/source:HierarchicalMemory',
+   _$parentProperty: null,
+});
+
 //FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
 HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;

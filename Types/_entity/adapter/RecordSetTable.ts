@@ -206,7 +206,8 @@ export default class RecordSetTable extends mixin(
    //endregion Protected methods
 }
 
-RecordSetTable.prototype['[Types/_entity/adapter/RecordSetTable]'] = true;
-// @ts-ignore
-RecordSetTable.prototype['[Types/_entity/adapter/ITable]'] = true;
-RecordSetTable.prototype._data = null;
+Object.assign(RecordSetTable.prototype, {
+   '[Types/_entity/adapter/RecordSetTable]': true,
+   '[Types/_entity/adapter/ITable]': true,
+   _data: null
+});

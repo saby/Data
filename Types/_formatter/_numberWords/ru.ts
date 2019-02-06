@@ -88,7 +88,6 @@ export default function numToWordsRu(num: string, feminine: boolean = false): st
       }
 
       if (counter > 0 && +three != 0) {
-         //@ts-ignore
          words.push(rk(THOUSANDS[counter], +three));
       }
    });

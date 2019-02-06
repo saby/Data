@@ -235,22 +235,18 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
    //endregion
 }
 
-TreeItem.prototype._moduleName = 'Types/display:TreeItem';
-TreeItem.prototype['[Types/_display/TreeItem]'] = true;
-// @ts-ignore
-TreeItem.prototype._$parent = undefined;
-// @ts-ignore
-TreeItem.prototype._$node = false;
-// @ts-ignore
-TreeItem.prototype._$expanded = false;
-// @ts-ignore
-TreeItem.prototype._$hasChildren = true;
-// @ts-ignore
-TreeItem.prototype._$childrenProperty = '';
-// @ts-ignore
-TreeItem.prototype._instancePrefix = 'tree-item-';
+Object.assign(TreeItem.prototype, {
+   '[Types/_display/TreeItem]': true,
+   _moduleName: 'Types/display:TreeItem',
+   _$parent: undefined,
+   _$node: false,
+   _$expanded: false,
+   _$hasChildren: true,
+   _$childrenProperty: '',
+   _instancePrefix: 'tree-item-'
+});
 
-// Deprecated
+// FIXME: deprecated
 TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
 
 register('Types/display:TreeItem', TreeItem);

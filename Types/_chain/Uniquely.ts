@@ -47,6 +47,7 @@ export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uni
    // endregion Types/_collection/IEnumerable
 }
 
-Uniquely.prototype['[Types/_chain/Uniquely]'] = true;
-// @ts-ignore
-Uniquely.prototype._idExtractor = null;
+Object.assign(Uniquely.prototype, {
+   '[Types/_chain/Uniquely]': true,
+   _idExtractor: null
+});

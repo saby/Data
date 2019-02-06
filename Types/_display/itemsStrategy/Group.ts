@@ -296,9 +296,9 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
    //endregion
 }
 
-Group.prototype._moduleName = 'Types/display:itemsStrategy.Group';
-Group.prototype['[Types/_display/itemsStrategy/Group]'] = true;
-// @ts-ignore
-Group.prototype._groups = null;
-// @ts-ignore
-Group.prototype._itemsOrder = null;
+Object.assign(Group.prototype, {
+   '[Types/_display/itemsStrategy/Group]': true,
+   _moduleName: 'Types/display:itemsStrategy.Group',
+   _groups: null,
+   _itemsOrder: null
+});

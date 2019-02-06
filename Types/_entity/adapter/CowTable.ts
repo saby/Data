@@ -166,12 +166,12 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
    //endregion Protected methods
 }
 
-CowTable.prototype['[Types/_entity/adapter/CowTable]'] = true;
-// @ts-ignore
-CowTable.prototype['[Types/_entity/adapter/ITable]'] = true;
-// @ts-ignore
-CowTable.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-CowTable.prototype._original = null;
-CowTable.prototype._originalTable = null;
-CowTable.prototype._writeCallback = null;
-CowTable.prototype._copied = false;
+Object.assign(CowTable.prototype, {
+   '[Types/_entity/adapter/CowTable]': true,
+   '[Types/_entity/adapter/ITable]': true,
+   '[Types/_entity/adapter/IDecorator]': true,
+   _original: null,
+   _originalTable: null,
+   _writeCallback: null,
+   _copied: false
+});

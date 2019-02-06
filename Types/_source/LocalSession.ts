@@ -1060,29 +1060,22 @@ export default class LocalSession extends mixin(
    ///endregion
 }
 
-LocalSession.prototype._moduleName = 'Types/source:LocalSession';
-LocalSession.prototype['[Types/_source/LocalSession]'] = true;
-// @ts-ignore
-LocalSession.prototype._writable = ReadWriteMixin.writable;
-// @ts-ignore
-LocalSession.prototype._dataSetModule = 'Types/source:DataSet';
-// @ts-ignore
-LocalSession.prototype._$adapter = 'Types/entity:adapter.Json';
-// @ts-ignore
-LocalSession.prototype._$listModule = 'Types/collection:RecordSet';
-// @ts-ignore
-LocalSession.prototype._$model = 'Types/entity:Model';
-// @ts-ignore
-LocalSession.prototype._$idProperty = '';
-// @ts-ignore
-LocalSession.prototype._dataSetItemsProperty = 'items';
-// @ts-ignore
-LocalSession.prototype._dataSetMetaProperty = 'meta';
-// @ts-ignore
-LocalSession.prototype._options = {
-   prefix: '',
-   model: Model,
-   data: []
-};
+Object.assign(LocalSession.prototype, {
+   '[Types/_source/LocalSession]': true,
+   _moduleName: 'Types/source:LocalSession',
+   _writable: ReadWriteMixin.writable,
+   _dataSetModule: 'Types/source:DataSet',
+   _$adapter: 'Types/entity:adapter.Json',
+   _$listModule: 'Types/collection:RecordSet',
+   _$model: 'Types/entity:Model',
+   _$idProperty: '',
+   _dataSetItemsProperty: 'items',
+   _dataSetMetaProperty: 'meta',
+   _options: {
+      prefix: '',
+      model: Model,
+      data: []
+   }
+});
 
 register('Types/source:LocalSession', LocalSession, {instantiate: false});

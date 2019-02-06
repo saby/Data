@@ -852,23 +852,17 @@ export default class DataSet extends mixin(
    //endregion Protected methods
 }
 
-DataSet.prototype._moduleName = 'Types/source:DataSet';
-DataSet.prototype['[Types/_source/DataSet]'] = true;
-// @ts-ignore
-DataSet.prototype._$adapter = 'Types/entity:adapter.Json';
-// @ts-ignore
-DataSet.prototype._$rawData = null;
-// @ts-ignore
-DataSet.prototype._$model = 'Types/entity:Model';
-// @ts-ignore
-DataSet.prototype._$listModule = 'Types/collection:RecordSet';
-// @ts-ignore
-DataSet.prototype._$idProperty = '';
-// @ts-ignore
-DataSet.prototype._$itemsProperty = '';
-// @ts-ignore
-DataSet.prototype._$metaProperty = '';
-// @ts-ignore
-DataSet.prototype._$writable = true;
+Object.assign(DataSet.prototype, {
+   '[Types/_source/DataSet]': true,
+   _moduleName: 'Types/source:DataSet',
+   _$adapter: 'Types/entity:adapter.Json',
+   _$rawData: null,
+   _$model: 'Types/entity:Model',
+   _$listModule: 'Types/collection:RecordSet',
+   _$idProperty: '',
+   _$itemsProperty: '',
+   _$metaProperty: '',
+   _$writable: true
+});
 
 register('Types/source:DataSet', DataSet, {instantiate: false});

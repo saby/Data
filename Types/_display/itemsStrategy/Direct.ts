@@ -204,7 +204,8 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
    //endregion
 }
 
-Direct.prototype._moduleName = 'Types/display:itemsStrategy.Direct';
-Direct.prototype['[Types/_display/itemsStrategy/Direct]'] = true;
-// @ts-ignore
-Direct.prototype._itemsOrder = null;
+Object.assign(Direct.prototype, {
+   '[Types/_display/itemsStrategy/Direct]': true,
+   _moduleName: 'Types/display:itemsStrategy.Direct',
+   _itemsOrder: null
+});

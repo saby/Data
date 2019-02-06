@@ -150,7 +150,8 @@ export default abstract class Abstract extends mixin(
    }
 }
 
-Abstract.prototype['[Types/_entity/adapter/Abstract]'] = true;
-// @ts-ignore
-Abstract.prototype['[Types/_entity/adapter/IAdapter]'] = true;
-Abstract.prototype._pathSeparator = '.';
+Object.assign(Abstract.prototype, {
+   '[Types/_entity/adapter/Abstract]': true,
+   '[Types/_entity/adapter/IAdapter]': true,
+   _pathSeparator: '.'
+});

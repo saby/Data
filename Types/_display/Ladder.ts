@@ -205,9 +205,8 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
     * Устанавливает позицию в коллекции, с которой начинает строиться лесенка
     * @param {Number} offset Позиция.
     */
-   setOffset(offset: number) {
-      // @ts-ignore
-      offset = parseInt(offset, 10);
+   setOffset(offset: number | string) {
+      offset = parseInt(<string>offset, 10);
 
       let prev = this._offset;
       this._offset = offset;

@@ -142,12 +142,11 @@ if (typeof Map === 'undefined') {
       }
    };
 
-   // @ts-ignore
-   MapImplementation.prototype._hash = null;
-   // @ts-ignore
-   MapImplementation.prototype._objectPrefix = Set.prototype._objectPrefix;
-   // @ts-ignore
-   MapImplementation.prototype._objects = null;
+   Object.assign(MapImplementation.prototype, {
+      _hash: null,
+      _objectPrefix: Set.prototype._objectPrefix,
+      _objects: null
+   });
 
    Object.defineProperty(MapImplementation.prototype, 'size', {
       get: function() {

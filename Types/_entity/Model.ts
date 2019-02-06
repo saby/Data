@@ -958,19 +958,20 @@ export default class Model extends mixin(
    //endregion
 }
 
-Model.prototype['[Types/_entity/Model]'] = true;
-// @ts-ignore
-Model.prototype['[Types/_entity/IInstantiable]'] = true;
-Model.prototype._moduleName = 'Types/entity:Model';
-Model.prototype._instancePrefix = 'model-';
-Model.prototype._$properties = null;
-Model.prototype._$idProperty = '';
-Model.prototype._isDeleted = false;
-Model.prototype._defaultPropertiesValues = null;
-Model.prototype._propertiesDependency = null;
-Model.prototype._propertiesDependencyGathering = '';
-Model.prototype._calculatingProperties = null;
-Model.prototype._deepChangedProperties = null;
+Object.assign(Model.prototype, {
+   '[Types/_entity/Model]': true,
+   '[Types/_entity/IInstantiable]': true,
+   _moduleName: 'Types/entity:Model',
+   _instancePrefix: 'model-',
+   _$properties: null,
+   _$idProperty: '',
+   _isDeleted: false,
+   _defaultPropertiesValues: null,
+   _propertiesDependency: null,
+   _propertiesDependencyGathering: '',
+   _calculatingProperties: null,
+   _deepChangedProperties: null
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Model.prototype['[WS.Data/Entity/Model]'] = true;

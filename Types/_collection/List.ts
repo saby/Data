@@ -486,26 +486,18 @@ export default class List<T> extends mixin(
    };
 }
 
-List.prototype._moduleName = 'Types/collection:List';
-
-//Properties defaults
-List.prototype['[Types/_collection/List]'] = true;
-// @ts-ignore
-List.prototype['[Types/_collection/IEnumerable]'] = true;
-// @ts-ignore
-List.prototype['[Types/_collection/IIndexedCollection]'] = true;
-// @ts-ignore
-List.prototype['[Types/_collection/IList]'] = true;
-// @ts-ignore
-List.prototype['[Types/_entity/ICloneable]'] = true;
-// @ts-ignore
-List.prototype['[Types/_entity/IEquatable]'] = true;
-// @ts-ignore
-List.prototype['[Types/_entity/IVersionable]'] = true;
-// @ts-ignore
-List.prototype._$items = null;
-// @ts-ignore
-List.prototype._indexer = null;
+Object.assign(List.prototype,{
+   '[Types/_collection/List]': true,
+   '[Types/_collection/IEnumerable]': true,
+   '[Types/_collection/IIndexedCollection]': true,
+   '[Types/_collection/IList]': true,
+   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/IEquatable]': true,
+   '[Types/_entity/IVersionable]': true,
+   _moduleName: 'Types/collection:List',
+   _$items: null,
+   _indexer: null
+});
 
 //Aliases
 List.prototype.forEach = List.prototype.each;

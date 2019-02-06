@@ -230,9 +230,11 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    //endregion Protected methods
 }
 
-SerializableMixin.prototype['[Types/_entity/SerializableMixin]'] = true;
+Object.assign(SerializableMixin.prototype, {
+   '[Types/_entity/SerializableMixin]': true,
+   _instanceNumber: null
+});
+
 //FIXME: Core/Serializer is looking for dynamic method
 // @ts-ignore
 SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;
-// @ts-ignore
-SerializableMixin.prototype._instanceNumber = null;

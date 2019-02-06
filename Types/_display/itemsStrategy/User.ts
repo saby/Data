@@ -240,7 +240,8 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    //endregion
 }
 
-User.prototype._moduleName = 'Types/display:itemsStrategy.User';
-User.prototype['[Types/_display/itemsStrategy/User]'] = true;
-// @ts-ignore
-User.prototype._itemsOrder = null;
+Object.assign(User.prototype, {
+   '[Types/_display/itemsStrategy/User]': true,
+   _moduleName: 'Types/display:itemsStrategy.User',
+   _itemsOrder: null
+});

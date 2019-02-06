@@ -102,11 +102,11 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 }
 
-Enum.prototype._moduleName = 'Types/display:Enum';
-Enum.prototype['[Types/_display/Enum]'] = true;
-// @ts-ignore
-Enum.prototype._localize = true;
-// @ts-ignore
-Enum.prototype._onSourceChange = null;
+Object.assign(Enum.prototype, {
+   '[Types/_display/Enum]': true,
+   _moduleName: 'Types/display:Enum',
+   _localize: true,
+   _onSourceChange: null
+});
 
 register('Types/display:Enum', Enum);

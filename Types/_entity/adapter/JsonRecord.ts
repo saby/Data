@@ -124,7 +124,8 @@ export default class JsonRecord extends mixin(
    //endregion Protected methods
 }
 
-JsonRecord.prototype['[Types/_entity/adapter/JsonRecord]'] = true;
-// @ts-ignore
-JsonRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-JsonRecord.prototype._data = null;
+Object.assign(JsonRecord.prototype, {
+   '[Types/_entity/adapter/JsonRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   _data: null
+});

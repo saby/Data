@@ -245,10 +245,9 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
    }
 }
 
-ObservableMixin.prototype['[Types/_entity/ObservableMixin]'] = true;
-// @ts-ignore
-ObservableMixin.prototype._eventBusChannel = null;
-// @ts-ignore
-ObservableMixin.prototype._eventsQueue = null;
-// @ts-ignore
-ObservableMixin.prototype._publishedEvents = null;
+Object.assign(ObservableMixin.prototype, {
+   '[Types/_entity/ObservableMixin]': true,
+   _eventBusChannel: null,
+   _eventsQueue: null,
+   _publishedEvents: null
+});

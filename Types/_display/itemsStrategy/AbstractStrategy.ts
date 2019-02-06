@@ -194,9 +194,9 @@ export default abstract class Abstract extends mixin(
    //endregion
 }
 
-Abstract.prototype._moduleName = 'Types/display:itemsStrategy.DestroyableMixin';
-Abstract.prototype['[Types/_display/itemsStrategy/DestroyableMixin]'] = true;
-// @ts-ignore
-Abstract.prototype._items = null;
-// @ts-ignore
-Abstract.prototype._sourceItems = null;
+Object.assign(Abstract.prototype, {
+   '[Types/_display/itemsStrategy/DestroyableMixin]': true,
+   _moduleName: 'Types/display:itemsStrategy.DestroyableMixin',
+   _items: null,
+   _sourceItems: null
+});

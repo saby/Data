@@ -284,16 +284,14 @@ export default class Record extends mixin(
     * @property {Map} Объект содержащий закэшированные значения полей
     */
    get _fieldsCache(): Map<string, any> {
-      // @ts-ignore
-      return this[$fieldsCache] || (this[$fieldsCache] = new Map());
+      return this[<string>$fieldsCache] || (this[<string>$fieldsCache] = new Map());
    }
 
    /**
     * @property {Map} Объект содержащий клонированные значения полей
     */
    get _fieldsClone(): Map<string, any> {
-      // @ts-ignore
-      return this[$fieldsClone] || (this[$fieldsClone] = new Map());
+      return this[<string>$fieldsClone] || (this[<string>$fieldsClone] = new Map());
    }
 
    /**
@@ -301,8 +299,7 @@ export default class Record extends mixin(
     */
    get _changedFields(): Object {
       let result = {};
-      // @ts-ignore
-      let changedFields = this[$changedFields];
+      let changedFields = this[<string>$changedFields];
 
       if (!changedFields) {
          return result;
@@ -342,8 +339,7 @@ export default class Record extends mixin(
    }
 
    destroy() {
-      // @ts-ignore
-      this[$changedFields] = null;
+      this[<string>$changedFields] = null;
       this._clearFieldsCache();
 
       ReadWriteMixin.destroy.call(this);
@@ -672,8 +668,7 @@ export default class Record extends mixin(
    _getSerializableState(state) {
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
       state = FormattableMixin._getSerializableState.call(this, state);
-      // @ts-ignore
-      state._changedFields = this[$changedFields];
+      state._changedFields = this[<string>$changedFields];
 
       //keep format if record has owner with format
       if (state.$options.owner && state.$options.owner._hasFormat()) {
@@ -1182,10 +1177,8 @@ export default class Record extends mixin(
     * @protected
     */
    protected _clearFieldsCache() {
-      // @ts-ignore
-      this[$fieldsCache] = null;
-      // @ts-ignore
-      this[$fieldsClone] = null;
+      this[<string>$fieldsCache] = null;
+      this[<string>$fieldsClone] = null;
    }
 
    /**
@@ -1282,8 +1275,7 @@ export default class Record extends mixin(
     * @protected
     */
    protected _clearChangedFields() {
-      // @ts-ignore
-      this[$changedFields] = {};
+      this[<string>$changedFields] = {};
    }
 
    /**
@@ -1314,10 +1306,8 @@ export default class Record extends mixin(
     * @protected
     */
    protected _setChangedField(name, value, byLink?: boolean) {
-      // @ts-ignore
-      if (!this[$changedFields].hasOwnProperty(name)) {
-         // @ts-ignore
-         this[$changedFields][name] = [value, Boolean(byLink)];
+      if (!this[<string>$changedFields].hasOwnProperty(name)) {
+         this[<string>$changedFields][name] = [value, Boolean(byLink)];
       }
       switch (this._$state) {
          case STATES.UNCHANGED:
@@ -1332,8 +1322,7 @@ export default class Record extends mixin(
     * @protected
     */
    protected _unsetChangedField(name) {
-      // @ts-ignore
-      delete this[$changedFields][name];
+      delete this[<string>$changedFields][name];
    }
 
    //endregion
@@ -1493,36 +1482,28 @@ export default class Record extends mixin(
    //endregion
 }
 
-Record.prototype['[Types/_entity/Record]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_collection/IEnumerable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/ICloneable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IEquatable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IObject]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IObservableObject]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IProducible]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/IVersionable]'] = true;
-// @ts-ignore
-Record.prototype['[Types/_entity/relation/IReceiver]'] = true;
-Record.prototype._moduleName = 'Types/entity:Record';
+Object.assign(Record.prototype, {
+   '[Types/_entity/Record]': true,
+   '[Types/_collection/IEnumerable]': true,
+   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/IEquatable]': true,
+   '[Types/_entity/IObject]': true,
+   '[Types/_entity/IObservableObject]': true,
+   '[Types/_entity/IProducible]': true,
+   '[Types/_entity/IVersionable]': true,
+   '[Types/_entity/relation/IReceiver]': true,
+   _moduleName: 'Types/entity:Record',
+   _$state: STATES.DETACHED,
+   _$cacheMode: CACHE_MODE_OBJECTS,
+   _$cloneChanged: false,
+   _$owner: null,
+   _acceptedState: undefined
+});
 
 /**
  * {Object} Измененные поля и оригинальные значения
  */
-// @ts-ignore
-Record.prototype[$changedFields] = null;
-
-Record.prototype._$state = STATES.DETACHED;
-Record.prototype._$cacheMode = CACHE_MODE_OBJECTS;
-Record.prototype._$cloneChanged = false;
-Record.prototype._$owner = null;
-Record.prototype._acceptedState = undefined;
+Record.prototype[<string>$changedFields] = null;
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Record.prototype['[WS.Data/Entity/Record]'] = true;

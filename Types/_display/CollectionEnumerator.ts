@@ -326,20 +326,14 @@ export default class CollectionEnumerator extends mixin(
    //endregion
 }
 
-CollectionEnumerator.prototype['[Types/_display/CollectionEnumerator]'] = true;
-// @ts-ignore
-CollectionEnumerator.prototype._$items = null;
-// @ts-ignore
-CollectionEnumerator.prototype._$filterMap = null;
-// @ts-ignore
-CollectionEnumerator.prototype._$sortMap = null;
-// @ts-ignore
-CollectionEnumerator.prototype._itemsCache = null;
-// @ts-ignore
-CollectionEnumerator.prototype._position = -1;
-// @ts-ignore
-CollectionEnumerator.prototype._current = undefined;
-// @ts-ignore
-CollectionEnumerator.prototype._internalToSource = null;
-// @ts-ignore
-CollectionEnumerator.prototype._sourceToInternal = null;
+Object.assign(CollectionEnumerator.prototype, {
+   '[Types/_display/CollectionEnumerator]': true,
+   _$items: null,
+   _$filterMap: null,
+   _$sortMap: null,
+   _itemsCache: null,
+   _position: -1,
+   _current: undefined,
+   _internalToSource: null,
+   _sourceToInternal: null
+});

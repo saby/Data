@@ -66,8 +66,7 @@ function validate(type: Descriptor): ValidateFunc {
 
       case 'function':
          return function validateTypeIntance(value) {
-            // @ts-ignore
-            if (value === undefined || value instanceof type) {
+            if (value === undefined || value instanceof <Function>type) {
                return value;
             }
             return new TypeError(`Value "${value}" should be instance of ${type}`);

@@ -44,6 +44,7 @@ export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zippe
    // endregion Types/_collection/IEnumerable
 }
 
-Zipped.prototype['[Types/_chain/Zipped]'] = true;
-// @ts-ignore
-Zipped.prototype._items = null;
+Object.assign(Zipped.prototype, {
+   '[Types/_chain/Zipped]': true,
+   _items: null
+});

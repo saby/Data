@@ -43,6 +43,7 @@ export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorte
    // endregion Types/_collection/IEnumerable
 }
 
-Sorted.prototype['[Types/_chain/Sorted]'] = true;
-// @ts-ignore
-Sorted.prototype._compareFunction = null;
+Object.assign(Sorted.prototype, {
+   '[Types/_chain/Sorted]': true,
+   _compareFunction: null
+});

@@ -260,19 +260,15 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
 
 applyMixins(Flags, ManyToManyMixin, SerializableMixin, CloneableMixin);
 
-Flags.prototype['[Types/_collection/Flags]'] = true;
-// @ts-ignore
-Flags.prototype['[Types/_collection/IFlags]'] = true;
-// @ts-ignore
-Flags.prototype['[Types/_entity/ICloneable]'] = true;
-// @ts-ignore
-Flags.prototype['[Types/_entity/IProducible]'] = true;
-// @ts-ignore
-Flags.prototype._moduleName = 'Types/collection:Flags';
-// @ts-ignore
-Flags.prototype._$values = undefined;
-// @ts-ignore
-Flags.prototype._type = 'flags';
+Object.assign(Flags.prototype,{
+   '[Types/_collection/Flags]': true,
+   '[Types/_collection/IFlags]': true,
+   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/IProducible]': true,
+   _moduleName: 'Types/collection:Flags',
+   _$values: undefined,
+   _type: 'flags'
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Flags.prototype['[WS.Data/Type/Flags]'] = true;
