@@ -39,6 +39,16 @@ define([
          return format;
       };
 
+      function patchTzo(date, offset) {
+         date.tzoStub = sinon.stub(date, 'getTimezoneOffset');
+         date.tzoStub.returns(offset);
+      }
+
+      function revertTzo(date) {
+         date.tzoStub.restore();
+         delete date.tzoStub;
+      }
+
       describe('.cast()', function() {
          context('for integer', function() {
             it('should return a Number', function() {
@@ -779,6 +789,22 @@ define([
                   Factory.serialize(datetime, {format: format}),
                   '2001-04-15 00:00:00'
                );
+            });
+
+            it('should return a String without timezone if timezome offset contains not integer hours', function() {
+               var format = new type.format.DateTimeField({
+                  withoutTimeZone: true
+               });
+               var datetime = new Date(2001, 0, 1, 10, 20, 30);
+               patchTzo(datetime, 30);
+
+               assert.strictEqual(datetime.getTimezoneOffset(), 30);
+               assert.strictEqual(
+                  Factory.serialize(datetime, {format: format}),
+                  '2001-01-01 10:20:30'
+               );
+
+               revertTzo(datetime);
             });
 
             it('should return a String for date', function() {
