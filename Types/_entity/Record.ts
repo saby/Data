@@ -89,8 +89,6 @@ import {resolve, register} from '../di';
 import {mixin} from '../util';
 import {Map} from '../shim';
 import {logger} from '../util';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
 
 interface IOptions {
    adapter?: IAdapter,
@@ -1474,8 +1472,15 @@ export default class Record extends mixin(
    /**
     * @deprecated
     */
-   static extend(mixinsList:any, classExtender:any) {
-      logger.info('Types/entity:Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+   static extend(mixinsList: any, classExtender: any) {
+      logger.info('Types/_entity/Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You shold require module "Core/core-extend" to use old-fashioned "Types/_entity/Record::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
    }
 
