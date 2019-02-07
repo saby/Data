@@ -954,7 +954,7 @@ export default class Model extends mixin(
 
       if (!require.defined('Core/core-extend')) {
          throw new ReferenceError(
-            'You shold require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.'
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.'
          );
       }
       const coreExtend = require('Core/core-extend');

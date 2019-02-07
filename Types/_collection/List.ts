@@ -482,7 +482,7 @@ export default class List<T> extends mixin(
       logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
 
       if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError('You shold require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
+         throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
       }
       const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
