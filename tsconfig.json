@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "types" : ["requirejs"]
+  },
   "include": [
+    "WS.Core/ws.d.ts",
     "Types/**/*.ts"
   ]
 }
