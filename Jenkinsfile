@@ -1,5 +1,5 @@
 node ('controls') {
-def version = "19.100"
+def version = "19.120"
 def workspace = "/home/sbis/workspace/types_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
