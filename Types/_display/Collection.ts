@@ -815,7 +815,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
+    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
    getItems(): Array<CollectionItem> {
@@ -1504,14 +1504,22 @@ export default class Collection extends mixin(
     * </pre>
     */
    getGroupByIndex(index: number): string | number {
-      let items = this._getItems();
+      let currentGroupId;
+      let enumerator = this.getEnumerator();
       let item;
-      for (let position = index; position >= 0; position--) {
-         item = items[position];
+      let itemIndex = 0;
+      while (enumerator.moveNext()) {
+         item = enumerator.getCurrent();
          if (item instanceof GroupItem) {
-            return item.getContents();
+            currentGroupId = item.getContents();
          }
+         if (itemIndex === index) {
+            break;
+         }
+         itemIndex++;
       }
+
+      return currentGroupId;
    }
 
    /**
@@ -1886,8 +1894,7 @@ export default class Collection extends mixin(
    //region Multiselectable
 
    /**
-    * Возвращает массив выбранных элементов
-    * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
+    * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
    getSelectedItems(): Array<CollectionItem> {
@@ -1926,8 +1933,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает признак, что элемент выбран, всем элементам проекции.
-    * @remark Метод устанавливает  признак всем элементам не зависимо от фильтра проекции.
+    * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и группировки).
     * @param {Boolean} selected Элемент выбран.
     * @return {Array}
     */
@@ -1936,8 +1942,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Инвертирует признак, что элемент выбран, у всех элементов проекции
-    * @remark Метод инвертирует выделение у всех элементов не зависимо от фильтра проекции.
+    * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и группировки).
     */
    invertSelectedItemsAll() {
       let items = this._getItems();
@@ -2073,7 +2078,7 @@ export default class Collection extends mixin(
    //region Navigation
 
    /**
-    * Возвращает элементы проекции
+    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
     * @return {Array.<Types/_display/CollectionItem>}
     * @protected
     */
