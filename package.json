@@ -26,6 +26,8 @@
       "links": {
          "node_modules/sbis3-ws/WS.Core": "WS.Core",
          "node_modules/sbis3-ws/Inferno": "Inferno",
+         "node_modules/rmi/src/client/Browser": "Browser",
+         "node_modules/rmi/src/client/Env": "Env",
          "node_modules/sbis3-ws/View": "View"
       },
       "initializer": "init-testing.js",
@@ -49,6 +51,7 @@
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.7",
       "eslint": "^5.3.0",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.200",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.200",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200"
