@@ -3,6 +3,8 @@
   "include": [
     "Browser/**/*.ts",
     "Env/**/*.ts",
-    "Types/**/*.ts"
+    "Types/**/*.ts",
+    "node_modules/rmi/src/client/types.d.ts",
+    "WS.Core/ws.d.ts"
   ]
 }
