@@ -19,6 +19,7 @@
  */
 
 import DataSet from './DataSet';
+import Deferred = require('Core/Deferred');
 
 export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
    readonly '[Types/_source/IRpc]': boolean;
@@ -46,5 +47,5 @@ export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
     *    });
     * </pre>
     */
-   call(command: string, data?: Object): ExtendPromise<DataSet>;
+   call(command: string, data?: Object): Deferred<DataSet>;
 }

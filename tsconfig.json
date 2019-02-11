@@ -5,6 +5,7 @@
   },
   "include": [
     "WS.Core/ws.d.ts",
+    "Core/**/*.ts",
     "Types/**/*.ts"
   ]
 }

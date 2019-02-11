@@ -24,6 +24,7 @@
       "moduleType": "amd",
       "tests": "test",
       "links": {
+         "node_modules/saby-typescript/tslib.js": "tslib.js",
          "node_modules/sbis3-ws/WS.Core": "WS.Core",
          "node_modules/sbis3-ws/Inferno": "Inferno",
          "node_modules/sbis3-ws/View": "View"

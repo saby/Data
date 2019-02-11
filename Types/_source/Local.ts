@@ -21,9 +21,7 @@ import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
 import {IList, RecordSet} from '../collection';
 import {mixin, object} from '../util';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
 import randomId = require('Core/helpers/Number/randomId');
 
 const MOVE_POSITION = {
@@ -166,14 +164,14 @@ export default abstract class Local extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: Object): Deferred<Record | Error> {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies().addCallback(() => {
          return this._prepareCreateResult(meta);
       });
    }
 
-   read(key: any, meta?: Object): ExtendPromise<Record> {
+   read(key: any, meta?: Object): Deferred<Record | Error> {
       let data = this._getRecordByKey(key);
       if (data) {
          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
@@ -182,7 +180,7 @@ export default abstract class Local extends mixin(
       }
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet<Record>, meta?: Object): Deferred<void | Error> {
       let updateRecord = (record) => {
          let idProperty = this.getIdProperty();
          let key = idProperty ? record.get(idProperty) : undefined;
@@ -221,7 +219,7 @@ export default abstract class Local extends mixin(
       );
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | Array<any>, meta?: Object): Deferred<void | Error> {
       let destroyByKey = (key) => {
          let index = this._getIndexByKey(key);
          if (index !== -1) {
@@ -243,10 +241,10 @@ export default abstract class Local extends mixin(
          }
       }
 
-      return Deferred.success(true);
+      return Deferred.success();
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query: Query): Deferred<DataSet | Error> {
       let items = this._applyFrom(query ? query.getFrom() : undefined);
       let adapter = this.getAdapter();
       let total;
@@ -277,7 +275,7 @@ export default abstract class Local extends mixin(
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from: string | number, to: string | number): ExtendPromise<any> {
+   merge(from: string | number, to: string | number): Deferred<void | Error> {
       let indexOne = this._getIndexByKey(from);
       let indexTwo = this._getIndexByKey(to);
       if (indexOne === -1 || indexTwo === -1) {
@@ -289,11 +287,11 @@ export default abstract class Local extends mixin(
             this.getIdProperty()
          );
          this._reIndex();
-         return Deferred.success(true);
+         return Deferred.success();
       }
    }
 
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: Object): Deferred<Record | Error> {
       let index = this._getIndexByKey(key);
       if (index === -1) {
          return Deferred.fail(`Record with key "${key}" does not exist`);
@@ -306,7 +304,7 @@ export default abstract class Local extends mixin(
       }
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+   move(items: Array<string | number>, target: string | number, meta?: any): Deferred<void | Error> {
       meta = meta || {};
       let sourceItems = [];
       if (!(items instanceof Array)) {
@@ -603,7 +601,7 @@ export default abstract class Local extends mixin(
       return newDataAdapter.getData();
    }
 
-   protected _reorderMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): ExtendPromise<null> {
+   protected _reorderMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): Deferred<void> {
       let parentValue;
       if (meta.parentProperty) {
          parentValue = target.get(meta.parentProperty);
@@ -629,10 +627,10 @@ export default abstract class Local extends mixin(
          this._reIndex();
       });
 
-      return new Deferred().callback();
+      return new Deferred<void>().callback();
    }
 
-   protected _hierarchyMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): ExtendPromise<null> {
+   protected _hierarchyMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): Deferred<void | Error> {
       if (!meta.parentProperty) {
          return Deferred.fail('Parent property is not defined');
       }
@@ -641,7 +639,7 @@ export default abstract class Local extends mixin(
          item.set(meta.parentProperty, parentValue);
       });
 
-      return new Deferred().callback();
+      return new Deferred<void>().callback();
    }
 
    //endregion Protected methods

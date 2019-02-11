@@ -6,7 +6,6 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
 import EventBus = require('Core/EventBus');
 
 interface IOptions {

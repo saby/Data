@@ -60,7 +60,6 @@ import Base from './Base';
 import DataSet from './DataSet';
 import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin} from '../entity';
 import {mixin} from '../util';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IData {

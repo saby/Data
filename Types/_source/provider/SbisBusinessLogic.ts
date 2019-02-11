@@ -12,8 +12,8 @@ import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
 import RpcJson = require('Transport/RPCJSON');
+import Deferred = require('Core/Deferred');
 
 export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */{
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
@@ -58,7 +58,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
       return this._$endpoint;
    }
 
-   call(name: string, args: Array<string> | Object): ExtendPromise<any> {
+   call<T>(name: string, args: Array<string> | Object): Deferred<T> {
       name = name + '';
       args = args || {};
 

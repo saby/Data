@@ -17,7 +17,6 @@ import {create, resolve, isRegistered} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
 import TimeInterval from './TimeInterval';
 
-// @ts-ignore
 import renders = require('Core/defaultRenders');
 
 declare type ValueType = string | Function | IProducible;

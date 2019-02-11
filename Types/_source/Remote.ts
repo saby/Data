@@ -34,7 +34,6 @@ import {create} from '../di';
 import {mixin, logger} from '../util';
 // @ts-ignore
 import req = require('require');
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 export interface IPassing {
@@ -247,7 +246,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: Object): Deferred<Record> {
       return this._callProvider(
          this._$binding.create,
          this._$passing.create.call(this, meta)
@@ -258,7 +257,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   read(key: any, meta?: Object): ExtendPromise<Record> {
+   read(key: any, meta?: Object): Deferred<Record> {
       return this._callProvider(
          this._$binding.read,
          this._$passing.read.call(this, key, meta)
@@ -269,7 +268,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet<Record>, meta?: Object): Deferred<null> {
       return this._callProvider(
          this._$binding.update,
          this._$passing.update.call(this, data, meta)
@@ -278,14 +277,14 @@ export default abstract class Remote extends mixin(
       )
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | Array<any>, meta?: Object): Deferred<void | Error> {
       return this._callProvider(
          this._$binding.destroy,
          this._$passing.destroy.call(this, keys, meta)
       );
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query: Query): Deferred<DataSet> {
       return this._callProvider(
          this._$binding.query,
          this._$passing.query.call(this, query)
@@ -302,14 +301,14 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from: string | number, to: string | number): ExtendPromise<any> {
+   merge(from: string | number, to: string | number): Deferred<any> {
       return this._callProvider(
          this._$binding.merge,
          this._$passing.merge.call(this, from, to)
       );
    }
 
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: Object): Deferred<Record> {
       return this._callProvider(
          this._$binding.copy,
          this._$passing.copy.call(this, key, meta)
@@ -318,7 +317,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
+   move(items: Array<string | number>, target: string | number, meta?: Object): Deferred<any> {
       return this._callProvider(
          this._$binding.move,
          this._$passing.move.call(this, items, target, meta)
@@ -375,7 +374,7 @@ export default abstract class Remote extends mixin(
     * @return {Core/Deferred} Асинхронный результат операции
     * @protected
     */
-   protected _callProvider(name, args): ExtendPromise<any> {
+   protected _callProvider(name, args): Deferred<any> {
       let provider = this.getProvider();
 
       let eventResult = this._notify('onBeforeProviderCall', name, args);

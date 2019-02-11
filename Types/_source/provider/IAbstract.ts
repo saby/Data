@@ -1,4 +1,6 @@
 /// <amd-module name="Types/_source/provider/IAbstract" />
+import Deferred = require('Core/Deferred');
+
 /**
  * Интерфейс абстрактного провайдера
  * @interface Types/_source/provider/IAbstract
@@ -15,5 +17,5 @@ export default interface IAbstract /** @lends Types/_source/provider/IAbstract.p
     * @param {Object|Array} [args] Аргументы вызова
     * @return {Promise} Асинхронный результат операции
     */
-   call(name: string, args: Array<string> | Object): ExtendPromise<any>;
+   call(name: string, args: Array<string> | Object): Deferred<any>;
 }

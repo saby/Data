@@ -5,12 +5,17 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
 import IoC = require('Core/IoC');
 
 const STACK_DETECTOR = /:[0-9]+:[0-9]+/;
 
 let stackPoints = {};
+
+interface ILogger {
+   log(tag: string, message: string | Error): void;
+   warn(tag: string, message: string | Error): void;
+   error(tag: string, message: string | Error): void;
+}
 
 const logger = {
 
@@ -24,7 +29,7 @@ const logger = {
          message = tag;
          tag = 'Log';
       }
-      IoC.resolve('ILogger').log(tag, message || '');
+      IoC.resolve<ILogger>('ILogger').log(tag, message || '');
    },
 
    /**
@@ -37,7 +42,7 @@ const logger = {
          message = tag;
          tag = 'Critical';
       }
-      IoC.resolve('ILogger').error(tag, message || '');
+      IoC.resolve<ILogger>('ILogger').error(tag, message || '');
    },
 
    /**
@@ -51,7 +56,7 @@ const logger = {
          message = tag;
          tag = 'Warning';
       }
-      IoC.resolve('ILogger').warn(tag, message || '');
+      IoC.resolve<ILogger>('ILogger').warn(tag, message || '');
    },
 
    /**

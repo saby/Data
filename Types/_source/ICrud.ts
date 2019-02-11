@@ -54,6 +54,7 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {Record} from '../entity';
 import {RecordSet} from '../collection';
+import Deferred = require('Core/Deferred');
 
 export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
    readonly '[Types/_source/ICrud]': boolean;
@@ -90,7 +91,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   create(meta?: Object): ExtendPromise<Record>;
+   create(meta?: Object): Deferred<Record | Error>;
 
    /**
     * Читает запись из источника данных
@@ -124,7 +125,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   read(key: any, meta?: Object): ExtendPromise<Record>;
+   read(key: any, meta?: Object): Deferred<Record | Error>;
 
    /**
     * Обновляет запись в источнике данных
@@ -178,7 +179,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null>;
+   update(data: Record | RecordSet<Record>, meta?: Object): Deferred<void | Error>;
 
    /**
     * Удаляет запись из источника данных
@@ -211,7 +212,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *     });
     * </pre>
     */
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null>;
+   destroy(keys: any | Array<any>, meta?: Object): Deferred<void | Error>;
 
    /**
     * Выполняет запрос на выборку
@@ -266,5 +267,5 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   query(query: Query): ExtendPromise<DataSet>;
+   query(query: Query): Deferred<DataSet | Error>;
 }

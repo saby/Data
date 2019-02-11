@@ -24,7 +24,7 @@ import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
 import {DestroyableMixin, SerializableMixin, functor} from '../entity';
-import {EnumeratorCallback, IList, EventRaisingMixin,} from '../collection';
+import {EnumeratorCallback, IList, EventRaisingMixin} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';

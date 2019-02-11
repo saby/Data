@@ -142,8 +142,8 @@ import {RecordSet} from '../collection';
 import {adapter, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
-// @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
+import Deferred = require('Core/Deferred');
 
 /**
  * Типы навигации для query()
@@ -237,7 +237,7 @@ function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): O
  * @param name BL object name
  * @param meta Meta data
  */
-function callDestroyWithComplexId(instance: SbisService | any, ids: string[], name: string, meta: Object): ExtendPromise<any> {
+function callDestroyWithComplexId(instance: SbisService | any, ids: string[], name: string, meta: Object): Deferred<any> {
    return instance._callProvider(
       instance._$endpoint.contract === name ? instance._$binding.destroy :  name + '.' + instance._$binding.destroy,
       instance._$passing.destroy.call(instance, ids, meta)
@@ -577,7 +577,7 @@ interface IOldMoveMeta {
  * @param to Record to move to
  * @param meta Meta data
  */
-function oldMove(instance: SbisService | any, from: string | Array<string | number>, to: string, meta: IOldMoveMeta): ExtendPromise<any> {
+function oldMove(instance: SbisService | any, from: string | Array<string | number>, to: string, meta: IOldMoveMeta): Deferred<any> {
    logger.info(instance._moduleName, 'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.');
 
    from = <string> from;
@@ -785,7 +785,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     *     });
     * </pre>
     */
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: Object): Deferred<Record> {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies((def) => {
          this._connectAdditionalDependencies(
@@ -795,7 +795,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       });
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet<Record>, meta?: Object): Deferred<null> {
       if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
          return this._loadAdditionalDependencies((def) => {
             this._connectAdditionalDependencies(
@@ -813,7 +813,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return super.update(data, meta);
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | Array<any>, meta?: Object): Deferred<void | Error> {
       if (!(keys instanceof Array)) {
          return callDestroyWithComplexId(
             this,
@@ -825,7 +825,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
       //В ключе может содержаться ссылка на объект БЛ - сгруппируем ключи по соответствующим им объектам
       let groups = getGroupsByComplexIds(keys, this._$endpoint.contract);
-      let pd = new ParallelDeferred();
+      let pd = new ParallelDeferred<void>();
       for (let name in groups) {
          if (groups.hasOwnProperty(name)) {
             pd.push(callDestroyWithComplexId(
@@ -839,7 +839,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return pd.done().getResult();
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query: Query): Deferred<DataSet> {
       query = object.clonePlain(query, true);
       return this._loadAdditionalDependencies((def) => {
          this._connectAdditionalDependencies(
@@ -853,7 +853,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
    //region ICrudPlus
 
-   move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): ExtendPromise<any> {
+   move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): Deferred<any> {
       meta = meta || {};
       if (this._$binding.moveBefore) {
          //TODO: поддерживаем старый способ с двумя методами

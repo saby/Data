@@ -7,7 +7,6 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
 import Serializer = require('Core/Serializer');
 
 const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{

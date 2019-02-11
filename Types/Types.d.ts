@@ -2,6 +2,9 @@ interface CompareFunction {
    (a: any, b: any): number
 }
 
+interface EventObject {
+}
+
 interface EventBusChannel {
    publish(name: string): void;
    subscribe(event: string, handler: Function, ctx?: any): void;
@@ -11,9 +14,6 @@ interface EventBusChannel {
    hasEventHandlers(event: string): boolean;
    destroy(): void;
    _notifyWithTarget(event: string, target: any, ...args): void;
-}
-
-interface EventObject {
 }
 
 interface ExtendDateConstructor extends DateConstructor {
@@ -26,12 +26,6 @@ interface ExtendDateConstructor extends DateConstructor {
 interface ExtendDate extends Date {
    getSQLSerializationMode(): any;
    setSQLSerializationMode(mode: any);
-}
-
-interface ExtendPromise<T> extends Promise<T> {
-   addCallback(callback: Function);
-   addErrback(callback: Function);
-   addCallbacks(callback: Function, errback: Function);
 }
 
 declare function rk (key: string, ctx?: string|number, num?: number): string;

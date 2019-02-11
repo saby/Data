@@ -6,7 +6,6 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
 import req = require('require');
@@ -32,10 +31,10 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
     * @return {Core/Deferred}
     * @protected
     */
-   _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
+   _loadAdditionalDependencies<T>(callback?: () => Deferred<T>): Deferred<T> {
       let deps = this._additionalDependencies;
       let depsLoaded = deps.reduce((prev, curr) => prev && req.defined(curr), true);
-      let result = new Deferred();
+      let result = new Deferred<T>();
 
       if (depsLoaded) {
          if (callback) {

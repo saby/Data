@@ -12,6 +12,7 @@
 import Remote, {IPassing as IRemotePassing, IOptions as IRemoteOptions} from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
+import Deferred = require('Core/Deferred');
 
 export interface IPassing extends IRemotePassing {
 }
@@ -25,7 +26,7 @@ export default abstract class Rpc extends Remote implements IRpc /** @lends Type
 
    readonly '[Types/_source/IRpc]': boolean = true;
 
-   call(command: string, data?: Object): ExtendPromise<DataSet> {
+   call(command: string, data?: Object): Deferred<DataSet> {
       return this._callProvider(
          command,
          data
@@ -34,15 +35,6 @@ export default abstract class Rpc extends Remote implements IRpc /** @lends Type
             () => this._wrapToDataSet(data)
          )
       );
-   }
-
-   //endregion
-
-   //region Statics
-
-   //FIXME: something went wrong with inheritance of static members in IE
-   static get NAVIGATION_TYPE() {
-      return Remote.NAVIGATION_TYPE;
    }
 
    //endregion

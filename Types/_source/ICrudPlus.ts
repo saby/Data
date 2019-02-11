@@ -7,6 +7,7 @@
  */
 
 import {Record} from '../entity';
+import Deferred = require('Core/Deferred');
 
 export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype */{
    readonly '[Types/_source/ICrudPlus]': boolean;
@@ -41,7 +42,7 @@ export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype 
     *    });
     * </pre>
     */
-   merge(from: string | number, to: string | number): ExtendPromise<any>;
+   merge(from: string | number, to: string | number): Deferred<void | Error>;
 
    /**
     * Создает копию записи
@@ -62,7 +63,7 @@ export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype 
     *    });
     * </pre>
     */
-   copy(key: string | number, meta?: Object): ExtendPromise<Record>;
+   copy(key: string | number, meta?: Object): Deferred<Record | Error>;
 
    /**
     * Производит перемещение записи.
@@ -71,5 +72,5 @@ export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype 
     * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
     * @return {Promise.<*>} Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
     */
-   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any>;
+   move(items: Array<string | number>, target: string | number, meta?: Object): Deferred<void | Error>;
 }

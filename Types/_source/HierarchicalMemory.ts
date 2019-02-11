@@ -50,8 +50,8 @@ import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter, re
 import {mixin} from '../util';
 // @ts-ignore
 import req = require('require');
-// @ts-ignore
 import Deferred = require('Core/Deferred');
+import DataSet from "./DataSet";
 
 interface IOptions extends IMemoryOptions {
    parentProperty: string;
@@ -130,7 +130,7 @@ export default class HierarchicalMemory extends mixin(
    }
 
    query(query) {
-      let result = new Deferred();
+      let result = new Deferred<DataSet>();
 
       req(['Types/collection'], (collection) => {
          this._source.query(query).addCallbacks((response) => {

@@ -43,9 +43,7 @@ import {RecordSet} from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
 import {merge} from '../object';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
 import LocalStorage = require('Lib/Storage/LocalStorage');
 
 const DATA_FIELD_PREFIX = 'd';
@@ -778,7 +776,7 @@ export default class LocalSession extends mixin(
          keys.push(updateRecord(data));
       }
 
-      return Deferred.success(keys);
+      return Deferred.success<void>();
    }
 
    /**
@@ -800,7 +798,7 @@ export default class LocalSession extends mixin(
          return Deferred.fail('Not all keys exist');
       }
       this.rawManager.remove(keys);
-      return Deferred.success(true);
+      return Deferred.success<void>();
    }
 
    /**
@@ -860,7 +858,7 @@ export default class LocalSession extends mixin(
     *     })
     * </pre>
     */
-   merge(from, to) {
+   merge(from: string | number, to: string | number): Deferred<void | Error> {
       let fromData = this.rawManager.get(from);
       let toData = this.rawManager.get(to);
       if (fromData === null || toData === null) {
@@ -869,7 +867,7 @@ export default class LocalSession extends mixin(
       let data = merge(fromData, toData);
       this.rawManager.set(from, data);
       this.rawManager.remove(to);
-      return Deferred.success(true);
+      return Deferred.success<void>();
    }
 
    /**
