@@ -85,7 +85,6 @@ export default function numberWordsEN(num: string): string {
       if (prepareWord.length > 0) {
          let word = prepareWord.reduceRight(concat).title;
          if (counter > 0 && +three != 0) {
-            //@ts-ignore
             word += ' ' + (rk(THOUSANDS[counter], +three));
          }
 

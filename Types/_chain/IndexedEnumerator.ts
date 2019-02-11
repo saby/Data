@@ -59,9 +59,8 @@ export default class IndexedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-IndexedEnumerator.prototype.previous = null;
-// @ts-ignore
-IndexedEnumerator.prototype.index = -1;
-// @ts-ignore
-IndexedEnumerator.prototype._items = null;
+Object.assign(IndexedEnumerator.prototype, {
+   previous: null,
+   index: -1,
+   _items: null
+});

@@ -1501,28 +1501,20 @@ export default class RecordSet<Record> extends mixin(
    //endregion Statics
 }
 
-//Properties defaults
-RecordSet.prototype['[Types/_collection/RecordSet]'] = true;
-// @ts-ignore
-RecordSet.prototype['[Types/_entity/IInstantiable]'] = true;
-// @ts-ignore
-RecordSet.prototype['[Types/_entity/IObservableObject]'] = true;
-// @ts-ignore
-RecordSet.prototype['[Types/_entity/IProducible]'] = true;
-RecordSet.prototype._moduleName = 'Types/collection:RecordSet';
-RecordSet.prototype._instancePrefix = 'recordset-';
-// @ts-ignore
-RecordSet.prototype._defaultModel = DEFAULT_MODEL;
-// @ts-ignore
-RecordSet.prototype._$model = DEFAULT_MODEL;
-// @ts-ignore
-RecordSet.prototype._$idProperty = '';
-// @ts-ignore
-RecordSet.prototype._$metaData = null;
-// @ts-ignore
-RecordSet.prototype._$metaFormat = null;
-// @ts-ignore
-RecordSet.prototype._metaData = null;
+Object.assign(RecordSet.prototype,{
+   '[Types/_collection/RecordSet]': true,
+   '[Types/_entity/IInstantiable]': true,
+   '[Types/_entity/IObservableObject]': true,
+   '[Types/_entity/IProducible]': true,
+   _moduleName: 'Types/collection:RecordSet',
+   _instancePrefix: 'recordset-',
+   _defaultModel: DEFAULT_MODEL,
+   _$model: DEFAULT_MODEL,
+   _$idProperty: '',
+   _$metaData: null,
+   _$metaFormat: null,
+   _metaData: null
+});
 
 //Aliases
 RecordSet.prototype.forEach = RecordSet.prototype.each;

@@ -53,14 +53,14 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
    }
 }
 
-GroupItem.prototype._moduleName = 'Types/display:GroupItem';
-GroupItem.prototype['[Types/_display/GroupItem]'] = true;
-// @ts-ignore
-GroupItem.prototype._instancePrefix = 'group-item-';
-// @ts-ignore
-GroupItem.prototype._$expanded = true;
+Object.assign(GroupItem.prototype, {
+   '[Types/_display/GroupItem]': true,
+   _moduleName: 'Types/display:GroupItem',
+   _instancePrefix: 'group-item-',
+   _$expanded: true
+});
 
-// Deprecated
+// FIXME: deprecated
 GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
 
 register('Types/display:GroupItem', GroupItem);

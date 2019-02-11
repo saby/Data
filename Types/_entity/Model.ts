@@ -320,7 +320,7 @@ export default class Model extends mixin(
    /**
     * @property Properties names and values which affected during the recurseve set() calls
     */
-   _deepChangedProperties: Array<Array<any>>;
+   _deepChangedProperties: Object;
 
    constructor(options?) {
       super(options);
@@ -363,9 +363,7 @@ export default class Model extends mixin(
    get(name: string): any {
       this._pushDependency(name);
 
-      const isCalculating = this._calculatingProperties ? this._calculatingProperties.has(name) : false;
-
-      if (!isCalculating && this._fieldsCache.has(name)) {
+      if (this._fieldsCache.has(name)) {
          return this._fieldsCache.get(name);
       }
 
@@ -392,7 +390,7 @@ export default class Model extends mixin(
          this._addChild(value, this._getRelationNameForField(name));
       }
 
-      if (!isCalculating && this._isFieldValueCacheable(value)) {
+      if (this._isFieldValueCacheable(value)) {
          this._fieldsCache.set(name, value);
       } else if (this._fieldsCache.has(name)) {
          this._fieldsCache.delete(name);
@@ -439,7 +437,7 @@ export default class Model extends mixin(
                }
             }
 
-            pairs.push([key, value, Record.prototype.get.call(this, key)]);
+            pairs.push([key, value, this._getRawDataValue(key)]);
          } catch (err) {
             //Collecting errors for every property
             propertiesErrors.push(err);
@@ -447,28 +445,28 @@ export default class Model extends mixin(
       });
 
       //Collect pairs of properties
-      if (isCalculating && pairs.length) {
+      let pairsErrors = [];
+      let changedProperties = super._setPairs(pairs, pairsErrors);
+      if (isCalculating && changedProperties) {
          //Here is the set() that recursive calls from another set() so just accumulate the changes
-         this._deepChangedProperties = this._deepChangedProperties || [];
-         this._deepChangedProperties.push(...pairs);
+         this._deepChangedProperties = this._deepChangedProperties || {};
+         Object.assign(this._deepChangedProperties, changedProperties);
       } else if (!isCalculating && this._deepChangedProperties) {
          //Here is the top level set() so do merge with accumulated changes
-         pairs.push(...this._deepChangedProperties);
-         this._deepChangedProperties.length = 0;
+         if (changedProperties) {
+            Object.assign(this._deepChangedProperties, changedProperties);
+         }
+         changedProperties = this._deepChangedProperties;
+         this._deepChangedProperties = null;
       }
 
-      let pairsErrors = [];
-
       //It's top level set() so notify changes if have some
-      if (!isCalculating) {
-         let changedProperties = super._setPairs(pairs, pairsErrors);
-         if (changedProperties) {
-            let changed = Object.keys(changedProperties).reduce((memo, key) => {
-               memo[key] = this.get(key);
-               return memo;
-            }, {});
-            this._notifyChange(changed);
-         }
+      if (!isCalculating && changedProperties) {
+         let changed = Object.keys(changedProperties).reduce((memo, key) => {
+            memo[key] = this.get(key);
+            return memo;
+         }, {});
+         this._notifyChange(changed);
       }
 
       this._checkErrors([...propertiesErrors, ...pairsErrors]);
@@ -960,19 +958,20 @@ export default class Model extends mixin(
    //endregion
 }
 
-Model.prototype['[Types/_entity/Model]'] = true;
-// @ts-ignore
-Model.prototype['[Types/_entity/IInstantiable]'] = true;
-Model.prototype._moduleName = 'Types/entity:Model';
-Model.prototype._instancePrefix = 'model-';
-Model.prototype._$properties = null;
-Model.prototype._$idProperty = '';
-Model.prototype._isDeleted = false;
-Model.prototype._defaultPropertiesValues = null;
-Model.prototype._propertiesDependency = null;
-Model.prototype._propertiesDependencyGathering = '';
-Model.prototype._calculatingProperties = null;
-Model.prototype._deepChangedProperties = null;
+Object.assign(Model.prototype, {
+   '[Types/_entity/Model]': true,
+   '[Types/_entity/IInstantiable]': true,
+   _moduleName: 'Types/entity:Model',
+   _instancePrefix: 'model-',
+   _$properties: null,
+   _$idProperty: '',
+   _isDeleted: false,
+   _defaultPropertiesValues: null,
+   _propertiesDependency: null,
+   _propertiesDependencyGathering: '',
+   _calculatingProperties: null,
+   _deepChangedProperties: null
+});
 
 //FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Model.prototype['[WS.Data/Entity/Model]'] = true;

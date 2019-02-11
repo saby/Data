@@ -1,4 +1,4 @@
-///<amd-module name="Types/_entity/date/toSql" />
+///<amd-module name="Types/_formatter/dateToSql" />
 /**
  * Serializes Date to the preferred SQL format.
  * @public
@@ -12,7 +12,7 @@
  * @variant MODE_TIME Время
  */
 
-import {date as dateFormatter} from '../../formatter';
+import dateFormatter from './date';
 
 const MODE = {
    'TIME': 'time',

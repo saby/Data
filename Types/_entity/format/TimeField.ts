@@ -16,7 +16,7 @@
  */
 
 import Field from './Field';
-import toSql, {MODE} from '../date/toSql';
+import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
@@ -24,7 +24,7 @@ export default class TimeField extends Field /** @lends Types/_entity/format/Tim
 
    getDefaultValue() {
       if (this._$defaultValue instanceof Date) {
-         return toSql(this._$defaultValue, MODE.TIME);
+         return dateToSql(this._$defaultValue, TO_SQL_MODE.TIME);
       }
       return this._$defaultValue;
    }

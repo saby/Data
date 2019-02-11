@@ -244,15 +244,13 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
    //endregion Protected members
 }
 
-Memory.prototype._moduleName = 'Types/source:Memory';
-Memory.prototype['[Types/_source/Memory]'] = true;
-// @ts-ignore
-Memory.prototype._$data = null;
-// @ts-ignore
-Memory.prototype._dataSetItemsProperty = 'items';
-// @ts-ignore
-Memory.prototype._dataSetMetaProperty = 'meta';
-// @ts-ignore
-Memory.prototype._emptyData = null;
+Object.assign(Memory.prototype, {
+   '[Types/_source/Memory]': true,
+   _moduleName: 'Types/source:Memory',
+   _$data: null,
+   _dataSetItemsProperty: 'items',
+   _dataSetMetaProperty: 'meta',
+   _emptyData: null
+});
 
 register('Types/source:Memory', Memory, {instantiate: false});

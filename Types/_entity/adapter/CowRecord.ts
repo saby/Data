@@ -141,12 +141,12 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
    //endregion Protected methods
 }
 
-CowRecord.prototype['[Types/_entity/adapter/CowRecord]'] = true;
-// @ts-ignore
-CowRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-// @ts-ignore
-CowRecord.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-CowRecord.prototype._original = null;
-CowRecord.prototype._originalRecord = null;
-CowRecord.prototype._writeCallback = null;
-CowRecord.prototype._copied = false;
+Object.assign(CowRecord.prototype, {
+   '[Types/_entity/adapter/CowRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   '[Types/_entity/adapter/IDecorator]': true,
+   _original: null,
+   _originalRecord: null,
+   _writeCallback: null,
+   _copied: false
+});

@@ -436,110 +436,105 @@ export default abstract class Remote extends mixin(
    //endregion
 }
 
-Remote.prototype['[Types/_source/Remote]'] = true;
-// @ts-ignore
-Remote.prototype._$provider = null;
-// @ts-ignore
-Remote.prototype._$passing = /** @lends Types/_source/Remote.prototype */{
+Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
+   '[Types/_source/Remote]': true,
+   _moduleName: 'Types/source:Remote',
+   _provider: null,
+   _$provider: null,
+   _$passing: {
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
+       * @name Types/_source/Remote#passing.create
+       */
+      create: passCreate,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-    * @name Types/_source/Remote#passing.create
-    */
-   create: passCreate,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
+       * @name Types/_source/Remote#passing.read
+       */
+      read: passRead,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-    * @name Types/_source/Remote#passing.read
-    */
-   read: passRead,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
+       * @name Types/_source/Remote#passing.update
+       */
+      update: passUpdate,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-    * @name Types/_source/Remote#passing.update
-    */
-   update: passUpdate,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
+       * @name Types/_source/Remote#passing.destroy
+       */
+      destroy: passDestroy,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-    * @name Types/_source/Remote#passing.destroy
-    */
-   destroy: passDestroy,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
+       * @name Types/_source/Remote#passing.query
+       */
+      query: passQuery,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-    * @name Types/_source/Remote#passing.query
-    */
-   query: passQuery,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
+       * @name Types/_source/Remote#passing.copy
+       */
+      copy: passCopy,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-    * @name Types/_source/Remote#passing.copy
-    */
-   copy: passCopy,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
+       * @name Types/_source/Remote#passing.merge
+       */
+      merge: passMerge,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-    * @name Types/_source/Remote#passing.merge
-    */
-   merge: passMerge,
+      /**
+       * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
+       * @name Types/_source/Remote#passing.move
+       */
+      move: passMove
+   },
+   _$options: OptionsMixin.addOptions(Base, {
+      /**
+       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
+       * @name Types/_source/Remote#options.updateOnlyChanged
+       * @remark
+       * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые записи от уже существующих.
+       */
+      updateOnlyChanged: false,
 
-   /**
-    * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-    * @name Types/_source/Remote#passing.move
-    */
-   move: passMove
-};
-
-// @ts-ignore
-Remote.prototype._$options = OptionsMixin.addOptions(Base, /** @lends Types/_source/Remote.prototype */{
-   /**
-    * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
-    * @name Types/_source/Remote#options.updateOnlyChanged
-    * @remark
-    * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые записи от уже существующих.
-    */
-   updateOnlyChanged: false,
-
-   /**
-    * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
-    * @name Types/_source/Remote#options.navigationType
-    * @example
-    * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
-    * <pre>
-    *    var dataSource = new RemoteSource({
-    *          endpoint: 'Orders'
-    *          options: {
-    *             navigationType: RemoteSource.prototype.NAVIGATION_TYPE.OFFSET
-    *          }
-    *       }),
-    *       query = new Query();
-    *
-    *    query.select([
-    *          'id',
-    *          'date',
-    *          'amount'
-    *       ])
-    *       .where({
-    *          'date': new Date()
-    *       })
-    *       .orderBy('id')
-    *       .offset(20)
-    *       .limit(10);
-    *
-    *    dataSource.query(query).addCallbacks(function(dataSet) {
-    *       var orders = dataSet.getAll();
-    *    }, function(error) {
-    *       console.error(error);
-    *    });
-    * </pre>
-    */
-   navigationType: NAVIGATION_TYPE.PAGE
+      /**
+       * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
+       * @name Types/_source/Remote#options.navigationType
+       * @example
+       * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
+       * <pre>
+       *    var dataSource = new RemoteSource({
+       *          endpoint: 'Orders'
+       *          options: {
+       *             navigationType: RemoteSource.prototype.NAVIGATION_TYPE.OFFSET
+       *          }
+       *       }),
+       *       query = new Query();
+       *
+       *    query.select([
+       *          'id',
+       *          'date',
+       *          'amount'
+       *       ])
+       *       .where({
+       *          'date': new Date()
+       *       })
+       *       .orderBy('id')
+       *       .offset(20)
+       *       .limit(10);
+       *
+       *    dataSource.query(query).addCallbacks(function(dataSet) {
+       *       var orders = dataSet.getAll();
+       *    }, function(error) {
+       *       console.error(error);
+       *    });
+       * </pre>
+       */
+      navigationType: NAVIGATION_TYPE.PAGE
+   }),
 });
-
-Remote.prototype._moduleName = 'Types/source:Remote';
-// @ts-ignore
-Remote.prototype._provider = null;
 
 // FIXME: backward compatibility for SbisFile/Source/BL
 // @ts-ignore

@@ -54,9 +54,10 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
    // endregion
 }
 
-BreadcrumbsItem.prototype._moduleName = 'Types/display:BreadcrumbsItem';
-BreadcrumbsItem.prototype['[Types/_display/BreadcrumbsItem]'] = true;
-// @ts-ignore
-BreadcrumbsItem.prototype._$last = null;
+Object.assign(BreadcrumbsItem.prototype,{
+   '[Types/_display/BreadcrumbsItem]': true,
+   _moduleName: 'Types/display:BreadcrumbsItem',
+   _$last: null
+});
 
 register('Types/display:BreadcrumbsItem', BreadcrumbsItem);

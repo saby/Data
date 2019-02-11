@@ -211,20 +211,17 @@ export default class CollectionItem extends mixin(
    //endregion
 }
 
-CollectionItem.prototype._moduleName = 'Types/display:CollectionItem';
-CollectionItem.prototype['[Types/_display/CollectionItem]'] = true;
-// @ts-ignore
-CollectionItem.prototype._$owner = null;
-// @ts-ignore
-CollectionItem.prototype._$contents = null;
-// @ts-ignore
-CollectionItem.prototype._$selected = false;
-// @ts-ignore
-CollectionItem.prototype._instancePrefix = 'collection-item-';
-// @ts-ignore
-CollectionItem.prototype._contentsIndex = undefined;
+Object.assign(CollectionItem.prototype, {
+   '[Types/_display/CollectionItem]': true,
+   _moduleName: 'Types/display:CollectionItem',
+   _$owner: null,
+   _$contents: null,
+   _$selected: false,
+   _instancePrefix: 'collection-item-',
+   _contentsIndex: undefined
+});
 
-// Deprecated
+// FIXME: deprecated
 CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
 
 register('Types/display:CollectionItem', CollectionItem);

@@ -1,6 +1,6 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_entity/date/toSql'
+   'Types/_formatter/dateToSql'
 ], function(
    toSqlLib
 ) {
@@ -9,7 +9,7 @@ define([
    var toSql = toSqlLib.default;
    var MODE = toSqlLib.MODE;
 
-   describe('Types/_entity/date/toSql', function() {
+   describe('Types/_formatter/dateToSql', function() {
       function patchTzo(date, offset) {
          date.tzoStub = sinon.stub(date, 'getTimezoneOffset');
          date.tzoStub.returns(offset);

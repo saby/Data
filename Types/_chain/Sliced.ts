@@ -45,8 +45,8 @@ export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Slice
    // endregion Types/_collection/IEnumerable
 }
 
-Sliced.prototype['[Types/_chain/Sliced]'] = true;
-// @ts-ignore
-Sliced.prototype._begin = 0;
-// @ts-ignore
-Sliced.prototype._end = 0;
+Object.assign(Sliced.prototype, {
+   '[Types/_chain/Sliced]': true,
+   _begin: 0,
+   _end: 0
+});

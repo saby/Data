@@ -62,7 +62,8 @@ export default abstract class Base extends mixin(
    };
 }
 
-Base.prototype._moduleName = 'Types/source:Base';
-Base.prototype['[Types/_source/Base]'] = true;
-// @ts-ignore
-Base.prototype['[Types/_source/IData]'] = true;
+Object.assign(Base.prototype, {
+   '[Types/_source/Base]': true,
+   '[Types/_source/IData]': true,
+   _moduleName: 'Types/source:Base'
+});

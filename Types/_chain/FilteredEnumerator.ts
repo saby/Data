@@ -58,11 +58,9 @@ export default class FilteredEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-FilteredEnumerator.prototype.previous = null;
-// @ts-ignore
-FilteredEnumerator.prototype.callback = null;
-// @ts-ignore
-FilteredEnumerator.prototype.callbackContext = null;
-// @ts-ignore
-FilteredEnumerator.prototype.enumerator = null;
+Object.assign(FilteredEnumerator.prototype, {
+   previous: null,
+   callback: null,
+   callbackContext: null,
+   enumerator: null
+});

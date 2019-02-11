@@ -173,8 +173,9 @@ export default class RecordSetRecord extends mixin(
    //endregion Protected methods
 }
 
-RecordSetRecord.prototype['[Types/_entity/adapter/RecordSetRecord]'] = true;
-// @ts-ignore
-RecordSetRecord.prototype['[Types/_entity/adapter/IRecord]'] = true;
-RecordSetRecord.prototype._data = null;
-RecordSetRecord.prototype._tableData = null;
+Object.assign(RecordSetRecord.prototype, {
+   '[Types/_entity/adapter/RecordSetRecord]': true,
+   '[Types/_entity/adapter/IRecord]': true,
+   _data: null,
+   _tableData: null
+});

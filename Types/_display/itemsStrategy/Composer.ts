@@ -207,7 +207,8 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    //endregion Protected members
 }
 
-Composer.prototype._moduleName = 'Types/display:itemsStrategy.Composer';
-Composer.prototype['[Types/_display/itemsStrategy/Composer]'] = true;
-// @ts-ignore
-Composer.prototype._result = null;
+Object.assign(Composer.prototype, {
+   '[Types/_display/itemsStrategy/Composer]': true,
+   _moduleName: 'Types/display:itemsStrategy.Composer',
+   _result: null
+});

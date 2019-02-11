@@ -815,7 +815,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
+    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
    getItems(): Array<CollectionItem> {
@@ -1504,14 +1504,22 @@ export default class Collection extends mixin(
     * </pre>
     */
    getGroupByIndex(index: number): string | number {
-      let items = this._getItems();
+      let currentGroupId;
+      let enumerator = this.getEnumerator();
       let item;
-      for (let position = index; position >= 0; position--) {
-         item = items[position];
+      let itemIndex = 0;
+      while (enumerator.moveNext()) {
+         item = enumerator.getCurrent();
          if (item instanceof GroupItem) {
-            return item.getContents();
+            currentGroupId = item.getContents();
          }
+         if (itemIndex === index) {
+            break;
+         }
+         itemIndex++;
       }
+
+      return currentGroupId;
    }
 
    /**
@@ -1886,8 +1894,7 @@ export default class Collection extends mixin(
    //region Multiselectable
 
    /**
-    * Возвращает массив выбранных элементов
-    * @remark Метод возвращает выбранные элементы не зависимо от фильтра проекции.
+    * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
    getSelectedItems(): Array<CollectionItem> {
@@ -1926,8 +1933,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает признак, что элемент выбран, всем элементам проекции.
-    * @remark Метод устанавливает  признак всем элементам не зависимо от фильтра проекции.
+    * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и группировки).
     * @param {Boolean} selected Элемент выбран.
     * @return {Array}
     */
@@ -1936,8 +1942,7 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Инвертирует признак, что элемент выбран, у всех элементов проекции
-    * @remark Метод инвертирует выделение у всех элементов не зависимо от фильтра проекции.
+    * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и группировки).
     */
    invertSelectedItemsAll() {
       let items = this._getItems();
@@ -2073,7 +2078,7 @@ export default class Collection extends mixin(
    //region Navigation
 
    /**
-    * Возвращает элементы проекции
+    * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
     * @return {Array.<Types/_display/CollectionItem>}
     * @protected
     */
@@ -2866,46 +2871,30 @@ export default class Collection extends mixin(
    //endregion
 }
 
-Collection.prototype._moduleName = 'Types/display:Collection';
-Collection.prototype['[Types/_display/Collection]'] = true;
-// @ts-ignore
-Collection.prototype._$collection = null;
-// @ts-ignore
-Collection.prototype._$filter = null;
-// @ts-ignore
-Collection.prototype._$group = null;
-// @ts-ignore
-Collection.prototype._$sort = null;
-// @ts-ignore
-Collection.prototype._$idProperty = '';
-// @ts-ignore
-Collection.prototype._$unique = false;
-// @ts-ignore
-Collection.prototype._$importantItemProperties = null;
-// @ts-ignore
-Collection.prototype._localize = false;
-// @ts-ignore
-Collection.prototype._itemModule = 'Types/display:CollectionItem';
-// @ts-ignore
-Collection.prototype._itemsFactory = null;
-// @ts-ignore
-Collection.prototype._composer = null;
-// @ts-ignore
-Collection.prototype._sourceCollectionSynchronized = true;
-// @ts-ignore
-Collection.prototype._sourceCollectionDelayedCallbacks = null;
-// @ts-ignore
-Collection.prototype._cursorEnumerator = null;
-// @ts-ignore
-Collection.prototype._utilityEnumerator = null;
-// @ts-ignore
-Collection.prototype._onCollectionChange = null;
-// @ts-ignore
-Collection.prototype._onCollectionItemChange = null;
-// @ts-ignore
-Collection.prototype._oEventRaisingChange = null;
+Object.assign(Collection.prototype, {
+   '[Types/_display/Collection]': true,
+   _moduleName: 'Types/display:Collection',
+   _$collection: null,
+   _$filter: null,
+   _$group: null,
+   _$sort: null,
+   _$idProperty: '',
+   _$unique: false,
+   _$importantItemProperties: null,
+   _localize: false,
+   _itemModule: 'Types/display:CollectionItem',
+   _itemsFactory: null,
+   _composer: null,
+   _sourceCollectionSynchronized: true,
+   _sourceCollectionDelayedCallbacks: null,
+   _cursorEnumerator: null,
+   _utilityEnumerator: null,
+   _onCollectionChange: null,
+   _onCollectionItemChange: null,
+   _oEventRaisingChange: null
+});
 
-// Deprecated
+// FIXME: deprecated
 Collection.prototype['[WS.Data/Display/Collection]'] = true;
 
 register('Types/display:Collection', Collection);

@@ -63,11 +63,11 @@ export default class Flags extends Collection /** @lends Types/_display/Flags.pr
    }
 }
 
-Flags.prototype._moduleName = 'Types/display:Flags';
-Flags.prototype['[Types/_display/Flags]'] = true;
-// @ts-ignore
-Flags.prototype._itemModule = 'Types/display:FlagsItem';
-// @ts-ignore
-Flags.prototype._localize = true;
+Object.assign(Flags.prototype, {
+   '[Types/_display/Flags]': true,
+   _moduleName: 'Types/display:Flags',
+   _itemModule: 'Types/display:FlagsItem',
+   _localize: true
+});
 
 register('Types/display:Flags', Flags);

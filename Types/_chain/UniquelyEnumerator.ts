@@ -70,13 +70,10 @@ export default class UniquelyEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-UniquelyEnumerator.prototype.previous = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.enumerator = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.idExtractor = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.keysHash = null;
-// @ts-ignore
-UniquelyEnumerator.prototype.objectsHash = null;
+Object.assign(UniquelyEnumerator.prototype, {
+   previous: null,
+   enumerator: null,
+   idExtractor: null,
+   keysHash: null,
+   objectsHash: null
+});

@@ -571,15 +571,12 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    //endregion
 }
 
-AdjacencyList.prototype._moduleName = 'Types/display:itemsStrategy.AdjacencyList';
-AdjacencyList.prototype['[Types/_display/itemsStrategy/AdjacencyList]'] = true;
-// @ts-ignore
-AdjacencyList.prototype._options = null;
-// @ts-ignore
-AdjacencyList.prototype._items = null;
-// @ts-ignore
-AdjacencyList.prototype._sourceItems = null;
-// @ts-ignore
-AdjacencyList.prototype._itemsOrder = null;
-// @ts-ignore
-AdjacencyList.prototype._parentsMap = null;
+Object.assign(AdjacencyList.prototype, {
+   '[Types/_display/itemsStrategy/AdjacencyList]': true,
+   _moduleName: 'Types/display:itemsStrategy.AdjacencyList',
+   _options: null,
+   _items: null,
+   _sourceItems: null,
+   _itemsOrder: null,
+   _parentsMap: null
+});

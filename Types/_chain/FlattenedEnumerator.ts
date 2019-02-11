@@ -45,9 +45,8 @@ export default class FlattenedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-FlattenedEnumerator.prototype.previous = null;
-// @ts-ignore
-FlattenedEnumerator.prototype.mover = null;
-// @ts-ignore
-FlattenedEnumerator.prototype.index = null;
+Object.assign(FlattenedEnumerator.prototype,{
+   previous: null,
+   mover: null,
+   index: null
+});

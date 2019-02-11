@@ -76,15 +76,11 @@ export default class ZippedEnumerator<T> implements IEnumerator<T> {
    }
 }
 
-// @ts-ignore
-ZippedEnumerator.prototype.previous = null;
-// @ts-ignore
-ZippedEnumerator.prototype.items = null;
-// @ts-ignore
-ZippedEnumerator.prototype.itemsEnumerators = null;
-// @ts-ignore
-ZippedEnumerator.prototype.enumerator = null;
-// @ts-ignore
-ZippedEnumerator.prototype.index = null;
-// @ts-ignore
-ZippedEnumerator.prototype.current = undefined;
+Object.assign(ZippedEnumerator.prototype,{
+   previous: null,
+   items: null,
+   itemsEnumerators: null,
+   enumerator: null,
+   index: null,
+   current: undefined
+});

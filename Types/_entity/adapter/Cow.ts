@@ -105,11 +105,12 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
    //endregion SerializableMixin
 }
 
-Cow.prototype['[Types/_entity/adapter/Cow]'] = true;
-// @ts-ignore
-Cow.prototype['[Types/_entity/adapter/IDecorator]'] = true;
-Cow.prototype._moduleName = 'Types/entity:adapter.Cow';
-Cow.prototype._original = null;
-Cow.prototype._writeCallback = null;
+Object.assign(Cow.prototype, {
+   '[Types/_entity/adapter/Cow]': true,
+   '[Types/_entity/adapter/IDecorator]': true,
+   _moduleName: 'Types/entity:adapter.Cow',
+   _original: null,
+   _writeCallback: null
+});
 
 register('Types/entity:adapter.Cow', Cow, {instantiate: false});

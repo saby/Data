@@ -117,12 +117,11 @@ if (typeof Set === 'undefined') {
       }
    };
 
-   // @ts-ignore
-   SetImplementation.prototype._hash = null;
-   // @ts-ignore
-   SetImplementation.prototype._objectPrefix = '{[object]}:';
-   // @ts-ignore
-   SetImplementation.prototype._objects = null;
+   Object.assign(SetImplementation.prototype, {
+      _hash: null,
+      _objectPrefix: '{[object]}:',
+      _objects: null
+   });
 
    Object.defineProperty(SetImplementation.prototype, 'size', {
       get: function() {
