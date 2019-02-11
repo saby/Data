@@ -1,4 +1,4 @@
-# Types system
+# Type system
 
 ## Setup in development mode
 
