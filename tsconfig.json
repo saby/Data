@@ -1,5 +1,8 @@
 {
   "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "types" : ["requirejs"]
+  },
   "include": [
     "Browser/**/*.ts",
     "Env/**/*.ts",
