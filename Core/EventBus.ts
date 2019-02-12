@@ -27,11 +27,11 @@ class Channel implements EventBusChannel {
    }
 
    getEventHandlers(event: string): Function[] {
-      return [];
+      return this.handlers.get(event) || [];
    }
 
    hasEventHandlers(event: string): boolean {
-      return false;
+      return this.getEventHandlers(event).length > 0;
    }
 
    destroy(): void {
@@ -39,11 +39,14 @@ class Channel implements EventBusChannel {
    }
 
    _notifyWithTarget(event: string, target: any, ...args): void {
+      this.getEventHandlers(event).forEach((handler) => {
+         handler.apply(target || handler, args);
+      });
    }
 }
 
 class EventBus {
-   static channel() {
+   static channel(): Channel {
       return new Channel();
    }
 }

@@ -1,7 +1,13 @@
+const logger = console;
+
 class IoC {
    protected bindings: Map<string, any> = new Map();
 
    resolve<T>(name: string): T {
+      switch (name) {
+         case 'ILogger':
+            return logger;
+      }
       return this.bindings.get(name);
    }
 
