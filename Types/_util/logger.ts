@@ -6,7 +6,7 @@
  */
 
 // @ts-ignore
-import IoC = require('Core/IoC');
+import { IoC } from 'Env/Env';
 
 const STACK_DETECTOR = /:[0-9]+:[0-9]+/;
 

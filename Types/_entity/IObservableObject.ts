@@ -11,7 +11,7 @@ export default interface IObservableObject /** @lends Types/_entity/IObservableO
 
    /**
     * @event onPropertyChange После изменения набора свойств объекта.
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {Object} properties Названия и новые значения изменившихся свойств.
     * @example
     * <pre>

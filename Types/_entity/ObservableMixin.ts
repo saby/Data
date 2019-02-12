@@ -7,7 +7,7 @@
  */
 
 // @ts-ignore
-import EventBus = require('Core/EventBus');
+import { Bus as EventBus } from 'Env/Event';
 
 interface IOptions {
    handlers?: Object
@@ -117,7 +117,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
    /**
     * Возвращет массив подписчиков на событие
     * @param {String} event Имя события
-    * @return {Array.<Core/EventObject>}
+    * @return {Array.<Env/Event.Object>}
     * @example
     * Посмотрим, сколько подписчиков у события OnSomethingChanged
     * <pre>

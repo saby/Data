@@ -1,10 +1,10 @@
 /* global define, describe, it, assert */
 define([
    'Types/_entity/InstantiableMixin',
-   'Core/constants'
+   'Env/Env'
 ], function(
    InstantiableMixin,
-   constants
+   Env
 ) {
    'use strict';
 
@@ -14,7 +14,7 @@ define([
       describe('.getInstanceId()', function() {
          it('should return various prefix on client and server', function() {
             var id = InstantiableMixin.getInstanceId();
-            if (constants.isBrowserPlatform) {
+            if (Env.constants.isBrowserPlatform) {
                assert.isTrue(id.startsWith('client-id-'));
             } else {
                assert.isTrue(id.startsWith('server-id-'));

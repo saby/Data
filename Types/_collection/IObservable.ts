@@ -52,7 +52,7 @@ const IObservable = /** @lends Types/_collection/IBind.prototype */{
 
    /**
     * @event onCollectionChange После изменения коллекции
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {ChangeAction} action Действие, приведшее к изменению.
     * @param {Array} newItems Новые элементы коллекции.
     * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
@@ -84,7 +84,7 @@ const IObservable = /** @lends Types/_collection/IBind.prototype */{
 
    /**
     * @event onCollectionItemChange После изменения элемента коллекции
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {*} item Измененный элемент коллекции.
     * @param {Number} index Индекс измененного элемента.
     * @param {Object} [properties] Изменившиеся свойства

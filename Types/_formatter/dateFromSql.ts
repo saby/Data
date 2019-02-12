@@ -1,6 +1,6 @@
 ///<amd-module name="Types/_formatter/dateFromSql" />
 //@ts-ignore
-import constants = require('Core/constants');
+import { constants } from 'Env/Env';
 
 /**
  * @public

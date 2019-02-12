@@ -13,7 +13,7 @@ export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype *
 
    /**
     * @event onChange Triggers after change the selected item
-    * @param {Core/EventObject} event Event descriptor
+    * @param {Env/Event.Object} event Event descriptor
     * @param {Number} index Key of selected item
     * @param {String} value Value of selected item
     * @example

@@ -13,7 +13,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
 
    /**
     * @event onChange Triggers after change the selection
-    * @param {Core/EventObject} event Event descriptor
+    * @param {Env/Event.Object} event Event descriptor
     * @param {String|Array.<Boolean|Null>} name Name of the flag or whole flags selection in case of mass operation
     * @param {Number} [index] Index of the flag
     * @param {Boolean|Null} [value] New value of selection of the flag
