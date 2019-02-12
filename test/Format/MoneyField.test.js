@@ -37,13 +37,5 @@ define([
             assert.isTrue(field.isLarge());
          });
       });
-
-      describe('.clone()', function() {
-         it('should return the clone', function() {
-            var clone = field.clone();
-            assert.instanceOf(clone, MoneyField);
-            assert.isTrue(field.isEqual(clone));
-         });
-      });
    });
 });

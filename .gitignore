@@ -6,10 +6,12 @@
 .settings
 /package-lock.json
 /tsconfig.base.json
+/tslib.js
 /tslint.json
 /node_modules
 /artifacts
-/Inferno
-/View
-/WS.Core
+/Core/**/*.js
+/Lib/**/*.js
+/Transport/**/*.js
 /Types/**/*.js
+

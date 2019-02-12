@@ -1,5 +1,6 @@
 /* global define, before, beforeEach, afterEach, describe, it, assert, context */
 define([
+   '../util',
    'Types/_collection/RecordSet',
    'Types/_collection/IObservable',
    'Types/entity',
@@ -7,9 +8,9 @@ define([
    'Types/_entity/adapter/Json',
    'Types/_entity/adapter/Sbis',
    'Types/_entity/adapter/Cow',
-   'Core/core-extend',
    'Core/Serializer'
 ], function(
+   util,
    RecordSet,
    IBindCollection,
    type,
@@ -17,7 +18,6 @@ define([
    JsonAdapter,
    SbisAdapter,
    CowAdapter,
-   coreExtend,
    Serializer
 ) {
    'use strict';
@@ -593,7 +593,7 @@ define([
          });
 
          it('should build the format by Model\'s format if don\'t have it\'s own', function() {
-            var Foo = coreExtend.extend(Model, {
+            var Foo = util.extend(Model, {
                   _$format: {
                      bar: Number
                   }
@@ -2328,7 +2328,7 @@ define([
             var data = getItems(),
                rs = new RecordSet({
                   rawData: data,
-                  model: coreExtend.extend(Model, {})
+                  model: util.extend(Model, {})
                });
 
             for (var i = 0; i < data.length; i++) {
@@ -2453,7 +2453,7 @@ define([
             });
 
             it('should return meta data with results of given type', function() {
-               var Foo = coreExtend.extend(Model, {}),
+               var Foo = util.extend(Model, {}),
                   data = {
                      r: {
                         d: [],
@@ -2554,7 +2554,7 @@ define([
 
          it('should return an instance with inherited adapter', function() {
             var adapter = new SbisAdapter(),
-               Foo = coreExtend.extend(RecordSet, {
+               Foo = util.extend(RecordSet, {
                   _$adapter: adapter
                }),
                instance = Foo.produceInstance(null);
@@ -2571,7 +2571,7 @@ define([
          });
 
          it('should return an instance with inherited model', function() {
-            var Foo = coreExtend.extend(RecordSet, {
+            var Foo = util.extend(RecordSet, {
                   _$model: 'fooModel'
                }),
                instance = Foo.produceInstance([]);

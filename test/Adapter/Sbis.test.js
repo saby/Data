@@ -5,8 +5,7 @@ define([
    'Types/_entity/adapter/SbisRecord',
    'Types/_entity/Model',
    'Types/_entity/Record',
-   'Types/_collection/RecordSet',
-   'Core/Date'
+   'Types/_collection/RecordSet'
 ], function(
    SbisAdapter,
    SbisTable,

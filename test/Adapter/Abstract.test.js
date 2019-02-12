@@ -3,8 +3,7 @@ define([
    'Types/_entity/adapter/Abstract',
    'Types/_entity/Record',
    'Types/_collection/RecordSet',
-   'Types/_source/DataSet',
-   'Core/Date'
+   'Types/_source/DataSet'
 ], function(
    AbstractAdapter,
    Record,
@@ -17,6 +16,7 @@ define([
    Record = Record.default;
    RecordSet = RecordSet.default;
    DataSet = DataSet.default;
+
    describe('Types/_entity/adapter/Abstract', function() {
       var adapter;
 

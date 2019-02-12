@@ -1,10 +1,10 @@
 /* global beforeEach, afterEach, describe, it, assert */
 define([
+   '../util',
    'Types/_entity/descriptor',
-   'Core/core-extend'
 ], function(
-   descriptor,
-   extend
+   util,
+   descriptor
 ) {
    'use strict';
 
@@ -85,7 +85,7 @@ define([
 
       it('should return value that implements an interface', function() {
          var IFace = {},
-            Module = extend.extend(Object, [IFace], {}),
+            Module = util.extend(Object, [IFace], {}),
             inst = new Module();
 
          assert.equal(descriptor(IFace)(inst), inst);
@@ -93,7 +93,7 @@ define([
 
       it('should return TypeError if value is not implements an interface', function() {
          var IFace = {},
-            Module = extend.extend(Object, {}),
+            Module = util.extend(Object, {}),
             inst = new Module();
 
          assert.instanceOf(descriptor(IFace)(inst), TypeError);

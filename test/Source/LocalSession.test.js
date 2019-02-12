@@ -1,21 +1,21 @@
 /* global beforeEach, afterEach, describe, context, assert, it */
 define([
+   '../util',
    'Types/_source/LocalSession',
    'Types/_source/DataSet',
    'Types/_source/Query',
    'Types/_entity/Model',
    'Types/_collection/RecordSet',
    'Types/_collection/List',
-   'Core/core-simpleExtend',
    'Lib/Storage/LocalStorage'
 ], function(
+   util,
    LocalSession,
    DataSet,
    Query,
    Model,
    RecordSet,
    List,
-   coreExtend,
    CoreLocalStorage
 ) {
    LocalSession = LocalSession.default;
@@ -534,7 +534,7 @@ define([
          });
 
          it('should return a list instance of injected module', function(done) {
-            var MyList = coreExtend.extend(List, {});
+            var MyList = util.extend(List, {});
             source.setListModule(MyList);
             source.query().addCallbacks(function(ds) {
                try {
@@ -549,7 +549,7 @@ define([
          });
 
          it('should return a model instance of injected module', function(done) {
-            var MyModel = coreExtend.extend(Model, {});
+            var MyModel = util.extend(Model, {});
             source.setModel(MyModel);
             source.query().addCallbacks(function(ds) {
                try {
@@ -1425,7 +1425,7 @@ define([
             });
 
             it('should return a list instance of injected module', function(done) {
-               var MyList = coreExtend.extend(List, {});
+               var MyList = util.extend(List, {});
                source6.setListModule(MyList);
                source6.query().addCallbacks(function(ds) {
                   try {
@@ -1440,7 +1440,7 @@ define([
             });
 
             it('should return a model instance of injected module', function(done) {
-               var MyModel = coreExtend.extend(Model, {});
+               var MyModel = util.extend(Model, {});
                source6.setModel(MyModel);
                source6.query().addCallbacks(function(ds) {
                   try {

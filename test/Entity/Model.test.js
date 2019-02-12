@@ -1,16 +1,16 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
+   '../util',
    'Types/_entity/Model',
    'Types/_entity/functor/Compute',
    'Types/_entity/adapter/Sbis',
-   'Types/_collection/RecordSet',
-   'Core/core-extend'
+   'Types/_collection/RecordSet'
 ], function(
+   util,
    Model,
    Compute,
    SbisAdapter,
-   RecordSet,
-   extend
+   RecordSet
 ) {
    'use strict';
 
@@ -197,7 +197,7 @@ define([
          });
 
          it('should use recordset format for the property initial value', function() {
-            var SubModel = extend.extend(Model, {
+            var SubModel = util.extend(Model, {
                   _$properties: {
                      id: {
                         get: function(value) {
@@ -708,7 +708,7 @@ define([
          });
 
          context('if has properties calculated dependency', function() {
-            var MyModel = extend.extend(Model, {
+            var MyModel = util.extend(Model, {
                   _$properties: {
                      p1: {
                         get: function() {
@@ -767,7 +767,7 @@ define([
             });
 
             it('should reset the value if dependency cached', function() {
-               var MyModel = extend.extend(Model, {
+               var MyModel = util.extend(Model, {
                      _$properties: {
                         a: {
                            get: function() {
@@ -1396,7 +1396,7 @@ define([
          describe('.$constructor()', function() {
             it('should be called', function() {
                var testOk = false,
-                  Sub = extend.extend(Model, {
+                  Sub = util.extend(Model, {
                      $constructor: function() {
                         testOk = true;
                      }
@@ -1410,12 +1410,12 @@ define([
 
             it('should be called on each child', function() {
                var testOk = 0,
-                  Sub = extend.extend(Model, {
+                  Sub = util.extend(Model, {
                      $constructor: function() {
                         testOk++;
                      }
                   }),
-                  MoreSub = extend.extend(Sub, {
+                  MoreSub = util.extend(Sub, {
                      $constructor: function() {
                         testOk += 2;
                      }
@@ -1431,7 +1431,7 @@ define([
 
          describe('.toJSON()', function() {
             it('should dont save _$properties', function() {
-               var Sub = extend.extend(Model, {
+               var Sub = util.extend(Model, {
                      _moduleName: 'Sub',
                      _$properties: {
                         some: {
@@ -1447,7 +1447,7 @@ define([
             });
 
             it('should save old _options object values', function() {
-               var Sub = extend.extend(Model, {
+               var Sub = util.extend(Model, {
                      _moduleName: 'Sub',
                      $protected: {
                         _options: {

@@ -11,16 +11,26 @@ define([
    'use strict';
    var format = formatter.date;
    describe('Types/formatter.date', function() {
-      var saveI18nEnabled = i18n.isEnabled(),
-         saveI18nLang = i18n.getLang();
+      function patchI18n(i18n, enabled, lang) {
+         i18n.getEnabledStub = sinon.stub(i18n, 'isEnabled');
+         i18n.getEnabledStub.returns(enabled);
+
+         i18n.getLangStub = sinon.stub(i18n, 'getLang');
+         i18n.getLangStub.returns(lang);
+      }
+
+      function revertI18n(i18n) {
+         i18n.getEnabledStub.restore();
+         i18n.getLangStub.restore();
+         delete i18n.getLangStub;
+      }
 
       beforeEach(function() {
-         i18n.setEnable(true);
+         patchI18n(i18n, true, 'en-US');
       });
 
       afterEach(function() {
-         i18n.setLang(saveI18nLang);
-         i18n.setEnable(saveI18nEnabled);
+         revertI18n(i18n);
       });
 
 
@@ -108,14 +118,12 @@ define([
       Object.keys(localized).forEach(function(locale) {
          context('for locale"' + locale + '"', function() {
             beforeEach(function() {
-               if (i18n.isEnabled()) {
-                  i18n.setLang(locale);
-                  if (i18n.getLang() !== locale) {
-                     this.skip();
-                  }
-               } else {
-                  this.skip();
-               }
+               revertI18n(i18n);
+               patchI18n(i18n, true, locale);
+            });
+
+            afterEach(function() {
+               revertI18n(i18n);
             });
 
             var data = localized[locale];

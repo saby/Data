@@ -1,5 +1,6 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
+   '../util',
    'Types/_entity/Record',
    'Types/_collection/ObservableList',
    'Types/_collection/RecordSet',
@@ -7,11 +8,10 @@ define([
    'Types/_entity/adapter/Sbis',
    'Types/_entity/format/IntegerField',
    'Types/_entity/format/fieldsFactory',
-   'Core/core-extend',
    'Types/_collection/Enum',
-   'Types/_collection/Flags',
-   'Core/Date'
+   'Types/_collection/Flags'
 ], function(
+   util,
    Record,
    ObservableList,
    RecordSet,
@@ -19,7 +19,6 @@ define([
    SbisAdapter,
    IntegerField,
    fieldsFactory,
-   extend
 ) {
    'use strict';
 
@@ -1756,7 +1755,7 @@ define([
          });
 
          it('should return true for same module and submodule', function() {
-            var MyRecord = extend.extend(Record, {}),
+            var MyRecord = util.extend(Record, {}),
                recordA = new Record(),
                recordB = new Record(),
                recordC = new MyRecord();
@@ -1993,7 +1992,7 @@ define([
          });
 
          it('should set subclass\'s module name', function() {
-            var Sub = extend.extend(Record, {
+            var Sub = util.extend(Record, {
                   _moduleName: 'My.Sub'
                }),
                record = new Sub(),
@@ -2002,7 +2001,7 @@ define([
          });
 
          it('should throw an error if subclass\'s module name is not defined', function() {
-            var Sub = extend.extend(Record, {}),
+            var Sub = util.extend(Record, {}),
                record = new Sub();
             assert.throws(function() {
                record.toJSON();
@@ -2010,7 +2009,7 @@ define([
          });
 
          it('should keep original raw data if old extend used', function() {
-            var SubRecord = extend.extend(Record, {
+            var SubRecord = util.extend(Record, {
                   _moduleName: 'SubRecord',
                   $protected: {
                      _options: {
@@ -2035,7 +2034,7 @@ define([
          });
 
          it('should don\'t serialize writable property if old extend used', function() {
-            var SubRecord = extend.extend(Record, {
+            var SubRecord = util.extend(Record, {
                   _moduleName: 'SubRecord',
                   $protected: {
                      _options: {
@@ -2183,7 +2182,7 @@ define([
 
          it('should return an instance with inherited adapter', function() {
             var adapter = new SbisAdapter(),
-               Foo = extend.extend(Record, {
+               Foo = util.extend(Record, {
                   _$adapter: adapter
                }),
                instance = Foo.produceInstance(null);

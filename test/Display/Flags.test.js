@@ -2,11 +2,11 @@
 define([
    'Types/_display/Flags',
    'Types/_collection/Flags',
-   'Core/core-instance'
+   'Types/_display/FlagsItem'
 ], function(
    FlagsDisplay,
    FlagsType,
-   coreInstance
+   FlagsItem
 ) {
    'use strict';
 
@@ -78,7 +78,7 @@ define([
       describe('.each()', function() {
          it('should return FlagsItem', function() {
             display.each(function(item) {
-               assert.isTrue(coreInstance.instanceOfModule(item, 'Types/_display/FlagsItem'));
+               assert.instanceOf(item, FlagsItem);
             });
          });
       });

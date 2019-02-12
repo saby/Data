@@ -1,14 +1,8 @@
 /* global define, describe, context, before, after, beforeEach, afterEach, it, assert */
 define([
-   'Types/formatter',
-   // 'WS.Data/Entity/Model',
-   // 'WS.Data/Collection/List',
-   'Core/ConsoleLogger'
-   //'Data/_type/adapter/Json'
+   'Types/formatter'
 ], function (
-   formatter,
-   //Model,
-   //List
+   formatter
 ) {
    'use strict';
 

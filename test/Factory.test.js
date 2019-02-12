@@ -3,10 +3,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Types/_entity/Model',
-   'Core/helpers/Date/toSql',
-   'Core/TimeInterval',
-   'Core/Date',
-   'Core/ConsoleLogger'
+   'Types/_formatter/dateToSql'
 ], function(
    type,
    collection,

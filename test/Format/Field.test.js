@@ -95,19 +95,6 @@ define([
          });
       });
 
-      describe('.clone()', function() {
-         it('should return the clone', function() {
-            var clone = field.clone();
-            assert.instanceOf(clone, Field);
-            assert.notEqual(field, clone);
-            assert.strictEqual(field.getType(), clone.getType());
-            assert.strictEqual(field.getName(), clone.getName());
-            assert.strictEqual(field.getDefaultValue(), clone.getDefaultValue());
-            assert.strictEqual(field.isNullable(), clone.isNullable());
-            assert.isTrue(field.isEqual(clone));
-         });
-      });
-
       describe('.copyFrom()', function() {
          it('should return the same configured object', function() {
             var name = 'a',

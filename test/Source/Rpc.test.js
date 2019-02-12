@@ -1,15 +1,15 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
+   '../util',
    'Types/_source/Rpc',
    'Types/_source/IRpc',
    'Types/_source/DataSet',
-   'Core/core-extend',
    'Core/Deferred'
 ], function(
+   util,
    RpcSource,
    IRpc,
    DataSet,
-   coreExtend,
    Deferred
 ) {
    'use strict';
@@ -28,7 +28,7 @@ define([
                done(err);
             }
          },
-         ProviderMock = coreExtend([IRpc], {
+         ProviderMock = util.extend([IRpc], {
             result: null,
             call: function(name, args) {
                this.lastName = name;

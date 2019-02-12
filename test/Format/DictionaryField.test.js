@@ -44,14 +44,5 @@ define([
             assert.strictEqual(field.getLocaleDictionary(), dict);
          });
       });
-
-      describe('.clone()', function() {
-         it('should return the clone', function() {
-            var clone = field.clone();
-            assert.instanceOf(clone, DictionaryField);
-            assert.isTrue(field.isEqual(clone));
-            assert.deepEqual(field.getDictionary(), clone.getDictionary());
-         });
-      });
    });
 });

@@ -1,22 +1,22 @@
 /* global beforeEach, afterEach, describe, context, assert, it */
 define([
+   '../util',
    'Types/_source/Memory',
    'Types/_source/DataSet',
    'Types/_source/Query',
    'Types/_entity/Model',
    'Types/_collection/List',
    'Types/_collection/RecordSet',
-   'Types/_entity/adapter/Sbis',
-   'Core/core-extend'
+   'Types/_entity/adapter/Sbis'
 ], function(
+   util,
    MemorySource,
    DataSet,
    Query,
    Model,
    List,
    RecordSet,
-   SbisAdapter,
-   coreExtend
+   SbisAdapter
 ) {
    'use strict';
 
@@ -587,7 +587,7 @@ define([
          });
 
          it('should return a list instance of injected module', function(done) {
-            var MyList = coreExtend.extend(List, {});
+            var MyList = util.extend(List, {});
             source.setListModule(MyList);
             source.query().addCallbacks(function(ds) {
                try {
@@ -602,7 +602,7 @@ define([
          });
 
          it('should return a model instance of injected module', function(done) {
-            var MyModel = coreExtend.extend(Model, {});
+            var MyModel = util.extend(Model, {});
             source.setModel(MyModel);
             source.query().addCallbacks(function(ds) {
                try {
@@ -1745,7 +1745,7 @@ define([
             });
 
             it('should return a list instance of injected module', function(done) {
-               var MyList = coreExtend.extend(List, {});
+               var MyList = util.extend(List, {});
                source.setListModule(MyList);
                source.query().addCallbacks(function(ds) {
                   try {
@@ -1760,7 +1760,7 @@ define([
             });
 
             it('should return a model instance of injected module', function(done) {
-               var MyModel = coreExtend.extend(Model, {});
+               var MyModel = util.extend(Model, {});
                source.setModel(MyModel);
                source.query().addCallbacks(function(ds) {
                   try {

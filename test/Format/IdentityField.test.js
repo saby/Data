@@ -24,13 +24,5 @@ define([
             assert.deepEqual(field.getDefaultValue(), [null]);
          });
       });
-
-      describe('.clone()', function() {
-         it('should return the clone', function() {
-            var clone = field.clone();
-            assert.instanceOf(clone, IdentityField);
-            assert.isTrue(field.isEqual(clone));
-         });
-      });
    });
 });

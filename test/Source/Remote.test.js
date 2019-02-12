@@ -1,19 +1,19 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
+   '../util',
    'Types/_source/Remote',
    'Types/_entity/Record',
    'Types/_entity/Model',
    'Types/_collection/RecordSet',
    'Types/di',
-   'Core/core-extend',
    'Core/Deferred'
 ], function(
+   util,
    RemoteSource,
    Record,
    Model,
    RecordSet,
    Di,
-   coreExtend,
    Deferred
 ) {
    'use strict';
@@ -36,7 +36,7 @@ define([
             done(err);
          }
       };
-      var ProviderMock = coreExtend({}, [IAbstractProvider], {
+      var ProviderMock = util({}, [IAbstractProvider], {
          result: null,
          call: function(name, args) {
             this.lastName = name;
@@ -100,7 +100,7 @@ define([
          });
 
          it('should return value of the subclass', function() {
-            var SubRemoteSource = coreExtend.extend(RemoteSource, {
+            var SubRemoteSource = util.extend(RemoteSource, {
                _$endpoint: {'foo': 'bar'}
             });
             var source = new SubRemoteSource();

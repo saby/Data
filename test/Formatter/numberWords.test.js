@@ -1,14 +1,10 @@
 /* global define, describe, it, assert */
 define([
    'Types/formatter',
-   'Core/i18n',
-   'json!Types/lang/en-US/en-US.json',
-   'json!Types/lang/ru-RU/ru-RU.json'
+   'Core/i18n'
 ], function(
    formatter,
-   i18n,
-   enUS,
-   ruRU
+   i18n
 ) {
    'use strict';
 
@@ -16,6 +12,9 @@ define([
       var locales = ['en-US', 'ru-RU'];
 
       before(function() {
+         var enUS = {};
+         var ruRU = {};
+
          i18n.setDict(ruRU, 'formatter', 'ru-RU');
          i18n.setDict(enUS, 'formatter', 'en-US');
       });

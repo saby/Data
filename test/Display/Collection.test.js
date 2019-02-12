@@ -3,6 +3,7 @@ define([
    'Types/_display/IBind',
    'Types/_display/Abstract',
    'Types/_display/Collection',
+   'Types/_display/CollectionEnumerator',
    'Types/_display/CollectionItem',
    'Types/_display/GroupItem',
    'Types/_collection/RecordSet',
@@ -11,12 +12,12 @@ define([
    'Types/_entity/functor/Compute',
    'Types/_entity/adapter/Json',
    'Types/_entity/Model',
-   'Core/Serializer',
-   'Core/core-instance'
+   'Core/Serializer'
 ], function(
    IBindCollection,
    Display,
    CollectionDisplay,
+   CollectionEnumerator,
    CollectionItem,
    GroupItem,
    RecordSet,
@@ -25,8 +26,7 @@ define([
    ComputeFunctor,
    JsonAdapter,
    Model,
-   Serializer,
-   coreInstance
+   Serializer
 ) {
    'use strict';
 
@@ -215,7 +215,7 @@ define([
             var display = new CollectionDisplay({
                collection: new ObservableList()
             });
-            assert.isTrue(coreInstance.instanceOfModule(display.getEnumerator(), 'Types/_display/CollectionEnumerator'));
+            assert.instanceOf(display.getEnumerator(), CollectionEnumerator);
          });
 
          context('if has repeatable ids', function() {

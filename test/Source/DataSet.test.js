@@ -1,16 +1,16 @@
 /* global beforeEach, afterEach, describe, it, assert */
 define([
+   '../util',
    'Types/_source/DataSet',
    'Types/_entity/Model',
    'Types/_entity/adapter/Json',
-   'Types/_collection/RecordSet',
-   'Core/core-extend'
+   'Types/_collection/RecordSet'
 ], function(
+   util,
    DataSet,
    Model,
    JsonAdapter,
-   RecordSet,
-   coreExtend
+   RecordSet
 ) {
    'use strict';
 
@@ -90,7 +90,7 @@ define([
 
       describe('.setModel()', function() {
          it('should set the model', function() {
-            var MyModel = coreExtend.extend(Model, {}),
+            var MyModel = util.extend(Model, {}),
                ds = new DataSet();
             ds.setModel(MyModel);
             assert.strictEqual(ds.getModel(), MyModel);
@@ -104,7 +104,7 @@ define([
          });
 
          it('should return the given list', function() {
-            var MyList = coreExtend.extend(RecordSet, {}),
+            var MyList = util.extend(RecordSet, {}),
                ds = new DataSet({
                   listModule: MyList
                });
@@ -114,7 +114,7 @@ define([
 
       describe('.setListModule()', function() {
          it('should set the model', function() {
-            var MyList = coreExtend.extend(RecordSet, {}),
+            var MyList = util.extend(RecordSet, {}),
                ds = new DataSet();
             ds.setListModule(MyList);
             assert.strictEqual(ds.getListModule(), MyList);

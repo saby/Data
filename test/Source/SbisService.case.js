@@ -1,5 +1,6 @@
 /* global define, describe, context, beforeEach, afterEach, it, assert, DeferredCanceledError */
 define([
+   '../util',
    'Types/di',
    'Types/_source/IRpc',
    'Types/_source/DataSet',
@@ -7,10 +8,10 @@ define([
    'Types/_collection/RecordSet',
    'Types/_collection/List',
    'Types/_source/Query',
-   'Core/core-extend',
    'Core/Deferred',
    'Types/_entity/adapter/Sbis'
 ], function(
+   util,
    Di,
    IRpc,
    DataSet,
@@ -18,7 +19,6 @@ define([
    RecordSet,
    List,
    QueryModule,
-   coreExtend,
    Deferred
 ) {
    'use strict';
@@ -46,7 +46,7 @@ define([
                notExistsId = 99,
                textId = 'uuid';
 
-            var Mock = coreExtend([IRpc], {
+            var Mock = util.extend([IRpc], {
                _cfg: {},
                _$binding: {},
                constructor: function(cfg) {
@@ -980,7 +980,7 @@ define([
             });
 
             it('should return a list instance of injected module', function(done) {
-               var MyList = coreExtend.extend(List, {});
+               var MyList = util.extend(List, {});
                service.setListModule(MyList);
                service.query().addCallbacks(function(ds) {
                   try {
@@ -995,7 +995,7 @@ define([
             });
 
             it('should return a model instance of injected module', function(done) {
-               var MyModel = coreExtend.extend(Model, {});
+               var MyModel = util.extend(Model, {});
                service.setModel(MyModel);
                service.query().addCallbacks(function(ds) {
                   try {
@@ -1112,7 +1112,7 @@ define([
             });
 
             it('should generate a request with filter contains only given data', function(done) {
-               var MyModel = coreExtend.extend(Model, {
+               var MyModel = util.extend(Model, {
                      $protected: {
                         _options: {
                            rawData: {
@@ -1717,7 +1717,7 @@ define([
 
          it('should return origin error', function(done) {
             var originError = new Error(),
-               SbisBusinessLogic2 = coreExtend(SbisBusinessLogic, {
+               SbisBusinessLogic2 = util.extend(SbisBusinessLogic, {
                   call: function() {
                      return new Deferred().errback(originError);
                   }

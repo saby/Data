@@ -37,13 +37,5 @@ define([
             assert.isTrue(field.isWithoutTimeZone());
          });
       });
-
-      describe('.clone()', function() {
-         it('should return the clone', function() {
-            var clone = field.clone();
-            assert.instanceOf(clone, DateTimeField);
-            assert.isTrue(field.isEqual(clone));
-         });
-      });
    });
 });

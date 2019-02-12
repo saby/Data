@@ -1,20 +1,20 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
+   '../util',
    'Types/_entity/adapter/RecordSet',
    'Types/_entity/adapter/RecordSetTable',
    'Types/_entity/adapter/RecordSetRecord',
    'Types/_collection/RecordSet',
    'Types/_entity/Record',
-   'Types/_entity/Model',
-   'Core/core-extend'
+   'Types/_entity/Model'
 ], function(
+   util,
    RecordSetAdapter,
    RecordSetTableAdapter,
    RecordSetRecordAdaprter,
    RecordSet,
    Record,
-   Model,
-   extend
+   Model
 ) {
    'use strict';
 
@@ -87,7 +87,7 @@ define([
                model;
 
             beforeEach(function() {
-               ModelA = extend.extend(Model, {
+               ModelA = util.extend(Model, {
                   _$properties: {
                      propA: {
                         get: function() {
@@ -97,7 +97,7 @@ define([
                   }
                });
 
-               ModelB = extend.extend(Model, {
+               ModelB = util.extend(Model, {
                   _$properties: {
                      propB: {
                         get: function() {

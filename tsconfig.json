@@ -4,8 +4,9 @@
     "types" : ["requirejs"]
   },
   "include": [
-    "WS.Core/ws.d.ts",
     "Core/**/*.ts",
+    "Lib/**/*.ts",
+    "Transport/**/*.ts",
     "Types/**/*.ts"
   ]
 }
