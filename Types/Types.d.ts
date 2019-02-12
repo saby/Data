@@ -33,5 +33,3 @@ interface ExtendPromise<T> extends Promise<T> {
    addErrback(callback: Function);
    addCallbacks(callback: Function, errback: Function);
 }
-
-declare function rk (key: string, ctx?: string|number, num?: number): string;

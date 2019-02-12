@@ -3,13 +3,11 @@ define([
    'Types/_display/IBind',
    'Types/_display/Abstract',
    'Types/_display/Collection',
-   'Types/_display/CollectionItem',
    'Types/_display/GroupItem',
    'Types/_collection/RecordSet',
    'Types/_collection/ObservableList',
    'Types/_collection/List',
    'Types/_entity/functor/Compute',
-   'Types/_entity/adapter/Json',
    'Types/_entity/Model',
    'Core/Serializer',
    'Core/core-instance'
@@ -17,13 +15,11 @@ define([
    IBindCollection,
    Display,
    CollectionDisplay,
-   CollectionItem,
    GroupItem,
    RecordSet,
    ObservableList,
    List,
    ComputeFunctor,
-   JsonAdapter,
    Model,
    Serializer,
    coreInstance
@@ -33,13 +29,11 @@ define([
    IBindCollection = IBindCollection.default;
    Display = Display.default;
    CollectionDisplay = CollectionDisplay.default;
-   CollectionItem = CollectionItem.default;
    GroupItem = GroupItem.default;
    RecordSet = RecordSet.default;
    ObservableList = ObservableList.default;
    List = List. default;
    ComputeFunctor = ComputeFunctor.default;
-   JsonAdapter = JsonAdapter.default;
    Model = Model.default;
 
    describe('Types/_display/Collection', function() {
@@ -1917,6 +1911,29 @@ define([
             display.setGroup(function(item) {
                return item.group;
             });
+
+            for (var index = 0; index < expected.length; index++) {
+               assert.equal(
+                  display.getGroupByIndex(index),
+                  expected[index]
+               );
+            }
+         });
+
+         it('should return valid group id in filtered mode', function() {
+            var list = new List({
+               items: getItems()
+            });
+            var display = new CollectionDisplay({
+               collection: list,
+               group: function(item) {
+                  return item.group;
+               },
+               filter: function(item) {
+                  return item && item.id !== 2;
+               }
+            });
+            var expected = [1, 1, 1, 2, 2];
 
             for (var index = 0; index < expected.length; index++) {
                assert.equal(

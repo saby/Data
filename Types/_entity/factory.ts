@@ -25,7 +25,7 @@ declare type ValueType = string | Function | IProducible;
 /**
  * @const {RegExp} Выделяет временную зону в строковом представлении Date
  */
-const SQL_TIME_ZONE: RegExp = /[+-][0-9]+$/;
+const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
 
 /**
  * Возвращает словарь для поля типа "Словарь"
