@@ -32,28 +32,31 @@ class Deferred<T> {
    }
 
    addCallback(fn): Deferred<T> {
-      this.wrapper.then(fn);
+      this.wrapper.then(() => {
+         this.result = fn(this.result);
+      });
       return this;
    }
 
    addErrback(fn): Deferred<T> {
-      this.wrapper.catch(fn);
+      this.wrapper.catch(() => {
+         this.result = fn(this.result);
+      });
       return this;
    }
 
    addCallbacks(cb, eb): Deferred<T> {
-      this.wrapper.then(cb, eb);
+      this.wrapper.then(() => {
+         this.result = cb(this.result);
+      }, () => {
+         this.result = eb(this.result);
+      });
       return this;
    }
 
-   dependOn(master): Deferred<T> {
+   dependOn(master: Deferred<T>): Deferred<T> {
       master.then(this.resolver, this.rejecter);
       return this;
-   }
-
-   createDependent(): Deferred<T> {
-      const dependent = new Deferred<T>();
-      return dependent.dependOn(this);
    }
 
    isReady(): boolean {

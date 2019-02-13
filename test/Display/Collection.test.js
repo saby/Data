@@ -33,6 +33,7 @@ define([
    IBindCollection = IBindCollection.default;
    Display = Display.default;
    CollectionDisplay = CollectionDisplay.default;
+   CollectionEnumerator = CollectionEnumerator.default;
    CollectionItem = CollectionItem.default;
    GroupItem = GroupItem.default;
    RecordSet = RecordSet.default;

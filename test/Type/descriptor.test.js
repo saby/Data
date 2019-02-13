@@ -85,7 +85,9 @@ define([
 
       it('should return value that implements an interface', function() {
          var IFace = {},
-            Module = util.extend(Object, [IFace], {}),
+            Module = util.extend({
+               _mixins: [IFace]
+            }),
             inst = new Module();
 
          assert.equal(descriptor(IFace)(inst), inst);
