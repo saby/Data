@@ -17,6 +17,7 @@
 
 import Field from './Field';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
+import {register} from '../../di';
 
 export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
@@ -35,3 +36,5 @@ export default class TimeField extends Field /** @lends Types/_entity/format/Tim
 TimeField.prototype['[Types/_entity/format/TimeField]'] = true;
 TimeField.prototype._moduleName = 'Types/entity:format.TimeField';
 TimeField.prototype._typeName = 'Time';
+
+register('Types/entity:format.TimeField', TimeField, {instantiate: false});

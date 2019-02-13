@@ -8,6 +8,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class DictionaryField extends Field /** @lends Types/_entity/format/DictionaryField.prototype */{
       /**
@@ -52,3 +53,5 @@ DictionaryField.prototype._moduleName = 'Types/entity:format.DictionaryField';
 DictionaryField.prototype._typeName = 'Dictionary';
 DictionaryField.prototype._$dictionary = null;
 DictionaryField.prototype._$localeDictionary = null;
+
+register('Types/entity:format.DictionaryField', DictionaryField, {instantiate: false});

@@ -8,6 +8,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class HierarchyField extends Field /** @lends Types/_entity/format/HierarchyField.prototype */{
    /**
@@ -42,3 +43,5 @@ HierarchyField.prototype['[Types/_entity/format/HierarchyField]'] = true;
 HierarchyField.prototype._moduleName = 'Types/entity:format.HierarchyField';
 HierarchyField.prototype._typeName = 'Hierarchy';
 HierarchyField.prototype._$kind = '';
+
+register('Types/entity:format.HierarchyField', HierarchyField, {instantiate: false});

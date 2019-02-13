@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class UuidField extends Field /** @lends Types/_entity/format/UuidField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class UuidField extends Field /** @lends Types/_entity/format/Uui
 UuidField.prototype['[Types/_entity/format/UuidField]'] = true;
 UuidField.prototype._moduleName = 'Types/entity:format.UuidField';
 UuidField.prototype._typeName = 'Uuid';
+
+register('Types/entity:format.UuidField', UuidField, {instantiate: false});

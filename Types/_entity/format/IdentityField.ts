@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class IdentityField extends Field /** @lends Types/_entity/format/IdentityField.prototype */{
    /**
@@ -46,3 +47,5 @@ IdentityField.prototype._moduleName = 'Types/entity:format.IdentityField';
 IdentityField.prototype._typeName = 'Identity';
 IdentityField.prototype._separator = ',';
 IdentityField.prototype._$defaultValue = [null];
+
+register('Types/entity:format.IdentityField', IdentityField, {instantiate: false});

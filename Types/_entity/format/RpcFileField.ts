@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class RpcFileField extends Field /** @lends Types/_entity/format/RpcFileField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class RpcFileField extends Field /** @lends Types/_entity/format/
 RpcFileField.prototype['[Types/_entity/format/RpcFileField]'] = true;
 RpcFileField.prototype._moduleName = 'Types/entity:format.RpcFileField';
 RpcFileField.prototype._typeName = 'RpcFile';
+
+register('Types/entity:format.RpcFileField', RpcFileField, {instantiate: false});

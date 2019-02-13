@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class RecordSetField extends Field /** @lends Types/_entity/format/RecordSetField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class RecordSetField extends Field /** @lends Types/_entity/forma
 RecordSetField.prototype['[Types/_entity/format/RecordSetField]'] = true;
 RecordSetField.prototype._moduleName = 'Types/entity:format.RecordSetField';
 RecordSetField.prototype._typeName = 'RecordSet';
+
+register('Types/entity:format.RecordSetField', RecordSetField, {instantiate: false});

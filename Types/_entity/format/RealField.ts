@@ -17,6 +17,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class RealField extends Field /** @lends Types/_entity/format/RealField.prototype */{
    _$defaultValue: number;
@@ -60,3 +61,4 @@ RealField.prototype._typeName = 'Real';
 RealField.prototype._$defaultValue = 0;
 RealField.prototype._$precision = 16;
 
+register('Types/entity:format.RealField', RealField, {instantiate: false});

@@ -357,9 +357,7 @@ define([
                adapter.copy(0);
             }, TypeError);
          });
-      });
 
-      describe('.copy()', function() {
          it('should copy the record', function() {
             var copy = adapter.copy(1);
             assert.isTrue(

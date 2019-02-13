@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class BinaryField extends Field /** @lends Types/_entity/format/BinaryField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class BinaryField extends Field /** @lends Types/_entity/format/B
 BinaryField.prototype['[Types/_entity/format/BinaryField]'] = true;
 BinaryField.prototype._moduleName = 'Types/entity:format.BinaryField';
 BinaryField.prototype._typeName = 'Binary';
+
+register('Types/entity:format.BinaryField', BinaryField, {instantiate: false});

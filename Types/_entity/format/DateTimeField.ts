@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class DateTimeField extends Field /** @lends Types/_entity/format/DateTimeField.prototype */{
       /**
@@ -43,3 +44,5 @@ DateTimeField.prototype['[Types/_entity/format/DateTimeField]'] = true;
 DateTimeField.prototype._moduleName = 'Types/entity:format.DateTimeField';
 DateTimeField.prototype._typeName = 'DateTime';
 DateTimeField.prototype._$withoutTimeZone = false;
+
+register('Types/entity:format.DateTimeField', DateTimeField, {instantiate: false});

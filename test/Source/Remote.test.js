@@ -23,10 +23,6 @@ define([
    Model = Model.default;
    RecordSet = RecordSet.default;
 
-   var IAbstractProvider = {
-      '[Types/_source/provider/IAbstract]': true
-   };
-
    describe('Types/_source/Remote', function() {
       var checkDone = function(callback, done) {
          try {
@@ -36,7 +32,8 @@ define([
             done(err);
          }
       };
-      var ProviderMock = util({}, [IAbstractProvider], {
+      var ProviderMock = util.extend({
+         '[Types/_source/provider/IAbstract]': true,
          result: null,
          call: function(name, args) {
             this.lastName = name;

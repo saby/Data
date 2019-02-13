@@ -17,6 +17,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class ArrayField extends Field /** @lends Types/_entity/format/ArrayField.prototype */{
     /**
@@ -44,3 +45,5 @@ ArrayField.prototype['[Types/_entity/format/ArrayField]'] = true;
 ArrayField.prototype._moduleName = 'Types/entity:format.ArrayField';
 ArrayField.prototype._typeName = 'Array';
 ArrayField.prototype._$kind = '';
+
+register('Types/entity:format.ArrayField', ArrayField, {instantiate: false});

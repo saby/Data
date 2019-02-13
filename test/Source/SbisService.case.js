@@ -46,7 +46,7 @@ define([
                notExistsId = 99,
                textId = 'uuid';
 
-            var Mock = util.extend([IRpc], {
+            var Mock = util.extend({
                _cfg: {},
                _$binding: {},
                constructor: function(cfg) {

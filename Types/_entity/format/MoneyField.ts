@@ -16,6 +16,7 @@
  */
 
 import RealField from './RealField';
+import {register} from '../../di';
 
 export default class MoneyField extends RealField /** @lends Types/_entity/format/MoneyField.prototype */{
    _$precision: number;
@@ -46,3 +47,5 @@ MoneyField.prototype._moduleName = 'Types/entity:format.MoneyField';
 MoneyField.prototype._typeName = 'Money';
 MoneyField.prototype._$precision = 2;
 MoneyField.prototype._$large = false;
+
+register('Types/entity:format.MoneyField', MoneyField, {instantiate: false});

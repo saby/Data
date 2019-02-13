@@ -1,11 +1,31 @@
 define(function() {
-   return {
-      extend: function (Child, Parent) {
-         var Proxy = function() {};
-         Proxy.prototype = Parent.prototype;
-         Child.prototype = new Proxy();
-         Child.prototype.constructor = Child;
-         Child.superclass = Parent.prototype;
+   function extend(Parent, Child) {
+      if (Child === undefined) {
+         Child = Parent;
+         Parent = Object;
       }
+
+      if (!(Child instanceof Function)) {
+         Child = (function(childProto, Parent) {
+            var Basic = function() {
+               return Parent.apply(this, arguments);
+            };
+            Object.assign(Basic.prototype, childProto);
+            return Basic;
+         })(Child, Parent);
+      }
+
+      var childProto = Child.prototype;
+      Child.prototype = Object.create(Parent.prototype);
+      Object.assign(Child.prototype, childProto);
+      Child.prototype.constructor = Child;
+
+      Child.superclass = Parent.prototype;
+
+      return Child;
+   }
+
+   return {
+      extend: extend
    }
 });

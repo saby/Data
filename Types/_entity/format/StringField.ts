@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class StringField extends Field /** @lends Types/_entity/format/StringField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class StringField extends Field /** @lends Types/_entity/format/S
 StringField.prototype['[Types/_entity/format/StringField]'] = true;
 StringField.prototype._moduleName = 'Types/entity:format.StringField';
 StringField.prototype._typeName = 'String';
+
+register('Types/entity:format.StringField', StringField, {instantiate: false});

@@ -17,6 +17,7 @@
 
 import Field from './Field';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
+import {register} from '../../di';
 
 export default class DateField extends Field /** @lends Types/_entity/format/DateField.prototype */{
       //region Public methods
@@ -34,3 +35,5 @@ export default class DateField extends Field /** @lends Types/_entity/format/Dat
 DateField.prototype['[Types/_entity/format/DateField]'] = true;
 DateField.prototype._moduleName = 'Types/entity:format.DateField';
 DateField.prototype._typeName = 'Date';
+
+register('Types/entity:format.DateField', DateField, {instantiate: false});

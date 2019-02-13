@@ -397,8 +397,8 @@ class RawManager {
       this.ls.setItem(ID_COUNT, number);
    }
 
-   getKeys() {
-      return this.ls.getItem(KEYS_FIELD);
+   getKeys(): string[] {
+      return this.ls.getItem<string[]>(KEYS_FIELD);
    }
 
    setKeys(keys) {

@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class ObjectField extends Field /** @lends Types/_entity/format/ObjectField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class ObjectField extends Field /** @lends Types/_entity/format/O
 ObjectField.prototype['[Types/_entity/format/ObjectField]'] = true;
 ObjectField.prototype._moduleName = 'Types/entity:format.ObjectField';
 ObjectField.prototype._typeName = 'Object';
+
+register('Types/entity:format.ObjectField', ObjectField, {instantiate: false});

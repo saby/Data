@@ -3,11 +3,11 @@ const logger = console;
 class IoC {
    protected bindings: Map<string, any> = new Map();
 
+   constructor() {
+      this.bind<Console>('ILogger', logger);
+   }
+
    resolve<T>(name: string): T {
-      switch (name) {
-         case 'ILogger':
-            return logger;
-      }
       return this.bindings.get(name);
    }
 

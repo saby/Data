@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class XmlField extends Field /** @lends Types/_entity/format/XmlField.prototype */{
    _$defaultValue: string;
@@ -25,3 +26,5 @@ XmlField.prototype['[Types/_entity/format/XmlField]'] = true;
 XmlField.prototype._moduleName = 'Types/entity:format.XmlField';
 XmlField.prototype._typeName = 'Xml';
 XmlField.prototype._$defaultValue = '';
+
+register('Types/entity:format.XmlField', XmlField, {instantiate: false});

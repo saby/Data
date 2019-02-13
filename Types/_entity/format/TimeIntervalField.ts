@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class TimeIntervalField extends Field /** @lends Types/_entity/format/TimeIntervalField.prototype */{
    _$defaultValue: number;
@@ -25,3 +26,5 @@ TimeIntervalField.prototype['[Types/_entity/format/TimeIntervalField]'] = true;
 TimeIntervalField.prototype._moduleName = 'Types/entity:format.TimeIntervalField';
 TimeIntervalField.prototype._typeName = 'TimeInterval';
 TimeIntervalField.prototype._$defaultValue = 0;
+
+register('Types/entity:format.TimeIntervalField', TimeIntervalField, {instantiate: false});

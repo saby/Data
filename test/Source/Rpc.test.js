@@ -28,7 +28,7 @@ define([
                done(err);
             }
          },
-         ProviderMock = util.extend([IRpc], {
+         ProviderMock = util.extend({
             result: null,
             call: function(name, args) {
                this.lastName = name;

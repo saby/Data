@@ -107,9 +107,8 @@ define([
                day = 12,
                date = new Date(year, month, day);
 
-            assert.equal(
-               adapter.serialize(date),
-               '2016-12-12'
+            assert.isTrue(
+               adapter.serialize(date).startsWith('2016-12-12 00:00:00')
             );
          });
 

@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class BooleanField extends Field /** @lends Types/_entity/format/BooleanField.prototype */{
 }
@@ -23,3 +24,5 @@ export default class BooleanField extends Field /** @lends Types/_entity/format/
 BooleanField.prototype['[Types/_entity/format/BooleanField]'] = true;
 BooleanField.prototype._moduleName = 'Types/entity:format.BooleanField';
 BooleanField.prototype._typeName = 'Boolean';
+
+register('Types/entity:format.BooleanField', BooleanField, {instantiate: false});

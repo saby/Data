@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class LinkField extends Field /** @lends Types/_entity/format/LinkField.prototype */{
    _$defaultValue: number;
@@ -25,3 +26,5 @@ LinkField.prototype['[Types/_entity/format/LinkField]'] = true;
 LinkField.prototype._moduleName = 'Types/entity:format.LinkField';
 LinkField.prototype._typeName = 'Link';
 LinkField.prototype._$defaultValue = 0;
+
+register('Types/entity:format.LinkField', LinkField, {instantiate: false});

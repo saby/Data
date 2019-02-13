@@ -9,6 +9,7 @@ class Channel implements EventBusChannel {
       handlers.push(handler);
       this.handlers.set(event, handlers);
    }
+
    unsubscribe(event: string, handler: Function, ctx?: any): void {
       const handlers = this.handlers.get(event);
       if (handlers) {
@@ -38,9 +39,10 @@ class Channel implements EventBusChannel {
       this.unsubscribeAll();
    }
 
-   _notifyWithTarget(event: string, target: any, ...args): void {
+   _notifyWithTarget(event: string, target: any, args: any[]): void {
+      const handlerArgs = [{name: event}, ...args];
       this.getEventHandlers(event).forEach((handler) => {
-         handler.apply(target || handler, args);
+         handler.apply(target || handler, handlerArgs);
       });
    }
 }

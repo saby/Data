@@ -17,6 +17,7 @@
  */
 
 import DictionaryField from './DictionaryField';
+import {register} from '../../di';
 
 export default class FlagsField extends DictionaryField /** @lends Types/_entity/format/FlagsField.prototype */{
 }
@@ -24,3 +25,5 @@ export default class FlagsField extends DictionaryField /** @lends Types/_entity
 FlagsField.prototype['[Types/_entity/format/FlagsField]'] = true;
 FlagsField.prototype._moduleName = 'Types/entity:format.FlagsField';
 FlagsField.prototype._typeName = 'Flags';
+
+register('Types/entity:format.FlagsField', FlagsField, {instantiate: false});

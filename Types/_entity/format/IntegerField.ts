@@ -16,6 +16,7 @@
  */
 
 import Field from './Field';
+import {register} from '../../di';
 
 export default class IntegerField extends Field /** @lends Types/_entity/format/IntegerField.prototype */{
    _$defaultValue: number;
@@ -25,3 +26,5 @@ IntegerField.prototype['[Types/_entity/format/IntegerField]'] = true;
 IntegerField.prototype._moduleName = 'Types/entity:format.IntegerField';
 IntegerField.prototype._typeName = 'Integer';
 IntegerField.prototype._$defaultValue = 0;
+
+register('Types/entity:format.IntegerField', IntegerField, {instantiate: false});

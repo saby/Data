@@ -17,6 +17,7 @@
  */
 
 import DictionaryField from './DictionaryField';
+import {register} from '../../di';
 
 export default class EnumField extends DictionaryField /** @lends Types/_entity/format/EnumField.prototype */{
 }
@@ -24,3 +25,5 @@ export default class EnumField extends DictionaryField /** @lends Types/_entity/
 EnumField.prototype['[Types/_entity/format/EnumField]'] = true;
 EnumField.prototype._moduleName = 'Types/entity:format.EnumField';
 EnumField.prototype._typeName = 'Enum';
+
+register('Types/entity:format.EnumField', EnumField, {instantiate: false});
