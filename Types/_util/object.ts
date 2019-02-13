@@ -50,7 +50,7 @@ function getPropertyValue(object: any, property: string): any {
  * @param {String} property Название свойства.
  * @param {*} value Значение свойства.
  */
-function setPropertyValue(object: any, property: string, value: any) {
+function setPropertyValue(object: any, property: string, value: any): void {
    const checkedProperty = property || '';
 
    if (!(object instanceof Object)) {

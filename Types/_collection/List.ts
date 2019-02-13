@@ -59,11 +59,9 @@ import {
    ManyToManyMixin,
    ReadWriteMixin,
    VersionableMixin
-} from '../entity'
+} from '../entity';
 import {register} from '../di';
 import {logger, mixin, object} from '../util';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
 
 export default class List<T> extends mixin(
    DestroyableMixin,
@@ -480,10 +478,15 @@ export default class List<T> extends mixin(
    /**
     * @deprecated
     */
-   static extend(mixinsList:any, classExtender:any) {
-      logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+   static extend(mixinsList: any, classExtender: any) {
+      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
+      }
+      const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
-   };
+   }
 }
 
 Object.assign(List.prototype,{

@@ -113,8 +113,6 @@ import {enumerator, EnumeratorCallback} from '../collection';
 import {resolve, register} from '../di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
 
 /**
  * Separator for path in object
@@ -951,7 +949,15 @@ export default class Model extends mixin(
    /**
     * @deprecated
     */
-   static extend(mixinsList:any, classExtender:any) {
+   static extend(mixinsList: any, classExtender: any) {
+      logger.info('Types/_entity/Model', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
    }
 

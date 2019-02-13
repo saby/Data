@@ -10,7 +10,7 @@ const map = {};
  * Проверяет валидность названия зависимости
  * @param {String} alias Название зависимости
  */
-function checkAlias(alias: string) {
+function checkAlias(alias: string): void {
    if (typeof alias !== 'string') {
       throw new TypeError('Alias should be a string');
    }
@@ -63,7 +63,7 @@ function checkAlias(alias: string) {
  *    });
  * </pre>
  */
-export function register(alias: string, factory: Function|Object, options?: Object) {
+export function register(alias: string, factory: Function|Object, options?: Object): void {
    checkAlias(alias);
    map[alias] = [factory, options];
 }
@@ -76,7 +76,7 @@ export function register(alias: string, factory: Function|Object, options?: Obje
  *    di.unregister('model.user');
  * </pre>
  */
-export function unregister(alias: string) {
+export function unregister(alias: string): void {
    checkAlias(alias);
    delete map[alias];
 }
@@ -140,10 +140,10 @@ export function create(alias: string|Function|Object, options?: Object): any {
  * </pre>
  */
 export function resolve(alias: string|Function|Object, options?: Object): any {
-   let aliasType = typeof alias,
-      Factory,
-      config,
-      singleInst;
+   const aliasType = typeof alias;
+   let Factory;
+   let config;
+   let singleInst;
 
    switch (aliasType) {
       case 'function':
@@ -154,12 +154,12 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
          config = { instantiate: false };
          break;
       default:
-         if (!isRegistered(<string>alias)) {
+         if (!isRegistered(<string> alias)) {
             throw new ReferenceError(`Alias "${alias}" does not registered`);
          }
-         Factory = map[<string>alias][0];
-         config = map[<string>alias][1];
-         singleInst = map[<string>alias][2];
+         Factory = map[<string> alias][0];
+         config = map[<string> alias][1];
+         singleInst = map[<string> alias][2];
    }
 
    if (config) {
@@ -168,7 +168,7 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
       }
       if (config.single === true) {
          if (singleInst === undefined) {
-            singleInst = map[<string>alias][2] = new Factory(options);
+            singleInst = map[<string> alias][2] = new Factory(options);
          }
          return singleInst;
       }
