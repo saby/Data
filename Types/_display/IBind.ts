@@ -43,7 +43,7 @@ const IBind = /** @lends Types/_display/IBindCollection.prototype */ {
 
    /**
     * @event onCollectionChange После изменения коллекции
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {Types/_collection/IBind#ChangeAction} action Действие, приведшее к изменению.
     * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
     * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.

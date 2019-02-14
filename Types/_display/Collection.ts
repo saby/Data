@@ -2773,7 +2773,7 @@ export default class Collection extends mixin(
 
    /**
     * Генерирует событие об изменении элемента проекции
-    * @param {Core/EventObject} event Дескриптор события.
+    * @param {Env/Event.Object} event Дескриптор события.
     * @param {*} item Измененный элемент коллекции.
     * @param {Number} index Индекс измененного элемента.
     * @param {Object} [properties] Изменившиеся свойства

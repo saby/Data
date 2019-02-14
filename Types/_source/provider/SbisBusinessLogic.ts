@@ -13,7 +13,7 @@ import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
 import {mixin} from '../../util';
 // @ts-ignore
-import RpcJson = require('Transport/RPCJSON');
+import { RPCJSON as RpcJson } from 'Browser/Transport';
 
 export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */{
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
