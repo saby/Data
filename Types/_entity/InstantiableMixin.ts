@@ -6,10 +6,9 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
-import { constants } from 'Env/Env';
-
 const MAX_VALUE = Number.MAX_SAFE_INTEGER || (Math.pow(2, 53) - 1);
+const IS_SERVER_SIDE = typeof window === 'undefined';
+
 let counter = 0;
 
 const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype */{
@@ -31,10 +30,11 @@ const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype *
       if (counter >= MAX_VALUE) {
          counter = 0;
       }
-      return this._instanceId || (this._instanceId = (constants.isBrowserPlatform ? 'client-' : 'server-') + this._instancePrefix + counter++);
+      return this._instanceId ||
+         (this._instanceId = (IS_SERVER_SIDE ? 'server-' : 'client-') + this._instancePrefix + counter++);
    }
 
-   //endregion IInstantiable
+   //endregion
 };
 
 //Deprecated methods

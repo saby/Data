@@ -21,8 +21,6 @@ import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
 import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
 import {logger, mixin} from '../util';
-//@ts-ignore
-import coreExtend = require('Core/core-extend');
 
 export interface IOptions extends IDefaultOptions, IDataOptions {
 }
@@ -57,9 +55,16 @@ export default abstract class Base extends mixin(
     * @deprecated
     */
    static extend(mixinsList:any, classExtender:any) {
-      logger.info('Types/source:Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+      logger.info('Types/_source/Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_source/Base::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
       return coreExtend(this, mixinsList, classExtender);
-   };
+   }
 }
 
 Object.assign(Base.prototype, {
