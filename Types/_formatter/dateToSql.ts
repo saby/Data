@@ -1,4 +1,3 @@
-///<amd-module name="Types/_formatter/dateToSql" />
 /**
  * Serializes Date to the preferred SQL format.
  * @public
@@ -15,18 +14,34 @@
 import dateFormatter from './date';
 
 const MODE = {
-   'TIME': 'time',
-   'DATE': 'date',
-   'DATETIME': 'datetime'
+   TIME: 'time',
+   DATE: 'date',
+   DATETIME: 'datetime'
 };
 
 const FORMAT = {
-   'time': 'HH:mm:ss',
-   'date': 'YYYY-MM-DD',
-   'datetime': 'YYYY-MM-DD HH:mm:ss'
+   time: 'HH:mm:ss',
+   date: 'YYYY-MM-DD',
+   datetime: 'YYYY-MM-DD HH:mm:ss'
 };
 
+const MINUTES_IN_HOUR = 60;
 const UNIX_EPOCH_START = new Date(0);
+
+/**
+ * Adds symbols to the left side of string until it reaches desired length
+ */
+function strPad(input: string | number, size: number, pattern: string): string {
+   let output = String(input);
+
+   if (pattern.length > 0) {
+      while (output.length < size) {
+         output = pattern + output;
+      }
+   }
+
+   return output;
+}
 
 /**
  * Returns time zone offset in [+-]HH or [+-]HH:mm format
@@ -37,31 +52,30 @@ function getTimeZone(date: Date): string {
    if (totalMinutes < 0) {
       totalMinutes = -totalMinutes;
    }
-   let hours: number | string = Math.floor(totalMinutes / 60);
-   let minutes: number | string = totalMinutes - 60 * hours;
+   let hours: number | string = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+   let minutes: number | string = totalMinutes - MINUTES_IN_HOUR * hours;
+   const size = 2;
 
-   if (hours < 10) {
-      hours = '0' + hours;
-   }
+   hours = strPad(hours, size, '0');
    if (minutes === 0) {
       minutes = '';
-   } else if (minutes < 10) {
-      minutes = '0' + minutes;
+   } else {
+      minutes = strPad(minutes, size, '0');
    }
 
    return `${isEast ? '+' : '-'}${hours}${minutes ? ':' + minutes : ''}`;
 }
 
-export default function toSQL(date: Date, mode: string = MODE.DATETIME) {
+export default function toSQL(date: Date, mode: string = MODE.DATETIME): string {
    let result = dateFormatter(date, FORMAT[mode]);
 
    if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {
-      //Add milliseconds
+      // Add milliseconds
       if (date.getMilliseconds() > 0) {
-         result += `.${date.getMilliseconds()}`
+         result += `.${strPad(date.getMilliseconds(), 3, '0')}`;
       }
 
-      //Add time zone offset
+      // Add time zone offset
       result += getTimeZone(date);
    }
 
