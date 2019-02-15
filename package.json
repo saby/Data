@@ -51,7 +51,7 @@
    "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.7",
-      "eslint": "^5.3.0",
+      "eslint": "^5.13.0",
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.200",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.200",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200",
