@@ -15,23 +15,23 @@ export default class DictionaryField extends Field /** @lends Types/_entity/form
        * @name Types/_entity/format/DictionaryField#dictionary
        * @see getDictionary
        */
-      _$dictionary: Array<string>;
+      _$dictionary: string[];
 
       /**
        * @cfg {Array.<String>} Локализованный словарь возможных значений
        * @name Types/_entity/format/DictionaryField#localeDictionary
        * @see getDictionary
        */
-      _$localeDictionary: Array<string>;
+      _$localeDictionary: string[];
 
-      //region Public methods
+      // region Public methods
 
       /**
        * Возвращает словарь возможных значений
        * @return {Array.<String>}
        * @see dictionary
        */
-      getDictionary(): Array<string> {
+      getDictionary(): string[] {
          return this._$dictionary;
       }
 
@@ -40,11 +40,11 @@ export default class DictionaryField extends Field /** @lends Types/_entity/form
        * @return {Array.<String>}
        * @see dictionary
        */
-      getLocaleDictionary(): Array<string> {
+      getLocaleDictionary(): string[] {
          return this._$localeDictionary;
       }
 
-      //endregion Public methods
+      // endregion Public methods
 }
 
 DictionaryField.prototype['[Types/_entity/format/DictionaryField]'] = true;

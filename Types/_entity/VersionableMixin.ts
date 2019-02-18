@@ -9,7 +9,7 @@
 const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
    '[Types/_entity/VersionableMixin]': true,
 
-   //region IVersionable
+   // region IVersionable
 
    _version: 0,
 
@@ -28,7 +28,7 @@ const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
       }
    }
 
-   //endregion IVersionable
+   // endregion IVersionable
 };
 
 export default VersionableMixin;

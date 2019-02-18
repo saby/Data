@@ -67,7 +67,7 @@ import {logger} from '../../util';
  * @param {FieldDeclaration} declaration Декларативное описание
  * @return {Types/_entity/format/Field}
  */
-export default function (declaration) {
+export default function(declaration) {
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {
       throw new TypeError('Types/_entity/format/FieldsFactory::create(): declaration should be an instance of Object');
    }
@@ -134,12 +134,12 @@ export default function (declaration) {
    }
 
    if (typeof type === 'function') {
-      let inst = Object.create(type.prototype);
+      const inst = Object.create(type.prototype);
       if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/_entity/Record
+         // Yes it's Types/_entity/Record
          return new RecordField(declaration);
       } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
-         //Yes it's Types/_collection/RecordSet
+         // Yes it's Types/_collection/RecordSet
          return new RecordSetField(declaration);
       } else if (inst['[Types/_collection/IEnum]']) {
          return new EnumField(declaration);

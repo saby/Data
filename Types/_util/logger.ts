@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_util/logger" />
 /**
  * Logger
  * @public
@@ -9,17 +8,18 @@
 import { IoC } from 'Env/Env';
 
 const STACK_DETECTOR = /:[0-9]+:[0-9]+/;
+const SELF_STACK_DEPTH = 2;
 
-let stackPoints = {};
+const stackPoints = {};
 
 const logger = {
 
    /**
     * Пишет в лог сообщение
-    * @param {String} tag Метка
-    * @param {String} message Сообщение
+    * @param tag Метка
+    * @param message Сообщение
     */
-   log(tag: string, message: any) {
+   log(tag: string, message?: string): void {
       if (arguments.length === 1) {
          message = tag;
          tag = 'Log';
@@ -29,10 +29,10 @@ const logger = {
 
    /**
     * Пишет в лог сообщение об ошибке
-    * @param {String} tag Метка
-    * @param {String} message Сообщение
+    * @param tag Метка
+    * @param message Сообщение
     */
-   error(tag: string, message: any) {
+   error(tag: string, message?: string | Error): void {
       if (arguments.length === 1) {
          message = tag;
          tag = 'Critical';
@@ -42,11 +42,11 @@ const logger = {
 
    /**
     * Пишет в лог информационное сообщение
-    * @param {String} tag Метка
-    * @param {String} message Сообщение
+    * @param tag Метка
+    * @param message Сообщение
     * @static
     */
-   info(tag: string, message?: any) {
+   info(tag: string, message?: string): void {
       if (arguments.length === 1) {
          message = tag;
          tag = 'Warning';
@@ -57,22 +57,23 @@ const logger = {
    /**
     * Пишет в лог предупреждение с указанием файла, спровоцировавшего это предупреждение.
     * Для каждой точки файла предупреждение выводится только один раз.
-    * @param {String} message Сообщение
-    * @param {Number} [offset=0] Смещение по стеку
-    * @param {String} [level=info] Уровень логирования
+    * @param message Сообщение
+    * @param [offset=0] Смещение по стеку
+    * @param [level=info] Уровень логирования
     */
-   stack(message: string, offset?: number, level?: string) {
+   stack(message: string, offset?: number, level?: string): void {
       offset = offset || 0;
       level = level || 'info';
-      let error = new Error(message);
-      let at = 2 + offset; //this scope -> logStack() called scope -> error scope
+      const error = new Error(message);
+      let at = SELF_STACK_DEPTH + offset; // this scope -> logStack() called scope -> error scope
       let callStack = '';
       let hash = '';
 
       if ('stack' in error) {
-         let stack = String(error.stack).split('\n');
+         const stack = String(error.stack).split('\n');
          if (!STACK_DETECTOR.test(stack[0])) {
-            at++;//Error text may be at first row
+            // Error text may be at first row
+            at++;
          }
 
          callStack = stack.slice(at).join('\n').trim();

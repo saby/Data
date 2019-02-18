@@ -8,7 +8,6 @@
  */
 
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import TreeItem from './TreeItem';
 import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
@@ -33,7 +32,7 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
    getContents() {
       const root = this._$owner ? this._$owner.getRoot() : {};
       let current = this._$last;
-      let contents = [];
+      const contents = [];
 
       // Go up from last item until end
       while (current) {
@@ -54,7 +53,7 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
    // endregion
 }
 
-Object.assign(BreadcrumbsItem.prototype,{
+Object.assign(BreadcrumbsItem.prototype, {
    '[Types/_display/BreadcrumbsItem]': true,
    _moduleName: 'Types/display:BreadcrumbsItem',
    _$last: null

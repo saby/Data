@@ -8,7 +8,7 @@
  * @author Мальцев А.А.
  */
 
-import Collection, {ItemsFactory, SessionItemState} from './Collection';
+import Collection, {ItemsFactory, ISessionItemState} from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
 import GroupItem from './GroupItem';
@@ -39,15 +39,15 @@ function onCollectionChange(
    oldItems: any[],
    oldItemsIndex: number
 ) {
-   //Fix state of all nodes
-   let nodes = this.instance._getItems().filter((item) => item.isNode && item.isNode());
-   let state = this.instance._getItemsState(nodes);
-   let session = this.instance._startUpdateSession();
+   // Fix state of all nodes
+   const nodes = this.instance._getItems().filter((item) => item.isNode && item.isNode());
+   const state = this.instance._getItemsState(nodes);
+   const session = this.instance._startUpdateSession();
 
    this.instance._reIndex();
    this.prev(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
 
-   //Check state of all nodes. They can change children count (include hidden by filter).
+   // Check state of all nodes. They can change children count (include hidden by filter).
    this.instance._finishUpdateSession(session, false);
    this.instance._checkItemsDiff(session, nodes, state);
 }
@@ -77,14 +77,13 @@ export interface IOptions {
    loadedProperty?: string;
 }
 
-export interface TreeSessionItemState extends SessionItemState {
+export interface TreeSessionItemState extends ISessionItemState {
    parent: TreeItem;
    childrenCount: number;
    level: number;
    node: boolean;
    expanded: boolean;
 }
-
 
 export default class Tree extends Collection /** @lends Types/_display/Tree.prototype */{
    /**
@@ -176,7 +175,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       super.destroy();
    }
 
-   //region SerializableMixin
+   // region SerializableMixin
 
    protected _getSerializableState(state) {
       state = super._getSerializableState(state);
@@ -187,14 +186,14 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _setSerializableState(state) {
-      let fromSuper = super._setSerializableState(state);
+      const fromSuper = super._setSerializableState(state);
       return function() {
          this._root = state._root;
          fromSuper.call(this);
       };
    }
 
-   //region Collection
+   // region Collection
 
    getIndexBySourceItem(item: any): number {
       if (this._$rootEnumerable && this.getRoot().getContents() === item) {
@@ -220,7 +219,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _exctractItemId(item) {
-      let path = [super._exctractItemId(item)];
+      const path = [super._exctractItemId(item)];
 
       let parent;
       while ((parent = item.getParent()) && !parent.isRoot()) {
@@ -231,9 +230,9 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       return path.join(':');
    }
 
-   //endregion
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает название свойства, содержащего идентификатор родительского узла
@@ -338,7 +337,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
          return;
       }
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
 
       this._$rootEnumerable = enumerable;
       if (enumerable) {
@@ -370,12 +369,12 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
     * @return {Boolean} Есть ли родитель
     */
    moveToAbove(): boolean {
-      let current = this.getCurrent();
+      const current = this.getCurrent();
       if (!current) {
          return false;
       }
 
-      let parent = current.getParent();
+      const parent = current.getParent();
       if (!parent || parent.isRoot()) {
          return false;
       }
@@ -389,12 +388,12 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
     * @return {Boolean} Есть ли первый потомок
     */
    moveToBelow(): boolean {
-      let current = <TreeItem> this.getCurrent();
+      const current = <TreeItem> this.getCurrent();
       if (!current || !current.isNode()) {
          return false;
       }
 
-      let children = this._getChildrenArray(current);
+      const children = this._getChildrenArray(current);
       if (children.length === 0) {
          return false;
       }
@@ -403,12 +402,12 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       return true;
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    protected _getItemsFactory(): ItemsFactory {
-      let parent = super._getItemsFactory();
+      const parent = super._getItemsFactory();
 
       return function TreeItemsFactory(options) {
          let hasChildrenProperty = this._$hasChildrenProperty;
@@ -419,7 +418,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
             invertLogic = !invertLogic;
          }
 
-         let hasChildren = object.getPropertyValue(options.contents, hasChildrenProperty);
+         const hasChildren = object.getPropertyValue(options.contents, hasChildrenProperty);
          options.hasChildren = invertLogic ? !hasChildren : hasChildren;
 
          if (!('node' in options)) {
@@ -431,7 +430,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _createComposer(): ItemsStrategyComposer {
-      let composer = super._createComposer();
+      const composer = super._createComposer();
 
       if (this._$childrenProperty) {
          composer.remove(DirectItemsStrategy);
@@ -490,12 +489,12 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _replaceItems(start: number, newItems: any[]): CollectionItem[] {
-      let replaced = super._replaceItems(start, newItems);
-      let strategy = this._getItemsStrategy();
-      let count = strategy.count;
+      const replaced = super._replaceItems(start, newItems);
+      const strategy = this._getItemsStrategy();
+      const count = strategy.count;
 
       replaced.forEach((item, index) => {
-         let strategyIndex = replaced.start + index;
+         const strategyIndex = replaced.start + index;
          if (strategyIndex < count) {
             strategy.at(strategyIndex).setExpanded(item.isExpanded(), true);
          }
@@ -505,7 +504,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _getItemState(item: CollectionItem): TreeSessionItemState {
-      let state = <TreeSessionItemState> super._getItemState(item);
+      const state = <TreeSessionItemState> super._getItemState(item);
 
       if (item instanceof TreeItem) {
          state.parent = item.getParent();
@@ -540,11 +539,11 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       this._checkItem(parent);
 
       withFilter = withFilter === undefined ? true : !!withFilter;
-      let iid = parent.getInstanceId();
-      let key = iid + '|' + withFilter;
+      const iid = parent.getInstanceId();
+      const key = iid + '|' + withFilter;
 
       if (!(key in this._childrenMap)) {
-         let children = [];
+         const children = [];
          let enumerator;
 
          if (withFilter) {
@@ -580,17 +579,17 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _getNearbyItem(enumerator: CollectionEnumerator, item: CollectionItem, isNext: boolean, skipGroups: boolean) {
-      let method = isNext ? 'moveNext' : 'movePrevious';
-      let parent = item && item.getParent && item.getParent() || this.getRoot();
+      const method = isNext ? 'moveNext' : 'movePrevious';
+      const parent = item && item.getParent && item.getParent() || this.getRoot();
       let hasItem = true;
-      let initial = enumerator.getCurrent();
+      const initial = enumerator.getCurrent();
       let sameParent = false;
       let current;
       let nearbyItem;
 
       enumerator.setCurrent(item);
 
-      //TODO: отлеживать по level, что вышли "выше"
+      // TODO: отлеживать по level, что вышли "выше"
       while (hasItem && !sameParent) {
          hasItem = enumerator[method]();
          nearbyItem = enumerator.getCurrent();
@@ -610,10 +609,10 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    }
 
    protected _moveTo(isNext: boolean): boolean {
-      let enumerator = this._getCursorEnumerator();
-      let initial = this.getCurrent();
-      let item = this._getNearbyItem(enumerator, initial, isNext, true);
-      let hasMove = !!item;
+      const enumerator = this._getCursorEnumerator();
+      const initial = this.getCurrent();
+      const item = this._getNearbyItem(enumerator, initial, isNext, true);
+      const hasMove = !!item;
 
       if (hasMove) {
          this.setCurrent(item);
@@ -638,7 +637,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       }
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(Tree.prototype, {

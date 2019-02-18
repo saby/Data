@@ -7,17 +7,21 @@
 
 import Set from './Set';
 
-//Use native implementation if supported
+// Use native implementation if supported
 let MapImplementation;
 
 if (typeof Map === 'undefined') {
    MapImplementation = class <K, V> {
       protected _hash: Object;
-      protected _objects: Array<V>;
+      protected _objects: V[];
       protected _objectPrefix: string;
 
       constructor() {
          this.clear();
+      }
+
+      static _getUnhashedKey(key: string): string {
+         return String(key).split('@', 2)[1];
       }
 
       clear() {
@@ -44,12 +48,12 @@ if (typeof Map === 'undefined') {
       }
 
       forEach(callbackFn: Function, thisArg?: Object) {
-         //FIXME: now not in insertion order
-         let hash = this._hash;
+         // FIXME: now not in insertion order
+         const hash = this._hash;
          let ukey;
          let value;
 
-         for (let key in hash) {
+         for (const key in hash) {
             if (hash.hasOwnProperty(key) && hash[key] !== undefined) {
                value = hash[key];
                ukey = MapImplementation._getUnhashedKey(key);
@@ -133,12 +137,8 @@ if (typeof Map === 'undefined') {
       }
 
       _getObject(key: string) {
-         let index = parseInt(key.substr(this._objectPrefix.length), 10);
+         const index = parseInt(key.substr(this._objectPrefix.length), 10);
          return this._objects[index];
-      }
-
-      static _getUnhashedKey(key: string): string {
-         return String(key).split('@', 2)[1];
       }
    };
 
@@ -149,7 +149,7 @@ if (typeof Map === 'undefined') {
    });
 
    Object.defineProperty(MapImplementation.prototype, 'size', {
-      get: function() {
+      get() {
          return Object.keys(this._hash).length;
       },
       enumerable: true,

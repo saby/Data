@@ -32,7 +32,7 @@
  */
 
 const SbisFieldType = {
-   'boolean': 'Логическое',
+   boolean: 'Логическое',
    integer: 'Число целое',
    real: 'Число вещественное',
    money: 'Деньги',
@@ -42,9 +42,9 @@ const SbisFieldType = {
    date: 'Дата',
    time: 'Время',
    timeinterval: 'Временной интервал',
-   link: 'Связь', //deprecated
+   link: 'Связь', // deprecated
    identity: 'Идентификатор',
-   'enum': 'Перечисляемое',
+   enum: 'Перечисляемое',
    flags: 'Флаги',
    record: 'Запись',
    recordset: 'Выборка',

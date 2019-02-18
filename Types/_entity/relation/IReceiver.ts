@@ -14,5 +14,5 @@ export default interface IReceiver /** @lends Types/_entity/relation/IReceiver.p
     * @param {Array.<String>} route Маршрут до объекта
     * @return {Object} Модификация объекта, уведомившего об изменении отношений
     */
-   relationChanged(which: any, route: Array<string>): any;
+   relationChanged(which: any, route: string[]): any;
 }

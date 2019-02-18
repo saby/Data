@@ -17,7 +17,7 @@ export default function factory(declaration) {
    if (!declaration || !(declaration instanceof Array)) {
       throw new TypeError('Types/_collection/format/factory: declaration should be an instance of Array');
    }
-   let instance = new Format();
+   const instance = new Format();
    for (let i = 0; i < declaration.length; i++) {
       instance.add(format.fieldsFactory(declaration[i]));
    }

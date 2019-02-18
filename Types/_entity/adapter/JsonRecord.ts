@@ -35,6 +35,15 @@ export default class JsonRecord extends mixin(
     */
    _data: Object;
 
+   // region IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   getData: () => any;
+   getFormat: (name: string) => Field;
+   getSharedFormat: (name: string) => UniversalField;
+   removeFieldAt: (index: number) => void;
+
    /**
     * Конструктор
     * @param {*} data Сырые данные
@@ -45,24 +54,15 @@ export default class JsonRecord extends mixin(
       JsonFormatMixin.constructor.call(this, data);
    }
 
-   //region IRecord
+   // endregion IRecord
 
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-   removeFieldAt: (index: number) => void;
-
-   //endregion IRecord
-
-   //region Types/_entity/adapter/JsonFormatMixin
+   // region Types/_entity/adapter/JsonFormatMixin
 
    addField(format, at) {
       if (!format || !(format instanceof Field)) {
          throw new TypeError(`${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`);
       }
-      let name = format.getName();
+      const name = format.getName();
       if (this.has(name)) {
          throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
       }
@@ -76,9 +76,9 @@ export default class JsonRecord extends mixin(
       delete this._data[name];
    }
 
-   //endregion Types/_entity/adapter/JsonFormatMixin
+   // endregion Types/_entity/adapter/JsonFormatMixin
 
-   //region Public methods
+   // region Public methods
 
    has(name) {
       return this._isValidData() ? this._data.hasOwnProperty(name) : false;
@@ -98,8 +98,8 @@ export default class JsonRecord extends mixin(
 
    clear() {
       this._touchData();
-      let keys = Object.keys(this._data);
-      let count = keys.length;
+      const keys = Object.keys(this._data);
+      const count = keys.length;
       for (let i = 0; i < count; i++) {
          delete this._data[keys[i]];
       }
@@ -113,15 +113,15 @@ export default class JsonRecord extends mixin(
       return undefined;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    _has(name) {
       return this.has(name);
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(JsonRecord.prototype, {

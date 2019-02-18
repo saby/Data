@@ -250,7 +250,7 @@ function callDestroyWithComplexId(instance: SbisService | any, ids: string[], na
  * @param adapter
  */
 export function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
-   const Record = resolve('Types/entity:Record');
+   const Record = resolve<any>('Types/entity:Record');
    return Record.fromObject(data, adapter);
 }
 
@@ -268,7 +268,7 @@ export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty:
       return data;
    }
 
-   const RecordSet = resolve('Types/collection:RecordSet');
+   const RecordSet = resolve<any>('Types/collection:RecordSet');
    let records = new RecordSet({
       adapter: adapter,
       idProperty: idProperty
@@ -501,7 +501,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
 }
 
 function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Object {
-   const RecordSet = resolve('Types/collection:RecordSet');
+   const RecordSet = resolve<any>('Types/collection:RecordSet');
    let patch = RecordSet.patch(items);
    return {
       changed: patch.get('changed'),

@@ -5,6 +5,7 @@
  * @author Мальцев А.А.
  */
 
+import { IObject, ICloneable } from '../entity';
 import {Set} from '../shim';
 // @ts-ignore
 import Serializer = require('Core/Serializer');
@@ -15,10 +16,10 @@ function getPropertyMethodName(property: string, prefix: string): string {
 
 /**
  * Возвращает значение свойства объекта
- * @param {*} object Объект.
- * @param {String} property Название свойства.
+ * @param object Объект.
+ * @param property Название свойства.
  */
-function getPropertyValue(object: any, property: string): any {
+function getPropertyValue<T>(object: Object | IObject, property: string): T {
    const checkedProperty = property || '';
 
    if (!(object instanceof Object)) {
@@ -31,9 +32,9 @@ function getPropertyValue(object: any, property: string): any {
 
    if (object &&
       (object['[Types/_entity/IObject]']) &&
-      object.has(checkedProperty)
+      (object as IObject).has(checkedProperty)
    ) {
-      return object.get(checkedProperty);
+      return (object as IObject).get(checkedProperty);
    }
 
    const getter = getPropertyMethodName(checkedProperty, 'get');
@@ -46,11 +47,11 @@ function getPropertyValue(object: any, property: string): any {
 
 /**
  * Устанавливает значение свойства объекта
- * @param {*} object Объект.
- * @param {String} property Название свойства.
- * @param {*} value Значение свойства.
+ * @param object Объект.
+ * @param property Название свойства.
+ * @param value Значение свойства.
  */
-function setPropertyValue(object: any, property: string, value: any): void {
+function setPropertyValue<T>(object: Object | IObject, property: string, value: T): void {
    const checkedProperty = property || '';
 
    if (!(object instanceof Object)) {
@@ -64,9 +65,9 @@ function setPropertyValue(object: any, property: string, value: any): void {
 
    if (object &&
       (object['[Types/_entity/IObject]']) &&
-      object.has(checkedProperty)
+      (object as IObject).has(checkedProperty)
    ) {
-      object.set(checkedProperty, value);
+      (object as IObject).set(checkedProperty, value);
       return;
    }
 
@@ -81,15 +82,15 @@ function setPropertyValue(object: any, property: string, value: any): void {
 
 /**
  * Клонирует объект путем сериализации в строку и последующей десериализации.
- * @param {Object} original Объект для клонирования
- * @return {Object} Клон объекта
+ * @param original Объект для клонирования
+ * @return Клон объекта
  */
-function clone(original: any): any {
+function clone<T>(original: T | ICloneable): T {
    if (original instanceof Object) {
       if (original['[Types/_entity/ICloneable]']) {
-         return original.clone();
+         return (original as ICloneable).clone<T>();
       } else {
-         let serializer = new Serializer();
+         const serializer = new Serializer();
          return JSON.parse(
             JSON.stringify(original, serializer.serialize),
             serializer.deserialize
@@ -100,13 +101,13 @@ function clone(original: any): any {
    }
 }
 
-   /**
+/**
  * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
- * @param {Object} original Объект для клонирования
- * @param {Boolean} [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
- * @return {Object} Клон объекта
+ * @param original Объект для клонирования
+ * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
+ * @return Клон объекта
  */
-function clonePlain(original: any, processCloneable?: boolean, processing?: Set<Object>): any {
+function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean, processing?: Set<Object>): T {
    let result;
    let checkedProcessing = processing;
 
@@ -114,12 +115,12 @@ function clonePlain(original: any, processCloneable?: boolean, processing?: Set<
       checkedProcessing = new Set();
    }
    if (checkedProcessing.has(original)) {
-      return original;
+      return original as T;
    }
 
    if (original instanceof Array) {
       checkedProcessing.add(original);
-      result = original.map(item => clonePlain(item, processCloneable, checkedProcessing));
+      result = original.map((item) => clonePlain<T>(item, processCloneable, checkedProcessing));
       checkedProcessing.delete(original);
    } else if (original instanceof Object) {
       if (Object.getPrototypeOf(original) === Object.prototype) {
@@ -130,7 +131,7 @@ function clonePlain(original: any, processCloneable?: boolean, processing?: Set<
          });
          checkedProcessing.delete(original);
       } else if (original['[Types/_entity/ICloneable]']) {
-         result = original.clone();
+         result = (original as ICloneable).clone<T>();
       } else {
          result = original;
       }

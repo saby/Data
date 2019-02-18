@@ -1,5 +1,5 @@
 /// <amd-module name="Types/_formatter/number" />
-//@ts-ignore
+// @ts-ignore
 import i18n = require('Core/i18n');
 
 /**
@@ -57,4 +57,4 @@ import i18n = require('Core/i18n');
  */
 export default function format(source: number, options?: Intl.NumberFormatOptions): string {
    return (new Intl.NumberFormat(i18n.getLang(), options)).format(source);
-};
+}

@@ -157,7 +157,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
       }
    },
 
-   //region Public methods
+   // region Public methods
 
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
@@ -194,9 +194,9 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
       this._$idProperty = name;
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Определяет название свойства с первичным ключом по данным
@@ -232,13 +232,12 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    _getDataSetInstance(cfg): DataSet {
       return create(// eslint-disable-line new-cap
          this._dataSetModule,
-         Object.assign({
+         {
             writable: this._writable,
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null)
-         }, cfg)
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null), ...cfg}
       );
    },
 
@@ -264,15 +263,15 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @protected
     */
    _each(data, callback, context) {
-      let tableAdapter = this.getAdapter().forTable(data);
+      const tableAdapter = this.getAdapter().forTable(data);
       for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
          callback.call(context || this, tableAdapter.at(index), index);
       }
    },
 
-   //endregion Protected methods
+   // endregion Protected methods
 
-   //region Statics
+   // region Statics
 
    /**
     * Проверяет, что это экземпляр модели
@@ -298,7 +297,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
          instance['[Types/_entity/FormattableMixin]'];
    }
 
-   //endregion Statics
+   // endregion Statics
 };
 
 export default DataMixin;

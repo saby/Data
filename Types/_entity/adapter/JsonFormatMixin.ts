@@ -6,7 +6,7 @@
  * @author Мальцев А.А.
  */
 
-import {fieldsFactory, Field, UniversalField} from '../format'
+import {fieldsFactory, Field, UniversalField} from '../format';
 
 const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
@@ -16,7 +16,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
     */
    _format: null,
 
-   //region Public methods
+   // region Public methods
 
    constructor() {
       this._format = {};
@@ -36,7 +36,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       if (this._sharedFieldFormat === null) {
          this._sharedFieldFormat = new UniversalField();
       }
-      let format = this._sharedFieldFormat;
+      const format = this._sharedFieldFormat;
       format.name = name;
       if (this._format.hasOwnProperty(name)) {
          format.type = this.getFormat(name).getType();
@@ -52,7 +52,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       if (!format || !(format instanceof Field)) {
          throw new TypeError(`${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`);
       }
-      let name = format.getName();
+      const name = format.getName();
       if (!name) {
          throw new Error(`${this._moduleName}::addField(): field name is empty`);
       }
@@ -72,9 +72,9 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       throw new Error(`Method ${this._moduleName}::removeFieldAt() doesn't supported`);
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    _touchData() {
       if (!(this._data instanceof Object)) {
@@ -92,12 +92,12 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
 
    _buildFormat(name) {
       return fieldsFactory({
-         name: name,
+         name,
          type: 'string'
       });
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default JsonFormatMixin;

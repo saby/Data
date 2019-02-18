@@ -33,18 +33,24 @@ import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {mixin} from '../util';
 
-let arraySlice = Array.prototype.slice;
+const arraySlice = Array.prototype.slice;
 
 export default class ObservableList<T> extends mixin(
    List,
    IObservable,
-   EventRaisingMixin,
+   EventRaisingMixin
 ) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
 
    /**
     * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие onCollectionChange с ACTION_RESET, вместо нескольких c другими action
     */
    _resetChangesCount: number;
+
+   // endregion List
+
+   // region IReceiver
+
+   readonly '[Types/_entity/relation/IReceiver]': boolean;
 
    constructor(options?) {
       super(options);
@@ -53,11 +59,11 @@ export default class ObservableList<T> extends mixin(
       this._publish('onCollectionChange', 'onCollectionItemChange');
    }
 
-   //region List
+   // region List
 
    assign(items) {
-      let oldItems = this._itemsSlice();
-      let eventsWasRaised = this._eventRaising;
+      const oldItems = this._itemsSlice();
+      const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
       super.assign(items);
@@ -75,10 +81,10 @@ export default class ObservableList<T> extends mixin(
    }
 
    append(items) {
-      let eventsWasRaised = this._eventRaising;
+      const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
-      let count = this.getCount();
+      const count = this.getCount();
       super.append(items);
       this._eventRaising = eventsWasRaised;
 
@@ -92,10 +98,10 @@ export default class ObservableList<T> extends mixin(
    }
 
    prepend(items) {
-      let eventsWasRaised = this._eventRaising;
+      const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
-      let length = this.getCount();
+      const length = this.getCount();
       super.prepend(items);
       this._eventRaising = eventsWasRaised;
 
@@ -109,8 +115,8 @@ export default class ObservableList<T> extends mixin(
    }
 
    clear() {
-      let oldItems = this._$items.slice();
-      let eventsWasRaised = this._eventRaising;
+      const oldItems = this._$items.slice();
+      const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
       super.clear();
@@ -138,7 +144,7 @@ export default class ObservableList<T> extends mixin(
    }
 
    removeAt(index) {
-      let item = super.removeAt(index);
+      const item = super.removeAt(index);
       this._notifyCollectionChange(
          IObservable.ACTION_REMOVE,
          [],
@@ -150,10 +156,10 @@ export default class ObservableList<T> extends mixin(
    }
 
    replace(item, at) {
-      let oldItem = this._$items[at];
+      const oldItem = this._$items[at];
       super.replace(item, at);
 
-      //Replace with itself has no effect
+      // Replace with itself has no effect
       if (oldItem !== item) {
          this._notifyCollectionChange(
             IObservable.ACTION_REPLACE,
@@ -166,7 +172,7 @@ export default class ObservableList<T> extends mixin(
    }
 
    move(from, to) {
-      let item = this._$items[from];
+      const item = this._$items[from];
       super.move(from, to);
 
       if (from !== to) {
@@ -180,16 +186,10 @@ export default class ObservableList<T> extends mixin(
       }
    }
 
-   //endregion List
-
-   //region IReceiver
-
-   readonly '[Types/_entity/relation/IReceiver]': boolean;
-
-   relationChanged(which: any, route: Array<string>): any {
-      let target = which.target;
-      let index = this.getIndex(target);
-      let data = {};
+   relationChanged(which: any, route: string[]): any {
+      const target = which.target;
+      const index = this.getIndex(target);
+      const data = {};
 
       if (index > -1) {
          this._reindex(
@@ -199,7 +199,7 @@ export default class ObservableList<T> extends mixin(
          );
       }
 
-      let name = route[0];
+      const name = route[0];
       if (name === undefined) {
          this._notifyItemChange(
             target,
@@ -209,22 +209,22 @@ export default class ObservableList<T> extends mixin(
 
       data[index] = target;
       return {
-         target: target,
-         data: data
+         target,
+         data
       };
    }
 
-   //endregion IReceiver
+   // endregion IReceiver
 
-   //region EventRaisingMixin
+   // region EventRaisingMixin
 
    setEventRaising(enabled, analyze) {
       EventRaisingMixin.setEventRaising.call(this, enabled, analyze);
 
-      //Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
+      // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
       if (enabled && analyze && this._silentChangedItems) {
          if (this._silentChangedItems.length >= Math.min(this._resetChangesCount, this._$items.length)) {
-            //Если изменилось критическое число элементов, то генерируем reset
+            // Если изменилось критическое число элементов, то генерируем reset
             this._notifyCollectionChange(
                IObservable.ACTION_RESET,
                this._itemsSlice(),
@@ -233,7 +233,7 @@ export default class ObservableList<T> extends mixin(
                0
             );
          } else {
-            //Собираем изменившиеся элементы в пачки
+            // Собираем изменившиеся элементы в пачки
             EventRaisingMixin._extractPacksByList(
                this,
                this._silentChangedItems,
@@ -252,9 +252,9 @@ export default class ObservableList<T> extends mixin(
       delete this._silentChangedItems;
    }
 
-   //endregion EventRaisingMixin
+   // endregion EventRaisingMixin
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Генерирует событие об изменении элемента
@@ -263,7 +263,7 @@ export default class ObservableList<T> extends mixin(
     */
    _notifyItemChange(item, properties) {
       if (this._isNeedNotifyCollectionItemChange()) {
-         let index = this.getIndex(item);
+         const index = this.getIndex(item);
          this._notify(
             'onCollectionItemChange',
             this._$items[index],
@@ -303,7 +303,7 @@ export default class ObservableList<T> extends mixin(
       return this._eventRaising && this.hasEventHandlers('onCollectionItemChange');
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(ObservableList.prototype, {

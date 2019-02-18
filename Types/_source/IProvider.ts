@@ -9,8 +9,8 @@
 import {IAbstract} from './provider';
 
 export interface IEndpoint {
-   contract: string,
-   address?: string
+   contract: string;
+   address?: string;
 }
 
 export default interface IProvider /** @lends Types/_source/IProvider.prototype */{

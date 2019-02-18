@@ -48,7 +48,7 @@ export default interface IRecord /** @lends Types/_entity/adapter/IRecord.protot
     * Возвращает массив названий полей
     * @return {Array.<String>} Названия полей
     */
-   getFields(): Array<string>;
+   getFields(): string[];
 
    /**
     * Возвращает формат поля (в режиме только для чтения)

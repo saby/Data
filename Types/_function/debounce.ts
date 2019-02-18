@@ -65,7 +65,7 @@ export default function debounce(original: Function, delay: number|String, first
    let wait = false,
       timer;
 
-   return function(...args:any[]) {
+   return function(...args: any[]) {
       if (wait) {
          return;
       }
@@ -75,7 +75,7 @@ export default function debounce(original: Function, delay: number|String, first
          wait = true;
          setTimeout(() => {
             wait = false;
-         }, <number>delay);
+         }, delay as number);
          return;
       }
 
@@ -84,6 +84,6 @@ export default function debounce(original: Function, delay: number|String, first
       }
 
       // original.bind(this, arg1, arg2, arg3, ...);
-      timer = setTimeout(original.bind(this, ...args), <number>delay);
+      timer = setTimeout(original.bind(this, ...args), delay as number);
    };
 }

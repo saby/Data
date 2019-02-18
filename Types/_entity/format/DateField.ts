@@ -19,7 +19,7 @@ import Field from './Field';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 export default class DateField extends Field /** @lends Types/_entity/format/DateField.prototype */{
-      //region Public methods
+      // region Public methods
 
       getDefaultValue() {
          if (this._$defaultValue instanceof Date) {
@@ -28,7 +28,7 @@ export default class DateField extends Field /** @lends Types/_entity/format/Dat
          return this._$defaultValue;
       }
 
-      //endregion Public methods
+      // endregion Public methods
 }
 
 DateField.prototype['[Types/_entity/format/DateField]'] = true;

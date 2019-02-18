@@ -78,19 +78,56 @@ export default class List<T> extends mixin(
    IIndexedCollection,
    ICloneable,
    IEquatable,
-   IVersionable
-/** @lends Types/_collection/List.prototype */{
+   IVersionable {
 
    /**
     * @cfg {Array.<*>} Элементы списка
     * @name Types/_collection/List#items
     */
-   _$items: Array<T>;
+   _$items: T[];
 
    /**
     * @property {Types/_collection/Indexer} Индексатор
     */
    _indexer: Indexer;
+
+   // region IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]': boolean;
+
+   // endregion IEnumerable
+
+   // region IList
+
+   readonly '[Types/_collection/IList]': boolean;
+
+   // endregion IList
+
+   // region IIndexedCollection
+
+   readonly '[Types/_collection/IIndexedCollection]': boolean;
+
+   // endregion IEquatable
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
+   clone: <List>(shallow?: boolean) => List;
+
+   // endregion ICloneable
+
+   // region IEquatable
+
+   readonly '[Types/_entity/IEquatable]': boolean;
+
+   // endregion IEquatable
+
+   // region IVersionable
+
+   readonly '[Types/_entity/IVersionable]': boolean;
+
+   getVersion: () => number;
 
    constructor(options?) {
       if (options && 'items' in options && !(options.items instanceof Array)) {
@@ -108,6 +145,21 @@ export default class List<T> extends mixin(
       }
    }
 
+   // endregion Protected methods
+
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList: any, classExtender: any) {
+      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
+      }
+      const coreExtend = require('Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
+   }
+
    destroy() {
       this._$items = null;
       this._indexer = null;
@@ -115,10 +167,6 @@ export default class List<T> extends mixin(
       ReadWriteMixin.destroy.call(this);
       super.destroy();
    }
-
-   //region IEnumerable
-
-   readonly '[Types/_collection/IEnumerable]': boolean;
 
    /**
     * Возвращает энумератор для перебора элементов списка.
@@ -130,7 +178,7 @@ export default class List<T> extends mixin(
    }
 
    each(callback, context) {
-      //It's faster than use getEnumerator()
+      // It's faster than use getEnumerator()
       for (let i = 0, count = this.getCount(); i < count; i++) {
          callback.call(
             context || this,
@@ -140,12 +188,6 @@ export default class List<T> extends mixin(
          );
       }
    }
-
-   //endregion IEnumerable
-
-   //region IList
-
-   readonly '[Types/_collection/IList]': boolean;
 
    assign(items) {
       for (let i = 0, count = this._$items.length; i < count; i++) {
@@ -210,7 +252,7 @@ export default class List<T> extends mixin(
    }
 
    remove(item) {
-      let index = this.getIndex(item);
+      const index = this.getIndex(item);
       if (index !== -1) {
          this.removeAt(index);
          this._childChanged(item);
@@ -224,7 +266,7 @@ export default class List<T> extends mixin(
          throw new Error('Index is out of bounds');
       }
       this._removeChild(this._$items[index]);
-      let deleted = this._$items.splice(index, 1);
+      const deleted = this._$items.splice(index, 1);
       this._reindex(IObservable.ACTION_REMOVE, index, 1);
       this._childChanged(index);
       this._nextVersion();
@@ -236,9 +278,9 @@ export default class List<T> extends mixin(
          throw new Error('Index is out of bounds');
       }
 
-      let oldItem = this._$items[at];
+      const oldItem = this._$items[at];
 
-      //Replace with itself has no effect
+      // Replace with itself has no effect
       if (oldItem === item) {
          return;
       }
@@ -262,7 +304,7 @@ export default class List<T> extends mixin(
          return;
       }
 
-      let items = this._$items.splice(from, 1);
+      const items = this._$items.splice(from, 1);
       this._$items.splice(to, 0, items[0]);
 
       if (from < to) {
@@ -282,12 +324,6 @@ export default class List<T> extends mixin(
       return this._$items.length;
    }
 
-   //endregion IList
-
-   //region IIndexedCollection
-
-   readonly '[Types/_collection/IIndexedCollection]': boolean;
-
    getIndexByValue(property, value) {
       return this._getIndexer().getIndexByValue(property, value);
    }
@@ -296,9 +332,9 @@ export default class List<T> extends mixin(
       return this._getIndexer().getIndicesByValue(property, value);
    }
 
-   //endregion IIndexedCollection
+   // endregion IIndexedCollection
 
-   //region IEquatable
+   // region IEquatable
 
    isEqual(to) {
       if (to === this) {
@@ -319,29 +355,7 @@ export default class List<T> extends mixin(
       return true;
    }
 
-   //endregion IEquatable
-
-   //region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: (shallow?: boolean) => Object;
-
-   //endregion ICloneable
-
-   //region IEquatable
-
-   readonly '[Types/_entity/IEquatable]': boolean;
-
-   //endregion IEquatable
-
-   //region IVersionable
-
-   readonly '[Types/_entity/IVersionable]': boolean;
-
-   getVersion: () => number;
-
-   //endregion IVersionable
+   // endregion IVersionable
 
    // SerializableMixin
 
@@ -350,7 +364,7 @@ export default class List<T> extends mixin(
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._clearIndexer();
@@ -359,7 +373,7 @@ export default class List<T> extends mixin(
 
    // SerializableMixin
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Возвращает индексатор коллекции
@@ -410,7 +424,7 @@ export default class List<T> extends mixin(
          return;
       }
 
-      let indexer = this._getIndexer();
+      const indexer = this._getIndexer();
       switch (action) {
          case IObservable.ACTION_ADD:
             indexer.shiftIndex(start, this.getCount() - start, count);
@@ -459,11 +473,11 @@ export default class List<T> extends mixin(
     * @return {Array}
     * @protected
     */
-   protected _itemsToArray(items): Array<any> {
+   protected _itemsToArray(items): any[] {
       if (items instanceof Array) {
          return items;
       } else if (items && items['[Types/_collection/IEnumerable]']) {
-         let result = [];
+         const result = [];
          items.each((item) => {
             result.push(item);
          });
@@ -472,24 +486,9 @@ export default class List<T> extends mixin(
          throw new TypeError('Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.');
       }
    }
-
-   //endregion Protected methods
-
-   /**
-    * @deprecated
-    */
-   static extend(mixinsList: any, classExtender: any) {
-      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-
-      if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
-      }
-      const coreExtend = require('Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
-   }
 }
 
-Object.assign(List.prototype,{
+Object.assign(List.prototype, {
    '[Types/_collection/List]': true,
    '[Types/_collection/IEnumerable]': true,
    '[Types/_collection/IIndexedCollection]': true,
@@ -502,12 +501,12 @@ Object.assign(List.prototype,{
    _indexer: null
 });
 
-//Aliases
+// Aliases
 List.prototype.forEach = List.prototype.each;
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 List.prototype['[WS.Data/Collection/List]'] = true;
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 List.prototype['[WS.Data/Collection/IEnumerable]'] = true;
 List.prototype['[WS.Data/Collection/IList]'] = true;
 List.prototype['[WS.Data/Collection/IIndexedCollection]'] = true;

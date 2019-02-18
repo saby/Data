@@ -1,6 +1,6 @@
-/// <amd-module name="Types/_display/Collection" />
 /**
- * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную коллекцию.
+ * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
+ * не меняя при этом оригинальную коллекцию.
  * @class Types/_display/Collection
  * @extends Types/_display/Abstract
  * @implements Types/_collection/IEnumerable
@@ -16,7 +16,7 @@
 import IBind from './IBind';
 import Abstract, {IEnumerable} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
-import CollectionItem from './CollectionItem';
+import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import GroupItem from './GroupItem';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -24,22 +24,22 @@ import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
 import {DestroyableMixin, SerializableMixin, functor} from '../entity';
-import {EnumeratorCallback, IList, EventRaisingMixin,} from '../collection';
+import {EnumeratorCallback, IList, EventRaisingMixin} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 
+// tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-
 
 /**
  * Преобразует проекцию в массив из ее элементов
  * @param display Проекция.
  */
-function toArray(display: Abstract): Array<CollectionItem> {
-   let result = [];
+function toArray(display: Collection): CollectionItem[] {
+   const result = [];
    display.each((item) => {
       result.push(item);
    });
@@ -70,16 +70,16 @@ function normalizeHandlers<T>(handlers: T | T[]): T[] {
 function onCollectionChange(
    event: EventObject,
    action: string,
-   newItems: Array<any>,
+   newItems: any[],
    newItemsIndex: number,
-   oldItems: Array<any>,
+   oldItems: any[],
    oldItemsIndex: number
-) {
+): void {
    let session;
 
    switch (action) {
       case IBind.ACTION_RESET:
-         let projectionOldItems = toArray(this);
+         const projectionOldItems = toArray(this);
          let projectionNewItems;
          this._reBuild(true);
          projectionNewItems = toArray(this);
@@ -97,7 +97,7 @@ function onCollectionChange(
       case IBind.ACTION_CHANGE:
          session = this._startUpdateSession();
 
-         //FIXME: newItems.length - FIXME[OrderMatch]
+         // FIXME: newItems.length - FIXME[OrderMatch]
          this._reGroup(newItemsIndex, newItems.length);
          this._reSort();
          this._reFilter();
@@ -112,14 +112,14 @@ function onCollectionChange(
       case IBind.ACTION_ADD:
          this._addItems(newItemsIndex, newItems);
 
-         //FIXME: newItems.length - FIXME[OrderMatch]
+         // FIXME: newItems.length - FIXME[OrderMatch]
          this._reGroup(newItemsIndex, newItems.length);
          this._reSort();
          this._reFilter();
          break;
 
       case IBind.ACTION_REMOVE:
-         //FIXME: oldItems.length - FIXME[OrderMatch]
+         // FIXME: oldItems.length - FIXME[OrderMatch]
          this._removeItems(oldItemsIndex, oldItems.length);
          this._reSort();
          if (this._isFiltered() && this._isFilteredByIndex()) {
@@ -128,17 +128,17 @@ function onCollectionChange(
          break;
 
       case IBind.ACTION_REPLACE:
-         //FIXME: newItems - FIXME[OrderMatch]
+         // FIXME: newItems - FIXME[OrderMatch]
          this._replaceItems(newItemsIndex, newItems);
 
-         //FIXME: newItems.length - FIXME[OrderMatch]
+         // FIXME: newItems.length - FIXME[OrderMatch]
          this._reGroup(newItemsIndex, newItems.length);
          this._reSort();
          this._reFilter();
          break;
 
       case IBind.ACTION_MOVE:
-         //FIXME: newItems - FIXME[OrderMatch]
+         // FIXME: newItems - FIXME[OrderMatch]
          this._moveItems(newItemsIndex, oldItemsIndex, newItems);
          this._reSort();
          this._reFilter();
@@ -160,7 +160,7 @@ function onCollectionItemChange(
    item: any,
    index: number,
    properties?: Object
-) {
+): void {
    if (!this.isEventRaising()) {
       return;
    }
@@ -179,16 +179,16 @@ function onCollectionItemChange(
  * @param enabled Включена или выключена генерация событий
  * @param analyze Включен или выключен анализ изменений
  */
-function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boolean) {
-   //Если без выключили без анализа изменений, то при следующем включении генерации надо актуализировать состояние
+function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boolean): void {
+   // Если без выключили без анализа изменений, то при следующем включении генерации надо актуализировать состояние
    if (!analyze && enabled) {
       this._reBuild(true);
    }
 
    this._sourceCollectionSynchronized = enabled;
 
-   //Call delayed handlers if get back to synchronize
-   let callbacks = this._sourceCollectionDelayedCallbacks;
+   // Call delayed handlers if get back to synchronize
+   const callbacks = this._sourceCollectionDelayedCallbacks;
    if (this._sourceCollectionSynchronized && callbacks) {
       let callback;
       while (callbacks.length > 0) {
@@ -199,58 +199,66 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
    }
 }
 
-interface IOptions {
-}
-
-interface SplicedArray<T> extends Array<T> {
+interface ISplicedArray<T> extends Array<T> {
    start?: number;
 }
 
-
 export interface ICollection extends DestroyableMixin, IEnumerable<any>, IList<any> {
-   each(callback: EnumeratorCallback<any>, context?: Object, localize?: boolean);
-   subscribe(event: string, handler: Function, ctx?: Object);
-   unsubscribe(event: string, handler: Function, ctx?: Object);
+   each(callback: EnumeratorCallback<any>, context?: Object, localize?: boolean): void;
+   subscribe(event: string, handler: Function, ctx?: Object): void;
+   unsubscribe(event: string, handler: Function, ctx?: Object): void;
 }
 
-interface FilterFunction {
-   (item: any, index: number, collectionItem: CollectionItem, collectionIndex: number): boolean;
-}
+type FilterFunction = (item: any, index: number, collectionItem: CollectionItem, collectionIndex: number) => boolean;
 
-interface GroupFunction {
-   (item: any, index: number, collectionItem: CollectionItem): string | null;
-}
+type GroupFunction = (item: any, index: number, collectionItem: CollectionItem) => string | null;
 
-interface SortItem {
+interface ISortItem {
    item: CollectionItem;
    index: number;
    collectionItem: any;
    collectionIndex: number;
 }
 
-export interface SortFunction {
-   (a: SortItem, b: SortItem): Number;
+export type SortFunction = (a: ISortItem, b: ISortItem) => number;
+
+export type ItemsFactory = (item: any) => CollectionItem;
+
+interface ISession {
+   before: any;
+   after: any;
 }
 
-export interface ItemsFactory {
-   (item: any): CollectionItem;
+interface ISessionItems extends Array<CollectionItem> {
+   properties?: object;
 }
 
-interface Session {
-}
-
-interface SessionItems extends Array<CollectionItem> {
-   properties?: Object
-}
-
-export interface SessionItemState {
+export interface ISessionItemState {
    item: CollectionItem;
    selected: boolean;
 }
 
-export default class Collection extends mixin(
+export default class Collection extends mixin<Abstract>(
    Abstract, SerializableMixin, EventRaisingMixin
-) implements IEnumerable<CollectionItem>, IList<CollectionItem> /** @lends Types/_display/Collection.prototype */{
+) implements IEnumerable<CollectionItem>, IList<CollectionItem> /** @lends Types/_display/Collection.prototype */ {
+   /**
+    * Возвращать локализованные значения
+    */
+   get localize(): boolean {
+      return this._localize;
+   }
+
+   // endregion
+
+   // region IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]': boolean = true;
+
+   // endregion
+
+   // region IList
+
+   readonly '[Types/_collection/IList]': boolean = true;
    /**
     * @typedef {Object} UserSortItem
     * @property {Types/_display/CollectionItem} item Элемент проекции
@@ -275,7 +283,12 @@ export default class Collection extends mixin(
    protected _$collection: ICollection;
 
    /**
-    * @cfg {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>|Function(*, Number, Types/_display/CollectionItem, Number): Boolean} Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+    * @cfg {
+    * Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>|
+    * Function(*, Number, Types/_display/CollectionItem, Number): Boolean
+    * } Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
+    * элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям
+    * фильтрации.
     * @name Types/_display/Collection#filter
     * @example
     * Отберем персонажей женского пола:
@@ -314,7 +327,10 @@ export default class Collection extends mixin(
    protected _$filter: FilterFunction[];
 
    /**
-    * @cfg {Function(*, Number, Types/_display/CollectionItem): String|null} Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции. Должен вернуть идентификатор группы.
+    * @cfg {
+    * Function(*, Number, Types/_display/CollectionItem): String|null
+    * } Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
+    * Должен вернуть идентификатор группы.
     * @name Types/_display/Collection#group
     * @example
     * Сгруппируем персонажей по полу:
@@ -346,7 +362,10 @@ export default class Collection extends mixin(
     *             console.log(item.getContents().name);
     *          }
     *       });
-    *       //output: '[M]', 'Philip J. Fry', 'Professor Farnsworth', '[F]', 'Turanga Leela', 'Amy Wong', '[R]', 'Bender Bending Rodriguez'
+    *       //output:
+    *       // '[M]', 'Philip J. Fry', 'Professor Farnsworth',
+    *       // '[F]', 'Turanga Leela', 'Amy Wong',
+    *       // '[R]', 'Bender Bending Rodriguez'
     *    });
     * </pre>
     * @see getGroup
@@ -355,7 +374,11 @@ export default class Collection extends mixin(
    protected _$group: GroupFunction;
 
    /**
-    * @cfg {Array.<Function(UserSortItem, UserSortItem): Number>|Function(UserSortItem, UserSortItem): Number} Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+    * @cfg {
+    * Array.<Function(UserSortItem, UserSortItem): Number>|
+    * Function(UserSortItem, UserSortItem): Number
+    * } Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
+    * должен вернуть -1|0|1 (см. Array.prototype.sort())
     * @name Types/_display/Collection#sort
     * @example
     * Отсортируем коллекцию по возрастанию значения поля title:
@@ -396,7 +419,8 @@ export default class Collection extends mixin(
    protected _$idProperty: string;
 
    /**
-    * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут игнорироваться). Работает только если задано {@link idProperty}.
+    * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
+    * игнорироваться). Работает только если задано {@link idProperty}.
     * @name Types/_display/Collection#unique
     */
    protected _$unique: boolean;
@@ -405,7 +429,8 @@ export default class Collection extends mixin(
     * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация, сортировка, группировка.
     * @name Types/_display/Collection#importantItemProperties
     * @remark
-    * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтрации, сортировки и группировки.
+    * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтрации, сортировки и
+    * группировки.
     */
    protected _$importantItemProperties: string[];
 
@@ -484,14 +509,7 @@ export default class Collection extends mixin(
     */
    protected _oEventRaisingChange: Function;
 
-   /**
-    * Возвращать локализованные значения
-    */
-   get localize(): boolean {
-      return this._localize;
-   }
-
-   constructor(options: IOptions) {
+   constructor(options: Object) {
       super(options);
       SerializableMixin.constructor.call(this);
       EventRaisingMixin.constructor.call(this, options);
@@ -532,7 +550,26 @@ export default class Collection extends mixin(
       }
    }
 
-   destroy() {
+   /**
+    * Добавляет/удаляет свойства функтора в в/из список важных свойств.
+    * @param func Функтор
+    * @param instance Проекция
+    * @param add Добавить или удалить свойства
+    */
+   protected static _functorToImportantProperties(func: Function, instance: Collection, add: boolean): void {
+      if (functor.Compute.isFunctor(func)) {
+         const properties = (func as any).properties;
+         for (let i = 0; i < properties.length; i++) {
+            if (add) {
+               instance._setImportantProperty(properties[i]);
+            } else {
+               instance._unsetImportantProperty(properties[i]);
+            }
+         }
+      }
+   }
+
+   destroy(): void {
       if (!this._$collection.destroyed) {
          if (this._$collection['[Types/_collection/IObservable]']) {
             this._$collection.unsubscribe('onCollectionChange', this._onCollectionChange);
@@ -555,7 +592,7 @@ export default class Collection extends mixin(
       super.destroy();
    }
 
-   //region mutable
+   // region mutable
 
    /**
     * Возвращает элемент проекции с указанным идентификатором экземпляра.
@@ -579,12 +616,6 @@ export default class Collection extends mixin(
       return this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId);
    }
 
-   //endregion
-
-   //region IEnumerable
-
-   readonly '[Types/_collection/IEnumerable]': boolean = true;
-
    /**
     * Возвращает энумератор для перебора элементов проекции
     * @return {Types/_display/CollectionEnumerator}
@@ -595,7 +626,8 @@ export default class Collection extends mixin(
 
    /**
     * Перебирает все элементы проекции, начиная с первого.
-    * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента коллекции (аргументами придут элемент коллекции и его порядковый номер)
+    * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента
+    * коллекции (аргументами придут элемент коллекции и его порядковый номер)
     * @param {Object} [context] Контекст вызова callback
     * @example
     * Сгруппируем персонажей по полу:
@@ -628,12 +660,15 @@ export default class Collection extends mixin(
     *             console.log(item.getContents().name);
     *          }
     *       });
-    *       //output: '[M]', 'Philip J. Fry', 'Professor Farnsworth', '[F]', 'Turanga Leela', 'Amy Wong', '[R]', 'Bender Bending Rodriguez'
+    *       //output:
+    *       // '[M]', 'Philip J. Fry', 'Professor Farnsworth',
+    *       // '[F]', 'Turanga Leela', 'Amy Wong',
+    *       // '[R]', 'Bender Bending Rodriguez'
     *    });
     * </pre>
     */
-   each(callback: EnumeratorCallback<CollectionItem>, context?: Object) {
-      let enumerator = this.getEnumerator();
+   each(callback: EnumeratorCallback<CollectionItem>, context?: Object): void {
+      const enumerator = this.getEnumerator();
       let index;
       while (enumerator.moveNext()) {
          index = enumerator.getCurrentIndex();
@@ -645,33 +680,27 @@ export default class Collection extends mixin(
       }
    }
 
-   //endregion
-
-   //region IList
-
-   readonly '[Types/_collection/IList]': boolean = true;
-
-   assign() {
+   assign(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   append() {
+   append(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   prepend() {
+   prepend(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   clear() {
+   clear(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   add() {
+   add(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   at(index) {
+   at(index: number): CollectionItem {
       return this._getUtilityEnumerator().at(index);
    }
 
@@ -683,15 +712,15 @@ export default class Collection extends mixin(
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   replace() {
+   replace(): CollectionItem {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   move() {
+   move(): void {
       throw new Error(MESSAGE_READ_ONLY);
    }
 
-   getIndex(item) {
+   getIndex(item: CollectionItem): number {
       if (!(item instanceof CollectionItem)) {
          return -1;
       }
@@ -717,73 +746,11 @@ export default class Collection extends mixin(
       return count;
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region Public
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-
-      state._composer = this._composer;
-
-      return state;
-   }
-
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
-         fromSerializableMixin.call(this);
-
-         this._composer = state._composer;
-
-         if (this._composer) {
-            //Restore link to _$sort in UserItemsStrategy instance
-            let userStrategy = this._composer.getInstance(UserItemsStrategy);
-            if (userStrategy) {
-               userStrategy.handlers = this._$sort;
-            }
-
-            //Restore link to _$group in GroupItemsStrategy instance
-            let groupStrategy = this._composer.getInstance(GroupItemsStrategy);
-            if (groupStrategy) {
-               groupStrategy.handler = this._$group;
-            }
-
-            //Restore items contents before the _$collection will be affected
-            if (this._composer) {
-               let restoreItemsContents = (items, owner) => {
-                  items.forEach((item) => {
-                     if (item._contentsIndex !== undefined) {
-                        item._$owner = owner;//Link to _$owner is not restored yet, force it
-                        item.getContents();//Force resolving item contents
-                     }
-                  });
-               };
-
-               try {
-                  let itemsHolder = this._composer.getResult();
-                  do {
-                     if (itemsHolder._items) {
-                        restoreItemsContents(itemsHolder._items, this);
-                     }
-                     itemsHolder = itemsHolder.source;
-                  } while (itemsHolder);
-               } catch (err) {
-                  //eslint
-                  if (typeof LOGGER !== undefined) {
-                     LOGGER.error(err);// eslint-disable-line no-console
-                  }
-               }
-            }
-         }
-      };
-   }
-
-   //endregion
-
-   //region Public
-
-   //region Access
+   // region Access
 
    /**
     * Возвращает оригинальную коллекцию
@@ -800,12 +767,12 @@ export default class Collection extends mixin(
     * @see collection
     */
    getCollectionCount(): number {
-      let collection = this.getCollection();
+      const collection = this.getCollection();
       if (collection['[Types/_collection/IList]']) {
          return collection.getCount();
       }
 
-      let enumerator = collection.getEnumerator();
+      const enumerator = collection.getEnumerator();
       let count = 0;
       enumerator.reset();
       while (enumerator.moveNext()) {
@@ -818,7 +785,7 @@ export default class Collection extends mixin(
     * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
-   getItems(): Array<CollectionItem> {
+   getItems(): CollectionItem[] {
       return this._getItems().slice();
    }
 
@@ -827,7 +794,7 @@ export default class Collection extends mixin(
     * @param {Object} options Значения опций
     * @return {Types/_display/CollectionItem}
     */
-   createItem(options): CollectionItem {
+   createItem(options: object): CollectionItem {
       if (!this._itemsFactory) {
          this._itemsFactory = this._getItemsFactory().bind(this);
       }
@@ -836,12 +803,13 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link Types/_display/CollectionItem#contents}.
+    * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции
+    * {@link Types/_display/CollectionItem#contents}.
     * @param {Types/_display/CollectionItem} item Элемент коллекции
     * @return {String|undefined}
     */
    getItemUid(item: CollectionItem): string {
-      let itemToUid = this._itemToUid;
+      const itemToUid = this._itemToUid;
       if (itemToUid.has(item)) {
          return itemToUid.get(item);
       }
@@ -854,46 +822,9 @@ export default class Collection extends mixin(
       return uid;
    }
 
-   /**
-    * Рассчитывает идентификатор элемента коллекции.
-    * @param {Types/_display/CollectionItem} item Элемент коллекции
-    * @return {String}
-    */
-   protected _exctractItemId(item: CollectionItem): string {
-      let contents = item.getContents();
-      let uid;
-      if (contents['[Types/_entity/Model]']) {
-         uid = contents.getId();
-      } else if (this._$idProperty) {
-         uid = object.getPropertyValue(contents, this._$idProperty);
-      } else {
-         throw new Error('Option "idProperty" must be defined to extract item unique id.');
-      }
+   // endregion Access
 
-      return String(uid);
-   }
-
-   /**
-    * Рассчитывает уникальный идентификатор элемента коллекции.
-    * @param {Types/_display/CollectionItem} item Элемент коллекции
-    * @param {String} baseId Базовое значение
-    * @return {String}
-    */
-   protected _searchItemUid(item: CollectionItem, baseId: string): string {
-      let uid = baseId;
-      let itemsUid = this._itemsUid;
-      let count = 0;
-      while (itemsUid.has(uid)) {
-         uid = baseId.concat('-', String(++count));
-      }
-      itemsUid.add(uid);
-
-      return uid;
-   }
-
-   //endregion Access
-
-   //region Navigation
+   // region Navigation
 
    /**
     * Возвращает текущий элемент
@@ -908,11 +839,11 @@ export default class Collection extends mixin(
     * @param {Types/_display/CollectionItem} item Новый текущий элемент
     * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
     */
-   setCurrent(item: CollectionItem, silent?: boolean) {
-      let oldCurrent = this.getCurrent();
+   setCurrent(item: CollectionItem, silent?: boolean): void {
+      const oldCurrent = this.getCurrent();
       if (oldCurrent !== item) {
-         let enumerator = this._getCursorEnumerator();
-         let oldPosition = this.getCurrentPosition();
+         const enumerator = this._getCursorEnumerator();
+         const oldPosition = this.getCurrentPosition();
          enumerator.setCurrent(item);
 
          if (!silent) {
@@ -939,10 +870,10 @@ export default class Collection extends mixin(
     * @param {Number} position Позиция текущего элемента. Значение -1 указывает, что текущий элемент не выбран.
     * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
     */
-   setCurrentPosition(position: number, silent?: boolean) {
-      let oldPosition = this.getCurrentPosition();
+   setCurrentPosition(position: number, silent?: boolean): void {
+      const oldPosition = this.getCurrentPosition();
       if (position !== oldPosition) {
-         let oldCurrent = this.getCurrent();
+         const oldCurrent = this.getCurrent();
          this._getCursorEnumerator().setPosition(position);
          if (!silent) {
             this._notifyCurrentChange(
@@ -960,10 +891,10 @@ export default class Collection extends mixin(
     * @return {Types/_display/CollectionItem}
     */
    getFirst(): CollectionItem {
-      let enumerator = this._getUtilityEnumerator();
+      const enumerator = this._getUtilityEnumerator();
       enumerator.setPosition(0);
 
-      let item = enumerator.getCurrent();
+      const item = enumerator.getCurrent();
 
       if (item instanceof GroupItem) {
          return this._getNearbyItem(
@@ -982,11 +913,11 @@ export default class Collection extends mixin(
     * @return {Types/_display/CollectionItem}
     */
    getLast(): CollectionItem {
-      let enumerator = this._getUtilityEnumerator();
-      let lastIndex = enumerator.getCount() - 1;
+      const enumerator = this._getUtilityEnumerator();
+      const lastIndex = enumerator.getCount() - 1;
 
       enumerator.setPosition(lastIndex);
-      let item = enumerator.getCurrent();
+      const item = enumerator.getCurrent();
 
       if (item instanceof GroupItem) {
          return this._getNearbyItem(
@@ -1033,9 +964,9 @@ export default class Collection extends mixin(
     * @return {Boolean} Есть ли следующий элемент
     */
    moveToNext(): boolean {
-      let oldCurrent = this.getCurrent();
-      let oldCurrentPosition = this.getCurrentPosition();
-      let hasNext = this._getCursorEnumerator().moveNext();
+      const oldCurrent = this.getCurrent();
+      const oldCurrentPosition = this.getCurrentPosition();
+      const hasNext = this._getCursorEnumerator().moveNext();
       if (hasNext) {
          this._notifyCurrentChange(
             this.getCurrent(),
@@ -1052,9 +983,9 @@ export default class Collection extends mixin(
     * @return {Boolean} Есть ли предыдущий элемент
     */
    moveToPrevious(): boolean {
-      let oldCurrent = this.getCurrent();
-      let oldCurrentPosition = this.getCurrentPosition();
-      let hasPrevious = this._getCursorEnumerator().movePrevious();
+      const oldCurrent = this.getCurrent();
+      const oldCurrentPosition = this.getCurrentPosition();
+      const hasPrevious = this._getCursorEnumerator().movePrevious();
       if (hasPrevious) {
          this._notifyCurrentChange(
             this.getCurrent(),
@@ -1083,7 +1014,7 @@ export default class Collection extends mixin(
     * @return {Boolean} Есть ли последний элемент
     */
    moveToLast(): boolean {
-      let position = this.getCount() - 1;
+      const position = this.getCount() - 1;
       if (this.getCurrentPosition() === position) {
          return false;
       }
@@ -1108,7 +1039,7 @@ export default class Collection extends mixin(
     * @return {Number} Индекс элемента проекции в коллекции
     */
    getSourceIndexByItem(item: CollectionItem): number {
-      let index = this.getIndex(item);
+      const index = this.getIndex(item);
       return index === -1 ? -1 : this.getSourceIndexByIndex(index);
    }
 
@@ -1119,7 +1050,7 @@ export default class Collection extends mixin(
     */
    getIndexBySourceIndex(index: number): number {
       index = this._getItemIndex(index);
-      let itemIndex = this._getUtilityEnumerator().getInternalBySource(index);
+      const itemIndex = this._getUtilityEnumerator().getInternalBySource(index);
 
       return itemIndex === undefined || itemIndex === null ? -1 : itemIndex;
    }
@@ -1130,7 +1061,7 @@ export default class Collection extends mixin(
     * @return {Number} Позиция элемента в проекции или -1, если не входит в проекцию
     */
    getIndexBySourceItem(item: any): number {
-      let collection = this.getCollection();
+      const collection = this.getCollection();
       let sourceIndex = -1;
 
       if (collection && collection['[Types/_collection/IList]']) {
@@ -1163,13 +1094,13 @@ export default class Collection extends mixin(
     * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
     */
    getItemBySourceItem(item: any): CollectionItem {
-      let index = this.getIndexBySourceItem(item);
+      const index = this.getIndexBySourceItem(item);
       return index === -1 ? undefined : this.at(index);
    }
 
-   //endregion Navigation
+   // endregion Navigation
 
-   //region Changing
+   // region Changing
 
    /**
     * Возвращает пользовательские методы фильтрации элементов проекции
@@ -1184,8 +1115,11 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских фильтров.
-    * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+    * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
+    * удалению всех пользовательских фильтров.
+    * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+    * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
+    * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @see filter
     * @see getFilter
     * @see addFilter
@@ -1221,7 +1155,7 @@ export default class Collection extends mixin(
     *    });
     * </pre>
     */
-   setFilter(...args) {
+   setFilter(...args: FilterFunction[]): void {
       let filters;
       if (args[0] instanceof Array) {
          filters = args[0];
@@ -1245,14 +1179,16 @@ export default class Collection extends mixin(
 
       this._$filter = filters.filter((item) => typeof item === 'function');
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
       this._reFilter();
       this._finishUpdateSession(session);
    }
 
    /**
     * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+    * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+    * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
     * @see filter
     * @see getFilter
@@ -1289,7 +1225,7 @@ export default class Collection extends mixin(
     *    });
     * </pre>
     */
-   addFilter(filter: FilterFunction, at?: number) {
+   addFilter(filter: FilterFunction, at?: number): void {
       if (this._$filter.indexOf(filter) > -1) {
          return;
       }
@@ -1299,14 +1235,16 @@ export default class Collection extends mixin(
          this._$filter.splice(at, 0, filter);
       }
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
       this._reFilter();
       this._finishUpdateSession(session);
    }
 
    /**
     * Удаляет пользовательский метод фильтрации элементов проекции.
-    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
+    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+    * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
+    * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @return {Boolean} Был ли установлен такой метод фильтрации
     * @see filter
     * @see getFilter
@@ -1351,14 +1289,14 @@ export default class Collection extends mixin(
     * </pre>
     */
    removeFilter(filter: FilterFunction): boolean {
-      let at = this._$filter.indexOf(filter);
+      const at = this._$filter.indexOf(filter);
       if (at === -1) {
          return false;
       }
 
       this._$filter.splice(at, 1);
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
       this._reFilter();
       this._finishUpdateSession(session);
 
@@ -1376,12 +1314,15 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать этот метод без параметров.
-    * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов: аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу, в которую входит элемент.
+    * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
+    * этот метод без параметров.
+    * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов:
+    * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
+    * в которую входит элемент.
     * @see group
     * @see getGroup
     */
-   setGroup(group: GroupFunction) {
+   setGroup(group: GroupFunction): void {
       if (this._$group === group) {
          return;
       }
@@ -1393,8 +1334,8 @@ export default class Collection extends mixin(
          return;
       }
 
-      let session = this._startUpdateSession();
-      let groupStrategy = <GroupItemsStrategy> this._composer.getInstance(GroupItemsStrategy);
+      const session = this._startUpdateSession();
+      const groupStrategy = this._composer.getInstance(GroupItemsStrategy) as GroupItemsStrategy;
 
       this._$group = groupStrategy.handler = group;
       this._switchImportantPropertiesByGroup(true);
@@ -1444,8 +1385,8 @@ export default class Collection extends mixin(
     *    });
     * </pre>
     */
-   getGroupItems(groupId: string): Array<CollectionItem> {
-      let items = [];
+   getGroupItems(groupId: string): CollectionItem[] {
+      const items = [];
       let currentGroupId;
       this.each((item) => {
          if (item instanceof GroupItem) {
@@ -1499,13 +1440,18 @@ export default class Collection extends mixin(
     *          console.log(group + ': ' + contents.name);
     *          index++;
     *       }
-    *       //output: 'M: Philip J. Fry', 'M: Professor Farnsworth', 'F: Turanga Leela', 'F: Amy Wong', 'R: Bender Bending Rodriguez'
+    *       // output:
+    *       // 'M: Philip J. Fry',
+    *       // 'M: Professor Farnsworth',
+    *       // 'F: Turanga Leela',
+    *       // 'F: Amy Wong',
+    *       // 'R: Bender Bending Rodriguez'
     *    });
     * </pre>
     */
    getGroupByIndex(index: number): string | number {
       let currentGroupId;
-      let enumerator = this.getEnumerator();
+      const enumerator = this.getEnumerator();
       let item;
       let itemIndex = 0;
       while (enumerator.moveNext()) {
@@ -1534,8 +1480,10 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к удалению всех пользовательских сортировок.
-    * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+    * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к
+    * удалению всех пользовательских сортировок.
+    * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами
+    * приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
     * @see sort
     * @see getSort
     * @see addSort
@@ -1595,9 +1543,9 @@ export default class Collection extends mixin(
     *    });
     * </pre>
     */
-   setSort(...args) {
-      let session = this._startUpdateSession();
-      let sorts = args[0] instanceof Array ? args[0] : args;
+   setSort(...args: SortFunction[]): void {
+      const session = this._startUpdateSession();
+      const sorts = args[0] instanceof Array ? args[0] : args;
 
       if (this._$sort.length === sorts.length) {
          let changed = false;
@@ -1630,7 +1578,8 @@ export default class Collection extends mixin(
 
    /**
     * Добавляет пользовательский метод сортировки элементов проекции, если такой еще не был задан.
-    * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+    * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+    * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
     * @see sort
     * @see getSort
@@ -1658,12 +1607,12 @@ export default class Collection extends mixin(
     *    });
     * </pre>
     */
-   addSort(sort: SortFunction, at?: number) {
+   addSort(sort: SortFunction, at?: number): void {
       if (this._$sort.indexOf(sort) > -1) {
          return;
       }
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
 
       this._switchImportantPropertiesByUserSort(false);
       if (at === undefined) {
@@ -1685,7 +1634,8 @@ export default class Collection extends mixin(
 
    /**
     * Удаляет пользовательский метод сортировки элементов проекции.
-    * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов: аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+    * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+    * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
     * @return {Boolean} Был ли установлен такой метод сортировки
     * @see sort
     * @see getSort
@@ -1717,12 +1667,12 @@ export default class Collection extends mixin(
     * </pre>
     */
    removeSort(sort: SortFunction): boolean {
-      let at = this._$sort.indexOf(sort);
+      const at = this._$sort.indexOf(sort);
       if (at === -1) {
          return false;
       }
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
 
       this._switchImportantPropertiesByUserSort(false);
       this._$sort.splice(at, 1);
@@ -1759,15 +1709,15 @@ export default class Collection extends mixin(
     * Возвращает признак обеспечивания уникальности элементов
     * @param {Boolean} unique Обеспечивать уникальность элементов
     */
-   setUnique(unique: boolean) {
+   setUnique(unique: boolean): void {
       if (this._$unique === unique) {
          return;
       }
 
-      let session = this._startUpdateSession();
+      const session = this._startUpdateSession();
 
       this._$unique = unique;
-      (<DirectItemsStrategy>this._composer.getInstance(DirectItemsStrategy)).unique = unique;
+      (this._composer.getInstance(DirectItemsStrategy) as DirectItemsStrategy).unique = unique;
       this._getItemsStrategy().invalidate();
       this._reSort();
 
@@ -1779,12 +1729,12 @@ export default class Collection extends mixin(
     * @param {Types/_display/CollectionItem} item Элемент проекции
     * @param {Object} [properties] Изменившиеся свойства
     */
-   notifyItemChange(item: CollectionItem, properties?: Object) {
-      let isFiltered = this._isFiltered();
-      let isGrouped = this._isGrouped();
+   notifyItemChange(item: CollectionItem, properties?: Object): void {
+      const isFiltered = this._isFiltered();
+      const isGrouped = this._isGrouped();
 
       if (isFiltered || isGrouped) {
-         let session = this._startUpdateSession();
+         const session = this._startUpdateSession();
          if (isGrouped) {
             this._reGroup();
             this._reSort();
@@ -1799,8 +1749,8 @@ export default class Collection extends mixin(
          return;
       }
 
-      let index = this.getIndex(item);
-      let items: SessionItems = [item];
+      const index = this.getIndex(item);
+      const items: ISessionItems = [item];
       items.properties = properties;
 
       this._notifyBeforeCollectionChange();
@@ -1814,92 +1764,17 @@ export default class Collection extends mixin(
       this._notifyAfterCollectionChange();
    }
 
-   //endregion
+   // endregion
 
-   //endregion
-
-   //region EventRaisingMixin
-
-   protected _analizeUpdateSession(session: Session) {
-      if (session) {
-         this._notifyBeforeCollectionChange();
-      }
-
-      EventRaisingMixin._analizeUpdateSession.call(this, session);
-
-      if (session) {
-         this._notifyAfterCollectionChange();
-      }
-   }
-
-   protected _notifyCollectionChange(
-      action: string,
-      newItems: CollectionItem[],
-      newItemsIndex: number,
-      oldItems: CollectionItem[],
-      oldItemsIndex: number,
-      session?: Session
-   ) {
-      if (!this._isNeedNotifyCollectionChange()) {
-         return;
-      }
-      if (
-         !session ||
-         action === IBind.ACTION_RESET ||
-         !this._isGrouped()
-      ) {
-         this._notifyLater(
-            'onCollectionChange',
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-         return;
-      }
-
-      //Split by groups and notify
-      let notify = (start, finish) => {
-         if (start < finish) {
-            this._notifyLater(
-               'onCollectionChange',
-               action,
-               newItems.slice(start, finish),
-               newItems.length ? newItemsIndex + start : 0,
-               oldItems.slice(start, finish),
-               oldItems.length ? oldItemsIndex + start : 0
-            );
-         }
-      };
-      let isRemove = action === IBind.ACTION_REMOVE;
-      let max = isRemove ? oldItems.length : newItems.length;
-      let notifyIndex = 0;
-      let item;
-
-      for (let i = 0; i < max; i++) {
-         item = isRemove ? oldItems[i] : newItems[i];
-         if (item instanceof GroupItem) {
-            notify(notifyIndex, i);
-            notifyIndex = i;
-         }
-         if (i === max - 1) {
-            notify(notifyIndex, i + 1);
-         }
-      }
-   }
-
-   //endregion
-
-   //region Multiselectable
+   // region Multiselectable
 
    /**
     * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
     * @return {Array.<Types/_display/CollectionItem>}
     */
-   getSelectedItems(): Array<CollectionItem> {
-      let items = this._getItems();
-      let result = [];
+   getSelectedItems(): CollectionItem[] {
+      const items = this._getItems();
+      const result = [];
       for (let i = items.length - 1; i >= 0; i--) {
          if (items[i].isSelected()) {
             result.push(items[i]);
@@ -1922,8 +1797,8 @@ export default class Collection extends mixin(
     *    display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
     * </pre>
     */
-   setSelectedItems(items: Array<any>, selected: boolean) {
-      let sourceItems = [];
+   setSelectedItems(items: any[], selected: boolean): void {
+      const sourceItems = [];
       for (let i = 0, count = items.length; i < count; i++) {
          sourceItems.push(
             this.getItemBySourceItem(items[i])
@@ -1933,19 +1808,21 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и группировки).
+    * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и
+    * группировки).
     * @param {Boolean} selected Элемент выбран.
     * @return {Array}
     */
-   setSelectedItemsAll(selected: boolean) {
+   setSelectedItemsAll(selected: boolean): void {
       this._setSelectedItems(this._getItems(), selected);
    }
 
    /**
-    * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и группировки).
+    * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
+    * группировки).
     */
-   invertSelectedItemsAll() {
-      let items = this._getItems();
+   invertSelectedItemsAll(): void {
+      const items = this._getItems();
       for (let i = items.length - 1; i >= 0; i--) {
          items[i].setSelected(!items[i].isSelected(), true);
       }
@@ -1960,13 +1837,186 @@ export default class Collection extends mixin(
       this._notifyAfterCollectionChange();
    }
 
+   // endregion
+
+   // region SerializableMixin
+
+   protected _getSerializableState(state: any): object {
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+
+      state._composer = this._composer;
+
+      return state;
+   }
+
+   protected _setSerializableState(state: any): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
+         fromSerializableMixin.call(this);
+
+         this._composer = state._composer;
+
+         if (this._composer) {
+            // Restore link to _$sort in UserItemsStrategy instance
+            const userStrategy = this._composer.getInstance(UserItemsStrategy);
+            if (userStrategy) {
+               userStrategy.handlers = this._$sort;
+            }
+
+            // Restore link to _$group in GroupItemsStrategy instance
+            const groupStrategy = this._composer.getInstance(GroupItemsStrategy);
+            if (groupStrategy) {
+               groupStrategy.handler = this._$group;
+            }
+
+            // Restore items contents before the _$collection will be affected
+            if (this._composer) {
+               const restoreItemsContents = (items, owner) => {
+                  items.forEach((item) => {
+                     if (item._contentsIndex !== undefined) {
+                        item._$owner = owner; // Link to _$owner is not restored yet, force it
+                        item.getContents(); // Force resolving item contents
+                     }
+                  });
+               };
+
+               try {
+                  let itemsHolder = this._composer.getResult();
+                  do {
+                     if (itemsHolder._items) {
+                        restoreItemsContents(itemsHolder._items, this);
+                     }
+                     itemsHolder = itemsHolder.source;
+                  } while (itemsHolder);
+               } catch (err) {
+                  if (typeof LOGGER !== undefined) {
+                     LOGGER.error(err); // eslint-disable-line no-console
+                  }
+               }
+            }
+         }
+      };
+   }
+
+   /**
+    * Рассчитывает идентификатор элемента коллекции.
+    * @param {Types/_display/CollectionItem} item Элемент коллекции
+    * @return {String}
+    */
+   protected _exctractItemId(item: CollectionItem): string {
+      const contents = item.getContents();
+      let uid;
+      if (contents['[Types/_entity/Model]']) {
+         uid = contents.getId();
+      } else if (this._$idProperty) {
+         uid = object.getPropertyValue(contents, this._$idProperty);
+      } else {
+         throw new Error('Option "idProperty" must be defined to extract item unique id.');
+      }
+
+      return String(uid);
+   }
+
+   /**
+    * Рассчитывает уникальный идентификатор элемента коллекции.
+    * @param {Types/_display/CollectionItem} item Элемент коллекции
+    * @param {String} baseId Базовое значение
+    * @return {String}
+    */
+   protected _searchItemUid(item: CollectionItem, baseId: string): string {
+      let uid = baseId;
+      const itemsUid = this._itemsUid;
+      let count = 0;
+      while (itemsUid.has(uid)) {
+         uid = baseId.concat('-', String(++count));
+      }
+      itemsUid.add(uid);
+
+      return uid;
+   }
+
+   // endregion
+
+   // endregion
+
+   // region EventRaisingMixin
+
+   protected _analizeUpdateSession(session: ISession): void {
+      if (session) {
+         this._notifyBeforeCollectionChange();
+      }
+
+      EventRaisingMixin._analizeUpdateSession.call(this, session);
+
+      if (session) {
+         this._notifyAfterCollectionChange();
+      }
+   }
+
+   protected _notifyCollectionChange(
+      action: string,
+      newItems: CollectionItem[],
+      newItemsIndex: number,
+      oldItems: CollectionItem[],
+      oldItemsIndex: number,
+      session?: ISession
+   ): void {
+      if (!this._isNeedNotifyCollectionChange()) {
+         return;
+      }
+      if (
+         !session ||
+         action === IBind.ACTION_RESET ||
+         !this._isGrouped()
+      ) {
+         this._notifyLater(
+            'onCollectionChange',
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+         );
+         return;
+      }
+
+      // Split by groups and notify
+      const notify = (start, finish) => {
+         if (start < finish) {
+            this._notifyLater(
+               'onCollectionChange',
+               action,
+               newItems.slice(start, finish),
+               newItems.length ? newItemsIndex + start : 0,
+               oldItems.slice(start, finish),
+               oldItems.length ? oldItemsIndex + start : 0
+            );
+         }
+      };
+      const isRemove = action === IBind.ACTION_REMOVE;
+      const max = isRemove ? oldItems.length : newItems.length;
+      let notifyIndex = 0;
+      let item;
+
+      for (let i = 0; i < max; i++) {
+         item = isRemove ? oldItems[i] : newItems[i];
+         if (item instanceof GroupItem) {
+            notify(notifyIndex, i);
+            notifyIndex = i;
+         }
+         if (i === max - 1) {
+            notify(notifyIndex, i + 1);
+         }
+      }
+   }
+
    /**
     * Устанавливает признак, переданным, элементам проекции.
     * @param {Array} selecItems массив элементов проекции
     * @param {Boolean} selected Элемент выбран.
     */
-   protected _setSelectedItems(selecItems: Array<CollectionItem>, selected: boolean) {
-      let items = [];
+   protected _setSelectedItems(selecItems: CollectionItem[], selected: boolean): void {
+      const items = [];
       selected = !!selected;
       for (let i = selecItems.length - 1; i >= 0; i--) {
          if (selecItems[i].isSelected() !== selected) {
@@ -1975,7 +2025,7 @@ export default class Collection extends mixin(
          }
       }
       if (items.length > 0) {
-         let index = this.getIndex(items[0]);
+         const index = this.getIndex(items[0]);
          this._notifyBeforeCollectionChange();
          this._notifyCollectionChange(
             IBind.ACTION_REPLACE,
@@ -1988,19 +2038,19 @@ export default class Collection extends mixin(
       }
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
-   //region Access
+   // region Access
 
    /**
     * Добавляет свойство в importantItemProperties, если его еще там нет
     * @param {String} name Название свойства
     * @protected
     */
-   protected _setImportantProperty(name: string) {
-      let index = this._$importantItemProperties.indexOf(name);
+   protected _setImportantProperty(name: string): void {
+      const index = this._$importantItemProperties.indexOf(name);
       if (index === -1) {
          this._$importantItemProperties.push(name);
       }
@@ -2011,8 +2061,8 @@ export default class Collection extends mixin(
     * @param {String} name Название свойства
     * @protected
     */
-   protected _unsetImportantProperty(name: string) {
-      let index = this._$importantItemProperties.indexOf(name);
+   protected _unsetImportantProperty(name: string): void {
+      const index = this._$importantItemProperties.indexOf(name);
       if (index !== -1) {
          this._$importantItemProperties.splice(index, 1);
       }
@@ -2023,7 +2073,7 @@ export default class Collection extends mixin(
     * @param {Boolean} add Добавить или удалить свойства
     * @protected
     */
-   protected _switchImportantPropertiesByUserSort(add: boolean) {// eslint-disable-line id-match
+   protected _switchImportantPropertiesByUserSort(add: boolean): void {
       for (let i = 0; i < this._$sort.length; i++) {
          Collection._functorToImportantProperties(this._$sort[i], this, add);
       }
@@ -2034,55 +2084,36 @@ export default class Collection extends mixin(
     * @param {Boolean} add Добавить или удалить свойства
     * @protected
     */
-   protected _switchImportantPropertiesByGroup(add: boolean) {// eslint-disable-line id-match
+   protected _switchImportantPropertiesByGroup(add: boolean): void {
       Collection._functorToImportantProperties(this._$group, this, add);
-   }
-
-   /**
-    * Добавляет/удаляет свойства функтора в в/из список важных свойств.
-    * @param func Функтор
-    * @param instance Проекция
-    * @param add Добавить или удалить свойства
-    */
-   protected static _functorToImportantProperties(func: Function, instance: Collection, add: boolean) {
-      if (functor.Compute.isFunctor(func)) {
-         let properties = (<any>func).properties;
-         for (let i = 0; i < properties.length; i++) {
-            if (add) {
-               instance._setImportantProperty(properties[i]);
-            } else {
-               instance._unsetImportantProperty(properties[i]);
-            }
-         }
-      }
    }
 
    /**
     * Настраивает контекст обработчиков
     * @protected
     */
-   protected _bindHandlers() {
+   protected _bindHandlers(): void {
       this._onCollectionChange = onCollectionChange.bind(this);
       this._onCollectionItemChange = onCollectionItemChange.bind(this);
       this._oEventRaisingChange = onEventRaisingChange.bind(this);
    }
 
-   protected _unbindHandlers() {
+   protected _unbindHandlers(): void {
       this._onCollectionChange = null;
       this._onCollectionItemChange = null;
       this._oEventRaisingChange = null;
    }
 
-   //endregion
+   // endregion
 
-   //region Navigation
+   // region Navigation
 
    /**
     * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
     * @return {Array.<Types/_display/CollectionItem>}
     * @protected
     */
-   protected _getItems(): Array<CollectionItem> {
+   protected _getItems(): CollectionItem[] {
       return this._getItemsStrategy().items;
    }
 
@@ -2092,7 +2123,7 @@ export default class Collection extends mixin(
     * @protected
     */
    protected _getItemsFactory(): ItemsFactory {
-      return function CollectionItemsFactory(options) {
+      return function CollectionItemsFactory(options?: ICollectionItemOptions): CollectionItem {
          options.owner = this;
          return resolve(this._itemModule, options);
       };
@@ -2115,7 +2146,7 @@ export default class Collection extends mixin(
     * Сбрасывает построенную cтратегию получения элементов проекции
     * @protected
     */
-   protected _resetItemsStrategy() {
+   protected _resetItemsStrategy(): void {
       this._composer = null;
    }
 
@@ -2125,7 +2156,7 @@ export default class Collection extends mixin(
     * @protected
     */
    protected _createComposer(): ItemsStrategyComposer {
-      let composer = new ItemsStrategyComposer();
+      const composer = new ItemsStrategyComposer();
 
       composer.append(DirectItemsStrategy, {
          display: this,
@@ -2165,9 +2196,9 @@ export default class Collection extends mixin(
     */
    protected _buildEnumerator(items: CollectionItem[], filterMap: boolean[], sortMap: number[]): CollectionEnumerator {
       return new CollectionEnumerator({
-         items: items,
-         filterMap: filterMap,
-         sortMap: sortMap
+         items,
+         filterMap,
+         sortMap
       });
    }
 
@@ -2181,7 +2212,8 @@ export default class Collection extends mixin(
    }
 
    /**
-    * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
+    * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
+    * относительно заданного
     * @return {Types/_display/CollectionEnumerator}
     * @protected
     */
@@ -2204,7 +2236,7 @@ export default class Collection extends mixin(
       isNext: boolean,
       skipGroups?: boolean
    ): CollectionItem {
-      let method = isNext ? 'moveNext' : 'movePrevious';
+      const method = isNext ? 'moveNext' : 'movePrevious';
       let nearbyItem;
 
       enumerator.setCurrent(item);
@@ -2240,17 +2272,17 @@ export default class Collection extends mixin(
       return this._getItemsStrategy().getCollectionIndex(index);
    }
 
-   //endregion
+   // endregion
 
-   //region Calculation
+   // region Calculation
 
    /**
     * Перерасчитывает все данные заново
     * @param {Boolean} [reset=false] Сбросить все созданные элементы
     * @protected
     */
-   protected _reBuild(reset?: boolean) {
-      let itemsStrategy = this._getItemsStrategy();
+   protected _reBuild(reset?: boolean): void {
+      const itemsStrategy = this._getItemsStrategy();
       this._reIndex();
 
       if (reset) {
@@ -2272,15 +2304,15 @@ export default class Collection extends mixin(
     * @param {Number} [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
-   protected _reAnalize(start?: number, count?: number) {
+   protected _reAnalize(start?: number, count?: number): void {
       start = start || 0;
 
-      let itemsStrategy = this._getItemsStrategy();
-      let session = this._startUpdateSession();
+      const itemsStrategy = this._getItemsStrategy();
+      const session = this._startUpdateSession();
 
-      let indexBefore = itemsStrategy.getDisplayIndex(start);
+      const indexBefore = itemsStrategy.getDisplayIndex(start);
       itemsStrategy.invalidate();
-      let indexAfter = itemsStrategy.getDisplayIndex(start);
+      const indexAfter = itemsStrategy.getDisplayIndex(start);
 
       if (count === undefined) {
          count = itemsStrategy.count - indexAfter;
@@ -2303,20 +2335,20 @@ export default class Collection extends mixin(
     * Вызывает переиндексацию
     * @protected
     */
-   protected _reIndex() {
+   protected _reIndex(): void {
       this._getCursorEnumerator().reIndex();
       this._getUtilityEnumerator().reIndex();
    }
 
-   //endregion
+   // endregion
 
-   //region Changing
+   // region Changing
 
    /**
     * Сбрасывает фильтр: помечает все элементы как прошедшие фильтрацию
     * @protected
     */
-   protected _resetFilter(count: number) {
+   protected _resetFilter(count: number): void {
       this._filterMap.length = 0;
       for (let index = 0; index < count; index++) {
          this._filterMap.push(true);
@@ -2330,18 +2362,18 @@ export default class Collection extends mixin(
     * @param {Number} [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
-   protected _reFilter(start?: number, count?: number) {
+   protected _reFilter(start?: number, count?: number): void {
       start = start || 0;
       count = count || this._getItemsStrategy().count - start;
 
-      let filters = this._$filter;
-      let filtersLength = filters.length;
-      let items = this._getItems();
-      let sortMap = this._sortMap;
-      let sortMapLength = sortMap.length;
-      let filterMap = this._filterMap;
-      let processedIndices = new Set();
-      let finish = start + count;
+      const filters = this._$filter;
+      const filtersLength = filters.length;
+      const items = this._getItems();
+      const sortMap = this._sortMap;
+      const sortMapLength = sortMap.length;
+      const filterMap = this._filterMap;
+      const processedIndices = new Set();
+      const finish = start + count;
       let changed = false;
       let item;
       let position;
@@ -2351,7 +2383,7 @@ export default class Collection extends mixin(
       let prevGroupPosition = -1;
       let prevGroupHasMembers = false;
       let match;
-      let isMatch = (item, index, position, hasMembers?: boolean) => {
+      const isMatch = (item, index, position, hasMembers?: boolean) => {
          let result = true;
          let filter;
          for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
@@ -2369,8 +2401,8 @@ export default class Collection extends mixin(
          }
          return result;
       };
-      let applyMatch = (match, index) => {
-         let oldMatch = filterMap[index];
+      const applyMatch = (match, index) => {
+         const oldMatch = filterMap[index];
          if (match === oldMatch) {
             return false;
          }
@@ -2384,11 +2416,11 @@ export default class Collection extends mixin(
          return false;
       };
 
-      //Lookup every item in _sortMap order
+      // Lookup every item in _sortMap order
       for (position = 0; position < sortMapLength; position++) {
          index = sortMap[position];
 
-         //Check item index in range
+         // Check item index in range
          if (index === undefined || index < start || index >= finish) {
             continue;
          }
@@ -2397,19 +2429,19 @@ export default class Collection extends mixin(
          item = items[index];
          match = true;
          if (item instanceof GroupItem) {
-            //A new group begin, check match for previous
+            // A new group begin, check match for previous
             if (prevGroup) {
                match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
                changed = applyMatch(match, prevGroupIndex) || changed;
             }
 
-            //Remember current group as previous
+            // Remember current group as previous
             prevGroup = item;
             prevGroupIndex = index;
             prevGroupPosition = position;
             prevGroupHasMembers = false;
          } else {
-            //Check item match
+            // Check item match
             match = isMatch(item, index, position);
             changed = applyMatch(match, index) || changed;
             if (match) {
@@ -2424,7 +2456,7 @@ export default class Collection extends mixin(
          }
       }
 
-      //Check last group match
+      // Check last group match
       if (prevGroup) {
          match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
          changed = applyMatch(match, prevGroupIndex) || changed;
@@ -2439,9 +2471,9 @@ export default class Collection extends mixin(
     * Производит сортировку элементов
     * @protected
     */
-   protected _reSort() {
+   protected _reSort(): void {
       this._sortMap.length = 0;
-      let items = this._buildSortMap();
+      const items = this._buildSortMap();
       this._sortMap.push(...items);
 
       this._reIndex();
@@ -2462,11 +2494,11 @@ export default class Collection extends mixin(
     * @param {Number} [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
-   protected _reGroup(start?: number, count?: number) {
+   protected _reGroup(start?: number, count?: number): void {
       if (!this._composer) {
          return;
       }
-      let groupStrategy = <GroupItemsStrategy> this._composer.getInstance(GroupItemsStrategy);
+      const groupStrategy = this._composer.getInstance(GroupItemsStrategy) as GroupItemsStrategy;
       groupStrategy.invalidate();
    }
 
@@ -2515,12 +2547,12 @@ export default class Collection extends mixin(
     * @protected
     */
    protected _addItems(start: number, items: any[]): number {
-      let isFiltered = this._isFiltered();
-      let strategy = this._getItemsStrategy();
+      const isFiltered = this._isFiltered();
+      const strategy = this._getItemsStrategy();
       let innerIndex;
-      let filterMap = [];
-      let sortMap = [];
-      let groupMap = [];
+      const filterMap = [];
+      const sortMap = [];
+      const groupMap = [];
 
       strategy.splice(start, 0, items);
       innerIndex = strategy.getDisplayIndex(start);
@@ -2547,7 +2579,7 @@ export default class Collection extends mixin(
    protected _removeItems(start: number, count?: number): CollectionItem[] {
       start = start || 0;
 
-      let strategy = this._getItemsStrategy();
+      const strategy = this._getItemsStrategy();
       let innerIndex;
       let result;
 
@@ -2569,9 +2601,9 @@ export default class Collection extends mixin(
     * @return {Array.<Types/_display/CollectionItem>} Замененные элементы
     * @protected
     */
-   protected _replaceItems(start: number, newItems: any[]): SplicedArray<CollectionItem> {
-      let strategy = this._getItemsStrategy();
-      let result = <SplicedArray<CollectionItem>> strategy.splice(start, newItems.length, newItems);
+   protected _replaceItems(start: number, newItems: any[]): ISplicedArray<CollectionItem> {
+      const strategy = this._getItemsStrategy();
+      const result = strategy.splice(start, newItems.length, newItems) as ISplicedArray<CollectionItem>;
       result.start = strategy.getDisplayIndex(start);
 
       return result;
@@ -2586,8 +2618,8 @@ export default class Collection extends mixin(
     * @protected
     */
    protected _moveItems(newIndex: number, oldIndex: number, items: any[]): CollectionItem[] {
-      let length = items.length;
-      let strategy = this._getItemsStrategy();
+      const length = items.length;
+      const strategy = this._getItemsStrategy();
       let movedItems;
 
       movedItems = strategy.splice(oldIndex, length);
@@ -2607,13 +2639,13 @@ export default class Collection extends mixin(
    protected _removeFromSortMap(start: number, count: number): Object {
       start = start || 0;
       count = count || 0;
-      let finish = start + count;
+      const finish = start + count;
       let index;
       let sortIndex;
-      let toRemove = [];
-      let removed = {};
+      const toRemove = [];
+      const removed = {};
 
-      //Collect indices to remove
+      // Collect indices to remove
       for (index = start; index < finish; index++) {
          sortIndex = this._sortMap.indexOf(index);
          if (sortIndex > -1) {
@@ -2622,13 +2654,13 @@ export default class Collection extends mixin(
          }
       }
 
-      //Remove collected indices from _sortMap
+      // Remove collected indices from _sortMap
       toRemove.sort((a, b) => a - b);
       for (index = toRemove.length - 1; index >= 0; index--) {
          this._sortMap.splice(toRemove[index], 1);
       }
 
-      //Shift _sortMap values by count from start index
+      // Shift _sortMap values by count from start index
       for (index = 0; index < this._sortMap.length; index++) {
          if (this._sortMap[index] >= start) {
             this._sortMap[index] -= count;
@@ -2646,9 +2678,9 @@ export default class Collection extends mixin(
     * @return {Object}
     * @protected
     */
-   protected _getItemState(item: CollectionItem): SessionItemState {
+   protected _getItemState(item: CollectionItem): ISessionItemState {
       return {
-         item: item,
+         item,
          selected: item.isSelected()
       };
    }
@@ -2659,7 +2691,7 @@ export default class Collection extends mixin(
     * @return {Array.<Object>}
     * @protected
     */
-   protected _getItemsState(items: CollectionItem[]): SessionItemState[] {
+   protected _getItemsState(items: CollectionItem[]): ISessionItemState[] {
       return items.map(this._getItemState);
    }
 
@@ -2670,9 +2702,9 @@ export default class Collection extends mixin(
     * @return {Array.<CollectionItem>} Отличающиеся состояния
     * @protected
     */
-   protected _getItemsDiff(before: SessionItemState[], after: SessionItemState[]): CollectionItem[] {
+   protected _getItemsDiff(before: ISessionItemState[], after: ISessionItemState[]): CollectionItem[] {
       return after.filter((itemNow, index) => {
-         let itemThen = before[index];
+         const itemThen = before[index];
          return Object.keys(itemNow).some((prop) => itemNow[prop] !== itemThen[prop]);
       }).map((element) => {
          return element.item;
@@ -2687,8 +2719,8 @@ export default class Collection extends mixin(
     * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
     * @protected
     */
-   protected _checkItemsDiff(session: Session, items: CollectionItem[], state: any[], beforeCheck: Function) {
-      let diff = state ? this._getItemsDiff(
+   protected _checkItemsDiff(session: ISession, items: CollectionItem[], state: any[], beforeCheck: Function): void {
+      const diff = state ? this._getItemsDiff(
          state,
          this._getItemsState(items)
       ) : [];
@@ -2697,7 +2729,7 @@ export default class Collection extends mixin(
          beforeCheck(diff, items);
       }
 
-      //Notify changes by the diff
+      // Notify changes by the diff
       if (diff.length) {
          this._notifyBeforeCollectionChange();
          EventRaisingMixin._extractPacksByList(this, diff, (items, index) => {
@@ -2722,7 +2754,12 @@ export default class Collection extends mixin(
     * @param {Number} oldPosition Старая позиция
     * @protected
     */
-   protected _notifyCurrentChange(newCurrent: CollectionItem, oldCurrent: CollectionItem, newPosition: number, oldPosition: number) {
+   protected _notifyCurrentChange(
+      newCurrent: CollectionItem,
+      oldCurrent: CollectionItem,
+      newPosition: number,
+      oldPosition: number
+   ): void {
       if (!this.isEventRaising()) {
          return;
       }
@@ -2743,12 +2780,12 @@ export default class Collection extends mixin(
     * @param {Number} index Индекс исходной коллекции, в котором находятся элементы.
     * @protected
     */
-   protected _notifyCollectionItemsChange(changed: any[], index: number, session: Session) {
-      let items = this._getItems();
-      let last = index + changed.length;
-      let changedItems = [];
+   protected _notifyCollectionItemsChange(changed: any[], index: number, session: ISession): void {
+      const items = this._getItems();
+      const last = index + changed.length;
+      const changedItems = [];
 
-      //Extract display items contains changed
+      // Extract display items contains changed
       for (let i = index; i < last; i++) {
          changedItems.push(items[this._getItemIndex(i)]);
       }
@@ -2779,25 +2816,30 @@ export default class Collection extends mixin(
     * @param {Object} [properties] Изменившиеся свойства
     * @protected
     */
-   protected _notifySourceCollectionItemChange(event: EventObject, item: any, index: number, properties?: Object) {
-      let enumerator = this._getUtilityEnumerator();
-      let internalItems = this._getItems();
-      let internalIndexBefore = this._getItemIndex(index);
+   protected _notifySourceCollectionItemChange(
+      event: EventObject,
+      item: any,
+      index: number,
+      properties?: Object
+   ): void {
+      const enumerator = this._getUtilityEnumerator();
+      const internalItems = this._getItems();
+      const internalIndexBefore = this._getItemIndex(index);
       let internalIndexAfter;
-      let internalItem = internalItems[internalIndexBefore];
-      let indexBefore = enumerator.getInternalBySource(internalIndexBefore);
+      const internalItem = internalItems[internalIndexBefore];
+      const indexBefore = enumerator.getInternalBySource(internalIndexBefore);
       let indexAfter;
-      let isEventRaising = this.isEventRaising();
-      let session = this._startUpdateSession();
+      const isEventRaising = this.isEventRaising();
+      const session = this._startUpdateSession();
       let isMoved;
       let state;
 
-      //Only changes of important properties can run analysis
-      for (let key in properties) {
+      // Only changes of important properties can run analysis
+      for (const key in properties) {
          if (properties.hasOwnProperty(key)) {
             if (this._$importantItemProperties.indexOf(key) > -1) {
                if (isEventRaising) {
-                  //Fix the state before analysis
+                  // Fix the state before analysis
                   state = this._getItemsState(internalItems);
                }
                this._reAnalize(
@@ -2809,36 +2851,36 @@ export default class Collection extends mixin(
          }
       }
 
-      //Return here if events are disabled
+      // Return here if events are disabled
       if (!isEventRaising) {
          return;
       }
 
       this._finishUpdateSession(session, false);
 
-      //Check changes by state
+      // Check changes by state
       internalIndexAfter = this._getItemIndex(index);
       indexAfter = enumerator.getInternalBySource(internalIndexAfter);
       isMoved = indexBefore !== indexAfter;
       this._checkItemsDiff(session, internalItems, state, (diff) => {
-         //Some hard logic related with the character of item change.
-         let internalItemIndex = diff.indexOf(internalItem);
+         // Some hard logic related with the character of item change.
+         const internalItemIndex = diff.indexOf(internalItem);
          if (isMoved) {
-            //Item change the position
+            // Item change the position
             if (internalItemIndex > -1 && indexBefore > indexAfter) {
-               //Changed item is presented in the diff and moved up.
-               //It will be presented as a move event with that item in _finishUpdateSession.
-               //We should not notify about item change with the diff.
+               // Changed item is presented in the diff and moved up.
+               // It will be presented as a move event with that item in _finishUpdateSession.
+               // We should not notify about item change with the diff.
                diff.splice(internalItemIndex, 1);
             } else if (internalItemIndex === -1 && indexBefore < indexAfter) {
-               //Changed item isn't presented in the diff and moved down.
-               //It won't be presented as a move event with that item in _finishUpdateSession (items after will move up).
-               //We should notify about item change with the diff.
+               // Changed item isn't presented in the diff and moved down.
+               // It won't be presented as a move event with that item in _finishUpdateSession (items after will
+               // move up). We should notify about item change with the diff.
                diff.push(internalItem);
             }
          } else if (!isMoved && internalItemIndex === -1) {
-            //Changed item don't change the position and not presented in the diff.
-            //We should notify about item change with the diff.
+            // Changed item don't change the position and not presented in the diff.
+            // We should notify about item change with the diff.
             diff.push(internalItem);
          }
       });
@@ -2848,7 +2890,7 @@ export default class Collection extends mixin(
     * Генерирует событие о начале изменений коллекции
     * @protected
     */
-   protected _notifyBeforeCollectionChange() {
+   protected _notifyBeforeCollectionChange(): void {
       if (!this.isEventRaising()) {
          return;
       }
@@ -2859,16 +2901,16 @@ export default class Collection extends mixin(
     * Генерирует событие об окончании изменений коллекции
     * @protected
     */
-   protected _notifyAfterCollectionChange() {
+   protected _notifyAfterCollectionChange(): void {
       if (!this.isEventRaising()) {
          return;
       }
       this._notify('onAfterCollectionChange');
    }
 
-   //endregion
+   // endregion
 
-   //endregion
+   // endregion
 }
 
 Object.assign(Collection.prototype, {

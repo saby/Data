@@ -25,7 +25,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
    /**
     * @property {Array} Кэш ключей
     */
-   protected _cachedKeys: Array<string>;
+   protected _cachedKeys: string[];
 
    /**
     * @property {Array} Ключи
@@ -87,7 +87,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
    // endregion Public methods
 }
 
-Object.assign(Mapwise.prototype,{
+Object.assign(Mapwise.prototype, {
    '[Types/_collection/enumerator/Mapwise]': true,
    _items: null,
    _index: -1,

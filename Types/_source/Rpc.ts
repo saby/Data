@@ -21,7 +21,7 @@ export interface IOptions extends IRemoteOptions {
 
 export default abstract class Rpc extends Remote implements IRpc /** @lends Types/_source/Rpc.prototype */{
 
-   //region IRpc
+   // region IRpc
 
    readonly '[Types/_source/IRpc]': boolean = true;
 
@@ -36,16 +36,16 @@ export default abstract class Rpc extends Remote implements IRpc /** @lends Type
       );
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Statics
 
-   //FIXME: something went wrong with inheritance of static members in IE
+   // FIXME: something went wrong with inheritance of static members in IE
    static get NAVIGATION_TYPE() {
       return Remote.NAVIGATION_TYPE;
    }
 
-   //endregion
+   // endregion
 }
 
 Rpc.prototype._moduleName = 'Types/source:Rpc';

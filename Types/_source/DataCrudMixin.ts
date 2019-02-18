@@ -21,8 +21,8 @@ const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
    },
 
    _prepareUpdateResult(data, keys) {
-      let idProperty = this.getIdProperty();
-      let callback = (record, key) => {
+      const idProperty = this.getIdProperty();
+      const callback = (record, key) => {
          if (key &&
             idProperty &&
             !record.get(idProperty)

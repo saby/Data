@@ -12,8 +12,8 @@
  * @param {Number} value Вставляемое значение
  * @return {Number}
  */
-function getPosition(items: Array<any>, value: number): number {
-   let count = items.length;
+function getPosition(items: any[], value: number): number {
+   const count = items.length;
    let distance = count;
    let position = Math.floor(distance / 2);
    let having;
@@ -71,7 +71,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       this.resetIndex();
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
@@ -80,7 +80,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @return {Number}
     */
    getIndexByValue(property, value) {
-      let indices = this.getIndicesByValue(property, value);
+      const indices = this.getIndicesByValue(property, value);
       return indices.length ? indices[0] : -1;
    }
 
@@ -91,7 +91,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @return {Array.<Number>}
     */
    getIndicesByValue(property, value) {
-      let index = this._getIndex(property);
+      const index = this._getIndex(property);
       if (index) {
          if (index[value]) {
             return index[value].slice();
@@ -103,7 +103,6 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       }
       return [];
    }
-
 
    /**
     * Сбрасывает индекс
@@ -118,14 +117,14 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} count Число обновляемых элементов
     */
    updateIndex(start, count) {
-      let indices = this._indices;
+      const indices = this._indices;
 
       if (!indices) {
          return;
       }
 
       /* eslint-disable guard-for-in */
-      for (let property in indices) {
+      for (const property in indices) {
          this._updateIndex(property, start, count);
       }
       /* eslint-enable guard-for-in */
@@ -138,7 +137,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} offset На сколько сдвинуть индексы
     */
    shiftIndex(start, count, offset) {
-      let finish = start + count;
+      const finish = start + count;
       this._eachIndexItem((data) => {
          for (let i = 0; i < data.length; i++) {
             if (data[i] >= start && data[i] < finish) {
@@ -165,9 +164,9 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       });
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Перебирает проиндексированные значения для всех свойств
@@ -175,16 +174,16 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @protected
     */
    _eachIndexItem(callback) {
-      let indices = this._indices;
+      const indices = this._indices;
       if (!indices) {
          return;
       }
 
       let values;
       /* eslint-disable guard-for-in */
-      for (let property in indices) {
+      for (const property in indices) {
          values = indices[property];
-         for (let value in values) {
+         for (const value in values) {
             callback(values[value], value, property);
          }
       }
@@ -250,7 +249,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @protected
     */
    _updateIndex(property, start, count) {
-      let index = this._indices[property];
+      const index = this._indices[property];
       if (!index) {
          return;
       }
@@ -276,7 +275,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       }
    }
 
-   //region Protected methods
+   // region Protected methods
 }
 
 Indexer.prototype['[Types/_collection/Indexer]'] = true;

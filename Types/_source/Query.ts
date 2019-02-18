@@ -323,9 +323,9 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    readonly '[Types/_entity/ICloneable]': boolean = true;
 
-   clone(): Query {
-      //TODO: deeper clone?
-      let clone = new Query();
+   clone<Query>(): any {
+      // TODO: deeper clone?
+      const clone = new Query();
       clone._select = duplicate(this._select);
       clone._from = this._from;
       clone._as = this._as;

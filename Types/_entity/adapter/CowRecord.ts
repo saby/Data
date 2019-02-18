@@ -35,6 +35,16 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
     */
    _copied: boolean;
 
+   // region Types/_entity/adapter/IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   // endregion Types/_entity/adapter/IRecord
+
+   // region Types/_entity/adapter/IDecorator
+
+   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+
    /**
     * Конструктор
     * @param {*} data Сырые данные
@@ -49,10 +59,6 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
          this._writeCallback = writeCallback;
       }
    }
-
-   //region Types/_entity/adapter/IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
 
    has(name) {
       return this._originalRecord.has(name);
@@ -103,19 +109,13 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       return this._originalRecord.removeFieldAt(index);
    }
 
-   //endregion Types/_entity/adapter/IRecord
-
-   //region Types/_entity/adapter/IDecorator
-
-   readonly '[Types/_entity/adapter/IDecorator]': boolean;
-
    getOriginal() {
       return this._originalRecord;
    }
 
-   //endregion Types/_entity/adapter/IDecorator
+   // endregion Types/_entity/adapter/IDecorator
 
-   //region Protected methods
+   // region Protected methods
 
    _copy() {
       if (!this._copied) {
@@ -138,7 +138,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       }
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(CowRecord.prototype, {

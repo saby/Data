@@ -7,18 +7,18 @@
  */
 
 export interface IBinding {
-   create?: string
-   read?: string
-   update?: string
-   destroy?: string
-   query?: string
-   copy?: string
-   merge?: string
-   move?: string
+   create?: string;
+   read?: string;
+   update?: string;
+   destroy?: string;
+   query?: string;
+   copy?: string;
+   merge?: string;
+   move?: string;
 }
 
 export interface IOptions {
-   binding?: IBinding
+   binding?: IBinding;
 }
 
 const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
@@ -121,7 +121,7 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
 
    constructor(options?: IOptions) {
       if (options && options.binding instanceof Object) {
-         options.binding = Object.assign({}, this._$binding, options.binding);
+         options.binding = {...this._$binding, ...options.binding};
       }
    },
 
@@ -155,7 +155,7 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
     * </pre>
     */
    getBinding(): IBinding {
-      return Object.assign({}, this._$binding);
+      return {...this._$binding};
    },
 
    setBinding(binding: IBinding) {

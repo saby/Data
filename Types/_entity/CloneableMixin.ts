@@ -13,7 +13,7 @@ import Serializer = require('Core/Serializer');
 const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
    '[Types/_entity/CloneableMixin]': true,
 
-   //region Types/_entity/ICloneable
+   // region Types/_entity/ICloneable
 
    '[Types/_entity/ICloneable]': true,
 
@@ -23,7 +23,7 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       if (shallow) {
          const proto = Object.getPrototypeOf(this);
          const Module = proto.constructor;
-         let data = this.toJSON();
+         const data = this.toJSON();
 
          data.state = this._unlinkCollection(data.state);
          if (data.state.$options) {
@@ -32,22 +32,22 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
 
          clone = Module.prototype.fromJSON.call(Module, data);
       } else {
-         let serializer = new Serializer();
+         const serializer = new Serializer();
          clone = JSON.parse(
             JSON.stringify(this, serializer.serialize),
             serializer.deserialize
          );
       }
 
-      //TODO: this should be do instances mixes InstantiableMixin
+      // TODO: this should be do instances mixes InstantiableMixin
       delete clone._instanceId;
 
       return clone;
    },
 
-   //endregion Types/_entity/ICloneable
+   // endregion Types/_entity/ICloneable
 
-   //region Protected methods
+   // region Protected methods
 
    _unlinkCollection(collection) {
       let result;
@@ -61,7 +61,7 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       }
       if (collection instanceof Object) {
          result = {};
-         for (let key in collection) {
+         for (const key in collection) {
             if (collection.hasOwnProperty(key)) {
                result[key] = this._unlinkObject(collection[key]);
             }
@@ -79,7 +79,7 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       return object;
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default CloneableMixin;

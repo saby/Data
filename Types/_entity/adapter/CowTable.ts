@@ -35,6 +35,16 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
     */
    _copied: boolean;
 
+   // region Types/_entity/adapter/ITable
+
+   readonly '[Types/_entity/adapter/ITable]': boolean;
+
+   // endregion Types/_entity/adapter/ITable
+
+   // region Types/_entity/adapter/IDecorator
+
+   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+
    /**
     * Конструктор
     * @param {*} data Сырые данные
@@ -49,10 +59,6 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
          this._writeCallback = writeCallback;
       }
    }
-
-   //region Types/_entity/adapter/ITable
-
-   readonly '[Types/_entity/adapter/ITable]': boolean;
 
    getFields() {
       return this._originalTable.getFields();
@@ -128,19 +134,13 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       return this._originalTable.removeFieldAt(index);
    }
 
-   //endregion Types/_entity/adapter/ITable
-
-   //region Types/_entity/adapter/IDecorator
-
-   readonly '[Types/_entity/adapter/IDecorator]': boolean;
-
    getOriginal() {
       return this._originalTable;
    }
 
-   //endregion Types/_entity/adapter/IDecorator
+   // endregion Types/_entity/adapter/IDecorator
 
-   //region Protected methods
+   // region Protected methods
 
    _copy() {
       if (!this._copied) {
@@ -163,7 +163,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       }
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(CowTable.prototype, {

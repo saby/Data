@@ -211,7 +211,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *     });
     * </pre>
     */
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null>;
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null>;
 
    /**
     * Выполняет запрос на выборку

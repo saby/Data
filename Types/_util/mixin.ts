@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_util/mixin" />
 /**
  * Наследование с использованием миксинов
  * @author Мальцев А.А.
@@ -6,11 +5,11 @@
 
 /**
  * Наследует статические свойства
- * @param {Function} Base Базовый класс.
- * @param {Function} Sub Класс-наследник.
+ * @param Base Базовый класс.
+ * @param Sub Класс-наследник.
  */
-function inheritStatic(Base, Sub) {
-   //Don't inherit from plain object
+function inheritStatic<T>(Base: Function, Sub: Function): void {
+   // Don't inherit from plain object
    if (Base === Object) {
       return;
    }
@@ -22,7 +21,7 @@ function inheritStatic(Base, Sub) {
          case 'length':
          case 'name':
          case 'prototype':
-            //Skip some valuable keys of type Function
+            // Skip some valuable keys of type Function
             break;
          default:
             if (!Sub.hasOwnProperty(key)) {
@@ -32,19 +31,18 @@ function inheritStatic(Base, Sub) {
    });
 }
 
-export function applyMixins(Sub: any, ...mixins): any {
-
-   //FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
+export function applyMixins(Sub: Function, ...mixins: Array<Function | object>): void {
+   // FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
    if (mixins.length && !Sub.prototype._mixins) {
       Sub.prototype._mixins = [];
    }
 
    mixins.forEach((mixin) => {
       const isClass = typeof mixin === 'function';
-      const proto = isClass ? mixin.prototype : mixin;
+      const proto = isClass ? (mixin as Function).prototype : mixin;
 
       if (isClass) {
-         inheritStatic(mixin, Sub);
+         inheritStatic(mixin as Function, Sub);
       }
 
       const inject = (name) => {
@@ -62,11 +60,11 @@ export function applyMixins(Sub: any, ...mixins): any {
  * Создает наследника с набором миксинов
  * @param Base Базовый класс
  * @param mixins Миксины
- * @return {Function} Наследник с миксинами.
+ * @return Наследник с миксинами.
  */
-export function mixin(Base, ...mixins) {
-   class Sub extends Base {
-      constructor(...args) {
+export function mixin<T>(Base: any, ...mixins: Array<Function | Object>): any {
+   class Sub extends Base  {
+      constructor(...args: any[]) {
          if (Base !== Object) {
             super(...args);
          }

@@ -7,19 +7,19 @@
  */
 
 interface IDateTimeMeta {
-   withoutTimeZone: boolean
+   withoutTimeZone: boolean;
 }
 
 interface IDictionaryMeta {
-   dictionary: Array<any>
+   dictionary: any[];
 }
 
 interface IRealdMeta {
-   precision: number
+   precision: number;
 }
 
 interface IMoneyMeta extends IRealdMeta {
-   large: boolean
+   large: boolean;
 }
 
 interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta {

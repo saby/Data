@@ -1,7 +1,7 @@
 /// <amd-module name="Types/_formatter/numberWords" />
 import numberWordsRu from './_numberWords/ru';
 import numberWordsEN from './_numberWords/en';
-//@ts-ignore
+// @ts-ignore
 import i18n = require('Core/i18n');
 
 export default function numberWords(num: number|string, feminine: boolean = false): String {
@@ -14,4 +14,4 @@ export default function numberWords(num: number|string, feminine: boolean = fals
       default:
          return numberWordsEN(num);
    }
-};
+}

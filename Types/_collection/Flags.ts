@@ -20,7 +20,7 @@ import {register} from '../di';
 import {applyMixins} from '../util';
 
 interface ProduceOptions {
-   format?: Object
+   format?: Object;
 }
 
 function prepareValue(value): IValue {
@@ -33,11 +33,28 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    readonly '[Types/_entity/IProducible]': boolean;
    readonly _moduleName: string;
 
+   // endregion
+
+   // region ICloneable
+
+   clone: <Flags>(shallow?: boolean) => Flags;
+
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
     */
-   protected _$values: Array<IValue>;
+   protected _$values: IValue[];
+
+   // region ObservableMixin
+
+   protected _publish: (...events) => void;
+   protected _notify: (event: string, ...args) => void;
+
+   // endregion
+
+   // region ManyToManyMixin
+
+   protected _childChanged: (data) => void;
 
    constructor(options?: Object) {
       super(options);
@@ -46,28 +63,29 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       this._$values = this._$values || [];
    }
 
+   // endregion
+
+   // region IProducible
+
+   static produceInstance<T>(data?: any, options?: ProduceOptions): Flags<T> {
+      return new this({
+         dictionary: this.prototype._getDictionaryByFormat(options && options.format),
+         localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
+         values: data
+      });
+   }
+
    destroy() {
       ManyToManyMixin.destroy.call(this);
       super.destroy();
    }
 
-   //region ObservableMixin
+   // endregion
 
-   protected _publish: (...events) => void;
-   protected _notify: (event: string, ...args) => void;
-
-   //endregion
-
-   //region ManyToManyMixin
-
-   protected _childChanged: (data) => void;
-
-   //endregion
-
-   //region IFlags
+   // region IFlags
 
    get(name: T, localize?: boolean): IValue {
-      let ordinalIndex = this._getOrdinalIndex(name, localize);
+      const ordinalIndex = this._getOrdinalIndex(name, localize);
       if (ordinalIndex !== undefined) {
          return prepareValue(this._$values[ordinalIndex]);
       }
@@ -75,7 +93,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    }
 
    set(name: T, value: IValue, localize?: boolean) {
-      let ordinalIndex = this._getOrdinalIndex(name, localize);
+      const ordinalIndex = this._getOrdinalIndex(name, localize);
       if (ordinalIndex === undefined) {
          throw new ReferenceError(`${this._moduleName}::set(): the value "${name}" doesn't found in dictionary`);
       }
@@ -86,24 +104,24 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       }
       this._$values[ordinalIndex] = value;
 
-      let index = this._getIndex(name, localize);
+      const index = this._getIndex(name, localize);
       this._notifyChange(name, index, value);
    }
 
    getByIndex(index: number): IValue {
-      let name = this._getValue(index);
-      let ordinalIndex = this._getOrdinalIndex(name);
+      const name = this._getValue(index);
+      const ordinalIndex = this._getOrdinalIndex(name);
 
       return this._$values[ordinalIndex];
    }
 
    setByIndex(index: number, value: IValue) {
-      let name = this._getValue(index);
+      const name = this._getValue(index);
       if (name === undefined) {
          throw new ReferenceError(`${this._moduleName}::setByIndex(): the index ${index} doesn't found in dictionary`);
       }
 
-      let ordinalIndex = this._getOrdinalIndex(name);
+      const ordinalIndex = this._getOrdinalIndex(name);
       value = prepareValue(value);
       if (this._$values[ordinalIndex] === value) {
          return;
@@ -113,15 +131,15 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       this._notifyChange(name, index, value);
    }
 
-   fromArray(source: Array<IValue>) {
-      let values = this._$values;
-      let enumerator = this.getEnumerator();
+   fromArray(source: IValue[]) {
+      const values = this._$values;
+      const enumerator = this.getEnumerator();
       let ordinalIndex = 0;
-      let selection = [];
+      const selection = [];
       while (enumerator.moveNext()) {
-         let value = source[ordinalIndex] === undefined ? null : source[ordinalIndex];
+         const value = source[ordinalIndex] === undefined ? null : source[ordinalIndex];
          values[ordinalIndex] = value;
-         let dictionaryIndex = enumerator.getCurrentIndex();
+         const dictionaryIndex = enumerator.getCurrentIndex();
          selection[dictionaryIndex] = value;
          ordinalIndex++;
       }
@@ -140,9 +158,9 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       this._setAll(null);
    }
 
-   //endregion
+   // endregion
 
-   //region IEquatable
+   // region IEquatable
 
    isEqual(to): boolean {
       if (!(to instanceof Flags)) {
@@ -153,7 +171,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
          return false;
       }
 
-      let enumerator = this.getEnumerator();
+      const enumerator = this.getEnumerator();
       let key;
       while (enumerator.moveNext()) {
          key = enumerator.getCurrent();
@@ -165,27 +183,9 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       return true;
    }
 
-   //endregion
+   // endregion
 
-   //region ICloneable
-
-   clone: (shallow?: boolean) => Flags<T>;
-
-   //endregion
-
-   //region IProducible
-
-   static produceInstance<T>(data?: any, options?: ProduceOptions): Flags<T> {
-      return new this({
-         dictionary: this.prototype._getDictionaryByFormat(options && options.format),
-         localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-         values: data
-      });
-   }
-
-   //endregion
-
-   //region Public methods
+   // region Public methods
 
    toString(): string {
       return '[' + this._$values.map((value) => {
@@ -193,9 +193,9 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
       }).join(',') + ']';
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Returns an ordinal index of the flag.
@@ -205,7 +205,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
     * @protected
     */
    protected _getOrdinalIndex(name: T, localize?: boolean): number {
-      let enumerator = this.getEnumerator(localize);
+      const enumerator = this.getEnumerator(localize);
       let index = 0;
       while (enumerator.moveNext()) {
          if (enumerator.getCurrent() === name) {
@@ -217,14 +217,14 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
    }
 
    protected _setAll(value: IValue) {
-      let dictionary = this._$dictionary;
-      let values = this._$values;
-      let enumerator = this.getEnumerator();
+      const dictionary = this._$dictionary;
+      const values = this._$values;
+      const enumerator = this.getEnumerator();
       let ordinalIndex = 0;
       while (enumerator.moveNext()) {
          if (values[ordinalIndex] !== value) {
             values[ordinalIndex] = value;
-            let dictionaryIndex = enumerator.getCurrentIndex();
+            const dictionaryIndex = enumerator.getCurrentIndex();
             this._notifyChange(dictionary[dictionaryIndex], dictionaryIndex, value);
          }
          ordinalIndex++;
@@ -239,7 +239,7 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
     * @protected
     */
    protected _notifyChange(name: T, index: number | string, value: IValue) {
-      let data = {};
+      const data = {};
       data[String(name)] = value;
       this._childChanged(data);
       this._notify('onChange', name, index, value);
@@ -250,17 +250,17 @@ export default class Flags<T> extends Dictionary<T> implements IFlags<T>, IClone
     * @param {Array.<Boolean|Null>} values Selection
     * @protected
     */
-   protected _notifyChanges(values: Array<IValue>) {
+   protected _notifyChanges(values: IValue[]) {
       this._childChanged(values);
       this._notify('onChange', values);
    }
 
-   //endregion
+   // endregion
 }
 
 applyMixins(Flags, ManyToManyMixin, SerializableMixin, CloneableMixin);
 
-Object.assign(Flags.prototype,{
+Object.assign(Flags.prototype, {
    '[Types/_collection/Flags]': true,
    '[Types/_collection/IFlags]': true,
    '[Types/_entity/ICloneable]': true,
@@ -270,9 +270,9 @@ Object.assign(Flags.prototype,{
    _type: 'flags'
 });
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Flags.prototype['[WS.Data/Type/Flags]'] = true;
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Flags.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
 register('Types/collection:Flags', Flags, {instantiate: false});

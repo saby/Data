@@ -38,19 +38,19 @@ import req = require('require');
 import Deferred = require('Core/Deferred');
 
 export interface IPassing {
-   create: (meta?: Object) => Object,
-   read: (key: string | number, meta?: Object) => Object,
-   update: (data: Record | RecordSet<Record>, meta?: Object) => Object,
-   destroy: (keys: string | string[], meta?: Object) => Object,
-   query: (query: Query) => Object,
-   copy: (key: string | number, meta?: Object) => Object,
-   merge: (from: string | number, to: string | number) => Object,
-   move: (from: string | number, to: string | number, meta?: Object) => Object
+   create: (meta?: Object) => Object;
+   read: (key: string | number, meta?: Object) => Object;
+   update: (data: Record | RecordSet<Record>, meta?: Object) => Object;
+   destroy: (keys: string | string[], meta?: Object) => Object;
+   query: (query: Query) => Object;
+   copy: (key: string | number, meta?: Object) => Object;
+   merge: (from: string | number, to: string | number) => Object;
+   move: (from: string | number, to: string | number, meta?: Object) => Object;
 }
 
 export interface IOptions extends IBaseOptions {
-   updateOnlyChanged?: boolean
-   navigationType?: string
+   updateOnlyChanged?: boolean;
+   navigationType?: string;
 }
 
 const global = (0, eval)('this');
@@ -99,19 +99,19 @@ function passRead(key, meta?: Object) {
  */
 function passUpdate(data, meta?: Object) {
    if (this._$options.updateOnlyChanged) {
-      let idProperty = this._getValidIdProperty(data);
+      const idProperty = this._getValidIdProperty(data);
       if (!isEmpty(idProperty)) {
          if (DataMixin.isModelInstance(data) && !isNull(data.get(idProperty))) {
             //Filter record fields
-            let Record = req('Types/entity').Record;
-            let changed = data.getChanged();
+            const Record = req('Types/entity').Record;
+            const changed = data.getChanged();
             changed.unshift(idProperty);
             data = Record.filterFields(data, changed);
          } else if (DataMixin.isListInstance(data)) {
             //Filter recordset fields
             data = ((source) => {
-               let RecordSet = req('Types/collection').RecordSet;
-               let result = new RecordSet({
+               const RecordSet = req('Types/collection').RecordSet;
+               const result = new RecordSet({
                   adapter: source._$adapter,
                   idProperty: source._$idProperty
                });
@@ -183,6 +183,30 @@ function passMove(from, to, meta?: Object) {
 export default abstract class Remote extends mixin(
    Base, ObservableMixin, DataCrudMixin, BindingMixin, EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
+  
+   // endregion
+
+   // region Statics
+
+   static get NAVIGATION_TYPE() {
+      return NAVIGATION_TYPE;
+   }
+
+   // region ICrud
+
+   readonly '[Types/_source/ICrud]': boolean = true;
+
+   // endregion
+
+   // region ICrudPlus
+
+   readonly '[Types/_source/ICrudPlus]': boolean = true;
+
+   // endregion
+
+   // region IProvider
+
+   readonly '[Types/_source/IProvider]': boolean = true;
    /**
     * @typedef {String} NavigationType
     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
@@ -243,10 +267,6 @@ export default abstract class Remote extends mixin(
       this._publish('onBeforeProviderCall');
    }
 
-   //region ICrud
-
-   readonly '[Types/_source/ICrud]': boolean = true;
-
    create(meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.create,
@@ -275,10 +295,10 @@ export default abstract class Remote extends mixin(
          this._$passing.update.call(this, data, meta)
       ).addCallback(
          (key) => this._prepareUpdateResult(data, key)
-      )
+      );
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.destroy,
          this._$passing.destroy.call(this, keys, meta)
@@ -295,12 +315,6 @@ export default abstract class Remote extends mixin(
          )
       );
    }
-
-   //endregion
-
-   //region ICrudPlus
-
-   readonly '[Types/_source/ICrudPlus]': boolean = true;
 
    merge(from: string | number, to: string | number): ExtendPromise<any> {
       return this._callProvider(
@@ -325,12 +339,6 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   //endregion
-
-   //region IProvider
-
-   readonly '[Types/_source/IProvider]': boolean = true;
-
    getEndpoint(): IEndpoint {
       return EndpointMixin.getEndpoint.call(this);
    }
@@ -346,9 +354,9 @@ export default abstract class Remote extends mixin(
       return this._provider;
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Инстанциирует провайдер удаленного доступа
@@ -362,7 +370,7 @@ export default abstract class Remote extends mixin(
          throw new Error('Remote access provider is not defined');
       }
       if (typeof provider === 'string') {
-         provider = <IAbstract>create(provider, options);
+         provider = create(provider, options) as IAbstract;
       }
 
       return provider;
@@ -376,14 +384,14 @@ export default abstract class Remote extends mixin(
     * @protected
     */
    protected _callProvider(name, args): ExtendPromise<any> {
-      let provider = this.getProvider();
+      const provider = this.getProvider();
 
-      let eventResult = this._notify('onBeforeProviderCall', name, args);
+      const eventResult = this._notify('onBeforeProviderCall', name, args);
       if (eventResult !== undefined) {
          args = eventResult;
       }
 
-      let result = provider.call(
+      const result = provider.call(
          name,
          this._prepareProviderArguments(args)
       );
@@ -413,7 +421,7 @@ export default abstract class Remote extends mixin(
    }
 
    protected _getValidIdProperty(data) {
-      let idProperty = this.getIdProperty();
+      const idProperty = this.getIdProperty();
       if (!isEmpty(idProperty)) {
          return idProperty;
       }
@@ -424,16 +432,7 @@ export default abstract class Remote extends mixin(
       // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой idProperty
       return idProperty;
    }
-
-   //endregion
-
-   //region Statics
-
-   static get NAVIGATION_TYPE() {
-      return NAVIGATION_TYPE;
-   }
-
-   //endregion
+gion;
 }
 
 Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
@@ -533,7 +532,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        * </pre>
        */
       navigationType: NAVIGATION_TYPE.PAGE
-   }),
+   })
 });
 
 // FIXME: backward compatibility for SbisFile/Source/BL

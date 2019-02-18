@@ -40,9 +40,7 @@ function getCollectionItemId(item: CollectionItem): string | number {
    return getObjectId(item.getContents());
 }
 
-interface Converter {
-   (item: any): string
-}
+type Converter = (item: any) => string;
 
 export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/_display/Ladder.prototype */{
    /**
@@ -114,51 +112,9 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       super.destroy();
    }
 
-   //region SerializableMixin
+   // endregion
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-
-      if (this._collection) {
-         state.$options = this._collection;
-      } else {
-         delete state.$options;
-      }
-      if (this._offset) {
-         state._offset = this._offset;
-      }
-      if (this._columnNames.length) {
-         state._columnNames = this._columnNames;
-      }
-
-      //FIXME: what about _converters?
-
-      return state;
-   }
-
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
-         fromSerializableMixin.call(this);
-
-         if (state._offset) {
-            this._offset = state._offset;
-         }
-
-         if (state._columnNames) {
-            this._columnNames = state._columnNames;
-
-            //Restore _column2primaryId on wake up
-            if (this._collection) {
-               this._checkRange(0, this._collectionItems.length);
-            }
-         }
-      };
-   }
-
-   //endregion
-
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает проекцию коллекции, по которой строится лесенка.
@@ -177,10 +133,10 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
          throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
       }
 
-      //Reset for  the new collection
-      let reset = collection !== this._collection;
+      // Reset for  the new collection
+      const reset = collection !== this._collection;
 
-      //For the same collection just move event handler to the end (unsubscribe and then subscribe)
+      // For the same collection just move event handler to the end (unsubscribe and then subscribe)
       if (this._collection && !this._collection.destroyed) {
          this._collection.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
          this._collection.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeHandler);
@@ -206,9 +162,9 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
     * @param {Number} offset Позиция.
     */
    setOffset(offset: number | string) {
-      offset = parseInt(<string>offset, 10);
+      offset = parseInt(offset as string, 10);
 
-      let prev = this._offset;
+      const prev = this._offset;
       this._offset = offset;
       let result = this._checkRange(this._offset, 2);
       this._notifyPrimaryChanges(result);
@@ -259,11 +215,11 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
       this._applyColumn(columnName);
 
-      let id = getObjectId(item);
-      let columnData = this._getColumnData(columnName);
+      const id = getObjectId(item);
+      const columnData = this._getColumnData(columnName);
       let hasData = columnData.has(id);
       let data = hasData ? columnData.get(id) : undefined;
-      let idx = this._collection.getIndexBySourceItem(item);
+      const idx = this._collection.getIndexBySourceItem(item);
       if (!hasData || data[1] !== idx) {
          this._checkRange(idx, 1, true);
          hasData = columnData.has(id);
@@ -282,9 +238,51 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       return this._column2primaryId.has(columnName);
    }
 
-   //endregion
+   // region SerializableMixin
 
-   //region Protected methods
+   protected _getSerializableState(state) {
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+
+      if (this._collection) {
+         state.$options = this._collection;
+      } else {
+         delete state.$options;
+      }
+      if (this._offset) {
+         state._offset = this._offset;
+      }
+      if (this._columnNames.length) {
+         state._columnNames = this._columnNames;
+      }
+
+      // FIXME: what about _converters?
+
+      return state;
+   }
+
+   protected _setSerializableState(state) {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function() {
+         fromSerializableMixin.call(this);
+
+         if (state._offset) {
+            this._offset = state._offset;
+         }
+
+         if (state._columnNames) {
+            this._columnNames = state._columnNames;
+
+            // Restore _column2primaryId on wake up
+            if (this._collection) {
+               this._checkRange(0, this._collectionItems.length);
+            }
+         }
+      };
+   }
+
+   // endregion
+
+   // region Protected methods
 
    protected _applyCollection() {
       if (!this._collection) {
@@ -292,7 +290,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
          return;
       }
 
-      let items = this._collectionItems = [];
+      const items = this._collectionItems = [];
       this._collection.each((item) => {
          items.push(item);
       });
@@ -306,7 +304,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    }
 
    protected _applyColumn(columnName: string) {
-      let columnNames = this._columnNames;
+      const columnNames = this._columnNames;
       if (columnNames.indexOf(columnName) > -1) {
          return;
       }
@@ -314,12 +312,12 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    }
 
    protected _getColumnData(columnName: string) {
-      let map = this._column2primaryId;
+      const map = this._column2primaryId;
       if (map.has(columnName)) {
          return map.get(columnName);
       }
 
-      let data = new Map();
+      const data = new Map();
       map.set(columnName, data);
       return data;
    }
@@ -332,13 +330,13 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       oldItems: CollectionItem,
       oldItemsIndex: number
    ) {
-      let push = Array.prototype.push;
+      const push = Array.prototype.push;
       let result = [];
 
-      let removeData = (oldItems, newItems) => {
+      const removeData = (oldItems, newItems) => {
          if (oldItems.length) {
-            let columnNames = this._columnNames;
-            let newItemsId = new Set();
+            const columnNames = this._columnNames;
+            const newItemsId = new Set();
             let columnIndex;
             let columnData;
             let delta;
@@ -363,7 +361,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
       };
 
-      let checkItems = (items, count, startIdx) => {
+      const checkItems = (items, count, startIdx) => {
          return count > 0 ? this._checkRange(startIdx - 1, items.length + 2) : [];
       };
 
@@ -384,16 +382,16 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
             this._spliceCollection(oldItemsIndex, oldItems.length, []);
             this._spliceCollection(newItemsIndex, 0, newItems);
 
-            //если запись перемещают наверх, то индекс сдвинется
-            let startIndex = newItemsIndex > oldItemsIndex ? oldItemsIndex : oldItemsIndex + newItems.length;
+            // если запись перемещают наверх, то индекс сдвинется
+            const startIndex = newItemsIndex > oldItemsIndex ? oldItemsIndex : oldItemsIndex + newItems.length;
             push.apply(result, checkItems([], oldItems.length, startIndex));
             push.apply(result, checkItems(newItems, newItems.length, newItemsIndex));
             break;
          default:
-            //Translate collection items to the _collectionItems
+            // Translate collection items to the _collectionItems
             this._applyCollection();
 
-            //FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
+            // FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
             if (
                action === IObservable.ACTION_RESET &&
                this._collectionItems &&
@@ -402,10 +400,10 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
                newItems = this._collectionItems;
             }
 
-            //Remove rejected ladder data
+            // Remove rejected ladder data
             removeData(oldItems, newItems);
 
-            //Check updated ladder data in newItems
+            // Check updated ladder data in newItems
             push.apply(result, checkItems(newItems, newItems.length, newItemsIndex));
       }
 
@@ -425,13 +423,13 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    }
 
    protected _notifyPrimaryChanges(changesArray: any[]) {
-      let collection = this._collection;
-      let collectionItems = this._collectionItems;
+      const collection = this._collection;
+      const collectionItems = this._collectionItems;
       let idx;
       let columnName;
       let item;
 
-      let optimized = changesArray.reduce((prev, curr) => {
+      const optimized = changesArray.reduce((prev, curr) => {
          if (curr !== null) {
             idx = curr[0];
             columnName = curr[1];
@@ -455,15 +453,15 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
    }
 
    protected _checkRange(startIdx: number, length: number, byOriginal?: boolean) {
-      let result = [];
-      let collection = this._collection;
-      let collectionItems = this._collectionItems;
-      let columnNames = this._columnNames;
+      const result = [];
+      const collection = this._collection;
+      const collectionItems = this._collectionItems;
+      const columnNames = this._columnNames;
       let columnIndex;
       let idx;
       let adjusted;
 
-      let finishIdx = Math.min(startIdx + length, byOriginal ? collection.getCount() : collectionItems.length);
+      const finishIdx = Math.min(startIdx + length, byOriginal ? collection.getCount() : collectionItems.length);
       startIdx = Math.max(0, startIdx);
 
       for (columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
@@ -488,7 +486,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
          return null;
       }
 
-      let id = getCollectionItemId(item);
+      const id = getCollectionItemId(item);
       let data;
       let nowIsPrimary;
       let thenIsPrimary;
@@ -512,10 +510,10 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
          return true;
       }
 
-      let collection = this._collection;
-      let collectionItems = this._collectionItems;
-      let prev = (byOriginal ? collection.at(idx - 1) : collectionItems[idx - 1]).getContents();
-      let curr = (byOriginal ? collection.at(idx) : collectionItems[idx]).getContents();
+      const collection = this._collection;
+      const collectionItems = this._collectionItems;
+      const prev = (byOriginal ? collection.at(idx - 1) : collectionItems[idx - 1]).getContents();
+      const curr = (byOriginal ? collection.at(idx) : collectionItems[idx]).getContents();
       let prevVal = object.getPropertyValue(prev, columnName);
       let currVal = object.getPropertyValue(curr, columnName);
 
@@ -531,8 +529,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
       return prevVal !== currVal;
    }
-
-   //endregion
+n;
 }
 
 Ladder.prototype._moduleName = 'Types/display:Ladder';

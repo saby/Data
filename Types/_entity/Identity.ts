@@ -26,7 +26,7 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
    /**
     * @property {Array} Значение идентификатора
     */
-   _value: Array<any>;
+   _value: any[];
 
    /**
     * Конструктор типа "Идентификатор".
@@ -43,7 +43,7 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
       this._value = value;
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает значение поля таблицы.
@@ -69,7 +69,7 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
       return this._value[0] === null ? null : this._value.join(',');
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 Identity.prototype['[Types/_entity/Identity]'] = true;

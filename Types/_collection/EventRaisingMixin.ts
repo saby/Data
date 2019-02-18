@@ -36,7 +36,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
       this._publish('onEventRaisingChange');
    },
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Включает/выключает генерацию событий об изменении коллекции
@@ -72,7 +72,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
    setEventRaising(enabled, analyze) {
       enabled = !!enabled;
       analyze = !!analyze;
-      let isEqual = this._eventRaising === enabled;
+      const isEqual = this._eventRaising === enabled;
 
       if (analyze && isEqual) {
          throw new Error(`The events raising is already ${enabled ? 'enabled' : 'disabled'} with analize=true`);
@@ -104,9 +104,9 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
       return this._eventRaising;
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Запускает серию обновлений
@@ -196,11 +196,11 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @static
     */
    _extractPacksByList(list, items, callback) {
-      let send = (pack, index) => {
+      const send = (pack, index) => {
          callback(pack.slice(), index);
          pack.length = 0;
       };
-      let sortedItems = [];
+      const sortedItems = [];
       let item;
       let index;
       for (let i = 0; i < items.length; i++) {
@@ -209,9 +209,9 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
          sortedItems[index] = item;
       }
 
-      let pack = [];
+      const pack = [];
       let packIndex = 0;
-      let maxIndex = sortedItems.length - 1;
+      const maxIndex = sortedItems.length - 1;
       for (let index = 0; index <= maxIndex; index++) {
          item = sortedItems[index];
 
@@ -243,7 +243,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
       return this._eventRaising && this.hasEventHandlers('onCollectionChange');
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default EventRaisingMixin;

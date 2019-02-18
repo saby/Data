@@ -51,7 +51,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(2);//5
     * </pre>
     */
-   assign(items: IEnumerable<T> | Array<T>);
+   assign(items: IEnumerable<T> | T[]);
 
    /**
     * Добавляет элементы другой коллекции к концу списка.
@@ -86,7 +86,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(5);//5
     * </pre>
     */
-   append(items: IEnumerable<T> | Array<T>);
+   append(items: IEnumerable<T> | T[]);
 
    /**
     * Добавляет элементы другой коллекции в начало списка.
@@ -121,7 +121,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(5);//3
     * </pre>
     */
-   prepend(items: IEnumerable<T> | Array<T>);
+   prepend(items: IEnumerable<T> | T[]);
 
    /**
     * Очищает список.

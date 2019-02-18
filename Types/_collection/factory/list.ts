@@ -19,7 +19,7 @@ export default function list<T>(items: IEnumerable<T>): List<T> {
       throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
    }
 
-   let itemsArray = [];
+   const itemsArray = [];
    items.each((item) => {
       itemsArray.push(item);
    });

@@ -7,9 +7,7 @@
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
-interface CallbackFunc {
-   (item: any, index: number): boolean;
-}
+type CallbackFunc = (item: any, index: number) => boolean;
 
 export default class FilteredEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;

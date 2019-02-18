@@ -34,6 +34,12 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
     */
    _writeCallback: Function;
 
+   // endregion IAdapter
+
+   // region IDecorator
+
+   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+
    /**
     * Конструктор
     * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
@@ -48,7 +54,7 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
       }
    }
 
-   //region IAdapter
+   // region IAdapter
 
    forTable(data) {
       return new CowTable(data, this._original, this._writeCallback);
@@ -74,19 +80,13 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
       return this._original.serialize(data);
    }
 
-   //endregion IAdapter
-
-   //region IDecorator
-
-   readonly '[Types/_entity/adapter/IDecorator]': boolean;
-
    getOriginal() {
       return this._original;
    }
 
-   //endregion IDecorator
+   // endregion IDecorator
 
-   //region SerializableMixin
+   // region SerializableMixin
 
    _getSerializableState(state) {
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
@@ -95,14 +95,14 @@ export default class Cow extends mixin(Abstract, SerializableMixin) implements I
    }
 
    _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function() {
          fromSerializableMixin.call(this);
          this._original = state._original;
       };
    }
 
-   //endregion SerializableMixin
+   // endregion SerializableMixin
 }
 
 Object.assign(Cow.prototype, {

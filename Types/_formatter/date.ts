@@ -1,12 +1,12 @@
 /// <amd-module name="Types/_formatter/date" />
 
-//@ts-ignore
+// @ts-ignore
 import locales = require('Core/helpers/i18n/locales');
 import toRoman from './numberRoman';
 
-declare type DateFormatOptions = {
-   lead: number,
-   lower: boolean
+declare interface DateFormatOptions {
+   lead: number;
+   lower: boolean;
 }
 /**
  * Преобразует дату в строку указанного формата.
@@ -126,9 +126,9 @@ declare type DateFormatOptions = {
  * @author Мальцев А.А.
  */
 
-var tokensRegex;
-var tokens = {};
-var locale = locales.current;
+let tokensRegex;
+let tokens = {};
+let locale = locales.current;
 
 /**
  * Adds lead zeroes to the Number
@@ -341,8 +341,8 @@ function getTokensRegex(): RegExp {
       return tokensRegex;
    }
 
-   //More longer must match first
-   var expr = Object.keys(tokens).sort(function (a, b) {
+   // More longer must match first
+   let expr = Object.keys(tokens).sort(function(a, b) {
       return b.length - a.length;
    });
    tokensRegex = new RegExp('\\[[^\\]]+\\]|(' + expr.join('|') + ')', 'g');
@@ -356,7 +356,7 @@ function getTokensRegex(): RegExp {
  * @param {String|Function(Date): String} handler Token handler (for String is the method name in Date.prototype)
  * @param {Object} [options] Options to pass to the handler
  */
-function addToken(token: string, handler:string|Function, options = <DateFormatOptions>{}) {
+function addToken(token: string, handler: string|Function, options = {} as DateFormatOptions) {
    tokens[token] = [handler, options];
    tokensRegex = null;
 }
@@ -370,14 +370,14 @@ function addToken(token: string, handler:string|Function, options = <DateFormatO
  */
 function formatByToken(date: Date, handler: string|Function, options: DateFormatOptions) {
    if (typeof handler === 'string') {
-      handler = (function (method) {
-         return function (date) {
+      handler = (function(method) {
+         return function(date) {
             return date[method]();
          };
       })(handler);
    }
 
-   var result = handler(date);
+   let result = handler(date);
 
    if (options.lead) {
       result = withLeadZeroes(result, options.lead);
@@ -390,38 +390,38 @@ function formatByToken(date: Date, handler: string|Function, options: DateFormat
    return result;
 }
 
-//Time tokens
+// Time tokens
 addToken('SSS', 'getMilliseconds');
 addToken('s', 'getSeconds');
-addToken('ss', 'getSeconds', <DateFormatOptions>{lead: 2});
+addToken('ss', 'getSeconds', {lead: 2} as DateFormatOptions);
 addToken('m', 'getMinutes');
-addToken('mm', 'getMinutes', <DateFormatOptions>{lead: 2});
+addToken('mm', 'getMinutes', {lead: 2} as DateFormatOptions);
 addToken('h', getTwelveHours);
-addToken('hh', getTwelveHours, <DateFormatOptions>{lead: 2});
+addToken('hh', getTwelveHours, {lead: 2} as DateFormatOptions);
 addToken('H', 'getHours');
-addToken('HH', 'getHours', <DateFormatOptions>{lead: 2});
+addToken('HH', 'getHours', {lead: 2} as DateFormatOptions);
 addToken('a', getAmPm);
 
-//Date tokens
+// Date tokens
 addToken('D', 'getDate');
-addToken('DD', 'getDate', <DateFormatOptions>{lead: 2});
+addToken('DD', 'getDate', {lead: 2} as DateFormatOptions);
 addToken('dd', getDayOfWeekMin);
-addToken('ddl', getDayOfWeekMin, <DateFormatOptions>{lower: true});
+addToken('ddl', getDayOfWeekMin, {lower: true} as DateFormatOptions);
 addToken('ddd', getDayOfWeekShort);
-addToken('dddl', getDayOfWeekShort, <DateFormatOptions>{lower: true});
+addToken('dddl', getDayOfWeekShort, {lower: true} as DateFormatOptions);
 addToken('dddd', getDayOfWeekLong);
-addToken('ddddl', getDayOfWeekLong, <DateFormatOptions>{lower: true});
+addToken('ddddl', getDayOfWeekLong, {lower: true} as DateFormatOptions);
 addToken('M', getHumanMonth);
-addToken('MM', getHumanMonth, <DateFormatOptions>{lead: 2});
+addToken('MM', getHumanMonth, {lead: 2} as DateFormatOptions);
 addToken('MMM', getMonthNameShort);
-addToken('MMMl', getMonthNameShort, <DateFormatOptions>{lower: true});
+addToken('MMMl', getMonthNameShort, {lower: true} as DateFormatOptions);
 addToken('MMMM', getMonthNameLong);
-addToken('MMMMl', getMonthNameLong, <DateFormatOptions>{lower: true});
+addToken('MMMMl', getMonthNameLong, {lower: true} as DateFormatOptions);
 addToken('MMMMo', getMonthOrdinal);
-addToken('MMMMlo', getMonthOrdinal, <DateFormatOptions>{lower: true});
+addToken('MMMMlo', getMonthOrdinal, {lower: true} as DateFormatOptions);
 addToken('Y', getYearMin);
 addToken('Yh', getHalfYear);
-addToken('YY', getYearMin, <DateFormatOptions>{lead: 2});
+addToken('YY', getYearMin, {lead: 2} as DateFormatOptions);
 addToken('YYhr', getHalfYearRomanMin);
 addToken('YYYY', 'getFullYear');
 addToken('YYYYhr', getHalfYearRomanLong);
@@ -436,9 +436,9 @@ addToken('QQQQr', getQuarterRomanLong);
  * @param {String} format Format string
  * @return {String} Date as string
  */
-var format = function (date: Date, format: string): string {
-   return String(format).replace(getTokensRegex(), function (token) {
-      //Check if to be escaped
+let format = function(date: Date, format: string): string {
+   return String(format).replace(getTokensRegex(), function(token) {
+      // Check if to be escaped
       if (token[0] === '[' && token[token.length - 1] === ']') {
          return token.substr(1, token.length - 2);
       }

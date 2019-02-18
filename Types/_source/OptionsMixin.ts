@@ -7,11 +7,11 @@
  */
 
 export interface IOptions {
-   debug?: boolean
+   debug?: boolean;
 }
 
 interface IConstructorOptions {
-   options?: IOptions
+   options?: IOptions;
 }
 
 const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
@@ -32,7 +32,7 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
 
    constructor(options?: IConstructorOptions) {
       if (options && options.options instanceof Object) {
-         this._$options = Object.assign({}, this._$options || {}, options.options);
+         this._$options = {...(this._$options || {}), ...options.options};
          delete options.options;
       }
    },
@@ -43,11 +43,11 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     * @see options
     */
    getOptions(): Object {
-      return Object.assign({}, this._$options);
+      return {...this._$options};
    },
 
    setOptions(options: Object) {
-      this._$options = Object.assign({}, this._$options, options || {});
+      this._$options = {...this._$options, ...(options || {})};
    },
 
    /**
@@ -58,7 +58,7 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     * @static
     */
    addOptions(Super: Function, options: Object) {
-      return Object.assign({}, Super.prototype._$options, options);
+      return {...Super.prototype._$options, ...options};
    }
 };
 

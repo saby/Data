@@ -13,7 +13,7 @@ import {register} from '../di';
 
 export default class Search extends Tree /** @lends Types/_display/Search.prototype */{
    _createComposer() {
-      let composer = super._createComposer();
+      const composer = super._createComposer();
       composer.append(SearchStrategy);
 
       return composer;

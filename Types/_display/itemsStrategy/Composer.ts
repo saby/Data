@@ -11,7 +11,9 @@ import IItemsStrategy from '../IItemsStrategy';
 import {DestroyableMixin, SerializableMixin} from '../../entity';
 import {mixin} from '../../util';
 
-export default class Composer extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/_display/ItemsStrategy/Composer.prototype */{
+export default class Composer extends mixin(
+   DestroyableMixin, SerializableMixin
+) /** @lends Types/_display/ItemsStrategy/Composer.prototype */{
    /**
     * Композируемые модули
     */
@@ -34,7 +36,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       super();
    }
 
-   destroy() {
+   destroy(): void {
       this._modules = null;
       this._options = null;
       this._result = null;
@@ -90,12 +92,12 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * @return {Types/_display/IItemsStrategy} Удаленный экземпляр стратегии
     */
    remove(Module: Function): IItemsStrategy {
-      let index = this._modules.indexOf(Module);
+      const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
       }
 
-      let instance = this._getInstance(index);
+      const instance = this._getInstance(index);
       this._modules.splice(index, 1);
       this._options.splice(index, 1);
       this._reBuild(index);
@@ -121,7 +123,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
     */
    getInstance(Module: Function): IItemsStrategy {
-      let index = this._modules.indexOf(Module);
+      const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
       }
@@ -137,11 +139,11 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       return this._result;
    }
 
-   //endregion Public members
+   // endregion Public members
 
-   //region Types/_entity/SerializableMixin
+   // region Types/_entity/SerializableMixin
 
-   protected _getSerializableState(state) {
+   protected _getSerializableState(state: any): void {
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       state.$options = {};
@@ -152,9 +154,9 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       return state;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: any): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
 
          this._modules = state._modules;
@@ -163,20 +165,20 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       };
    }
 
-   //endregion Types/_entity/SerializableMixin
+   // endregion Types/_entity/SerializableMixin
 
-   //region Protected members
+   // region Protected members
 
-   protected _reBuild(index: number, onAdd?: boolean) {
-      let wrap = (source, Module, defaults) => {
-         let options = Object.assign({}, defaults || {});
+   protected _reBuild(index: number, onAdd?: boolean): void {
+      const wrap = (source, Module, defaults) => {
+         const options = {...(defaults || {})};
          if (source) {
             options.source = source;
          }
          return new Module(options);
       };
 
-      //Just add or remove if last item affected
+      // Just add or remove if last item affected
       if (this._result && index === this._modules.length + (onAdd ? -1 : 0)) {
          if (onAdd) {
             this._result = wrap(this._result, this._modules[index], this._options[index]);
@@ -192,7 +194,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    }
 
    protected _getInstance(index: number): IItemsStrategy {
-      let target = this._modules.length - index - 1;
+      const target = this._modules.length - index - 1;
       let current = 0;
       let item = this._result;
 
@@ -204,7 +206,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       return item;
    }
 
-   //endregion Protected members
+   // endregion Protected members
 }
 
 Object.assign(Composer.prototype, {

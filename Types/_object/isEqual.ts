@@ -30,7 +30,7 @@
  * @author Мальцев А.А.
  */
 
-let isTraversable = function (v): boolean {
+const isTraversable = function(v): boolean {
    let proto;
    if (v && typeof v === 'object') {
       if (v instanceof Date) {
@@ -42,17 +42,17 @@ let isTraversable = function (v): boolean {
 
    return false;
 };
-let isEqualArrays = function (arr1, arr2): boolean {
+const isEqualArrays = function(arr1, arr2): boolean {
    if (arr1.length !== arr2.length) {
       return false;
    }
 
-   return !arr1.some(function (item, index) {
+   return !arr1.some(function(item, index) {
       return !isEqual(item, arr2[index]);
    });
 };
-let isEqualObjects = function (obj1, obj2): boolean {
-   let keys1 = Object.keys(obj1),
+const isEqualObjects = function(obj1, obj2): boolean {
+   const keys1 = Object.keys(obj1),
       keys2 = Object.keys(obj2);
 
    if (keys1.length !== keys2.length) {
@@ -62,7 +62,7 @@ let isEqualObjects = function (obj1, obj2): boolean {
    keys1.sort();
    keys2.sort();
    if (keys1.length > 0) {
-      return !keys1.some(function (key, index) {
+      return !keys1.some(function(key, index) {
          return !(keys2[index] === key && isEqual(obj1[key], obj2[key]));
       });
    }
@@ -101,4 +101,4 @@ export default function isEqual(obj1, obj2): boolean {
    }
 
    return false;
-};
+}

@@ -11,7 +11,7 @@ import ManyToMany from './relation/ManyToMany';
 const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
    '[Types/_entity/ManyToManyMixin]': true,
 
-   //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
    '[WS.Data/Entity/ManyToManyMixin]': true,
 
    /**
@@ -19,11 +19,11 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     */
    _mediator: null,
 
-   //region Public methods
+   // region Public methods
 
    destroy() {
-      let mediator = this._getMediator();
-      let slaves = [];
+      const mediator = this._getMediator();
+      const slaves = [];
 
       mediator.hasMany(this, (slave) => {
          slaves.push(slave);
@@ -42,9 +42,9 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
       this._setMediator(null);
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Добавляет отношение с другой сущностью
@@ -54,9 +54,8 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     */
    _addChild(child, name) {
       if (child instanceof Object) {
-         let mediator = this._getMediator();
+         const mediator = this._getMediator();
          mediator.addRelationship(this, child, name);
-
 
          if (child['[Types/_entity/ManyToManyMixin]'] &&
             !child._hasSameMediator(mediator)
@@ -76,7 +75,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     */
    _removeChild(child) {
       if (child instanceof Object) {
-         let mediator = this._getMediator();
+         const mediator = this._getMediator();
          mediator.removeRelationship(this, child);
 
          if (child['[Types/_entity/ManyToManyMixin]'] &&
@@ -94,9 +93,9 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     * @protected
     */
    _parentChanged(data) {
-      let which = {
+      const which = {
          target: this,
-         data: data,
+         data,
          original: data
       };
       this._getMediator().hasMany(this, (slave, name) => {
@@ -112,14 +111,14 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     * @protected
     */
    _childChanged(data) {
-      let original = data;
-      let notifyParent = (mediator, child, route) => {
+      const original = data;
+      const notifyParent = (mediator, child, route) => {
          mediator.belongsTo(child, (parent, name) => {
             let childRoute = route.slice(),
                which = {
                   target: child,
-                  data: data,
-                  original: original
+                  data,
+                  original
                },
                parentWhich;
 
@@ -127,7 +126,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
             if (parent['[Types/_entity/relation/IReceiver]']) {
                parentWhich = parent.relationChanged(which, childRoute);
 
-               //Replace data with parent's data
+               // Replace data with parent's data
                if (parentWhich !== undefined) {
                   data = parentWhich.data;
                }
@@ -186,7 +185,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
       this._mediator = mediator;
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default ManyToManyMixin;

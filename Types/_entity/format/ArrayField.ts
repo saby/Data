@@ -26,7 +26,7 @@ export default class ArrayField extends Field /** @lends Types/_entity/format/Ar
      */
     _$kind: string;
 
-    //region Public methods
+    // region Public methods
 
     /**
      * Возвращает тип элементов
@@ -37,7 +37,7 @@ export default class ArrayField extends Field /** @lends Types/_entity/format/Ar
        return this._$kind;
     }
 
-    //endregion Public methods
+    // endregion Public methods
 }
 
 ArrayField.prototype['[Types/_entity/format/ArrayField]'] = true;

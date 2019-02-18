@@ -25,7 +25,7 @@ export default class DateTimeField extends Field /** @lends Types/_entity/format
        */
       _$withoutTimeZone: boolean;
 
-      //region Public methods
+      // region Public methods
 
       /**
        * Возвращает признак указания временной зоны
@@ -35,7 +35,7 @@ export default class DateTimeField extends Field /** @lends Types/_entity/format
          return this._$withoutTimeZone;
       }
 
-      //endregion Public methods
+      // endregion Public methods
 
 }
 

@@ -55,7 +55,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
       super.destroy();
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Добавляет отношение между двумя сущностями
@@ -107,7 +107,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     */
    hasMany(master, callback) {
       if (this._hasMany.has(master)) {
-         let names = this._hasManyName.get(master);
+         const names = this._hasManyName.get(master);
          this._hasMany.get(master).forEach((slave) => {
             if (isAlive(slave)) {
                callback.call(
@@ -127,7 +127,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     */
    belongsTo(slave, callback) {
       if (this._belongsTo.has(slave)) {
-         let names = this._belongsToName.get(slave);
+         const names = this._belongsToName.get(slave);
          this._belongsTo.get(slave).forEach((master) => {
             if (isAlive(master)) {
                callback.call(
@@ -140,9 +140,9 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
       }
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Добавляет отношение вида hasMany
@@ -175,7 +175,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     */
    protected _removeHasMany(master, slave) {
       if (this._hasMany.has(master)) {
-         let slaves = this._hasMany.get(master);
+         const slaves = this._hasMany.get(master);
          slaves.delete(slave);
          this._hasManyName.get(master).delete(slave);
 
@@ -217,7 +217,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     */
    protected _removeBelongsTo(slave, master) {
       if (this._belongsTo.has(slave)) {
-         let masters = this._belongsTo.get(slave);
+         const masters = this._belongsTo.get(slave);
          masters.delete(master);
          this._belongsToName.get(slave).delete(master);
 
@@ -228,7 +228,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
       }
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 ManyToMany.prototype['[Types/_entity/relation/ManyToMany]'] = true;

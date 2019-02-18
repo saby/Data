@@ -21,6 +21,17 @@ interface IOptions {
 export default class CollectionEnumerator extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, IndexedEnumeratorMixin
 ) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{
+
+   get items(): CollectionItem[] {
+      if (!this._itemsCache) {
+         this._itemsCache = this._$items instanceof Function ? this._$items() : this._$items;
+      }
+      return this._itemsCache;
+   }
+
+   // region IEnumerator
+
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    /**
     * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
     * @name Types/_display/CollectionEnumerator#items
@@ -64,13 +75,6 @@ export default class CollectionEnumerator extends mixin(
     */
    protected _sourceToInternal: number[] = [];
 
-   get items(): CollectionItem[] {
-      if (!this._itemsCache) {
-         this._itemsCache = this._$items instanceof Function ? this._$items() : this._$items;
-      }
-      return this._itemsCache;
-   }
-
    constructor(options: IOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
@@ -87,9 +91,31 @@ export default class CollectionEnumerator extends mixin(
       }
    }
 
-   //region IEnumerator
+   // endregion
 
-   readonly '[Types/_collection/IEnumerator]': boolean = true;
+   // region Statics
+
+   /**
+    * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
+    * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
+    * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
+    * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
+    * @public
+    * @static
+    */
+   static getAssociativeMap(sortMap: number[], filterMap: boolean[]): number[] {
+      const result = [];
+      let index;
+
+      for (let i = 0; i < sortMap.length; i++) {
+         index = sortMap[i];
+         if (filterMap[index]) {
+            result.push(index);
+         }
+      }
+
+      return result;
+   }
 
    getCurrent(): CollectionItem {
       return this._current;
@@ -105,9 +131,9 @@ export default class CollectionEnumerator extends mixin(
       this._setCurrentByPosition();
    }
 
-   //endregion
+   // endregion
 
-   //region IndexedEnumeratorMixin
+   // region IndexedEnumeratorMixin
 
    reIndex(action?: string, start?: number, count?: number) {
       IndexedEnumeratorMixin.reIndex.call(this, action, start, count);
@@ -121,16 +147,16 @@ export default class CollectionEnumerator extends mixin(
    }
 
    _createIndex(property: string) {
-      let savedPosition = this._position;
-      let savedCurrent = this._current;
+      const savedPosition = this._position;
+      const savedCurrent = this._current;
       IndexedEnumeratorMixin._createIndex.call(this, property);
       this._position = savedPosition;
       this._current = savedCurrent;
    }
 
-   //endregion
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает элемент по индексу
@@ -245,9 +271,9 @@ export default class CollectionEnumerator extends mixin(
       return this._internalToSource[internal];
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Инициализирует массив соответствия позиций проекции и исходной коллекции
@@ -286,7 +312,7 @@ export default class CollectionEnumerator extends mixin(
     */
    protected _setPositionByCurrent() {
       this._position = -1;
-      let index = this._current ? this.items.indexOf(this._current) : -1;
+      const index = this._current ? this.items.indexOf(this._current) : -1;
       if (
          index > -1 &&
          this._$filterMap[index]
@@ -297,33 +323,7 @@ export default class CollectionEnumerator extends mixin(
       }
    }
 
-   //endregion
-
-   //region Statics
-
-   /**
-    * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
-    * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
-    * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
-    * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
-    * @public
-    * @static
-    */
-   static getAssociativeMap(sortMap: number[], filterMap: boolean[]): number[] {
-      let result = [];
-      let index;
-
-      for (let i = 0; i < sortMap.length; i++) {
-         index = sortMap[i];
-         if (filterMap[index]) {
-            result.push(index);
-         }
-      }
-
-      return result;
-   }
-
-   //endregion
+   // endregion
 }
 
 Object.assign(CollectionEnumerator.prototype, {

@@ -4,6 +4,7 @@
  * @author Мальцев А.А.
  */
 
+const SINGLETONE_MAP_INDEX = 2;
 const map = {};
 
 /**
@@ -110,8 +111,8 @@ export function isRegistered(alias: string): boolean {
  *    });
  * </pre>
  */
-export function create(alias: string|Function|Object, options?: Object): any {
-   const result = resolve(alias, options);
+export function create<T>(alias: string|Function|Object, options?: Object): T {
+   const result = resolve<T>(alias, options);
    if (typeof result === 'function') {
       return resolve(result, options);
    }
@@ -139,7 +140,7 @@ export function create(alias: string|Function|Object, options?: Object): any {
  *    });
  * </pre>
  */
-export function resolve(alias: string|Function|Object, options?: Object): any {
+export function resolve<T>(alias: string|Function|Object, options?: Object): T {
    const aliasType = typeof alias;
    let Factory;
    let config;
@@ -154,12 +155,10 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
          config = { instantiate: false };
          break;
       default:
-         if (!isRegistered(<string> alias)) {
+         if (!isRegistered(alias as string)) {
             throw new ReferenceError(`Alias "${alias}" does not registered`);
          }
-         Factory = map[<string> alias][0];
-         config = map[<string> alias][1];
-         singleInst = map[<string> alias][2];
+         [Factory, config, singleInst] = map[alias as string];
    }
 
    if (config) {
@@ -168,7 +167,7 @@ export function resolve(alias: string|Function|Object, options?: Object): any {
       }
       if (config.single === true) {
          if (singleInst === undefined) {
-            singleInst = map[<string> alias][2] = new Factory(options);
+            singleInst = map[alias as string][SINGLETONE_MAP_INDEX] = new Factory(options);
          }
          return singleInst;
       }
