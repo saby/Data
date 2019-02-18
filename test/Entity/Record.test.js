@@ -163,6 +163,20 @@ define([
       });
 
       describe('.destroy()', function() {
+         it('shouldn\'t destroy same child twice', function() {
+            var root = new Record();
+            var foo = new Record();
+            var bar = new Record();
+            root.set('foo', foo);
+            foo.set('bar', bar);
+            root.set('bar', bar);
+
+            root.destroy();
+            assert.isTrue(root.destroyed);
+            assert.isTrue(foo.destroyed);
+            assert.isTrue(bar.destroyed);
+         });
+
          it('should throw ReferenceError on any method call after destroy', function() {
             var record = new Record();
             record.get('foo');

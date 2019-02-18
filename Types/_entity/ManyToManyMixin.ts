@@ -34,7 +34,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
       let slave;
       for (let i = 0, count = slaves.length; i < count; i++) {
          slave = slaves[i];
-         if (slave.destroy) {
+         if (slave.destroy && !slave.destroyed) {
             slave.destroy();
          }
       }
