@@ -15,11 +15,25 @@ export default class SortWrapper {
 
    constructor(item: any, index: number) {
       if (item instanceof Object) {
-         item[<string>SortWrapper.indexKey] = index;
+         item[SortWrapper.indexKey as string] = index;
          return item;
       }
       this.item = item;
       this.index = index;
+   }
+
+   static valueOf(item): any {
+      return item instanceof SortWrapper ? item.valueOf() : item;
+   }
+
+   static indexOf(item): number {
+      return item instanceof SortWrapper ? item.indexOf() : item[SortWrapper.indexKey as string];
+   }
+
+   static clear(item) {
+      if (!(item instanceof SortWrapper)) {
+         delete item[SortWrapper.indexKey as string];
+      }
    }
 
    valueOf(): any {
@@ -28,20 +42,6 @@ export default class SortWrapper {
 
    indexOf(): number {
       return this.index;
-   }
-
-   static valueOf(item): any {
-      return item instanceof SortWrapper ? item.valueOf() : item;
-   }
-
-   static indexOf(item): number {
-      return item instanceof SortWrapper ? item.indexOf() : item[<string>SortWrapper.indexKey];
-   }
-
-   static clear(item) {
-      if (!(item instanceof SortWrapper)) {
-         delete item[<string>SortWrapper.indexKey];
-      }
    }
 }
 

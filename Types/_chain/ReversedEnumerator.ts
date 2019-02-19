@@ -7,7 +7,7 @@
 import IndexedEnumerator from './IndexedEnumerator';
 
 export default class ReversedEnumerator<T> extends IndexedEnumerator<T> {
-   _getItems(): Array<T> {
+   _getItems(): T[] {
       if (!this._items) {
          super._getItems();
          this._items.reverse();

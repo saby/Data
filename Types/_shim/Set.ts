@@ -5,21 +5,25 @@
  * @author Мальцев А.А.
  */
 
-//Use native implementation if supported
+// Use native implementation if supported
 let SetImplementation;
 
 if (typeof Set === 'undefined') {
    SetImplementation = class <T> {
       protected _hash: Object;
-      protected _objects: Array<T>;
+      protected _objects: T[];
       protected _objectPrefix: string;
 
       constructor() {
          this.clear();
       }
 
+      static _getHashedKey(key: string): string {
+         return (typeof key) + '@' + key;
+      }
+
       add(value: T): this {
-         let key = this._isObject(value) ? this._addObject(value) : value;
+         const key = this._isObject(value) ? this._addObject(value) : value;
 
          this._hash[SetImplementation._getHashedKey(key)] = value;
 
@@ -50,9 +54,9 @@ if (typeof Set === 'undefined') {
       }
 
       forEach(callbackFn: Function, thisArg?: Object) {
-         //FIXME: now not in insertion order
-         let hash = this._hash;
-         for (let key in hash) {
+         // FIXME: now not in insertion order
+         const hash = this._hash;
+         for (const key in hash) {
             if (hash.hasOwnProperty(key) && hash[key] !== undefined) {
                callbackFn.call(thisArg, hash[key], hash[key], this);
             }
@@ -96,7 +100,7 @@ if (typeof Set === 'undefined') {
       }
 
       _deleteObject(value: T): string|undefined {
-         let index = this._objects.indexOf(value);
+         const index = this._objects.indexOf(value);
          if (index > -1) {
             this._objects[index] = null;
             return this._objectPrefix + index;
@@ -105,15 +109,11 @@ if (typeof Set === 'undefined') {
       }
 
       _getObjectKey(value: T): string|undefined {
-         let index = this._objects.indexOf(value);
+         const index = this._objects.indexOf(value);
          if (index === -1) {
             return undefined;
          }
          return this._objectPrefix + index;
-      }
-
-      static _getHashedKey(key: string): string {
-         return (typeof key) + '@' + key;
       }
    };
 
@@ -124,7 +124,7 @@ if (typeof Set === 'undefined') {
    });
 
    Object.defineProperty(SetImplementation.prototype, 'size', {
-      get: function() {
+      get() {
          return Object.keys(this._hash).length;
       },
       enumerable: true,

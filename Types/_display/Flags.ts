@@ -20,7 +20,7 @@ interface IOptions {
  * @param {Env/Event.Object} event Дескриптор события
  * @param {String|Array.<boolean|null>} name Название флага
  */
-function onSourceChange (event: EventObject, name: string | Array<IFlagsValue>) {
+function onSourceChange(event: EventObject, name: string | IFlagsValue[]) {
    if (Array.isArray(name)) {
       name.forEach((selected, index) => {
          let item = this.getItemBySourceIndex(index);

@@ -24,11 +24,11 @@ export default class IdentityField extends Field /** @lends Types/_entity/format
     * @see getDefaultValue
     * @see setDefaultValue
     */
-   _$defaultValue: Array<any>;
+   _$defaultValue: any[];
 
    _separator: string;
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает разделитель
@@ -38,7 +38,7 @@ export default class IdentityField extends Field /** @lends Types/_entity/format
       return this._separator;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 IdentityField.prototype['[Types/_entity/format/IdentityField]'] = true;

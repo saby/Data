@@ -74,7 +74,7 @@ import {isEqual} from '../object';
 
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
-let developerMode = false;
+const developerMode = false;
 
 /**
  *
@@ -96,8 +96,28 @@ function checkNullId(value, idProperty) {
 export default class RecordSet<Record> extends mixin(
    ObservableList,
    FormattableMixin,
-   InstantiableMixin,
+   InstantiableMixin
 ) implements IObservableObject, IInstantiable, IProducible /** @lends Types/_collection/RecordSet.prototype */{
+
+   // endregion IReceiver
+
+   // region IInstantiable
+
+   readonly '[Types/_entity/IInstantiable]': boolean;
+
+   getInstanceId: () => string;
+
+   // endregion IInstantiable
+
+   // region IObservableObject
+
+   readonly '[Types/_entity/IObservableObject]': boolean;
+
+   // endregion ICloneable
+
+   // region IProducible
+
+   readonly '[Types/_entity/IProducible]': boolean;
 
    /**
     * @typedef {Object} MergeOptions
@@ -251,8 +271,8 @@ export default class RecordSet<Record> extends mixin(
          }
       }
 
-      //Model can have it's own format. Inherit that format if RecordSet's format is not defined.
-      //FIXME: It only works with model's constructor injection not string alias
+      // Model can have it's own format. Inherit that format if RecordSet's format is not defined.
+      // FIXME: It only works with model's constructor injection not string alias
       if (!this._$format && this._$model && typeof this._$model === 'function' && this._$model.prototype._$format) {
          this._$format = this._$model.prototype._$format;
       }
@@ -271,68 +291,8 @@ export default class RecordSet<Record> extends mixin(
       this._publish('onPropertyChange');
    }
 
-   destroy() {
-      this._$model = '';
-      this._$metaData = null;
-      this._metaData = null;
-
-      super.destroy();
-   }
-
-   //region IReceiver
-
-   relationChanged(which: any, route: Array<string>): any {
-      let index = this.getIndex(which.target);
-      if (index > -1) {
-         // Apply record's raw data to the self raw data if necessary
-         let adapter = this._getRawDataAdapter();
-         let selfData = adapter.at(index);
-         let recordData = which.target.getRawData(true);
-         if (selfData !== recordData) {
-            this._getRawDataAdapter().replace(
-               recordData,
-               index
-            );
-         }
-      }
-
-      return super.relationChanged(which, route);
-   }
-
-   //endregion IReceiver
-
-   //region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
-   //endregion IInstantiable
-
-   //region IObservableObject
-
-   readonly '[Types/_entity/IObservableObject]': boolean;
-
-   //endregion IObservableObject
-
-   //region ICloneable
-
-   clone(shallow) {
-      let clone = super.clone(shallow);
-      if (shallow) {
-         clone._$items = this._$items.slice();
-      }
-      return clone;
-   }
-
-   //endregion ICloneable
-
-   //region IProducible
-
-   readonly '[Types/_entity/IProducible]': boolean;
-
    static produceInstance(data, options) {
-      let instanceOptions: any = {
+      const instanceOptions: any = {
          rawData: data
       };
       if (options) {
@@ -346,9 +306,103 @@ export default class RecordSet<Record> extends mixin(
       return new this(instanceOptions);
    }
 
-   //endregion IProducible
+   // endregion Protected methods
 
-   //region IEquatable
+   // region Statics
+
+   /**
+    * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
+    * @param {Types/_collection/RecordSet} items Исходный рекордсет
+    * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
+    * @return {Types/_entity/Record} Патч
+    */
+   static patch(items: RecordSet<any>, names?: string[]) {
+      names = names || ['changed', 'added', 'removed'];
+
+      const filter = (state) => {
+         const result = new RecordSet({
+            adapter: items.getAdapter(),
+            idProperty: items.getIdProperty()
+         });
+
+         items.each((item) => {
+            result.add(item);
+         }, state);
+
+         return result;
+      };
+
+      const getIds = (items) => {
+         const result = [];
+         const idProperty = items.getIdProperty();
+
+         items.each((item) => {
+            result.push(item.get(idProperty));
+         });
+
+         return result;
+      };
+
+      const result = new Record({
+         format: [
+            {name: names[0], type: 'recordset'},
+            {name: names[1], type: 'recordset'},
+            {name: names[2], type: 'array', kind: 'string'}
+         ],
+         adapter: items.getAdapter()
+      });
+
+      result.set(names[0], filter(RECORD_STATE.CHANGED));
+      result.set(names[1], filter(RECORD_STATE.ADDED));
+      result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
+      result.acceptChanges();
+
+      return result;
+   }
+
+   destroy() {
+      this._$model = '';
+      this._$metaData = null;
+      this._metaData = null;
+
+      super.destroy();
+   }
+
+   // region IReceiver
+
+   relationChanged(which: any, route: string[]): any {
+      const index = this.getIndex(which.target);
+      if (index > -1) {
+         // Apply record's raw data to the self raw data if necessary
+         const adapter = this._getRawDataAdapter();
+         const selfData = adapter.at(index);
+         const recordData = which.target.getRawData(true);
+         if (selfData !== recordData) {
+            this._getRawDataAdapter().replace(
+               recordData,
+               index
+            );
+         }
+      }
+
+      return super.relationChanged(which, route);
+   }
+
+   // endregion IObservableObject
+
+   // region ICloneable
+
+   clone(shallow) {
+      const clone = super.clone(shallow);
+      if (shallow) {
+         clone._$items = this._$items.slice();
+      }
+      return clone;
+   }
+
+   // endregion IProducible
+
+   // region IEquatable
 
    isEqual(to) {
       if (to === this) {
@@ -361,16 +415,16 @@ export default class RecordSet<Record> extends mixin(
          return false;
       }
 
-      //TODO: compare using formats
+      // TODO: compare using formats
       return isEqual(
          this._getRawData(),
          to.getRawData(true)
       );
    }
 
-   //endregion IEquatable
+   // endregion IEquatable
 
-   //region IEnumerable
+   // region IEnumerable
 
    /**
     * Возвращает энумератор для перебора записей рекордсета.
@@ -412,7 +466,7 @@ export default class RecordSet<Record> extends mixin(
     * </pre>
     */
    getEnumerator(state) {
-      let enumerator = new Arraywise(this._$items);
+      const enumerator = new Arraywise(this._$items);
 
       enumerator.setResolver((index) => this.at(index));
 
@@ -466,7 +520,7 @@ export default class RecordSet<Record> extends mixin(
       }
       context = context || this;
 
-      let length = this.getCount();
+      const length = this.getCount();
       let index = 0;
       let isMatching;
       let record;
@@ -488,9 +542,9 @@ export default class RecordSet<Record> extends mixin(
       }
    }
 
-   //endregion IEnumerable
+   // endregion IEnumerable
 
-   //region List
+   // region List
 
    clear() {
       let item;
@@ -550,8 +604,8 @@ export default class RecordSet<Record> extends mixin(
    removeAt(index) {
       this._getRawDataAdapter().remove(index);
 
-      let item = this._$items[index];
-      let result = super.removeAt(index);
+      const item = this._$items[index];
+      const result = super.removeAt(index);
 
       if (item) {
          item.detach();
@@ -602,7 +656,7 @@ export default class RecordSet<Record> extends mixin(
    replace(item, at) {
       item = this._normalizeItems([item], RECORD_STATE.CHANGED)[0];
       this._getRawDataAdapter().replace(item.getRawData(true), at);
-      let oldItem = this._$items[at];
+      const oldItem = this._$items[at];
       super.replace(item, at);
       if (oldItem) {
          oldItem.detach();
@@ -612,7 +666,7 @@ export default class RecordSet<Record> extends mixin(
    }
 
    move(from, to) {
-      this._getRecord(from);//force create record instance
+      this._getRecord(from); // force create record instance
       this._getRawDataAdapter().move(from, to);
       super.move(from, to);
    }
@@ -629,7 +683,7 @@ export default class RecordSet<Record> extends mixin(
          return [];
       }
 
-      let oldItems = this._$items.slice();
+      const oldItems = this._$items.slice();
       let result;
 
       if (items instanceof RecordSet) {
@@ -704,11 +758,11 @@ export default class RecordSet<Record> extends mixin(
 
       let indexer;
 
-      //Custom model possible has different properties collection, this cause switch to the slow not lazy mode
+      // Custom model possible has different properties collection, this cause switch to the slow not lazy mode
       if (this._$model === this._defaultModel) {
-         //Fast mode: indexing without record instances
-         let adapter = this._getAdapter();
-         let tableAdapter = this._getRawDataAdapter();
+         // Fast mode: indexing without record instances
+         const adapter = this._getAdapter();
+         const tableAdapter = this._getRawDataAdapter();
 
          indexer = new Indexer(
             this._getRawData(),
@@ -717,7 +771,7 @@ export default class RecordSet<Record> extends mixin(
             (item, property) => adapter.forRecord(item).get(property)
          );
       } else {
-         //Slow mode: indexing use record instances
+         // Slow mode: indexing use record instances
          indexer = new Indexer(
             this._$items,
             (items) => items.length,
@@ -730,9 +784,9 @@ export default class RecordSet<Record> extends mixin(
       return indexer;
    }
 
-   //endregion List
+   // endregion List
 
-   //endregion ObservableList
+   // endregion ObservableList
 
    _itemsSlice(begin, end) {
       if (this._isNeedNotifyCollectionChange()) {
@@ -743,7 +797,7 @@ export default class RecordSet<Record> extends mixin(
             end = this._$items.length;
          }
 
-         //Force create records for event handler
+         // Force create records for event handler
          for (let i = begin; i < end; i++) {
             this._getRecord(i);
          }
@@ -752,9 +806,9 @@ export default class RecordSet<Record> extends mixin(
       return super._itemsSlice(begin, end);
    }
 
-   //endregion ObservableList
+   // endregion ObservableList
 
-   //region SerializableMixin
+   // region SerializableMixin
 
    _getSerializableState(state) {
       state = ObservableList.prototype._getSerializableState.call(this, state);
@@ -765,8 +819,8 @@ export default class RecordSet<Record> extends mixin(
    }
 
    _setSerializableState(state) {
-      let fromSuper = super._setSerializableState(state);
-      let fromFormattableMixin = FormattableMixin._setSerializableState(state);
+      const fromSuper = super._setSerializableState(state);
+      const fromFormattableMixin = FormattableMixin._setSerializableState(state);
       return function() {
          fromSuper.call(this);
          fromFormattableMixin.call(this);
@@ -774,13 +828,13 @@ export default class RecordSet<Record> extends mixin(
       };
    }
 
-   //endregion SerializableMixin
+   // endregion SerializableMixin
 
-   //region FormattableMixin
+   // region FormattableMixin
 
    setRawData(data) {
-      let oldItems = this._$items.slice();
-      let eventsWasRaised = this._eventRaising;
+      const oldItems = this._$items.slice();
+      const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
       this.clear();
@@ -804,7 +858,7 @@ export default class RecordSet<Record> extends mixin(
       this._parentChanged(Record.prototype.addField);
 
       if (value !== undefined) {
-         let name = format.getName();
+         const name = format.getName();
          this.each((record) => {
             record.set(name, value);
          });
@@ -848,9 +902,9 @@ export default class RecordSet<Record> extends mixin(
       this._nextVersion();
    }
 
-   //endregion FormattableMixin
+   // endregion FormattableMixin
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает конструктор записей, порождаемых рекордсетом.
@@ -957,7 +1011,7 @@ export default class RecordSet<Record> extends mixin(
     * </pre>
     */
    acceptChanges(spread) {
-      let toRemove = [];
+      const toRemove = [];
       this.each((record, index) => {
          if (record.getState() === RECORD_STATE.DELETED) {
             toRemove.push(index);
@@ -976,8 +1030,8 @@ export default class RecordSet<Record> extends mixin(
 
    isChanged() {
       let changed = false;
-      let items = this._$items;
-      let count = items.length;
+      const items = this._$items;
+      const count = items.length;
 
       for (let i = 0; i < count; i++) {
          if (items[i].isChanged()) {
@@ -1081,18 +1135,18 @@ export default class RecordSet<Record> extends mixin(
          return this._metaData;
       }
 
-      let cast = (value, format) => {
+      const cast = (value, format) => {
          return factory.cast(
             value,
             format,
             {
-               format: format,
+               format,
                adapter: this._getAdapter(),
                idProperty: this._$idProperty
             }
          );
       };
-      let metaFormat = this._$metaFormat ? FormattableMixin._buildFormat(this._$metaFormat) : null;
+      const metaFormat = this._$metaFormat ? FormattableMixin._buildFormat(this._$metaFormat) : null;
       let metaData = {};
 
       if (this._$metaData) {
@@ -1100,8 +1154,8 @@ export default class RecordSet<Record> extends mixin(
             Object.keys(this._$metaData).forEach((fieldName) => {
                let fieldValue = this._$metaData[fieldName];
                if (metaFormat) {
-                  let fieldFormat = undefined;
-                  let fieldIndex = metaFormat.getFieldIndex(fieldName);
+                  let fieldFormat;
+                  const fieldIndex = metaFormat.getFieldIndex(fieldName);
                   if (fieldIndex > -1) {
                      fieldFormat = metaFormat.at(fieldIndex);
                      fieldValue = cast(
@@ -1118,17 +1172,17 @@ export default class RecordSet<Record> extends mixin(
       } else {
          let adapter = this._getRawDataAdapter();
 
-         //Unwrap if needed
+         // Unwrap if needed
          if (adapter['[Types/_entity/adapter/IDecorator]']) {
             adapter = adapter.getOriginal();
          }
 
          if (adapter['[Types/_entity/adapter/IMetaData]']) {
             adapter.getMetaDataDescriptor().forEach((format) => {
-               let fieldName = format.getName();
-               let fieldFormat = undefined;
+               const fieldName = format.getName();
+               let fieldFormat;
                if (metaFormat) {
-                  let fieldIndex = metaFormat.getFieldIndex(fieldName);
+                  const fieldIndex = metaFormat.getFieldIndex(fieldName);
                   if (fieldIndex > -1) {
                      fieldFormat = metaFormat.at(fieldIndex);
                   }
@@ -1162,14 +1216,14 @@ export default class RecordSet<Record> extends mixin(
       this._metaData = this._$metaData = meta;
 
       if (meta instanceof Object) {
-         let adapter = this._getRawDataAdapter();
+         const adapter = this._getRawDataAdapter();
          if (adapter['[Types/_entity/adapter/IMetaData]']) {
             adapter.getMetaDataDescriptor().forEach((format) => {
-               let name = format.getName();
-               let value = factory.serialize(
+               const name = format.getName();
+               const value = factory.serialize(
                   meta[name],
                   {
-                     format: format,
+                     format,
                      adapter: this.getAdapter()
                   }
                );
@@ -1193,25 +1247,24 @@ export default class RecordSet<Record> extends mixin(
     * @see remove
     */
    merge(recordSet, options) {
-      //Backward compatibility for 'merge'
+      // Backward compatibility for 'merge'
       if (options instanceof Object && options.hasOwnProperty('merge') && !options.hasOwnProperty('replace')) {
          options.replace = options.merge;
       }
 
-      options = Object.assign({
+      options = {
          add: true,
          remove: true,
          replace: true,
-         inject: false
-      }, options || {});
+         inject: false, ...(options || {})};
 
-      let count = recordSet.getCount();
-      let idProperty = this._$idProperty;
-      let existsIdMap = {};
-      let newIdMap = {};
-      let toAdd = [];
-      let toReplace = [];
-      let toInject = [];
+      const count = recordSet.getCount();
+      const idProperty = this._$idProperty;
+      const existsIdMap = {};
+      const newIdMap = {};
+      const toAdd = [];
+      const toReplace = [];
+      const toInject = [];
       let record;
       let id;
       let index;
@@ -1269,7 +1322,7 @@ export default class RecordSet<Record> extends mixin(
       }
 
       if (options.remove) {
-         let toRemove = [];
+         const toRemove = [];
          this.each((record, index) => {
             if (!newIdMap.hasOwnProperty(record.get(idProperty))) {
                toRemove.push(index);
@@ -1282,9 +1335,9 @@ export default class RecordSet<Record> extends mixin(
       }
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Вставляет сырые данные записей в сырые данные рекордсета
@@ -1294,7 +1347,7 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _addItemsToRawData(items, at?: number) {
-      let adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter();
       items = this._itemsToArray(items);
 
       let item;
@@ -1317,9 +1370,9 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _normalizeItems(items, state) {
-      let formatDefined = this._hasFormat();
+      const formatDefined = this._hasFormat();
       let format;
-      let result = [];
+      const result = [];
       let resultItem;
       let item;
       for (let i = 0; i < items.length; i++) {
@@ -1353,7 +1406,7 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _normalizeItemData(item, format) {
-      let itemFormat = item.getFormat(true);
+      const itemFormat = item.getFormat(true);
       let result;
 
       if (format.isEqual(itemFormat)) {
@@ -1361,11 +1414,11 @@ export default class RecordSet<Record> extends mixin(
             item.getRawData()
          );
       } else {
-         let adapter = this.getAdapter().forRecord(null, this._getRawData());
-         let itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
+         const adapter = this.getAdapter().forRecord(null, this._getRawData());
+         const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
 
          format.each((field, index) => {
-            let name = field.getName();
+            const name = field.getName();
             adapter.addField(field, index);
             adapter.set(name, itemAdapter.get(name));
          });
@@ -1397,7 +1450,7 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _buildRecord(data) {
-      let record = create(this._$model, {
+      const record = create(this._$model, {
          owner: this,
          writable: this.writable,
          state: RECORD_STATE.UNCHANGED,
@@ -1422,7 +1475,7 @@ export default class RecordSet<Record> extends mixin(
 
       let record = this._$items[at];
       if (!record) {
-         let adapter = this._getRawDataAdapter();
+         const adapter = this._getRawDataAdapter();
          record = this._$items[at] = this._buildRecord(() => {
             return adapter.at(record ? this.getIndex(record) : at);
          });
@@ -1439,69 +1492,15 @@ export default class RecordSet<Record> extends mixin(
     * @protected
     */
    _initByRawData() {
-      let adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter();
       this._$items.length = 0;
       this._$items.length = adapter.getCount();
    }
 
-   //endregion Protected methods
-
-   //region Statics
-
-   /**
-    * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-    * @param {Types/_collection/RecordSet} items Исходный рекордсет
-    * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-    * @return {Types/_entity/Record} Патч
-    */
-   static patch(items: RecordSet<any>, names?: string[]) {
-      names = names || ['changed', 'added', 'removed'];
-
-      let filter = (state) => {
-         let result = new RecordSet({
-            adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
-         });
-
-         items.each((item) => {
-            result.add(item);
-         }, state);
-
-         return result;
-      };
-
-      let getIds = (items) => {
-         let result = [];
-         let idProperty = items.getIdProperty();
-
-         items.each((item) => {
-            result.push(item.get(idProperty));
-         });
-
-         return result;
-      };
-
-      let result = new Record({
-         format: [
-            {name: names[0], type: 'recordset'},
-            {name: names[1], type: 'recordset'},
-            {name: names[2], type: 'array', kind: 'string'}
-         ],
-         adapter: items.getAdapter()
-      });
-
-      result.set(names[0], filter(RECORD_STATE.CHANGED));
-      result.set(names[1], filter(RECORD_STATE.ADDED));
-      result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
-      result.acceptChanges();
-
-      return result;
-   }
-
-   //endregion Statics
+   // endregion Statics
 }
 
-Object.assign(RecordSet.prototype,{
+Object.assign(RecordSet.prototype, {
    '[Types/_collection/RecordSet]': true,
    '[Types/_entity/IInstantiable]': true,
    '[Types/_entity/IObservableObject]': true,
@@ -1516,10 +1515,10 @@ Object.assign(RecordSet.prototype,{
    _metaData: null
 });
 
-//Aliases
+// Aliases
 RecordSet.prototype.forEach = RecordSet.prototype.each;
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 RecordSet.prototype['[WS.Data/Collection/RecordSet]'] = true;
 
 register('Types/collection:RecordSet', RecordSet, {instantiate: false});

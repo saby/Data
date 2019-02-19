@@ -36,8 +36,8 @@ import Record from '../Record';
 import {RecordSet} from '../../collection';
 
 interface RecordSetOptions {
-   adapter?: string | IAdapter
-   idProperty?: string
+   adapter?: string | IAdapter;
+   idProperty?: string;
 }
 
 export default class RecordSetTable extends mixin(
@@ -47,6 +47,14 @@ export default class RecordSetTable extends mixin(
     * @property Список
     */
    _data: RecordSet<Record>;
+
+   // region ITable
+
+   readonly '[Types/_entity/adapter/ITable]': boolean;
+
+   getData: () => any;
+   getFormat: (name: string) => any;
+   getSharedFormat: (name: string) => UniversalField;
 
    /**
     * Конструктор
@@ -60,16 +68,8 @@ export default class RecordSetTable extends mixin(
       GenericFormatMixin.constructor.call(this, data);
    }
 
-   //region ITable
-
-   readonly '[Types/_entity/adapter/ITable]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => any;
-   getSharedFormat: (name: string) => UniversalField;
-
    getFields() {
-      let fields = [];
+      const fields = [];
       if (this._isValidData()) {
          this._data.getFormat().each((field) => {
             fields.push(field.getName());
@@ -112,7 +112,7 @@ export default class RecordSetTable extends mixin(
          throw new TypeError('Passed data has invalid format');
       }
 
-      let rec = this._data.at(source);
+      const rec = this._data.at(source);
       this._data.removeAt(source);
       this._data.add(rec, target);
    }
@@ -136,7 +136,7 @@ export default class RecordSetTable extends mixin(
          throw new TypeError('Passed data has invalid format');
       }
 
-      let clone = this._data.at(index).clone();
+      const clone = this._data.at(index).clone();
       this.add(clone, 1 + index);
       return clone;
    }
@@ -146,7 +146,7 @@ export default class RecordSetTable extends mixin(
          throw new TypeError('Passed data has invalid format');
       }
 
-      let count = this._data.getCount();
+      const count = this._data.getCount();
       for (let i = count - 1; i >= 0; i--) {
          this._data.removeAt(i);
       }
@@ -176,13 +176,13 @@ export default class RecordSetTable extends mixin(
       this._data.removeFieldAt(index);
    }
 
-   //endregion ITable
+   // endregion ITable
 
-   //region Protected methods
+   // region Protected methods
 
    _buildData(sample) {
       if (!this._data) {
-         let config = <RecordSetOptions>{};
+         const config = {} as RecordSetOptions;
          if (sample) {
             if (sample.getAdapter) {
                config.adapter = sample.getAdapter();
@@ -203,7 +203,7 @@ export default class RecordSetTable extends mixin(
       return this._data.getFormat();
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(RecordSetTable.prototype, {

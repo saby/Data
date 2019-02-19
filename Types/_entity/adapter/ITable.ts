@@ -16,7 +16,7 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
     * Возвращает массив названий полей
     * @return {Array.<String>} Названия полей
     */
-   getFields(): Array<string>;
+   getFields(): string[];
 
    /**
     * Возвращает кол-во записей таблицы

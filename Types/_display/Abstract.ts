@@ -18,17 +18,17 @@ import {mixin} from '../util';
 /**
  * Массив соответствия индексов проекций и коллекций
  */
-let displaysToCollections: Array<IEnumerable<any>> = [];
+const displaysToCollections: Array<IEnumerable<any>> = [];
 
 /**
  * Массив соответствия индексов проекций и их инстансов
  */
-let displaysToInstances: Array<Abstract> = [];
+const displaysToInstances: Abstract[] = [];
 
 /**
  * Счетчик ссылок на singlton-ы
  */
-let displaysCounter: Array<number> = [];
+const displaysCounter: number[] = [];
 
 export interface IEnumerable<T> extends IEnumerableCollection<T> {
    getEnumerator(localize?: boolean): IEnumerator<T>;
@@ -47,12 +47,12 @@ export default abstract class Abstract extends mixin(
       ObservableMixin.call(this, options);
    }
 
-   destroy() {
+   destroy(): void {
       DestroyableMixin.prototype.destroy.call(this);
       ObservableMixin.prototype.destroy.call(this);
    }
 
-   //region Statics
+   // region Statics
 
    /**
     * Возвращает проекцию по умолчанию
@@ -62,13 +62,13 @@ export default abstract class Abstract extends mixin(
     * @return {Types/_display/Abstract}
     * @static
     */
-   static getDefaultDisplay(collection: IEnumerable<any>, options?: IOptions, single?: boolean) {
+   static getDefaultDisplay(collection: IEnumerable<any>, options?: IOptions, single?: boolean): Abstract {
       if (arguments.length === 2 && (typeof options !== 'object')) {
          single = options;
          options = {};
       }
 
-      let index = single ? displaysToCollections.indexOf(collection) : -1;
+      const index = single ? displaysToCollections.indexOf(collection) : -1;
       if (index === -1) {
          options = options || {};
          options.collection = collection;
@@ -83,7 +83,8 @@ export default abstract class Abstract extends mixin(
          } else if (collection instanceof Array) {
             instance = create('Types/display:Collection', options);
          } else {
-            throw new TypeError(`Argument "collection" should implement Types/_collection/IEnumerable or be an instance of Array, but "${collection}" given.`);
+            throw new TypeError(`Argument "collection" should implement Types/_collection/IEnumerable or be an ' +
+               'instance of Array, but "${collection}" given.`);
          }
 
          if (single) {
@@ -105,8 +106,8 @@ export default abstract class Abstract extends mixin(
     * @return {Boolean} Ссылка на проекцию была освобождена
     * @static
     */
-   static releaseDefaultDisplay(display) {
-      let index = displaysToInstances.indexOf(display);
+   static releaseDefaultDisplay(display: Abstract): boolean {
+      const index = displaysToInstances.indexOf(display);
       if (index === -1) {
          return false;
       }
@@ -124,7 +125,7 @@ export default abstract class Abstract extends mixin(
       return true;
    }
 
-   //endregion
+   // endregion
 }
 
 Abstract.prototype['[Types/_display/Abstract]'] = true;

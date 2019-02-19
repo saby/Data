@@ -17,7 +17,7 @@ export default class HierarchyField extends Field /** @lends Types/_entity/forma
     */
    _$kind: string;
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает тип элементов
@@ -35,7 +35,7 @@ export default class HierarchyField extends Field /** @lends Types/_entity/forma
       return null;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 HierarchyField.prototype['[Types/_entity/format/HierarchyField]'] = true;

@@ -17,7 +17,7 @@
 export default function runDelayed(original: Function) {
    const win = typeof window !== 'undefined' ? window : null;
    if (win && win.requestAnimationFrame) {
-      win.requestAnimationFrame(<FrameRequestCallback>original);
+      win.requestAnimationFrame(original as FrameRequestCallback);
    } else {
       setTimeout(original, 0);
    }

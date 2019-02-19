@@ -26,6 +26,12 @@ export interface IOptions {
 export default class CollectionItem extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin
 ) implements IInstantiable /** @lends Types/_display/CollectionItem.prototype */{
+
+   // region IInstantiable
+
+   readonly '[Types/_entity/IInstantiable]': boolean;
+
+   getInstanceId: () => string;
    /**
     * @cfg {Types/_collection/IEnumerable} Коллекция, которой принадлежит элемент
     * @name Types/_display/CollectionItem#owner
@@ -57,51 +63,9 @@ export default class CollectionItem extends mixin(
       SerializableMixin.constructor.call(this);
    }
 
-   //region IInstantiable
+   // endregion
 
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
-   //endregion
-
-   //region SerializableMixin
-
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-
-      if (state.$options.owner) {
-         //save element index if collections implements Types/_collection/IList
-         let collection = state.$options.owner.getCollection();
-         let index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
-         if (index > -1) {
-            state.ci = index;
-            delete state.$options.contents;
-         }
-      }
-
-      //By performance reason. It will be restored at Collection::_setSerializableState
-      //delete state.$options.owner;
-
-      state.iid = this.getInstanceId();
-
-      return state;
-   }
-
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
-         fromSerializableMixin.call(this);
-         if (state.hasOwnProperty('ci')) {
-            this._contentsIndex = state.ci;
-         }
-         this._instanceId = state.iid;
-      };
-   }
-
-   //endregion
-
-   //region Public
+   // region Public
 
    /**
     * Возвращает коллекцию, которой принадлежит элемент
@@ -125,7 +89,7 @@ export default class CollectionItem extends mixin(
     */
    getContents(): any {
       if (this._contentsIndex !== undefined) {
-         //Ленивое восстановление _$contents по _contentsIndex после десериализации
+         // Ленивое восстановление _$contents по _contentsIndex после десериализации
          this._$contents = this.getOwner().getCollection().at(this._contentsIndex);
          this._contentsIndex = undefined;
       }
@@ -181,9 +145,45 @@ export default class CollectionItem extends mixin(
       }
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region SerializableMixin
+
+   protected _getSerializableState(state) {
+      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+
+      if (state.$options.owner) {
+         // save element index if collections implements Types/_collection/IList
+         const collection = state.$options.owner.getCollection();
+         const index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
+         if (index > -1) {
+            state.ci = index;
+            delete state.$options.contents;
+         }
+      }
+
+      // By performance reason. It will be restored at Collection::_setSerializableState
+      // delete state.$options.owner;
+
+      state.iid = this.getInstanceId();
+
+      return state;
+   }
+
+   protected _setSerializableState(state) {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function() {
+         fromSerializableMixin.call(this);
+         if (state.hasOwnProperty('ci')) {
+            this._contentsIndex = state.ci;
+         }
+         this._instanceId = state.iid;
+      };
+   }
+
+   // endregion
+
+   // region Protected
 
    /**
     * Возвращает коллекцию проекции
@@ -208,7 +208,7 @@ export default class CollectionItem extends mixin(
       }
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(CollectionItem.prototype, {

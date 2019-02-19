@@ -135,7 +135,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   fromArray(source: Array<IValue>);
+   fromArray(source: IValue[]);
 
    /**
     * Sets selection state of all the flags to false

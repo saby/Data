@@ -33,9 +33,9 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
     * @protected
     */
    _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
-      let deps = this._additionalDependencies;
-      let depsLoaded = deps.reduce((prev, curr) => prev && req.defined(curr), true);
-      let result = new Deferred();
+      const deps = this._additionalDependencies;
+      const depsLoaded = deps.reduce((prev, curr) => prev && req.defined(curr), true);
+      const result = new Deferred();
 
       if (depsLoaded) {
          if (callback) {
@@ -68,7 +68,7 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
     * @protected
     */
    _connectAdditionalDependencies(master, slave) {
-      //Cancel master on slave cancelling
+      // Cancel master on slave cancelling
       if (!slave.isCallbacksLocked()) {
          slave.addErrback((err) => {
             if (err instanceof DeferredCanceledError) {
@@ -78,7 +78,7 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
          });
       }
 
-      //Connect master's result with slave's result
+      // Connect master's result with slave's result
       master.addCallbacks((result) => {
          slave.callback(result);
          return result;

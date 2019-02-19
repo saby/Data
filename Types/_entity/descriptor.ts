@@ -15,14 +15,12 @@
 
 declare type Descriptor = string | Function;
 
-interface ValidateFunc {
-   (value: any): any;
-}
+type ValidateFunc = (value: any) => any;
 
 interface Chained extends ValidateFunc {
-   required?: Chained
-   oneOf?: Chained
-   arrayOf?: Chained
+   required?: Chained;
+   oneOf?: Chained;
+   arrayOf?: Chained;
 }
 
 /**
@@ -66,7 +64,7 @@ function validate(type: Descriptor): ValidateFunc {
 
       case 'function':
          return function validateTypeIntance(value) {
-            if (value === undefined || value instanceof <Function>type) {
+            if (value === undefined || value instanceof <Function> type) {
                return value;
             }
             return new TypeError(`Value "${value}" should be instance of ${type}`);
@@ -111,7 +109,7 @@ function required(): Chained {
  * @param {Array} values Allowed values.
  * @returns {Chained} Validator.
  */
-function oneOf(values: Array<any>): Chained {
+function oneOf(values: any[]): Chained {
    if (!(values instanceof Array)) {
       throw new TypeError('Argument values should be an instance of Array');
    }
@@ -180,7 +178,7 @@ function chain(parent: Chained): Chained {
       }
    });
 
-   return <Chained>wrapper;
+   return wrapper as Chained;
 }
 
 /**

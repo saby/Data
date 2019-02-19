@@ -27,7 +27,7 @@ export default class MoneyField extends RealField /** @lends Types/_entity/forma
     */
    _$large: boolean;
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает признак "Большие деньги"
@@ -38,7 +38,7 @@ export default class MoneyField extends RealField /** @lends Types/_entity/forma
       return this._$large;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 MoneyField.prototype['[Types/_entity/format/MoneyField]'] = true;

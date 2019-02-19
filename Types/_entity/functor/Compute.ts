@@ -24,7 +24,7 @@
 
 export interface IFunctor {
    readonly functor: Function;
-   readonly properties: Array<string>;
+   readonly properties: string[];
 }
 
 /**
@@ -36,9 +36,9 @@ export interface IFunctor {
  */
 export default class Compute implements IFunctor {
    readonly functor: Function;
-   readonly properties: Array<string>;
+   readonly properties: string[];
 
-   constructor(fn: Function, properties?: Array<string>) {
+   constructor(fn: Function, properties?: string[]) {
       properties = properties || [];
       if (!(fn instanceof Function)) {
          throw new TypeError('Argument "fn" be an instance of Function');
@@ -48,12 +48,12 @@ export default class Compute implements IFunctor {
       }
 
       Object.defineProperty(fn, 'functor', {
-         get: function() {
+         get() {
             return Compute;
          }
       });
       Object.defineProperty(fn, 'properties', {
-         get: function() {
+         get() {
             return properties;
          }
       });

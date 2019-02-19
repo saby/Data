@@ -11,9 +11,7 @@ import Abstract from './Abstract';
 import {enumerator} from '../collection';
 import {Map} from '../shim';
 
-interface KeyFunc {
-   (key: any): string;
-}
+type KeyFunc = (key: any) => string;
 
 export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Counted.prototype */{
    /**
@@ -55,7 +53,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
    // endregion Types/_collection/IEnumerable
 }
 
-Object.assign(Counted.prototype,{
+Object.assign(Counted.prototype, {
    '[Types/_chain/Counted]': true,
    _key: null
 });

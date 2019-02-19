@@ -24,7 +24,7 @@ const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype *
     */
    _instanceId: '',
 
-   //region IInstantiable
+   // region IInstantiable
 
    getInstanceId(): string {
       if (counter >= MAX_VALUE) {
@@ -34,10 +34,10 @@ const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype *
          (this._instanceId = (IS_SERVER_SIDE ? 'server-' : 'client-') + this._instancePrefix + counter++);
    }
 
-   //endregion
+   // endregion
 };
 
-//Deprecated methods
+// Deprecated methods
 // @ts-ignore
 InstantiableMixin.getHash = InstantiableMixin.getInstanceId;
 

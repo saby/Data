@@ -51,5 +51,5 @@ export default interface IIndexedCollection /** @lends Types/_collection/IIndexe
     *    list.getIndicesByValue('node', true);//[0, 1, 3]
     * </pre>
     */
-   getIndicesByValue(property: string, value: any): Array<number>;
+   getIndicesByValue(property: string, value: any): number[];
 }

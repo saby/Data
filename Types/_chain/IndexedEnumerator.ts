@@ -9,8 +9,8 @@ import {IEnumerator} from '../collection';
 export default class IndexedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;
    protected previous: Abstract<T>;
+   protected _items: any[];
    private index: number;
-   protected _items: Array<any>;
 
    /**
     * Конструктор.
@@ -46,7 +46,7 @@ export default class IndexedEnumerator<T> implements IEnumerator<T> {
       this.index = -1;
    }
 
-   _getItems(): Array<any> {
+   _getItems(): any[] {
       if (!this._items) {
          this._items = [];
          const enumerator = this.previous.getEnumerator();

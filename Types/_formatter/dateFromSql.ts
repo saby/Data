@@ -1,5 +1,5 @@
-///<amd-module name="Types/_formatter/dateFromSql" />
-//@ts-ignore
+/// <amd-module name="Types/_formatter/dateFromSql" />
+// @ts-ignore
 import { constants } from 'Env/Env';
 
 /**
@@ -40,12 +40,12 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
       return retval;
    }
 
-   //It's only time with negative time zone
+   // It's only time with negative time zone
    if (timeSep > -1 && dateSep > timeSep) {
       dateSep = -1;
    }
 
-   //Looking for milliseconds
+   // Looking for milliseconds
    if (millisecSep !== -1) {
       msStr = dateTime.substr(millisecSep + 1, (tzSep === -1 ? dateTime.length : tzSep) - (millisecSep + 1));
       if (msStr.length > 3) {
@@ -57,7 +57,7 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
       }
    }
 
-   //Apply date if defined
+   // Apply date if defined
    if (dateSep !== -1) {
       y = parseInt(dateTime.substr(dateSep - 4, 4), 10);
       m = parseInt(dateTime.substr(dateSep + 1, 2), 10) - 1;
@@ -70,7 +70,7 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
       retval.setFullYear(y, m, d);
    }
 
-   //Apply time if defined
+   // Apply time if defined
    if (timeSep !== -1) {
       retval.setHours(
          parseInt(dateTime.substr(timeSep - 2, 2), 10),
@@ -78,15 +78,15 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
          parseInt(dateTime.substr(timeSep + 4, 2), 10),
          ms);
 
-      //First use default time zone
+      // First use default time zone
       let timeOffset = defaultTimeZone;
 
-      //Use time zone from dateTime if available
+      // Use time zone from dateTime if available
       if (tz) {
          timeOffset = (Number(tz[2] + '1') * (Number(tz[3]) * 60 + (Number(tz[4]) * 1 || 0)));
       }
 
-      //Apply time zone by shifting minutes
+      // Apply time zone by shifting minutes
       if (timeOffset !== undefined) {
          retval.setMinutes(retval.getMinutes() - timeOffset - retval.getTimezoneOffset());
       }

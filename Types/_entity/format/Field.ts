@@ -66,15 +66,15 @@ export default abstract class Field extends mixin(
       OptionsToPropertyMixin.call(this, options);
    }
 
-   //region ICloneable
+   // region ICloneable
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone: (shallow?: boolean) => Field;
+   clone: <Field>(shallow?: boolean) => Field;
 
-   //endregion
+   // endregion
 
-   //region Types/_entity/IEquatable
+   // region Types/_entity/IEquatable
 
    readonly '[Types/_entity/IEquatable]': boolean;
 
@@ -87,8 +87,8 @@ export default abstract class Field extends mixin(
       if (to === this) {
          return true;
       }
-      let selfProto = Object.getPrototypeOf(this);
-      let toProto = Object.getPrototypeOf(to);
+      const selfProto = Object.getPrototypeOf(this);
+      const toProto = Object.getPrototypeOf(to);
 
       return selfProto === toProto &&
          this.getName() === to.getName() &&
@@ -96,9 +96,9 @@ export default abstract class Field extends mixin(
          this.isNullable() === to.isNullable();
    }
 
-   //endregion Types/_entity/IEquatable
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает модуль, который является конструктором значения поля
@@ -181,9 +181,9 @@ export default abstract class Field extends mixin(
     * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
     */
    copyFrom(format) {
-      let formatOptions = format._getOptions();
+      const formatOptions = format._getOptions();
       let key;
-      for (let option in formatOptions) {
+      for (const option in formatOptions) {
          if (formatOptions.hasOwnProperty(option)) {
             key = '_$' + option;
             if (key in this) {
@@ -193,7 +193,7 @@ export default abstract class Field extends mixin(
       }
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 Field.prototype['[Types/_entity/format/DestroyableMixin]'] = true;

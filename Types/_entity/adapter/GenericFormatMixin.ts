@@ -6,7 +6,7 @@
  * @author Мальцев А.А.
  */
 
-import {Field, UniversalField} from '../format'
+import {Field, UniversalField} from '../format';
 
 const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
@@ -34,7 +34,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       this._data = data;
    },
 
-   //region Public methods
+   // region Public methods
 
    getData() {
       return this._data;
@@ -45,8 +45,8 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
    },
 
    getFormat(name) {
-      let fields = this._getFieldsFormat();
-      let index = fields ? fields.getFieldIndex(name) : -1;
+      const fields = this._getFieldsFormat();
+      const index = fields ? fields.getFieldIndex(name) : -1;
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
       }
@@ -57,9 +57,9 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       if (this._sharedFieldFormat === null) {
          this._sharedFieldFormat = new UniversalField();
       }
-      let fieldFormat = this._sharedFieldFormat;
-      let fields = this._getFieldsFormat();
-      let index = fields ? fields.getFieldIndex(name) : -1;
+      const fieldFormat = this._sharedFieldFormat;
+      const fields = this._getFieldsFormat();
+      const index = fields ? fields.getFieldIndex(name) : -1;
 
       fieldFormat.name = name;
       fieldFormat.type = index === -1 ? 'String' : fields.at(index).getType();
@@ -72,12 +72,12 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       if (!format || !(format instanceof Field)) {
          throw new TypeError(`${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`);
       }
-      let name = format.getName();
+      const name = format.getName();
       if (!name) {
-         throw new Error(`{$this._moduleName}::addField(): field name is empty`);
+         throw new Error('{$this._moduleName}::addField(): field name is empty');
       }
-      let fields = this._getFieldsFormat();
-      let index = fields ? fields.getFieldIndex(name) : -1;
+      const fields = this._getFieldsFormat();
+      const index = fields ? fields.getFieldIndex(name) : -1;
       if (index > -1) {
          throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
       }
@@ -86,8 +86,8 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
    },
 
    removeField(name) {
-      let fields = this._getFieldsFormat();
-      let index = fields ? fields.getFieldIndex(name) : -1;
+      const fields = this._getFieldsFormat();
+      const index = fields ? fields.getFieldIndex(name) : -1;
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}::removeField(): field "${name}" doesn't exist`);
       }
@@ -97,15 +97,15 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
 
    removeFieldAt(index) {
       this._touchData();
-      let fields = this._getFieldsFormat();
+      const fields = this._getFieldsFormat();
       if (fields) {
          fields.removeAt(index);
       }
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    _touchData() {
    },
@@ -122,8 +122,8 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       if (this._sharedFieldMeta === null) {
          this._sharedFieldMeta = {};
       }
-      let format = this.getFormat(name);
-      let meta = this._sharedFieldMeta;
+      const format = this.getFormat(name);
+      const meta = this._sharedFieldMeta;
 
       switch (format.getType()) {
          case 'Real':
@@ -145,7 +145,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       return meta;
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default GenericFormatMixin;

@@ -21,9 +21,19 @@ import {applyMixins} from '../util';
 
 interface GenericObject<T> {}
 
-declare type DictionaryValues = Array<string> | GenericObject<string>;
+declare type DictionaryValues = string[] | GenericObject<string>;
 
 export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */{
+
+   // region IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]';
+
+   // endregion
+
+   // region IEquatable
+
+   readonly '[Types/_entity/IEquatable]';
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
     * @name Types/_collection/Dictionary#dictionary
@@ -60,19 +70,15 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @protected
     */
    getDictionary(localize?: boolean): DictionaryValues {
-      let dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
+      const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
       return dictionary
-         ? (Array.isArray(dictionary) ? dictionary.slice() : Object.assign({}, dictionary))
+         ? (Array.isArray(dictionary) ? dictionary.slice() : {...dictionary})
          : dictionary;
    }
 
-   //region IEnumerable
-
-   readonly '[Types/_collection/IEnumerable]';
-
    each(callback: EnumeratorCallback<T>, context?: Object, localize?: boolean) {
       context = context || this;
-      let enumerator = this.getEnumerator(localize);
+      const enumerator = this.getEnumerator(localize);
       while (enumerator.moveNext()) {
          callback.call(
             context,
@@ -83,8 +89,8 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
    }
 
    getEnumerator(localize?: boolean): IEnumerator<T> {
-      let dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
-      let enumerator = dictionary instanceof Array ? new ArrayEnumerator(dictionary) : new Objectwise(dictionary);
+      const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
+      const enumerator = dictionary instanceof Array ? new ArrayEnumerator(dictionary) : new Objectwise(dictionary);
 
       enumerator.setFilter((item: any, index: any): boolean => {
          return index !== 'null';
@@ -92,19 +98,13 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       return enumerator;
    }
 
-   //endregion
-
-   //region IEquatable
-
-   readonly '[Types/_entity/IEquatable]';
-
    isEqual(to: Object): boolean {
       if (!(to instanceof Dictionary)) {
          return false;
       }
 
-      let enumerator = this.getEnumerator();
-      let toEnumerator = to.getEnumerator();
+      const enumerator = this.getEnumerator();
+      const toEnumerator = to.getEnumerator();
       let item;
       let hasItem;
       let toItem;
@@ -126,9 +126,9 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       return true;
    }
 
-   //endregion
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Returns key of the value in dictionary
@@ -138,7 +138,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @protected
     */
    protected _getIndex(name: T, localize?: boolean): number | string {
-      let enumerator = this.getEnumerator(localize);
+      const enumerator = this.getEnumerator(localize);
       while (enumerator.moveNext()) {
          if (enumerator.getCurrent() === name) {
             return enumerator.getCurrentIndex();
@@ -164,7 +164,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @return {Array}
     * @protected
     */
-   protected _getDictionaryByFormat(format): Array<any> {
+   protected _getDictionaryByFormat(format): any[] {
       if (!format) {
          return [];
       }
@@ -179,7 +179,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @return {Array|undefined}
     * @protected
     */
-   protected _getLocaleDictionaryByFormat(format): Array<any> {
+   protected _getLocaleDictionaryByFormat(format): any[] {
       if (!format) {
          return;
       }
@@ -188,7 +188,7 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       ) || undefined;
    }
 
-   //endregion
+   // endregion
 }
 
 applyMixins(Dictionary, OptionsToPropertyMixin, ObservableMixin);
@@ -202,5 +202,5 @@ Object.assign(Dictionary.prototype, {
    _type: undefined
 });
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 Dictionary.prototype['[WS.Data/Collection/IEnumerable]'] = true;

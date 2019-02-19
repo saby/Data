@@ -48,7 +48,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
       super.destroy();
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Добавляет отношение "родитель - ребенок"
@@ -109,13 +109,13 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @return {Object}
     */
    getParent(child) {
-      let parent = this._childToParent.get(child);
+      const parent = this._childToParent.get(child);
       return parent !== undefined && isAlive(parent) ? parent : undefined;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Добавляет ребенка в список родителя
@@ -142,7 +142,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     */
    _removeForParent(parent, child) {
       if (this._parentToChild.has(parent)) {
-         let children = this._parentToChild.get(parent);
+         const children = this._parentToChild.get(parent);
          children.delete(child);
          if (children.size === 0) {
             this._parentToChild.delete(parent);
@@ -175,7 +175,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
       }
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 OneToMany.prototype['[Types/_entity/relation/OneToMany]'] = true;

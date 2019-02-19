@@ -6,14 +6,13 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
 import { Bus as EventBus } from 'Env/Event';
 
 interface IOptions {
-   handlers?: Object
+   handlers?: Object;
 }
 
-export default abstract class ObservableMixin /**@lends Types/_entity/ObservableMixin.prototype */{
+export default abstract class ObservableMixin /** @lends Types/_entity/ObservableMixin.prototype */{
    /**
     * @cfg {Object.<Function>} handlers Обработчики событий
     */
@@ -26,7 +25,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
    /**
     * @property {Array.<Array>} Очередь событий
     */
-   protected _eventsQueue: Array<Array<any>>;
+   protected _eventsQueue: any[][];
 
    /**
     * Декларированные события
@@ -36,9 +35,9 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
    protected _destroyed: boolean;
 
    constructor(options?: IOptions) {
-      let handlers = options && options.handlers;
+      const handlers = options && options.handlers;
       if (handlers instanceof Object) {
-         for (let event in handlers) {
+         for (const event in handlers) {
             if (handlers.hasOwnProperty(event)) {
                this.subscribe(event, handlers[event]);
             }
@@ -46,7 +45,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
       }
    }
 
-   destroy() {
+   destroy(): void {
       if (this._eventBusChannel) {
          this._eventBusChannel.unsubscribeAll();
          this._eventBusChannel.destroy();
@@ -68,12 +67,13 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     *    });
     * </pre>
     */
-   subscribe(event: string, handler: Function, ctx?: Object) {
+   subscribe(event: string, handler: Function, ctx?: Object): void {
       if (this._destroyed) {
          return;
       }
 
       if (!this._eventBusChannel) {
+         // @ts-ignore
          this._eventBusChannel = EventBus.channel();
 
          if (this._publishedEvents) {
@@ -105,7 +105,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     *    instance.subscribe('OnSomethingChanged', handler);
     * </pre>
     */
-   unsubscribe(event: string, handler: Function, ctx?: Object) {
+   unsubscribe(event: string, handler: Function, ctx?: Object): void {
       if (this._eventBusChannel) {
          if (ctx === undefined) {
             ctx = this;
@@ -124,7 +124,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     *    var handlersCount = instance.getEventHandlers().length;
     * </pre>
     */
-   getEventHandlers(event: string): Array<Object> {
+   getEventHandlers(event: string): Object[] {
       return this._eventBusChannel ? this._eventBusChannel.getEventHandlers(event) : [];
    }
 
@@ -147,7 +147,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     * @param {...String} events Имя события
     * @protected
     */
-   protected _publish(...events) {
+   protected _publish(...events: string[]): void {
       this._publishedEvents = this._publishedEvents || [];
       let event;
       for (let i = 0; i < events.length; i++) {
@@ -160,14 +160,14 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
    }
 
    /**
-    * Извещает о наступлении события.
-    * Если в процессе извещения приходит очередное событие, то извещение о нем будет отправлено после выполнения обработчиков предыдущего.
+    * Извещает о наступлении события. Если в процессе извещения приходит очередное событие, то извещение о нем будет
+    * отправлено после выполнения обработчиков предыдущего.
     * @param {String} event Имя события
     * @param {...*} args Аргументы события
     * @return {*} Результат обработки события (возвращается только в случае отсутствия очереди)
     * @protected
     */
-   protected _notify(event: string, ...args) {
+   protected _notify(event: string, ...args: any[]): void {
       if (this._eventBusChannel) {
          this._notifyPushQueue.apply(this, arguments);
          return this._notifyQueue(this._eventsQueue)[0];
@@ -180,7 +180,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     * @param {...*} args Аргументы события
     * @protected
     */
-   protected _notifyLater(event: string, ...args) {
+   protected _notifyLater(event: string, ...args: any[]): void {
       if (this._eventBusChannel) {
          this._notifyPushQueue.apply(this, arguments);
       }
@@ -192,7 +192,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     * @param {...*} args Аргументы события
     * @protected
     */
-   protected _notifyPushQueue(event: string, ...args) {
+   protected _notifyPushQueue(event: string, ...args: any[]): void {
       this._eventsQueue = this._eventsQueue || [];
       this._eventsQueue.push([event, ...args]);
    }
@@ -203,8 +203,8 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     * @return {Array} Результаты обработки событиий
     * @protected
     */
-   protected _notifyQueue(eventsQueue: Array<Array<Function>>) {
-      let results = [];
+   protected _notifyQueue(eventsQueue: Function[][]): any[] {
+      const results = [];
 
       // @ts-ignore
       if (!eventsQueue.running) {
@@ -231,7 +231,7 @@ export default abstract class ObservableMixin /**@lends Types/_entity/Observable
     * @param {String} eventName Имя события
     * @protected
     */
-   protected _removeFromQueue(eventName: string) {
+   protected _removeFromQueue(eventName: string): void {
       if (!this._eventsQueue) {
          return;
       }

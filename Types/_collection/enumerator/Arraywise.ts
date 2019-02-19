@@ -17,11 +17,15 @@ export default class Arraywise<T> extends mixin(
    Object,
    IndexedEnumeratorMixin
 ) implements IEnumerator<T> /** @lends Types/_collection/ArrayEnumerator.prototype */{
+
+   // region Types/_collection/IEnumerator
+
+   readonly '[Types/_collection/IEnumerator]': true;
    /**
     * Конструктор
     * @param {Array} items Массив
     */
-   constructor(items: Array<T>) {
+   constructor(items: T[]) {
       super();
       let checkedItems = items;
       if (checkedItems === undefined) {
@@ -33,10 +37,6 @@ export default class Arraywise<T> extends mixin(
       this._items = checkedItems;
       IndexedEnumeratorMixin.constructor.call(this);
    }
-
-   // region Types/_collection/IEnumerator
-
-   readonly '[Types/_collection/IEnumerator]': true;
 
    getCurrent(): any {
       if (this._index < 0) {

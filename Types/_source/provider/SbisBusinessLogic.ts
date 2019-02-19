@@ -58,13 +58,13 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
       return this._$endpoint;
    }
 
-   call(name: string, args: Array<string> | Object): ExtendPromise<any> {
+   call(name: string, args: string[] | Object): ExtendPromise<any> {
       name = name + '';
       args = args || {};
 
       const Transport = this._$transport;
-      let endpoint = this.getEndpoint();
-      let overrideContract = name.indexOf('.') > -1;
+      const endpoint = this.getEndpoint();
+      const overrideContract = name.indexOf('.') > -1;
 
       if (!overrideContract && endpoint.contract) {
          name = endpoint.contract + this._nameSpaceSeparator + name;

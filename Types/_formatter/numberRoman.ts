@@ -28,7 +28,7 @@ const boundaries = {
  * @public
  * @author Мальцев А.А.
  */
-export default function numberRoman(num: number):string {
+export default function numberRoman(num: number): string {
    let result = '';
 
    for (const key in boundaries) {

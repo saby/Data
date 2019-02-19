@@ -98,7 +98,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
       OptionsToPropertyMixin.call(this, options);
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает название свойства, содержащего идентификатор узла.
@@ -119,7 +119,6 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
    setIdProperty(idProperty: string) {
       this._$idProperty = idProperty;
    }
-
 
    /**
     * Возвращает название свойства, содержащего идентификатор родительского узла.
@@ -207,7 +206,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
    getChildren(parent, rs) {
       if (!this._$parentProperty) {
          return parent === null || parent === undefined ? (() => {
-            let result = [];
+            const result = [];
             rs.each((item) => {
                result.push(item);
             });
@@ -215,11 +214,11 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
          })() : [];
       }
 
-      let parentId = this._asField(parent, this._$idProperty);
+      const parentId = this._asField(parent, this._$idProperty);
       let indices = rs.getIndicesByValue(this._$parentProperty, parentId);
-      let children = [];
+      const children = [];
 
-      //If nothing found by that property value, return all if null(root) requested
+      // If nothing found by that property value, return all if null(root) requested
       if (indices.length === 0 && parentId === null) {
          indices = rs.getIndicesByValue(this._$parentProperty);
       }
@@ -251,9 +250,9 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     */
    hasParent(child, rs) {
       child = this._asRecord(child, rs);
-      let parentId = child.get(this._$parentProperty);
-      let idProperty = this._$idProperty || rs.getIdProperty();
-      let index = rs.getIndexByValue(idProperty, parentId);
+      const parentId = child.get(this._$parentProperty);
+      const idProperty = this._$idProperty || rs.getIdProperty();
+      const index = rs.getIndexByValue(idProperty, parentId);
 
       return index > -1;
    }
@@ -269,14 +268,14 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     */
    getParent(child, rs) {
       child = this._asRecord(child, rs);
-      let parentId = child.get(this._$parentProperty);
+      const parentId = child.get(this._$parentProperty);
 
       return parentId === undefined || parentId === null ? null : this._asRecord(parentId, rs);
    }
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Возвращает инстанс записи
@@ -290,8 +289,8 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
          return value;
       }
 
-      let idProperty = this._$idProperty || rs.getIdProperty();
-      let index = rs.getIndexByValue(idProperty, value);
+      const idProperty = this._$idProperty || rs.getIdProperty();
+      const index = rs.getIndexByValue(idProperty, value);
 
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}: record with id "${value}" does not found in the recordset`);
@@ -315,7 +314,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
       return value.get(field);
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Hierarchy.prototype['[Types/_entity/relation/Hierarchy]'] = true;

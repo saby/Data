@@ -45,6 +45,24 @@ export default class SbisRecord extends mixin(
     */
    _castSeparator: string;
 
+   // region IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   addField: (format: Field, at?: number) => void;
+   getData: () => any;
+   getFields: () => string[];
+   getFormat: (name: string) => Field;
+   getSharedFormat: (name: string) => UniversalField;
+   removeField: (name: string) => void;
+   removeFieldAt: (index: number) => void;
+
+   // endregion IRecord
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
    /**
     * Конструктор
     * @param {*} data Сырые данные
@@ -54,31 +72,19 @@ export default class SbisRecord extends mixin(
       SbisFormatMixin.constructor.call(this, data);
    }
 
-   //region IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   addField: (format: Field, at?: number) => void;
-   getData: () => any;
-   getFields: () => Array<string>;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-   removeField: (name: string) => void;
-   removeFieldAt: (index: number) => void;
-
    has(name) {
       return this._has(name);
    }
 
    get(name) {
-      let index = this._getFieldIndex(name);
+      const index = this._getFieldIndex(name);
       return index >= 0
          ? this._cast(this._data.s[index], this._data.d[index])
          : undefined;
    }
 
    set(name, value) {
-      let index = this._getFieldIndex(name);
+      const index = this._getFieldIndex(name);
       if (index < 0) {
          throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
       }
@@ -91,20 +97,14 @@ export default class SbisRecord extends mixin(
       this._data.s.length = 0;
    }
 
-   //endregion IRecord
-
-   //region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone(shallow?: boolean): SbisRecord {
-      //FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
+   clone<SbisRecord>(shallow?: boolean): any {
+      // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
       return new SbisRecord(shallow ? this.getData() : this._cloneData(true));
    }
 
-   //endregion ICloneable
+   // endregion ICloneable
 
-   //region SbisFormatMixin
+   // region SbisFormatMixin
 
    protected _buildD(at, value) {
       this._data.d.splice(at, 0, value);
@@ -114,9 +114,9 @@ export default class SbisRecord extends mixin(
       this._data.d.splice(at, 1);
    }
 
-   //endregion SbisFormatMixin
+   // endregion SbisFormatMixin
 
-   //region Protected methods
+   // region Protected methods
 
    protected _cast(format, value) {
       switch (format && format.t) {
@@ -141,7 +141,7 @@ export default class SbisRecord extends mixin(
       return value;
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(SbisRecord.prototype, {
@@ -152,5 +152,5 @@ Object.assign(SbisRecord.prototype, {
    _castSeparator: ','
 });
 
-//FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
 SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;

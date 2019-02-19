@@ -7,9 +7,7 @@
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
-interface MapFunc {
-   (item: any, index: number): any;
-}
+type MapFunc = (item: any, index: number) => any;
 
 export default class MappedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]' = true;

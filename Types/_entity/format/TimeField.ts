@@ -20,7 +20,7 @@ import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
-   //region Public methods
+   // region Public methods
 
    getDefaultValue() {
       if (this._$defaultValue instanceof Date) {
@@ -29,7 +29,7 @@ export default class TimeField extends Field /** @lends Types/_entity/format/Tim
       return this._$defaultValue;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 TimeField.prototype['[Types/_entity/format/TimeField]'] = true;

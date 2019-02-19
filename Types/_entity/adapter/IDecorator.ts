@@ -10,5 +10,5 @@ export default interface IDecorator /** @lends Types/_entity/adapter/IDecorator.
     * Возвращает оригинальный адаптер
     * @return {Types/_entity/adapter/IAdapter|Types/_entity/adapter/IRecord|Types/_entity/adapter/ITable}
     */
-   getOriginal(): IAdapter | ITable | IRecord
+   getOriginal(): IAdapter | ITable | IRecord;
 }

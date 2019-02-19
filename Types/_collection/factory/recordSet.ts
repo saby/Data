@@ -9,10 +9,10 @@
 import IEnumerable from '../IEnumerable';
 import RecordSet from '../RecordSet';
 import {Record} from '../../entity';
-import {resolve, isRegistered} from '../../di';
+import {create} from '../../di';
 
 interface IOptions {
-   rawData?: any
+   rawData?: any;
 }
 
 /**
@@ -26,14 +26,10 @@ export default function recordSet(items: IEnumerable<Record>, options?: IOptions
       throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
    }
 
-   const Factory = resolve(
-      isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet'
-   );
-
    options = options || {};
    delete options.rawData;
 
-   let result = new Factory(options);
+   const result = create<RecordSet<Record>>('Types/collection:RecordSet', options);
    items.each((item) => {
       result.add(item);
    });

@@ -26,7 +26,7 @@ export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis
    }
 
    getKeyField(data) {
-      //TODO: primary key field index can be defined in this._data.k. and can be -1
+      // TODO: primary key field index can be defined in this._data.k. and can be -1
       let index;
       let s;
       if (data && data.s) {

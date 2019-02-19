@@ -22,7 +22,11 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
       this.compareFunction = compareFunction || SortedEnumerator.defaultCompare;
    }
 
-   _getItems(): Array<any> {
+   static defaultCompare(a: any, b: any): number {
+      return a === b ? 0 : (a > b ? 1 : -1);
+   }
+
+   _getItems(): any[] {
       if (!this._items) {
          const { shouldSaveIndices } = this.previous;
          this._items = super._getItems()
@@ -40,10 +44,6 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
       }
 
       return this._items;
-   }
-
-   static defaultCompare(a: any, b: any): number {
-      return a === b ? 0 : (a > b ? 1 : -1);
    }
 }
 

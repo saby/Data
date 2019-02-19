@@ -27,9 +27,9 @@ function getId() {
  * @return {Object}
  */
 function extractItems(collection, contentsWrapper) {
-   let enumerator = collection.getEnumerator();
-   let items = [];
-   let contents = [];
+   const enumerator = collection.getEnumerator();
+   const items = [];
+   const contents = [];
    let item;
    enumerator.reset();
    while (enumerator.moveNext()) {
@@ -41,7 +41,7 @@ function extractItems(collection, contentsWrapper) {
    }
 
    return {
-      items: items,
+      items,
       contents: contentsWrapper ? contents : null
    };
 }
@@ -59,23 +59,23 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
    session.addedProcessed = session.addedProcessed || [];
    session.removedProcessed = session.removedProcessed || {};
 
-   let before = session.before;
-   let after = session.after;
-   let beforeContents = session.beforeContents;
-   let afterContents = session.afterContents;
-   let addedProcessed = session.addedProcessed; //индексы новых элементов, которые уже были найдены
-   let removedProcessed = session.removedProcessed; //индексы удаленных элементов, которые уже были найдены
-   let newItems = [];
+   const before = session.before;
+   const after = session.after;
+   const beforeContents = session.beforeContents;
+   const afterContents = session.afterContents;
+   const addedProcessed = session.addedProcessed; // индексы новых элементов, которые уже были найдены
+   const removedProcessed = session.removedProcessed; // индексы удаленных элементов, которые уже были найдены
+   const newItems = [];
    let newItemsIndex = 0;
-   let oldItems = [];
+   const oldItems = [];
    let oldItemsIndex = 0;
-   let beforeItem; //элемент до изменений
-   let beforeIndex; //индекс элемента до изменений
-   let afterItem; //элемент после изменений
-   let afterIndex; //индекс элемента после изменений
+   let beforeItem; // элемент до изменений
+   let beforeIndex; // индекс элемента до изменений
+   let afterItem; // элемент после изменений
+   let afterIndex; // индекс элемента после изменений
    let exit = false;
    let index;
-   let count = Math.max(before.length, after.length);
+   const count = Math.max(before.length, after.length);
    let skip;
    let lookUp;
 
@@ -87,13 +87,13 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
       afterItem = after[index];
       switch (groupName) {
          case 'added':
-            //собираем добавленные элементы
+            // собираем добавленные элементы
             if (!afterItem) {
                continue;
             }
             afterIndex = index;
 
-            //ищем индекс с учетом возможных дубликатов
+            // ищем индекс с учетом возможных дубликатов
             skip = 0;
             lookUp = true;
             do {
@@ -101,21 +101,21 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
                if (beforeIndex === -1) {
                   lookUp = false;
                } else if (addedProcessed.indexOf(beforeIndex) > -1) {
-                  //этот индекс мы уже находили, значит afterItem - дубль, ищем дальше
+                  // этот индекс мы уже находили, значит afterItem - дубль, ищем дальше
                   skip = beforeIndex + 1;
                } else {
                   if (!newItems.length) {
-                     //запомним найденный индекс
+                     // запомним найденный индекс
                      addedProcessed.push(beforeIndex);
                   }
                   lookUp = false;
                }
             } while (lookUp);
 
-            //если элемента не было - добавим его в список новых,
-            //если был - отдаем накопленный список новых, если там что-то есть
+            // если элемента не было - добавим его в список новых,
+            // если был - отдаем накопленный список новых, если там что-то есть
             if (beforeIndex === -1) {
-               //элемент добавлен
+               // элемент добавлен
                newItems.push(afterItem);
                newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
             } else if (newItems.length) {
@@ -124,13 +124,13 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
             break;
 
          case 'removed':
-            //собираем удаленные элементы
+            // собираем удаленные элементы
             if (!beforeItem) {
                continue;
             }
             beforeIndex = index;
 
-            //ищем индекс с учетом возможных дубликатов
+            // ищем индекс с учетом возможных дубликатов
             skip = 0;
             lookUp = true;
             do {
@@ -138,19 +138,19 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
                if (afterIndex === -1) {
                   lookUp = false;
                } else if (removedProcessed[afterIndex]) {
-                  //этот индекс мы уже находили, значит beforeItem - дубль, ищем дальше
+                  // этот индекс мы уже находили, значит beforeItem - дубль, ищем дальше
                   skip = afterIndex + 1;
                } else {
                   if (!oldItems.length) {
-                     //запомним найденный индекс
+                     // запомним найденный индекс
                      removedProcessed[afterIndex] = true;
                   }
                   lookUp = false;
                }
             } while (lookUp);
 
-            //если элемента не стало - добавим его в список старых,
-            //если остался - отдаем накопленный список старых, если там что-то есть
+            // если элемента не стало - добавим его в список старых,
+            // если остался - отдаем накопленный список старых, если там что-то есть
             if (afterIndex === -1) {
                oldItems.push(beforeItem);
                oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
@@ -160,7 +160,7 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
             break;
 
          case 'replaced':
-            //собираем замененные элементы
+            // собираем замененные элементы
             if (!beforeContents) {
                index = -1;
                exit = true;
@@ -172,13 +172,13 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
             afterIndex = index;
             beforeIndex = before.indexOf(afterItem);
 
-            //если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
-            //если остался - отдаем накопленные списки старых и новых, если в них что-то есть
+            // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
+            // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
             if (
                beforeIndex === afterIndex &&
                beforeContents[index] !== afterContents[index]
             ) {
-               //FIXME: convertToItem
+               // FIXME: convertToItem
                oldItems.push(collection._getItemsStrategy().convertToItem(beforeContents[index]));
                newItems.push(afterItem);
                oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
@@ -188,7 +188,7 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
             break;
 
          case 'moved':
-            //собираем перемещенные элементы
+            // собираем перемещенные элементы
             if (before.length !== after.length) {
                throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
             }
@@ -227,12 +227,12 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
    }
 
    return {
-      newItems: newItems,
-      newItemsIndex: newItemsIndex,
-      oldItems: oldItems,
-      oldItemsIndex: oldItemsIndex,
+      newItems,
+      newItemsIndex,
+      oldItems,
+      oldItemsIndex,
       endAt: exit ? index : -1,
-      offset: offset
+      offset
    };
 }
 
@@ -243,17 +243,17 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
  * @param {Object} session Сессия изменений
  */
 function applyGroupChanges(groupName, changes, session) {
-   let before = session.before;
-   let beforeContents = session.beforeContents;
-   let afterContents = session.afterContents;
+   const before = session.before;
+   const beforeContents = session.beforeContents;
+   const afterContents = session.afterContents;
 
-   //Производим с before действия согласно пачке изменений
+   // Производим с before действия согласно пачке изменений
    switch (groupName) {
       case 'added':
          before.splice(changes.newItemsIndex, 0, ...changes.newItems);
 
          if (session.addedProcessed) {
-            let count = changes.newItems.length;
+            const count = changes.newItems.length;
             for (let i = 0; i < session.addedProcessed.length; i++) {
                if (session.addedProcessed[i] >= changes.newItemsIndex) {
                   session.addedProcessed[i] += count;
@@ -265,7 +265,7 @@ function applyGroupChanges(groupName, changes, session) {
          }
 
          if (beforeContents !== null) {
-            let added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+            const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
             beforeContents.splice(changes.newItemsIndex, 0, ...added);
          }
          break;
@@ -284,13 +284,13 @@ function applyGroupChanges(groupName, changes, session) {
       case 'replaced':
          before.splice(changes.oldItemsIndex, changes.oldItems.length, ...changes.newItems);
          if (beforeContents !== null) {
-            let added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+            const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
             beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length, ...added);
          }
          break;
 
       case 'moved':
-         let afterSpliceIndex = changes.oldItemsIndex + changes.oldItems.length > changes.newItemsIndex
+         const afterSpliceIndex = changes.oldItemsIndex + changes.oldItems.length > changes.newItemsIndex
             ? changes.newItemsIndex
             : changes.newItemsIndex - changes.oldItems.length + 1;
 
@@ -299,7 +299,7 @@ function applyGroupChanges(groupName, changes, session) {
 
          if (beforeContents !== null) {
             beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
-            let added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+            const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
             beforeContents.splice(afterSpliceIndex, 0, ...added);
          }
 
@@ -320,7 +320,7 @@ const enumerableComparator = {
     * @return {Object}
     */
    startSession(collection, contentsWrapper) {
-      let items = extractItems(collection, contentsWrapper);
+      const items = extractItems(collection, contentsWrapper);
 
       return {
          id: getId(),
@@ -336,7 +336,7 @@ const enumerableComparator = {
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     */
    finishSession(session, collection, contentsWrapper) {
-      let items = extractItems(collection, contentsWrapper);
+      const items = extractItems(collection, contentsWrapper);
 
       session.after = items.items;
       session.afterContents = items.contents;
@@ -349,8 +349,8 @@ const enumerableComparator = {
     * @param {Function} callback Функция обратного вызова для каждой пачки изменений
     */
    analizeSession(session, collection, callback) {
-      //сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом удаляются оба
-      let groups = ['removed', 'added', 'replaced', 'moved'];
+      // сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом удаляются оба
+      const groups = ['removed', 'added', 'replaced', 'moved'];
       let changes;
       let maxRepeats = Math.max(
          65535,
@@ -361,14 +361,14 @@ const enumerableComparator = {
       let groupName;
       let groupAction;
 
-      //Информируем об изменениях по группам
+      // Информируем об изменениях по группам
       for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-         //Собираем изменения в пачки (следующие подряд наборы элементов коллекции)
+         // Собираем изменения в пачки (следующие подряд наборы элементов коллекции)
          startFrom = 0;
          offset = 0;
          groupName = groups[groupIndex];
          while (startFrom !== -1) {
-            //Очередная пачка
+            // Очередная пачка
             changes = getGroupChanges(
                groupName,
                session,
@@ -377,9 +377,9 @@ const enumerableComparator = {
                offset
             );
 
-            //Есть какие-то изменения
+            // Есть какие-то изменения
             if (changes.newItems.length || changes.oldItems.length) {
-               //Уведомляем
+               // Уведомляем
                if (callback) {
                   groupAction = '';
                   switch (groupName) {
@@ -399,7 +399,7 @@ const enumerableComparator = {
                   callback(groupAction, changes);
                }
 
-               //Синхронизируем состояние по пачке
+               // Синхронизируем состояние по пачке
                applyGroupChanges(
                   groupName,
                   changes,
@@ -407,7 +407,7 @@ const enumerableComparator = {
                );
             }
 
-            //Проверяем, все ли хорошо
+            // Проверяем, все ли хорошо
             if (changes.endAt !== -1 && changes.endAt <= startFrom) {
                maxRepeats--;
                if (maxRepeats === 0) {
@@ -415,7 +415,7 @@ const enumerableComparator = {
                }
             }
 
-            //Запоминаем, на чем остановились
+            // Запоминаем, на чем остановились
             startFrom = changes.endAt;
             offset = changes.offset;
          }

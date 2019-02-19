@@ -29,7 +29,7 @@ export default class RealField extends Field /** @lends Types/_entity/format/Rea
     */
    _$precision: number;
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает максимальное количество знаков в дробной части
@@ -51,7 +51,7 @@ export default class RealField extends Field /** @lends Types/_entity/format/Rea
       this._$precision = value;
    }
 
-   //endregion Public methods
+   // endregion Public methods
 }
 
 RealField.prototype['[Types/_entity/format/RealField]'] = true;
@@ -59,4 +59,3 @@ RealField.prototype._moduleName = 'Types/entity:format.RealField';
 RealField.prototype._typeName = 'Real';
 RealField.prototype._$defaultValue = 0;
 RealField.prototype._$precision = 16;
-

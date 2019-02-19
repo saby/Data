@@ -38,7 +38,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       }
 
       this._getCursorEnumerator().setPosition(
-         this.getIndexBySourceIndex(<number>this._$collection.get())
+         this.getIndexBySourceIndex(this._$collection.get() as number)
       );
 
       if (this._$collection['[Types/_entity/ObservableMixin]']) {
@@ -74,7 +74,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 
    protected _getSourceIndex(index) {
-      let enumerator = this._$collection.getEnumerator();
+      const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
       if (index > -1) {
@@ -89,7 +89,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
    }
 
    protected _getItemIndex(index) {
-      let enumerator = this._$collection.getEnumerator();
+      const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
       while (enumerator.moveNext()) {

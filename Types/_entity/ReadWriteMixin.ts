@@ -12,17 +12,17 @@ import ObservableMixin from  './ObservableMixin';
 import ManyToManyMixin from  './ManyToManyMixin';
 import {protect} from '../util';
 
-let hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 /**
  * Свойство, хранящее признак возможности записи
  */
-let $writable = protect('writable');
+const $writable = protect('writable');
 
 const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
    '[Types/_entity/ReadWriteMixin]': true,
 
-   //region Types/_entity/ReadWriteMixin
+   // region Types/_entity/ReadWriteMixin
 
    get writable() {
       return this[$writable];
@@ -47,9 +47,9 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
       }
    },
 
-   //endregion Types/_entity/ReadWriteMixin
+   // endregion Types/_entity/ReadWriteMixin
 
-   //region Types/_entity/ObservableMixin
+   // region Types/_entity/ObservableMixin
 
    subscribe(event, handler, ctx) {
       if (this[$writable]) {
@@ -77,20 +77,20 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
       }
    },
 
-   //endregion Types/_entity/ObservableMixin
+   // endregion Types/_entity/ObservableMixin
 
-   //region Types/_entity/OptionsToPropertyMixin
+   // region Types/_entity/OptionsToPropertyMixin
 
    _getOptions() {
       // @ts-ignore
-      let options = OptionsToPropertyMixin.prototype._getOptions.call(this);
+      const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
 
-      //Delete "writable" property received from _options
+      // Delete "writable" property received from _options
       delete options.writable;
       return options;
    }
 
-   //endregion Types/_entity/OptionsToPropertyMixin
+   // endregion Types/_entity/OptionsToPropertyMixin
 };
 
 // @ts-ignore

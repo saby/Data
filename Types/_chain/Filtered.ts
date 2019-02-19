@@ -10,9 +10,7 @@
 import Abstract from './Abstract';
 import FilteredEnumerator from './FilteredEnumerator';
 
-interface CallbackFunc {
-   (item: any, index: number): boolean;
-}
+type CallbackFunc = (item: any, index: number) => boolean;
 
 export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Filtered.prototype */{
    /**

@@ -12,13 +12,13 @@ import {object} from '../../util';
 import {Set} from '../../shim';
 
 interface IOptions extends IAbstractOptions {
-   unique: boolean
-   idProperty: string
+   unique: boolean;
+   idProperty: string;
 }
 
 interface ISortOptions {
-   unique: boolean
-   idProperty: string
+   unique: boolean;
+   idProperty: string;
 }
 
 export default class Direct extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/Direct.prototype */{
@@ -32,8 +32,8 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
    /**
     * @typedef {Object} Options
     * @property {Types/_display/Collection} display Проекция
-    * @property {Boolean} unique Признак обеспечения уникальности элементов
-    * @property {String} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
+    * @property {Boolean} unique Признак обеспечения униconstьности элементов
+    * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
     */
 
    constructor(options: IOptions) {
@@ -72,7 +72,7 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
       return items[position];
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem | any>): Array<CollectionItem> {
+   splice(start: number, deleteCount: number, added?: Array<CollectionItem | any>): CollectionItem[] {
       added = added || [];
 
       let reallyAdded = added.map(
@@ -144,7 +144,7 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
    }
 
    /**
-    * Возвращает соответствие индексов в стратегии оригинальным индексам
+    * Возвращает сооconstтствие индексов в стратегии оригинальным инconstсам
     * @protected
     * @return {Array.<Number>}
     */

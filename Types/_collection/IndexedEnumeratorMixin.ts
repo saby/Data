@@ -285,10 +285,10 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
       }
 
       if (!Object.prototype.hasOwnProperty.call(index, value)) {
-         index[value] = [];
+         index[value as string] = [];
       }
 
-      index[value].push(position);
+      index[value as string].push(position);
    },
 
    /**

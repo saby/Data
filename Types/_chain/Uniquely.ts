@@ -10,9 +10,7 @@
 import Abstract from './Abstract';
 import UniquelyEnumerator from './UniquelyEnumerator';
 
-interface ExtractFunc {
-   (item: any, index: string|number): string|number;
-}
+type ExtractFunc = (item: any, index: string|number) => string|number;
 
 export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uniquely.prototype */{
    /**

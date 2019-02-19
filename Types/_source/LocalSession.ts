@@ -943,7 +943,7 @@ export default class LocalSession extends mixin(
    }
 
    getAdapter() {
-      return create(this._$adapter);
+      return create<any>(this._$adapter);
    }
 
    getListModule() {

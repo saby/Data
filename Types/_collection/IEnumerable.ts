@@ -8,9 +8,7 @@
 
 import IEnumerator from './IEnumerator';
 
-export interface EnumeratorCallback<T> {
-   (item: T, index: number): void
-}
+export type EnumeratorCallback<T> = (item: T, index: number) => void;
 
 export default interface IEnumerable<T> /** @lends Types/_collection/IEnumerable.prototype */{
    readonly '[Types/_collection/IEnumerable]': boolean;

@@ -9,4 +9,3 @@
 export {default as Arraywise}  from './enumerator/Arraywise';
 export {default as Mapwise}  from './enumerator/Mapwise';
 export {default as Objectwise}  from './enumerator/Objectwise';
-

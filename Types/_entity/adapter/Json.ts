@@ -32,5 +32,5 @@ Json.prototype['[Types/_entity/adapter/Json]'] = true;
 Json.prototype._moduleName = 'Types/entity:adapter.Json';
 
 register('Types/entity:adapter.Json', Json, {instantiate: false});
-//FIXME: deprecated
+// FIXME: deprecated
 register('adapter.json', Json);

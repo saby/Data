@@ -19,7 +19,7 @@ import {mixin} from '../../util';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 const serializer = (function() {
-   let serialize = function(data) {
+   const serialize = function(data) {
       if (data instanceof Array) {
          return serializeArray(data);
       } else if (data && typeof data === 'object') {
@@ -29,32 +29,32 @@ const serializer = (function() {
       }
    };
 
-   let serializeArray = function(arr) {
+   const serializeArray = function(arr) {
       return arr.map(function(item) {
          return serialize(item);
       });
    };
 
-   let serializeObject = function(obj) {
+   const serializeObject = function(obj) {
       if (typeof obj.getRawData === 'function') {
-         //Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
+         // Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
          return obj.getRawData(true);
       } else if (obj instanceof Date) {
          let mode = TO_SQL_MODE.DATETIME;
-         obj = <ExtendDate>obj;
+         obj = obj as ExtendDate;
          if (obj.getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
-               case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_DATE:
+               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                   mode = TO_SQL_MODE.DATE;
                   break;
-               case (<ExtendDateConstructor>Date).SQL_SERIALIZE_MODE_TIME:
+               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
                   mode = TO_SQL_MODE.TIME;
                   break;
             }
          }
          return dateToSql(obj, mode);
       } else {
-         //Check if 'obj' is a scalar value wrapper
+         // Check if 'obj' is a scalar value wrapper
          if (obj.valueOf) {
             obj = obj.valueOf();
          }
@@ -65,15 +65,15 @@ const serializer = (function() {
       }
    };
 
-   let serializePlainObject = function(obj) {
-      let result = {};
+   const serializePlainObject = function(obj) {
+      const result = {};
 
-      let proto = Object.getPrototypeOf(obj);
+      const proto = Object.getPrototypeOf(obj);
       if (proto !== null && proto !== Object.prototype) {
          throw new TypeError('Unsupported object type. Only plain objects can be serialized.');
       }
 
-      let keys = Object.keys(obj);
+      const keys = Object.keys(obj);
       let key;
       for (let i = 0; i < keys.length; i++) {
          key = keys[i];
@@ -83,7 +83,7 @@ const serializer = (function() {
    };
 
    return {
-      serialize: serialize
+      serialize
    };
 })();
 
@@ -104,7 +104,7 @@ export default abstract class Abstract extends mixin(
 
    getProperty(data: any, property: string): any {
       property = property || '';
-      let parts = property.split(this._pathSeparator);
+      const parts = property.split(this._pathSeparator);
       let result;
       for (let i = 0; i < parts.length; i++) {
          result = i
@@ -119,7 +119,7 @@ export default abstract class Abstract extends mixin(
          return;
       }
       property = property || '';
-      let parts = property.split(this._pathSeparator);
+      const parts = property.split(this._pathSeparator);
       let current = data;
       for (let i = 0, max = parts.length - 1; i <= max; i++) {
          if (i === max) {

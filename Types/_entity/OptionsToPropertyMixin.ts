@@ -43,11 +43,11 @@ function defineProperty(instance: Object, name: string, key: string, scope: Obje
    Object.defineProperty(instance, name, {
       enumerable: true,
       configurable: true,
-      get: function() {
+      get() {
          delete instance[name];
          return (instance[name] = scope[key]);
       },
-      set: function(value) {
+      set(value) {
          delete instance[name];
          instance[name] = value;
       }
@@ -63,8 +63,8 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
     */
    constructor(options?: Object) {
       if (options && typeof options === 'object') {
-         let prefix = optionPrefix;
-         let keys = Object.keys(options);
+         const prefix = optionPrefix;
+         const keys = Object.keys(options);
          let option;
          let property;
          for (let i = 0, count = keys.length; i < count; i++) {
@@ -83,8 +83,8 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
     * @protected
     */
    protected _getOptions(): Object {
-      let options = {};
-      let keys = Object.keys(this);
+      const options = {};
+      const keys = Object.keys(this);
       let key;
       for (let i = 0, count = keys.length; i < count; i++) {
          key = keys[i];
@@ -93,7 +93,7 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
          }
       }
 
-      //FIXME: get rid of _options
+      // FIXME: get rid of _options
       if (this._options) {
          for (key in this._options) {
             if (this._options.hasOwnProperty(key) && !(key in options)) {

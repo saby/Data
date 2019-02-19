@@ -11,9 +11,9 @@ import Abstract from './Abstract';
 import {enumerator} from '../collection';
 
 export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Array.prototype */{
-   protected _source: Array<any>;
+   protected _source: any[];
 
-   constructor(source: Array<any>) {
+   constructor(source: any[]) {
       if (!(source instanceof Array)) {
          throw new TypeError('Source should be an instance of Array');
       }
@@ -40,7 +40,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
 
    // region Types/_chain/DestroyableMixin
 
-   toArray(): Array<any> {
+   toArray(): any[] {
       return this._source.slice();
    }
 

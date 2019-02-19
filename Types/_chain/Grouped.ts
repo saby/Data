@@ -11,13 +11,9 @@ import Abstract from './Abstract';
 import {enumerator} from '../collection';
 import {Map} from '../shim';
 
-interface GroupFunc {
-   (item: any): string;
-}
+type GroupFunc = (item: any) => string;
 
-interface ValueFunc {
-   (item: any): any;
-}
+type ValueFunc = (item: any) => any;
 
 export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grouped.prototype */{
    /**

@@ -19,14 +19,14 @@ export default abstract class DestroyableMixin /** @lends Types/_entity/Destroya
    /**
     * Экземпляр был разрушен
     */
-   public get destroyed(): boolean {
+   get destroyed(): boolean {
       return Boolean(this[$destroyed]);
    }
 
    /**
     * Разрушает экземпляр
     */
-   public destroy() {
+   destroy() {
       this[$destroyed] = true;
 
       for (const key in this) {
@@ -37,13 +37,13 @@ export default abstract class DestroyableMixin /** @lends Types/_entity/Destroya
                break;
             default:
                if (typeof this[key] === 'function') {
-                  this[<string>key] = dontTouchDeads;
+                  this[key as string] = dontTouchDeads;
                }
          }
       }
    }
 
-   //FIXME: deprecated
+   // FIXME: deprecated
    private isDestroyed(): boolean {
       return this.destroyed;
    }

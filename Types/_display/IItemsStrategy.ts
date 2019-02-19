@@ -34,7 +34,7 @@ export default interface IItemsStrategy /** @lends Types/_display/IItemsStrategy
    /**
     * Возвращает элементы проекции
     */
-   readonly items: Array<CollectionItem>;
+   readonly items: CollectionItem[];
 
    /**
     * Возвращает элемент по позиции
@@ -50,17 +50,17 @@ export default interface IItemsStrategy /** @lends Types/_display/IItemsStrategy
     * @param {Array} [added] Добавляемые элементы
     * @return {Types/_display/CollectionItem} Удаленные элементы
     */
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem>;
+   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[];
 
    /**
     * Сбрасывает все сформированные результаты
     */
-   reset();
+   reset(): void;
 
    /**
     * Очищает закэшированные результаты
     */
-   invalidate();
+   invalidate(): void;
 
    /**
     * Возвращает позицию в проекции по позиции в коллекции

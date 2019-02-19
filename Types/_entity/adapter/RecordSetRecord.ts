@@ -44,6 +44,14 @@ export default class RecordSetRecord extends mixin(
     */
    _tableData: RecordSet<Record>;
 
+   // region IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   getData: () => any;
+   getFormat: (name: string) => Field;
+   getSharedFormat: (name: string) => UniversalField;
+
    /**
     * Конструктор
     * @param {Types/_entity/Record} data Сырые данные
@@ -57,14 +65,6 @@ export default class RecordSetRecord extends mixin(
       GenericFormatMixin.constructor.call(this, data);
       this._tableData = tableData;
    }
-
-   //region IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
 
    has(name) {
       return this._isValidData() ? this._data.has(name) : false;
@@ -92,8 +92,8 @@ export default class RecordSetRecord extends mixin(
          throw new TypeError('Passed data has invalid format');
       }
 
-      let fields = this.getFields();
-      let format = this._data.getFormat();
+      const fields = this.getFields();
+      const format = this._data.getFormat();
       if (format) {
          let field;
          let index;
@@ -108,7 +108,7 @@ export default class RecordSetRecord extends mixin(
    }
 
    getFields() {
-      let fields = [];
+      const fields = [];
       if (this._isValidData()) {
          this._data.getFormat().each((field) => {
             fields.push(field.getName());
@@ -144,20 +144,20 @@ export default class RecordSetRecord extends mixin(
       this._data.removeFieldAt(index);
    }
 
-   //endregion IRecord
+   // endregion IRecord
 
-   //region Protected methods
+   // region Protected methods
 
    _touchData() {
       if (!this._data &&
          this._tableData &&
          this._tableData['[Types/_entity/FormattableMixin]']
       ) {
-         let model = this._tableData.getModel();
-         let adapter = this._tableData.getAdapter();
+         const model = this._tableData.getModel();
+         const adapter = this._tableData.getAdapter();
 
          this._data = create(model, {
-            adapter: adapter
+            adapter
          });
       }
    }
@@ -170,7 +170,7 @@ export default class RecordSetRecord extends mixin(
       return this._isValidData() ? this._data.getFormat() : create('Types/collection:format.Format');
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 }
 
 Object.assign(RecordSetRecord.prototype, {

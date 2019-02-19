@@ -15,14 +15,14 @@ export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zippe
    /**
     * @property {Array.<Array>|Array.<Types/_collection/IEnumerable>} Коллекции для объединения
     */
-   protected _items: Array<Array<T> | IEnumerable<T>>;
+   protected _items: Array<T[] | IEnumerable<T>>;
 
    /**
     * Конструктор объединяющего звена цепочки.
     * @param {Types/_chain/Abstract} source Предыдущее звено.
     * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
     */
-   constructor(source: Abstract<T>, items: Array<Array<T> | IEnumerable<T>>) {
+   constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
       super(source);
       this._items = items;
    }

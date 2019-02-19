@@ -7,8 +7,9 @@
  */
 
 import {Field, fieldsFactory} from './format';
-import {Cow as CowAdapter, Json as JsonAdapter} from './adapter';
+import {Cow as CowAdapter} from './adapter';
 import {resolve, create, isRegistered} from '../di';
+import {format} from '../collection';
 import {object, logger} from '../util';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
@@ -22,7 +23,7 @@ const defaultAdapter = 'Types/entity:adapter.Json';
 function buildFormatFromObject(sliceFormat, rawDataFormat) {
    let field;
    let fieldIndex;
-   for (let name in sliceFormat) {
+   for (const name in sliceFormat) {
       if (!sliceFormat.hasOwnProperty(name)) {
          continue;
       }
@@ -52,11 +53,10 @@ function buildFormatFromObject(sliceFormat, rawDataFormat) {
  * @return {Types/_entity/format/Format}
  */
 function buildFormatByRawData() {
-   const Format = resolve('Types/collection:format.Format');
-   let format = new Format();
-   let adapter = this._getRawDataAdapter();
-   let fields = this._getRawDataFields();
-   let count = fields.length;
+   const format = create<format.Format<Field>>('Types/collection:format.Format');
+   const adapter = this._getRawDataAdapter();
+   const fields = this._getRawDataFields();
+   const count = fields.length;
 
    for (let i = 0; i < count; i++) {
       format.add(
@@ -73,12 +73,12 @@ function buildFormatByRawData() {
 function buildRawData() {
    if (this._hasFormat()) {
       let adapter = this._getRawDataAdapter();
-      let fields = adapter.getFields();
+      const fields = adapter.getFields();
 
       if (adapter['[Types/_entity/adapter/IDecorator]']) {
          adapter = adapter.getOriginal();
       }
-      //TODO: solve the problem of data normalization
+      // TODO: solve the problem of data normalization
       if (adapter._touchData) {
          adapter._touchData();
       }
@@ -98,7 +98,7 @@ function buildRawData() {
 const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    '[Types/_entity/FormattableMixin]': true,
 
-   //FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
    '[WS.Data/Entity/FormattableMixin]': true,
 
    /**
@@ -369,7 +369,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    _rawDataFields: null,
 
    constructor() {
-      //FIXME: get rid of _options
+      // FIXME: get rid of _options
       if (!this._$format && this._options && this._options.format) {
          this._$format = this._options.format;
       }
@@ -377,7 +377,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       buildRawData.call(this);
    },
 
-   //region Types/_entity/SerializableMixin
+   // region Types/_entity/SerializableMixin
 
    _getSerializableState(state) {
       state.$options.rawData = this._getRawData();
@@ -388,9 +388,9 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       return function() {};
    },
 
-   //endregion Types/_entity/SerializableMixin
+   // endregion Types/_entity/SerializableMixin
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает данные в "сыром" виде. Если данные являются объектом, то возвращается его дубликат.
@@ -588,9 +588,9 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       this._clearFormatClone();
    },
 
-   //endregion Public methods
+   // endregion Public methods
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Возвращает данные в "сыром" виде из _rawDataAdapter (если он был создан) или исходные
@@ -668,7 +668,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    _resetRawDataAdapter(data) {
       if (data === undefined) {
          if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
-            //Save possible rawData changes
+            // Save possible rawData changes
             this._$rawData = this._rawDataAdapter.getData();
          }
       } else {
@@ -693,7 +693,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
          internal = internal.getOriginal();
       }
 
-      let internalProto = Object.getPrototypeOf(internal);
+      const internalProto = Object.getPrototypeOf(internal);
       if (!internalProto.isPrototypeOf(foreign)) {
          throw new TypeError(`The foreign adapter "${foreign._moduleName}" is incompatible with the internal adapter "${internal._moduleName}"`);
       }
@@ -783,8 +783,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     */
    _getFieldFormat(name, adapter) {
       if (this._hasFormat()) {
-         let fields = this._getFormat();
-         let index = fields.getFieldIndex(name);
+         const fields = this._getFormat();
+         const index = fields.getFieldIndex(name);
          if (index > -1) {
             return fields.at(index);
          }
@@ -837,16 +837,16 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @protected
     */
    _buildFormat(format, fullFormatCallback?: Function) {
-      const Format = resolve('Types/collection:format.Format');
+      const Format = resolve<any>('Types/collection:format.Format');
 
       if (format) {
-         let formatProto = Object.getPrototypeOf(format);
+         const formatProto = Object.getPrototypeOf(format);
          if (formatProto === Array.prototype) {
-            let factory = resolve('Types/collection:format.factory');
-            //All of the fields in Array
+            const factory = resolve<Function>('Types/collection:format.factory');
+            // All of the fields in Array
             format = factory(format);
          } else if (formatProto === Object.prototype) {
-            //Slice of the fields in Object
+            // Slice of the fields in Object
             format = buildFormatFromObject(format, fullFormatCallback ? fullFormatCallback() : new Format());
          }
       }
@@ -858,7 +858,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       return format;
    }
 
-   //endregion Protected methods
+   // endregion Protected methods
 };
 
 export default FormattableMixin;

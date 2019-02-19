@@ -11,9 +11,7 @@ import Abstract from './Abstract';
 import MappedEnumerator from './MappedEnumerator';
 import {IEnumerator} from '../collection';
 
-interface MapFunc {
-   (item: any, index: number): any;
-}
+type MapFunc = (item: any, index: number) => any;
 
 export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mapped.prototype */{
    /**

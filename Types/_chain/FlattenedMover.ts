@@ -8,12 +8,12 @@ import {enumerator, IEnumerable, IEnumerator} from '../collection';
 
 export default class FlattenedMover {
    private readonly parent: IEnumerator<any>;
-   private current: FlattenedMover | IEnumerable<any> | Array<any>;
+   private current: FlattenedMover | IEnumerable<any> | any[];
 
    /**
     * @param {Types/_collection/IEnumerator|Array} parent
     */
-   constructor(parent: IEnumerator<any> | Array<any>) {
+   constructor(parent: IEnumerator<any> | any[]) {
       if (parent instanceof Array) {
          this.parent = new enumerator.Arraywise(parent);
       } else {
@@ -59,7 +59,7 @@ export default class FlattenedMover {
          this.current = new FlattenedMover(this.current);
          return this.current.moveNext();
       } if (this.current && this.current['[Types/_collection/IEnumerable]']) {
-         this.current = new FlattenedMover((<IEnumerable<any>>this.current).getEnumerator());
+         this.current = new FlattenedMover((this.current as IEnumerable<any>).getEnumerator());
          return this.current.moveNext();
       }
       return true;
