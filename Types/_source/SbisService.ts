@@ -492,7 +492,8 @@ function passRead(key: string | number, meta?: Object): Object {
 }
 
 function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
-   const superArgs = this._$passing.update.call(this, data, meta);
+   // @ts-ignore
+   const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
    const args: any = {};
    const recordArg = DataMixin.isListInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
@@ -1149,7 +1150,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
        * @name Types/_source/BindingMixin#passing.update
        */
-      update: passUpdate.bind(Rpc.prototype),
+      update: passUpdate,
 
       /**
        * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
