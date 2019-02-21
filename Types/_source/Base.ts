@@ -40,6 +40,7 @@ export default abstract class Base extends mixin(
    setModel: (model: Function) => void;
    getListModule: () => Function | string;
    setListModule: (listModule: Function | string) => void;
+
    protected constructor(options?: IOptions) {
       options = {...(options || {})};
 
@@ -51,6 +52,7 @@ export default abstract class Base extends mixin(
    }
 
    // endregion
+
    /**
     * @deprecated
     */

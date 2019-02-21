@@ -15,7 +15,14 @@ import {mixin} from '../../util';
 // @ts-ignore
 import { RPCJSON as RpcJson } from 'Browser/Transport';
 
-export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMixin) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */{
+interface IEndPoint {
+   contract?: string;
+   address?: string;
+}
+
+export default class SbisBusinessLogic extends mixin(
+   Object, OptionsToPropertyMixin
+) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */ {
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
 
    /**
@@ -32,7 +39,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     *    });
     * </pre>
     */
-   _$endpoint: any = {};
+   _$endpoint: IEndPoint = {};
 
    /**
     * @cfg {Function} Конструктор сетевого транспорта
@@ -44,7 +51,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     */
    _nameSpaceSeparator: string;
 
-   constructor(options?) {
+   constructor(options?: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
    }
@@ -54,7 +61,7 @@ export default class SbisBusinessLogic extends mixin(Object, OptionsToPropertyMi
     * @return {Endpoint}
     * @see endpoint
     */
-   getEndpoint() {
+   getEndpoint(): IEndPoint {
       return this._$endpoint;
    }
 

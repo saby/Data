@@ -36,16 +36,31 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IMetaData from './IMetaData';
 import ICloneable from '../ICloneable';
+import {IFieldFormat} from './Sbis';
 import SbisFormatMixin from './SbisFormatMixin';
-import SbisRecord from './SbisRecord';
+import SbisRecord, {IRecordFormat} from './SbisRecord';
 import {fieldsFactory, Field, UniversalField} from '../format';
 import {mixin} from '../../util';
 import {merge} from '../../object';
+
+export interface ITableFormat {
+   d: any[][];
+   s: IFieldFormat[];
+}
 
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin
 ) implements ITable, IMetaData, ICloneable /** @lends Types/_entity/adapter/SbisTable.prototype */{
    _type: string;
+
+   /**
+    * Конструктор
+    * @param {*} data Сырые данные
+    */
+   constructor(data: ITableFormat) {
+      super(data);
+      SbisFormatMixin.constructor.call(this, data);
+   }
 
    // region ITable
 
@@ -60,32 +75,11 @@ export default class SbisTable extends mixin(
    removeField: (name: string) => void;
    removeFieldAt: (index: number) => void;
 
-   // endregion ITable
-
-   // region IMetaData
-
-   readonly '[Types/_entity/adapter/IMetaData]': boolean;
-
-   // endregion IMetaData
-
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   /**
-    * Конструктор
-    * @param {*} data Сырые данные
-    */
-   constructor(data) {
-      super(data);
-      SbisFormatMixin.constructor.call(this, data);
-   }
-
-   getCount() {
+   getCount(): number {
       return this._isValidData() ? this._data.d.length : 0;
    }
 
-   add(record, at) {
+   add(record: IRecordFormat, at: null): void {
       this._touchData();
       record = this._normalizeData(record, SbisRecord.prototype._type);
 
@@ -104,20 +98,20 @@ export default class SbisTable extends mixin(
       }
    }
 
-   at(index) {
+   at(index: number): ITableFormat {
       return this._isValidData() && this._data.d[index] ? {
          d: this._data.d[index],
          s: this._data.s
       } : undefined;
    }
 
-   remove(at) {
+   remove(at: number): void {
       this._touchData();
       this._checkRowIndex(at);
       this._data.d.splice(at, 1);
    }
 
-   replace(record, at) {
+   replace(record: IRecordFormat, at: number): void {
       this._touchData();
       this._checkRowIndex(at);
       if (!this._data.s.length && record.s.length) {
@@ -128,7 +122,7 @@ export default class SbisTable extends mixin(
       this._data.d[at] = record.d;
    }
 
-   move(source, target) {
+   move(source: number, target: number): void {
       this._touchData();
       if (target === source) {
          return;
@@ -137,7 +131,7 @@ export default class SbisTable extends mixin(
       target === -1 ? this._data.d.unshift(removed.shift()) : this._data.d.splice(target, 0, removed.shift());
    }
 
-   merge(acceptor, donor) {
+   merge(acceptor: number, donor: number): void {
       this._touchData();
       this._checkRowIndex(acceptor);
       this._checkRowIndex(donor);
@@ -148,7 +142,7 @@ export default class SbisTable extends mixin(
       this.remove(donor);
    }
 
-   copy(index) {
+   copy(index: number): any[] {
       this._touchData();
       this._checkRowIndex(index);
       const source = this._data.d[index];
@@ -157,7 +151,13 @@ export default class SbisTable extends mixin(
       return clone;
    }
 
-   getMetaDataDescriptor() {
+   // endregion
+
+   // region IMetaData
+
+   readonly '[Types/_entity/adapter/IMetaData]': boolean;
+
+   getMetaDataDescriptor(): any {
       const result = [];
       const data = this.getData();
 
@@ -213,7 +213,7 @@ export default class SbisTable extends mixin(
       return result;
    }
 
-   getMetaData(name) {
+   getMetaData(name: string): any {
       const alias = this._getMetaDataAlias(name);
       const data = this.getData();
 
@@ -225,7 +225,7 @@ export default class SbisTable extends mixin(
       return meta.get(name);
    }
 
-   setMetaData(name, value) {
+   setMetaData(name: string, value: any): void {
       const alias = this._getMetaDataAlias(name);
       const data = this.getData();
 
@@ -240,7 +240,7 @@ export default class SbisTable extends mixin(
       meta.set(name, value);
    }
 
-   _getMetaDataAlias(name) {
+   protected _getMetaDataAlias(name: string): string {
       switch (name) {
          case 'results':
             return 'r';
@@ -252,38 +252,44 @@ export default class SbisTable extends mixin(
       }
    }
 
+   // endregion
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
    clone <SbisTable>(shallow?: boolean): any {
       return new SbisTable(shallow ? this.getData() : this._cloneData());
    }
 
-   // endregion ICloneable
+   // endregion
 
    // region SbisFormatMixin
 
-   protected _buildD(at, value) {
+   protected _buildD(at: number, value: any): void {
       this._data.d.forEach((item) => {
          item.splice(at, 0, value);
       });
    }
 
-   protected _removeD(at) {
+   protected _removeD(at: number): void {
       this._data.d.forEach((item) => {
          item.splice(at, 1);
       });
    }
 
-   // endregion SbisFormatMixin
+   // endregion
 
    // region Protected methods
 
-   protected _checkRowIndex(index: number, addMode?: boolean) {
+   protected _checkRowIndex(index: number, addMode?: boolean): void {
       const max = this._data.d.length + (addMode ? 0 : -1);
       if (!(index >= 0 && index <= max)) {
          throw new RangeError(`${this._moduleName}: row index ${index} is out of bounds.`);
       }
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(SbisTable.prototype, {

@@ -11,7 +11,8 @@
  * @mixes Types/_source/DataCrudMixin
  * @mixes Types/_source/BindingMixin
  * @mixes Types/_source/EndpointMixin
- * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy passing.merge passing.move
+ * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy
+ * passing.merge passing.move
  * @public
  * @author Мальцев А.А.
  */
@@ -33,8 +34,6 @@ import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
 // @ts-ignore
-import req = require('require');
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 export interface IPassing {
@@ -53,6 +52,7 @@ export interface IOptions extends IBaseOptions {
    navigationType?: string;
 }
 
+// tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
@@ -64,53 +64,50 @@ const NAVIGATION_TYPE = {
    OFFSET: 'Offset'
 };
 
-function isNull(value): boolean {
+function isNull(value: any): boolean {
    return value === null || value === undefined;
 }
 
-function isEmpty(value): boolean {
+function isEmpty(value: any): boolean {
    return value === '' || isNull(value);
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове create().
- * @param {Object} [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
- * @return {Object}.
+ * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
  */
-function passCreate(meta?: Object) {
+function passCreate(meta?: object): object[] {
    return [meta];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове read().
- * @param {String} key Первичный ключ записи
- * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
- * @return {Object}
+ * @param key Первичный ключ записи
+ * @param [meta] Дополнительные мета данные
  */
-function passRead(key, meta?: Object) {
+function passRead(key: string, meta?: Object): any[] {
    return [key, meta];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове update().
- * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
- * @param {Object} [meta] Дополнительные мета данные
- * @return {Object}
+ * @param data Обновляемая запись или рекордсет
+ * @param [meta] Дополнительные мета данные
  */
-function passUpdate(data, meta?: Object) {
+function passUpdate(data: Record|RecordSet<Record>, meta?: Object): any[] {
    if (this._$options.updateOnlyChanged) {
       const idProperty = this._getValidIdProperty(data);
       if (!isEmpty(idProperty)) {
          if (DataMixin.isModelInstance(data) && !isNull(data.get(idProperty))) {
-            //Filter record fields
-            const Record = req('Types/entity').Record;
+            // Filter record fields
+            const Record = require('Types/entity').Record;
             const changed = data.getChanged();
             changed.unshift(idProperty);
             data = Record.filterFields(data, changed);
          } else if (DataMixin.isListInstance(data)) {
-            //Filter recordset fields
+            // Filter recordset fields
             data = ((source) => {
-               const RecordSet = req('Types/collection').RecordSet;
+               const RecordSet = require('Types/collection').RecordSet;
                const result = new RecordSet({
                   adapter: source._$adapter,
                   idProperty: source._$idProperty
@@ -132,81 +129,53 @@ function passUpdate(data, meta?: Object) {
 
 /**
  * Формирует данные, передваемые в провайдер при вызове destroy().
- * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
- * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные
- * @return {Object}
+ * @param keys Первичный ключ, или массив первичных ключей записи
+ * @param [meta] Дополнительные мета данные
  */
-function passDestroy(keys, meta?: Object) {
+function passDestroy(keys: string | string[], meta?: Object|Record): any[] {
    return [keys, meta];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове query().
- * @param {Types/_source/Query} [query] Запрос
- * @return {Object}
+ * @param [query] Запрос
  */
-function passQuery(query) {
+function passQuery(query: Query): Query[] {
    return [query];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове copy().
- * @param {String} key Первичный ключ записи
- * @param {Object} [meta] Дополнительные мета данные
- * @return {Object}
+ * @param key Первичный ключ записи
+ * @param [meta] Дополнительные мета данные
  */
-function passCopy(key, meta?: Object) {
+function passCopy(key: string, meta?: Object): any[] {
    return [key, meta];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове merge().
- * @param {String} from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
- * @param {String} to Первичный ключ записи-приёмника
- * @return {Object}
+ * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
+ * @param to Первичный ключ записи-приёмника
  */
-function passMerge(from, to) {
+function passMerge(from: string, to: string): string[] {
    return [from, to];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове move().
- * @param {Array} items Перемещаемая запись.
- * @param {String} target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
- * @param {Object} [meta] Дополнительные мета данные.
- * @return {Object}
+ * @param items Перемещаемая запись.
+ * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+ * @param [meta] Дополнительные мета данные.
  */
-function passMove(from, to, meta?: Object) {
+function passMove(from: any[], to: string, meta?: object): any[] {
    return [from, to, meta];
 }
 
 export default abstract class Remote extends mixin(
    Base, ObservableMixin, DataCrudMixin, BindingMixin, EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
-  
-   // endregion
 
-   // region Statics
-
-   static get NAVIGATION_TYPE() {
-      return NAVIGATION_TYPE;
-   }
-
-   // region ICrud
-
-   readonly '[Types/_source/ICrud]': boolean = true;
-
-   // endregion
-
-   // region ICrudPlus
-
-   readonly '[Types/_source/ICrudPlus]': boolean = true;
-
-   // endregion
-
-   // region IProvider
-
-   readonly '[Types/_source/IProvider]': boolean = true;
    /**
     * @typedef {String} NavigationType
     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
@@ -267,6 +236,10 @@ export default abstract class Remote extends mixin(
       this._publish('onBeforeProviderCall');
    }
 
+   // region ICrud
+
+   readonly '[Types/_source/ICrud]': boolean = true;
+
    create(meta?: Object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.create,
@@ -316,6 +289,12 @@ export default abstract class Remote extends mixin(
       );
    }
 
+   // endregion
+
+   // region ICrudPlus
+
+   readonly '[Types/_source/ICrudPlus]': boolean = true;
+
    merge(from: string | number, to: string | number): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.merge,
@@ -338,6 +317,12 @@ export default abstract class Remote extends mixin(
          this._$passing.move.call(this, items, target, meta)
       );
    }
+
+   // endregion
+
+   // region IProvider
+
+   readonly '[Types/_source/IProvider]': boolean = true;
 
    getEndpoint(): IEndpoint {
       return EndpointMixin.getEndpoint.call(this);
@@ -365,12 +350,12 @@ export default abstract class Remote extends mixin(
     * @return {Types/_source/Provider}
     * @protected
     */
-   protected _createProvider(provider: IAbstract | string, options): IAbstract {
+   protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
       if (!provider) {
          throw new Error('Remote access provider is not defined');
       }
       if (typeof provider === 'string') {
-         provider = create(provider, options) as IAbstract;
+         provider = create<IAbstract>(provider, options);
       }
 
       return provider;
@@ -383,7 +368,7 @@ export default abstract class Remote extends mixin(
     * @return {Core/Deferred} Асинхронный результат операции
     * @protected
     */
-   protected _callProvider(name, args): ExtendPromise<any> {
+   protected _callProvider(name: string, args: object): ExtendPromise<any> {
       const provider = this.getProvider();
 
       const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -416,11 +401,11 @@ export default abstract class Remote extends mixin(
     * @return {Object|undefined}
     * @protected
     */
-   protected _prepareProviderArguments(args) {
+   protected _prepareProviderArguments(args: object): object {
       return this.getAdapter().serialize(args);
    }
 
-   protected _getValidIdProperty(data) {
+   protected _getValidIdProperty(data: any): string {
       const idProperty = this.getIdProperty();
       if (!isEmpty(idProperty)) {
          return idProperty;
@@ -432,7 +417,15 @@ export default abstract class Remote extends mixin(
       // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой idProperty
       return idProperty;
    }
-gion;
+
+   // endregion
+
+   // region Statics
+
+   static get NAVIGATION_TYPE(): any {
+      return NAVIGATION_TYPE;
+   }
+   // endregion
 }
 
 Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
@@ -491,10 +484,12 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
    },
    _$options: OptionsMixin.addOptions(Base, {
       /**
-       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
+       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
+       * измененые поля записи (если обновляется одна запись).
        * @name Types/_source/Remote#options.updateOnlyChanged
        * @remark
-       * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые записи от уже существующих.
+       * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые
+       * записи от уже существующих.
        */
       updateOnlyChanged: false,
 

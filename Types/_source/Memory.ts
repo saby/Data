@@ -84,15 +84,15 @@ const $cachedAdapter = protect('cachedAdapter');
 /**
  * All injected data by contracts
  */
-let contracts = {};
+const contracts = {};
 
 interface IEndpoint {
-   contract?: string
+   contract?: string;
 }
 
 export interface IOptions extends ILocalOptions {
-   data?: any
-   endpoint?: IEndpoint
+   data?: any;
+   endpoint?: IEndpoint;
 }
 
 export default class Memory extends Local /** @lends Types/_source/Memory.prototype */{
@@ -122,7 +122,8 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
     *       });
     *    });
     * </pre>
-    * Создадим источник с данными объектов солнечной системы, данные представлены в виде {@link Types/_collection/RecordSet рекордсета}:
+    * Создадим источник с данными объектов солнечной системы, данные представлены в виде
+    * {@link Types/_collection/RecordSet рекордсета}:
     * <pre>
     *    require([
     *       'Types/source',
@@ -169,28 +170,32 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
    constructor(options?: IOptions) {
       super(options);
 
-      //FIXME: YAGNI
-      if (options && options.endpoint && options.endpoint.contract && !contracts.hasOwnProperty(options.endpoint.contract)) {
+      // FIXME: YAGNI
+      if (options &&
+         options.endpoint &&
+         options.endpoint.contract &&
+         !contracts.hasOwnProperty(options.endpoint.contract)
+      ) {
          contracts[options.endpoint.contract] = this._$data;
       }
    }
 
-   //region Base
+   // region Base
 
-   protected _prepareQueryResult(data: any, query): DataSet {
-      //selection has no items - return an empty table
+   protected _prepareQueryResult(data: any, query: Query): DataSet {
+      // Selection has no items - return an empty table
       if (data && data.items === undefined) {
          data.items = this._getEmptyData(query);
       }
       return super._prepareQueryResult(data);
    }
 
-   //endregion Base
+   // endregion
 
-   //region Local
+   // region Local
 
    protected _getTableAdapter(): adapter.ITable {
-      return this[<string>$cachedAdapter] || (this[<string>$cachedAdapter] = this.getAdapter().forTable(this._$data));
+      return this[<string> $cachedAdapter] || (this[<string> $cachedAdapter] = this.getAdapter().forTable(this._$data));
    }
 
    protected _applyFrom(from?: string): any {
@@ -204,24 +209,25 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
       return data;
    }
 
-   protected _applyWhere(data: any, where?: Object | Function, meta?: IMeta): any {
-      //FIXME: get rid of this SBIS-specified
+   protected _applyWhere(data: any, where?: any | Function, meta?: IMeta): any {
+      // FIXME: get rid of this SBIS-specified
       if (where && typeof where === 'object') {
-         where = Object.assign({}, where);
-         delete where['Разворот'];
-         delete where['ВидДерева'];
-         delete where['usePages'];
+         where = {...where};
+         delete where.Разворот;
+         delete where.ВидДерева;
+         delete where.usePages;
       }
 
       return super._applyWhere(data, where, meta);
    }
 
-   //endregion Local
+   // endregion
 
-   //region Protected members
+   // region Protected members
 
    /**
-    * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от используемого адаптера)
+    * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
+    * используемого адаптера)
     * @param {Types/_source/Query} [query] Запрос
     * @return {*}
     * @protected
@@ -229,10 +235,10 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
    protected _getEmptyData(query?: Query): any {
       this._emptyData = this._emptyData || new Map();
 
-      let table = query ? query.getFrom() : undefined;
+      const table = query ? query.getFrom() : undefined;
       if (!this._emptyData.has(table)) {
-         let items = object.clonePlain(this._applyFrom(table), true);
-         let adapter = this.getAdapter().forTable(items);
+         const items = object.clonePlain(this._applyFrom(table), true);
+         const adapter = this.getAdapter().forTable(items);
 
          adapter.clear();
          this._emptyData.set(table, adapter.getData());
@@ -241,7 +247,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
       return this._emptyData.get(table);
    }
 
-   //endregion Protected members
+   // endregion
 }
 
 Object.assign(Memory.prototype, {

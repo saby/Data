@@ -32,7 +32,7 @@ const MOVE_POSITION = {
    after: 'after'
 };
 
-function compareValues(given, expect, operator) {
+function compareValues(given: any, expect: any, operator: string): boolean {
    // If array expected, use "given in expect" logic
    if (expect instanceof Array) {
       for (let i = 0; i < expect.length; i++) {
@@ -53,11 +53,12 @@ function compareValues(given, expect, operator) {
       return true;
    }
 
-   //Otherwise - just compare
+   // Otherwise - just compare
+   // tslint:disable-next-line:triple-equals
    return given == expect;
 }
 
-interface GenericObject<T> {}
+interface IGenericObject<T> {}
 
 interface IFilter {
    (item: adapter.IRecord, query: Object): boolean;
@@ -147,7 +148,7 @@ export default abstract class Local extends mixin(
    /**
     * Индекс для быстрого поиска записи по ключу
     */
-   protected _index: GenericObject<Number>;
+   protected _index: IGenericObject<Number>;
 
    /**
     * Data which source work with

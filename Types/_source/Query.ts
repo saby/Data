@@ -31,13 +31,13 @@ import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {mixin} from '../util';
 
 declare type Where = Object | ((item: any, index: number) => boolean);
-declare type Expression = Object | Array<string> | string;
+declare type Expression = Object | string[] | string;
 
 export enum ExpandMode {
    None,
    Nodes,
    Leaves,
-   All,
+   All
 }
 
 export interface IMeta {
@@ -54,7 +54,7 @@ function duplicate(data: any): Object {
       return data.clone();
    }
    if (data && typeof data === 'object') {
-      return Object.assign({}, data);
+      return {...data};
    }
    return data;
 }
@@ -64,13 +64,13 @@ function duplicate(data: any): Object {
  * @param expression Expression with fields set
  * @return {Object}
  */
-function parseSelectExpression(expression: Expression) {
+function parseSelectExpression(expression: Expression): object {
    if (typeof expression === 'string') {
       expression = expression.split(/[ ,]/);
    }
 
    if (expression instanceof Array) {
-      let orig = expression;
+      const orig = expression;
       expression = {};
       for (let i = 0; i < orig.length; i++) {
          expression[orig[i]] = orig[i];
@@ -80,7 +80,6 @@ function parseSelectExpression(expression: Expression) {
    if (typeof expression !== 'object') {
       throw new TypeError('Invalid argument "expression"');
    }
-
 
    return expression;
 }
@@ -263,7 +262,9 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
 /**
  * Query implementation
  */
-export default class Query extends mixin(Object, OptionsToPropertyMixin) implements ICloneable /** @lends Types/_source/Query.prototype */{
+export default class Query extends mixin(
+   Object, OptionsToPropertyMixin
+) implements ICloneable /** @lends Types/_source/Query.prototype */ {
    /**
     * Выбираемые поля
     */
@@ -522,7 +523,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *    });
     * </pre>
     */
-   join(resource: string | Array<string>, on: any, expression: Expression, inner?: boolean): Query {
+   join(resource: string | string[], on: any, expression: Expression, inner?: boolean): Query {
       if (typeof resource === 'string') {
          resource = resource.split(' ');
       }
@@ -534,7 +535,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
       this._join.push(new Join({
          resource: resource.shift(),
          as: resource.shift() || '',
-         on: on,
+         on,
          select: parseSelectExpression(expression),
          inner: inner === undefined ? true : inner
       }));
@@ -595,7 +596,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     */
    where(expression: Where): Query {
       expression = expression || {};
-      let type = typeof expression;
+      const type = typeof expression;
       if (type !== 'object' && type !== 'function') {
          throw new TypeError('Invalid argument "expression"');
       }
@@ -629,7 +630,8 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
 
    /**
     * Устанавливает порядок сортировки выборки
-    * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
+    * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор
+    * полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
     * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
     * @return {Types/_source/Query}
     * @example
@@ -664,7 +666,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     *    });
     * </pre>
     */
-   orderBy(selector: string | boolean[], desc?: boolean) {
+   orderBy(selector: string | boolean[], desc?: boolean): Query {
       if (desc === undefined) {
          desc = true;
       }
@@ -672,11 +674,11 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
       this._orderBy = [];
 
       if (typeof selector === 'object') {
-         let processObject = (obj) => {
+         const processObject = (obj) => {
             if (!obj) {
                return;
             }
-            for (let key in obj) {
+            for (const key in obj) {
                if (obj.hasOwnProperty(key)) {
                   this._orderBy.push(new Order({
                      selector: key,
@@ -695,7 +697,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
          }
       } else if (selector) {
          this._orderBy.push(new Order({
-            selector: selector,
+            selector,
             order: desc
          }));
       }
@@ -792,7 +794,7 @@ export default class Query extends mixin(Object, OptionsToPropertyMixin) impleme
     * </pre>
     */
    offset(start: number | string): Query {
-      this._offset = parseInt(<string>start, 10) || 0;
+      this._offset = parseInt(start as string, 10) || 0;
 
       return this;
    }
