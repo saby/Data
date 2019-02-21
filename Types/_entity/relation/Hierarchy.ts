@@ -58,9 +58,13 @@
 
 import DestroyableMixin from '../DestroyableMixin';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
+import IObject from '../IObject';
+import {RecordSet} from '../../collection';
 import {mixin} from '../../util';
 
-export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) /** @lends Types/_entity/relation/Hierarchy.prototype */{
+export default class Hierarchy extends mixin(
+   DestroyableMixin, OptionsToPropertyMixin
+) /** @lends Types/_entity/relation/Hierarchy.prototype */ {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
     * @name Types/_entity/relation/Hierarchy#idProperty
@@ -116,7 +120,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see idProperty
     * @see getIdProperty
     */
-   setIdProperty(idProperty: string) {
+   setIdProperty(idProperty: string): void {
       this._$idProperty = idProperty;
    }
 
@@ -136,7 +140,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see parentProperty
     * @see getParentProperty
     */
-   setParentProperty(parentProperty: string) {
+   setParentProperty(parentProperty: string): void {
       this._$parentProperty = parentProperty;
    }
 
@@ -156,7 +160,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see nodeProperty
     * @see getNodeProperty
     */
-   setNodeProperty(nodeProperty: string) {
+   setNodeProperty(nodeProperty: string): void {
       this._$nodeProperty = nodeProperty;
    }
 
@@ -176,7 +180,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see declaredChildrenProperty
     * @see getDeclaredChildrenProperty
     */
-   setDeclaredChildrenProperty(declaredChildrenProperty: string) {
+   setDeclaredChildrenProperty(declaredChildrenProperty: string): void {
       this._$declaredChildrenProperty = declaredChildrenProperty;
    }
 
@@ -192,7 +196,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Boolean|null}
     * @see nodeProperty
     */
-   isNode(record): boolean {
+   isNode(record: IObject): boolean {
       return record.get(this._$nodeProperty);
    }
 
@@ -203,7 +207,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Array.<Types/_entity/Record>}
     * @see nodeProperty
     */
-   getChildren(parent, rs) {
+   getChildren(parent: IObject, rs: RecordSet<IObject>): IObject[] {
       if (!this._$parentProperty) {
          return parent === null || parent === undefined ? (() => {
             const result = [];
@@ -237,7 +241,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Boolean}
     * @see declaredChildrenProperty
     */
-   hasDeclaredChildren(record) {
+   hasDeclaredChildren(record: IObject): boolean {
       return record.get(this._$declaredChildrenProperty);
    }
 
@@ -248,7 +252,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Boolean}
     * @see nodeProperty
     */
-   hasParent(child, rs) {
+   hasParent(child: IObject, rs: RecordSet<IObject>): boolean {
       child = this._asRecord(child, rs);
       const parentId = child.get(this._$parentProperty);
       const idProperty = this._$idProperty || rs.getIdProperty();
@@ -266,7 +270,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Types/_entity/Record|Null}
     * @see nodeProperty
     */
-   getParent(child, rs) {
+   getParent(child: IObject, rs: RecordSet<IObject>): IObject {
       child = this._asRecord(child, rs);
       const parentId = child.get(this._$parentProperty);
 
@@ -284,7 +288,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {Types/_entity/Record}
     * @protected
     */
-   _asRecord(value, rs) {
+   _asRecord(value: IObject, rs: RecordSet<IObject>): IObject {
       if (value && value['[Types/_entity/Record]']) {
          return value;
       }
@@ -306,7 +310,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @return {*}
     * @protected
     */
-   _asField(value, field) {
+   _asField(value: IObject, field: string): any {
       if (!(value && value['[Types/_entity/Record]'])) {
          return value;
       }

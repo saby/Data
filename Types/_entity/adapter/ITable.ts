@@ -35,7 +35,7 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
     * @param {*} record Запись
     * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
     */
-   add(record: any, at?: number);
+   add(record: any, at?: number): void;
 
    /**
     * Возвращает запись по позиции
@@ -48,14 +48,14 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
     * Удаляет запись по позиции
     * @param {Number} at Позиция записи
     */
-   remove(at: number);
+   remove(at: number): void;
 
    /**
     * Заменяет запись
     * @param {*} record Заменяющая запись
     * @param {Number} at Позиция, в которой будет произведена замена
     */
-   replace(record: any, at: number);
+   replace(record: any, at: number): void;
 
    /**
     * Перемещает запись
@@ -63,7 +63,7 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
     * @param {Number} target Позиция, в позицию которую перемещаем
     * @return {*}
     */
-   move(source: number, target: number);
+   move(source: number, target: number): void;
 
    /**
     * Объединяет две записи
@@ -84,7 +84,7 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
    /**
     * Очищает таблицу (удаляет все записи)
     */
-   clear();
+   clear(): void;
 
    /**
     * Возвращает формат поля (в режиме только для чтения)
@@ -109,18 +109,18 @@ export default interface ITable /** @lends Types/_entity/adapter/ITable.prototyp
     * @param {Types/_entity/format/Field} format Формат поля
     * @param {Number} [at] Позиция поля
     */
-   addField(format: Field, at: number);
+   addField(format: Field, at: number): void;
 
    /**
     * Удаляет поле из таблицы по имени.
     * @param {String} name Имя поля
     */
-   removeField(name: string);
+   removeField(name: string): void;
 
    /**
     * Удаляет поле из таблицы по позиции.
     * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
     * @param {Number} index Позиция поля
     */
-   removeFieldAt(index: number);
+   removeFieldAt(index: number): void;
 }

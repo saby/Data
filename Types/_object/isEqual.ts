@@ -4,7 +4,9 @@
  * Модуль, в котором описана функция <b>isEqual(obj1, obj2)</b>,
  *
  * Функция рекурсивно сравнивает два объекта или массива.
- * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или массивы, то они сравниваются рекурсивно.
+ * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них
+ * одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или
+ * массивы, то они сравниваются рекурсивно.
  * Функция возвращает true, когда оба объекта/массива идентичны.
  *
  * <h2>Параметры функции</h2>
@@ -30,7 +32,7 @@
  * @author Мальцев А.А.
  */
 
-const isTraversable = function(v): boolean {
+function isTraversable(v: any): boolean {
    let proto;
    if (v && typeof v === 'object') {
       if (v instanceof Date) {
@@ -41,19 +43,21 @@ const isTraversable = function(v): boolean {
    }
 
    return false;
-};
-const isEqualArrays = function(arr1, arr2): boolean {
+}
+
+function isEqualArrays(arr1: any[], arr2: any[]): boolean {
    if (arr1.length !== arr2.length) {
       return false;
    }
 
-   return !arr1.some(function(item, index) {
+   return !arr1.some((item, index) => {
       return !isEqual(item, arr2[index]);
    });
-};
-const isEqualObjects = function(obj1, obj2): boolean {
-   const keys1 = Object.keys(obj1),
-      keys2 = Object.keys(obj2);
+}
+
+function isEqualObjects(obj1: object, obj2: object): boolean {
+   const keys1 = Object.keys(obj1);
+   const keys2 = Object.keys(obj2);
 
    if (keys1.length !== keys2.length) {
       return false;
@@ -62,19 +66,20 @@ const isEqualObjects = function(obj1, obj2): boolean {
    keys1.sort();
    keys2.sort();
    if (keys1.length > 0) {
-      return !keys1.some(function(key, index) {
+      return !keys1.some((key, index) => {
          return !(keys2[index] === key && isEqual(obj1[key], obj2[key]));
       });
    }
-   return Object.getPrototypeOf(obj1) === Object.getPrototypeOf(obj2);
-};
 
-export default function isEqual(obj1, obj2): boolean {
-   let equal = obj1 === obj2,
-      val1,
-      val2,
-      isArray1,
-      isArray2;
+   return Object.getPrototypeOf(obj1) === Object.getPrototypeOf(obj2);
+}
+
+export default function isEqual(obj1: object, obj2: object): boolean {
+   const equal = obj1 === obj2;
+   let val1;
+   let val2;
+   let isArray1;
+   let isArray2;
 
    if (equal) {
       return equal;
@@ -86,7 +91,7 @@ export default function isEqual(obj1, obj2): boolean {
       return false;
    }
    if (isArray1) {
-      return isEqualArrays(obj1, obj2);
+      return isEqualArrays(obj1 as any[], obj2 as any[]);
    }
 
    if (isTraversable(obj1) && isTraversable(obj2)) {

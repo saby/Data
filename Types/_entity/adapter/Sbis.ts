@@ -11,15 +11,11 @@
  */
 
 import Abstract from './Abstract';
-import SbisTable, {ITableFormat} from './SbisTable';
-import SbisRecord, {IRecordFormat} from './SbisRecord';
+import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisTable from './SbisTable';
+import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
-
-export interface IFieldFormat {
-   n: string;
-   t: string;
-}
 
 export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis.prototype */{
 

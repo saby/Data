@@ -26,7 +26,7 @@ export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prot
     * @param {*} [tableData] Сырые данные таблицы (передаются, когда data пустой)
     * @return {Types/_entity/adapter/IRecord}
     */
-   forRecord(data: any, tableData?): IRecord;
+   forRecord(data: any, tableData?: any): IRecord;
 
    /**
     * Возвращает название поля, которое является первичным ключом
@@ -43,7 +43,7 @@ export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prot
     */
    getProperty(data: any, property: string): any;
 
-   setProperty(data: any, property: string, value: any);
+   setProperty(data: any, property: string, value: any): void;
 
    /**
     * Сериализует данные - переводит из внешнего формата в формат адаптера

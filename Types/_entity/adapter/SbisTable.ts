@@ -36,17 +36,11 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IMetaData from './IMetaData';
 import ICloneable from '../ICloneable';
-import {IFieldFormat} from './Sbis';
-import SbisFormatMixin from './SbisFormatMixin';
-import SbisRecord, {IRecordFormat} from './SbisRecord';
+import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisRecord from './SbisRecord';
 import {fieldsFactory, Field, UniversalField} from '../format';
 import {mixin} from '../../util';
 import {merge} from '../../object';
-
-export interface ITableFormat {
-   d: any[][];
-   s: IFieldFormat[];
-}
 
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin

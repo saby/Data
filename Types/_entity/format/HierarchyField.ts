@@ -24,11 +24,11 @@ export default class HierarchyField extends Field /** @lends Types/_entity/forma
     * @return {String}
     * @see dictionary
     */
-   getKind() {
+   getKind(): string {
       return this._$kind;
    }
 
-   getDefaultValue() {
+   getDefaultValue(): any {
       if (this._$kind && this._$kind === 'Identity') {
          return [null];
       }

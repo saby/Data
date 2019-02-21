@@ -48,12 +48,12 @@ export default class Compute implements IFunctor {
       }
 
       Object.defineProperty(fn, 'functor', {
-         get() {
+         get(): Function {
             return Compute;
          }
       });
       Object.defineProperty(fn, 'properties', {
-         get() {
+         get(): string[] {
             return properties;
          }
       });

@@ -31,12 +31,12 @@ export default interface IRecord /** @lends Types/_entity/adapter/IRecord.protot
     * @param {String} name Поле записи
     * @param {*} value Значение
     */
-   set(name: string, value: any);
+   set(name: string, value: any): void;
 
    /**
     * Очищает запись (удаляет все поля)
     */
-   clear();
+   clear(): void;
 
    /**
     * Возвращает данные записи в формате адаптера
@@ -73,18 +73,18 @@ export default interface IRecord /** @lends Types/_entity/adapter/IRecord.protot
     * @param {Types/_entity/format/Field} format Формат поля
     * @param {Number} [at] Позиция поля
     */
-   addField(format: Field, at?: number);
+   addField(format: Field, at?: number): void;
 
    /**
     * Удаляет поле из записи по имени.
     * @param {String} name Имя поля
     */
-   removeField(name: string);
+   removeField(name: string): void;
 
    /**
     * Удаляет поле из записи по позиции.
     * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
     * @param {Number} index Позиция поля
     */
-   removeFieldAt(index: number);
+   removeFieldAt(index: number): void;
 }

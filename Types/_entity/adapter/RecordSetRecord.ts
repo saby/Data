@@ -29,7 +29,7 @@ import {Field, UniversalField} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';
-import {RecordSet} from '../../collection';
+import {RecordSet, format} from '../../collection';
 
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
@@ -57,7 +57,7 @@ export default class RecordSetRecord extends mixin(
     * @param {Types/_entity/Record} data Сырые данные
     * @param {Types/_collection/RecordSet} [tableData] Таблица
     */
-   constructor(data, tableData?) {
+   constructor(data: Record, tableData?: RecordSet<Record>) {
       if (data && !data['[Types/_entity/Record]']) {
          throw new TypeError('Argument "data" should be an instance of Types/entity:Record');
       }
@@ -66,15 +66,15 @@ export default class RecordSetRecord extends mixin(
       this._tableData = tableData;
    }
 
-   has(name) {
+   has(name: string): boolean {
       return this._isValidData() ? this._data.has(name) : false;
    }
 
-   get(name) {
+   get(name: string): any {
       return this._isValidData() ? this._data.get(name) : undefined;
    }
 
-   set(name, value) {
+   set(name: string, value: any): void {
       if (!name) {
          throw new ReferenceError(`${this._moduleName}::set(): argument "name" is not defined`);
       }
@@ -86,7 +86,7 @@ export default class RecordSetRecord extends mixin(
       return this._data.set(name, value);
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -107,7 +107,7 @@ export default class RecordSetRecord extends mixin(
       }
    }
 
-   getFields() {
+   getFields(): string[] {
       const fields = [];
       if (this._isValidData()) {
          this._data.getFormat().each((field) => {
@@ -117,7 +117,7 @@ export default class RecordSetRecord extends mixin(
       return fields;
    }
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -126,7 +126,7 @@ export default class RecordSetRecord extends mixin(
       this._data.addField(format, at);
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -135,7 +135,7 @@ export default class RecordSetRecord extends mixin(
       this._data.removeField(name);
    }
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._touchData();
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
@@ -144,11 +144,11 @@ export default class RecordSetRecord extends mixin(
       this._data.removeFieldAt(index);
    }
 
-   // endregion IRecord
+   // endregion
 
    // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
       if (!this._data &&
          this._tableData &&
          this._tableData['[Types/_entity/FormattableMixin]']
@@ -162,15 +162,17 @@ export default class RecordSetRecord extends mixin(
       }
    }
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data && this._data['[Types/_entity/Record]'];
    }
 
-   _getFieldsFormat() {
-      return this._isValidData() ? this._data.getFormat() : create('Types/collection:format.Format');
+   _getFieldsFormat(): format.Format<Field> {
+      return this._isValidData()
+         ? this._data.getFormat()
+         : create<format.Format<Field>>('Types/collection:format.Format');
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(RecordSetRecord.prototype, {

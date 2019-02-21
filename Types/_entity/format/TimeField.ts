@@ -22,7 +22,7 @@ export default class TimeField extends Field /** @lends Types/_entity/format/Tim
 
    // region Public methods
 
-   getDefaultValue() {
+   getDefaultValue(): string {
       if (this._$defaultValue instanceof Date) {
          return dateToSql(this._$defaultValue, TO_SQL_MODE.TIME);
       }
