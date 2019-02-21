@@ -28,7 +28,8 @@ export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
     * Вызывает удаленный метод.
     * @param {String} command Имя метода
     * @param {Object} [data] Аргументы метода
-    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet}, в случае ошибки - Error.
+    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет
+    * {@link Types/_source/DataSet}, в случае ошибки - Error.
     * @see Types/_source/DataSet
     * @example
     * Раздаем подарки сотрудникам, у которых сегодня день рождения. Также посчитаем их количество:

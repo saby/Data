@@ -30,12 +30,12 @@ if (typeof Set === 'undefined') {
          return this;
       }
 
-      clear() {
+      clear(): void {
          this._hash = {};
          this._objects = [];
       }
 
-      delete(value: T) {
+      delete(value: T): void {
          let key;
          if (this._isObject(value)) {
             key = this._deleteObject(value);
@@ -49,11 +49,11 @@ if (typeof Set === 'undefined') {
          this._hash[SetImplementation._getHashedKey(key)] = undefined;
       }
 
-      entries() {
+      entries(): any[] {
          throw new Error('Method is not supported');
       }
 
-      forEach(callbackFn: Function, thisArg?: Object) {
+      forEach(callbackFn: Function, thisArg?: Object): void {
          // FIXME: now not in insertion order
          const hash = this._hash;
          for (const key in hash) {
@@ -78,11 +78,11 @@ if (typeof Set === 'undefined') {
          return this._hash.hasOwnProperty(key) && this._hash[key] !== undefined;
       }
 
-      keys() {
+      keys(): any[] {
          throw new Error('Method is not supported');
       }
 
-      values() {
+      values(): any[] {
          throw new Error('Method is not supported');
       }
 
@@ -124,7 +124,7 @@ if (typeof Set === 'undefined') {
    });
 
    Object.defineProperty(SetImplementation.prototype, 'size', {
-      get() {
+      get(): number {
          return Object.keys(this._hash).length;
       },
       enumerable: true,

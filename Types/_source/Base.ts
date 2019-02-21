@@ -28,6 +28,15 @@ export interface IOptions extends IDefaultOptions, IDataOptions {
 export default abstract class Base extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
 ) implements IData /** @lends Types/_source/Base.prototype */{
+   protected constructor(options?: IOptions) {
+      options = {...(options || {})};
+
+      super(options);
+      SourceOptionsMixin.constructor.call(this, options);
+      OptionsToPropertyMixin.call(this, options);
+      SerializableMixin.constructor.call(this);
+      DataMixin.constructor.call(this, options);
+   }
 
    // region IData
 
@@ -41,22 +50,12 @@ export default abstract class Base extends mixin(
    getListModule: () => Function | string;
    setListModule: (listModule: Function | string) => void;
 
-   protected constructor(options?: IOptions) {
-      options = {...(options || {})};
-
-      super(options);
-      SourceOptionsMixin.constructor.call(this, options);
-      OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
-      DataMixin.constructor.call(this, options);
-   }
-
    // endregion
 
    /**
     * @deprecated
     */
-   static extend(mixinsList:any, classExtender:any) {
+   static extend(mixinsList: any, classExtender: any): Function {
       logger.info('Types/_source/Base', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
 
       if (!require.defined('Core/core-extend')) {

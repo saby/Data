@@ -1,6 +1,7 @@
 /// <amd-module name="Types/_source/ICrud" />
 /**
- * Интерфейс источника данных, поддерживающиего контракт {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
+ * Интерфейс источника данных, поддерживающиего контракт
+ * {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
  *
  * Создадим новую статью:
  * <pre>

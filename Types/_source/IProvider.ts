@@ -18,7 +18,8 @@ export default interface IProvider /** @lends Types/_source/IProvider.prototype 
 
    /**
     * @typedef {Object} Endpoint
-    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
+    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено
+    * подключение
     * @property {String} contract Контракт - определяет доступные операции
     */
 
@@ -26,7 +27,8 @@ export default interface IProvider /** @lends Types/_source/IProvider.prototype 
     * @event onBeforeProviderCall Перед вызовом метода удаленного сервиса через провайдер
     * @param {Env/Event.Object} eventObject Дескриптор события.
     * @param {String} name Имя метода
-    * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует учитывать, что изменяется оригинальный объект)
+    * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует
+    * учитывать, что изменяется оригинальный объект)
     * @example
     * Добавляем в фильтр выборки поле enabled со значением true:
     * <pre>
@@ -57,7 +59,8 @@ export default interface IProvider /** @lends Types/_source/IProvider.prototype 
    getProvider(): IAbstract;
 
    /**
-    * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям провайдера удаленного доступа.
+    * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям провайдера удаленного
+    * доступа.
     * @return {Endpoint}
     * @see endpoint
     * @example

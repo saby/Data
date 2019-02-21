@@ -6,7 +6,7 @@
  * @author Мальцев А.А.
  */
 
-import DataSet from './DataSet';
+import DataSet, {IOptions as IDataSetOptions} from './DataSet';
 import {ReadWriteMixin, adapter, Model} from '../entity';
 import {create} from '../di';
 
@@ -22,7 +22,8 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    '[Types/_source/DataMixin]': true,
 
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
+    * По умолчанию {@link Types/_entity/adapter/Json}.
     * @name Types/_source/DataMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/IAdapter
@@ -52,7 +53,8 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    _$adapter: 'Types/entity:adapter.Json',
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
+    * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
+    * По умолчанию {@link Types/_entity/Model}.
     * @name Types/_source/DataMixin#model
     * @see getModel
     * @see Types/_entity/Model
@@ -85,7 +87,8 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    _$model: 'Types/entity:Model',
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
+    * По умолчанию {@link Types/_collection/RecordSet}.
     * @name Types/_source/DataMixin#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
@@ -149,7 +152,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
 
    _writable: ReadWriteMixin.writable,
 
-   constructor(options?: IOptions) {
+   constructor(options?: IOptions): void {
       options = options || {};
 
       if (options.dataSetMetaProperty) {
@@ -166,15 +169,11 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
       return this._$adapter;
    },
 
-   setAdapter() {
-      throw new Error(this._moduleName + '::setAdapter() - method has been removed in 3.17.300 as deprecated. You should inject adapter into constructor use "adapter" option.');
-   },
-
    getModel(): Function | string {
       return this._$model;
    },
 
-   setModel(model: Function | string) {
+   setModel(model: Function | string): void {
       this._$model = model;
    },
 
@@ -182,7 +181,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
       return this._$listModule;
    },
 
-   setListModule(listModule: Function | string) {
+   setListModule(listModule: Function | string): void {
       this._$listModule = listModule;
    },
 
@@ -190,11 +189,11 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
       return this._$idProperty;
    },
 
-   setIdProperty(name: string) {
+   setIdProperty(name: string): void {
       this._$idProperty = name;
    },
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -204,7 +203,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {String}
     * @protected
     */
-   _getIdPropertyByData(data): string {
+   _getIdPropertyByData(data: any): string {
       return this.getAdapter().getKeyField(data) || '';
    },
 
@@ -214,7 +213,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {Types/_entity/Model}
     * @protected
     */
-   _getModelInstance(data): Model {
+   _getModelInstance(data: any): Model {
       return create(this._$model, {
          writable: this._writable,
          rawData: data,
@@ -229,7 +228,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {Types/_source/DataSet}
     * @protected
     */
-   _getDataSetInstance(cfg): DataSet {
+   _getDataSetInstance(cfg: IDataSetOptions): DataSet {
       return create(// eslint-disable-line new-cap
          this._dataSetModule,
          {
@@ -237,7 +236,9 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null), ...cfg}
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null),
+            ...cfg
+         }
       );
    },
 
@@ -247,7 +248,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {Types/_source/DataSet}
     * @protected
     */
-   _wrapToDataSet(data): DataSet {
+   _wrapToDataSet(data: any): DataSet {
       return this._getDataSetInstance({
          rawData: data,
          itemsProperty: this._dataSetItemsProperty,
@@ -262,7 +263,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @param {Object} context Конекст
     * @protected
     */
-   _each(data, callback, context) {
+   _each(data: any, callback: Function, context: object): void {
       const tableAdapter = this.getAdapter().forTable(data);
       for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
          callback.call(context || this, tableAdapter.at(index), index);
@@ -279,7 +280,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {Boolean}
     * @static
     */
-   isModelInstance(instance): boolean {
+   isModelInstance(instance: any): boolean {
       return instance &&
          instance['[Types/_entity/IObject]'] &&
          instance['[Types/_entity/FormattableMixin]'];
@@ -291,7 +292,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     * @return {Boolean}
     * @static
     */
-   isListInstance(instance): boolean {
+   isListInstance(instance: any): boolean {
       return instance &&
          instance['[Types/_collection/IList]'] &&
          instance['[Types/_entity/FormattableMixin]'];

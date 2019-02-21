@@ -8,9 +8,8 @@
 
 // @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
-import req = require('require');
 
+// tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
@@ -32,9 +31,10 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
     * @return {Core/Deferred}
     * @protected
     */
+   // tslint:disable-next-line:ban-types
    _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
       const deps = this._additionalDependencies;
-      const depsLoaded = deps.reduce((prev, curr) => prev && req.defined(curr), true);
+      const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
       const result = new Deferred();
 
       if (depsLoaded) {
@@ -45,7 +45,7 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
          }
       } else {
          // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
-         req(deps, () => {
+         require(deps, () => {
             // Don't call callback() if deferred has been cancelled during require
             if (
                callback &&
@@ -55,7 +55,7 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
             } else {
                result.callback();
             }
-         }, (error) => result.errback(error));
+         }, (error: Error) => result.errback(error));
       }
 
       return result;
@@ -67,7 +67,8 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
     * @param {Core/Deferred} slave Ведомый
     * @protected
     */
-   _connectAdditionalDependencies(master, slave) {
+   // tslint:disable-next-line:ban-types
+   _connectAdditionalDependencies(master: Deferred, slave: Deferred): void {
       // Cancel master on slave cancelling
       if (!slave.isCallbacksLocked()) {
          slave.addErrback((err) => {

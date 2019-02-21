@@ -119,7 +119,7 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
       move: 'move'
    },
 
-   constructor(options?: IOptions) {
+   constructor(options?: IOptions): void {
       if (options && options.binding instanceof Object) {
          options.binding = {...this._$binding, ...options.binding};
       }
@@ -150,15 +150,17 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
     *       },
     *       idProperty: 'id'
     *    });
-    *    console.log('Calling read() method via ' + dataSource.getBinding().read);//'Calling read() method via /api/article/read/'
-    *    articlesSource.read(13);//Cause HTTP request to /api/article/read/?id=13
+    *    console.log('Calling read() method via ' + dataSource.getBinding().read);
+    *    //'Calling read() method via /api/article/read/'
+    *    articlesSource.read(13);
+    *   //Cause HTTP request to /api/article/read/?id=13
     * </pre>
     */
    getBinding(): IBinding {
       return {...this._$binding};
    },
 
-   setBinding(binding: IBinding) {
+   setBinding(binding: IBinding): void {
       this._$binding = binding;
    }
 };

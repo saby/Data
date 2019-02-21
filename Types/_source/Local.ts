@@ -19,7 +19,7 @@ import DataCrudMixin from './DataCrudMixin';
 import Query, {IMeta, Join, Order} from './Query';
 import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
-import {IList, RecordSet} from '../collection';
+import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
@@ -58,24 +58,26 @@ function compareValues(given: any, expect: any, operator: string): boolean {
    return given == expect;
 }
 
-interface IGenericObject<T> {}
+type FilterFunction = (item: adapter.IRecord, query: Object) => boolean;
 
-interface IFilter {
-   (item: adapter.IRecord, query: Object): boolean;
+interface IGenericObject<T> {
+   __proto?: object;
 }
 
 export interface IOptions extends IBaseOptions {
-   filter?: IFilter
+   filter?: FilterFunction;
 }
 
 export default abstract class Local extends mixin(
    Base, DataCrudMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
    /**
-    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода
+    * {@link query}.
     * @name Types/_source/Local#filter
     * @remark
-    * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода query().
+    * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода
+    * query().
     * Функция должна вернуть Boolean: true - запись прошла фильтр и попадет в итоговую выборку, false - не  прошла.
     * @example
     * Спрячем Землю из результатов выборки:
@@ -102,7 +104,8 @@ export default abstract class Local extends mixin(
     *
     *       solarSystem.query().addCallback(function(result) {
     *          result.getAll().each(function(record) {
-    *             console.log(record.get('name'));//'Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'
+    *             console.log(record.get('name'));
+    *             //'Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'
     *          });
     *       });
     *    });
@@ -143,7 +146,7 @@ export default abstract class Local extends mixin(
     *    });
     * </pre>
     */
-   protected _$filter: IFilter;
+   protected _$filter: FilterFunction;
 
    /**
     * Индекс для быстрого поиска записи по ключу
@@ -163,7 +166,7 @@ export default abstract class Local extends mixin(
       this._reIndex();
    }
 
-   //region ICrud
+   // region ICrud
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
@@ -175,7 +178,7 @@ export default abstract class Local extends mixin(
    }
 
    read(key: any, meta?: Object): ExtendPromise<Record> {
-      let data = this._getRecordByKey(key);
+      const data = this._getRecordByKey(key);
       if (data) {
          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
       } else {
@@ -184,16 +187,16 @@ export default abstract class Local extends mixin(
    }
 
    update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
-      let updateRecord = (record) => {
-         let idProperty = this.getIdProperty();
+      const updateRecord = (record) => {
+         const idProperty = this.getIdProperty();
          let key = idProperty ? record.get(idProperty) : undefined;
          if (key === undefined) {
             key = randomId('k');
             record.set(idProperty, key);
          }
 
-         let adapter = this._getTableAdapter();
-         let index = this._getIndexByKey(key);
+         const adapter = this._getTableAdapter();
+         const index = this._getIndexByKey(key);
 
          if (index === -1) {
             adapter.add(record.getRawData());
@@ -210,7 +213,7 @@ export default abstract class Local extends mixin(
       let keys = [];
 
       if (DataMixin.isListInstance(data)) {
-         (<RecordSet<Record>>data).each((record) => {
+         (data as RecordSet<Record>).each((record) => {
             keys.push(updateRecord(record));
          });
       } else {
@@ -222,9 +225,9 @@ export default abstract class Local extends mixin(
       );
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
-      let destroyByKey = (key) => {
-         let index = this._getIndexByKey(key);
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+      const destroyByKey = (key) => {
+         const index = this._getIndexByKey(key);
          if (index !== -1) {
             this._getTableAdapter().remove(index);
             this._reIndex();
@@ -249,7 +252,7 @@ export default abstract class Local extends mixin(
 
    query(query: Query): ExtendPromise<DataSet> {
       let items = this._applyFrom(query ? query.getFrom() : undefined);
-      let adapter = this.getAdapter();
+      const adapter = this.getAdapter();
       let total;
 
       if (query) {
@@ -265,22 +268,22 @@ export default abstract class Local extends mixin(
       }
 
       return this._loadAdditionalDependencies().addCallback(() => this._prepareQueryResult({
-         items: items,
+         items,
          meta: {
-            total: total
+            total
          }
       }, query));
    }
 
-   //endregion ICrud
+   // endregion
 
-   //region ICrudPlus
+   // region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
    merge(from: string | number, to: string | number): ExtendPromise<any> {
-      let indexOne = this._getIndexByKey(from);
-      let indexTwo = this._getIndexByKey(to);
+      const indexOne = this._getIndexByKey(from);
+      const indexTwo = this._getIndexByKey(to);
       if (indexOne === -1 || indexTwo === -1) {
          return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`);
       } else {
@@ -295,11 +298,11 @@ export default abstract class Local extends mixin(
    }
 
    copy(key: string | number, meta?: Object): ExtendPromise<Record> {
-      let index = this._getIndexByKey(key);
+      const index = this._getIndexByKey(key);
       if (index === -1) {
          return Deferred.fail(`Record with key "${key}" does not exist`);
       } else {
-         let copy = this._getTableAdapter().copy(index);
+         const copy = this._getTableAdapter().copy(index);
          this._reIndex();
          return this._loadAdditionalDependencies().addCallback(
             () => this._prepareReadResult(copy)
@@ -309,19 +312,19 @@ export default abstract class Local extends mixin(
 
    move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
       meta = meta || {};
-      let sourceItems = [];
+      const sourceItems = [];
       if (!(items instanceof Array)) {
          items = [items];
       }
-      let tableAdapter = this._getTableAdapter();
-      let adapter = this.getAdapter();
+      const tableAdapter = this._getTableAdapter();
+      const adapter = this.getAdapter();
 
       items.sort( (a, b) => {
-         let indexa = this._getIndexByKey(a);
-         let indexb = this._getIndexByKey(b);
-         return  meta.position == MOVE_POSITION.after ? indexb - indexa : indexa - indexb;
+         const indexa = this._getIndexByKey(a);
+         const indexb = this._getIndexByKey(b);
+         return  meta.position === MOVE_POSITION.after ? indexb - indexa : indexa - indexb;
       }).forEach((id) => {
-         let index = this._getIndexByKey(id);
+         const index = this._getIndexByKey(id);
          sourceItems.push(adapter.forRecord(tableAdapter.at(index)));
       });
 
@@ -342,44 +345,44 @@ export default abstract class Local extends mixin(
       return this._reorderMove(sourceItems, targetItem, meta);
    }
 
-   //endregion ICrudPlus
+   // endregion
 
-   //region DataMixin
+   // region DataMixin
 
-   protected _wrapToDataSet(data): DataSet {
+   protected _wrapToDataSet(data: any): DataSet {
       return super._wrapToDataSet(
          object.clonePlain(data, true)
       );
    }
 
-   //endregion DataMixin
+   // endregion
 
-   //region DataCrudMixin
+   // region DataCrudMixin
 
-   protected _prepareCreateResult(data): Model {
+   protected _prepareCreateResult(data: any): Model {
       return DataCrudMixin._prepareCreateResult.call(
          this,
          object.clonePlain(data, true)
       );
    }
 
-   protected _prepareReadResult(data): Model {
+   protected _prepareReadResult(data: any): Model {
       return DataCrudMixin._prepareReadResult.call(
          this,
          object.clonePlain(data, true)
       );
    }
 
-   //endregion DataCrudMixin
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Возвращает адаптер для работы с таблицей
     * @return {Types/_entity/adapter/ITable}
     * @protected
     */
-   protected abstract _getTableAdapter(): adapter.ITable
+   protected abstract _getTableAdapter(): adapter.ITable;
 
    /**
     * Возвращает данные модели с указанным ключом
@@ -387,7 +390,7 @@ export default abstract class Local extends mixin(
     * @return {Array|undefined}
     * @protected
     */
-   protected _getRecordByKey(key: string): Array<adapter.IRecord> {
+   protected _getRecordByKey(key: string): adapter.IRecord {
       return this._getTableAdapter().at(
          this._getIndexByKey(key)
       );
@@ -400,7 +403,7 @@ export default abstract class Local extends mixin(
     * @protected
     */
    protected _getIndexByKey(key: string | number): number {
-      let index = this._index[key];
+      const index = this._index[key];
       return index === undefined ? -1 : index;
    }
 
@@ -408,11 +411,11 @@ export default abstract class Local extends mixin(
     * Перестраивает индекс
     * @protected
     */
-   protected _reIndex() {
+   protected _reIndex(): void {
       this._index = {};
-      let adapter = this.getAdapter();
+      const adapter = this.getAdapter();
       this._each(this.data, (item, index) => {
-         let key = adapter.forRecord(item).get(this._$idProperty);
+         const key = adapter.forRecord(item).get(this._$idProperty);
          this._index[key] = index;
       });
    }
@@ -423,7 +426,7 @@ export default abstract class Local extends mixin(
     * @return {*}
     * @protected
     */
-   protected abstract _applyFrom(from?: string): any
+   protected abstract _applyFrom(from?: string): any;
 
    /**
     * Применяет объединение
@@ -449,9 +452,9 @@ export default abstract class Local extends mixin(
          return data;
       }
 
-      let checkFields = (fields, item) => {
+      const checkFields = (fields, item) => {
          let result = true;
-         for (let name in fields) {
+         for (const name in fields) {
             if (!fields.hasOwnProperty(name)) {
                continue;
             }
@@ -467,9 +470,9 @@ export default abstract class Local extends mixin(
          return result;
       };
 
-      let adapter = this.getAdapter();
-      let tableAdapter = adapter.forTable();
-      let isPredicate = typeof where === 'function';
+      const adapter = this.getAdapter();
+      const tableAdapter = adapter.forTable();
+      const isPredicate = typeof where === 'function';
 
       this._each(data, (item, index) => {
          item = adapter.forRecord(item);
@@ -478,7 +481,7 @@ export default abstract class Local extends mixin(
          if (this._$filter) {
             isMatch = this._$filter(item, where);
          } else {
-            isMatch = isPredicate ? (<Function>where)(item, index) : checkFields(where, item);
+            isMatch = isPredicate ? (where as Function)(item, index) : checkFields(where, item);
          }
 
          if (isMatch) {
@@ -503,7 +506,7 @@ export default abstract class Local extends mixin(
       }
 
       //Создаем карту сортировки
-      let orderMap = [];
+      const orderMap = [];
       for (let i = 0; i < order.length; i++) {
          orderMap.push({
             field: order[i].getSelector(),
@@ -512,24 +515,25 @@ export default abstract class Local extends mixin(
       }
 
       //Создаем служебный массив, который будем сортировать
-      let adapter = this.getAdapter();
-      let dataMap = [];
+      const adapter = this.getAdapter();
+      const dataMap = [];
       this._each(data, (item, index) => {
          let value;
-         let values = [];
+         const values = [];
          for (let i = 0; i < orderMap.length; i++) {
             value = adapter.forRecord(item).get(orderMap[i].field);
 
-            //undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются непредсказуемо. Поэтому заменим их на null.
+            // undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются
+            // непредсказуемо. Поэтому заменим их на null.
             values.push(value === undefined ? null : value);
          }
          dataMap.push({
-            index: index,
-            values: values
+            index,
+            values
          });
       });
 
-      let compare = (a, b) => {
+      const compare = (a, b) => {
          if (a === null && b !== null) {
             //Считаем null меньше любого не-null
             return -1;
@@ -538,13 +542,14 @@ export default abstract class Local extends mixin(
             //Считаем любое не-null больше null
             return 1;
          }
+         // tslint:disable-next-line:triple-equals
          if (a == b) {
             return 0;
          }
          return a > b ? 1 : -1;
       };
 
-      //Сортируем служебный массив
+      // Сортируем служебный массив
       dataMap.sort((a, b) => {
          let result = 0;
          for (let index = 0; index < orderMap.length; index++) {
@@ -559,9 +564,9 @@ export default abstract class Local extends mixin(
          return result;
       });
 
-      //Создаем новую таблицу по служебному массиву
-      let sourceAdapter = adapter.forTable(data);
-      let resultAdapter = adapter.forTable();
+      // Создаем новую таблицу по служебному массиву
+      const sourceAdapter = adapter.forTable(data);
+      const resultAdapter = adapter.forTable();
       for (let i = 0, count = dataMap.length; i < count; i++) {
          resultAdapter.add(sourceAdapter.at(dataMap[i].index));
       }
@@ -583,17 +588,17 @@ export default abstract class Local extends mixin(
          return data;
       }
 
-      let dataAdapter = this.getAdapter().forTable(data);
+      const dataAdapter = this.getAdapter().forTable(data);
       if (limit === undefined) {
          limit = dataAdapter.getCount();
       } else {
          limit = limit || 0;
       }
 
-      let newDataAdapter = this.getAdapter().forTable();
+      const newDataAdapter = this.getAdapter().forTable();
       let newIndex = 0;
-      let beginIndex = offset;
-      let endIndex = Math.min(
+      const beginIndex = offset;
+      const endIndex = Math.min(
          dataAdapter.getCount(),
          beginIndex + limit
       );
@@ -604,7 +609,7 @@ export default abstract class Local extends mixin(
       return newDataAdapter.getData();
    }
 
-   protected _reorderMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): ExtendPromise<null> {
+   protected _reorderMove(items: adapter.IRecord[], target: adapter.IRecord, meta: any): ExtendPromise<null> {
       let parentValue;
       if (meta.parentProperty) {
          parentValue = target.get(meta.parentProperty);
@@ -613,13 +618,13 @@ export default abstract class Local extends mixin(
          meta.position = meta.before ? MOVE_POSITION.before : MOVE_POSITION.after;
       }
 
-      let tableAdapter = this._getTableAdapter();
-      let targetsId = target.get(this._$idProperty);
+      const tableAdapter = this._getTableAdapter();
+      const targetsId = target.get(this._$idProperty);
       items.forEach((item) => {
          if (meta.parentProperty) {
             item.set(meta.parentProperty, parentValue);
          }
-         let index = this._getIndexByKey(item.get(this._$idProperty));
+         const index = this._getIndexByKey(item.get(this._$idProperty));
          let targetIndex = this._getIndexByKey(targetsId);
          if (meta.position === MOVE_POSITION.before && targetIndex > index) {
             targetIndex--;
@@ -633,11 +638,11 @@ export default abstract class Local extends mixin(
       return new Deferred().callback();
    }
 
-   protected _hierarchyMove(items: Array<adapter.IRecord>, target: adapter.IRecord, meta: any): ExtendPromise<null> {
+   protected _hierarchyMove(items: adapter.IRecord[], target: adapter.IRecord, meta: any): ExtendPromise<null> {
       if (!meta.parentProperty) {
          return Deferred.fail('Parent property is not defined');
       }
-      let parentValue = target ? target.get(this._$idProperty) : null;
+      const parentValue = target ? target.get(this._$idProperty) : null;
       items.forEach((item) => {
          item.set(meta.parentProperty, parentValue);
       });
@@ -645,7 +650,7 @@ export default abstract class Local extends mixin(
       return new Deferred().callback();
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
 Object.assign(Local.prototype, {
