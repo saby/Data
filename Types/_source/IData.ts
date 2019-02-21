@@ -45,7 +45,7 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
     */
    getModel(): Function | string;
 
-   setModel(model: Function);
+   setModel(model: Function): void;
 
    /**
     * Возвращает конструктор рекордсетов, порождаемых источником данных.
@@ -62,7 +62,7 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
     */
    getListModule(): Function | string;
 
-   setListModule(listModule: Function | string);
+   setListModule(listModule: Function | string): void;
 
    /**
     * Возвращает название свойства записи, содержащего первичный ключ
@@ -82,5 +82,5 @@ export default interface IData /** @lends Types/_source/IData.prototype */{
     */
    getIdProperty(): string;
 
-   setIdProperty(name: string);
+   setIdProperty(name: string): void;
 }

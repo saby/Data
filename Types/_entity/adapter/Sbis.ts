@@ -2,7 +2,8 @@
 /**
  * Адаптер для данных в формате СБиС.
  * Работает с форматом данных, который использует БЛ СБИС.
- * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/SbisRecord} и {@link Types/_entity/adapter/SbisTable}.
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/SbisRecord} и
+ * {@link Types/_entity/adapter/SbisTable}.
  * @class Types/_entity/adapter/Sbis
  * @extends Types/_entity/adapter/Abstract
  * @public
@@ -10,22 +11,27 @@
  */
 
 import Abstract from './Abstract';
-import SbisTable from './SbisTable';
-import SbisRecord from './SbisRecord';
+import SbisTable, {ITableFormat} from './SbisTable';
+import SbisRecord, {IRecordFormat} from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
 
+export interface IFieldFormat {
+   n: string;
+   t: string;
+}
+
 export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis.prototype */{
 
-   forTable(data) {
+   forTable(data: ITableFormat): SbisTable {
       return new SbisTable(data);
    }
 
-   forRecord(data) {
+   forRecord(data: IRecordFormat): SbisRecord {
       return new SbisRecord(data);
    }
 
-   getKeyField(data) {
+   getKeyField(data: ITableFormat): string {
       // TODO: primary key field index can be defined in this._data.k. and can be -1
       let index;
       let s;
@@ -44,7 +50,7 @@ export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis
       return index === undefined ? undefined : s[index].n;
    }
 
-   static get FIELD_TYPE() {
+   static get FIELD_TYPE(): object {
       return FIELD_TYPE;
    }
 }

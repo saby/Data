@@ -1,13 +1,18 @@
 /// <amd-module name="Types/_source/DataSet" />
 /**
  * Набор данных, полученный из источника.
- * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также скалярных значений, которые можно получить по имени свойства (или пути из имен).
- * Использование таких комплексных наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения какого-либо сложного интерфейса данные.
- * {@link rawData Исходные данные} могут быть предоставлены источником в разных форматах (JSON, XML). По умолчанию используется формат JSON.
- * Для чтения каждого формата должен быть указан соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
- * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для наглядности ниже приведены несколько примеров чтения частей из набора данных.
+ * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также
+ * скалярных значений, которые можно получить по имени свойства (или пути из имен).Использование таких комплексных
+ * наборов позволяет за один вызов {@link Types/_source/ICrud#query списочного} либо
+ * {@link Types/_source/IRpc#call произвольного} метода источника данных получать сразу все требующиеся для отображения
+ * какого-либо сложного интерфейса данные. {@link rawData Исходные данные} могут быть предоставлены источником в разных
+ * форматах (JSON, XML). По умолчанию используется формат JSON. Для чтения каждого формата должен быть указан
+ * соответствующий адаптер. По умолчанию используется адаптер {@link Types/_entity/adapter/Json}.
+ * В общем случае не требуется создавать экземпляры DataSet самостоятельно - это за вас будет делать источник. Но для
+ * наглядности ниже приведены несколько примеров чтения частей из набора данных.
  *
- * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
+ * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты
+ * выполнения запроса:
  * <pre>
  *    require(['Types/source'], function (source) {
  *       var data = new source.DataSet({
@@ -51,7 +56,8 @@
  *       console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
  *    });
  * </pre>
- * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения запроса:
+ * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения
+ * запроса:
  * <pre>
  *    require(['Types/source', 'Types/entity'], function (source, entity) {
  *       var data = new source.DataSet({
@@ -124,11 +130,16 @@ import {RecordSet} from '../collection';
 
 declare type TypeDeclaration = Function | string;
 
+export interface IOptions {
+   rawData: any;
+}
+
 export default class DataSet extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) /** @lends Types/_source/DataSet.prototype */{
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию {@link Types/_entity/adapter/Json}
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию
+    * {@link Types/_entity/adapter/Json}
     * @name Types/_source/DataSet#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/IAdapter
@@ -193,7 +204,8 @@ export default class DataSet extends mixin(
    protected _$model: TypeDeclaration;
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию {@link Types/_collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию
+    * {@link Types/_collection/RecordSet}.
     * @name Types/_source/DataSet#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
@@ -287,13 +299,13 @@ export default class DataSet extends mixin(
       this._$writable = !!value;
    }
 
-   constructor(options) {
+   constructor(options?: IOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.constructor.call(this);
    }
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Возвращает адаптер для работы с данными
@@ -311,7 +323,7 @@ export default class DataSet extends mixin(
     */
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
-         this._$adapter = <adapter.IAdapter>create(this._$adapter);
+         this._$adapter = create<adapter.IAdapter>(this._$adapter);
       }
       return this._$adapter;
    }
@@ -351,7 +363,7 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   setModel(model: TypeDeclaration) {
+   setModel(model: TypeDeclaration): void {
       this._$model = model;
    }
 
@@ -388,7 +400,7 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   setListModule(listModule: TypeDeclaration) {
+   setListModule(listModule: TypeDeclaration): void {
       this._$listModule = listModule;
    }
 
@@ -427,7 +439,7 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   setIdProperty(name: string) {
+   setIdProperty(name: string): void {
       this._$idProperty = name;
    }
 
@@ -465,13 +477,14 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   setItemsProperty(name: string) {
+   setItemsProperty(name: string): void {
       this._$itemsProperty = name;
    }
 
    /**
     * Возвращает выборку
-    * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
+    * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется
+    * основная выборка.
     * @return {Types/_collection/RecordSet}
     * @see itemsProperty
     * @example
@@ -533,7 +546,7 @@ export default class DataSet extends mixin(
          property = this._$itemsProperty;
       }
 
-      let items = this._getListInstance(
+      const items = this._getListInstance(
          this._getDataProperty(property)
       );
 
@@ -549,7 +562,7 @@ export default class DataSet extends mixin(
          }
 
          if (someInMetaData) {
-            itemsMetaData = Object.assign(itemsMetaData || {}, metaData);
+            itemsMetaData = {...(itemsMetaData || {}), ...metaData};
 
             // FIXME: don't use 'more' anymore
             if (!itemsMetaData.hasOwnProperty('more') && metaData.hasOwnProperty('total')) {
@@ -614,11 +627,11 @@ export default class DataSet extends mixin(
          property = this._$itemsProperty;
       }
 
-      //FIXME: don't use hardcoded signature for type detection
-      let data = this._getDataProperty(property);
-      let type = this.getAdapter().getProperty(data, '_type');
+      // FIXME: don't use hardcoded signature for type detection
+      const data = this._getDataProperty(property);
+      const type = this.getAdapter().getProperty(data, '_type');
       if (type === 'recordset') {
-         let tableAdapter = this.getAdapter().forTable(data);
+         const tableAdapter = this.getAdapter().forTable(data);
          if (tableAdapter.getCount() > 0) {
             return this._getModelInstance(tableAdapter.at(0));
          }
@@ -784,13 +797,13 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   setRawData(rawData: any) {
+   setRawData(rawData: any): void {
       this._$rawData = rawData;
    }
 
-   //endregion Public methods
+   // endregion
 
-   //region Protected methods
+   // region Protected methods
 
    /**
     * Возвращает свойство данных
@@ -815,9 +828,9 @@ export default class DataSet extends mixin(
       if (!this._$model) {
          throw new Error('Model is not defined');
       }
-      return <Model>create(this._$model, {
+      return create<Model>(this._$model, {
          writable: this._$writable,
-         rawData: rawData,
+         rawData,
          adapter: this._$adapter,
          idProperty: this._$idProperty
       });
@@ -830,9 +843,9 @@ export default class DataSet extends mixin(
     * @protected
     */
    protected _getListInstance(rawData: any): RecordSet<Model> {
-      return <RecordSet<Model>>create(this._$listModule, {
+      return create<RecordSet<Model>>(this._$listModule, {
          writable: this._$writable,
-         rawData: rawData,
+         rawData,
          adapter: this._$adapter,
          model: this._$model,
          idProperty: this._$idProperty
@@ -843,13 +856,13 @@ export default class DataSet extends mixin(
     * Проверят наличие адаптера
     * @protected
     */
-   protected _checkAdapter() {
+   protected _checkAdapter(): void {
       if (!this.getAdapter()) {
          throw new Error('Adapter is not defined');
       }
    }
 
-   //endregion Protected methods
+   // endregion
 }
 
 Object.assign(DataSet.prototype, {

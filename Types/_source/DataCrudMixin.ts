@@ -12,15 +12,15 @@ import {Model} from '../entity';
 const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
    '[Types/_source/DataCrudMixin]': true,
 
-   _prepareCreateResult(data): Model {
+   _prepareCreateResult(data: any): Model {
       return this._getModelInstance(data);
    },
 
-   _prepareReadResult(data): Model {
+   _prepareReadResult(data: any): Model {
       return this._getModelInstance(data);
    },
 
-   _prepareUpdateResult(data, keys) {
+   _prepareUpdateResult(data: any, keys: string[]): string[] {
       const idProperty = this.getIdProperty();
       const callback = (record, key) => {
          if (key &&

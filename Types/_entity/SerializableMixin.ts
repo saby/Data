@@ -44,7 +44,7 @@ const isFunctionDefinitionSupported = typeof getFunctionDefinition === 'function
  */
 let instanceCounter = 0;
 
-interface IState {
+export interface IState {
    $options?: Object;
 }
 
@@ -194,7 +194,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
     * @return {Function}
     * @protected
     */
-   _setSerializableState(state?: Object) {
+   _setSerializableState(state?: Object): Function {
       return function() {
          this[$unserialized] = true;
       };

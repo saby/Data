@@ -46,15 +46,27 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import Memory, {IOptions as IMemoryOptions} from './Memory';
-import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter, relation} from '../entity';
+import Query from './Query';
+import DataSet from './DataSet';
+import {
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin,
+   ISerializableState as IDefaultSerializableState,
+   Record,
+   relation
+} from '../entity';
+import {RecordSet} from '../collection';
 import {mixin} from '../util';
-// @ts-ignore
-import req = require('require');
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
    parentProperty: string;
+}
+
+interface ISerializableState extends IDefaultSerializableState {
+   _source: Memory;
 }
 
 export default class HierarchicalMemory extends mixin(
@@ -109,61 +121,61 @@ export default class HierarchicalMemory extends mixin(
       this._source = new Memory(options);
    }
 
-   //region ICrud
+   // region ICrud
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta) {
+   create(meta?: object): ExtendPromise<Record> {
       return this._source.create(meta);
    }
 
-   read(key, meta) {
+   read(key: any, meta?: object): ExtendPromise<Record> {
       return this._source.read(key, meta);
    }
 
-   update(data, meta) {
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
       return this._source.update(data, meta);
    }
 
-   destroy(keys, meta) {
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
       return this._source.destroy(keys, meta);
    }
 
-   query(query) {
-      let result = new Deferred();
+   query(query: Query): ExtendPromise<DataSet> {
+      const result = new Deferred();
 
-      req(['Types/collection'], (collection) => {
+      require(['Types/collection'], (collection) => {
          this._source.query(query).addCallbacks((response) => {
             if (this._$parentProperty) {
-               let hierarchy = new relation.Hierarchy({
+               const hierarchy = new relation.Hierarchy({
                   idProperty: this._idProperty,
                   parentProperty: this._$parentProperty
                });
 
-               let sourceRecords = new collection.RecordSet({
+               const sourceRecords = new collection.RecordSet({
                   rawData: this._source.data,
                   adapter: this._source.getAdapter(),
-                  idProperty: this._idProperty,
+                  idProperty: this._idProperty
                });
 
-               let breadcrumbs = new collection.RecordSet({
+               const breadcrumbs = new collection.RecordSet({
                   adapter: this._source.getAdapter(),
-                  idProperty: this._idProperty,
+                  idProperty: this._idProperty
                });
 
                // Extract breadcrumbs as path from filtered node to the root
-               let startFromId = query.getWhere()[this._$parentProperty];
+               const startFromId = query.getWhere()[this._$parentProperty];
                let startFromNode = sourceRecords.getRecordById(startFromId);
                if (startFromNode) {
                   breadcrumbs.add(startFromNode, 0);
                   let node;
-                  while(startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
+                  while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
                      breadcrumbs.add(node, 0);
                      startFromNode = node.get(this._idProperty);
                   }
                }
 
-               //Store breadcrumbs as 'path' in meta data
+               // Store breadcrumbs as 'path' in meta data
                const data =  response.getRawData(true);
                if (data) {
                   const metaData =  data.meta || {};
@@ -184,38 +196,38 @@ export default class HierarchicalMemory extends mixin(
       return result;
    }
 
-   //endregion
+   // endregion
 
-   //region ICrudPlus
+   // region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from, to) {
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
       return this._source.merge(from, to);
    }
 
-   copy(key, meta) {
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
       return this._source.copy(key, meta);
    }
 
-   move(items, target, meta) {
+   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
       return this._source.move(items, target, meta);
    }
 
-   //endregion
+   // endregion
 
    // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-      state._source = this._source;
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
+      resultState._source = this._source;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
          this._source = state._source;
       };
@@ -227,8 +239,8 @@ export default class HierarchicalMemory extends mixin(
 Object.assign(HierarchicalMemory.prototype, {
    '[Types/_source/HierarchicalMemory]': true,
    _moduleName: 'Types/source:HierarchicalMemory',
-   _$parentProperty: null,
+   _$parentProperty: null
 });
 
-//FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
+// FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
 HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;
