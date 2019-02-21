@@ -96,14 +96,14 @@ export default function numToWordsRu(num: string, feminine: boolean = false): st
       if (three[1] > 1) {
          words.push(TWENTIES[three[1]]);
       }
-      if (three[1] === 1) {
+      if (three[1] == 1) {
          words.push(TENS[three[2]]);
       } else if (three[2] > 0 || (+three === 0 && words.length === 0)) {
          const dict = (counter === 1 || feminine) ? DIGITS_FEMININE : DIGITS;
          words.push(dict[three[2]]);
       }
 
-      if (counter > 0 && +three !== 0) {
+      if (counter > 0 && +three != 0) {
          words.push(rk(THOUSANDS[counter], +three));
       }
    });
