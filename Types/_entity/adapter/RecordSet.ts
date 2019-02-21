@@ -2,7 +2,8 @@
 /**
  * Адаптер для рекордсета.
  * Работает с данными, представленными в виде рекорда/рекордсета.
- * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/RecordSetRecord} и {@link Types/_entity/adapter/RecordSetTable}.
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/RecordSetRecord} и
+ * {@link Types/_entity/adapter/RecordSetTable}.
  * @class Types/_entity/adapter/RecordSet
  * @extends Types/_entity/adapter/Abstract
  * @public
@@ -12,6 +13,8 @@
 import Abstract from './Abstract';
 import RecordSetTable from './RecordSetTable';
 import RecordSetRecord from './RecordSetRecord';
+import Record from '../Record';
+import {RecordSet as collectionRecordSet} from '../../collection';
 import {register} from '../../di';
 import {object} from '../../util';
 
@@ -21,7 +24,7 @@ export default class RecordSet extends Abstract /** @lends Types/_entity/adapter
     * @param {Types/_collection/RecordSet} data Рекордсет
     * @return {Types/_entity/adapter/ITable}
     */
-   forTable(data) {
+   forTable(data: collectionRecordSet<Record>): RecordSetTable {
       return new RecordSetTable(data);
    }
 
@@ -31,19 +34,19 @@ export default class RecordSet extends Abstract /** @lends Types/_entity/adapter
     * @param {Types/_collection/RecordSet} [tableData] Таблица
     * @return {Types/_entity/adapter/IRecord}
     */
-   forRecord(data, tableData?) {
+   forRecord(data: Record, tableData?: collectionRecordSet<Record>): RecordSetRecord {
       return new RecordSetRecord(data, tableData);
    }
 
-   getProperty(data, property) {
+   getProperty(data: object, property: string): any {
       return object.getPropertyValue(data, property);
    }
 
-   setProperty(data, property, value) {
+   setProperty(data: object, property: string, value: any): void {
       return object.setPropertyValue(data, property, value);
    }
 
-   getKeyField(data) {
+   getKeyField(data: any): string {
       if (data && typeof data.getIdProperty === 'function') {
          return data.getIdProperty();
       }

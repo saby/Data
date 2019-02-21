@@ -14,7 +14,7 @@ import {Map, Set} from '../../shim';
  * @param {Object} item Объект
  * @return {Boolean}
  */
-function isAlive(item): boolean {
+function isAlive(item: any): boolean {
    return item instanceof Object && item['[Types/_entity/DestroyableMixin]'] ? !item.destroyed : true;
 }
 
@@ -41,7 +41,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
       this._childToRelation = new Map();
    }
 
-   destroy() {
+   destroy(): void {
       this._parentToChild = null;
       this._childToParent = null;
       this._childToRelation = null;
@@ -56,7 +56,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} child Ребенок
     * @param {String} [name] Название отношений
     */
-   addTo(parent, child, name) {
+   addTo(parent: object, child: object, name?: string): void {
       this._addForParent(parent, child);
       this._addForChild(child, parent, name);
    }
@@ -66,7 +66,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} parent Родитель
     * @param {Object} child Ребенок
     */
-   removeFrom(parent, child) {
+   removeFrom(parent: object, child: object): void {
       this._removeForParent(parent, child);
       this._removeForChild(child, parent);
    }
@@ -75,7 +75,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * Очищает все отношения c детьми у указанного родителя
     * @param {Object} parent Родитель
     */
-   clear(parent) {
+   clear(parent: object): void {
       if (this._parentToChild.has(parent)) {
          this._parentToChild.get(parent).forEach((child) => {
             this._removeForChild(child, parent);
@@ -89,7 +89,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} parent Родитель
     * @param {Function(Object, String)} callback Функция обратного вызова для каждого ребенка
     */
-   each(parent, callback) {
+   each(parent: object, callback: Function): void {
       if (this._parentToChild.has(parent)) {
          this._parentToChild.get(parent).forEach((child) => {
             if (isAlive(child)) {
@@ -108,12 +108,12 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} child Ребенок
     * @return {Object}
     */
-   getParent(child) {
+   getParent(child: object): object {
       const parent = this._childToParent.get(child);
       return parent !== undefined && isAlive(parent) ? parent : undefined;
    }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -123,7 +123,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} child Ребенок
     * @protected
     */
-   _addForParent(parent, child) {
+   _addForParent(parent: object, child: object): void {
       let children;
       if (this._parentToChild.has(parent)) {
          children = this._parentToChild.get(parent);
@@ -140,7 +140,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} child Ребенок
     * @protected
     */
-   _removeForParent(parent, child) {
+   _removeForParent(parent: object, child: object): void {
       if (this._parentToChild.has(parent)) {
          const children = this._parentToChild.get(parent);
          children.delete(child);
@@ -157,7 +157,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {String} name Название отношения
     * @protected
     */
-   _addForChild(child, parent, name) {
+   _addForChild(child: object, parent: object, name: string): void {
       this._childToParent.set(child, parent);
       this._childToRelation.set(child, name);
    }
@@ -168,14 +168,14 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
     * @param {Object} parent Родитель
     * @protected
     */
-   _removeForChild(child, parent) {
+   _removeForChild(child: object, parent: object): void {
       if (this._childToParent.get(child) === parent) {
          this._childToParent.delete(child);
          this._childToRelation.delete(child);
       }
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 OneToMany.prototype['[Types/_entity/relation/OneToMany]'] = true;

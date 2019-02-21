@@ -31,15 +31,9 @@
 import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
-import {IFieldFormat} from './Sbis';
-import SbisFormatMixin from './SbisFormatMixin';
+import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
 import {Field, UniversalField} from '../format';
 import {mixin} from '../../util';
-
-export interface IRecordFormat {
-   d: any[];
-   s: IFieldFormat[];
-}
 
 export default class SbisRecord extends mixin(
    DestroyableMixin, SbisFormatMixin

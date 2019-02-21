@@ -1,11 +1,29 @@
 import {iterateNumber} from './utils';
 
 const DIGITS = [
-   'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'
+   'zero',
+   'one',
+   'two',
+   'three',
+   'four',
+   'five',
+   'six',
+   'seven',
+   'eight',
+   'nine'
 ];
 
 const TENS = [
-   'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'
+   'ten',
+   'eleven',
+   'twelve',
+   'thirteen',
+   'fourteen',
+   'fifteen',
+   'sixteen',
+   'seventeen',
+   'eighteen',
+   'nineteen'
 ];
 
 const TWENTIES = {
@@ -35,13 +53,13 @@ const THOUSANDS = {
 
 const negword = 'minus';
 
-declare interface wordConcatnumberUS {
+declare interface IWordConcatnumberUS {
    value: number;
    title: string;
 }
 
-function concat(right: wordConcatnumberUS, left: wordConcatnumberUS): wordConcatnumberUS {
-   if (left.value == 1 && right.value < 100) {
+function concat(right: IWordConcatnumberUS, left: IWordConcatnumberUS): IWordConcatnumberUS {
+   if (left.value === 1 && right.value < 100) {
       return right;
    } else if (left.value < 100 && left.value > right.value) {
       return {
@@ -67,8 +85,7 @@ export default function numberWordsEN(num: string): string {
 
    const words = [];
    // let chunks = list(splitbyx(str(n), 3))
-   iterateNumber(num, function(three, counter) {
-      const i = three.length;
+   iterateNumber(num, (three: any, counter: number): void => {
       const prepareWord = [];
       if (three[0] !== '0') {
          prepareWord.push({title: `${DIGITS[three[0]]} hundred`, value: three[0] * 100});
@@ -76,14 +93,14 @@ export default function numberWordsEN(num: string): string {
       if (three[1] > 1) {
          prepareWord.push({title: TWENTIES[three[1]], value: three[1] * 10});
       }
-      if (three[1] == 1) {
+      if (three[1] === 1) {
          prepareWord.push({title: TENS[three[2]], value: +three.slice(1)});
       } else if (three[2] > 0 || (+three === 0 && words.length === 0)) {
          prepareWord.push({title: DIGITS[three[2]], value: +three[2]});
       }
       if (prepareWord.length > 0) {
          let word = prepareWord.reduceRight(concat).title;
-         if (counter > 0 && +three != 0) {
+         if (counter > 0 && +three !== 0) {
             word += ' ' + (rk(THOUSANDS[counter], +three));
          }
 

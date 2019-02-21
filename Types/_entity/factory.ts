@@ -8,7 +8,8 @@
 
 /**
  * @faq Почему я вижу ошибки от Types/di:resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
+ * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  */
 
 import IProducible, {IProducibleConstructor} from './IProducible';
@@ -232,19 +233,21 @@ const factory = {
          Type = Type.toLowerCase();
          switch (Type) {
             case 'recordset':
-               Type = resolve(isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet');
+               Type = resolve<Function>(
+                  isRegistered('collection.$recordset') ? 'collection.$recordset' : 'Types/collection:RecordSet'
+               );
                break;
 
             case 'record':
-               Type = resolve(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
+               Type = resolve<Function>(isRegistered('entity.$model') ? 'entity.$model' : 'Types/entity:Model');
                break;
 
             case 'enum':
-               Type = resolve('Types/collection:Enum');
+               Type = resolve<Function>('Types/collection:Enum');
                break;
 
             case 'flags':
-               Type = resolve('Types/collection:Flags');
+               Type = resolve<Function>('Types/collection:Flags');
                break;
 
             case 'link':
@@ -396,8 +399,8 @@ const factory = {
          case 'time':
          case 'datetime':
             value = toScalar(value);
-            let serializeMode = TO_SQL_MODE.DATE,
-               withoutTimeZone = false;
+            let serializeMode = TO_SQL_MODE.DATE;
+            let withoutTimeZone = false;
             switch (type) {
                case 'datetime':
                   serializeMode = TO_SQL_MODE.DATETIME;

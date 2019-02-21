@@ -18,11 +18,11 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
 
    // region Public methods
 
-   constructor() {
+   constructor(): void {
       this._format = {};
    },
 
-   getFormat(name) {
+   getFormat(name: string): Field {
       if (!this._has(name)) {
          throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
       }
@@ -32,7 +32,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       return this._format[name];
    },
 
-   getSharedFormat(name) {
+   getSharedFormat(name: string): UniversalField {
       if (this._sharedFieldFormat === null) {
          this._sharedFieldFormat = new UniversalField();
       }
@@ -48,9 +48,11 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       return format;
    },
 
-   addField(format) {
+   addField(format: Field): void {
       if (!format || !(format instanceof Field)) {
-         throw new TypeError(`${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`);
+         throw new TypeError(
+            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+         );
       }
       const name = format.getName();
       if (!name) {
@@ -60,7 +62,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       this._format[name] = format;
    },
 
-   removeField(name) {
+   removeField(name: string): void {
       if (!this._has(name)) {
          throw new ReferenceError(`${this._moduleName}::removeField(): field "${name}" doesn't exist`);
       }
@@ -68,36 +70,36 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       delete this._format[name];
    },
 
-   removeFieldAt() {
+   removeFieldAt(): void {
       throw new Error(`Method ${this._moduleName}::removeFieldAt() doesn't supported`);
    },
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
       if (!(this._data instanceof Object)) {
          this._data = {};
       }
    },
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data instanceof Object;
    },
 
-   _has() {
+   _has(): boolean {
       throw new Error('Method must be implemented');
    },
 
-   _buildFormat(name) {
+   _buildFormat(name: string): Field {
       return fieldsFactory({
          name,
          type: 'string'
       });
    }
 
-   // endregion Protected methods
+   // endregion
 };
 
 export default JsonFormatMixin;

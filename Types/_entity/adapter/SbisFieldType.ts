@@ -1,30 +1,32 @@
 /// <amd-module name="Types/_entity/adapter/SbisFieldType" />
 /**
  * @class Types/_entity/adapter/SbisFieldType
- * @description Класс используют, чтобы для строкового названия типа данных WS получить соответствующее ему строковое название типа данных, которое применяется в серверном фреймворке.
- * @remark Строковые названия типов данных WS:
+ * @description Класс используют, чтобы для строкового названия типа данных WS получить соответствующее ему строковое
+ * название типа данных, которое применяется в серверном фреймворке.
+ * @remark Строковые названия типов данных по классам:
  * <ul>
- *     <li>integer. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/IntegerField/ Types/_entity/format/IntegerField};</li>
- *     <li>money. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/MoneyField/ Types/_entity/format/MoneyField};</li>
- *     <li>array. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/ArrayField/ Types/_entity/format/ArrayField};</li>
- *     <li>binary. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/BinaryField/ Types/_entity/format/BinaryField};</li>
- *     <li>boolean. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/BooleanField/ Types/_entity/format/BooleanField};</li>
- *     <li>date. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/MoneyField/ Types/_entity/format/MoneyField};</li>
- *     <li>dateTime. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/DateTimeField/ Types/_entity/format/DateTimeField};</li>
- *     <li>dictionary. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/DictionaryField/ Types/_entity/format/DictionaryField};</li>
- *     <li>enum. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/EnumField/ Types/_entity/format/EnumField};</li>
- *     <li>flags. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/FlagsField/ Types/_entity/format/FlagsField};</li>
- *     <li>identity. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/IdentityField/ Types/_entity/format/IdentityField};</li>
- *     <li>object. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/ObjectField/ Types/_entity/format/ObjectField};</li>
- *     <li>real. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RealField/ Types/_entity/format/RealField};</li>
- *     <li>record. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RecordField/ Types/_entity/format/RecordField};</li>
- *     <li>recordset. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RecordSetField/ Types/_entity/format/RecordSetField};</li>
- *     <li>rpcfile. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RpcFileField/ Types/_entity/format/RpcFileField};</li>
- *     <li>string. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/StringField/ Types/_entity/format/StringField};</li>
- *     <li>time. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/TimeField/ Types/_entity/format/TimeField};</li>
- *     <li>uuid. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/UuidField/ Types/_entity/format/UuidField};</li>
- *     <li>timeinterval. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/TimeIntervalField/ Types/_entity/format/TimeIntervalField};</li>
- *     <li>xml. Описывается классом {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/XmlField/ Types/_entity/format/XmlField}.</li>
+ *   <li>integer - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/IntegerField/ IntegerField};</li>
+ *   <li>money - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/MoneyField/ MoneyField};</li>
+ *   <li>array - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/ArrayField/ ArrayField};</li>
+ *   <li>binary - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/BinaryField/ BinaryField};</li>
+ *   <li>boolean - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/BooleanField/ BooleanField};</li>
+ *   <li>date - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/MoneyField/ MoneyField};</li>
+ *   <li>dateTime - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/DateTimeField/ DateTimeField};</li>
+ *   <li>dictionary - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/DictionaryField/ DictionaryField};</li>
+ *   <li>enum - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/EnumField/ EnumField};</li>
+ *   <li>flags - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/FlagsField/ FlagsField};</li>
+ *   <li>identity - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/IdentityField/ IdentityField};</li>
+ *   <li>object - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/ObjectField/ ObjectField};</li>
+ *   <li>real - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RealField/ RealField};</li>
+ *   <li>record - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RecordField/ RecordField};</li>
+ *   <li>recordset - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RecordSetField/ RecordSetField};</li>
+ *   <li>rpcfile - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/RpcFileField/ RpcFileField};</li>
+ *   <li>string - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/StringField/ StringField};</li>
+ *   <li>time - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/TimeField/ TimeField};</li>
+ *   <li>uuid - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/UuidField/ UuidField};</li>
+ *   <li>timeinterval - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/TimeIntervalField/ TimeIntervalField};
+ *   </li>
+ *   <li>xml - {@link https://wi.sbis.ru/docs/js/WS/Types/_entity/format/XmlField/ XmlField}.</li>
  *
  * </pre>
  * @public
