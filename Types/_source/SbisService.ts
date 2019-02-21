@@ -21,7 +21,8 @@
  *       });
  *    });
  * </pre>
- * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка записей, а также свой формат записи:
+ * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка
+ * записей, а также свой формат записи:
  * <pre>
  *    require(['Types/source'], function(source) {
  *       var dataSource = new source.SbisService({
@@ -131,7 +132,8 @@
  * @author Мальцев А.А.
  */
 
-import Rpc, {IOptions as IRpcOptions, IPassing as IRpcPassing} from './Rpc';
+import Rpc from './Rpc';
+import {IOptions as IRemoteOptions, IPassing as IRemotePassing} from './Remote';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
@@ -148,9 +150,9 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 /**
  * Типы навигации для query()
  */
-const NAVIGATION_TYPE = Object.assign({
-   POSITION: 'Position' //Add POSITION navigation type
-}, Rpc.NAVIGATION_TYPE);
+const NAVIGATION_TYPE: any = {...Rpc.NAVIGATION_TYPE, ...{
+   POSITION: 'Position' // Add POSITION navigation type
+}};
 
 /**
  * Разделитель частей сложного идентификатора
@@ -163,23 +165,20 @@ const COMPLEX_ID_SEPARATOR = ',';
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
 
 export interface IBinding extends IDefaultBinding {
-   updateBatch?: string
-   moveBefore?: string
-   moveAfter?: string
-   format?: string
+   updateBatch?: string;
+   moveBefore?: string;
+   moveAfter?: string;
+   format?: string;
 }
 
-export interface IPassing extends IRpcPassing {
-}
-
-export interface IOptions extends IRpcOptions {
-   hasMoreProperty?: string
+export interface IOptions extends IRemoteOptions {
+   hasMoreProperty?: string;
 }
 
 export interface IMoveMeta {
-   parentProperty?: string
-   objectName?: string
-   position?: string
+   parentProperty?: string;
+   objectName?: string;
+   position?: string;
 }
 
 /**
@@ -219,7 +218,7 @@ function createComplexId(id: string, defaults: string): string[] {
  * Joins BL objects into groups be its names
  */
 function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): Object {
-   let groups = {};
+   const groups = {};
    let name;
    for (let i = 0, len = ids.length; i < len; i++) {
       name = getNameByComplexId(ids[i], defaults);
@@ -237,7 +236,12 @@ function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): O
  * @param name BL object name
  * @param meta Meta data
  */
-function callDestroyWithComplexId(instance: SbisService | any, ids: string[], name: string, meta: Object): ExtendPromise<any> {
+function callDestroyWithComplexId(
+   instance: SbisService | any,
+   ids: string[],
+   name: string,
+   meta: object
+): ExtendPromise<any> {
    return instance._callProvider(
       instance._$endpoint.contract === name ? instance._$binding.destroy :  name + '.' + instance._$binding.destroy,
       instance._$passing.destroy.call(instance, ids, meta)
@@ -269,11 +273,11 @@ export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty:
    }
 
    const RecordSet = resolve<any>('Types/collection:RecordSet');
-   let records = new RecordSet({
-      adapter: adapter,
-      idProperty: idProperty
+   const records = new RecordSet({
+      adapter,
+      idProperty
    });
-   let count = data.length || 0;
+   const count = data.length || 0;
 
    for (let i = 0; i < count; i++) {
       records.add(buildRecord(data[i], adapter));
@@ -285,16 +289,16 @@ export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty:
 /**
  * Returns sorting params
  */
-export function getSortingParams(query: Query): Array<string> | null {
+export function getSortingParams(query: Query): string[] | null {
    if (!query) {
       return null;
    }
-   let orders = query.getOrderBy();
+   const orders = query.getOrderBy();
    if (orders.length === 0) {
       return null;
    }
 
-   let sort = [];
+   const sort = [];
    let order;
    for (let i = 0; i < orders.length; i++) {
       order = orders[i];
@@ -315,14 +319,14 @@ export function getPagingParams(query: Query, options: IOptions, adapter: adapte
       return null;
    }
 
-   let offset = query.getOffset();
-   let limit = query.getLimit();
-   let meta = query.getMeta();
-   let moreProp = options.hasMoreProperty;
-   let hasMoreProp = meta.hasOwnProperty(moreProp);
-   let more = hasMoreProp ? meta[moreProp] : offset >= 0;
-   let withoutOffset = offset === 0;
-   let withoutLimit = limit === undefined || limit === null;
+   const offset = query.getOffset();
+   const limit = query.getLimit();
+   const meta = query.getMeta();
+   const moreProp = options.hasMoreProperty;
+   const hasMoreProp = meta.hasOwnProperty(moreProp);
+   const more = hasMoreProp ? meta[moreProp] : offset >= 0;
+   const withoutOffset = offset === 0;
+   const withoutLimit = limit === undefined || limit === null;
 
    if (hasMoreProp) {
       delete meta[moreProp];
@@ -334,17 +338,17 @@ export function getPagingParams(query: Query, options: IOptions, adapter: adapte
       case NAVIGATION_TYPE.PAGE:
          if (!withoutOffset || !withoutLimit) {
             params = {
-               'Страница': limit > 0 ? Math.floor(offset / limit) : 0,
-               'РазмерСтраницы': limit,
-               'ЕстьЕще': more
+               Страница: limit > 0 ? Math.floor(offset / limit) : 0,
+               РазмерСтраницы: limit,
+               ЕстьЕще: more
             };
          }
          break;
 
       case NAVIGATION_TYPE.POSITION:
          if (!withoutLimit) {
-            let where = query.getWhere();
-            let pattern = /(.+)([<>]=|~)$/;
+            const where = query.getWhere();
+            const pattern = /(.+)([<>]=|~)$/;
             let fields = null;
             let order = '';
             let parts;
@@ -403,23 +407,23 @@ function getFilterParams(query: Query): Object | null {
    if (query) {
       params = query.getWhere();
 
-      let meta = query.getMeta();
+      const meta = query.getMeta();
       if (meta) {
          switch (meta.expand) {
             case ExpandMode.None:
-               params['Разворот'] = 'Без разворота';
+               params.Разворот = 'Без разворота';
                break;
             case ExpandMode.Nodes:
-               params['Разворот'] = 'С разворотом';
-               params['ВидДерева'] = 'Только узлы';
+               params.Разворот = 'С разворотом';
+               params.ВидДерева = 'Только узлы';
                break;
             case ExpandMode.Leaves:
-               params['Разворот'] = 'С разворотом';
-               params['ВидДерева'] = 'Только листья';
+               params.Разворот = 'С разворотом';
+               params.ВидДерева = 'Только листья';
                break;
             case ExpandMode.All:
-               params['Разворот'] = 'С разворотом';
-               params['ВидДерева'] = 'Узлы и листья';
+               params.Разворот = 'С разворотом';
+               params.ВидДерева = 'Узлы и листья';
                break;
          }
       }
@@ -432,20 +436,20 @@ function getFilterParams(query: Query): Object | null {
  * Returns additional paramters
  * @return {Array}
  */
-export function getAdditionalParams(query: Query): Array<any> {
+export function getAdditionalParams(query: Query): any[] {
    let meta: any = [];
    if (query) {
       meta = query.getMeta();
       if (meta && DataMixin.isModelInstance(meta)) {
-         let obj = {};
+         const obj = {};
          meta.each((key, value) => {
             obj[key] = value;
          });
          meta = obj;
       }
       if (meta instanceof Object) {
-         let arr = [];
-         for (let key in meta) {
+         const arr = [];
+         for (const key in meta) {
             if (meta.hasOwnProperty(key)) {
                arr.push(meta[key]);
             }
@@ -453,48 +457,49 @@ export function getAdditionalParams(query: Query): Array<any> {
          meta = arr;
       }
       if (!(meta instanceof Array)) {
-         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type: only Array, Types/_entity/Record or Object allowed');
+         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type. ' +
+           'Only Array, Types/_entity/Record or Object are allowed.');
       }
    }
 
    return meta;
 }
 
-function passCreate(meta?: Object): Object {
+function passCreate(meta?: any): Object {
    if (!DataMixin.isModelInstance(meta)) {
-      meta = Object.assign({}, meta || {});
+      meta = {...meta || {}};
       if (!('ВызовИзБраузера' in meta)) {
-         meta['ВызовИзБраузера'] = true;
+         meta.ВызовИзБраузера = true;
       }
    }
 
    //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
    return {
-      'Фильтр': buildRecord(meta, this._$adapter),
-      'ИмяМетода': this._$binding.format || null
+      Фильтр: buildRecord(meta, this._$adapter),
+      ИмяМетода: this._$binding.format || null
    };
 }
 
 function passRead(key: string | number, meta?: Object): Object {
-   let args = {
-      'ИдО': key,
-      'ИмяМетода': this._$binding.format || null
+   const args: any = {
+      ИдО: key,
+      ИмяМетода: this._$binding.format || null
    };
    if (meta && Object.keys(meta).length) {
-      args['ДопПоля'] = meta;
+      args.ДопПоля = meta;
    }
    return args;
 }
 
 function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
-   let superArgs = Rpc.prototype['_$passing'].update.call(this, data, meta);
-   let args = {};
-   let recordArg = DataMixin.isListInstance(superArgs[0]) ? 'Записи' : 'Запись';
+   const superArgs = this._$passing.update.call(this, data, meta);
+   const args: any = {};
+   const recordArg = DataMixin.isListInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
    args[recordArg] = superArgs[0];
 
    if (superArgs[1] && Object.keys(superArgs[1]).length) {
-      args['ДопПоля'] = superArgs[1];
+      args.ДопПоля = superArgs[1];
    }
 
    return args;
@@ -502,7 +507,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
 
 function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Object {
    const RecordSet = resolve<any>('Types/collection:RecordSet');
-   let patch = RecordSet.patch(items);
+   const patch = RecordSet.patch(items);
    return {
       changed: patch.get('changed'),
       added: patch.get('added'),
@@ -511,44 +516,44 @@ function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Obje
 }
 
 function passDestroy(keys: string | string[], meta?: Object): Object {
-   let args = {
-      'ИдО': keys
+   const args: any = {
+      ИдО: keys
    };
    if (meta && Object.keys(meta).length) {
-      args['ДопПоля'] = meta;
+      args.ДопПоля = meta;
    }
    return args;
 }
 
-function passQuery (query: Query): Object {
-   let nav = getPagingParams(query, this._$options, this._$adapter);
-   let filter = getFilterParams(query);
-   let sort = getSortingParams(query);
-   let add = getAdditionalParams(query);
+function passQuery(query: Query): Object {
+   const nav = getPagingParams(query, this._$options, this._$adapter);
+   const filter = getFilterParams(query);
+   const sort = getSortingParams(query);
+   const add = getAdditionalParams(query);
 
    return {
-      'Фильтр': buildRecord(filter, this._$adapter),
-      'Сортировка': buildRecordSet(sort, this._$adapter, this.getIdProperty()),
-      'Навигация': buildRecord(nav, this._$adapter),
-      'ДопПоля': add
+      Фильтр: buildRecord(filter, this._$adapter),
+      Сортировка: buildRecordSet(sort, this._$adapter, this.getIdProperty()),
+      Навигация: buildRecord(nav, this._$adapter),
+      ДопПоля: add
    };
 }
 
 function passCopy(key: string | number, meta?: Object): Object {
-   let args = {
-      'ИдО': key,
-      'ИмяМетода': this._$binding.format
+   const args: any = {
+      ИдО: key,
+      ИмяМетода: this._$binding.format
    };
    if (meta && Object.keys(meta).length) {
-      args['ДопПоля'] = meta;
+      args.ДопПоля = meta;
    }
    return args;
 }
 
 function passMerge(from: string | number, to: string | number): Object {
    return {
-      'ИдО': from,
-      'ИдОУд': to
+      ИдО: from,
+      ИдОУд: to
    };
 }
 
@@ -577,16 +582,23 @@ interface IOldMoveMeta {
  * @param to Record to move to
  * @param meta Meta data
  */
-function oldMove(instance: SbisService | any, from: string | Array<string | number>, to: string, meta: IOldMoveMeta): ExtendPromise<any> {
-   logger.info(instance._moduleName, 'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.');
+function oldMove(
+   instance: SbisService | any,
+   from: string | Array<string | number>,
+   to: string, meta: IOldMoveMeta
+): ExtendPromise<any> {
+   logger.info(
+      instance._moduleName,
+      'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.'
+   );
 
    from = <string> from;
-   let moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
-   let params = {
-      'ПорядковыйНомер': instance._$orderProperty,
-      'Иерархия': meta.hierField || null,
-      'Объект': instance._$endpoint.moveContract,
-      'ИдО': createComplexId(from, instance._$endpoint.contract)
+   const moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
+   const params = {
+      ПорядковыйНомер: instance._$orderProperty,
+      Иерархия: meta.hierField || null,
+      Объект: instance._$endpoint.moveContract,
+      ИдО: createComplexId(from, instance._$endpoint.contract)
    };
 
    params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, instance._$endpoint.contract);
@@ -601,7 +613,8 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    /**
     * @typedef {Object} Endpoint
     * @property {String} contract Контракт - определяет доступные операции
-    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
+    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено
+    * подключение
     * @property {String} [moveContract=ПорядковыйНомер] Название объекта бл в которому принадлежат методы перемещения
     */
 
@@ -614,10 +627,12 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
     * @variant Offset По смещению: передается смещение от начала выборки и количество записей на странице.
     */
-   //* @variant Position По курсору: передается набор значений ключевых полей начальной записи выборки, количество записей на странице и направление сортировки.
+   // @variant Position По курсору: передается набор значений ключевых полей начальной записи выборки, количество
+   // записей на странице и направление сортировки.
 
    /**
-    * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
+    * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника
+    * данных.
     * @name Types/_source/SbisService#endpoint
     * @remark
     * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
@@ -646,7 +661,8 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     */
 
    /**
-    * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому методу CRUD.
+    * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому
+    * методу CRUD.
     * @name Types/_source/SbisService#binding
     * @remark
     * По умолчанию используются стандартные методы.
@@ -686,10 +702,11 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     */
    protected _$binding: IBinding;
 
-   protected _$passing: IPassing;
+   protected _$passing: IRemotePassing;
 
    /**
-    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда
+    * используется адаптер {@link Types/_entity/adapter/Sbis}.
     * @name Types/_source/SbisService#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Sbis
@@ -698,7 +715,8 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    protected _$adapter: string;
 
    /**
-    * @cfg {String|Function|Types/_source/provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/provider/SbisBusinessLogic}.
+    * @cfg {String|Function|Types/_source/provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме
+    * клиент-сервер, по умолчанию {@link Types/_source/provider/SbisBusinessLogic}.
     * @name Types/_source/SbisService#provider
     * @see Types/_source/Rpc#provider
     * @see getProvider
@@ -733,24 +751,26 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       }
    }
 
-   //region Public methods
+   // region Public methods
 
-   getOrderProperty() {
+   getOrderProperty(): string {
       return this._$orderProperty;
    }
 
-   setOrderProperty(name) {
+   setOrderProperty(name: string): void {
       this._$orderProperty = name;
    }
 
-   //endregion Public methods
+   // endregion
 
-   //region ICrud
+   // region ICrud
 
    /**
     * Создает пустую модель через источник данных
-    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания
+    * модели.
+    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в
+    * случае ошибки - Error.
     * @see Types/_source/ICrud#create
     * @example
     * Создадим нового сотрудника:
@@ -813,7 +833,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return super.update(data, meta);
    }
 
-   destroy(keys: any | Array<any>, meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
       if (!(keys instanceof Array)) {
          return callDestroyWithComplexId(
             this,
@@ -823,10 +843,10 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
          );
       }
 
-      //В ключе может содержаться ссылка на объект БЛ - сгруппируем ключи по соответствующим им объектам
-      let groups = getGroupsByComplexIds(keys, this._$endpoint.contract);
-      let pd = new ParallelDeferred();
-      for (let name in groups) {
+      // В ключе может содержаться ссылка на объект БЛ - сгруппируем ключи по соответствующим им объектам
+      const groups = getGroupsByComplexIds(keys, this._$endpoint.contract);
+      const pd = new ParallelDeferred();
+      for (const name in groups) {
          if (groups.hasOwnProperty(name)) {
             pd.push(callDestroyWithComplexId(
                this,
@@ -849,38 +869,38 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       });
    }
 
-   //endregion ICrud
+   // endregion
 
-   //region ICrudPlus
+   // region ICrudPlus
 
    move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): ExtendPromise<any> {
       meta = meta || {};
       if (this._$binding.moveBefore) {
-         //TODO: поддерживаем старый способ с двумя методами
-         return oldMove(this, items, <string>target, <IOldMoveMeta>meta);
+         // TODO: поддерживаем старый способ с двумя методами
+         return oldMove(this, items, target as string, meta as IOldMoveMeta);
       }
 
-      //На БЛ не могут принять массив сложных идентификаторов,
-      //поэтому надо сгуппировать идентификаторы по объекту и для каждой группы позвать метод
-      let groups = getGroupsByComplexIds(items, this._$endpoint.contract);
-      let groupsCount = Object.keys(groups).length;
-      let pd = new ParallelDeferred();
+      // На БЛ не могут принять массив сложных идентификаторов,
+      // поэтому надо сгуппировать идентификаторы по объекту и для каждой группы позвать метод
+      const groups = getGroupsByComplexIds(items, this._$endpoint.contract);
+      const groupsCount = Object.keys(groups).length;
+      const pd = new ParallelDeferred();
       if (target !== null) {
          target = getKeyByComplexId(target);
       }
 
-      for (let name in groups) {
+      for (const name in groups) {
          if (groups.hasOwnProperty(name)) {
             meta.objectName = name;
-            let def = this._callProvider(
+            const def = this._callProvider(
                this._$binding.move.indexOf('.') > -1 ?
                   this._$binding.move :
                   this._$endpoint.moveContract + '.' + this._$binding.move,
                this._$passing.move.call(this, groups[name], target, meta)
             );
             if (groupsCount === 1) {
-               //TODO: нужно доработать ParallelDeferred что бы он возвращал оригинал ошибки
-               //на это есть задача в 3.17.110 https://online.sbis.ru/opendoc.html?guid=ecb592a4-bc06-463f-a3a0-90527f397ac2&des=
+               // TODO: нужно доработать ParallelDeferred что бы он возвращал оригинал ошибки:
+               // https://online.sbis.ru/opendoc.html?guid=ecb592a4-bc06-463f-a3a0-90527f397ac2
                return def;
             }
             pd.push(def);
@@ -890,9 +910,9 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return pd.done().getResult();
    }
 
-   //endregion ICrudPlus
+   // endregion
 
-   //region Remote
+   // region Remote
 
    getProvider(): IAbstract {
       if (!this._provider) {
@@ -909,15 +929,15 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return this._provider;
    }
 
-   //endregion Remote
+   // endregion
 
-   //region Statics
+   // region Statics
 
-   static get NAVIGATION_TYPE() {
+   static get NAVIGATION_TYPE(): any {
       return NAVIGATION_TYPE;
    }
 
-   //endregion Statics
+   // endregion
 }
 
 Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.prototype */ {
@@ -1013,7 +1033,8 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
       update: 'Записать',
 
       /**
-       * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных записей.
+       * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных
+       * записей.
        * @remark
        * Метод должен принимать следующий набор аргументов:
        * RecordSet changed,
@@ -1096,14 +1117,16 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
 
       /**
        * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
-       * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update)
+       * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы
+       * Прочитать(read) и Записать(Update)
        * они обязательно должны быть у объекта БЛ.
        * @name Types/_source/SbisService#binding.move
        */
       move: 'Move',
 
       /**
-       * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
+       * @cfg {String} Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}.
+       * Метод должен быть декларативным.
        * @name Types/_source/SbisService#binding.format
        */
       format: ''
@@ -1126,7 +1149,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
        * @name Types/_source/BindingMixin#passing.update
        */
-      update: passUpdate,
+      update: passUpdate.bind(Rpc.prototype),
 
       /**
        * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
@@ -1160,7 +1183,8 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
    },
 
    /**
-    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда
+    * используется адаптер {@link Types/_entity/adapter/Sbis}.
     * @name Types/_source/SbisService#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Sbis
@@ -1169,7 +1193,8 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
    _$adapter: 'Types/entity:adapter.Sbis',
 
    /**
-    * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+    * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме
+    * клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
     * @name Types/_source/SbisService#provider
     * @see Types/_source/Rpc#provider
     * @see getProvider
@@ -1196,7 +1221,8 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
 
    _$options: OptionsMixin.addOptions(Rpc, {
       /**
-       * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
+       * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится
+       * значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
        * @name Types/_source/SbisService#options.hasMoreProperty
        */
       hasMoreProperty: 'hasMore'

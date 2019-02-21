@@ -30,7 +30,7 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
       debug: false
    },
 
-   constructor(options?: IConstructorOptions) {
+   constructor(options?: IConstructorOptions): void {
       if (options && options.options instanceof Object) {
          this._$options = {...(this._$options || {}), ...options.options};
          delete options.options;
@@ -42,11 +42,11 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     * @return {Object}
     * @see options
     */
-   getOptions(): Object {
+   getOptions(): object {
       return {...this._$options};
    },
 
-   setOptions(options: Object) {
+   setOptions(options: object): void {
       this._$options = {...this._$options, ...(options || {})};
    },
 
@@ -57,7 +57,7 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     * @return {Object}
     * @static
     */
-   addOptions(Super: Function, options: Object) {
+   addOptions(Super: Function, options: object): object {
       return {...Super.prototype._$options, ...options};
    }
 };

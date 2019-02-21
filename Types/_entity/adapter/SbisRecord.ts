@@ -31,9 +31,15 @@
 import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
+import {IFieldFormat} from './Sbis';
 import SbisFormatMixin from './SbisFormatMixin';
 import {Field, UniversalField} from '../format';
 import {mixin} from '../../util';
+
+export interface IRecordFormat {
+   d: any[];
+   s: IFieldFormat[];
+}
 
 export default class SbisRecord extends mixin(
    DestroyableMixin, SbisFormatMixin
@@ -44,6 +50,15 @@ export default class SbisRecord extends mixin(
     * @property Разделитель значений при сериализации сложных типов
     */
    _castSeparator: string;
+
+   /**
+    * Конструктор
+    * @param {*} data Сырые данные
+    */
+   constructor(data: IRecordFormat) {
+      super(data);
+      SbisFormatMixin.constructor.call(this, data);
+   }
 
    // region IRecord
 
@@ -57,33 +72,18 @@ export default class SbisRecord extends mixin(
    removeField: (name: string) => void;
    removeFieldAt: (index: number) => void;
 
-   // endregion IRecord
-
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   /**
-    * Конструктор
-    * @param {*} data Сырые данные
-    */
-   constructor(data) {
-      super(data);
-      SbisFormatMixin.constructor.call(this, data);
-   }
-
-   has(name) {
+   has(name: string): boolean {
       return this._has(name);
    }
 
-   get(name) {
+   get(name: string): any {
       const index = this._getFieldIndex(name);
       return index >= 0
          ? this._cast(this._data.s[index], this._data.d[index])
          : undefined;
    }
 
-   set(name, value) {
+   set(name: string, value: any): void {
       const index = this._getFieldIndex(name);
       if (index < 0) {
          throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
@@ -91,34 +91,40 @@ export default class SbisRecord extends mixin(
       this._data.d[index] = this._uncast(this._data.s[index], value);
    }
 
-   clear() {
+   clear(): void {
       this._touchData();
       SbisFormatMixin.clear.call(this);
       this._data.s.length = 0;
    }
+
+   // endregion
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
 
    clone<SbisRecord>(shallow?: boolean): any {
       // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
       return new SbisRecord(shallow ? this.getData() : this._cloneData(true));
    }
 
-   // endregion ICloneable
+   // endregion
 
    // region SbisFormatMixin
 
-   protected _buildD(at, value) {
+   protected _buildD(at: number, value: any): void {
       this._data.d.splice(at, 0, value);
    }
 
-   protected _removeD(at) {
+   protected _removeD(at: number): void {
       this._data.d.splice(at, 1);
    }
 
-   // endregion SbisFormatMixin
+   // endregion
 
    // region Protected methods
 
-   protected _cast(format, value) {
+   protected _cast(format: IFieldFormat, value: any): any {
       switch (format && format.t) {
          case 'Идентификатор':
             return value instanceof Array
@@ -128,7 +134,7 @@ export default class SbisRecord extends mixin(
       return value;
    }
 
-   protected _uncast(format, value) {
+   protected _uncast(format: IFieldFormat, value: any): any {
       switch (format && format.t) {
          case 'Идентификатор':
             if (value instanceof Array) {
@@ -141,7 +147,7 @@ export default class SbisRecord extends mixin(
       return value;
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(SbisRecord.prototype, {

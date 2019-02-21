@@ -1,6 +1,7 @@
 /// <amd-module name="Types/_source/PrefetchProxy" />
 /**
- * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода чтения данных. Все последующие вызовы проксируются на целевой источник данных.
+ * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода
+ * чтения данных. Все последующие вызовы проксируются на целевой источник данных.
  *
  * Создадим источник с заранее загруженным результатом списочного метода:
  * <pre>
@@ -57,25 +58,31 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import Base from './Base';
+import Query from './Query';
 import DataSet from './DataSet';
-import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin} from '../entity';
+import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin, ISerializableState} from '../entity';
+import {RecordSet} from '../collection';
 import {mixin} from '../util';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IData {
-   read: Record
-   query: DataSet
-   copy: Record
+   read: Record;
+   query: DataSet;
+   copy: Record;
 }
 
 interface IDone {
-   read?: boolean
-   query?: boolean
-   copy?: boolean
+   read?: boolean;
+   query?: boolean;
+   copy?: boolean;
 }
 
-declare type ITarget = ICrud | ICrudPlus | Base
+interface IPrefetchProxySerializableState extends ISerializableState {
+   _done: IDone;
+}
+
+declare type ITarget = ICrud | ICrudPlus | Base;
 
 export default class PrefetchProxy extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
@@ -87,7 +94,8 @@ export default class PrefetchProxy extends mixin(
    _$target: ITarget = null;
 
    /**
-    * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+    * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах
+    * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
     * @name Types/_source/PrefetchProxy#data
     */
    _$data: IData = {
@@ -126,92 +134,93 @@ export default class PrefetchProxy extends mixin(
       }
    }
 
-   //region ICrud
+   // region ICrud
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta) {
-      return (<ICrud>this._$target).create(meta);
+   create(meta?: object): ExtendPromise<Record> {
+      return (<ICrud> this._$target).create(meta);
    }
 
-   read(key, meta) {
+   read(key: any, meta?: object): ExtendPromise<Record> {
       if (this._$data.read && !this._done.read) {
          this._done.read = true;
          return Deferred.success(this._$data.read);
       }
-      return (<ICrud>this._$target).read(key, meta);
+      return (<ICrud> this._$target).read(key, meta);
    }
 
-   update(data, meta) {
-      return (<ICrud>this._$target).update(data, meta);
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+      return (<ICrud> this._$target).update(data, meta);
    }
 
-   destroy(keys, meta) {
-      return (<ICrud>this._$target).destroy(keys, meta);
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+      return (<ICrud> this._$target).destroy(keys, meta);
    }
 
-   query(query) {
+   query(query: Query): ExtendPromise<DataSet> {
       if (this._$data.query && !this._done.query) {
          this._done.query = true;
          return Deferred.success(this._$data.query);
       }
-      return (<ICrud>this._$target).query(query);
+      return (<ICrud> this._$target).query(query);
    }
 
-   //endregion ICrud
+   // endregion
 
-   //region ICrudPlus
+   // region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from, to) {
-      return (<ICrudPlus>this._$target).merge(from, to);
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
+      return (<ICrudPlus> this._$target).merge(from, to);
    }
 
-   copy(key, meta) {
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
       if (this._$data.copy && !this._done.copy) {
          this._done.copy = true;
          return Deferred.success(this._$data.copy);
       }
-      return (<ICrudPlus>this._$target).copy(key, meta);
+      return (<ICrudPlus> this._$target).copy(key, meta);
    }
 
-   move(items, target, meta) {
-      return (<ICrudPlus>this._$target).move(items, target, meta);
+   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
+      return (<ICrudPlus> this._$target).move(items, target, meta);
    }
 
-   //endregion ICrudPlus
+   // endregion
 
-   //region Base
+   // region Base
 
-   getOptions() {
-      return (<Base>this._$target).getOptions();
+   getOptions(): object {
+      return (<Base> this._$target).getOptions();
    }
 
-   setOptions(options) {
-      return (<Base>this._$target).setOptions(options);
+   setOptions(options: object): void {
+      return (<Base> this._$target).setOptions(options);
    }
 
-   //endregion Base
+   // endregion
 
    // region SerializableMixin
 
-   _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
-      state._done = this._done;
+   _getSerializableState(state: ISerializableState): IPrefetchProxySerializableState {
+      const resultState: IPrefetchProxySerializableState =
+         SerializableMixin.prototype._getSerializableState.call(this, state);
+      resultState._done = this._done;
 
-      return state;
+      return resultState;
    }
 
-   _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   _setSerializableState(state?: IPrefetchProxySerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
          this._done = state._done;
       };
    }
 
-   // endregion SerializableMixin
+   // endregion
 }
 
 PrefetchProxy.prototype._moduleName = 'Types/source:PrefetchProxy';

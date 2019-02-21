@@ -6,10 +6,7 @@
  * @author Мальцев А.А.
  */
 
-import DataSet from './DataSet';
-
-interface IEndpoint {
-}
+import {IEndpoint} from './IProvider';
 
 interface IOptions {
    endpoint?: IEndpoint | string;
@@ -19,10 +16,12 @@ const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
    '[Types/_source/EndpointMixin]': true,
 
    /**
-    * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
+    * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к
+    * функциональным возможностям источника данных.
     * @name Types/_source/EndpointMixin#endpoint
     * @remark
-    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет интерпретироваться как контракт (endpoint.contract).
+    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
+    * интерпретироваться как контракт (endpoint.contract).
     * @see getEndPoint
     * @example
     * Подключаем пользователей через HTTP API:
@@ -52,22 +51,22 @@ const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
     */
    _$endpoint: null,
 
-   constructor(options?: IOptions) {
+   constructor(options?: IOptions): void {
       this._$endpoint = this._$endpoint || {};
       if (options) {
-         //Shortcut support
+         // Shortcut support
          if (typeof options.endpoint === 'string') {
             options.endpoint = {contract: options.endpoint};
          }
 
          if (options.endpoint instanceof Object) {
-            options.endpoint = Object.assign({}, this._$endpoint, options.endpoint);
+            options.endpoint = {...this._$endpoint, ...options.endpoint};
          }
       }
    },
 
    getEndpoint(): IEndpoint {
-      return Object.assign({}, this._$endpoint);
+      return {...this._$endpoint};
    }
 };
 

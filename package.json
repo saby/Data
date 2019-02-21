@@ -13,13 +13,13 @@
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
       "build:units": "saby-units --install",
       "build:compile": "tsc -b --verbose",
-      "tslint": "tslint --fix -q -p ./",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:node": "saby-units --isolated --report",
       "test:node-coverage": "saby-units --isolated --report --coverage",
       "test:browser": "saby-units --browser --report",
-      "test:browser-coverage": "saby-units --browser --report --coverage"
+      "test:browser-coverage": "saby-units --browser --report --coverage",
+      "tslint": "tslint -q -p Types/tslint.json"
    },
    "saby-units": {
       "moduleType": "amd",

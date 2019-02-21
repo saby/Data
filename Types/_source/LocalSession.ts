@@ -36,23 +36,29 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IData from './IData';
-import Query from './Query';
+import Query, { Order } from './Query';
 import DataSet from './DataSet';
-import {DestroyableMixin, Record, Model, OptionsToPropertyMixin, ReadWriteMixin, adapter as libAdapter} from '../entity';
+import {
+   DestroyableMixin,
+   Record,
+   Model,
+   OptionsToPropertyMixin,
+   ReadWriteMixin,
+   adapter as adapters
+} from '../entity';
 import {RecordSet} from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
 import {merge} from '../object';
+import { LocalStorage } from 'Browser/Storage';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
-import { LocalStorage } from 'Browser/Storage';
 
 const DATA_FIELD_PREFIX = 'd';
 const KEYS_FIELD = 'i';
 const ID_COUNT = 'k';
 
-function initJsonData(source, data) {
+function initJsonData(source: LocalSession, data: any): void {
    let item;
    let itemId;
    let key;
@@ -64,21 +70,21 @@ function initJsonData(source, data) {
    }
 }
 
-function isJsonAdapter(instance) {
+function isJsonAdapter(instance: string | adapters.IAdapter): boolean {
    if (typeof instance === 'string') {
       return instance.indexOf('Types/entity:adapter.Json') > -1 || instance.indexOf('adapter.json') > -1;
    }
 
-   return instance instanceof libAdapter.Json;
+   return instance instanceof adapters.Json;
 }
 
-function itemToObject(item, adapter) {
+function itemToObject(item: any, adapter: string | adapters.IAdapter): object {
    if (!item) {
       return {};
    }
 
    let record = item;
-   let isRecord = item && item instanceof Record;
+   const isRecord = item && item instanceof Record;
 
    if (!isRecord && isJsonAdapter(adapter)) {
       return item;
@@ -86,15 +92,15 @@ function itemToObject(item, adapter) {
 
    if (!isRecord) {
       record = new Record({
-         adapter: adapter,
+         adapter,
          rawData: item
       });
    }
 
-   let data = {};
-   let enumerator = record.getEnumerator();
+   const data = {};
+   const enumerator = record.getEnumerator();
    while (enumerator.moveNext()) {
-      let key = enumerator.getCurrent();
+      const key = enumerator.getCurrent();
       data[key] = record.get(key);
    }
 
@@ -102,15 +108,16 @@ function itemToObject(item, adapter) {
 }
 
 interface IOptions {
-   prefix: string
-   data: string
+   prefix: string;
+   idProperty: string;
+   data?: object;
 }
 
 class WhereTokenizer {
    query: RegExp = /(\w+)([!><=]*)/;
 
    tokinize(key: string): IToken {
-      let m = key.match(this.query);
+      const m = key.match(this.query);
       m.shift();
 
       let op;
@@ -147,54 +154,56 @@ class WhereTokenizer {
       };
    }
 
-   static eq(field, val): boolean {
+   static eq(field: any, val: any): boolean {
       if (!(val instanceof Array)) {
+         // tslint:disable-next-line:triple-equals
          return field == val;
       }
       return val.indexOf(field) !== -1;
    }
 
-   static ne(field, val): boolean {
-      return field != val;
+   static ne(field: any, val: any): boolean {
+         // tslint:disable-next-line:triple-equals
+         return field != val;
    }
 
-   static lt(field, val): boolean {
+   static lt(field: any, val: any): boolean {
       return field < val;
    }
 
-   static le(field, val): boolean {
+   static le(field: any, val: any): boolean {
       return field <= val;
    }
 
-   static gt(field, val): boolean {
+   static gt(field: any, val: any): boolean {
       return field > val;
    }
 
-   static ge(field, val): boolean {
+   static ge(field: any, val: any): boolean {
       return field >= val;
    }
 }
 
 interface IToken {
-   field: string,
-   op: (field: any, val: any) => boolean
+   field: string;
+   op: (field: any, val: any) => boolean;
 }
 
 class LocalQuery {
-   query: any;
+   query: Query;
    tokenizer: WhereTokenizer = new WhereTokenizer();
 
-   constructor(query) {
+   constructor(query: Query) {
       this.query = query;
    }
 
-   select(items) {
-      let fields = this.query.getSelect();
+   select(items: object[]): object[] {
+      const fields = this.query.getSelect() as string[];
       if (Object.keys(fields).length === 0) {
          return items;
       }
       return items.map((item) => {
-         let res = {};
+         const res = {};
          let name;
          for (let i = 0; i < fields.length; i++) {
             name = fields[i];
@@ -204,10 +213,10 @@ class LocalQuery {
       });
    }
 
-   where(items) {
-      let where = this.query.getWhere();
-      let conditions = [];
-      let adapter = new libAdapter.Json();
+   where(items: object[]): object[] {
+      const where = this.query.getWhere();
+      const conditions = [];
+      const adapter = new adapters.Json();
 
       if (typeof where === 'function') {
          return items.filter((item, i) => {
@@ -215,22 +224,23 @@ class LocalQuery {
          });
       }
 
-      for (let key in where) {
+      for (const key in where) {
          if (!where.hasOwnProperty(key)) {
             continue;
          }
          if (where[key] === undefined) {
             continue;
          }
-         let token = this.tokenizer.tokinize(key);
+         const token = this.tokenizer.tokinize(key);
          if (token === undefined) {
             return [];
          }
          conditions.push({field: token.field, op: token.op, value: where[key]});
       }
+
       return items.filter((item) => {
          for (let i = 0; i < conditions.length; i++) {
-            let token = conditions[i];
+            const token = conditions[i];
             if (item[token.field] instanceof Array) {
                let trigger = false;
                for (let j = 0, field = item[token.field]; j < field.length; j++) {
@@ -247,38 +257,38 @@ class LocalQuery {
       });
    }
 
-   order(items) {
-      let orders = this.query.getOrderBy();
+   order(items: object[]): object[] {
+      const orders = this.query.getOrderBy();
       if (orders.length > 0) {
          return LocalQuery.orderBy(items, orders);
       }
       return items;
    }
 
-   offset(items) {
+   offset(items: object[]): object[] {
       if (!this.query.getOffset()) {
          return items;
       }
       return items.slice(this.query.getOffset());
    }
 
-   limit(items) {
+   limit(items: object[]): object[] {
       if (this.query.getLimit() === undefined) {
          return items;
       }
       return items.slice(0, this.query.getLimit());
    }
 
-   static orderBy(items, orders) {
-      let data = items;
+   static orderBy(items: object[], orders: Order[]): object[] {
+      const data = items;
 
-      function compare(a, b) {
+      function compare(a: any, b: any): number {
          if (a === null && b !== null) {
-            //Считаем null меньше любого не-null
+            // Считаем null меньше любого не-null
             return -1;
          }
          if (a !== null && b === null) {
-            //Считаем любое не-null больше null
+            // Считаем любое не-null больше null
             return 1;
          }
          if (a === b) {
@@ -290,9 +300,9 @@ class LocalQuery {
       data.sort((a, b) => {
          let result = 0;
          for (let i = 0; i < orders.length; i++) {
-            let order = orders[i];
-            let direction = order.getOrder() ? -1 : 1;
-            let selector = order.getSelector();
+            const order = orders[i];
+            const direction = order.getOrder() ? -1 : 1;
+            const selector = order.getSelector();
             result = direction * compare(a[selector], b[selector]);
             if (result !== 0) {
                break;
@@ -307,25 +317,25 @@ class LocalQuery {
 class RawManager {
    ls: LocalStorage;
 
-   constructor(ls) {
+   constructor(ls: LocalStorage) {
       this.ls = ls;
-      let count = this.getCount();
+      const count = this.getCount();
       if (count === null) {
          this.setCount(0);
       }
-      let keys = this.getKeys();
+      const keys = this.getKeys();
       if (keys === null) {
          this.setKeys([]);
       }
    }
 
-   get(key) {
+   get(key: string): any {
       return this.ls.getItem(DATA_FIELD_PREFIX + key);
    }
 
-   set(key, data) {
-      let count = this.getCount() + 1;
-      let keys = this.getKeys();
+   set(key: string, data: any): boolean {
+      const count = this.getCount() + 1;
+      const keys = this.getKeys();
       if (keys.indexOf(key) === -1) {
          keys.push(key);
          this.setKeys(keys);
@@ -334,11 +344,11 @@ class RawManager {
       return this.ls.setItem(DATA_FIELD_PREFIX + key, data);
    }
 
-   move(sourceItems, to, meta) {
-      let keys = this.getKeys();
+   move(sourceItems: string[], to: string, meta?: any): void {
+      const keys = this.getKeys();
       let toIndex;
       sourceItems.forEach((id) => {
-         let index = keys.indexOf(id);
+         const index = keys.indexOf(id);
          keys.splice(index, 1);
       });
       if (to !== null) {
@@ -347,14 +357,14 @@ class RawManager {
             return Deferred.fail('Record "to" with key ' + to + ' is not found.');
          }
       }
-      let shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
+      const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
       sourceItems.forEach((id, index) => {
          keys.splice(toIndex + shift + index, 0, id);
       });
       this.setKeys(keys);
    }
 
-   remove(keys) {
+   remove(keys: string[]): boolean {
       let count;
       if (!(keys instanceof Array)) {
          count = this.getCount();
@@ -363,7 +373,7 @@ class RawManager {
          return this.ls.removeItem(DATA_FIELD_PREFIX + keys);
       }
       for (let i = 0; i < keys.length; i++) {
-         let key = keys[i];
+         const key = keys[i];
          count = this.getCount();
          this.setCount(count - 1);
          this.ls.removeItem(DATA_FIELD_PREFIX + key);
@@ -372,17 +382,17 @@ class RawManager {
       return true;
    }
 
-   removeFromKeys(keys) {
+   removeFromKeys(keys: string[]): void {
       let ks;
       if (keys instanceof Array) {
          ks = keys;
       } else {
          ks = [keys];
       }
-      let data = this.getKeys();
+      const data = this.getKeys();
       for (let i = 0; i < ks.length; i++) {
-         let key = ks[i];
-         let index = data.indexOf(key);
+         const key = ks[i];
+         const index = data.indexOf(key);
          if (index === -1) {
             continue;
          }
@@ -395,15 +405,15 @@ class RawManager {
       return this.ls.getItem(ID_COUNT);
    }
 
-   setCount(number: number) {
-      this.ls.setItem(ID_COUNT, number);
+   setCount(count: number): void {
+      this.ls.setItem(ID_COUNT, count);
    }
 
-   getKeys() {
+   getKeys(): string[] {
       return this.ls.getItem(KEYS_FIELD);
    }
 
-   setKeys(keys) {
+   setKeys(keys: string[]): void {
       this.ls.setItem(KEYS_FIELD, keys);
    }
 
@@ -412,8 +422,8 @@ class RawManager {
     * @param {String|Array<String>} keys Значение ключа или ключей
     * @return {Boolean} true, если все ключи существуют, иначе false
     */
-   existKeys(keys) {
-      let existedKeys = this.getKeys();
+   existKeys(keys: string[]): boolean {
+      const existedKeys = this.getKeys();
       if (existedKeys.length === 0) {
          return false;
       }
@@ -430,9 +440,9 @@ class RawManager {
       return (existedKeys.indexOf(keys) > -1);
    }
 
-   reserveId() {
-      function genId() {
-         function str() {
+   reserveId(): string {
+      function genId(): string {
+         function str(): string {
             return Math.floor((1 + Math.random()) * 0x1d0aa0)
                .toString(32)
                .substring(1);
@@ -450,15 +460,15 @@ class RawManager {
 }
 
 class ModelManager {
-   adapter: string;
+   adapter: adapters.IAdapter | string;
    idProperty: string;
 
-   constructor(adapter, idProperty) {
+   constructor(adapter: adapters.IAdapter | string, idProperty: string) {
       this.adapter = adapter;
       this.idProperty = idProperty;
    }
 
-   get(data) {
+   get(data: object): Model {
       data = object.clonePlain(data, true);
       switch (this.adapter) {
          case 'Types/entity:adapter.RecordSet':
@@ -482,19 +492,19 @@ class ModelManager {
       }
    }
 
-   sbis(data) {
-      let rec = new Record({rawData: data});
-      let format = rec.getFormat();
-      let enumerator = rec.getEnumerator();
+   sbis(data: object): Model {
+      const rec = new Record({rawData: data});
+      const format = rec.getFormat();
+      const enumerator = rec.getEnumerator();
 
-      let model = new Model({
-         format: format,
+      const model = new Model({
+         format,
          adapter: create(this.adapter),
          idProperty: this.idProperty
       });
 
       while (enumerator.moveNext()) {
-         let key = enumerator.getCurrent();
+         const key = enumerator.getCurrent();
          model.set(key, rec.get(key));
       }
       return model;
@@ -502,17 +512,17 @@ class ModelManager {
 }
 
 class Converter {
-   adapter: string;
+   adapter: adapters.IAdapter | string;
    idProperty: string;
    modelManager: ModelManager;
 
-   constructor (adapter, idProperty, modelManager) {
+   constructor(adapter: adapters.IAdapter | string, idProperty: string, modelManager: ModelManager) {
       this.adapter = adapter;
       this.idProperty = idProperty;
       this.modelManager = modelManager;
    }
 
-   get(data) {
+   get(data: object[]): RecordSet<Record> | object {
       data = object.clonePlain(data, true);
       switch (this.adapter) {
          case 'Types/entity:adapter.RecordSet':
@@ -526,8 +536,8 @@ class Converter {
       }
    }
 
-   recordSet(data) {
-      let _data = [];
+   recordSet(data: object[]): RecordSet<Record> {
+      const _data = [];
       if (data.length === 0) {
          return new RecordSet({
             rawData: _data,
@@ -536,8 +546,8 @@ class Converter {
       }
 
       for (let i = 0; i < data.length; i++) {
-         let item = data[i];
-         let model = this.modelManager.get(item);
+         const item = data[i];
+         const model = this.modelManager.get(item);
          _data.push(model);
       }
       return new RecordSet({
@@ -546,25 +556,25 @@ class Converter {
       });
    }
 
-   sbis(data) {
+   sbis(data: object[]): object {
       if (data.length === 0) {
          return data;
       }
-      let rs = new RecordSet({
+      const rs = new RecordSet({
          adapter: this.adapter
       });
 
-      let format = new Record({rawData: data[0]}).getFormat();
+      const format = new Record({rawData: data[0]}).getFormat();
 
       for (let j = 0; j < data.length; j++) {
-         let item = data[j],
-            rec = new Record({
-               format: format,
-               adapter: this.adapter
-            }),
-            enumerator = rec.getEnumerator();
+         const item = data[j];
+         const rec = new Record({
+            format,
+            adapter: this.adapter
+         });
+         const enumerator = rec.getEnumerator();
          while (enumerator.moveNext()) {
-            let key = enumerator.getCurrent();
+            const key = enumerator.getCurrent();
             rec.set(key, item[key]);
          }
          rs.add(rec);
@@ -585,12 +595,14 @@ export default class LocalSession extends mixin(
    protected _dataSetModule: string | Function;
 
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником. По умолчанию {@link Types/_entity/adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
+    * По умолчанию {@link Types/_entity/adapter/Json}.
     */
-   protected _$adapter: string | libAdapter.IAdapter;
+   protected _$adapter: string | adapters.IAdapter;
 
    /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных. По умолчанию {@link Types/_collection/RecordSet}.
+    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
+    * По умолчанию {@link Types/_collection/RecordSet}.
     * @name Types/_source/LocalSession#listModule
     * @see getListModule
     * @see Types/_collection/RecordSet
@@ -611,7 +623,8 @@ export default class LocalSession extends mixin(
    protected _$listModule: string | Function;
 
    /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных. По умолчанию {@link Types/_entity/Model}.
+    * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
+    * По умолчанию {@link Types/_entity/Model}.
     * @name Types/_source/LocalSession#model
     * @see getModel
     * @see Types/_entity/Model
@@ -658,7 +671,7 @@ export default class LocalSession extends mixin(
 
    protected _options: any;
 
-   constructor(options?: any) {
+   constructor(options?: IOptions) {
       super();
 
       if (!('prefix' in options)) {
@@ -677,13 +690,14 @@ export default class LocalSession extends mixin(
       this._initData(options.data);
    }
 
-   ///region {ICrud}
+   // region {ICrud}
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для
+    * создания модели
     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
     * @see Types/_entity/Model
     * @example
@@ -696,8 +710,8 @@ export default class LocalSession extends mixin(
     *    });
     * </pre>
     */
-   create(meta) {
-      let item = itemToObject(meta, this._$adapter);
+   create(meta?: object): ExtendPromise<Record> {
+      const item = itemToObject(meta, this._$adapter);
       if (item[this.getIdProperty()] === undefined) {
          this.rawManager.reserveId();
       }
@@ -716,8 +730,8 @@ export default class LocalSession extends mixin(
     *     });
     * </pre>
     */
-   read(key) {
-      let data = this.rawManager.get(key);
+   read(key: any, meta?: object): ExtendPromise<Record> {
+      const data = this.rawManager.get(key);
       if (data) {
          return Deferred.success(this.modelManager.get(data));
       }
@@ -746,10 +760,10 @@ export default class LocalSession extends mixin(
     *    });
     * </pre>
     */
-   update(data) {
-      let updateRecord = (record) => {
+   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+      const updateRecord = (record) => {
          let key;
-         let idProperty = record.getIdProperty ? record.getIdProperty() : this.getIdProperty();
+         const idProperty = record.getIdProperty ? record.getIdProperty() : this.getIdProperty();
 
          try {
             key = record.get(idProperty);
@@ -762,14 +776,14 @@ export default class LocalSession extends mixin(
          }
 
          record.set(idProperty, key);
-         let item = itemToObject(record, this._$adapter);
+         const item = itemToObject(record, this._$adapter);
          this.rawManager.set(key, item);
          record.acceptChanges();
 
          return key;
       };
 
-      let keys = [];
+      const keys = [];
       if (data instanceof RecordSet) {
          data.each((record) => {
             keys.push(updateRecord(record));
@@ -794,8 +808,8 @@ export default class LocalSession extends mixin(
     *    });
     * </pre>
     */
-   destroy(keys) {
-      let isExistKeys = this.rawManager.existKeys(keys);
+   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+      const isExistKeys = this.rawManager.existKeys(keys);
       if (!isExistKeys) {
          return Deferred.fail('Not all keys exist');
       }
@@ -816,17 +830,17 @@ export default class LocalSession extends mixin(
     *   });
     * </pre>
     */
-   query(query) {
+   query(query: Query): ExtendPromise<DataSet> {
       if (query === void 0) {
          query = new Query();
       }
       let data = [];
-      let keys = this.rawManager.getKeys();
+      const keys = this.rawManager.getKeys();
       for (let i = 0; i < keys.length; i++) {
          data.push(this.rawManager.get(keys[i]));
       }
 
-      let lq = new LocalQuery(query);
+      const lq = new LocalQuery(query);
       data = lq.order(data);
       data = lq.where(data);
       data = lq.offset(data);
@@ -841,9 +855,9 @@ export default class LocalSession extends mixin(
       }));
    }
 
-   ///endregion
+   // endregion
 
-   ///region ICrudPlus
+   // region ICrudPlus
 
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
@@ -860,13 +874,13 @@ export default class LocalSession extends mixin(
     *     })
     * </pre>
     */
-   merge(from, to) {
-      let fromData = this.rawManager.get(from);
-      let toData = this.rawManager.get(to);
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
+      const fromData = this.rawManager.get(from);
+      const toData = this.rawManager.get(to);
       if (fromData === null || toData === null) {
          return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
       }
-      let data = merge(fromData, toData);
+      const data = merge(fromData, toData);
       this.rawManager.set(from, data);
       this.rawManager.remove(to);
       return Deferred.success(true);
@@ -875,7 +889,8 @@ export default class LocalSession extends mixin(
    /**
     * Создает копию модели
     * @param {String} key Первичный ключ модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model копия модели}.
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
+    * {@link Types/_entity/Model копия модели}.
     * @example
     * <pre>
     *   solarSystem.copy('5').addCallbacks(function (copy) {
@@ -883,13 +898,13 @@ export default class LocalSession extends mixin(
     *   });
     * </pre>
     */
-   copy(key) {
-      let myId = this.rawManager.reserveId();
-      let from = this.rawManager.get(key);
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+      const myId = this.rawManager.reserveId();
+      const from = this.rawManager.get(key);
       if (from === null) {
          return Deferred.fail('Record with key ' + from + ' isn\'t exists');
       }
-      let to = merge({}, from);
+      const to = merge({}, from);
       this.rawManager.set(myId, to);
       return Deferred.success(this.modelManager.get(to));
    }
@@ -909,69 +924,69 @@ export default class LocalSession extends mixin(
     *    })
     * </pre>
     */
-   move(from, to, meta) {
-      let keys = this.rawManager.getKeys();
-      let sourceItems = [];
-      if (!(from instanceof Array)) {
-         from = [from];
+   move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+      const keys = this.rawManager.getKeys();
+      const sourceItems = [];
+      if (!(items instanceof Array)) {
+         items = [items];
       }
-      from.forEach((id) => {
-         let index = keys.indexOf(id);
+      items.forEach((id) => {
+         const index = keys.indexOf(id);
          if (index === -1) {
-            return Deferred.fail('Record "from" with key ' + from + ' is not found.');
+            return Deferred.fail(`Record "items" with key "${items}" is not found.`);
          }
          sourceItems.push(id);
       });
       if (meta.position === 'on') {
-         return Deferred.success(this._hierarchyMove(sourceItems, to, meta, keys));
+         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys));
       }
-      return Deferred.success(this.rawManager.move(sourceItems, to, meta));
+      return Deferred.success(this.rawManager.move(sourceItems, target, meta));
    }
 
-   ///endregion
+   // endregion
 
-   ///region {IData}
+   // region {IData}
 
    readonly '[Types/_source/IData]': boolean = true;
 
-   getIdProperty() {
+   getIdProperty(): string {
       return this._$idProperty;
    }
 
-   setIdProperty(name: string) {
+   setIdProperty(name: string): void {
       throw new Error('Method is not supported');
    }
 
-   getAdapter() {
-      return create<any>(this._$adapter);
+   getAdapter(): adapters.IAdapter {
+      return create<adapters.IAdapter>(this._$adapter);
    }
 
-   getListModule() {
+   getListModule(): Function | string {
       return this._$listModule;
    }
 
-   setListModule(listModule) {
+   setListModule(listModule: Function | string): void {
       this._$listModule = listModule;
    }
 
-   getModel() {
+   getModel(): string | Function {
       return this._$model;
    }
 
-   setModel(model) {
+   setModel(model: string | Function): void {
       this._$model = model;
    }
 
-   ///endregion
+   // endregion
 
-   ///region protected
+   // region protected
 
    /**
     * Инициализирует данные источника, переданные в конструктор
     * @param {Object} data данные
     * @protected
     */
-   protected _initData(data: Object) {
+   protected _initData(data: object): void {
       if (!data) {
          return;
       }
@@ -981,12 +996,12 @@ export default class LocalSession extends mixin(
          return;
       }
 
-      let adapter = this.getAdapter().forTable(data);
-      let handler = (record) => {
+      const adapter = this.getAdapter().forTable(data);
+      const handler = (record) => {
          this.update(record);
       };
       for (let i = 0; i < adapter.getCount(); i++) {
-         let meta = adapter.at(i);
+         const meta = adapter.at(i);
          this.create(meta).addCallback(handler);
       }
    }
@@ -997,51 +1012,50 @@ export default class LocalSession extends mixin(
     * @return {Types/_source/DataSet}
     * @protected
     */
-   protected _getDataSet(rawData: any) {
-      return <DataSet>create(// eslint-disable-line new-cap
+   protected _getDataSet(rawData: any): DataSet {
+      return create<DataSet>(// eslint-disable-line new-cap
          this._dataSetModule,
-         Object.assign({
+         {...{
             writable: this._writable,
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
             idProperty: this.getIdProperty()
-         }, {
-            rawData: rawData,
+         }, ...{
+            rawData,
             itemsProperty: this._dataSetItemsProperty,
             metaProperty: this._dataSetMetaProperty
-         })
+         }}
       );
    }
 
-   protected _hierarchyMove(sourceItems, to, meta, keys) {
-      let _this = this;
+   protected _hierarchyMove(sourceItems: any[], to: string | number, meta: any, keys: string[]): void {
       let toIndex;
       let parentValue;
       if (!meta.parentProperty) {
          return Deferred.fail('Parent property is not defined');
       }
       if (to) {
-         toIndex = keys.indexOf(to);
+         toIndex = keys.indexOf(to as string);
          if (toIndex === -1) {
             return Deferred.fail('Record "to" with key ' + to + ' is not found.');
          }
-         let item = this.rawManager.get(keys[toIndex]);
+         const item = this.rawManager.get(keys[toIndex]);
          parentValue = item[meta.parentProperty];
       } else {
          parentValue = null;
       }
       sourceItems.forEach((id) => {
-         let item = _this.rawManager.get(id);
+         const item = this.rawManager.get(id);
          item[meta.parentProperty] = parentValue;
-         _this.rawManager.set(id, item);
+         this.rawManager.set(id, item);
       });
    }
 
-   protected _reorderMove(sourceItems, to, meta, keys) {
+   protected _reorderMove(sourceItems: any[], to: string, meta: any, keys: string[]): void {
       let toIndex;
       sourceItems.forEach((id) => {
-         let index = keys.indexOf(id);
+         const index = keys.indexOf(id);
          keys.splice(index, 1);
       });
       if (to !== null) {
@@ -1050,14 +1064,14 @@ export default class LocalSession extends mixin(
             return Deferred.fail('Record "to" with key ' + to + ' is not found.');
          }
       }
-      let shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
+      const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
       sourceItems.forEach((id, index) => {
          keys.splice(toIndex + shift + index, 0, id);
       });
       this.rawManager.setKeys(keys);
    }
 
-   ///endregion
+   // endregion
 }
 
 Object.assign(LocalSession.prototype, {

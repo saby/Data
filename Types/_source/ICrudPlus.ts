@@ -47,7 +47,8 @@ export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype 
     * Создает копию записи
     * @param {String} key Первичный ключ записи
     * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - скопированную запись, в случае ошибки - Error.
+    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
+    * {@link Types/_entity/Record} - скопированную запись, в случае ошибки - Error.
     * @example
     * Скопируем статью с ключом 'what-about-to-copy-me':
     * <pre>
@@ -71,5 +72,5 @@ export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype 
     * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
     * @return {Promise.<*>} Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
     */
-   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any>;
+   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any>;
 }

@@ -1,6 +1,7 @@
 /// <amd-module name="Types/_source/ICrud" />
 /**
- * Интерфейс источника данных, поддерживающиего контракт {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
+ * Интерфейс источника данных, поддерживающиего контракт
+ * {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
  *
  * Создадим новую статью:
  * <pre>
@@ -61,7 +62,8 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
     * @param {Object} [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
+    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
+    * {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
     * @see Types/_entity/Record
     * @example
     * Создадим новую статью:
@@ -90,13 +92,14 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   create(meta?: Object): ExtendPromise<Record>;
+   create(meta?: object): ExtendPromise<Record>;
 
    /**
     * Читает запись из источника данных
     * @param {String} key Первичный ключ записи
     * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
+    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
+    * {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
     * @example
     * Прочитаем статью с ключом 'how-to-read-an-item':
     * <pre>
@@ -124,7 +127,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   read(key: any, meta?: Object): ExtendPromise<Record>;
+   read(key: any, meta?: object): ExtendPromise<Record>;
 
    /**
     * Обновляет запись в источнике данных
@@ -216,7 +219,8 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
    /**
     * Выполняет запрос на выборку
     * @param {Types/_source/Query} [query] Запрос
-    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
+    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет
+    * {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
     * @see Types/_source/Query
     * @see Types/_source/DataSet
     * @example
