@@ -1,5 +1,7 @@
 /// <amd-module name="Types/_function/delay" />
 
+const win = typeof window !== 'undefined' ? window : null;
+
 /**
  * Модуль, в котором описана функция <b>delay(fn)</b>.
  *
@@ -14,8 +16,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default function runDelayed(original: Function) {
-   const win = typeof window !== 'undefined' ? window : null;
+export default function delay(original: Function): void {
    if (win && win.requestAnimationFrame) {
       win.requestAnimationFrame(original as FrameRequestCallback);
    } else {

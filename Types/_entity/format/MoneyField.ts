@@ -21,7 +21,8 @@ export default class MoneyField extends RealField /** @lends Types/_entity/forma
    _$precision: number;
 
    /**
-    * @cfg {Boolean} Большие деньги (значение передается строкой, чтобы избежать погрешностей выполнения операций с плавающей запятой)
+    * @cfg {Boolean} Большие деньги (значение передается строкой, чтобы избежать погрешностей выполнения операций с
+    * плавающей запятой)
     * @name Types/_entity/format/MoneyField#large
     * @see isLarge
     */
@@ -34,7 +35,7 @@ export default class MoneyField extends RealField /** @lends Types/_entity/forma
     * @return {Boolean}
     * @see large
     */
-   isLarge() {
+   isLarge(): boolean {
       return this._$large;
    }
 

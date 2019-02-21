@@ -1,5 +1,5 @@
 /// <amd-module name="Types/_formatter/dateFromSql" />
-// @ts-ignore
+
 import { constants } from 'Env/Env';
 
 /**
@@ -13,26 +13,27 @@ import { constants } from 'Env/Env';
 const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2})[:-]*([0-9]{2})*$/;
 
 /**
- * Создает дату из строки даты в формате SQL. Если строка содержит информацию о времени, то оно будет приведено к местному.
+ * Создает дату из строки даты в формате SQL. Если строка содержит информацию о времени, то оно будет приведено к
+ * местному.
  * @function
  * @name Types/_formatter/dateFromSql
  * @param {String} dateTime Дата и/или время в формате SQL
- * @param {Number} [defaultTimeZone] Использовать указанная временную зону (смещение относительно часового пояса UTC в минутах), если в строке временная зона не задана.
+ * @param {Number} [defaultTimeZone] Использовать указанная временную зону (смещение относительно часового пояса UTC в
+ * минутах), если в строке временная зона не задана.
  * @return {Date}
  */
-export default function fromSQL(dateTime: string, defaultTimeZone?: number) {
-   let
-      dateSep = dateTime.indexOf('-'),
-      timeSep = dateTime.indexOf(':'),
-      millisecSep = dateTime.indexOf('.'),
-      tz = dateTime.match(SQL_FORMAT),
-      tzSep = tz && tz.index + tz[1].length || -1,
-      retval = new Date(),
-      ms = null,
-      msStr,
-      y,
-      m,
-      d;
+export default function fromSQL(dateTime: string, defaultTimeZone?: number): Date {
+   let dateSep = dateTime.indexOf('-');
+   const timeSep = dateTime.indexOf(':');
+   const millisecSep = dateTime.indexOf('.');
+   const tz = dateTime.match(SQL_FORMAT);
+   const tzSep = tz && tz.index + tz[1].length || -1;
+   const retval = new Date();
+   let ms = null;
+   let msStr;
+   let y;
+   let m;
+   let d;
 
    retval.setHours(0, 0, 0, 0);
 

@@ -47,7 +47,7 @@ export default class RealField extends Field /** @lends Types/_entity/format/Rea
     * @see precision
     * @see getPrecision
     */
-   setPrecision(value: number) {
+   setPrecision(value: number): void {
       this._$precision = value;
    }
 

@@ -2,7 +2,8 @@
 /**
  * Адаптер для данных в формате JSON.
  * Работает с данными, представленными в виде обычных JSON объектов.
- * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/JsonRecord} и {@link Types/_entity/adapter/JsonTable}.
+ * Примеры можно посмотреть в модулях {@link Types/_entity/adapter/JsonRecord} и
+ * {@link Types/_entity/adapter/JsonTable}.
  * @class Types/_entity/adapter/Json
  * @extends Types/_entity/adapter/Abstract
  * @public
@@ -15,15 +16,15 @@ import JsonRecord from './JsonRecord';
 import {register} from '../../di';
 
 export default class Json extends Abstract /** @lends Types/_entity/adapter/Json.prototype */{
-   forTable(data) {
+   forTable(data: object[]): JsonTable {
       return new JsonTable(data);
    }
 
-   forRecord(data) {
+   forRecord(data: object): JsonRecord {
       return new JsonRecord(data);
    }
 
-   getKeyField() {
+   getKeyField(): string {
       return undefined;
    }
 }

@@ -29,13 +29,13 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IAdapter from './IAdapter';
 import GenericFormatMixin from './GenericFormatMixin';
-import {UniversalField} from '../format';
+import {UniversalField, Field} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';
-import {RecordSet} from '../../collection';
+import {RecordSet, format} from '../../collection';
 
-interface RecordSetOptions {
+interface IRecordSetOptions {
    adapter?: string | IAdapter;
    idProperty?: string;
 }
@@ -60,7 +60,7 @@ export default class RecordSetTable extends mixin(
     * Конструктор
     * @param {Types/_collection/RecordSet} data Таблица
     */
-   constructor(data) {
+   constructor(data: RecordSet<Record>) {
       if (data && !data['[Types/_collection/RecordSet]']) {
          throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
       }
@@ -68,7 +68,7 @@ export default class RecordSetTable extends mixin(
       GenericFormatMixin.constructor.call(this, data);
    }
 
-   getFields() {
+   getFields(): string[] {
       const fields = [];
       if (this._isValidData()) {
          this._data.getFormat().each((field) => {
@@ -78,20 +78,20 @@ export default class RecordSetTable extends mixin(
       return fields;
    }
 
-   getCount() {
+   getCount(): number {
       return this._isValidData() ? this._data.getCount() : 0;
    }
 
-   add(record, at) {
+   add(record: Record, at: number): void {
       this._buildData(record);
       this._data.add(record, at);
    }
 
-   at(index) {
+   at(index: number): Record {
       return this._isValidData() ? this._data.at(index) : undefined;
    }
 
-   remove(at) {
+   remove(at: number): Record {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -99,7 +99,7 @@ export default class RecordSetTable extends mixin(
       return this._data.removeAt(at);
    }
 
-   replace(record, at) {
+   replace(record: Record, at: number): Record {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -107,7 +107,7 @@ export default class RecordSetTable extends mixin(
       return this._data.replace(record, at);
    }
 
-   move(source, target) {
+   move(source: number, target: number): void {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -117,21 +117,21 @@ export default class RecordSetTable extends mixin(
       this._data.add(rec, target);
    }
 
-   merge(acceptor, donor, idProperty) {
+   merge(acceptor: number, donor: number, idProperty: string): any {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
 
-      acceptor = this._data.at(acceptor);
+      const acceptorRecord = this._data.at(acceptor);
       this._data.at(donor).each((name, value) => {
          if (name !== idProperty) {
-            acceptor.set(name, value);
+            acceptorRecord.set(name, value);
          }
       }, this);
       this._data.removeAt(donor);
    }
 
-   copy(index) {
+   copy(index: number): Record {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -141,7 +141,7 @@ export default class RecordSetTable extends mixin(
       return clone;
    }
 
-   clear() {
+   clear(): void {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -152,7 +152,7 @@ export default class RecordSetTable extends mixin(
       }
    }
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -160,7 +160,7 @@ export default class RecordSetTable extends mixin(
       this._data.addField(format, at);
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -168,7 +168,7 @@ export default class RecordSetTable extends mixin(
       this._data.removeField(name);
    }
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
@@ -176,13 +176,13 @@ export default class RecordSetTable extends mixin(
       this._data.removeFieldAt(index);
    }
 
-   // endregion ITable
+   // endregion
 
    // region Protected methods
 
-   _buildData(sample) {
+   _buildData(sample: Record): void {
       if (!this._data) {
-         const config = {} as RecordSetOptions;
+         const config = {} as IRecordSetOptions;
          if (sample) {
             if (sample.getAdapter) {
                config.adapter = sample.getAdapter();
@@ -195,15 +195,15 @@ export default class RecordSetTable extends mixin(
       }
    }
 
-   _isValidData() {
+   _isValidData(): boolean {
       return this._data && this._data['[Types/_collection/RecordSet]'];
    }
 
-   _getFieldsFormat() {
+   _getFieldsFormat(): format.Format<Field> {
       return this._data.getFormat();
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(RecordSetTable.prototype, {

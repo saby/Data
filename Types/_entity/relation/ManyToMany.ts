@@ -14,7 +14,7 @@ import {Map, Set} from '../../shim';
  * @param {Object} entity Объект
  * @return {Boolean}
  */
-function isAlive(entity): boolean {
+function isAlive(entity: any): boolean {
    return entity instanceof Object && entity['[Types/_entity/DestroyableMixin]'] ? !entity.destroyed : true;
 }
 
@@ -47,7 +47,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
       this._belongsToName = new Map();
    }
 
-   destroy() {
+   destroy(): void {
       this._hasMany = null;
       this._hasManyName = null;
       this._belongsTo = null;
@@ -63,7 +63,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} slave Зависимая сущность
     * @param {String} [name] Название отношения
     */
-   addRelationship(master, slave, name) {
+   addRelationship(master: object, slave: object, name?: string): void {
       this._addHasMany(master, slave, name);
       this._addBelongsTo(slave, master, name);
    }
@@ -73,7 +73,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} master Главная сущность
     * @param {Object} slave Зависимая сущность
     */
-   removeRelationship(master, slave) {
+   removeRelationship(master: object, slave: object): void {
       this._removeHasMany(master, slave);
       this._removeBelongsTo(slave, master);
    }
@@ -82,7 +82,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * Очищает все отношения указанной сущности
     * @param {Object} entity Сущность
     */
-   clear(entity) {
+   clear(entity: object): void {
       if (this._hasMany.has(entity)) {
          this._hasMany.get(entity).forEach((slave) => {
             this._removeBelongsTo(slave, entity);
@@ -105,7 +105,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} master Главная сущность
     * @param {Function(Object, String)} callback Функция обратного вызова для каждой зависимой сущности
     */
-   hasMany(master, callback) {
+   hasMany(master: object, callback: Function): void {
       if (this._hasMany.has(master)) {
          const names = this._hasManyName.get(master);
          this._hasMany.get(master).forEach((slave) => {
@@ -125,7 +125,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} slave Зависимая сущность
     * @param {Function(Object, String)} callback Функция обратного вызова для каждой главной сущности
     */
-   belongsTo(slave, callback) {
+   belongsTo(slave: object, callback: Function): void {
       if (this._belongsTo.has(slave)) {
          const names = this._belongsToName.get(slave);
          this._belongsTo.get(slave).forEach((master) => {
@@ -151,7 +151,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {String} name Название отношения
     * @protected
     */
-   protected _addHasMany(master, slave, name) {
+   protected _addHasMany(master: object, slave: object, name: string): void {
       let slaves;
       let names;
       if (this._hasMany.has(master)) {
@@ -173,7 +173,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} slave Зависимая сущность
     * @protected
     */
-   protected _removeHasMany(master, slave) {
+   protected _removeHasMany(master: object, slave: object): void {
       if (this._hasMany.has(master)) {
          const slaves = this._hasMany.get(master);
          slaves.delete(slave);
@@ -193,7 +193,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {String} name Название отношения
     * @protected
     */
-   protected _addBelongsTo(slave, master, name) {
+   protected _addBelongsTo(slave: object, master: object, name: string): void {
       let masters;
       let names;
       if (this._belongsTo.has(slave)) {
@@ -215,7 +215,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
     * @param {Object} slave Зависимая сущность
     * @protected
     */
-   protected _removeBelongsTo(slave, master) {
+   protected _removeBelongsTo(slave: object, master: object): void {
       if (this._belongsTo.has(slave)) {
          const masters = this._belongsTo.get(slave);
          masters.delete(master);

@@ -74,10 +74,10 @@ const charMap = {
    Я: 'YA'
 };
 
-export default function cyrTranslit(string: String): String {
+export default function cyrTranslit(str: String): String {
    const result = [];
-   for (let i = 0, l = string.length; i < l; i++) {
-      const char = string[i];
+   for (let i = 0, l = str.length; i < l; i++) {
+      const char = str[i];
       result[i] = (char in charMap) ? charMap[char] : char;
    }
    return result.join('');

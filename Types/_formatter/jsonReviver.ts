@@ -1,4 +1,5 @@
 /// <amd-module name="Types/_formatter/jsonReviver" />
+
 import {logger} from '../util';
 
 const DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
@@ -6,9 +7,9 @@ let unresolvedInstances = [];
 let unresolvedInstancesId = [];
 const instanceStorage = {};
 
-function resolveInstances() {
-   let Module,
-      name;
+function resolveInstances(): void {
+   let Module;
+   let name;
 
    for (let i = 0; i < unresolvedInstances.length; i++) {
       const item = unresolvedInstances[i];
@@ -18,8 +19,7 @@ function resolveInstances() {
       } else if (item.value.module) {
          try {
             name = item.value.module;
-            // @ts-ignore
-            Module = requirejs(name);
+            Module = require(name);
             if (!Module) {
                throw new Error(`The module "${name}" is not loaded yet.`);
             }
@@ -29,7 +29,9 @@ function resolveInstances() {
             if (typeof Module.prototype.fromJSON !== 'function') {
                throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
             }
-            instance = Module.fromJSON ? Module.fromJSON.call(Module, item.value) : Module.prototype.fromJSON.call(Module, item.value);
+            instance = Module.fromJSON
+               ? Module.fromJSON.call(Module, item.value)
+               : Module.prototype.fromJSON.call(Module, item.value);
          } catch (e) {
             logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
             instance = null;
@@ -41,7 +43,7 @@ function resolveInstances() {
    }
 }
 
-export default function jsonReviver(name: string, value: any) {
+export default function jsonReviver(name: string, value: any): any {
    let result = value;
 
    if ((value instanceof Object) &&

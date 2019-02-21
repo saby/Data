@@ -35,7 +35,7 @@
 const storage = new WeakMap();
 
 export default function once(original: Function): Function {
-   return function(...args): any {
+   return function(...args: any[]): any {
       if (!storage.has(original)) {
          const result = original.apply(this, args);
          storage.set(original, result);

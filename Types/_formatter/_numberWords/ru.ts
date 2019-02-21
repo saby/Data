@@ -14,6 +14,7 @@ const DIGITS = {
    8: 'восемь',
    9: 'девять'
 };
+
 const DIGITS_FEMININE = {
    0: 'ноль',
    1: 'одна',
@@ -39,6 +40,7 @@ const TENS = {
    8: 'восемнадцать',
    9: 'девятнадцать'
 };
+
 const TWENTIES = {
    2: 'двадцать',
    3: 'тридцать',
@@ -49,6 +51,7 @@ const TWENTIES = {
    8: 'восемьдесят',
    9: 'девяносто'
 };
+
 const HUNDREDS = {
    0: '',
    1: 'сто',
@@ -61,8 +64,24 @@ const HUNDREDS = {
    8: 'восемьсот',
    9: 'девятьсот'
 };
-const THOUSANDS = ['', 'тысяча', 'миллион', 'миллиард', 'триллион', 'квадриллион', 'квинтиллион', 'сикстиллион', 'септиллион', 'октиллион', 'нониллион', 'дециллион'];
+
+const THOUSANDS = [
+   '',
+   'тысяча',
+   'миллион',
+   'миллиард',
+   'триллион',
+   'квадриллион',
+   'квинтиллион',
+   'сикстиллион',
+   'септиллион',
+   'октиллион',
+   'нониллион',
+   'дециллион'
+];
+
 const negword = 'минус';
+
 export default function numToWordsRu(num: string, feminine: boolean = false): string {
    if (num[0] === '-') {
       return negword + ' ' + numToWordsRu(num.slice(1));
@@ -70,23 +89,21 @@ export default function numToWordsRu(num: string, feminine: boolean = false): st
 
    const words = [];
    // let chunks = list(splitbyx(str(n), 3))
-   iterateNumber(num, function(three, counter) {
-      const i = three.length;
-
+   iterateNumber(num, (three, counter) => {
       if (three[0] !== '0') {
          words.push(HUNDREDS[three[0]]);
       }
       if (three[1] > 1) {
          words.push(TWENTIES[three[1]]);
       }
-      if (three[1] == 1) {
+      if (three[1] === 1) {
          words.push(TENS[three[2]]);
       } else if (three[2] > 0 || (+three === 0 && words.length === 0)) {
          const dict = (counter === 1 || feminine) ? DIGITS_FEMININE : DIGITS;
          words.push(dict[three[2]]);
       }
 
-      if (counter > 0 && +three != 0) {
+      if (counter > 0 && +three !== 0) {
          words.push(rk(THOUSANDS[counter], +three));
       }
    });
