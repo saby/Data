@@ -67,7 +67,7 @@ function getInstanceId(): number {
  * Сериализует код модуля, чтобы его можно было идентифицировать.
  * @param {Object} instance Экземпляр модуля
  */
-function serializeCode(instance): string {
+function serializeCode(instance: object): string {
    const proto = Object.getPrototypeOf(instance);
    const processed = [];
 
@@ -100,8 +100,9 @@ function serializeCode(instance): string {
  * @param {Boolean} [critical=false] Выбросить исключение либо предупредить
  * @param {Number} [skip=3] Сколько уровней пропустить при выводе стека вызова метода
  */
-function createModuleNameError(instance, critical?: boolean, skip?: number) {
-   const text = `Property "_moduleName" with module name for RequireJS's define() is not found in this prototype: "${serializeCode(instance)}"`;
+function createModuleNameError(instance: object, critical?: boolean, skip?: number): void {
+   const text = `Property "_moduleName" with module name for RequireJS's define() is not found` +
+      ` in this prototype: "${serializeCode(instance)}"`;
    if (critical) {
       throw new ReferenceError(text);
    } else {
@@ -109,8 +110,7 @@ function createModuleNameError(instance, critical?: boolean, skip?: number) {
    }
 }
 
-export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */{
-
+export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */ {
    /**
     * Уникальный номер инстанса
     */
@@ -124,7 +124,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    /**
     * Nonstandard prototype getter
     */
-   private __proto__: this;
+   private '__proto__': this;
 
    /**
     * Method implemented in OptionsToPropertyMixin
@@ -133,7 +133,10 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
 
    // region Public methods
 
-   constructor(options?) {}
+   constructor(options?: any) {
+      // Just for signature
+   }
+
    /**
     * Конструирует экземпляр класса из сериализованного состояния
     * @param {Object} data Сериализованное состояние
@@ -178,7 +181,8 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    }
 
    /**
-    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
+    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
+    * это же состояние
     * @param {Object} state Cостояние
     * @return {Object}
     * @protected
@@ -189,18 +193,19 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    }
 
    /**
-    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
+    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
+    * после создания инстанса.
     * @param {Object} state Cостояние
     * @return {Function}
     * @protected
     */
    _setSerializableState(state?: Object): Function {
-      return function() {
+      return function(): void {
          this[$unserialized] = true;
       };
    }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -210,7 +215,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
     * @param [skip] Сколько уровней пропустить при выводе стека вызова метода
     * @protected
     */
-   protected _checkModuleName(critical: boolean, skip?: number) {
+   protected _checkModuleName(critical: boolean, skip?: number): void {
       let proto = this;
       if (!proto._moduleName) {
          createModuleNameError(this, critical, skip);
@@ -227,7 +232,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
       }
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(SerializableMixin.prototype, {

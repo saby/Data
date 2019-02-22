@@ -12,38 +12,32 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
+import ICloneable from '../ICloneable';
+import {Field, UniversalField} from '../format';
 import {object} from '../../util';
 
-export default class CowTable extends DestroyableMixin implements ITable, IDecorator /** @lends Types/_entity/adapter/CowTable.prototype */{
+export default class CowTable
+   extends DestroyableMixin
+   implements ITable, IDecorator /** @lends Types/_entity/adapter/CowTable.prototype */ {
    /**
-    * @property {Types/_entity/adapter/IAdapter} Оригинальный адаптер
+    * @property Оригинальный адаптер
     */
-   _original: IAdapter;
-
-   /**
-    * @property {Types/_entity/adapter/ITable} Оригинальный адаптер таблицы
-    */
-   _originalTable: ITable;
+   protected _original: IAdapter;
 
    /**
-    * @property {Function} Ф-я обратного вызова при событии записи
+    * @property Оригинальный адаптер таблицы
     */
-   _writeCallback: Function;
+   protected _originalTable: ITable | ICloneable;
 
    /**
-    * @property {Boolean} Сырые данные были скопированы
+    * @property Ф-я обратного вызова при событии записи
     */
-   _copied: boolean;
+   protected _writeCallback: Function;
 
-   // region Types/_entity/adapter/ITable
-
-   readonly '[Types/_entity/adapter/ITable]': boolean;
-
-   // endregion Types/_entity/adapter/ITable
-
-   // region Types/_entity/adapter/IDecorator
-
-   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+   /**
+    * @property Сырые данные были скопированы
+    */
+   protected _copied: boolean;
 
    /**
     * Конструктор
@@ -60,97 +54,106 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       }
    }
 
-   getFields() {
-      return this._originalTable.getFields();
+   // region Types/_entity/adapter/ITable
+
+   readonly '[Types/_entity/adapter/ITable]': boolean;
+
+   getFields(): string[] {
+      return (this._originalTable as ITable).getFields();
    }
 
-   getCount() {
-      return this._originalTable.getCount();
+   getCount(): number {
+      return (this._originalTable as ITable).getCount();
    }
 
-   getData() {
-      return this._originalTable.getData();
+   getData(): any {
+      return (this._originalTable as ITable).getData();
    }
 
-   add(record, at) {
+   add(record: any, at: number): void {
       this._copy();
-      return this._originalTable.add(record, at);
+      return (this._originalTable as ITable).add(record, at);
    }
 
-   at(index) {
-      return this._originalTable.at(index);
+   at(index: number): void {
+      return (this._originalTable as ITable).at(index);
    }
 
-   remove(at) {
+   remove(at: number): void {
       this._copy();
-      return this._originalTable.remove(at);
+      return (this._originalTable as ITable).remove(at);
    }
 
-   replace(record, at) {
+   replace(record: any, at: number): void {
       this._copy();
-      return this._originalTable.replace(record, at);
+      return (this._originalTable as ITable).replace(record, at);
    }
 
-   move(source, target) {
+   move(source: number, target: number): void {
       this._copy();
-      return this._originalTable.move(source, target);
+      return (this._originalTable as ITable).move(source, target);
    }
 
-   merge(acceptor, donor, idProperty) {
+   merge(acceptor: number, donor: number, idProperty: string): any {
       this._copy();
-      return this._originalTable.merge(acceptor, donor, idProperty);
+      return (this._originalTable as ITable).merge(acceptor, donor, idProperty);
    }
 
-   copy(index) {
+   copy(index: number): any {
       this._copy();
-      return this._originalTable.copy(index);
+      return (this._originalTable as ITable).copy(index);
    }
 
-   clear() {
+   clear(): void {
       this._copy();
-      return this._originalTable.clear();
+      return (this._originalTable as ITable).clear();
    }
 
-   getFormat(name) {
-      return this._originalTable.getFormat(name);
+   getFormat(name: string): Field {
+      return (this._originalTable as ITable).getFormat(name);
    }
 
-   getSharedFormat(name) {
-      return this._originalTable.getSharedFormat(name);
+   getSharedFormat(name: string): UniversalField {
+      return (this._originalTable as ITable).getSharedFormat(name);
    }
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       this._copy();
-      return this._originalTable.addField(format, at);
+      return (this._originalTable as ITable).addField(format, at);
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       this._copy();
-      return this._originalTable.removeField(name);
+      return (this._originalTable as ITable).removeField(name);
    }
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._copy();
-      return this._originalTable.removeFieldAt(index);
+      return (this._originalTable as ITable).removeFieldAt(index);
    }
 
-   getOriginal() {
-      return this._originalTable;
+   // endregion
+
+   // region Types/_entity/adapter/IDecorator
+
+   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+
+   getOriginal(): ITable {
+      return this._originalTable as ITable;
    }
 
-   // endregion Types/_entity/adapter/IDecorator
+   // endregion
 
    // region Protected methods
 
-   _copy() {
+   _copy(): void {
       if (!this._copied) {
          if (this._originalTable['[Types/_entity/ICloneable]']) {
-            // @ts-ignore
-            this._originalTable = this._originalTable.clone();
+            this._originalTable = (this._originalTable as ICloneable).clone();
          } else {
             this._originalTable = this._original.forTable(
                object.clonePlain(
-                  this._originalTable.getData()
+                  (this._originalTable as ITable).getData()
                )
             );
          }
@@ -163,7 +166,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
       }
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(CowTable.prototype, {

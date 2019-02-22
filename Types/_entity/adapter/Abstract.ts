@@ -18,8 +18,12 @@ import SerializableMixin from '../SerializableMixin';
 import {mixin} from '../../util';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
-const serializer = (function() {
-   const serialize = function(data) {
+const serialize = (() => {
+   interface ISerializableObject extends Object {
+      getRawData?: Function;
+   }
+
+   function serializeAny(data: any): any {
       if (data instanceof Array) {
          return serializeArray(data);
       } else if (data && typeof data === 'object') {
@@ -27,22 +31,19 @@ const serializer = (function() {
       } else {
          return data;
       }
-   };
+   }
 
-   const serializeArray = function(arr) {
-      return arr.map(function(item) {
-         return serialize(item);
-      });
-   };
+   function serializeArray(arr: any[]): any[] {
+      return arr.map((item) => serializeAny(item));
+   }
 
-   const serializeObject = function(obj) {
-      if (typeof obj.getRawData === 'function') {
+   function serializeObject(obj: ISerializableObject | ExtendDate): object | string {
+      if (typeof (obj as ISerializableObject).getRawData === 'function') {
          // Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
-         return obj.getRawData(true);
+         return (obj as ISerializableObject).getRawData(true);
       } else if (obj instanceof Date) {
          let mode = TO_SQL_MODE.DATETIME;
-         obj = obj as ExtendDate;
-         if (obj.getSQLSerializationMode) {
+         if ((obj as ExtendDate).getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
                case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                   mode = TO_SQL_MODE.DATE;
@@ -63,9 +64,9 @@ const serializer = (function() {
          }
          return obj;
       }
-   };
+   }
 
-   const serializePlainObject = function(obj) {
+   function serializePlainObject(obj: object): object {
       const result = {};
 
       const proto = Object.getPrototypeOf(obj);
@@ -77,14 +78,12 @@ const serializer = (function() {
       let key;
       for (let i = 0; i < keys.length; i++) {
          key = keys[i];
-         result[key] = serialize(obj[key]);
+         result[key] = serializeAny(obj[key]);
       }
       return result;
-   };
+   }
 
-   return {
-      serialize
-   };
+   return serializeAny;
 })();
 
 export default abstract class Abstract extends mixin(
@@ -114,7 +113,7 @@ export default abstract class Abstract extends mixin(
       return result;
    }
 
-   setProperty(data: any, property: string, value: any) {
+   setProperty(data: any, property: string, value: any): void {
       if (!data || !(data instanceof Object)) {
          return;
       }
@@ -134,10 +133,10 @@ export default abstract class Abstract extends mixin(
    }
 
    serialize(data: any): any {
-      return serializer.serialize(data);
+      return serialize(data);
    }
 
-   forRecord(data: any, tableData?): IRecord {
+   forRecord(data: any, tableData?: any): IRecord {
       throw new Error('Method must be implemented');
    }
 

@@ -367,6 +367,7 @@ export default class Model extends mixin(
       return new Model({
          rawData: record.getRawData(true),
          adapter: record.getAdapter(),
+         //@ts-ignore
          format: record._getFormat(true)// "Anakin, I Am Your Son"
       });
    }
