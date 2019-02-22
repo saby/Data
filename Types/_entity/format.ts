@@ -40,7 +40,10 @@ export {default as DateField} from './format/DateField';
 export {default as DateTimeField} from './format/DateTimeField';
 export {default as DictionaryField} from './format/DictionaryField';
 export {default as EnumField} from './format/EnumField';
-export {default as fieldsFactory, IDeclaration as IFieldDeclaration} from './format/fieldsFactory';
+export {
+   default as fieldsFactory,
+   IDeclaration as IFieldDeclaration,
+} from './format/fieldsFactory';
 export {default as FlagsField} from './format/FlagsField';
 export {default as HierarchyField} from './format/HierarchyField';
 export {default as IdentityField} from './format/IdentityField';

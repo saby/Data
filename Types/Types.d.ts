@@ -1,3 +1,3 @@
 interface CompareFunction {
-   (a: any, b: any): number
+   (a: any, b: any): number;
 }
