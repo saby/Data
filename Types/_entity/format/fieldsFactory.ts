@@ -68,6 +68,7 @@ import {logger} from '../../util';
 export interface IDeclaration {
    name: string;
    type: string | Function;
+   kind?: string;
 }
 
 /**

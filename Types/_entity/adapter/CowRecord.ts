@@ -12,38 +12,32 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
+import ICloneable from '../ICloneable';
+import {Field, UniversalField} from '../format';
 import {object} from '../../util';
 
-export default class CowRecord extends DestroyableMixin implements IRecord, IDecorator /** @lends Types/_entity/adapter/CowRecord.prototype */{
+export default class CowRecord
+   extends DestroyableMixin
+   implements IRecord, IDecorator /** @lends Types/_entity/adapter/CowRecord.prototype */ {
    /**
     * @property Оригинальный адаптер
     */
-   _original: IAdapter;
+   protected _original: IAdapter;
 
    /**
     * @property Оригинальный адаптер записи
     */
-   _originalRecord: IRecord;
+   protected _originalRecord: IRecord | ICloneable;
 
    /**
     * @property Ф-я обратного вызова при событии записи
     */
-   _writeCallback: Function;
+   protected _writeCallback: Function;
 
    /**
     * @property Сырые данные были скопированы
     */
-   _copied: boolean;
-
-   // region Types/_entity/adapter/IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   // endregion Types/_entity/adapter/IRecord
-
-   // region Types/_entity/adapter/IDecorator
-
-   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+   protected _copied: boolean;
 
    /**
     * Конструктор
@@ -60,72 +54,81 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       }
    }
 
-   has(name) {
-      return this._originalRecord.has(name);
+   // region Types/_entity/adapter/IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
+
+   has(name: string): boolean {
+      return (this._originalRecord as IRecord).has(name);
    }
 
-   get(name) {
-      return this._originalRecord.get(name);
+   get(name: string): any {
+      return (this._originalRecord as IRecord).get(name);
    }
 
-   set(name, value) {
+   set(name: string, value: any): void {
       this._copy();
-      return this._originalRecord.set(name, value);
+      return (this._originalRecord as IRecord).set(name, value);
    }
 
-   clear() {
+   clear(): void {
       this._copy();
-      return this._originalRecord.clear();
+      return (this._originalRecord as IRecord).clear();
    }
 
-   getData() {
-      return this._originalRecord.getData();
+   getData(): any {
+      return (this._originalRecord as IRecord).getData();
    }
 
-   getFields() {
-      return this._originalRecord.getFields();
+   getFields(): string[] {
+      return (this._originalRecord as IRecord).getFields();
    }
 
-   getFormat(name) {
-      return this._originalRecord.getFormat(name);
+   getFormat(name: string): Field {
+      return (this._originalRecord as IRecord).getFormat(name);
    }
 
-   getSharedFormat(name) {
-      return this._originalRecord.getSharedFormat(name);
+   getSharedFormat(name: string): UniversalField {
+      return (this._originalRecord as IRecord).getSharedFormat(name);
    }
 
-   addField(format, at) {
+   addField(format: Field, at?: number): void {
       this._copy();
-      return this._originalRecord.addField(format, at);
+      return (this._originalRecord as IRecord).addField(format, at);
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       this._copy();
-      return this._originalRecord.removeField(name);
+      return (this._originalRecord as IRecord).removeField(name);
    }
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._copy();
-      return this._originalRecord.removeFieldAt(index);
+      return (this._originalRecord as IRecord).removeFieldAt(index);
    }
 
-   getOriginal() {
-      return this._originalRecord;
+   // endregion
+
+   // region Types/_entity/adapter/IDecorator
+
+   readonly '[Types/_entity/adapter/IDecorator]': boolean;
+
+   getOriginal(): IRecord {
+      return this._originalRecord as IRecord;
    }
 
-   // endregion Types/_entity/adapter/IDecorator
+   // endregion
 
    // region Protected methods
 
-   _copy() {
+   _copy(): void {
       if (!this._copied) {
          if (this._originalRecord['[Types/_entity/ICloneable]']) {
-            // @ts-ignore
-            this._originalRecord = this._originalRecord.clone();
+            this._originalRecord = (this._originalRecord as ICloneable).clone();
          } else {
             this._originalRecord = this._original.forRecord(
                object.clonePlain(
-                  this._originalRecord.getData()
+                  (this._originalRecord as IRecord).getData()
                )
             );
          }
@@ -138,7 +141,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
       }
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(CowRecord.prototype, {

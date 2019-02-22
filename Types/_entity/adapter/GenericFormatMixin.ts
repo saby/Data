@@ -7,6 +7,8 @@
  */
 
 import {Field, UniversalField} from '../format';
+import {IDeclaration} from '../format/fieldsFactory';
+import {format} from '../../collection';
 
 const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
@@ -30,21 +32,21 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
     * Конструктор
     * @param {*} data Сырые данные
     */
-   constructor(data) {
+   constructor(data: any): void {
       this._data = data;
    },
 
    // region Public methods
 
-   getData() {
+   getData(): any {
       return this._data;
    },
 
-   getFields() {
+   getFields(): string[] {
       throw new Error('Method must be implemented');
    },
 
-   getFormat(name) {
+   getFormat(name: string): Field {
       const fields = this._getFieldsFormat();
       const index = fields ? fields.getFieldIndex(name) : -1;
       if (index === -1) {
@@ -53,7 +55,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       return fields.at(index);
    },
 
-   getSharedFormat(name) {
+   getSharedFormat(name: string): UniversalField {
       if (this._sharedFieldFormat === null) {
          this._sharedFieldFormat = new UniversalField();
       }
@@ -68,9 +70,11 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       return fieldFormat;
    },
 
-   addField(format, at) {
+   addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
-         throw new TypeError(`${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`);
+         throw new TypeError(
+            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+         );
       }
       const name = format.getName();
       if (!name) {
@@ -85,7 +89,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       fields.add(format, at);
    },
 
-   removeField(name) {
+   removeField(name: string): void {
       const fields = this._getFieldsFormat();
       const index = fields ? fields.getFieldIndex(name) : -1;
       if (index === -1) {
@@ -95,7 +99,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       fields.removeAt(index);
    },
 
-   removeFieldAt(index) {
+   removeFieldAt(index: number): void {
       this._touchData();
       const fields = this._getFieldsFormat();
       if (fields) {
@@ -107,18 +111,19 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
 
    // region Protected methods
 
-   _touchData() {
+   _touchData(): void {
+      // Could be implemented
    },
 
-   _isValidData() {
+   _isValidData(): boolean {
       return true;
    },
 
-   _getFieldsFormat() {
+   _getFieldsFormat(): format.Format<Field> {
       throw new Error('Method must be implemented');
    },
 
-   _getFieldMeta(name) {
+   _getFieldMeta(name: string): IDeclaration {
       if (this._sharedFieldMeta === null) {
          this._sharedFieldMeta = {};
       }
