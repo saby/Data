@@ -87,7 +87,7 @@ export default class Format<T>
       return super.getCount();
    }
 
-   at(i: number): format.Field {
+   at(i: number): T {
       return super.at(i);
    }
 
@@ -119,6 +119,7 @@ export default class Format<T>
          return false;
       }
       for (let i = 0, count = this.getCount(); i < count; i++) {
+         // @ts-ignore
          if (!this.at(i).isEqual(format.at(i))) {
             return false;
          }
@@ -160,6 +161,7 @@ export default class Format<T>
     * @return {String}
     */
    getFieldName(at: number): string {
+      // @ts-ignore
       return this.at(at).getName();
    }
 

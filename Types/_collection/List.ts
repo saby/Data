@@ -3,11 +3,18 @@
  * Список - коллекция c доступом по индексу.
  * Основные возможности:
  * <ul>
- *    <li>последовательный перебор элементов коллекции - поддержка интерфейса {@link Types/_collection/IEnumerable};</li>
- *    <li>доступ к элементам коллекции по индексу - поддержка интерфейса {@link Types/_collection/IList};</li>
- *    <li>поиск элементов коллекции по значению свойства - поддержка интерфейса {@link Types/_collection/IIndexedCollection}.</li>
+ *    <li>последовательный перебор элементов коллекции - поддержка интерфейса
+ *        {@link Types/_collection/IEnumerable};
+ *    </li>
+ *    <li>доступ к элементам коллекции по индексу - поддержка интерфейса
+ *        {@link Types/_collection/IList};
+ *    </li>
+ *    <li>поиск элементов коллекции по значению свойства - поддержка интерфейса
+ *        {@link Types/_collection/IIndexedCollection}.
+ *    </li>
  * </ul>
- * Создадим рекордсет, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
+ * Создадим рекордсет, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
+ * используется по умолчанию):
  * <pre>
  *    var characters = new List({
  *       items: [{
@@ -55,6 +62,7 @@ import {
    OptionsToPropertyMixin,
    ObservableMixin,
    SerializableMixin,
+   ISerializableState,
    CloneableMixin,
    ManyToManyMixin,
    ReadWriteMixin,
@@ -95,44 +103,6 @@ export default class List<T> extends mixin(
     */
    _indexer: Indexer;
 
-   // region IEnumerable
-
-   readonly '[Types/_collection/IEnumerable]': boolean;
-
-   // endregion IEnumerable
-
-   // region IList
-
-   readonly '[Types/_collection/IList]': boolean;
-
-   // endregion IList
-
-   // region IIndexedCollection
-
-   readonly '[Types/_collection/IIndexedCollection]': boolean;
-
-   // endregion IEquatable
-
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <List>(shallow?: boolean) => List;
-
-   // endregion ICloneable
-
-   // region IEquatable
-
-   readonly '[Types/_entity/IEquatable]': boolean;
-
-   // endregion IEquatable
-
-   // region IVersionable
-
-   readonly '[Types/_entity/IVersionable]': boolean;
-
-   getVersion: () => number;
-
    constructor(options?: IOptions<T>) {
       if (options && 'items' in options && !(options.items instanceof Array)) {
          throw new TypeError('Option "items" should be an instance of Array');
@@ -149,28 +119,17 @@ export default class List<T> extends mixin(
       }
    }
 
-   // endregion Protected methods
-
-   /**
-    * @deprecated
-    */
-   static extend(mixinsList: any, classExtender: any) {
-      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-
-      if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" method.');
-      }
-      const coreExtend = require('Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
-   }
-
-   destroy() {
+   destroy(): void {
       this._$items = null;
       this._indexer = null;
 
       ReadWriteMixin.destroy.call(this);
       super.destroy();
    }
+
+   // region IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]': boolean;
 
    /**
     * Возвращает энумератор для перебора элементов списка.
@@ -181,7 +140,7 @@ export default class List<T> extends mixin(
       return new Arraywise(this._$items);
    }
 
-   each(callback, context) {
+   each(callback: Function, context?: object): void {
       // It's faster than use getEnumerator()
       for (let i = 0, count = this.getCount(); i < count; i++) {
          callback.call(
@@ -193,7 +152,13 @@ export default class List<T> extends mixin(
       }
    }
 
-   assign(items) {
+   // endregion
+
+   // region IList
+
+   readonly '[Types/_collection/IList]': boolean;
+
+   assign(items: T[]): void {
       for (let i = 0, count = this._$items.length; i < count; i++) {
          this._removeChild(this._$items[i]);
       }
@@ -207,7 +172,7 @@ export default class List<T> extends mixin(
       this._childChanged(items);
    }
 
-   append(items) {
+   append(items: T[]): void {
       items = this._splice(items, this.getCount(), IObservable.ACTION_ADD);
 
       for (let i = 0, count = items.length; i < count; i++) {
@@ -216,7 +181,7 @@ export default class List<T> extends mixin(
       this._childChanged(items);
    }
 
-   prepend(items) {
+   prepend(items: T[]): void {
       items = this._splice(items, 0, IObservable.ACTION_ADD);
 
       for (let i = 0, count = items.length; i < count; i++) {
@@ -225,7 +190,7 @@ export default class List<T> extends mixin(
       this._childChanged(items);
    }
 
-   clear() {
+   clear(): void {
       this._$items.length = 0;
       this._reindex();
       this._getMediator().clear(this);
@@ -233,7 +198,7 @@ export default class List<T> extends mixin(
       this._nextVersion();
    }
 
-   add(item, at) {
+   add(item: T, at: number): void {
       if (at === undefined) {
          at = this._$items.length;
          this._$items.push(item);
@@ -251,11 +216,11 @@ export default class List<T> extends mixin(
       this._reindex(IObservable.ACTION_ADD, at, 1);
    }
 
-   at(index: number): any {
+   at(index: number): T {
       return this._$items[index];
    }
 
-   remove(item) {
+   remove(item: T): boolean {
       const index = this.getIndex(item);
       if (index !== -1) {
          this.removeAt(index);
@@ -265,7 +230,7 @@ export default class List<T> extends mixin(
       return false;
    }
 
-   removeAt(index) {
+   removeAt(index: number): T {
       if (!this._isValidIndex(index)) {
          throw new Error('Index is out of bounds');
       }
@@ -277,7 +242,7 @@ export default class List<T> extends mixin(
       return deleted[0];
    }
 
-   replace(item, at) {
+   replace(item: T, at: number): void {
       if (!this._isValidIndex(at)) {
          throw new Error('Index is out of bounds');
       }
@@ -297,7 +262,7 @@ export default class List<T> extends mixin(
       this._nextVersion();
    }
 
-   move(from, to) {
+   move(from: number, to: number): void {
       if (!this._isValidIndex(from)) {
          throw new Error('Argument "from" is out of bounds');
       }
@@ -320,27 +285,51 @@ export default class List<T> extends mixin(
       this._nextVersion();
    }
 
-   getIndex(item) {
-      return this._$items.indexOf(item);
-   }
-
-   getCount() {
+   getCount(): number {
       return this._$items.length;
    }
 
-   getIndexByValue(property, value) {
+   getIndex(item: T): number {
+      return this._$items.indexOf(item);
+   }
+
+   // endregion
+
+   // region IIndexedCollection
+
+   readonly '[Types/_collection/IIndexedCollection]': boolean;
+
+   getIndexByValue(property: string, value: any): number {
       return this._getIndexer().getIndexByValue(property, value);
    }
 
-   getIndicesByValue(property, value) {
+   getIndicesByValue(property: string, value: any): number[] {
       return this._getIndexer().getIndicesByValue(property, value);
    }
 
-   // endregion IIndexedCollection
+   // endregion
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
+   clone: <List>(shallow?: boolean) => List;
+
+   // endregion
+
+   // region IVersionable
+
+   readonly '[Types/_entity/IVersionable]': boolean;
+
+   getVersion: () => number;
+
+   // endregion
 
    // region IEquatable
 
-   isEqual(to) {
+   readonly '[Types/_entity/IEquatable]': boolean;
+
+   isEqual(to: any): boolean {
       if (to === this) {
          return true;
       }
@@ -359,23 +348,23 @@ export default class List<T> extends mixin(
       return true;
    }
 
-   // endregion IVersionable
+   // endregion
 
-   // SerializableMixin
+   // region SerializableMixin
 
-   _getSerializableState(state) {
+   _getSerializableState(state: ISerializableState): ISerializableState {
       return SerializableMixin.prototype._getSerializableState.call(this, state);
    }
 
-   _setSerializableState(state) {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+      return function(): void {
          fromSerializableMixin.call(this);
          this._clearIndexer();
       };
    }
 
-   // SerializableMixin
+   // endregion
 
    // region Protected methods
 
@@ -384,7 +373,7 @@ export default class List<T> extends mixin(
     * @return {Types/_collection/Indexer}
     * @protected
     */
-   protected _getIndexer() {
+   protected _getIndexer(): Indexer {
       return this._indexer || (this._indexer = new Indexer(
          this._$items,
          (items) => items.length,
@@ -397,7 +386,7 @@ export default class List<T> extends mixin(
     * Очищает индексатор коллекции
     * @protected
     */
-   protected _clearIndexer() {
+   protected _clearIndexer(): void {
       this._indexer = null;
    }
 
@@ -408,7 +397,7 @@ export default class List<T> extends mixin(
     * @return {Boolean}
     * @protected
     */
-   protected _isValidIndex(index: number, addMode?: boolean) {
+   protected _isValidIndex(index: number, addMode?: boolean): boolean {
       let max = this.getCount();
       if (addMode) {
          max++;
@@ -418,12 +407,12 @@ export default class List<T> extends mixin(
 
    /**
     * Переиндексирует список
-    * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+    * @param {Types/_collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
     * @param {Number} [start=0] С какой позиции переиндексировать
     * @param {Number} [count=0] Число переиндексируемых элементов
     * @protected
     */
-   protected _reindex(action?, start?, count?) {
+   protected _reindex(action?: string, start?: number, count?: number): void {
       if (!this._indexer) {
          return;
       }
@@ -463,7 +452,7 @@ export default class List<T> extends mixin(
     * @return {Array}
     * @protected
     */
-   protected _splice(items, start, action) {
+   protected _splice(items: T[], start: number, action: string): T[] {
       items = this._itemsToArray(items);
       this._$items.splice(start, 0, ...items);
       this._reindex(action, start, items.length);
@@ -477,7 +466,7 @@ export default class List<T> extends mixin(
     * @return {Array}
     * @protected
     */
-   protected _itemsToArray(items): any[] {
+   protected _itemsToArray(items: any): T[] {
       if (items instanceof Array) {
          return items;
       } else if (items && items['[Types/_collection/IEnumerable]']) {
@@ -487,9 +476,33 @@ export default class List<T> extends mixin(
          });
          return result;
       } else {
-         throw new TypeError('Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.');
+         throw new TypeError(
+            'Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.'
+         );
       }
    }
+
+   // endregion
+
+   // region Deprecated
+
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList: any, classExtender: any): Function {
+      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" ' +
+            'method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
+   }
+
+   // endregion
 }
 
 Object.assign(List.prototype, {

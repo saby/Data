@@ -7,7 +7,10 @@
  *          items: [1, 2, 3]
  *       });
  *
- *       list.subscribe('onCollectionChange', function(eventObject, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+ *       list.subscribe('onCollectionChange', function(
+ *          eventObject, action, newItems, newItemsIndex,
+ *          oldItems, oldItemsIndex
+ *       ) {
  *          if (action == collection.IObservable.ACTION_REMOVE) {
  *             console.log(oldItems);//[1]
  *             console.log(oldItemsIndex);//0
@@ -27,7 +30,7 @@
  */
 
 import IObservable from './IObservable';
-import List from './List';
+import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
@@ -42,17 +45,12 @@ export default class ObservableList<T> extends mixin(
 ) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
 
    /**
-    * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие onCollectionChange с ACTION_RESET, вместо нескольких c другими action
+    * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие
+    * onCollectionChange с ACTION_RESET, вместо нескольких c другими action
     */
    _resetChangesCount: number;
 
-   // endregion List
-
-   // region IReceiver
-
-   readonly '[Types/_entity/relation/IReceiver]': boolean;
-
-   constructor(options?) {
+   constructor(options?: IListOptions<T>) {
       super(options);
       EventRaisingMixin.constructor.call(this, options);
 
@@ -61,7 +59,7 @@ export default class ObservableList<T> extends mixin(
 
    // region List
 
-   assign(items) {
+   assign(items: T[]): void {
       const oldItems = this._itemsSlice();
       const eventsWasRaised = this._eventRaising;
 
@@ -80,7 +78,7 @@ export default class ObservableList<T> extends mixin(
       }
    }
 
-   append(items) {
+   append(items: T[]): void {
       const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
@@ -97,7 +95,7 @@ export default class ObservableList<T> extends mixin(
       );
    }
 
-   prepend(items) {
+   prepend(items: T[]): void {
       const eventsWasRaised = this._eventRaising;
 
       this._eventRaising = false;
@@ -114,7 +112,7 @@ export default class ObservableList<T> extends mixin(
       );
    }
 
-   clear() {
+   clear(): void {
       const oldItems = this._$items.slice();
       const eventsWasRaised = this._eventRaising;
 
@@ -131,7 +129,7 @@ export default class ObservableList<T> extends mixin(
       );
    }
 
-   add(item, at) {
+   add(item: T, at: number): void {
       super.add(item, at);
       at = this._isValidIndex(at) ? at : this.getCount() - 1;
       this._notifyCollectionChange(
@@ -143,7 +141,7 @@ export default class ObservableList<T> extends mixin(
       );
    }
 
-   removeAt(index) {
+   removeAt(index: number): T {
       const item = super.removeAt(index);
       this._notifyCollectionChange(
          IObservable.ACTION_REMOVE,
@@ -155,7 +153,7 @@ export default class ObservableList<T> extends mixin(
       return item;
    }
 
-   replace(item, at) {
+   replace(item: T, at: number): void {
       const oldItem = this._$items[at];
       super.replace(item, at);
 
@@ -171,7 +169,7 @@ export default class ObservableList<T> extends mixin(
       }
    }
 
-   move(from, to) {
+   move(from: number, to: number): void {
       const item = this._$items[from];
       super.move(from, to);
 
@@ -185,6 +183,12 @@ export default class ObservableList<T> extends mixin(
          );
       }
    }
+
+   // endregion
+
+   // region IReceiver
+
+   readonly '[Types/_entity/relation/IReceiver]': boolean;
 
    relationChanged(which: any, route: string[]): any {
       const target = which.target;
@@ -214,11 +218,11 @@ export default class ObservableList<T> extends mixin(
       };
    }
 
-   // endregion IReceiver
+   // endregion
 
    // region EventRaisingMixin
 
-   setEventRaising(enabled, analyze) {
+   setEventRaising(enabled: boolean, analyze?: boolean): void {
       EventRaisingMixin.setEventRaising.call(this, enabled, analyze);
 
       // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
@@ -252,7 +256,7 @@ export default class ObservableList<T> extends mixin(
       delete this._silentChangedItems;
    }
 
-   // endregion EventRaisingMixin
+   // endregion
 
    // region Protected methods
 
@@ -261,7 +265,7 @@ export default class ObservableList<T> extends mixin(
     * @param {*} item Элемент
     * @param {Object} properties Изменившиеся свойства
     */
-   _notifyItemChange(item, properties) {
+   protected _notifyItemChange(item: T, properties: object): void {
       if (this._isNeedNotifyCollectionItemChange()) {
          const index = this.getIndex(item);
          this._notify(
@@ -290,7 +294,7 @@ export default class ObservableList<T> extends mixin(
     * @return {Array}
     * @protected
     */
-   _itemsSlice(begin?, end?) {
+   protected _itemsSlice(begin?: number, end?: number): T[] {
       return arraySlice.apply(this._$items, arguments);
    }
 
@@ -299,7 +303,7 @@ export default class ObservableList<T> extends mixin(
     * @return {Boolean}
     * @protected
     */
-   _isNeedNotifyCollectionItemChange() {
+   protected _isNeedNotifyCollectionItemChange(): boolean {
       return this._eventRaising && this.hasEventHandlers('onCollectionItemChange');
    }
 
