@@ -27,7 +27,7 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain
       this._items = items;
    }
 
-   destroy() {
+   destroy(): void {
       this._items = null;
       super.destroy();
    }

@@ -101,7 +101,7 @@ export default class List<T> extends mixin(
    /**
     * @property {Types/_collection/Indexer} Индексатор
     */
-   _indexer: Indexer;
+   _indexer: Indexer<T[]>;
 
    constructor(options?: IOptions<T>) {
       if (options && 'items' in options && !(options.items instanceof Array)) {
@@ -373,8 +373,8 @@ export default class List<T> extends mixin(
     * @return {Types/_collection/Indexer}
     * @protected
     */
-   protected _getIndexer(): Indexer {
-      return this._indexer || (this._indexer = new Indexer(
+   protected _getIndexer(): Indexer<T[]> {
+      return this._indexer || (this._indexer = new Indexer<T[]>(
          this._$items,
          (items) => items.length,
          (items, at) => items[at],

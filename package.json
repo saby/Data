@@ -10,7 +10,7 @@
    ],
    "scripts": {
       "build": "npm run build:typescript && npm run build:units && npm run build:compile",
-      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
+      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json  --tslint=Types/tslint.json",
       "build:units": "saby-units --install",
       "build:compile": "tsc -b --verbose",
       "start": "node node_modules/saby-units/cli/server",
@@ -19,7 +19,7 @@
       "test:node-coverage": "saby-units --isolated --report --coverage",
       "test:browser": "saby-units --browser --report",
       "test:browser-coverage": "saby-units --browser --report --coverage",
-      "tslint": "tslint -q -p ./"
+      "tslint": "tslint -q -p Types/tslint.json"
    },
    "saby-units": {
       "moduleType": "amd",

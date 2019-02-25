@@ -9,7 +9,7 @@ import {enumerator, IEnumerable, IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private items: Array<any | IEnumerable<T>>;
    private enumerator: IEnumerator<T>;
@@ -64,7 +64,9 @@ export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
          } else if (this.currentItem && this.currentItem['[Types/_collection/IEnumerable]']) {
             this.currentItem = this.currentItem.getEnumerator();
          } else {
-            throw new TypeError(`Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`);
+            throw new TypeError(
+               `Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`
+            );
          }
          return this.moveNext();
       }
@@ -72,7 +74,7 @@ export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
       return false;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = null;
       this.index = -1;
       this.current = undefined;

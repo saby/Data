@@ -38,7 +38,7 @@ export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grou
       this._value = value;
    }
 
-   destroy() {
+   destroy(): void {
       this._key = null;
       this._value = null;
       super.destroy();

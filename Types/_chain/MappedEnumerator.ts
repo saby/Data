@@ -10,7 +10,7 @@ import Abstract from './Abstract';
 type MapFunc = (item: any, index: number) => any;
 
 export default class MappedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: any;
    private callback: MapFunc;
    private callbackContext: Object;
@@ -51,7 +51,7 @@ export default class MappedEnumerator<T> implements IEnumerator<T> {
       return false;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = this.previous.getEnumerator();
       this.current = undefined;
    }

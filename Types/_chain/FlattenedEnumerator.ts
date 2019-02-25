@@ -7,7 +7,7 @@ import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 export default class FlattenedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private mover: FlattenedMover;
    private index: number;
@@ -39,7 +39,7 @@ export default class FlattenedEnumerator<T> implements IEnumerator<T> {
       return hasNext;
    }
 
-   reset() {
+   reset(): void {
       this.mover = null;
       this.index = -1;
    }

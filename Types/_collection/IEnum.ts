@@ -66,7 +66,7 @@ export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype *
     *    });
     * </pre>
     */
-   set(index: IIndex);
+   set(index: IIndex): void;
 
    /**
     * Returns value of selected item
@@ -103,5 +103,5 @@ export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype *
     *    });
     * </pre>
     */
-   setByValue(value: T);
+   setByValue(value: T): void;
 }

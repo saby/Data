@@ -8,7 +8,7 @@ import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 export default class SlicedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private begin: number;
    private end: number;
@@ -55,7 +55,7 @@ export default class SlicedEnumerator<T> implements IEnumerator<T> {
       return false;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = this.previous.getEnumerator();
       this.now = -1;
    }

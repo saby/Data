@@ -45,7 +45,7 @@ export default abstract class DestroyableMixin /** @lends Types/_entity/Destroya
    }
 
    // FIXME: deprecated
-   private isDestroyed(): boolean {
+   protected isDestroyed(): boolean {
       return this.destroyed;
    }
 }

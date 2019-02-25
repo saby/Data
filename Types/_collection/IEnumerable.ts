@@ -51,5 +51,5 @@ export default interface IEnumerable<T> /** @lends Types/_collection/IEnumerable
     *    //1, 2, 3
     * </pre>
     */
-   each(callback: EnumeratorCallback<T>, context?: Object);
+   each(callback: EnumeratorCallback<T>, context?: object): void;
 }

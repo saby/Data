@@ -10,7 +10,7 @@ import Abstract from './Abstract';
 type CallbackFunc = (item: any, index: number) => boolean;
 
 export default class FilteredEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private callback: CallbackFunc;
    private callbackContext: Object;
@@ -51,7 +51,7 @@ export default class FilteredEnumerator<T> implements IEnumerator<T> {
       return false;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = this.previous.getEnumerator();
    }
 }

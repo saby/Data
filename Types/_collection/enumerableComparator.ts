@@ -47,13 +47,14 @@ function extractItems(collection: IEnumerable<any>, contentsWrapper?: string): a
    };
 }
 
-interface ISession {
+export interface ISession {
+   id: number;
    before: any[];
-   after: any[];
-   beforeContents: any[];
-   afterContents: any[];
-   addedProcessed: any[];
-   removedProcessed: object;
+   after?: any[];
+   beforeContents?: any[];
+   afterContents?: any[];
+   addedProcessed?: any[];
+   removedProcessed?: object;
 }
 
 /**
@@ -339,7 +340,7 @@ const enumerableComparator = {
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     * @return {Object}
     */
-   startSession(collection: IEnumerable<any>, contentsWrapper?: string): object {
+   startSession(collection: IEnumerable<any>, contentsWrapper?: string): ISession {
       const items = extractItems(collection, contentsWrapper);
 
       return {

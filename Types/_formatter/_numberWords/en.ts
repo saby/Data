@@ -59,6 +59,7 @@ declare interface IWordConcatnumberUS {
 }
 
 function concat(right: IWordConcatnumberUS, left: IWordConcatnumberUS): IWordConcatnumberUS {
+   // tslint:disable-next-line:triple-equals
    if (left.value == 1 && right.value < 100) {
       return right;
    } else if (left.value < 100 && left.value > right.value) {
@@ -93,6 +94,7 @@ export default function numberWordsEN(num: string): string {
       if (three[1] > 1) {
          prepareWord.push({title: TWENTIES[three[1]], value: three[1] * 10});
       }
+      // tslint:disable-next-line:triple-equals
       if (three[1] == 1) {
          prepareWord.push({title: TENS[three[2]], value: +three.slice(1)});
       } else if (three[2] > 0 || (+three === 0 && words.length === 0)) {
@@ -100,6 +102,7 @@ export default function numberWordsEN(num: string): string {
       }
       if (prepareWord.length > 0) {
          let word = prepareWord.reduceRight(concat).title;
+         // tslint:disable-next-line:triple-equals
          if (counter > 0 && +three != 0) {
             word += ' ' + (rk(THOUSANDS[counter], +three));
          }

@@ -11,7 +11,7 @@ import Abstract from './Abstract';
 import {IEnumerator} from '../collection';
 
 export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/Enumerable.prototype */{
-   constructor(source) {
+   constructor(source: any) {
       if (!source || !source['[Types/_collection/IEnumerable]']) {
          throw new TypeError('Source must implement Types/collection:IEnumerable');
       }
@@ -24,7 +24,7 @@ export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/E
       return this._source.getEnumerator();
    }
 
-   each(callback: (item: any, index: number) => void, context?: Object) {
+   each(callback: (item: any, index: number) => void, context?: object): void {
       return this._source.each(callback, context);
    }
 
@@ -32,7 +32,7 @@ export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/E
 
    // region Types/_chain/DestroyableMixin
 
-   toObject(): Object {
+   toObject(): object {
       if (this._source['[Types/_entity/IObject]']) {
          const result = {};
          this.each((key, value) => {

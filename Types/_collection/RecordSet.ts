@@ -648,7 +648,7 @@ export default class RecordSet<T> extends mixin(
     * @return {Types/_collection/Indexer}
     * @protected
     */
-   protected _getIndexer(): void {
+   protected _getIndexer(): Indexer<T[]> {
       if (this._indexer) {
          return this._indexer;
       }
@@ -661,7 +661,7 @@ export default class RecordSet<T> extends mixin(
          const adapter = this._getAdapter();
          const tableAdapter = this._getRawDataAdapter();
 
-         indexer = new Indexer(
+         indexer = new Indexer<any>(
             this._getRawData(),
             () => tableAdapter.getCount(),
             (items, at) => tableAdapter.at(at),
@@ -669,7 +669,7 @@ export default class RecordSet<T> extends mixin(
          );
       } else {
          // Slow mode: indexing use record instances
-         indexer = new Indexer(
+         indexer = new Indexer<T[]>(
             this._$items,
             (items) => items.length,
             (items, at) => this.at(at),

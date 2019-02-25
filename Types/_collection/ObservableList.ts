@@ -239,6 +239,7 @@ export default class ObservableList<T> extends mixin(
          } else {
             // Собираем изменившиеся элементы в пачки
             EventRaisingMixin._extractPacksByList(
+               //@ts-ignore
                this,
                this._silentChangedItems,
                (pack, index) => {

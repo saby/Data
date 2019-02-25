@@ -7,7 +7,7 @@ import {IEnumerable, IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 export default class ZippedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private items: Array<T[]|IEnumerable<T>>;
    private current: any;
@@ -68,7 +68,7 @@ export default class ZippedEnumerator<T> implements IEnumerator<T> {
       return hasNext;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = null;
       this.index = -1;
       this.current = undefined;

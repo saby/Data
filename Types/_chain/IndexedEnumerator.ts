@@ -7,7 +7,7 @@ import Abstract from './Abstract';
 import {IEnumerator} from '../collection';
 
 export default class IndexedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    protected previous: Abstract<T>;
    protected _items: any[];
    private index: number;
@@ -41,7 +41,7 @@ export default class IndexedEnumerator<T> implements IEnumerator<T> {
       return true;
    }
 
-   reset() {
+   reset(): void {
       this._items = null;
       this.index = -1;
    }
