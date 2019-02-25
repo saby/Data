@@ -9,10 +9,11 @@
 
 import Tree from './Tree';
 import SearchStrategy from './itemsStrategy/Search';
+import ItemsStrategyComposer from './itemsStrategy/Composer';
 import {register} from '../di';
 
 export default class Search extends Tree /** @lends Types/_display/Search.prototype */{
-   _createComposer() {
+   _createComposer(): ItemsStrategyComposer {
       const composer = super._createComposer();
       composer.append(SearchStrategy);
 

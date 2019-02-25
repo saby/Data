@@ -6,7 +6,10 @@
  * @author Мальцев А.А.
  */
 
-import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
+import AbstractStrategy, {
+   IOptions as IAbstractOptions,
+   ISerializableState as IDefaultSerializableState
+} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
 import {Set} from '../../shim';
@@ -21,13 +24,17 @@ interface ISortOptions {
    idProperty: string;
 }
 
+interface ISerializableState extends IDefaultSerializableState {
+   _itemsOrder: number[];
+}
+
 export default class Direct extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/Direct.prototype */{
    protected _options: IOptions;
 
    /**
     * Индекс в в стратегии -> оригинальный индекс
     */
-   protected _itemsOrder: Array<number>;
+   protected _itemsOrder: number[];
 
    /**
     * @typedef {Object} Options
@@ -47,23 +54,23 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
       this._options.unique = value;
    }
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    get count(): number {
       return this._getItemsOrder().length;
    }
 
-   get items(): Array<CollectionItem> {
-      let items = this._getItems();
-      let itemsOrder = this._getItemsOrder();
+   get items(): CollectionItem[] {
+      const items = this._getItems();
+      const itemsOrder = this._getItemsOrder();
 
       return itemsOrder.map((position) => items[position]);
    }
 
    at(index: number): CollectionItem {
-      let items = this._getItems();
-      let itemsOrder = this._getItemsOrder();
-      let position = itemsOrder[index];
+      const items = this._getItems();
+      const itemsOrder = this._getItemsOrder();
+      const position = itemsOrder[index];
 
       if (position === undefined) {
          throw new ReferenceError(`Display index ${index} is out of bounds.`);
@@ -75,69 +82,69 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
    splice(start: number, deleteCount: number, added?: Array<CollectionItem | any>): CollectionItem[] {
       added = added || [];
 
-      let reallyAdded = added.map(
+      const reallyAdded = added.map(
          (contents) => contents instanceof CollectionItem ? contents : this._createItem(contents)
       );
-      let result = this._getItems().splice(start, deleteCount, ...reallyAdded);
+      const result = this._getItems().splice(start, deleteCount, ...reallyAdded);
 
       this._itemsOrder = null;
 
       return result;
    }
 
-   reset() {
+   reset(): void {
       super.reset();
       this._itemsOrder = null;
    }
 
-   invalidate() {
+   invalidate(): void {
       super.invalidate();
       this._itemsOrder = null;
    }
 
    getDisplayIndex(index: number): number {
-      let itemsOrder = this._getItemsOrder();
-      let itemIndex = itemsOrder.indexOf(index);
+      const itemsOrder = this._getItemsOrder();
+      const itemIndex = itemsOrder.indexOf(index);
 
       return itemIndex === -1 ? itemsOrder.length : itemIndex;
    }
 
    getCollectionIndex(index: number): number {
-      let itemsOrder = this._getItemsOrder();
-      let itemIndex = itemsOrder[index];
+      const itemsOrder = this._getItemsOrder();
+      const itemIndex = itemsOrder[index];
       return itemIndex === undefined ? -1 : itemIndex;
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = super._getSerializableState(state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = super._getSerializableState(state) as ISerializableState;
 
-      state._itemsOrder = this._itemsOrder;
+      resultState._itemsOrder = this._itemsOrder;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSuper = super._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSuper = super._setSerializableState(state);
+      return function(): void {
          this._itemsOrder = state._itemsOrder;
          fromSuper.call(this);
       };
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region Protected
 
-   protected _initItems() {
+   protected _initItems(): void {
       super._initItems();
 
-      let items = this._items;
-      let sourceItems = this._getSourceItems();
-      let count = items.length;
+      const items = this._items;
+      const sourceItems = this._getSourceItems();
+      const count = items.length;
       for (let index = 0; index < count; index++) {
          items[index] = this._createItem(sourceItems[index]);
       }
@@ -148,23 +155,23 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
     * @protected
     * @return {Array.<Number>}
     */
-   protected _getItemsOrder(): Array<number> {
+   protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
          this._itemsOrder = this._createItemsOrder();
       }
       return this._itemsOrder;
    }
 
-   protected _createItemsOrder(): Array<number> {
+   protected _createItemsOrder(): number[] {
       return Direct.sortItems(this._getItems(), {
          idProperty: this._options.idProperty,
          unique: this._options.unique
       });
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Statics
 
    /**
     * Создает индекс сортировки в том же порядке, что и коллекция
@@ -173,15 +180,15 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
     * @param {Object} options Опции
     * @return {Array.<Number>}
     */
-   static sortItems(items: Array<CollectionItem>, options: ISortOptions): Array<number> {
-      let idProperty = options.idProperty;
+   static sortItems(items: CollectionItem[], options: ISortOptions): number[] {
+      const idProperty = options.idProperty;
 
       if (!options.unique || !idProperty) {
          return items.map((item, index) => index);
       }
 
-      let processed = new Set();
-      let result = [];
+      const processed = new Set();
+      const result = [];
       let itemId;
 
       items.forEach((item, index) => {
@@ -201,7 +208,7 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
       return result;
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(Direct.prototype, {

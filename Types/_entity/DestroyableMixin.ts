@@ -11,7 +11,7 @@ import {protect} from '../util';
 
 const $destroyed = protect('destroyed');
 
-function dontTouchDeads() {
+function dontTouchDeads(): void {
    throw new ReferenceError('This class instance is destroyed.');
 }
 
@@ -26,9 +26,10 @@ export default abstract class DestroyableMixin /** @lends Types/_entity/Destroya
    /**
     * Разрушает экземпляр
     */
-   destroy() {
+   destroy(): void {
       this[$destroyed] = true;
 
+      // tslint:disable-next-line:forin
       for (const key in this) {
          switch (key) {
             case 'destroy':

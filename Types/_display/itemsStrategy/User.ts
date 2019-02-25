@@ -13,15 +13,21 @@ import {SortFunction} from '../Collection';
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {mixin} from '../../util';
 
 interface IOptions {
-   handlers: SortFunction[],
-   source: AbstractStrategy
+   handlers: SortFunction[];
+   source: AbstractStrategy;
 }
 
-export default class User extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/User.prototype */{
+interface ISerializableState extends IDefaultSerializableState {
+   _itemsOrder: number[];
+}
+
+export default class User extends mixin(
+   DestroyableMixin, SerializableMixin
+) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/User.prototype */ {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -36,9 +42,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    /**
     * Индекс в в стратегии -> оригинальный индекс
     */
-   protected _itemsOrder: Array<number>;
-
-   //region Public members
+   protected _itemsOrder: number[];
 
    /**
     * Конструктор
@@ -49,8 +53,10 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       if (!options || !(options.handlers instanceof Array)) {
          throw new TypeError('Option "handlers" should be an instance of Array');
       }
-      this._options = Object.assign({}, options);
+      this._options = {...options};
    }
+
+   // region Public members
 
    /**
     * Декорирумая стратегия
@@ -69,9 +75,9 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       this._options.handlers = value;
    }
 
-   //endregion
+   // endregion
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
@@ -83,86 +89,86 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       return this.source.count;
    }
 
-   get items(): Array<CollectionItem> {
-      let items = this.source.items;
-      let itemsOrder = this._getItemsOrder();
+   get items(): CollectionItem[] {
+      const items = this.source.items;
+      const itemsOrder = this._getItemsOrder();
 
       return itemsOrder.map((index) => items[index]);
    }
 
    at(index: number): CollectionItem {
-      let itemsOrder = this._getItemsOrder();
-      let sourceIndex = itemsOrder[index];
+      const itemsOrder = this._getItemsOrder();
+      const sourceIndex = itemsOrder[index];
 
       return this.source.at(sourceIndex);
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem> {
+   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
       this._itemsOrder = null;
       return this.source.splice(start, deleteCount, added);
    }
 
-   reset() {
+   reset(): void {
       this._itemsOrder = null;
       return this.source.reset();
    }
 
-   invalidate() {
+   invalidate(): void {
       this._itemsOrder = null;
       return this.source.invalidate();
    }
 
    getDisplayIndex(index: number): number {
-      let sourceIndex = this.source.getDisplayIndex(index);
-      let itemsOrder = this._getItemsOrder();
-      let itemIndex = itemsOrder.indexOf(sourceIndex);
+      const sourceIndex = this.source.getDisplayIndex(index);
+      const itemsOrder = this._getItemsOrder();
+      const itemIndex = itemsOrder.indexOf(sourceIndex);
 
       return itemIndex === -1 ? itemsOrder.length : itemIndex;
    }
 
    getCollectionIndex(index: number): number {
-      let sourceIndex = this.source.getCollectionIndex(index);
-      let itemsOrder = this._getItemsOrder();
+      const sourceIndex = this.source.getCollectionIndex(index);
+      const itemsOrder = this._getItemsOrder();
 
       return sourceIndex === -1 ? sourceIndex : itemsOrder[sourceIndex];
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
-      state.$options = this._options;
-      state._itemsOrder = this._itemsOrder;
+      resultState.$options = this._options;
+      resultState._itemsOrder = this._itemsOrder;
 
       //If some handlers are defined force calc order because handlers can be lost during serialization
-      if (!state._itemsOrder && this._options.handlers.length) {
-         state._itemsOrder = this._getItemsOrder();
+      if (!resultState._itemsOrder && this._options.handlers.length) {
+         resultState._itemsOrder = this._getItemsOrder();
       }
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          this._itemsOrder = state._itemsOrder;
          fromSerializableMixin.call(this);
       };
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region Protected
 
    /**
     * Возвращает соответствие индексов в стратегии оригинальным индексам
     * @protected
     * @return {Array.<Number>}
     */
-   protected _getItemsOrder(): Array<number> {
+   protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
          this._itemsOrder = this._createItemsOrder();
       }
@@ -175,9 +181,9 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
     * @protected
     * @return {Array.<Number>}
     */
-   protected _createItemsOrder(): Array<number> {
-      let items = this.source.items;
-      let current = items.map((item, index) => index);
+   protected _createItemsOrder(): number[] {
+      const items = this.source.items;
+      const current = items.map((item, index) => index);
 
       return User.sortItems(
          items,
@@ -186,9 +192,9 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       );
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Statics
 
    /**
     * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
@@ -202,34 +208,34 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
          return current;
       }
 
-      let map = [];
-      let sorted = [];
+      const map = [];
+      const sorted = [];
       let index;
       let item;
 
-      //Make utilitary array
+      // Make utilitary array
       for (let i = 0, count = current.length; i < count; i++) {
          index = current[i];
          item = items[index];
          if (item instanceof GroupItem) {
-            //Don't sort groups
+            // Don't sort groups
             map.push(index);
          } else {
             sorted.push({
-               item: item,
+               item,
                collectionItem: item.getContents(),
-               index: index,
+               index,
                collectionIndex: index
             });
          }
       }
 
-      //Sort utilitary array
+      // Sort utilitary array
       for (let i = handlers.length - 1; i >= 0; i--) {
          sorted.sort(<CompareFunction> handlers[i]);
       }
 
-      //Create map from utilitary array
+      // Create map from utilitary array
       for (let index = 0, count = sorted.length; index < count; index++) {
          map.push(sorted[index].collectionIndex);
       }
@@ -237,7 +243,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       return map;
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(User.prototype, {

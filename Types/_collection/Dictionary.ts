@@ -90,12 +90,15 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
 
    getEnumerator(localize?: boolean): IEnumerator<T> {
       const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
-      const enumerator = dictionary instanceof Array ? new ArrayEnumerator(dictionary) : new Objectwise(dictionary);
+      const enumerator = dictionary instanceof Array
+         ? new ArrayEnumerator(dictionary)
+         : new Objectwise(dictionary);
 
       enumerator.setFilter((item: any, index: any): boolean => {
          return index !== 'null';
       });
-      return enumerator;
+
+      return enumerator as IEnumerator<T>;
    }
 
    isEqual(to: Object): boolean {

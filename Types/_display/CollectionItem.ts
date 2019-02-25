@@ -13,14 +13,21 @@
 
 import Abstract from './Abstract';
 import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
+import Collection from './Collection';
+import {ISerializableState as IDefaultSerializableState} from '../entity';
 import {IEnumerable} from '../collection';
 import {register} from '../di';
 import {mixin} from '../util';
-import Collection from './Collection';
 
 export interface IOptions {
    contents?: any;
-   owner: Collection;
+   owner?: Collection;
+}
+
+export interface ISerializableState extends IDefaultSerializableState {
+   $options: IOptions;
+   ci: number;
+   iid: string;
 }
 
 export default class CollectionItem extends mixin(
@@ -79,7 +86,7 @@ export default class CollectionItem extends mixin(
     * Устанавливает коллекцию, которой принадлежит элемент
     * @param {Types/_collection/IEnumerable} owner Коллекция, которой принадлежит элемент
     */
-   setOwner(owner: Abstract) {
+   setOwner(owner: Abstract): void {
       this._$owner = owner;
    }
 
@@ -101,7 +108,7 @@ export default class CollectionItem extends mixin(
     * @param {*} contents Новое содержимое
     * @param {Boolean} [silent=false] Не уведомлять владельца об изменении содержимого
     */
-   setContents(contents: any, silent?: boolean) {
+   setContents(contents: any, silent?: boolean): void {
       if (this._$contents === contents) {
          return;
       }
@@ -135,7 +142,7 @@ export default class CollectionItem extends mixin(
     * @param {Boolean} selected Элемент выбран
     * @param {Boolean} [silent=false] Не уведомлять владельца об изменении признака выбранности
     */
-   setSelected(selected: boolean, silent?: boolean) {
+   setSelected(selected: boolean, silent?: boolean): void {
       if (this._$selected === selected) {
          return;
       }
@@ -149,30 +156,32 @@ export default class CollectionItem extends mixin(
 
    // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
 
-      if (state.$options.owner) {
+      if (resultState.$options.owner) {
          // save element index if collections implements Types/_collection/IList
-         const collection = state.$options.owner.getCollection();
-         const index = collection['[Types/_collection/IList]'] ? collection.getIndex(state.$options.contents) : -1;
+         const collection = resultState.$options.owner.getCollection();
+         const index = collection['[Types/_collection/IList]']
+            ? collection.getIndex(resultState.$options.contents)
+            : -1;
          if (index > -1) {
-            state.ci = index;
-            delete state.$options.contents;
+            resultState.ci = index;
+            delete resultState.$options.contents;
          }
       }
 
       // By performance reason. It will be restored at Collection::_setSerializableState
-      // delete state.$options.owner;
+      // delete resultState.$options.owner;
 
-      state.iid = this.getInstanceId();
+      resultState.iid = this.getInstanceId();
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
+   protected _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+      return function(): void {
          fromSerializableMixin.call(this);
          if (state.hasOwnProperty('ci')) {
             this._contentsIndex = state.ci;
@@ -199,7 +208,7 @@ export default class CollectionItem extends mixin(
     * @param {String} property Измененное свойство
     * @protected
     */
-   protected _notifyItemChangeToOwner(property: string) {
+   protected _notifyItemChangeToOwner(property: string): void {
       if (this._$owner) {
          this._$owner.notifyItemChange(
             this,

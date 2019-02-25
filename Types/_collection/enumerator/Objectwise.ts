@@ -10,8 +10,6 @@
 import IEnumerator from '../IEnumerator';
 
 export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_collection/ObjectEnumerator.prototype */{
-   readonly '[Types/_collection/IEnumerator]' = true;
-
    /**
     * @property {Object} Объект
     */
@@ -52,14 +50,16 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
 
    // region Types/_collection/IEnumerator
 
-   getCurrent() {
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
+
+   getCurrent(): T {
       if (this._index < 0) {
          return undefined;
       }
       return this._items[this._keys[this._index]];
    }
 
-   moveNext() {
+   moveNext(): boolean {
       if (1 + this._index >= this._keys.length) {
          return false;
       }
@@ -72,7 +72,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
       return true;
    }
 
-   reset() {
+   reset(): void {
       this._index = -1;
    }
 
@@ -80,7 +80,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
 
    // region Public methods
 
-   getCurrentIndex() {
+   getCurrentIndex(): string {
       return this._keys[this._index];
    }
 
@@ -89,7 +89,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
     * @param {function(): Boolean} filter Функция обратного вызова, которая должна для каждого элемента вернуть признак,
     * проходит ли он фильтр
     */
-   setFilter(filter: (item: any, index: any) => boolean) {
+   setFilter(filter: (item: any, index: any) => boolean): void {
       this._filter = filter;
    }
 

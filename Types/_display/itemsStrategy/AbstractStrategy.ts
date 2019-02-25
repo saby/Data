@@ -11,12 +11,16 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
-import {IEnumerable, IEnumerator} from '../../collection';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
+import {IEnumerator} from '../../collection';
 import {mixin} from '../../util';
 
 export interface IOptions extends  IItemsStrategyOptions {
-   localize?: boolean
+   localize?: boolean;
+}
+
+export interface ISerializableState extends IDefaultSerializableState {
+   _items: CollectionItem[];
 }
 
 export default abstract class Abstract extends mixin(
@@ -31,12 +35,12 @@ export default abstract class Abstract extends mixin(
    /**
     * Элементы проекции
     */
-   protected _items: Array<CollectionItem>;
+   protected _items: CollectionItem[];
 
    /**
     * Кэш элементов исходной коллекции
     */
-   protected _sourceItems: Array<CollectionItem>;
+   protected _sourceItems: CollectionItem[];
 
    /**
     * Опции
@@ -52,15 +56,15 @@ export default abstract class Abstract extends mixin(
       this._options = options;
    }
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
    get options(): IOptions {
-      return Object.assign({}, this._options);
+      return {...this._options};
    }
 
-   get source() {
+   get source(): IItemsStrategy {
       return null;
    }
 
@@ -68,7 +72,7 @@ export default abstract class Abstract extends mixin(
       throw new Error('Property must be implemented');
    }
 
-   get items(): Array<CollectionItem> {
+   get items(): CollectionItem[] {
       return this._getItems();
    }
 
@@ -76,16 +80,17 @@ export default abstract class Abstract extends mixin(
       throw new Error('Method must be implemented');
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem> {
+   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
       throw new Error('Method must be implemented');
    }
 
-   reset() {
+   reset(): void {
       this._items = null;
       this._sourceItems = null;
    }
 
-   invalidate() {
+   invalidate(): void {
+      // Could be redefined
    }
 
    getDisplayIndex(index: number): number {
@@ -96,31 +101,31 @@ export default abstract class Abstract extends mixin(
       return index;
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
-      state.$options = this._options;
-      state._items = this._items;
+      resultState.$options = this._options;
+      resultState._items = this._items;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
 
-      return function() {
+      return function(): void {
          fromSerializableMixin.call(this);
          this._items = state._items;
       };
    }
 
-   //endregion
+   // endregion
 
-   //region Protected members
+   // region Protected members
 
    /**
     * Возвращает исходную коллекцию
@@ -145,7 +150,7 @@ export default abstract class Abstract extends mixin(
     * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
-   protected _getItems(): Array<CollectionItem> {
+   protected _getItems(): CollectionItem[] {
       if (!this._items) {
          this._initItems();
       }
@@ -156,7 +161,7 @@ export default abstract class Abstract extends mixin(
     * Инициализирует элементы
     * @protected
     */
-   protected _initItems() {
+   protected _initItems(): void {
       this._items = this._items || [];
       this._items.length = this._options.display.getCollectionCount();
    }
@@ -165,13 +170,13 @@ export default abstract class Abstract extends mixin(
     * Возвращает элементы исходной коллекции
     * @protected
     */
-   protected _getSourceItems(): Array<any> {
+   protected _getSourceItems(): any[] {
       if (this._sourceItems) {
          return this._sourceItems;
       }
 
-      let enumerator = this._getCollectionEnumerator();
-      let items = [];
+      const enumerator = this._getCollectionEnumerator();
+      const items = [];
       enumerator.reset();
       while (enumerator.moveNext()) {
          items.push(enumerator.getCurrent());
@@ -187,11 +192,11 @@ export default abstract class Abstract extends mixin(
     */
    protected _createItem(contents: any): CollectionItem {
       return this.options.display.createItem({
-         contents: contents
+         contents
       });
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(Abstract.prototype, {

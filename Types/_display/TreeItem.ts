@@ -7,7 +7,10 @@
  * @author Мальцев А.А.
  */
 
-import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
+import CollectionItem, {
+   IOptions as ICollectionItemOptions,
+   ISerializableState as IDefaultSerializableState
+} from './CollectionItem';
 import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
@@ -15,6 +18,11 @@ export interface IOptions extends ICollectionItemOptions {
    expanded?: boolean;
    hasChildren?: boolean;
    loaded?: boolean;
+   parent?: Function;
+}
+
+interface ISerializableState extends IDefaultSerializableState {
+   $options: IOptions;
 }
 
 export default class TreeItem extends CollectionItem /** @lends Types/_display/TreeItem.prototype */{
@@ -43,7 +51,8 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
    protected _$hasChildren: boolean;
 
    /**
-    * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
+    * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних
+    * элементов.
     * @name Types/_display/TreeItem#childrenProperty
     */
    protected _$childrenProperty: string;
@@ -76,7 +85,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * Устанавливает родительский узел
     * @param {Types/_display/TreeItem} parent Новый родительский узел
     */
-   setParent(parent: TreeItem) {
+   setParent(parent: TreeItem): void {
       this._$parent = parent;
    }
 
@@ -126,7 +135,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * Устанавливает признак, является ли элемент узлом
     * @param {Boolean} node Является ли элемент узлом
     */
-   setNode(node: boolean) {
+   setNode(node: boolean): void {
       this._$node = node;
    }
 
@@ -143,7 +152,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * @param {Boolean} expanded Развернут или свернут узел
     * @param {Boolean} [silent=false] Не генерировать событие
     */
-   setExpanded(expanded: boolean, silent?: boolean) {
+   setExpanded(expanded: boolean, silent?: boolean): void {
       if (this._$expanded === expanded) {
          return;
       }
@@ -156,7 +165,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
    /**
     * Переключает признак, что узел развернут или свернут
     */
-   toggleExpanded() {
+   toggleExpanded(): void {
       this.setExpanded(!this.isExpanded());
    }
 
@@ -172,7 +181,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * Устанавливает признак наличия детей у узла
     * @param {Boolean} value
     */
-   setHasChildren(value: boolean) {
+   setHasChildren(value: boolean): void {
       this._$hasChildren = value;
    }
 
@@ -180,7 +189,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       return !this._$hasChildren;
    }
 
-   setLoaded(value: boolean) {
+   setLoaded(value: boolean): void {
       this._$hasChildren = !value;
    }
 
@@ -194,20 +203,20 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    // region Types/_entity/SerializableMixin
 
-   protected _getSerializableState(state) {
-      state =  super._getSerializableState(state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = super._getSerializableState(state) as ISerializableState;
 
       // It's too hard to serialize context related method. It should be restored at class that injects this function.
-      if (typeof state.$options.parent === 'function') {
-         delete state.$options.parent;
+      if (typeof resultState.$options.parent === 'function') {
+         delete resultState.$options.parent;
       }
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
+   protected _setSerializableState(state: ISerializableState): Function {
       const fromSuper = super._setSerializableState(state);
-      return function() {
+      return function(): void {
          fromSuper.call(this);
       };
    }
@@ -222,7 +231,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * @param {String} property Измененное свойство
     * @protected
     */
-   protected _notifyItemChangeToOwner(property: string) {
+   protected _notifyItemChangeToOwner(property: string): void {
       super._notifyItemChangeToOwner(property);
 
       const root = this.getRoot();

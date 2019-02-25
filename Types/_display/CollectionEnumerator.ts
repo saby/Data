@@ -15,9 +15,6 @@ import {DestroyableMixin, OptionsToPropertyMixin} from '../entity';
 import {IEnumerator, IndexedEnumeratorMixin} from '../collection';
 import {mixin} from '../util';
 
-interface IOptions {
-}
-
 export default class CollectionEnumerator extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, IndexedEnumeratorMixin
 ) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{
@@ -75,7 +72,7 @@ export default class CollectionEnumerator extends mixin(
     */
    protected _sourceToInternal: number[] = [];
 
-   constructor(options: IOptions) {
+   constructor(options: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
       IndexedEnumeratorMixin.constructor.call(this);
@@ -125,7 +122,7 @@ export default class CollectionEnumerator extends mixin(
       return this._position;
    }
 
-   reset() {
+   reset(): void {
       this._itemsCache = null;
       this._position = -1;
       this._setCurrentByPosition();
@@ -135,7 +132,7 @@ export default class CollectionEnumerator extends mixin(
 
    // region IndexedEnumeratorMixin
 
-   reIndex(action?: string, start?: number, count?: number) {
+   reIndex(action?: string, start?: number, count?: number): void {
       IndexedEnumeratorMixin.reIndex.call(this, action, start, count);
       this._itemsCache = null;
       this._internalToSource = null;
@@ -146,7 +143,7 @@ export default class CollectionEnumerator extends mixin(
       }
    }
 
-   _createIndex(property: string) {
+   _createIndex(property: string): void {
       const savedPosition = this._position;
       const savedCurrent = this._current;
       IndexedEnumeratorMixin._createIndex.call(this, property);
@@ -183,7 +180,7 @@ export default class CollectionEnumerator extends mixin(
     * Устанавливает текущий элемент
     * @param {Types/_display/CollectionItem} item Текущий элемент
     */
-   setCurrent(item: CollectionItem) {
+   setCurrent(item: CollectionItem): void {
       this._itemsCache = null;
       this._position = this.getInternalBySource(this.items.indexOf(item));
       this._setCurrentByPosition();
@@ -200,9 +197,8 @@ export default class CollectionEnumerator extends mixin(
    /**
     * Устанавливает текущую позицию
     * @param {Number} position Позиция проекции
-    * @return {Boolean}
     */
-   setPosition(position: number) {
+   setPosition(position: number): void {
       this._itemsCache = null;
       this._checkPosition(position);
       this._position = position;
@@ -279,7 +275,7 @@ export default class CollectionEnumerator extends mixin(
     * Инициализирует массив соответствия позиций проекции и исходной коллекции
     * @protected
     */
-   protected _initInternalMap() {
+   protected _initInternalMap(): void {
       if (this._internalToSource === null) {
          this._internalToSource = CollectionEnumerator.getAssociativeMap(this._$sortMap, this._$filterMap);
       }
@@ -290,9 +286,9 @@ export default class CollectionEnumerator extends mixin(
     * @param {Number} position Позиция
     * @protected
     */
-   protected _checkPosition(position: number) {
+   protected _checkPosition(position: number): void {
       if (!this.isValidPosition(position)) {
-         throw new Error(this._moduleName + ': position is out of bounds');
+         throw new Error(`${this._moduleName}: position is out of bounds`);
       }
    }
 
@@ -300,7 +296,7 @@ export default class CollectionEnumerator extends mixin(
     * Устанавливает текущий элемент исходя из позиции
     * @protected
     */
-   protected _setCurrentByPosition() {
+   protected _setCurrentByPosition(): void {
       this._current = this._position > -1
          ? this.items[this.getSourceByInternal(this._position)]
          : undefined;
@@ -310,7 +306,7 @@ export default class CollectionEnumerator extends mixin(
     * Устанавливает позицию исходя из текущего элемента
     * @protected
     */
-   protected _setPositionByCurrent() {
+   protected _setPositionByCurrent(): void {
       this._position = -1;
       const index = this._current ? this.items.indexOf(this._current) : -1;
       if (

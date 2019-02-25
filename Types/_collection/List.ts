@@ -63,6 +63,10 @@ import {
 import {register} from '../di';
 import {logger, mixin, object} from '../util';
 
+export interface IOptions<T> {
+   items: T[];
+}
+
 export default class List<T> extends mixin(
    DestroyableMixin,
    OptionsToPropertyMixin,
@@ -129,7 +133,7 @@ export default class List<T> extends mixin(
 
    getVersion: () => number;
 
-   constructor(options?) {
+   constructor(options?: IOptions<T>) {
       if (options && 'items' in options && !(options.items instanceof Array)) {
          throw new TypeError('Option "items" should be an instance of Array');
       }

@@ -8,8 +8,8 @@
  */
 
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
-import ObservableMixin from  './ObservableMixin';
-import ManyToManyMixin from  './ManyToManyMixin';
+import ObservableMixin from './ObservableMixin';
+import ManyToManyMixin from './ManyToManyMixin';
 import {protect} from '../util';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -24,11 +24,11 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
 
    // region Types/_entity/ReadWriteMixin
 
-   get writable() {
+   get writable(): boolean {
       return this[$writable];
    },
 
-   constructor(options) {
+   constructor(options: any): void {
       if (this._options && hasOwnProperty.call(this._options, 'writable')) {
          this[$writable] = this._options.writable;
       }
@@ -40,48 +40,48 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
       }
    },
 
-   destroy() {
+   destroy(): void {
       if (this[$writable]) {
          ObservableMixin.prototype.destroy.call(this);
          ManyToManyMixin.destroy.call(this);
       }
    },
 
-   // endregion Types/_entity/ReadWriteMixin
+   // endregion
 
    // region Types/_entity/ObservableMixin
 
-   subscribe(event, handler, ctx) {
+   subscribe(event: string, handler: Function, ctx?: object): void {
       if (this[$writable]) {
          return ObservableMixin.prototype.subscribe.call(this, event, handler, ctx);
       }
    },
 
-   unsubscribe(event, handler, ctx) {
+   unsubscribe(event: string, handler: Function, ctx?: object): void {
       if (this[$writable]) {
          return ObservableMixin.prototype.unsubscribe.call(this, event, handler, ctx);
       }
    },
 
-   _publish() {
+   _publish(): void {
       if (this[$writable]) {
          // @ts-ignore
          return ObservableMixin.prototype._publish.apply(this, arguments);
       }
    },
 
-   _notify() {
+   _notify(): void {
       if (this[$writable]) {
          // @ts-ignore
          return ObservableMixin.prototype._notify.apply(this, arguments);
       }
    },
 
-   // endregion Types/_entity/ObservableMixin
+   // endregion
 
    // region Types/_entity/OptionsToPropertyMixin
 
-   _getOptions() {
+   _getOptions(): object {
       // @ts-ignore
       const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
 
@@ -90,7 +90,7 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
       return options;
    }
 
-   // endregion Types/_entity/OptionsToPropertyMixin
+   // endregion
 };
 
 // @ts-ignore
@@ -99,7 +99,8 @@ const IS_BROWSER = typeof window !== 'undefined';
 const IS_TESTING = !!(typeof global !== 'undefined' && global.assert && global.assert.strictEqual);
 
 /**
- * @property {Boolean} Объект можно модифицировать. Запрет модификации выключит механизмы генерации событий (ObservableMixin).
+ * @property {Boolean} Объект можно модифицировать.
+ * Запрет модификации выключит механизмы генерации событий (ObservableMixin).
  */
 Object.defineProperty(ReadWriteMixin, $writable, {
    writable: true,

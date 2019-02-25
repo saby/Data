@@ -17,14 +17,18 @@ interface IOptions extends IAbstractOptions {
 }
 
 interface ISortOptions {
-   indexToPath: Array<string>
+   indexToPath: string[];
 }
 
 interface ISorter {
-
+   name: string;
+   enabled: boolean;
+   method: Function;
+   options: () => object;
 }
 
-export default class MaterializedPath extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */{
+export default class MaterializedPath
+   extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */ {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/Collection} display Проекция
@@ -38,14 +42,14 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
    /**
     * Соответствие "индекс в коллекции" - "путь"
     */
-   protected _indexToPath: Array<Array<number>> = [];
+   protected _indexToPath: number[][] = [];
 
    constructor(options: IOptions) {
       super(options);
    }
 
-   getSorters(): Array<ISorter> {
-      let sorters = [];
+   getSorters(): ISorter[] {
+      const sorters: ISorter[] = [];
 
       sorters.push({
          name: 'tree',
@@ -59,7 +63,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       return sorters;
    }
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    get count(): number {
       let index = 0;
@@ -69,7 +73,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       return index;
    }
 
-   get items(): Array<CollectionItem> {
+   get items(): CollectionItem[] {
       let index = 0;
       while (this.at(index) !== undefined) {
          index++;
@@ -78,10 +82,10 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
    }
 
    at(index: number): CollectionItem {
-      let items = this._getItems();
+      const items = this._getItems();
       if (!items[index]) {
-         let collection = this._getCollection();
-         let path = this._getPathTo(collection, index);
+         const collection = this._getCollection();
+         const path = this._getPathTo(collection, index);
          let contents;
 
          if (path) {
@@ -90,7 +94,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
 
          if (contents) {
             items[index] = this.options.display.createItem({
-               contents: contents,
+               contents,
                parent: this._getParent(index, path)
             });
          }
@@ -99,15 +103,15 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       return items[index];
    }
 
-   splice(start: number): Array<CollectionItem> {
+   splice(start: number): CollectionItem[] {
       this._getItems().length = start;
       this._indexToPath.length = start;
       return [];
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region Protected
 
    /**
     * Возвращает путь до элемента с порядковым номером
@@ -121,14 +125,14 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
          return this._indexToPath[index];
       }
 
-      let childrenProperty = this._options.childrenProperty;
+      const childrenProperty = this._options.childrenProperty;
       let current;
       let path;
 
-      let iterator = (search, parent, path) => {
-         let isArray = parent instanceof Array;
-         let isList = parent['[Types/_collection/IList]'];
-         let isEnumerable = parent['[Types/_collection/IEnumerable]'];
+      const iterator = (search, parent, path) => {
+         const isArray = parent instanceof Array;
+         const isList = parent['[Types/_collection/IList]'];
+         const isEnumerable = parent['[Types/_collection/IEnumerable]'];
          let enumerator;
          let isLast;
          let item;
@@ -154,7 +158,8 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
                item = enumerator.moveNext() ? enumerator.getCurrent() : undefined;
                isLast = item === undefined;
             } else {
-               throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
+               throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or ' +
+                  'Types/_collection/IEnumerable are supported.');
             }
 
             if (isLast) {
@@ -197,7 +202,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
     * @protected
     */
    protected _getItemByPath(collection: IEnumerable<any>, path: number[]): any {
-      let childrenProperty = this._options.childrenProperty;
+      const childrenProperty = this._options.childrenProperty;
       let item = collection;
 
       for (let level = 0; level < path.length;) {
@@ -218,10 +223,10 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
     * @protected
     */
    protected _getParent(index: number, path: number[]): CollectionItem {
-      let parentPath = path.slice(0, path.length - 1);
+      const parentPath = path.slice(0, path.length - 1);
       if (parentPath.length) {
-         let items = this._getItems();
-         let parentContents = this._getItemByPath(this._getCollection(), parentPath);
+         const items = this._getItems();
+         const parentContents = this._getItemByPath(this._getCollection(), parentPath);
          if (parentContents) {
             for (let i = index - 1; i >= 0; i--) {
                if (items[i] && items[i].getContents() === parentContents) {
@@ -241,18 +246,18 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
     * @return {*}
     * @protected
     */
-   protected _getItemAt(collection: Array<any> | IEnumerable<any> | IList<any>, at: number): any {
-      let isArray = collection instanceof Array;
-      let isList = collection['[Types/_collection/IEnumerable]'];
-      let isEnumerable = collection['[Types/_collection/IEnumerable]'];
+   protected _getItemAt(collection: any[] | IEnumerable<any> | IList<any>, at: number): any {
+      const isArray = collection instanceof Array;
+      const isList = collection['[Types/_collection/IEnumerable]'];
+      const isEnumerable = collection['[Types/_collection/IEnumerable]'];
       let item;
 
       if (isArray) {
          item = collection[at];
       } else if (isList) {
-         item = (<IList<any>>collection).at(at);
+         item = (<IList<any>> collection).at(at);
       } else if (isEnumerable) {
-         let enumerator = (<IEnumerable<any>>collection).getEnumerator();
+         const enumerator = (<IEnumerable<any>> collection).getEnumerator();
          let current;
          let index = 0;
          while (enumerator.moveNext()) {
@@ -264,7 +269,8 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
             index++;
          }
       } else {
-         throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or Types/_collection/IEnumerable are supported.');
+         throw new TypeError('Unsupported object type: only Array, Types/_collection/IList or ' +
+            'Types/_collection/IEnumerable are supported.');
       }
 
       if (item === undefined) {
@@ -274,9 +280,9 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       return item;
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Statics
 
    /**
     * Создает индекс сортировки по материализованному пути - от корневой вершины вглубь до конечных вершин
@@ -285,19 +291,19 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
     * @param {Object} options Опции
     * @return {Array.<Number>}
     */
-   static sortItems(items: Array<CollectionItem>, current: Array<number>, options: ISortOptions): Array<number> {
-      let indexToPath = options.indexToPath;
+   static sortItems(items: CollectionItem[], current: number[], options: ISortOptions): number[] {
+      const indexToPath = options.indexToPath;
       let stringIndexToPath;
-      let stringPathToIndex = {};
-      let pathToString = (path) => {
+      const stringPathToIndex = {};
+      const pathToString = (path) => {
          return path.join('.');
       };
-      let getIndexByPath = (path) => {
+      const getIndexByPath = (path) => {
          return stringPathToIndex[pathToString(path)];
       };
-      let comparePaths = (pathA, pathB) => {
-         let realIndexA = getIndexByPath(pathA);
-         let realIndexB = getIndexByPath(pathB);
+      const comparePaths = (pathA, pathB) => {
+         const realIndexA = getIndexByPath(pathA);
+         const realIndexB = getIndexByPath(pathB);
 
          return current.indexOf(realIndexA) - current.indexOf(realIndexB);
       };
@@ -309,33 +315,33 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       });
 
       return current.slice().sort((indexA, indexB) => {
-         let pathA = indexToPath[indexA];
-         let pathB = indexToPath[indexB];
-         let pathALength = pathA.length;
-         let pathBLength = pathB.length;
-         let minLength = Math.min(pathALength, pathBLength);
+         const pathA = indexToPath[indexA];
+         const pathB = indexToPath[indexB];
+         const pathALength = pathA.length;
+         const pathBLength = pathB.length;
+         const minLength = Math.min(pathALength, pathBLength);
          let result = 0;
 
-         //Going deep into path and compare each level
+         // Going deep into path and compare each level
          for (let level = 0; level < minLength; level++) {
-            //Same paths are equal
+            // Same paths are equal
             if (pathA[level] === pathB[level]) {
                continue;
             }
 
-            //Different paths possibly are not equal
+            // Different paths possibly are not equal
             result = comparePaths(
                pathA.slice(0, 1 + level),
                pathB.slice(0, 1 + level)
             );
 
             if (result !== 0) {
-               //Paths are not equal
+               // Paths are not equal
                break;
             }
          }
 
-         //Equal paths but various level: child has deeper level than parent, child should be after parent
+         // Equal paths but various level: child has deeper level than parent, child should be after parent
          if (result === 0 && pathALength !== pathBLength) {
             result = pathALength - pathBLength;
          }
@@ -344,7 +350,7 @@ export default class MaterializedPath extends AbstractStrategy /** @lends Types/
       });
    }
 
-   //endregion
+   // endregion
 }
 
 MaterializedPath.prototype._moduleName = 'Types/display:itemsStrategy.MaterializedPath';
