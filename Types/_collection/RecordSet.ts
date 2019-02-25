@@ -1,15 +1,23 @@
 /// <amd-module name="Types/_collection/RecordSet" />
+
+/* tslint:disable:max-line-length member-ordering */
+
 /**
  * Рекордсет - список записей, имеющих общий формат полей.
  *
  * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/_collection/ObservableList}):
  * <ul>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
+ *    </li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
+ *        {@link Types/_entity/FormattableMixin}.
+ *    </li>
  * </ul>
- * Элементами рекордсета могут быть только {@link Types/_entity/Record записи}, причем формат полей всех записей должен совпадать.
+ * Элементами рекордсета могут быть только {@link Types/_entity/Record записи}, причем формат полей всех записей должен
+ * совпадать.
  *
- * Создадим рекордсет, в котором в качестве сырых данных используется JSON (адаптер для данных в таком формате используется по умолчанию):
+ * Создадим рекордсет, в котором в качестве сырых данных используется JSON (адаптер для данных в таком формате
+ * используется по умолчанию):
  * <pre>
  *    require(['Types/collection'], function (collection) {
  *       var characters = new collection.RecordSet({
@@ -27,7 +35,8 @@
  *       characters.at(1).get('firstName');//'Huckleberry'
  *    });
  * </pre>
- * Создадим рекордсет, в котором в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
+ * Создадим рекордсет, в котором в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
+ * укажем явно):
  * <pre>
  *    require([
  *       'Types/collection',
@@ -57,16 +66,22 @@
 
 import IObservable from './IObservable';
 import ObservableList from './ObservableList';
+import {IOptions as IListOptions} from './List';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
    FormattableMixin,
+   IFormattableOptions,
    IObservableObject,
    IInstantiable,
    IProducible,
    InstantiableMixin,
+   ISerializableState as IDefaultSerializableState,
+   IFormattableSerializableState,
    factory,
-   Record
+   format,
+   Record,
+   adapter
 } from '../entity';
 import {create, register} from '../di';
 import {mixin, logger} from '../util';
@@ -76,12 +91,24 @@ const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
 
+interface IOptions extends IListOptions<Record>, IFormattableOptions {
+   model?: Function | string;
+   idProperty?: string;
+   meta?: any;
+}
+
+interface ISerializableOptions extends IOptions, IFormattableOptions {
+}
+
+interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
+   $options: ISerializableOptions;
+   _instanceId: string;
+}
+
 /**
  *
- * @param value
- * @param idProperty
  */
-function checkNullId(value, idProperty) {
+function checkNullId(value: any, idProperty: string): void {
    if (developerMode && idProperty) {
       if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
          logger.info('Types/_collection/RecordSet: Id propery must not be null');
@@ -93,32 +120,11 @@ function checkNullId(value, idProperty) {
    }
 }
 
-export default class RecordSet<Record> extends mixin(
+export default class RecordSet<T> extends mixin(
    ObservableList,
    FormattableMixin,
    InstantiableMixin
 ) implements IObservableObject, IInstantiable, IProducible /** @lends Types/_collection/RecordSet.prototype */{
-
-   // endregion IReceiver
-
-   // region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
-   // endregion IInstantiable
-
-   // region IObservableObject
-
-   readonly '[Types/_entity/IObservableObject]': boolean;
-
-   // endregion ICloneable
-
-   // region IProducible
-
-   readonly '[Types/_entity/IProducible]': boolean;
-
    /**
     * @typedef {Object} MergeOptions
     * @property {Boolean} [add=true] Добавлять новые записи.
@@ -194,7 +200,9 @@ export default class RecordSet<Record> extends mixin(
     * Существуют три служебных поля в метаданных:
     * <ul>
     * <li>path - путь для "хлебных крошек", возвращается как {@link Types/_collection/RecordSet};</li>
-    * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+    * <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для
+    *     отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};
+    * </li>
     * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
     * </ul>
     * @name Types/_collection/RecordSet#metaData
@@ -224,7 +232,8 @@ export default class RecordSet<Record> extends mixin(
    protected _$metaData: any;
 
    /**
-    * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} Формат всех полей метаданных.
+    * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} Формат всех
+    * полей метаданных.
     * @name Types/_collection/RecordSet#metaFormat
     * @example
     * Создадим рекордсет с метаданным, поле created которых имеет тип Date
@@ -256,7 +265,7 @@ export default class RecordSet<Record> extends mixin(
     */
    protected _metaData: any;
 
-   constructor(options?) {
+   constructor(options?: IOptions) {
       if (options) {
          if ('items' in options) {
             logger.stack('Types/_collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
@@ -291,76 +300,7 @@ export default class RecordSet<Record> extends mixin(
       this._publish('onPropertyChange');
    }
 
-   static produceInstance(data, options) {
-      const instanceOptions: any = {
-         rawData: data
-      };
-      if (options) {
-         if (options.adapter) {
-            instanceOptions.adapter = options.adapter;
-         }
-         if (options.model) {
-            instanceOptions.model = options.model;
-         }
-      }
-      return new this(instanceOptions);
-   }
-
-   // endregion Protected methods
-
-   // region Statics
-
-   /**
-    * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-    * @param {Types/_collection/RecordSet} items Исходный рекордсет
-    * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-    * @return {Types/_entity/Record} Патч
-    */
-   static patch(items: RecordSet<any>, names?: string[]) {
-      names = names || ['changed', 'added', 'removed'];
-
-      const filter = (state) => {
-         const result = new RecordSet({
-            adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
-         });
-
-         items.each((item) => {
-            result.add(item);
-         }, state);
-
-         return result;
-      };
-
-      const getIds = (items) => {
-         const result = [];
-         const idProperty = items.getIdProperty();
-
-         items.each((item) => {
-            result.push(item.get(idProperty));
-         });
-
-         return result;
-      };
-
-      const result = new Record({
-         format: [
-            {name: names[0], type: 'recordset'},
-            {name: names[1], type: 'recordset'},
-            {name: names[2], type: 'array', kind: 'string'}
-         ],
-         adapter: items.getAdapter()
-      });
-
-      result.set(names[0], filter(RECORD_STATE.CHANGED));
-      result.set(names[1], filter(RECORD_STATE.ADDED));
-      result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
-      result.acceptChanges();
-
-      return result;
-   }
-
-   destroy() {
+   destroy(): void {
       this._$model = '';
       this._$metaData = null;
       this._metaData = null;
@@ -368,68 +308,13 @@ export default class RecordSet<Record> extends mixin(
       super.destroy();
    }
 
-   // region IReceiver
-
-   relationChanged(which: any, route: string[]): any {
-      const index = this.getIndex(which.target);
-      if (index > -1) {
-         // Apply record's raw data to the self raw data if necessary
-         const adapter = this._getRawDataAdapter();
-         const selfData = adapter.at(index);
-         const recordData = which.target.getRawData(true);
-         if (selfData !== recordData) {
-            this._getRawDataAdapter().replace(
-               recordData,
-               index
-            );
-         }
-      }
-
-      return super.relationChanged(which, route);
-   }
-
-   // endregion IObservableObject
-
-   // region ICloneable
-
-   clone(shallow) {
-      const clone = super.clone(shallow);
-      if (shallow) {
-         clone._$items = this._$items.slice();
-      }
-      return clone;
-   }
-
-   // endregion IProducible
-
-   // region IEquatable
-
-   isEqual(to) {
-      if (to === this) {
-         return true;
-      }
-      if (!to) {
-         return false;
-      }
-      if (!(to instanceof RecordSet)) {
-         return false;
-      }
-
-      // TODO: compare using formats
-      return isEqual(
-         this._getRawData(),
-         to.getRawData(true)
-      );
-   }
-
-   // endregion IEquatable
-
    // region IEnumerable
 
    /**
     * Возвращает энумератор для перебора записей рекордсета.
     * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
-    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать
+    * (по умолчанию перебираются все записи)
     * @return {Types/_collection/ArrayEnumerator.<Types/_entity/Record>}
     * @example
     * Получим сначала все, а затем - измененные записи:
@@ -465,8 +350,8 @@ export default class RecordSet<Record> extends mixin(
     *    });
     * </pre>
     */
-   getEnumerator(state) {
-      const enumerator = new Arraywise(this._$items);
+   getEnumerator(state: string): Arraywise<Record> {
+      const enumerator = new Arraywise<Record>(this._$items);
 
       enumerator.setResolver((index) => this.at(index));
 
@@ -479,8 +364,10 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Перебирает записи рекордсета.
-    * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
-    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+    * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы
+    * запись и ее позиция.
+    * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать
+    * (по умолчанию перебираются все записи)
     * @param {Object} [context] Контекст вызова callback
     * @example
     * Получим сначала все, а затем - измененные записи:
@@ -513,7 +400,7 @@ export default class RecordSet<Record> extends mixin(
     *    });
     * </pre>
     */
-   each(callback, state?, context?) {
+   each(callback: Function, state?: any, context?: object): void {
       if (state instanceof Object) {
          context = state;
          state = undefined;
@@ -542,11 +429,11 @@ export default class RecordSet<Record> extends mixin(
       }
    }
 
-   // endregion IEnumerable
+   // endregion
 
    // region List
 
-   clear() {
+   clear(): void {
       let item;
       for (let i = 0, count = this._$items.length; i < count; i++) {
          item = this._$items[i];
@@ -559,8 +446,10 @@ export default class RecordSet<Record> extends mixin(
    }
 
    /**
-    * Добавляет запись в рекордсет путем создания новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
-    * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
+    * Добавляет запись в рекордсет путем создания новой записи, в качестве сырых данных для которой будут взяты сырые
+    * данные аргумента item.
+    * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно:
+    * лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
     * При недопустимом at генерируется исключение.
     * @param {Types/_entity/Record} item Запись, из которой будут извлечены сырые данные.
     * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
@@ -584,7 +473,7 @@ export default class RecordSet<Record> extends mixin(
     *    });
     * </pre>
     */
-   add(item, at?) {
+   add(item: any, at?: number): T {
       item = this._normalizeItems([item], RECORD_STATE.ADDED)[0];
       this._getRawDataAdapter().add(item.getRawData(true), at);
       super.add(item, at);
@@ -592,16 +481,16 @@ export default class RecordSet<Record> extends mixin(
       return item;
    }
 
-   at(index) {
+   at(index: number): T {
       return this._getRecord(index);
    }
 
-   remove(item) {
+   remove(item: T): boolean {
       this._checkItem(item);
       return super.remove(item);
    }
 
-   removeAt(index) {
+   removeAt(index: number): T {
       this._getRawDataAdapter().remove(index);
 
       const item = this._$items[index];
@@ -615,8 +504,10 @@ export default class RecordSet<Record> extends mixin(
    }
 
    /**
-    * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
-    * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
+    * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты
+    * сырые данные аргумента item.
+    * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние
+    * поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
     * При недопустимом at генерируется исключение.
     * @param {Types/_entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
     * @param {Number} at Позиция, в которой будет произведена замена
@@ -653,7 +544,7 @@ export default class RecordSet<Record> extends mixin(
     *    });
     * </pre>
     */
-   replace(item, at) {
+   replace(item: any, at: number): T {
       item = this._normalizeItems([item], RECORD_STATE.CHANGED)[0];
       this._getRawDataAdapter().replace(item.getRawData(true), at);
       const oldItem = this._$items[at];
@@ -665,7 +556,7 @@ export default class RecordSet<Record> extends mixin(
       return item;
    }
 
-   move(from, to) {
+   move(from: number, to: number): void {
       this._getRecord(from); // force create record instance
       this._getRawDataAdapter().move(from, to);
       super.move(from, to);
@@ -673,12 +564,14 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Заменяет записи рекордсета копиями записей другой коллекции.
-    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для замены
+    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние
+    * поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с
+    * записями для замены
     * @return {Array.<Types/_entity/Record>} Добавленные записи
     * @see Types/_collection/ObservableList#assign
     */
-   assign(items) {
+   assign(items: any): T[] {
       if (items === this) {
          return [];
       }
@@ -716,12 +609,14 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Добавляет копии записей другой коллекции в конец рекордсета.
-    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние
+    * поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с
+    * записями для добавления
     * @return {Array.<Types/_entity/Record>} Добавленные записи
     * @see Types/_collection/ObservableList#append
     */
-   append(items) {
+   append(items: any): T[] {
       items = this._itemsToArray(items);
       items = this._normalizeItems(items, RECORD_STATE.ADDED);
       items = this._addItemsToRawData(items);
@@ -732,12 +627,14 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Добавляет копии записей другой коллекции в начало рекордсета.
-    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+    * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно:
+    * лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
+    * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с
+    * записями для добавления
     * @return {Array.<Types/_entity/Record>} Добавленные записи
     * @see Types/_collection/ObservableList#prepend
     */
-   prepend(items) {
+   prepend(items: any): T[] {
       items = this._itemsToArray(items);
       items = this._normalizeItems(items, RECORD_STATE.ADDED);
       items = this._addItemsToRawData(items, 0);
@@ -751,7 +648,7 @@ export default class RecordSet<Record> extends mixin(
     * @return {Types/_collection/Indexer}
     * @protected
     */
-   _getIndexer() {
+   protected _getIndexer(): void {
       if (this._indexer) {
          return this._indexer;
       }
@@ -784,11 +681,11 @@ export default class RecordSet<Record> extends mixin(
       return indexer;
    }
 
-   // endregion List
+   // endregion
 
-   // endregion ObservableList
+   // region ObservableList
 
-   _itemsSlice(begin, end) {
+   protected _itemsSlice(begin: number, end: number): T[] {
       if (this._isNeedNotifyCollectionChange()) {
          if (begin === undefined) {
             begin = 0;
@@ -806,33 +703,33 @@ export default class RecordSet<Record> extends mixin(
       return super._itemsSlice(begin, end);
    }
 
-   // endregion ObservableList
+   // endregion
 
    // region SerializableMixin
 
-   _getSerializableState(state) {
-      state = ObservableList.prototype._getSerializableState.call(this, state);
-      state = FormattableMixin._getSerializableState.call(this, state);
-      state._instanceId = this.getInstanceId();
-      delete state.$options.items;
-      return state;
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      let resultState = ObservableList.prototype._getSerializableState.call(this, state) as ISerializableState;
+      resultState = FormattableMixin._getSerializableState.call(this, resultState);
+      resultState._instanceId = this.getInstanceId();
+      delete resultState.$options.items;
+      return resultState;
    }
 
-   _setSerializableState(state) {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSuper = super._setSerializableState(state);
-      const fromFormattableMixin = FormattableMixin._setSerializableState(state);
-      return function() {
+      const fromFormattableMixin = FormattableMixin._setSerializableState(state as IFormattableSerializableState);
+      return function(): void {
          fromSuper.call(this);
          fromFormattableMixin.call(this);
          this._instanceId = state._instanceId;
       };
    }
 
-   // endregion SerializableMixin
+   // endregion
 
    // region FormattableMixin
 
-   setRawData(data) {
+   setRawData(data: any): void {
       const oldItems = this._$items.slice();
       const eventsWasRaised = this._eventRaising;
 
@@ -851,7 +748,7 @@ export default class RecordSet<Record> extends mixin(
       );
    }
 
-   addField(format, at, value?) {
+   addField(format: format.Field, at: number, value?: any): void {
       format = this._buildField(format);
       FormattableMixin.addField.call(this, format, at);
 
@@ -866,13 +763,13 @@ export default class RecordSet<Record> extends mixin(
       this._nextVersion();
    }
 
-   removeField(name) {
+   removeField(name: string): void {
       FormattableMixin.removeField.call(this, name);
       this._nextVersion();
       this._parentChanged(Record.prototype.removeField);
    }
 
-   removeFieldAt(at) {
+   removeFieldAt(at: number): void {
       FormattableMixin.removeFieldAt.call(this, at);
       this._nextVersion();
       this._parentChanged(Record.prototype.removeFieldAt);
@@ -883,7 +780,7 @@ export default class RecordSet<Record> extends mixin(
     * @return {Types/_entity/adapter/ITable}
     * @protected
     */
-   _createRawDataAdapter() {
+   protected _createRawDataAdapter(): adapter.ITable {
       return this._getAdapter().forTable(this._getRawData(true));
    }
 
@@ -893,7 +790,7 @@ export default class RecordSet<Record> extends mixin(
     * @param {Boolean} [keepFormat=false] Сохранить формат
     * @protected
     */
-   _assignRawData(data, keepFormat?: boolean) {
+   protected _assignRawData(data: any, keepFormat?: boolean): void {
       FormattableMixin.setRawData.call(this, data);
       this._clearIndexer();
       if (!keepFormat) {
@@ -902,7 +799,98 @@ export default class RecordSet<Record> extends mixin(
       this._nextVersion();
    }
 
-   // endregion FormattableMixin
+   // endregion
+
+   // region IInstantiable
+
+   readonly '[Types/_entity/IInstantiable]': boolean;
+
+   getInstanceId: () => string;
+
+   // endregion
+
+   // region IObservableObject
+
+   readonly '[Types/_entity/IObservableObject]': boolean;
+
+   // endregion
+
+   // region IProducible
+
+   readonly '[Types/_entity/IProducible]': boolean;
+
+   static produceInstance<T>(data: any, options: IOptions): RecordSet<T> {
+      const instanceOptions: any = {
+         rawData: data
+      };
+      if (options) {
+         if (options.adapter) {
+            instanceOptions.adapter = options.adapter;
+         }
+         if (options.model) {
+            instanceOptions.model = options.model;
+         }
+      }
+      return new this<T>(instanceOptions);
+   }
+
+   // endregion
+
+   // region IReceiver
+
+   relationChanged(which: any, route: string[]): any {
+      const index = this.getIndex(which.target);
+      if (index > -1) {
+         // Apply record's raw data to the self raw data if necessary
+         const adapter = this._getRawDataAdapter();
+         const selfData = adapter.at(index);
+         const recordData = which.target.getRawData(true);
+         if (selfData !== recordData) {
+            this._getRawDataAdapter().replace(
+               recordData,
+               index
+            );
+         }
+      }
+
+      return super.relationChanged(which, route);
+   }
+
+   // endregion
+
+   // region ICloneable
+
+   clone<T>(shallow?: boolean): RecordSet<T> {
+      const clone = super.clone(shallow);
+      if (shallow) {
+         clone._$items = this._$items.slice();
+      }
+      return clone;
+   }
+
+   // endregion
+
+   // region IEquatable
+
+   isEqual(to: any): boolean {
+      if (to === this) {
+         return true;
+      }
+      if (!to) {
+         return false;
+      }
+      if (!(to instanceof RecordSet)) {
+         return false;
+      }
+
+      // TODO: compare using formats
+      return isEqual(
+         this._getRawData(),
+         to.getRawData(true)
+      );
+   }
+
+   // endregion
 
    // region Public methods
 
@@ -933,7 +921,7 @@ export default class RecordSet<Record> extends mixin(
     *    users.getModel() === User;//true
     * </pre>
     */
-   getModel() {
+   getModel(): Function | string {
       return this._$model;
    }
 
@@ -1010,7 +998,7 @@ export default class RecordSet<Record> extends mixin(
     *    });
     * </pre>
     */
-   acceptChanges(spread) {
+   acceptChanges(spread?: boolean): void {
       const toRemove = [];
       this.each((record, index) => {
          if (record.getState() === RECORD_STATE.DELETED) {
@@ -1028,7 +1016,7 @@ export default class RecordSet<Record> extends mixin(
       }
    }
 
-   isChanged() {
+   isChanged(): boolean {
       let changed = false;
       const items = this._$items;
       const count = items.length;
@@ -1057,7 +1045,7 @@ export default class RecordSet<Record> extends mixin(
     *    users.getIdProperty();//'id'
     * </pre>
     */
-   getIdProperty() {
+   getIdProperty(): string {
       return this._$idProperty;
    }
 
@@ -1082,7 +1070,7 @@ export default class RecordSet<Record> extends mixin(
     *    users.getRecordById(257).get('login');//'shell'
     * </pre>
     */
-   setIdProperty(name) {
+   setIdProperty(name: string): void {
       if (this._$idProperty === name) {
          return;
       }
@@ -1117,7 +1105,7 @@ export default class RecordSet<Record> extends mixin(
     *    users.getRecordById(257).get('login');//'shell'
     * </pre>
     */
-   getRecordById(id) {
+   getRecordById(id: string | number): T {
       return this.at(
          this.getIndexByValue(this._$idProperty, id)
       );
@@ -1130,7 +1118,7 @@ export default class RecordSet<Record> extends mixin(
     * @see metaData
     * @see setMetaData
     */
-   getMetaData() {
+   getMetaData(): any {
       if (this._metaData) {
          return this._metaData;
       }
@@ -1212,7 +1200,7 @@ export default class RecordSet<Record> extends mixin(
     * @see metaData
     * @see getMetaData
     */
-   setMetaData(meta) {
+   setMetaData(meta: any): void {
       this._metaData = this._$metaData = meta;
 
       if (meta instanceof Object) {
@@ -1246,7 +1234,7 @@ export default class RecordSet<Record> extends mixin(
     * @see replace
     * @see remove
     */
-   merge(recordSet, options) {
+   merge(recordSet: RecordSet<T>, options?: any): void {
       // Backward compatibility for 'merge'
       if (options instanceof Object && options.hasOwnProperty('merge') && !options.hasOwnProperty('replace')) {
          options.replace = options.merge;
@@ -1335,7 +1323,7 @@ export default class RecordSet<Record> extends mixin(
       }
    }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -1346,7 +1334,7 @@ export default class RecordSet<Record> extends mixin(
     * @return {Array}
     * @protected
     */
-   _addItemsToRawData(items, at?: number) {
+   protected _addItemsToRawData(items: T[], at?: number): T[] {
       const adapter = this._getRawDataAdapter();
       items = this._itemsToArray(items);
 
@@ -1369,7 +1357,7 @@ export default class RecordSet<Record> extends mixin(
     * @return {Array.<Types/_entity/Record>}
     * @protected
     */
-   _normalizeItems(items, state) {
+   protected _normalizeItems(items: T[], state?: string): T[] {
       const formatDefined = this._hasFormat();
       let format;
       const result = [];
@@ -1400,12 +1388,12 @@ export default class RecordSet<Record> extends mixin(
 
    /**
     * Возращает копию записи с сырыми данными, приведенными к нужному формату
-    * @param {Array.<Types/_entity/Record>} item Запись
+    * @param {Types/_entity/Record} item Запись
     * @param {Types/_entity/format/Format} format Формат, к которому следует привести данные
     * @return {Array.<Types/_entity/Record>}
     * @protected
     */
-   _normalizeItemData(item, format) {
+   protected _normalizeItemData(item: any, format: format.Field): T[] {
       const itemFormat = item.getFormat(true);
       let result;
 
@@ -1435,7 +1423,7 @@ export default class RecordSet<Record> extends mixin(
     * @param {*} item Запись
     * @protected
     */
-   _checkItem(item) {
+   protected _checkItem(item: any): void {
       if (!item || !item['[Types/_entity/Record]']) {
          throw new TypeError('Item should be an instance of Types/entity:Record');
       }
@@ -1449,8 +1437,8 @@ export default class RecordSet<Record> extends mixin(
     * @return {Types/_entity/Record}
     * @protected
     */
-   _buildRecord(data) {
-      const record = create(this._$model, {
+   protected _buildRecord(data: any): T {
+      const record = create<T>(this._$model, {
          owner: this,
          writable: this.writable,
          state: RECORD_STATE.UNCHANGED,
@@ -1468,7 +1456,7 @@ export default class RecordSet<Record> extends mixin(
     * @return {Types/_entity/Record}
     * @protected
     */
-   _getRecord(at) {
+   protected _getRecord(at: number): T {
       if (at < 0 || at >= this._$items.length) {
          return undefined;
       }
@@ -1491,13 +1479,67 @@ export default class RecordSet<Record> extends mixin(
     * @param {Object} data Сырые данные
     * @protected
     */
-   _initByRawData() {
+   protected _initByRawData(): void {
       const adapter = this._getRawDataAdapter();
       this._$items.length = 0;
       this._$items.length = adapter.getCount();
    }
 
-   // endregion Statics
+   // endregion
+
+   // region Statics
+
+   /**
+    * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
+    * @param {Types/_collection/RecordSet} items Исходный рекордсет
+    * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
+    * @return {Types/_entity/Record} Патч
+    */
+   static patch(items: RecordSet<any>, names?: string[]): Record {
+      names = names || ['changed', 'added', 'removed'];
+
+      const filter = (state) => {
+         const result = new RecordSet({
+            adapter: items.getAdapter(),
+            idProperty: items.getIdProperty()
+         });
+
+         items.each((item) => {
+            result.add(item);
+         }, state);
+
+         return result;
+      };
+
+      const getIds = (items) => {
+         const result = [];
+         const idProperty = items.getIdProperty();
+
+         items.each((item) => {
+            result.push(item.get(idProperty));
+         });
+
+         return result;
+      };
+
+      const result = new Record({
+         format: [
+            {name: names[0], type: 'recordset'},
+            {name: names[1], type: 'recordset'},
+            {name: names[2], type: 'array', kind: 'string'}
+         ],
+         adapter: items.getAdapter()
+      });
+
+      result.set(names[0], filter(RECORD_STATE.CHANGED));
+      result.set(names[1], filter(RECORD_STATE.ADDED));
+      result.set(names[2], getIds(filter(RECORD_STATE.DELETED)));
+      result.acceptChanges();
+
+      return result;
+   }
+
+   // endregion
 }
 
 Object.assign(RecordSet.prototype, {

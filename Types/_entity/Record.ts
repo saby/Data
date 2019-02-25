@@ -729,6 +729,8 @@ export default class Record extends mixin(
 
    // region FormattableMixin
 
+   getRawData: (shared?: boolean) => any;
+
    setRawData(rawData: any): void {
       FormattableMixin.setRawData.call(this, rawData);
       this._nextVersion();

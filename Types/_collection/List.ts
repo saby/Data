@@ -64,7 +64,7 @@ import {register} from '../di';
 import {logger, mixin, object} from '../util';
 
 export interface IOptions<T> {
-   items: T[];
+   items?: T[];
 }
 
 export default class List<T> extends mixin(
