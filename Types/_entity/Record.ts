@@ -86,11 +86,14 @@ import IVersionable from './IVersionable';
 import DestroyableMixin from './DestroyableMixin';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin from './ObservableMixin';
-import SerializableMixin, {IState as ICommonSerializableState} from './SerializableMixin';
+import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin from './ReadWriteMixin';
-import FormattableMixin from './FormattableMixin';
+import FormattableMixin, {
+   ISerializableState as IFormattableSerializableState,
+   IOptions as IFormattableOptions
+} from './FormattableMixin';
 import VersionableMixin from './VersionableMixin';
 import Factory from './factory';
 import {IReceiver} from './relation';
@@ -144,14 +147,11 @@ const CACHE_MODE_ALL = protect('all');
 
 type pairsTuple = [string, any, any];
 
-interface IOptions {
-   adapter?: IAdapter | string;
-   format?: format.Format<Field> | IFieldDeclaration[];
+export interface IOptions extends IFormattableOptions {
    owner?: RecordSet<Record>;
-   rawData?: any;
 }
 
-interface ISerializableState extends ICommonSerializableState {
+interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
    $options: IOptions;
    _format: format.Format<Field>;
    _changedFields: string[];
@@ -695,7 +695,7 @@ export default class Record extends mixin(
 
    // region SerializableMixin
 
-   _getSerializableState(state: ICommonSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       let resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
       resultState = FormattableMixin._getSerializableState.call(this, resultState);
       resultState._changedFields = this[$changedFields as string];
@@ -728,6 +728,8 @@ export default class Record extends mixin(
    // endregion
 
    // region FormattableMixin
+
+   getRawData: (shared?: boolean) => any;
 
    setRawData(rawData: any): void {
       FormattableMixin.setRawData.call(this, rawData);

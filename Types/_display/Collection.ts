@@ -23,7 +23,12 @@ import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
-import {DestroyableMixin, SerializableMixin, functor} from '../entity';
+import {
+   DestroyableMixin,
+   SerializableMixin,
+   ISerializableState as IDefaultSerializableState,
+   functor
+} from '../entity';
 import {EnumeratorCallback, IList, EventRaisingMixin} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
@@ -236,6 +241,10 @@ interface ISessionItems extends Array<CollectionItem> {
 export interface ISessionItemState {
    item: CollectionItem;
    selected: boolean;
+}
+
+export interface ISerializableState extends IDefaultSerializableState {
+   _composer: ItemsStrategyComposer;
 }
 
 export default class Collection extends mixin<Abstract>(
@@ -1841,15 +1850,15 @@ export default class Collection extends mixin<Abstract>(
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: any): object {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
 
-      state._composer = this._composer;
+      resultState._composer = this._composer;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state: any): Function {
+   protected _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);

@@ -17,10 +17,6 @@ export default class Arraywise<T> extends mixin(
    Object,
    IndexedEnumeratorMixin
 ) implements IEnumerator<T> /** @lends Types/_collection/ArrayEnumerator.prototype */{
-
-   // region Types/_collection/IEnumerator
-
-   readonly '[Types/_collection/IEnumerator]': true;
    /**
     * Конструктор
     * @param {Array} items Массив
@@ -37,6 +33,10 @@ export default class Arraywise<T> extends mixin(
       this._items = checkedItems;
       IndexedEnumeratorMixin.constructor.call(this);
    }
+
+   // region Types/_collection/IEnumerator
+
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
 
    getCurrent(): any {
       if (this._index < 0) {
@@ -63,11 +63,11 @@ export default class Arraywise<T> extends mixin(
       return true;
    }
 
-   reset() {
+   reset(): void {
       this._index = -1;
    }
 
-   // endregion Types/_collection/IEnumerator
+   // endregion
 
    // region Public methods
 
@@ -75,7 +75,7 @@ export default class Arraywise<T> extends mixin(
     * Устанавливает резолвер элементов по позиции
     * @param {function(Number): *} resolver Функция обратного вызова, которая должна по позиции вернуть элемент
     */
-   setResolver(resolver: (index: number) => any) {
+   setResolver(resolver: (index: number) => any): void {
       this._resolver = resolver;
    }
 
@@ -84,11 +84,11 @@ export default class Arraywise<T> extends mixin(
     * @param {function(*): Boolean} filter Функция обратного вызова, которая должна для каждого элемента вернуть
     * признак, проходит ли он фильтр
     */
-   setFilter(filter: (item: any, index: any) => boolean) {
+   setFilter(filter: (item: any, index: any) => boolean): void {
       this._filter = filter;
    }
 
-   // endregion Public methods
+   // endregion
 }
 
 Arraywise.prototype['[Types/_collection/enumerator/Arraywise]'] = true;

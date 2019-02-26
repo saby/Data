@@ -1,12 +1,14 @@
 /// <amd-module name="Types/_collection/EventRaisingMixin" />
 /**
- * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния
+ * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией
+ * состояния
  * @mixin Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
 
-import enumerableComparator from './enumerableComparator';
+import enumerableComparator, {ISession} from './enumerableComparator';
+import { IList } from '../collection';
 
 const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype */{
    '[Types/_entity/EventRaisingMixin]': true,
@@ -32,7 +34,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     */
    _beforeRaiseOff: null,
 
-   constructor() {
+   constructor(): void {
       this._publish('onEventRaisingChange');
    },
 
@@ -41,7 +43,8 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
    /**
     * Включает/выключает генерацию событий об изменении коллекции
     * @param {Boolean} enabled Включить или выключить генерацию событий
-    * @param {Boolean} [analyze=false] Анализировать изменения (если включить, то при enabled = true будет произведен анализ всех изменений с момента enabled = false - сгенерируются события обо всех изменениях)
+    * @param {Boolean} [analyze=false] Анализировать изменения (если включить, то при enabled = true будет произведен
+    * анализ всех изменений с момента enabled = false - сгенерируются события обо всех изменениях)
     * @example
     * Сгенерируем событие о перемещении элемента c позиции 1 на позицию 3:
     * <pre>
@@ -50,7 +53,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     *          items: ['one', 'two', 'three', 'four', 'five']
     *       });
     *
-    *      list.subscribe('onCollectionChange', function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+    *      list.subscribe('onCollectionChange', (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
     *         action === collection.IObservable.ACTION_MOVE;//true
     *
     *         oldItems[0] === 'two';//true
@@ -69,7 +72,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     *   });
     * </pre>
     */
-   setEventRaising(enabled, analyze) {
+   setEventRaising(enabled: boolean, analyze?: boolean): void {
       enabled = !!enabled;
       analyze = !!analyze;
       const isEqual = this._eventRaising === enabled;
@@ -100,11 +103,11 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * Возвращает признак, включена ли генерация событий об изменении проекции
     * @return {Boolean}
     */
-   isEventRaising() {
+   isEventRaising(): boolean {
       return this._eventRaising;
    },
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -113,7 +116,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @return {Object}
     * @protected
     */
-   _startUpdateSession() {
+   _startUpdateSession(): ISession {
       if (!this._eventRaising) {
          return null;
       }
@@ -126,7 +129,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @param {Boolean} [analize=true] Запустить анализ изменений
     * @protected
     */
-   _finishUpdateSession(session, analize) {
+   _finishUpdateSession(session: ISession, analize?: boolean): void {
       if (!session) {
          return;
       }
@@ -145,7 +148,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @param {Object} session Серия обновлений
     * @protected
     */
-   _analizeUpdateSession(session) {
+   _analizeUpdateSession(session: ISession): void {
       if (!session) {
          return;
       }
@@ -172,7 +175,13 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @param {Object} [session] Серия обновлений
     * @protected
     */
-   _notifyCollectionChange(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   _notifyCollectionChange(
+      action: string,
+      newItems: any[],
+      newItemsIndex: number,
+      oldItems: any[],
+      oldItemsIndex: number
+   ): void {
       if (!this._isNeedNotifyCollectionChange()) {
          return;
       }
@@ -195,7 +204,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @protected
     * @static
     */
-   _extractPacksByList(list, items, callback) {
+   _extractPacksByList(list: IList<any>, items: any[], callback: Function): void {
       const send = (pack, index) => {
          callback(pack.slice(), index);
          pack.length = 0;
@@ -239,7 +248,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @return {Boolean}
     * @protected
     */
-   _isNeedNotifyCollectionChange() {
+   _isNeedNotifyCollectionChange(): boolean {
       return this._eventRaising && this.hasEventHandlers('onCollectionChange');
    }
 

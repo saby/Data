@@ -17,7 +17,7 @@ export default class FlagsItem extends CollectionItem /** @lends Types/_display/
       );
    }
 
-   setSelected(selected: boolean) {
+   setSelected(selected: boolean): void {
       if (this.isSelected() === selected) {
          return;
       }

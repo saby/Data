@@ -8,10 +8,11 @@
  */
 
 import TreeItem from './TreeItem';
-import {List} from '../collection';
+import {List, IListOptions} from '../collection';
 import {register} from '../di';
 
-interface IOptions {
+export interface IOptions extends IListOptions<TreeItem> {
+   owner?: TreeItem;
 }
 
 export default class TreeChildren extends List<TreeItem> /** @lends Types/_display/TreeChildren.prototype */{
@@ -36,7 +37,7 @@ export default class TreeChildren extends List<TreeItem> /** @lends Types/_displ
     * Возвращает узел-владелец
     * @return {Types/_display/TreeItem}
     */
-   getOwner() {
+   getOwner(): TreeItem {
       return this._$owner;
    }
 

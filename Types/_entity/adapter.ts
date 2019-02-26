@@ -29,6 +29,7 @@ export {default as Cow} from './adapter/Cow';
 export {default as GenericFormatMixin} from './adapter/GenericFormatMixin';
 export {default as Json} from './adapter/Json';
 export {default as IAdapter} from './adapter/IAdapter';
+export {default as IDecorator} from './adapter/IDecorator';
 export {default as IMetaData} from './adapter/IMetaData';
 export {default as IRecord} from './adapter/IRecord';
 export {default as ITable} from './adapter/ITable';

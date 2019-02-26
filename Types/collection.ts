@@ -42,6 +42,6 @@ export {default as IEnumerator} from './_collection/IEnumerator';
 export {default as IList} from './_collection/IList';
 export {default as IndexedEnumeratorMixin} from './_collection/IndexedEnumeratorMixin';
 export {default as IObservable} from './_collection/IObservable';
-export {default as List} from './_collection/List';
+export {default as List, IOptions as IListOptions} from './_collection/List';
 export {default as ObservableList} from './_collection/ObservableList';
 export {default as RecordSet} from './_collection/RecordSet';

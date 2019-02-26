@@ -36,7 +36,7 @@ export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mappe
       this._callbackContext = callbackContext;
    }
 
-   destroy() {
+   destroy(): void {
       this._callback = null;
       this._callbackContext = null;
       super.destroy();

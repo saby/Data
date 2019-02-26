@@ -27,7 +27,7 @@ export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zippe
       this._items = items;
    }
 
-   destroy() {
+   destroy(): void {
       this._items = null;
       super.destroy();
    }

@@ -58,7 +58,8 @@ export default class FlattenedMover {
       if (this.current instanceof Array) {
          this.current = new FlattenedMover(this.current);
          return this.current.moveNext();
-      } if (this.current && this.current['[Types/_collection/IEnumerable]']) {
+      }
+      if (this.current && this.current['[Types/_collection/IEnumerable]']) {
          this.current = new FlattenedMover((this.current as IEnumerable<any>).getEnumerator());
          return this.current.moveNext();
       }

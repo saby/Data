@@ -16,8 +16,8 @@ export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator
     * Проверим текущий элемент:
     * <pre>
     *    var list = new List({
-       *          items: [1, 2, 3]
-       *       }),
+    *          items: [1, 2, 3]
+    *       }),
     *       enumerator = list.getEnumerator();
     *
     *    enumerator.getCurrent();//undefined
@@ -34,8 +34,8 @@ export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator
     * Проверим текущий элемент:
     * <pre>
     *    var list = new List({
-       *          items: [1, 2, 3]
-       *       }),
+    *          items: [1, 2, 3]
+    *       }),
     *       enumerator = list.getEnumerator();
     *
     *    enumerator.getCurrentIndex();//undefined
@@ -53,13 +53,13 @@ export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator
     * Получим элементы коллекции:
     * <pre>
     *    var list = new List({
-       *          items: [1, 2, 3]
-       *       }),
+    *          items: [1, 2, 3]
+    *       }),
     *       enumerator = list.getEnumerator();
     *
     *    while (enumerator.moveNext()) {
-       *       console.log(enumerator.getCurrent());
-       *    }
+    *       console.log(enumerator.getCurrent());
+    *    }
     *    //1, 2, 3
     * </pre>
     */
@@ -71,8 +71,8 @@ export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator
     * Сбросим текущий элемент:
     * <pre>
     *    var list = new List({
-       *          items: [1, 2, 3]
-       *       }),
+    *          items: [1, 2, 3]
+    *       }),
     *       enumerator = list.getEnumerator();
     *
     *    enumerator.moveNext();//true
@@ -81,5 +81,5 @@ export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator
     *    enumerator.getCurrent();//undefined
     * </pre>
     */
-   reset();
+   reset(): void;
 }

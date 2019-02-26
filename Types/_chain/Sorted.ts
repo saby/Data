@@ -26,7 +26,7 @@ export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorte
       this._compareFunction = compareFunction;
    }
 
-   destroy() {
+   destroy(): void {
       this._compareFunction = null;
       super.destroy();
    }

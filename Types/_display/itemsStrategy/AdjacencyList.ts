@@ -12,7 +12,7 @@ import IItemsStrategy from '../IItemsStrategy';
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {mixin, protect, object, logger} from '../../util';
 import {Map} from '../../shim';
 import {throttle} from '../../function';
@@ -26,7 +26,7 @@ const $initialized = protect('initialized');
 /**
  * Выводит предупреждения не чаще, чем раз в 300мс
  */
-let warning = throttle(logger.info, 300);
+const warning = throttle(logger.info, 300);
 
 /**
  * Нормализует значение идентификатора
@@ -38,7 +38,7 @@ function normalizeId(id: number | string): string {
    return id;
 }
 
-interface SplicedArray {
+interface ISplicedArray {
    hasBeenRemoved?: boolean;
 }
 
@@ -49,8 +49,8 @@ interface SplicedArray {
  * @return Идентификатор узла -> Индексы детей в исходной коллекции
  */
 function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string): Map<number, number> {
-   let parentToChildren = new Map(); //Map<Array<Number>>: parentId => [childIndex, childIndex, ...]
-   let count = sourceItems.length;
+   const parentToChildren = new Map(); // Map<Array<Number>>: parentId => [childIndex, childIndex, ...]
+   const count = sourceItems.length;
    let item;
    let itemContents;
    let children;
@@ -60,12 +60,12 @@ function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string)
       item = sourceItems[position];
       itemContents = item.getContents();
 
-      //Skip groups
+      // Skip groups
       if (item instanceof GroupItem) {
          continue;
       }
 
-      //TODO: work with parentId === Object|Array
+      // TODO: work with parentId === Object|Array
       parentId = normalizeId(object.getPropertyValue(itemContents, parentProperty));
 
       if (parentToChildren.has(parentId)) {
@@ -88,7 +88,7 @@ function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string)
  * @static
  */
 function buildGroupsMap(sourceItems: CollectionItem[]): Map<CollectionItem, number> {
-   let itemToGroup = new Map();
+   const itemToGroup = new Map();
    let currentGroup;
 
    sourceItems.forEach((item, index) => {
@@ -115,28 +115,29 @@ function buildGroupsMap(sourceItems: CollectionItem[]): Map<CollectionItem, numb
  * @return {Array.<Number>} Индекс в дереве -> индекс в исходной коллекции
  * @static
  */
-function buildTreeIndex(options, parentIndex?: number): number[] {
-   let result = [];
-   let sourceItems = options.sourceItems;
-   let childrenMap = options.childrenMap;
-   let parentsMap = options.parentsMap;
-   let groupsMap = options.groupsMap;
+function buildTreeIndex(options: any, parentIndex?: number): number[] {
+   const result = [];
+   const sourceItems = options.sourceItems;
+   const childrenMap = options.childrenMap;
+   const parentsMap = options.parentsMap;
+   const groupsMap = options.groupsMap;
    let lastGroup = options.lastGroup;
-   let path = options.path;
-   let idProperty = options.idProperty;
-   let parentId = path[path.length - 1];
+   const path = options.path;
+   const idProperty = options.idProperty;
+   const parentId = path[path.length - 1];
 
-   //Check if that parentId is already behind
+   // Check if that parentId is already behind
    if (path.indexOf(parentId) > -1 && path.indexOf(parentId) < path.length - 1) {
       logger.error(
          'Types/display:itemsStrategy.AdjacencyList',
-         `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" is already in progress. Path: ${path.join(' -> ')}.`
+         `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" is already in ` +
+         `progress. Path: ${path.join(' -> ')}.`
       );
       return result;
    }
 
-   let children = childrenMap.has(parentId) ? childrenMap.get(parentId) : [];
-   let childrenCount = children.length;
+   const children = childrenMap.has(parentId) ? childrenMap.get(parentId) : [];
+   const childrenCount = children.length;
    let child;
    let childIndex;
    let childContents;
@@ -148,9 +149,9 @@ function buildTreeIndex(options, parentIndex?: number): number[] {
       childContents = child.getContents();
       childGroup = groupsMap.get(child);
 
-      //Add group if it has been changed
+      // Add group if it has been changed
       if (childGroup !== lastGroup) {
-         //Reject reverted group. Otherwise we'll have empty reverted group.
+         // Reject reverted group. Otherwise we'll have empty reverted group.
          if (groupReverted) {
             result.pop();
             parentsMap.pop();
@@ -165,18 +166,19 @@ function buildTreeIndex(options, parentIndex?: number): number[] {
       parentsMap.push(parentIndex);
 
       if (groupReverted) {
-         groupReverted = false;//Reset revert flag if group has any members
+         // Reset revert flag if group has any members
+         groupReverted = false;
       }
 
       if (childContents && idProperty) {
-         let childId = normalizeId(object.getPropertyValue(childContents, idProperty));
+         const childId = normalizeId(object.getPropertyValue(childContents, idProperty));
          path.push(childId);
 
-         //Lookup for children
-         let itemsToPush = buildTreeIndex(options, parentsMap.length - 1);
+         // Lookup for children
+         const itemsToPush = buildTreeIndex(options, parentsMap.length - 1);
          result.push(...itemsToPush);
 
-         //Revert parent's group if any child joins another group if there is not the last member in the root
+         // Revert parent's group if any child joins another group if there is not the last member in the root
          if (childGroup !== options.lastGroup && (parentIndex !== undefined || i < childrenCount - 1)) {
             result.push(childGroup);
             parentsMap.push(parentIndex);
@@ -197,7 +199,15 @@ interface IOptions {
    source: AbstractStrategy;
 }
 
-export default class AdjacencyList extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/AdjacencyList.prototype */{
+interface ISerializableState extends IDefaultSerializableState {
+   _items: CollectionItem[];
+   _itemsOrder: number[];
+   _parentsMap: number[];
+}
+
+export default class AdjacencyList extends mixin(
+   DestroyableMixin, SerializableMixin
+) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/AdjacencyList.prototype */ {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -213,22 +223,22 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    /**
     * Элементы стратегии
     */
-   protected _items: Array<CollectionItem>;
+   protected _items: CollectionItem[];
 
    /**
     * Элементы декорируемой стратегии
     */
-   protected _sourceItems: Array<CollectionItem>;
+   protected _sourceItems: CollectionItem[];
 
    /**
     * Внутренний индекс -> оригинальный индекс
     */
-   protected _itemsOrder: Array<number>;
+   protected _itemsOrder: number[];
 
    /**
     * Индекс ребенка -> индекс родителя
     */
-   protected _parentsMap: Array<number>;
+   protected _parentsMap: number[];
 
    /**
     * Конструктор
@@ -239,11 +249,12 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       this._options = options;
 
       if (!options.idProperty) {
-         warning(`${this._moduleName}::constructor(): option "idProperty" is not defined. Only root elements will be presented`);
+         warning(`${this._moduleName}::constructor(): option "idProperty" is not defined. ` +
+         'Only root elements will be presented');
       }
    }
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
@@ -256,15 +267,15 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    }
 
    get count(): number {
-      let itemsOrder = this._getItemsOrder();
+      const itemsOrder = this._getItemsOrder();
       return itemsOrder.length;
    }
 
-   get items(): Array<CollectionItem> {
-      //Force create every item
-      let items = this._getItems();
+   get items(): CollectionItem[] {
+      // Force create every item
+      const items = this._getItems();
       if (!items[$initialized]) {
-         let count = items.length;
+         const count = items.length;
          for (let i = 0; i < count; i++) {
             if (items[i] === undefined) {
                this.at(i);
@@ -276,14 +287,14 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    }
 
    at(index: number): CollectionItem {
-      let items = this._getItems();
+      const items = this._getItems();
       if (items[index]) {
          return items[index];
       }
 
-      let itemsOrder = this._getItemsOrder();
-      let collectionIndex = itemsOrder[index];
-      let sourceItem = this._getSourceItems()[collectionIndex];
+      const itemsOrder = this._getItemsOrder();
+      const collectionIndex = itemsOrder[index];
+      const sourceItem = this._getSourceItems()[collectionIndex];
       let item;
 
       if (sourceItem === undefined) {
@@ -302,48 +313,53 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return items[index] = item;
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem> {
+   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
       added = added || [];
 
-      let shiftTail = (start, offset) => {
-         return (value) => value >= start ? value + offset : value;
-      };
+      const shiftTail = (start, offset) => (value) => value >= start ? value + offset : value;
 
-      let source = this.source;
-      let deletedInSource = []; //deleted indices in this.source.items
+      const source = this.source;
+      // deleted indices in this.source.items
+      const deletedInSource = [];
       for (let i = start; i < start + deleteCount; i++) {
          deletedInSource.push(source.getDisplayIndex(i));
       }
 
       source.splice(start, deleteCount, added);
 
-      let items = this._getItems();
+      const items = this._getItems();
       let itemsOrder = this._getItemsOrder();
-      let sourceItems = this._getSourceItems();
+      const sourceItems = this._getSourceItems();
 
-      //There is the one and only case to move items with two in turn splices
-      if ((<SplicedArray>added).hasBeenRemoved) {
+      // There is the one and only case to move items with two in turn splices
+      if ((<ISplicedArray> added).hasBeenRemoved) {
          added.forEach((item, index) => {
-            let startInSource = source.getDisplayIndex(start + index - deleteCount); //Actual index of added items in source
-            let startInInner = itemsOrder.indexOf(startInSource);//Actual index of added items in itemsOrder
+            // Actual index of added items in source
+            const startInSource = source.getDisplayIndex(start + index - deleteCount);
+            // Actual index of added items in itemsOrder
+            let startInInner = itemsOrder.indexOf(startInSource);
 
-            //If no actual index in itemsOrder bring it to the end
+            // If no actual index in itemsOrder bring it to the end
             if (startInInner === -1) {
                startInInner = itemsOrder.length;
             }
 
-            sourceItems.splice(startInSource, 0, item);//insert in sourceItems
-            itemsOrder = itemsOrder.map(shiftTail(startInSource, 1));//shift itemsOrder values by +1 from startInSource
-            itemsOrder.splice(startInInner, 0, startInSource);//insert in itemsOrder
-            items.splice(startInInner, 0, item);//insert in items
+            // insert in sourceItems
+            sourceItems.splice(startInSource, 0, item);
+            // shift itemsOrder values by +1 from startInSource
+            itemsOrder = itemsOrder.map(shiftTail(startInSource, 1));
+            // insert in itemsOrder
+            itemsOrder.splice(startInInner, 0, startInSource);
+            // insert in items
+            items.splice(startInInner, 0, item);
          });
       }
 
-      let removed = [];
+      const removed = [];
       if (deleteCount > 0) {
-         //Remove deleted in _itemsOrder, _items and _sourceItems
-         let removeDeleted = (deleted) => (outer, inner) => {
-            let isRemoved = deleted.indexOf(outer) > -1;
+         // Remove deleted in _itemsOrder, _items and _sourceItems
+         const removeDeleted = (deleted) => (outer, inner) => {
+            const isRemoved = deleted.indexOf(outer) > -1;
             if (isRemoved) {
                removed.push(
                   items.splice(inner, 1)[0]
@@ -353,16 +369,16 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
             return !isRemoved;
          };
 
-         //Remove deleted from itemsOrder
+         // Remove deleted from itemsOrder
          itemsOrder = itemsOrder.filter(removeDeleted(deletedInSource));
 
-         //Shift indices from deleted in itemsOrder from higher to lower
+         // Shift indices from deleted in itemsOrder from higher to lower
          deletedInSource.sort().reverse().forEach((outer) => {
             itemsOrder = itemsOrder.map(shiftTail(outer, -1));
          });
 
-         //Set removed flag to use in possible move operation
-         (<SplicedArray>removed).hasBeenRemoved = true;
+         // Set removed flag to use in possible move operation
+         (<ISplicedArray> removed).hasBeenRemoved = true;
       }
 
       this._itemsOrder = itemsOrder;
@@ -372,52 +388,52 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return removed;
    }
 
-   reset() {
+   reset(): void {
       this._items = null;
       this._sourceItems = null;
       this._itemsOrder = null;
       this.source.reset();
    }
 
-   invalidate() {
+   invalidate(): void {
       this.source.invalidate();
       this._syncItemsOrder();
    }
 
    getDisplayIndex(index: number): number {
-      let sourceIndex = this.source.getDisplayIndex(index);
-      let itemsOrder = this._getItemsOrder();
-      let itemIndex = itemsOrder.indexOf(sourceIndex);
+      const sourceIndex = this.source.getDisplayIndex(index);
+      const itemsOrder = this._getItemsOrder();
+      const itemIndex = itemsOrder.indexOf(sourceIndex);
 
       return itemIndex === -1 ? itemsOrder.length : itemIndex;
    }
 
    getCollectionIndex(index: number): number {
-      let sourceIndex = this.source.getCollectionIndex(index);
-      let itemsOrder = this._getItemsOrder();
-      let collectionIndex = itemsOrder[sourceIndex];
+      const sourceIndex = this.source.getCollectionIndex(index);
+      const itemsOrder = this._getItemsOrder();
+      const collectionIndex = itemsOrder[sourceIndex];
 
       return collectionIndex === undefined ? -1 : collectionIndex;
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
-      state.$options = this._options;
-      state._items = this._items;
-      state._itemsOrder = this._itemsOrder;
-      state._parentsMap = this._parentsMap;
+      resultState.$options = this._options;
+      resultState._items = this._items;
+      resultState._itemsOrder = this._itemsOrder;
+      resultState._parentsMap = this._parentsMap;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
 
          this._items = state._items;
@@ -426,16 +442,16 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       };
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region Protected
 
    /**
     * Возвращает элементы проекции
     * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
-   protected _getItems(): Array<CollectionItem> {
+   protected _getItems(): CollectionItem[] {
       if (!this._items) {
          this._initItems();
       }
@@ -446,7 +462,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     * Инициализирует элементы проекции
     * @protected
     */
-   protected _initItems() {
+   protected _initItems(): void {
       this._items = [];
       this._items.length = this._getItemsOrder().length;
    }
@@ -456,7 +472,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     * @protected
     * @return {Array.<Number>}
     */
-   protected _getItemsOrder(): Array<number> {
+   protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
          this._itemsOrder = this._createItemsOrder();
       }
@@ -464,23 +480,23 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return this._itemsOrder;
    }
 
-   protected _syncItemsOrder() {
+   protected _syncItemsOrder(): void {
       if (!this._itemsOrder) {
          return;
       }
 
-      let oldOrder = this._itemsOrder;
-      let oldItems = this._getItems();
-      let oldSourceItems = this._getSourceItems();
-      let newOrder = this._createItemsOrder();
-      let newSourceItems = this._sourceItems;
-      let sourceToInner = new Map();
+      const oldOrder = this._itemsOrder;
+      const oldItems = this._getItems();
+      const oldSourceItems = this._getSourceItems();
+      const newOrder = this._createItemsOrder();
+      const newSourceItems = this._sourceItems;
+      const sourceToInner = new Map();
 
       oldOrder.forEach((sourceIndex, innerIndex) => {
          sourceToInner.set(oldSourceItems[sourceIndex], oldItems[innerIndex]);
       });
 
-      let newItems = new Array(newOrder.length);
+      const newItems = new Array(newOrder.length);
       let innerItem;
       let sourceItem;
       let sourceIndex;
@@ -490,21 +506,21 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
          innerItem = sourceToInner.get(sourceItem);
          if (innerItem && innerItem.getContents() === sourceItem.getContents()) {
             newItems[newIndex] = innerItem;
-            sourceToInner.delete(sourceItem);//To skip duplicates
+            sourceToInner.delete(sourceItem); // To skip duplicates
          }
       }
 
       this._itemsOrder = newOrder;
       this._items = newItems;
 
-      //Every item leaved the tree should lost their parent
+      // Every item leaved the tree should lost their parent
       oldItems.forEach((item) => {
          if (item.setParent) {
             item.setParent(undefined);
          }
       });
 
-      //Every item stayed in the tree should renew their parent
+      // Every item stayed in the tree should renew their parent
       newItems.forEach((item, index) => {
          if (item.setParent) {
             item.setParent(this._getParent(index));
@@ -512,19 +528,19 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       });
    }
 
-   protected _getSourceItems(): Array<CollectionItem> {
+   protected _getSourceItems(): CollectionItem[] {
       if (!this._sourceItems) {
          this._sourceItems = this.source.items;
       }
       return this._sourceItems;
    }
 
-   protected _createItemsOrder(): Array<number> {
+   protected _createItemsOrder(): number[] {
       this._sourceItems = null;
       this._parentsMap = [];
 
-      let options = this._options;
-      let sourceItems = this._getSourceItems();
+      const options = this._options;
+      const sourceItems = this._getSourceItems();
 
       let root = this.options.display.getRoot();
       root = root && root.getContents ? root.getContents() : root;
@@ -536,19 +552,19 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
          : root
       );
 
-      let childrenMap = buildChildrenMap(sourceItems, options.parentProperty);
-      let groupsMap = buildGroupsMap(sourceItems);
+      const childrenMap = buildChildrenMap(sourceItems, options.parentProperty);
+      const groupsMap = buildGroupsMap(sourceItems);
 
-      //FIXME: backward compatibility with controls logic: 1st level items may don\'t have parentProperty
+      // FIXME: backward compatibility with controls logic: 1st level items may don\'t have parentProperty
       if (root === null && !childrenMap.has(root) && childrenMap.has(undefined)) {
          root = undefined;
       }
 
       return buildTreeIndex({
          idProperty: options.idProperty,
-         sourceItems: sourceItems,
-         childrenMap: childrenMap,
-         groupsMap: groupsMap,
+         sourceItems,
+         childrenMap,
+         groupsMap,
          parentsMap: this._parentsMap,
          path: [root]
       });
@@ -560,15 +576,15 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     * @return {Types/_display/CollectionItem} Родитель
     */
    protected _getParent(index: number): CollectionItem {
-      let parentsMap = this._parentsMap;
-      let parentIndex = parentsMap[index];
+      const parentsMap = this._parentsMap;
+      const parentIndex = parentsMap[index];
       if (parentIndex === -1) {
          return undefined;
       }
       return parentIndex === undefined ? this.options.display.getRoot() : this.at(parentIndex);
    }
 
-   //endregion
+   // endregion
 }
 
 Object.assign(AdjacencyList.prototype, {

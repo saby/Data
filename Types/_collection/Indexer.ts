@@ -30,26 +30,26 @@ function getPosition(items: any[], value: number): number {
    return position;
 }
 
-export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
+export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype */{
    /**
     * @property {Object} Коллекция
     */
-   _collection: Object;
+   _collection: T;
 
    /**
     * @property {Function} Метод, возвращающий кол-во элементов коллекции
     */
-   _count: Function;
+   _count: (items: T) => number;
 
    /**
     * @property {Function} Метод, возвращающий элемент коллекции по индексу
     */
-   _at: Function;
+   _at: (items: T, index: number) => any;
 
    /**
     * @property {Function} Метод, возвращающий значение свойства элемента коллекции
     */
-   _prop: Function;
+   _prop: (item: any, prop: string) => any;
 
    /**
     * @property {Object.<Object>} Индексы, распределенные по полям
@@ -63,7 +63,12 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Function: Object} at Метод, возвращающий элемент коллекции по индексу
     * @param {Function} prop Метод, возвращающий значение свойства элемента коллекции
     */
-   constructor(collection, count, at, prop) {
+   constructor(
+      collection: T,
+      count: (items: T) => number,
+      at: (items: T, index: number) => any,
+      prop: (item: any, prop: string) => any
+   ) {
       this._collection = collection;
       this._count = count;
       this._at = at;
@@ -79,7 +84,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {*} value Значение свойства элемента.
     * @return {Number}
     */
-   getIndexByValue(property, value) {
+   getIndexByValue(property: string, value: any): number {
       const indices = this.getIndicesByValue(property, value);
       return indices.length ? indices[0] : -1;
    }
@@ -90,7 +95,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {*} value Значение свойства элемента.
     * @return {Array.<Number>}
     */
-   getIndicesByValue(property, value) {
+   getIndicesByValue(property: string, value: any): number[] {
       const index = this._getIndex(property);
       if (index) {
          if (index[value]) {
@@ -107,7 +112,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
    /**
     * Сбрасывает индекс
     */
-   resetIndex() {
+   resetIndex(): void {
       this._indices = null;
    }
 
@@ -116,18 +121,17 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} start С какой позиции
     * @param {Number} count Число обновляемых элементов
     */
-   updateIndex(start, count) {
+   updateIndex(start: number, count: number): void {
       const indices = this._indices;
 
       if (!indices) {
          return;
       }
 
-      /* eslint-disable guard-for-in */
+      // tslint:disable-next-line:forin
       for (const property in indices) {
          this._updateIndex(property, start, count);
       }
-      /* eslint-enable guard-for-in */
    }
 
    /**
@@ -136,7 +140,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} count Число сдвигаемых элементов
     * @param {Number} offset На сколько сдвинуть индексы
     */
-   shiftIndex(start, count, offset) {
+   shiftIndex(start: number, count: number, offset: number): void {
       const finish = start + count;
       this._eachIndexItem((data) => {
          for (let i = 0; i < data.length; i++) {
@@ -152,11 +156,10 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} start С какой позиции
     * @param {Number} count Число удаляемых элементов
     */
-   removeFromIndex(start, count) {
+   removeFromIndex(start: number, count: number): void {
       this._eachIndexItem((data) => {
-         let at;
          for (let i = 0; i < count; i++) {
-            at = data.indexOf(start + i);
+            const at = data.indexOf(start + i);
             if (at > -1) {
                data.splice(at, 1);
             }
@@ -164,7 +167,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       });
    }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -173,21 +176,21 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Function} callback Метод обратного вызова
     * @protected
     */
-   _eachIndexItem(callback) {
+   protected _eachIndexItem(callback: Function): void {
       const indices = this._indices;
       if (!indices) {
          return;
       }
 
       let values;
-      /* eslint-disable guard-for-in */
+      // tslint:disable-next-line:forin
       for (const property in indices) {
          values = indices[property];
+         // tslint:disable-next-line:forin
          for (const value in values) {
             callback(values[value], value, property);
          }
       }
-      /* eslint-enable guard-for-in */
    }
 
    /**
@@ -196,7 +199,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @return {Array}
     * @protected
     */
-   _getIndex(property) {
+   protected _getIndex(property: string): any[] {
       if (!property) {
          return undefined;
       }
@@ -209,9 +212,10 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
    /**
     * Проверяет наличие индекса для указанного свойства.
     * @param {String} [property] Название свойства.
+    * @return {Boolean}
     * @protected
     */
-   _hasIndex(property) {
+   protected _hasIndex(property: string): boolean {
       return property && this._indices ? property in this._indices : false;
    }
 
@@ -220,7 +224,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {String} property Название свойства.
     * @protected
     */
-   _deleteIndex(property) {
+   protected _deleteIndex(property: string): void {
       delete this._indices[property];
    }
 
@@ -229,7 +233,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {String} property Название свойства.
     * @protected
     */
-   _createIndex(property) {
+   protected _createIndex(property: string): void {
       if (!property) {
          return;
       }
@@ -248,7 +252,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
     * @param {Number} count Число элементов
     * @protected
     */
-   _updateIndex(property, start, count) {
+   protected _updateIndex(property: string, start: number, count: number): void {
       const index = this._indices[property];
       if (!index) {
          return;
@@ -275,7 +279,7 @@ export default class Indexer /** @lends Types/_collection/Indexer.prototype */{
       }
    }
 
-   // region Protected methods
+   // region
 }
 
 Indexer.prototype['[Types/_collection/Indexer]'] = true;

@@ -32,7 +32,7 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
     * Конструктор типа "Идентификатор".
     * @param {Array|String|Number} value Значение идентификатора
     */
-   constructor(value) {
+   constructor(value: any[] | string | number) {
       if (!(value instanceof Array)) {
          if (typeof value === 'string') {
             value = value.split(this._separator);
@@ -61,7 +61,7 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
       return this._value[1];
    }
 
-   valueOf() {
+   valueOf(): any[] {
       return this._value;
    }
 

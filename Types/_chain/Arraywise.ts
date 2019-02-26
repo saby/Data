@@ -26,7 +26,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
       return new enumerator.Arraywise(this._source);
    }
 
-   each(callback: (item: any, index: number) => void, context?: Object) {
+   each(callback: (item: any, index: number) => void, context?: object): void {
       for (let i = 0, count = this._source.length; i < count; i++) {
          callback.call(
             context || this,

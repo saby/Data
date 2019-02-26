@@ -11,8 +11,6 @@ import IEnumerator from '../IEnumerator';
 import {Map} from '../../shim';
 
 export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_collection/MapEnumerator.prototype */{
-   readonly '[Types/_collection/IEnumerator]' = true;
-
    /**
     * @property {Map} Объект
     */
@@ -30,7 +28,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
    /**
     * @property {Array} Ключи
     */
-   get _keys() {
+   get _keys(): any[] {
       if (!this._cachedKeys) {
          const keys = [];
          this._items.forEach((value, key) => {
@@ -57,11 +55,13 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
 
    // region Types/_collection/IEnumerator
 
-   getCurrent() {
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
+
+   getCurrent(): any {
       return this._index === -1 ? undefined : this._items.get(this._keys[this._index]);
    }
 
-   moveNext() {
+   moveNext(): boolean {
       const keys = this._keys;
       if (this._index >= keys.length - 1) {
          return false;
@@ -71,7 +71,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
       return true;
    }
 
-   reset() {
+   reset(): void {
       this._cachedKeys = undefined;
       this._index = -1;
    }
@@ -80,7 +80,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
 
    // region Public methods
 
-   getCurrentIndex() {
+   getCurrentIndex(): any {
       return this._keys[this._index];
    }
 

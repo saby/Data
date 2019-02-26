@@ -74,7 +74,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   set(name: T, value: IValue);
+   set(name: T, value: IValue): void;
 
    /**
     * Returns selection state by the flag index. If such index is not defined it throws an exception.
@@ -115,7 +115,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   setByIndex(index: number, value: IValue);
+   setByIndex(index: number, value: IValue): void;
 
    /**
     * Sets flags selection from array. Indices which not present in that array are going to be set to null.
@@ -135,20 +135,20 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   fromArray(source: IValue[]);
+   fromArray(source: IValue[]): void;
 
    /**
     * Sets selection state of all the flags to false
     */
-   setFalseAll();
+   setFalseAll(): void;
 
    /**
     * Sets selection state of all the flags to true
     */
-   setTrueAll();
+   setTrueAll(): void;
 
    /**
     * Sets selection state of all the flags to null
     */
-   setNullAll();
+   setNullAll(): void;
 }
