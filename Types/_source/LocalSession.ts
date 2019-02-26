@@ -1,4 +1,7 @@
 /// <amd-module name="Types/_source/LocalSession" />
+
+/* tslint:disable:max-classes-per-file */
+
 /**
  * Общий локальный источник данных для всех вкладок.
  * Источник позволяет хранить данные в локальной сессии браузера.
