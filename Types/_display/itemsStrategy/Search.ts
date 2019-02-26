@@ -12,7 +12,7 @@ import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrate
 import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
 import BreadcrumbsItem from '../BreadcrumbsItem';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
+import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
 
 interface IOptions {
@@ -23,7 +23,9 @@ interface ISortOptions {
    display: Collection;
 }
 
-export default class Search extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Search.prototype */{
+export default class Search extends mixin(
+   DestroyableMixin, SerializableMixin
+) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Search.prototype */ {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -43,7 +45,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       this._options = options;
    }
 
-   //region IItemsStrategy
+   // region IItemsStrategy
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
@@ -59,7 +61,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       return this._getItems().length;
    }
 
-   get items(): Array<CollectionItem> {
+   get items(): CollectionItem[] {
       return this._getItems();
    }
 
@@ -67,73 +69,72 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       return this._getItems()[index];
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem>): Array<CollectionItem> {
+   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
       return this.source.splice(start, deleteCount, added);
    }
 
-   reset() {
+   reset(): void {
       return this.source.reset();
    }
 
-   invalidate() {
+   invalidate(): void {
       return this.source.invalidate();
    }
 
    getDisplayIndex(index: number): number {
-      let sourceIndex = this.source.getDisplayIndex(index);
-      let sourceItem = this.source.items[sourceIndex];
-      let items = this._getItems();
-      let itemIndex = items.indexOf(sourceItem);
+      const sourceIndex = this.source.getDisplayIndex(index);
+      const sourceItem = this.source.items[sourceIndex];
+      const items = this._getItems();
+      const itemIndex = items.indexOf(sourceItem);
 
       return itemIndex === -1 ? items.length : itemIndex;
    }
 
    getCollectionIndex(index: number): number {
-      let items = this._getItems();
-      let item = items[index];
-      let sourceItems = this.source.items;
-      let sourceIndex = sourceItems.indexOf(item);
+      const items = this._getItems();
+      const item = items[index];
+      const sourceIndex = this.source.items.indexOf(item);
 
       return sourceIndex >= 0 ? this.source.getCollectionIndex(sourceIndex) : -1;
    }
 
-   //endregion
+   // endregion
 
-   //region SerializableMixin
+   // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: ISerializableState): ISerializableState {
+      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
-      state.$options = this._options;
+      resultState.$options = this._options;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
-      let fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+   protected _setSerializableState(state: ISerializableState): Function {
+      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      return function(): void {
          fromSerializableMixin.call(this);
       };
    }
 
-   //endregion
+   // endregion
 
-   //region Protected
+   // region Protected
 
    /**
     * Возвращает элементы проекции
     * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
-   protected _getItems(): Array<CollectionItem> {
+   protected _getItems(): CollectionItem[] {
       return Search.sortItems(this.source.items, {
-         display: <Collection> this.options.display
+         display: this.options.display as Collection
       });
    }
 
-   //endregion
+   // endregion
 
-   //region Statics
+   // region Statics
 
    /**
     * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
@@ -143,14 +144,12 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
     * @return {Array.<Types/_display/CollectionItem>}
     * @static
     */
-   static sortItems(items: Array<CollectionItem>, options: ISortOptions): Array<CollectionItem> {
+   static sortItems(items: CollectionItem[], options: ISortOptions): CollectionItem[] {
       const display = options.display;
       const dump = {};
       let currentBreadcrumbs = null;
 
-      const isNode = function(item) {
-         return item && item.isNode ? item.isNode() : false;
-      };
+      const isNode = (item: any): boolean => item && item.isNode ? item.isNode() : false;
 
       return items.map((item, index) => {
          const next = items[index + 1];
@@ -158,7 +157,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
          const nextIsNode = isNode(next);
 
          if (itemIsNode) {
-            var isLastBreadcrumb = nextIsNode ? item.getLevel() >= next.getLevel() : true;
+            const isLastBreadcrumb = nextIsNode ? item.getLevel() >= next.getLevel() : true;
             if (isLastBreadcrumb) {
                currentBreadcrumbs = new BreadcrumbsItem({
                   owner: display,
@@ -179,7 +178,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       });
    }
 
-   //endregion
+   // endregion
 }
 
 Search.prototype._moduleName = 'Types/display:itemsStrategy.Search';

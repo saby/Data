@@ -28,7 +28,7 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
 
    _getItems(): any[] {
       if (!this._items) {
-         const { shouldSaveIndices } = this.previous;
+         const shouldSaveIndices: boolean = this.previous.shouldSaveIndices;
          this._items = super._getItems()
             .map(([index, item]) => new SortWrapper(item, index))
             .sort(this.compareFunction)

@@ -29,7 +29,7 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
 
    // region Public methods
 
-   getContents() {
+   getContents(): any[] {
       const root = this._$owner ? this._$owner.getRoot() : {};
       let current = this._$last;
       const contents = [];
@@ -46,7 +46,7 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
       return contents;
    }
 
-   setContents() {
+   setContents(): void {
       throw new ReferenceError('BreadcrumbsItem contents is read only.');
    }
 

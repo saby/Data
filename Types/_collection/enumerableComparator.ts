@@ -6,6 +6,7 @@
  */
 
 import IObservable from './IObservable';
+import IEnumerable from './IEnumerable';
 
 let sessionId = 0;
 
@@ -13,7 +14,7 @@ let sessionId = 0;
  * Возвращает уникальный идентификатор сессии
  * @return {Number}
  */
-function getId() {
+function getId(): number {
    if (sessionId > 65534) {
       sessionId = 0;
    }
@@ -26,7 +27,7 @@ function getId() {
  * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
  * @return {Object}
  */
-function extractItems(collection, contentsWrapper) {
+function extractItems(collection: IEnumerable<any>, contentsWrapper?: string): any {
    const enumerator = collection.getEnumerator();
    const items = [];
    const contents = [];
@@ -46,6 +47,16 @@ function extractItems(collection, contentsWrapper) {
    };
 }
 
+export interface ISession {
+   id: number;
+   before: any[];
+   after?: any[];
+   beforeContents?: any[];
+   afterContents?: any[];
+   addedProcessed?: any[];
+   removedProcessed?: object;
+}
+
 /**
  * Возвращает изменения группы
  * @param {String} groupName Название группы
@@ -55,7 +66,13 @@ function extractItems(collection, contentsWrapper) {
  * @param {Number} [offset=0] Смещение элеметов в after относительно before
  * @return {Object}
  */
-function getGroupChanges(groupName, session, collection, startFrom, offset) {
+function getGroupChanges(
+   groupName: string,
+   session: ISession,
+   collection: IEnumerable<any>,
+   startFrom?: number,
+   offset?: number
+): object {
    session.addedProcessed = session.addedProcessed || [];
    session.removedProcessed = session.removedProcessed || {};
 
@@ -172,13 +189,15 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
             afterIndex = index;
             beforeIndex = before.indexOf(afterItem);
 
-            // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого генерим новую обертку, которую добавим в список старых
+            // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого
+            // генерим новую обертку, которую добавим в список старых
             // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
             if (
                beforeIndex === afterIndex &&
                beforeContents[index] !== afterContents[index]
             ) {
                // FIXME: convertToItem
+               // @ts-ignore
                oldItems.push(collection._getItemsStrategy().convertToItem(beforeContents[index]));
                newItems.push(afterItem);
                oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
@@ -190,7 +209,9 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
          case 'moved':
             // собираем перемещенные элементы
             if (before.length !== after.length) {
-               throw new Error('The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.');
+               throw new Error(
+                  'The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.'
+               );
             }
             if (beforeItem === afterItem) {
                if (oldItems.length === 0) {
@@ -242,7 +263,7 @@ function getGroupChanges(groupName, session, collection, startFrom, offset) {
  * @param {Object} changes Изменения группы
  * @param {Object} session Сессия изменений
  */
-function applyGroupChanges(groupName, changes, session) {
+function applyGroupChanges(groupName: string, changes: any, session: ISession): void {
    const before = session.before;
    const beforeContents = session.beforeContents;
    const afterContents = session.afterContents;
@@ -319,7 +340,7 @@ const enumerableComparator = {
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     * @return {Object}
     */
-   startSession(collection, contentsWrapper) {
+   startSession(collection: IEnumerable<any>, contentsWrapper?: string): ISession {
       const items = extractItems(collection, contentsWrapper);
 
       return {
@@ -335,7 +356,7 @@ const enumerableComparator = {
     * @param {Types/_collection/IEnumerable} collection Коллекция
     * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     */
-   finishSession(session, collection, contentsWrapper) {
+   finishSession(session: ISession, collection: IEnumerable<any>, contentsWrapper?: string): void {
       const items = extractItems(collection, contentsWrapper);
 
       session.after = items.items;
@@ -348,8 +369,9 @@ const enumerableComparator = {
     * @param {Types/_collection/IEnumerable} collection Коллекция
     * @param {Function} callback Функция обратного вызова для каждой пачки изменений
     */
-   analizeSession(session, collection, callback) {
-      // сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом удаляются оба
+   analizeSession(session: ISession, collection: IEnumerable<any>, callback: Function): void {
+      // сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом
+      // удаляются оба
       const groups = ['removed', 'added', 'replaced', 'moved'];
       let changes;
       let maxRepeats = Math.max(

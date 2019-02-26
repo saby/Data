@@ -51,7 +51,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(2);//5
     * </pre>
     */
-   assign(items: IEnumerable<T> | T[]);
+   assign(items: IEnumerable<T> | T[]): void;
 
    /**
     * Добавляет элементы другой коллекции к концу списка.
@@ -86,7 +86,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(5);//5
     * </pre>
     */
-   append(items: IEnumerable<T> | T[]);
+   append(items: IEnumerable<T> | T[]): void;
 
    /**
     * Добавляет элементы другой коллекции в начало списка.
@@ -121,7 +121,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(5);//3
     * </pre>
     */
-   prepend(items: IEnumerable<T> | T[]);
+   prepend(items: IEnumerable<T> | T[]): void;
 
    /**
     * Очищает список.
@@ -137,7 +137,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.getCount();//0
     * </pre>
     */
-   clear();
+   clear(): void;
 
    /**
     * Добавляет элемент в список.
@@ -170,7 +170,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(2);//2
     * </pre>
     */
-   add(item: T, at?: number);
+   add(item: T, at?: number): void;
 
    /**
     * Возвращает элемент по позиции.
@@ -193,7 +193,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(0);//undefined
     * </pre>
     */
-   at(index: number);
+   at(index: number): T;
 
    /**
     * Удаляет элемент из списка (первый найденный). Элементы, следующие за удаленным, смещаются вверх.
@@ -263,7 +263,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(1);//5
     * </pre>
     */
-   replace(item: T, at: number);
+   replace(item: T, at: number): void;
 
    /**
     * Перемещает элемент с одной позиции на другую.
@@ -283,7 +283,7 @@ export default interface IList<T> /** @lends Types/_collection/IList.prototype *
     *    list.at(2);//4
     * </pre>
     */
-   move(from: number, to: number);
+   move(from: number, to: number): void;
 
    /**
     * Возвращает позицию первого вхождения элемента в список.

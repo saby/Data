@@ -28,7 +28,7 @@ export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uni
       this._idExtractor = idExtractor;
    }
 
-   destroy() {
+   destroy(): void {
       this._idExtractor = null;
       super.destroy();
    }

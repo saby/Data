@@ -29,7 +29,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
       this._key = key;
    }
 
-   destroy() {
+   destroy(): void {
       this._key = null;
       super.destroy();
    }

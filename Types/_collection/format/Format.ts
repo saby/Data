@@ -10,17 +10,13 @@
 
 import {IEquatable} from '../../entity';
 import {format} from '../../entity';
-import List from '../List';
+import List, {IOptions as IListOptions} from '../List';
 import {register} from '../../di';
 
-export default class Format<T> extends List<T> implements IEquatable /** @lends Types/_entity/format/Format.prototype */{
+export default class Format<T>
+   extends List<T>
+   implements IEquatable /** @lends Types/_entity/format/Format.prototype */ {
    _$items: any[];
-
-   // endregion List
-
-   // region IEquatable
-
-   readonly '[Types/_entity/IEquatable]': boolean;
 
    protected _moduleName: string;
 
@@ -29,7 +25,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
     * @name Types/_entity/format/Format#items
     */
 
-   constructor(options?: Object) {
+   constructor(options?: IListOptions<T>) {
       super(options);
       for (let i = 0, len = this._$items.length; i < len; i++) {
          this._checkItem(this._$items[i]);
@@ -39,24 +35,24 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
 
    // region List
 
-   add(item: format.Field, at?: number) {
+   add(item: T, at?: number): void {
       this._checkItem(item);
       this._checkName(item);
       super.add(item, at);
    }
 
-   remove(item: format.Field) {
+   remove(item: T): boolean {
       this._checkItem(item);
       return super.remove(item);
    }
 
-   replace(item: format.Field, at: number) {
+   replace(item: T, at: number): void {
       this._checkItem(item);
       this._checkName(item, at);
       super.replace(item, at);
    }
 
-   assign(items: format.Field[]) {
+   assign(items: T[]): void {
       items = this._itemsToArray(items);
       for (let i = 0, len = items.length; i < len; i++) {
          this._checkItem(items[i]);
@@ -69,7 +65,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
       }
    }
 
-   append(items: format.Field[]) {
+   append(items: T[]): void {
       items = this._itemsToArray(items);
       for (let i = 0, len = items.length; i < len; i++) {
          this._checkItem(items[i]);
@@ -78,7 +74,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
       super.append(items);
    }
 
-   prepend(items: format.Field[]) {
+   prepend(items: T[]): void {
       items = this._itemsToArray(items);
       for (let i = 0, len = items.length; i < len; i++) {
          this._checkItem(items[i]);
@@ -91,7 +87,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
       return super.getCount();
    }
 
-   at(i: number): format.Field {
+   at(i: number): T {
       return super.at(i);
    }
 
@@ -99,9 +95,15 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
       return super.getIndexByValue(name, value);
    }
 
-   removeAt(index: any) {
+   removeAt(index: any): T {
       return super.removeAt(index);
    }
+
+   // endregion
+
+   // region IEquatable
+
+   readonly '[Types/_entity/IEquatable]': boolean;
 
    isEqual(format: Format<T>): boolean {
       if (format === this) {
@@ -117,6 +119,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
          return false;
       }
       for (let i = 0, count = this.getCount(); i < count; i++) {
+         // @ts-ignore
          if (!this.at(i).isEqual(format.at(i))) {
             return false;
          }
@@ -124,7 +127,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
       return true;
    }
 
-   // endregion IEquatable
+   // endregion
 
    // region Public methods
 
@@ -133,7 +136,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
     * Если поля с таким именем нет, генерирует исключение.
     * @param {String} name Имя поля
     */
-   removeField(name: string) {
+   removeField(name: string): void {
       const index = this.getIndexByValue('name', name);
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}::removeField(): field "${name}" doesn't found`);
@@ -158,10 +161,11 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
     * @return {String}
     */
    getFieldName(at: number): string {
+      // @ts-ignore
       return this.at(at).getName();
    }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -169,7 +173,7 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
     * Проверяет, что переданный элемент - формат поля
     * @protected
     */
-   protected _checkItem(item: any) {
+   protected _checkItem(item: T): void {
       if (!item || !(item instanceof format.Field)) {
          throw new TypeError('Item should be an instance of "Types/entity:format.Field"');
       }
@@ -179,18 +183,18 @@ export default class Format<T> extends List<T> implements IEquatable /** @lends 
     * Проверяет, что формат поля не дублирует уже существующее имя поля
     * @protected
     */
-   protected _checkName(item: format.Field, at?: number) {
+   protected _checkName(item: any, at?: number): void {
       const exists = this.getFieldIndex(item.getName());
       if (exists > -1 && exists !== at) {
          throw new ReferenceError(`${this._moduleName}: field with name "${item.getName()}" already exists`);
       }
    }
 
-   protected _itemsToArray(items: any): format.Field[] {
+   protected _itemsToArray(items: any): T[] {
       return super._itemsToArray(items);
    }
 
-   // endregion Protected methods
+   // endregion
 }
 
 Object.assign(Format.prototype, {

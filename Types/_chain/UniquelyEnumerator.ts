@@ -10,7 +10,7 @@ import Abstract from './Abstract';
 type ExtractFunc = (item: any, index: string|number) => string|number;
 
 export default class UniquelyEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]' = true;
+   readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;
    private idExtractor: ExtractFunc;
    private enumerator: IEnumerator<T>;
@@ -61,7 +61,7 @@ export default class UniquelyEnumerator<T> implements IEnumerator<T> {
       return hasNext;
    }
 
-   reset() {
+   reset(): void {
       this.enumerator = this.previous.getEnumerator();
       this.keysHash = {};
       this.objectsHash = [];

@@ -16,24 +16,23 @@ import {EnumeratorCallback} from './IEnumerable';
 import IEnumerator from './IEnumerator';
 import ArrayEnumerator from './enumerator/Arraywise';
 import Objectwise from './enumerator/Objectwise';
-import {IEquatable, DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
+import {
+   IEquatable,
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin,
+   format
+} from '../entity';
 import {applyMixins} from '../util';
 
-interface GenericObject<T> {}
+// tslint:disable-next-line:no-empty-interface
+interface IGenericObject<T> {}
 
-declare type DictionaryValues = string[] | GenericObject<string>;
+declare type DictionaryValues = string[] | IGenericObject<string>;
 
-export default abstract class Dictionary<T> extends DestroyableMixin implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */{
-
-   // region IEnumerable
-
-   readonly '[Types/_collection/IEnumerable]';
-
-   // endregion
-
-   // region IEquatable
-
-   readonly '[Types/_entity/IEquatable]';
+export default abstract class Dictionary<T>
+   extends DestroyableMixin
+   implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */ {
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
     * @name Types/_collection/Dictionary#dictionary
@@ -58,25 +57,29 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       this._$dictionary = this._$dictionary || [];
    }
 
-   destroy() {
+   destroy(): void {
       ObservableMixin.prototype.destroy.call(this);
       super.destroy();
    }
 
-   /**
-    * Returns collection of keys and values
-    * @param {Boolean} [localize=false] Should return localized version
-    * @return {Array.<String>|Object.<String>}
-    * @protected
-    */
-   getDictionary(localize?: boolean): DictionaryValues {
+   // region IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]': boolean;
+
+   getEnumerator(localize?: boolean): IEnumerator<T> {
       const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
-      return dictionary
-         ? (Array.isArray(dictionary) ? dictionary.slice() : {...dictionary})
-         : dictionary;
+      const enumerator = dictionary instanceof Array
+         ? new ArrayEnumerator(dictionary)
+         : new Objectwise(dictionary);
+
+      enumerator.setFilter((item: any, index: any): boolean => {
+         return index !== 'null';
+      });
+
+      return enumerator as IEnumerator<T>;
    }
 
-   each(callback: EnumeratorCallback<T>, context?: Object, localize?: boolean) {
+   each(callback: EnumeratorCallback<T>, context?: Object, localize?: boolean): void {
       context = context || this;
       const enumerator = this.getEnumerator(localize);
       while (enumerator.moveNext()) {
@@ -88,17 +91,13 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       }
    }
 
-   getEnumerator(localize?: boolean): IEnumerator<T> {
-      const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
-      const enumerator = dictionary instanceof Array ? new ArrayEnumerator(dictionary) : new Objectwise(dictionary);
+   // endregion
 
-      enumerator.setFilter((item: any, index: any): boolean => {
-         return index !== 'null';
-      });
-      return enumerator;
-   }
+   // region IEquatable
 
-   isEqual(to: Object): boolean {
+   readonly '[Types/_entity/IEquatable]': boolean;
+
+   isEqual(to: any): boolean {
       if (!(to instanceof Dictionary)) {
          return false;
       }
@@ -124,6 +123,23 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
       } while (hasItem || hasToItem);
 
       return true;
+   }
+
+   // endregion
+
+   // region Public methods
+
+   /**
+    * Returns collection of keys and values
+    * @param {Boolean} [localize=false] Should return localized version
+    * @return {Array.<String>|Object.<String>}
+    * @protected
+    */
+   getDictionary(localize?: boolean): DictionaryValues {
+      const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
+      return dictionary
+         ? (Array.isArray(dictionary) ? dictionary.slice() : {...dictionary})
+         : dictionary;
    }
 
    // endregion
@@ -164,12 +180,14 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @return {Array}
     * @protected
     */
-   protected _getDictionaryByFormat(format): any[] {
+   protected _getDictionaryByFormat(format: format.Field | format.UniversalField): any[] {
       if (!format) {
          return [];
       }
       return (
-         format.getDictionary ? format.getDictionary() : format.meta && format.meta.dictionary
+         (format as format.Field).getDictionary
+            ? (format as format.Field).getDictionary()
+            : format.meta && format.meta.dictionary
       ) || [];
    }
 
@@ -179,12 +197,14 @@ export default abstract class Dictionary<T> extends DestroyableMixin implements 
     * @return {Array|undefined}
     * @protected
     */
-   protected _getLocaleDictionaryByFormat(format): any[] {
+   protected _getLocaleDictionaryByFormat(format: format.Field | format.UniversalField): any[] {
       if (!format) {
          return;
       }
       return (
-         format.getLocaleDictionary ? format.getLocaleDictionary() : format.meta && format.meta.localeDictionary
+         (format as format.Field).getLocaleDictionary
+            ? (format as format.Field).getLocaleDictionary()
+            : format.meta && format.meta.localeDictionary
       ) || undefined;
    }
 

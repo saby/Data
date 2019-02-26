@@ -49,7 +49,7 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
 
    // region Protected methods
 
-   _unlinkCollection(collection) {
+   _unlinkCollection(collection: any): void {
       let result;
 
       if (collection instanceof Array) {
@@ -72,7 +72,7 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       return collection;
    },
 
-   _unlinkObject(object) {
+   _unlinkObject(object: any): any {
       if (object instanceof Array) {
          return object.slice();
       }

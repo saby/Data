@@ -12,14 +12,11 @@ import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
 import {register} from '../di';
 
-function onSourceChange(event: EventObject, index: number) {
+function onSourceChange(event: EventObject, index: number): void {
    this.setCurrentPosition(this.getIndexBySourceIndex(index));
 }
 
 interface IEnumCollection extends ICollection, IEnum<CollectionItem> {
-}
-
-interface IOptions {
 }
 
 export default class Enum extends Collection /** @lends Types/_display/Enum.prototype */{
@@ -30,7 +27,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
     */
    protected _onSourceChange: Function;
 
-   constructor(options: IOptions) {
+   constructor(options?: object) {
       super(options);
 
       if (!this._$collection['[Types/_collection/IEnum]']) {
@@ -46,7 +43,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       }
    }
 
-   destroy() {
+   destroy(): void {
       if (this._$collection['[Types/_entity/DestroyableMixin]'] &&
          this._$collection['[Types/_entity/ObservableMixin]'] &&
          !this._$collection.destroyed
@@ -57,13 +54,18 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       super.destroy();
    }
 
-   protected _bindHandlers() {
+   protected _bindHandlers(): void {
       super._bindHandlers();
 
       this._onSourceChange = onSourceChange.bind(this);
    }
 
-   protected _notifyCurrentChange(newCurrent: CollectionItem, oldCurrent: CollectionItem, newPosition: number, oldPosition: number) {
+   protected _notifyCurrentChange(
+      newCurrent: CollectionItem,
+      oldCurrent: CollectionItem,
+      newPosition: number,
+      oldPosition: number
+   ): void {
       let value = null;
       if (newPosition > -1) {
          value = this.getSourceIndexByIndex(newPosition);
@@ -73,7 +75,7 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       super._notifyCurrentChange(newCurrent, oldCurrent, newPosition, oldPosition);
    }
 
-   protected _getSourceIndex(index) {
+   protected _getSourceIndex(index: number): number {
       const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
@@ -88,11 +90,12 @@ export default class Enum extends Collection /** @lends Types/_display/Enum.prot
       return -1;
    }
 
-   protected _getItemIndex(index) {
+   protected _getItemIndex(index: number): number {
       const enumerator = this._$collection.getEnumerator();
       let i = 0;
 
       while (enumerator.moveNext()) {
+         // tslint:disable-next-line:triple-equals
          if (enumerator.getCurrentIndex() == index) {
             return i;
          }

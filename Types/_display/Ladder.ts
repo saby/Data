@@ -10,7 +10,11 @@
 
 import Collection from './Collection';
 import CollectionItem from './CollectionItem';
-import {DestroyableMixin, SerializableMixin} from '../entity';
+import {
+   DestroyableMixin,
+   SerializableMixin,
+   ISerializableState as IDefaultSerializableState
+} from '../entity';
 import {IObservable} from '../collection';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
@@ -20,7 +24,7 @@ import {Set, Map} from '../shim';
  * item Объект
  * @return {*}
  */
-function getObjectId(item: any): string | number {
+function getObjectId(item: any): string {
    if (item.getInstanceId instanceof Function) {
       return item.getInstanceId();
    } else if (item.getId instanceof Function) {
@@ -42,7 +46,14 @@ function getCollectionItemId(item: CollectionItem): string | number {
 
 type Converter = (item: any) => string;
 
-export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /** @lends Types/_display/Ladder.prototype */{
+interface ISerializableState extends IDefaultSerializableState {
+   _offset: number;
+   _columnNames: string[];
+}
+
+export default class Ladder extends mixin(
+   DestroyableMixin, SerializableMixin
+) /** @lends Types/_display/Ladder.prototype */ {
    /**
     * Проекция, по которой строится лесенка
     */
@@ -107,7 +118,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       }
    }
 
-   destroy() {
+   destroy(): void {
       this.setCollection(null);
       super.destroy();
    }
@@ -128,7 +139,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
     * Устанавливает проекцию коллекции, по которой строится лесенка.
     * @param {Types/_display/Collection|null} collection Проекция, по которой строится лесенка.
     */
-   setCollection(collection: Collection) {
+   setCollection(collection: Collection): void {
       if (collection !== null && !(collection instanceof Collection)) {
          throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
       }
@@ -161,7 +172,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
     * Устанавливает позицию в коллекции, с которой начинает строиться лесенка
     * @param {Number} offset Позиция.
     */
-   setOffset(offset: number | string) {
+   setOffset(offset: number | string): void {
       offset = parseInt(offset as string, 10);
 
       const prev = this._offset;
@@ -175,7 +186,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       }
    }
 
-   reset() {
+   reset(): void {
       this._column2primaryId = new Map();
    }
 
@@ -185,7 +196,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
     * @param {Function(*): String} converter Конвертер значения поля
     * @return {*}
     */
-   setConverter(columnName: string, converter: Converter) {
+   setConverter(columnName: string, converter: Converter): void {
       this._converters = this._converters || {};
       this._converters[columnName] = converter;
    }
@@ -240,29 +251,29 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
    // region SerializableMixin
 
-   protected _getSerializableState(state) {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
 
       if (this._collection) {
-         state.$options = this._collection;
+         resultState.$options = this._collection;
       } else {
-         delete state.$options;
+         delete resultState.$options;
       }
       if (this._offset) {
-         state._offset = this._offset;
+         resultState._offset = this._offset;
       }
       if (this._columnNames.length) {
-         state._columnNames = this._columnNames;
+         resultState._columnNames = this._columnNames;
       }
 
       // FIXME: what about _converters?
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state) {
+   protected _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function() {
+      return function(): void {
          fromSerializableMixin.call(this);
 
          if (state._offset) {
@@ -284,7 +295,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
    // region Protected methods
 
-   protected _applyCollection() {
+   protected _applyCollection(): void {
       if (!this._collection) {
          this._collectionItems = null;
          return;
@@ -303,7 +314,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       this._collectionItems.splice(at, deleteCount, ...added);
    }
 
-   protected _applyColumn(columnName: string) {
+   protected _applyColumn(columnName: string): void {
       const columnNames = this._columnNames;
       if (columnNames.indexOf(columnName) > -1) {
          return;
@@ -311,7 +322,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       columnNames.push(columnName);
    }
 
-   protected _getColumnData(columnName: string) {
+   protected _getColumnData(columnName: string): Map<string, any> {
       const map = this._column2primaryId;
       if (map.has(columnName)) {
          return map.get(columnName);
@@ -329,7 +340,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       newItemsIndex: number,
       oldItems: CollectionItem,
       oldItemsIndex: number
-   ) {
+   ): void {
       const push = Array.prototype.push;
       let result = [];
 
@@ -391,7 +402,8 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
             // Translate collection items to the _collectionItems
             this._applyCollection();
 
-            // FIXME: Check for desynchronization. It's possible if someone affects this._collection during event handler called before this handler
+            // FIXME: Check for desynchronization. It's possible if someone affects this._collection during event
+            // handler called before this handler
             if (
                action === IObservable.ACTION_RESET &&
                this._collectionItems &&
@@ -410,19 +422,19 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       this._notifyPrimaryChanges(result);
    }
 
-   protected _onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boolean) {
+   protected _onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boolean): void {
       if (enabled && !analyze) {
          this._applyCollection();
       }
    }
 
-   protected _onAfterCollectionChange() {
+   protected _onAfterCollectionChange(): void {
       if (this._collectionItems && this._collection.getCount() !== this._collectionItems.length) {
          this._applyCollection();
       }
    }
 
-   protected _notifyPrimaryChanges(changesArray: any[]) {
+   protected _notifyPrimaryChanges(changesArray: any[]): void {
       const collection = this._collection;
       const collectionItems = this._collectionItems;
       let idx;
@@ -452,7 +464,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       }
    }
 
-   protected _checkRange(startIdx: number, length: number, byOriginal?: boolean) {
+   protected _checkRange(startIdx: number, length: number, byOriginal?: boolean): any[] {
       const result = [];
       const collection = this._collection;
       const collectionItems = this._collectionItems;
@@ -481,7 +493,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
       return result;
    }
 
-   protected _adjustPrimary(idx: number, item: CollectionItem, columnName: string, byOriginal?: boolean) {
+   protected _adjustPrimary(idx: number, item: CollectionItem, columnName: string, byOriginal?: boolean): any[] {
       if (!item) {
          return null;
       }
@@ -529,7 +541,6 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) /
 
       return prevVal !== currVal;
    }
-n;
 }
 
 Ladder.prototype._moduleName = 'Types/display:Ladder';

@@ -24,7 +24,8 @@
  *       }
  *    });
  * </pre>
- * Потому что именно конструктор примеси OptionsToPropertyMixin раскладывает значения аргумента options по защищенным свойствам:
+ * Потому что именно конструктор примеси OptionsToPropertyMixin раскладывает значения аргумента options по защищенным
+ * свойствам:
  * <pre>
  *    var hdd = new Device({
  *       vendor: 'Seagate'
@@ -39,15 +40,15 @@
 const optionPrefix = '_$';
 const optionPrefixLen = optionPrefix.length;
 
-function defineProperty(instance: Object, name: string, key: string, scope: Object) {
+function defineProperty(instance: Object, name: string, key: string, scope: Object): void {
    Object.defineProperty(instance, name, {
       enumerable: true,
       configurable: true,
-      get() {
+      get(): any {
          delete instance[name];
          return (instance[name] = scope[key]);
       },
-      set(value) {
+      set(value: any): void {
          delete instance[name];
          instance[name] = value;
       }
@@ -82,7 +83,7 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
     * @return {Object} Значения опций
     * @protected
     */
-   protected _getOptions(): Object {
+   protected _getOptions(): object {
       const options = {};
       const keys = Object.keys(this);
       let key;

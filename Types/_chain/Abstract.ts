@@ -30,7 +30,9 @@ type PropertyMapFunc = (item: any, property: string|number) => any;
 
 type ReduceFunc = (memo: any, item: any, index: number) => any;
 
-export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */{
+export default abstract class Abstract<T>
+   extends DestroyableMixin
+   implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */ {
 
    /**
     * @property {Types/_chain/Abstract} Первый элемент цепочки
@@ -45,7 +47,6 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    get shouldSaveIndices(): boolean {
       return this._previous ? this._previous.shouldSaveIndices : true;
    }
-   readonly '[Types/_collection/IEnumerable]' = true;
 
    /**
     * @property {*} Данные, обрабатываемые цепочкой
@@ -72,31 +73,15 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
       }
    }
 
-   // endregion Ordering
-
-   // endregion Public methods
-
-   // region Static methods
-
-   static propertyMapper(name: string|PropertyMapFunc): PropertyMapFunc {
-      if (typeof name === 'function') {
-         return name;
-      }
-
-      if (name === undefined) {
-         return (item) => item;
-      }
-
-      return (item) => object.getPropertyValue(item, name);
-   }
-
-   destroy() {
+   destroy(): void {
       this._source = null;
       this._previous = null;
       super.destroy();
    }
 
    // region Types/_collection/IEnumerable
+
+   readonly '[Types/_collection/IEnumerable]': boolean = true;
 
    getEnumerator(): IEnumerator<T> {
       throw new Error('Not implemented');
@@ -116,7 +101,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * //'key: foo, value: Foo', 'key: bar, value: Bar'
     * </pre>
     */
-   each(callback: (item: any, index: number) => void, context?: Object) {
+   each(callback: (item: any, index: number) => void, context?: object): void {
       const enumerator = this.getEnumerator();
       while (enumerator.moveNext()) {
          callback.call(
@@ -127,7 +112,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
       }
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 
    // region Public methods
 
@@ -182,7 +167,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * });
     * </pre>
     */
-   value(factory: Function, ...optional): any {
+   value(factory: Function, ...optional: any[]): any {
       if (factory instanceof Function) {
          const args = [this, ...optional];
          return factory(...args);
@@ -303,7 +288,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
       return this.reverse().reduce(callback, initialValue);
    }
 
-   // endregion Summary
+   // endregion
 
    // region Transformation
 
@@ -352,7 +337,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
     * </pre>
     */
-   zip(...args): Zipped<T> {
+   zip(...args: any[]): Zipped<T> {
       const Next = resolve<any>('Types/chain:Zipped');
       return new Next(
          this,
@@ -379,7 +364,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    zipObject(values: any[]): Object {
       const result = Object.create(null);
       this.zip(values).each((item) => {
-         const [key, value] = item;
+         const [key, value]: [any, any] = item;
          result[key] = value;
       });
       return result;
@@ -439,7 +424,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     *    .join('');//['WYSIWYG']
     * </pre>
     */
-   invoke(methodName: string, ...args): Mapped<T> {
+   invoke(methodName: string, ...args: any[]): Mapped<T> {
       return this.map((item) => item[methodName](...args));
    }
 
@@ -622,7 +607,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
          .uniq();
    }
 
-   // endregion Transformation
+   // endregion
 
    // region Filtering
 
@@ -751,7 +736,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
       return this.reverse().first(n).reverse();
    }
 
-   // endregion Filtering
+   // endregion
 
    // region Ordering
 
@@ -771,8 +756,8 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
    }
 
    /**
-    * Сортирует коллекцию с использованием функции сортировки, алгоритм работы и сигнатура которой аналогичны
-    * методу {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.prototype.sort}.
+    * Сортирует коллекцию с использованием функции сортировки, алгоритм работы и сигнатура которой аналогичны методу
+    * {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort sort}.
     * @param {function(*, *): Number} [compareFunction] Функция сортировки. Принимает аргументами два элемента
     * коллекции, которые нужно сравнить.
     * @return {Types/_chain/Sorted}
@@ -790,7 +775,23 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
       return new Next(this, compareFunction);
    }
 
-   // endregion Static methods
+   // endregion
+
+   // region Static methods
+
+   static propertyMapper(name: string|PropertyMapFunc): PropertyMapFunc {
+      if (typeof name === 'function') {
+         return name;
+      }
+
+      if (name === undefined) {
+         return (item) => item;
+      }
+
+      return (item) => object.getPropertyValue(item, name);
+   }
+
+   // endregion
 }
 
 Object.assign(Abstract.prototype, {

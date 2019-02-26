@@ -2,7 +2,8 @@
 /**
  * Абстрактная модель.
  * Модели обеспечивают доступ к данным и поведению объектов предметной области (сущностям).
- * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира, которые вы моделируете в своем приложении.
+ * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира,
+ * которые вы моделируете в своем приложении.
  *
  * В основе абстрактной модели лежит {@link Types/_entity/Record запись}.
  * Основные аспекты модели (дополнительно к аспектам записи):
@@ -12,11 +13,13 @@
  * </ul>
  *
  * Поведенческие аспекты каждой сущности реализуются ее прикладным модулем в виде публичных методов.
- * Прикладные модели могут внедряться в порождающие их объекты, такие как {@link Types/_source/ISource#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
+ * Прикладные модели могут внедряться в порождающие их объекты, такие как
+ * {@link Types/_source/ISource#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
  *
  * Для реализации конкретной модели используется наследование от абстрактной либо промежуточной.
  *
- * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
+ * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля
+ * в свойстве _moduleName каждого наследника:
  * <pre>
  *    //My/Awesome/Model.ts
  *    import {Model} from 'Types/entity';
@@ -57,7 +60,8 @@
  *    const testOk = user.authenticate('its pizza time!');
  * </pre>
  *
- * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
+ * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для
+ * организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
  * <pre>
  *    var MyEngine, MyTransmission, myCar;
  *
@@ -105,14 +109,16 @@
  * @author Мальцев А.А.
  */
 
-import Record from './Record';
+import Record, {IOptions as IRecordOptions} from './Record';
 import IInstantiable from './IInstantiable';
 import InstantiableMixin from './InstantiableMixin';
+import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {Compute} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
+import { adapter } from '../entity';
 
 /**
  * Separator for path in object
@@ -135,7 +141,20 @@ interface IProperty {
    default?: (name: string) => any;
 }
 
+// tslint:disable-next-line:no-empty-interface
 interface IProperties<T> {
+}
+
+interface IOptions extends IRecordOptions {
+   properties?: IProperties<IProperty>;
+   idProperty?: string;
+}
+
+interface ISerializableState extends IDefaultSerializableState {
+   $options: IOptions;
+   _instanceId: string;
+   _isDeleted: boolean;
+   _defaultPropertiesValues: object;
 }
 
 export default class Model extends mixin(
@@ -144,12 +163,15 @@ export default class Model extends mixin(
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
-    * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных (если оно там есть).
-    * @property {Function} [set] Метод, устанавливающий значение свойства. Если метод вернет значение, отличное от undefined, то будет осуществлена попытка сохранить его в сырых данных.
+    * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в
+    * сырых данных (если оно там есть).
+    * @property {Function} [set] Метод, устанавливающий значение свойства. Если метод вернет значение, отличное от
+    * undefined, то будет осуществлена попытка сохранить его в сырых данных.
     */
 
    /**
-    * @cfg {Object.<Property>} Описание собственных свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+    * @cfg {Object.<Property>} Описание собственных свойств модели. Дополняет/уточняет свойства, уже существующие в
+    * сырых данных.
     * @name Types/_entity/Model#properties
     * @see Property
     * @see getProperties
@@ -222,7 +244,8 @@ export default class Model extends mixin(
     *
     *    user.set('guid', 'new-one');//ReferenceError 'Model::set(): property "guid" is read only'
     * </pre>
-    * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других свойств:
+    * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других
+    * свойств:
     * <pre>
     *    import {Model} from 'Types/entity';
     *
@@ -245,7 +268,8 @@ export default class Model extends mixin(
     *    });
     *    console.log(user.get('displayName'));//Johnny a.k.a "Keanu" Mnemonic
     * </pre>
-    * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет сбрасываться кэш, хранящий результат предыдущего вычисления:
+    * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет
+    * сбрасываться кэш, хранящий результат предыдущего вычисления:
     * <pre>
     *    import {Model, functor} from 'Types/entity';
     *
@@ -298,7 +322,7 @@ export default class Model extends mixin(
    /**
     * @property Default values of calculated properties
     */
-   _defaultPropertiesValues: Object;
+   _defaultPropertiesValues: object;
 
    /**
     * @property Properties dependency map like 'property name' -> ['property names that depend of that one']
@@ -320,15 +344,7 @@ export default class Model extends mixin(
     */
    _deepChangedProperties: Object;
 
-   // endregion
-
-   // region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
-   constructor(options?) {
+   constructor(options?: IOptions) {
       super(options);
 
       // TODO: don't allow to inject properties through constructor
@@ -355,43 +371,7 @@ export default class Model extends mixin(
       }
    }
 
-   // endregion
-
-   // region Statics
-
-   static fromObject(data, adapter) {
-      const record = Record.fromObject(data, adapter);
-      if (!record) {
-         return record;
-      }
-      return new Model({
-         rawData: record.getRawData(true),
-         adapter: record.getAdapter(),
-         //@ts-ignore
-         format: record._getFormat(true)// "Anakin, I Am Your Son"
-      });
-   }
-
-   // endregion
-
-   // region Deprecated
-
-   /**
-    * @deprecated
-    */
-   static extend(mixinsList: any, classExtender: any) {
-      logger.info('Types/_entity/Model', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-
-      if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError(
-            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.'
-         );
-      }
-      const coreExtend = require('Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
-   }
-
-   destroy() {
+   destroy(): void {
       this._defaultPropertiesValues = null;
       this._propertiesDependency = null;
       this._calculatingProperties = null;
@@ -534,14 +514,23 @@ export default class Model extends mixin(
 
    /**
     * Перебирает все свойства модели (включая имеющиеся в "сырых" данных)
-    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
+    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет
+    * название свойства, вторым - его значение.
     * @param {Object} [context] Контекст вызова callback.
     * @example
     * Смотри пример {@link Types/_entity/Record#each для записи}:
     */
-   each(callback: EnumeratorCallback<any>, context?: Object) {
+   each(callback: EnumeratorCallback<any>, context?: object): void {
       return super.each(callback, context);
    }
+
+   // endregion
+
+   // region IInstantiable
+
+   readonly '[Types/_entity/IInstantiable]': boolean;
+
+   getInstanceId: () => string;
 
    // endregion
 
@@ -572,26 +561,26 @@ export default class Model extends mixin(
 
    // region SerializableMixin
 
-   _getSerializableState(state) {
-      state = super._getSerializableState(state);
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+      const resultState = super._getSerializableState(state) as ISerializableState;
 
       // Properties are owned by class, not by instance
       if (!this._propertiesInjected) {
-         delete state.$options.properties;
+         delete resultState.$options.properties;
       }
 
-      state._instanceId = this.getInstanceId();
-      state._isDeleted = this._isDeleted;
+      resultState._instanceId = this.getInstanceId();
+      resultState._isDeleted = this._isDeleted;
       if (this._defaultPropertiesValues) {
-         state._defaultPropertiesValues = this._defaultPropertiesValues;
+         resultState._defaultPropertiesValues = this._defaultPropertiesValues;
       }
 
-      return state;
+      return resultState;
    }
 
-   _setSerializableState(state) {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSuper = super._setSerializableState(state);
-      return function() {
+      return function(): void {
          fromSuper.call(this);
 
          this._instanceId = state._instanceId;
@@ -606,21 +595,21 @@ export default class Model extends mixin(
 
    // region Record
 
-   rejectChanges(fields, spread) {
+   rejectChanges(fields: string[], spread?: boolean): void {
       super.rejectChanges(fields, spread);
       if (!(fields instanceof Array)) {
          this._isChanged = false;
       }
    }
 
-   acceptChanges(fields, spread) {
+   acceptChanges(fields: string[], spread?: boolean): void {
       super.acceptChanges(fields, spread);
       if (!(fields instanceof Array)) {
          this._isChanged = false;
       }
    }
 
-   isChanged(name) {
+   isChanged(name: string): boolean {
       if (!name && this._isChanged) {
          return true;
       }
@@ -663,7 +652,7 @@ export default class Model extends mixin(
     *    user.getProperties();//{id: {get: Function, set: Function}, group: {get: Function}}
     * </pre>
     */
-   getProperties() {
+   getProperties(): IProperties<IProperty> {
       return this._$properties;
    }
 
@@ -695,7 +684,7 @@ export default class Model extends mixin(
     *    }, 100);
     * </pre>
     */
-   getDefault(name) {
+   getDefault(name: string): any {
       let defaultPropertiesValues = this._defaultPropertiesValues;
       if (!defaultPropertiesValues) {
          defaultPropertiesValues = this._defaultPropertiesValues = {};
@@ -739,7 +728,7 @@ export default class Model extends mixin(
     *    user.get('group_name');//'Domain Users'
     * </pre>
     */
-   merge(model) {
+   merge(model: Record): void {
       try {
          const modelData = {};
          model.each((key, val) => {
@@ -774,7 +763,7 @@ export default class Model extends mixin(
     *    article.getId();//1
     * </pre>
     */
-   getId() {
+   getId(): any {
       const idProperty = this.getIdProperty();
       if (!idProperty) {
          logger.info(this._moduleName + '::getId(): idProperty is not defined');
@@ -802,7 +791,7 @@ export default class Model extends mixin(
     *    article.getIdProperty();//'id'
     * </pre>
     */
-   getIdProperty() {
+   getIdProperty(): string {
       return this._$idProperty;
    }
 
@@ -825,7 +814,7 @@ export default class Model extends mixin(
     *    article.getId();//1
     * </pre>
     */
-   setIdProperty(idProperty) {
+   setIdProperty(idProperty: string): void {
       if (idProperty && !this.has(idProperty)) {
          logger.info(this._moduleName + '::setIdProperty(): property "' + idProperty + '" is not defined');
          return;
@@ -842,7 +831,7 @@ export default class Model extends mixin(
     * @return {Array.<String>}
     * @protected
     */
-   protected _getAllProperties() {
+   protected _getAllProperties(): string[] {
       const fields = this._getRawDataFields();
       if (!this._$properties) {
          return fields;
@@ -864,7 +853,7 @@ export default class Model extends mixin(
     * @return {*}
     * @protected
     */
-   protected _processCalculatedValue(name: string, value: any, property: IProperty, isReading?: boolean) {
+   protected _processCalculatedValue(name: string, value: any, property: IProperty, isReading?: boolean): any {
       // Check for recursive calculating
       let calculatingProperties = this._calculatingProperties;
       if (!calculatingProperties) {
@@ -913,7 +902,7 @@ export default class Model extends mixin(
     * @param {String} name Название свойства.
     * @protected
     */
-   protected _pushDependency(name: string) {
+   protected _pushDependency(name: string): void {
       if (this._propertiesDependencyGathering && this._propertiesDependencyGathering !== name) {
          this._pushDependencyFor(name, this._propertiesDependencyGathering);
       }
@@ -925,7 +914,7 @@ export default class Model extends mixin(
     * @param {String} dependFor Название свойства, котороое зависит от name
     * @protected
     */
-   protected _pushDependencyFor(name: string, dependFor: string) {
+   protected _pushDependencyFor(name: string, dependFor: string): void {
       let propertiesDependency = this._propertiesDependency;
       if (!propertiesDependency) {
          propertiesDependency = this._propertiesDependency = new Map();
@@ -948,7 +937,7 @@ export default class Model extends mixin(
     * @param {String} name Название свойства.
     * @protected
     */
-   protected _deleteDependencyCache(name: string) {
+   protected _deleteDependencyCache(name: string): void {
       const propertiesDependency = this._propertiesDependency;
 
       if (propertiesDependency && propertiesDependency.has(name)) {
@@ -959,6 +948,42 @@ export default class Model extends mixin(
             this._deleteDependencyCache(related);
          });
       }
+   }
+
+   // endregion
+
+   // region Statics
+
+   static fromObject(data: any, adapter: adapter.IAdapter): Model | null {
+      const record = Record.fromObject(data, adapter);
+      if (!record) {
+         return null;
+      }
+      return new Model({
+         rawData: record.getRawData(true),
+         adapter: record.getAdapter(),
+         //@ts-ignore
+         format: record._getFormat(true)// "Anakin, I Am Your Son"
+      });
+   }
+
+   // endregion
+
+   // region Deprecated
+
+   /**
+    * @deprecated
+    */
+   static extend(mixinsList: any, classExtender: any): Function {
+      logger.info('Types/_entity/Model', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
+
+      if (!require.defined('Core/core-extend')) {
+         throw new ReferenceError(
+            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Model::extend()" method.'
+         );
+      }
+      const coreExtend = require('Core/core-extend');
+      return coreExtend(this, mixinsList, classExtender);
    }
 
    // endregion

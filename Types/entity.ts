@@ -31,7 +31,11 @@ export {default as DestroyableMixin} from './_entity/DestroyableMixin';
 export {default as factory} from './_entity/factory';
 import * as format from './_entity/format';
 export {format};
-export {default as FormattableMixin} from './_entity/FormattableMixin';
+export {
+    default as FormattableMixin,
+    IOptions as IFormattableOptions,
+    ISerializableState as IFormattableSerializableState
+} from './_entity/FormattableMixin';
 import * as functor from './_entity/functor';
 export {functor};
 export {default as Identity} from './_entity/Identity';

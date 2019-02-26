@@ -3,7 +3,7 @@
  * Enumerators library.
  * @library Types/_collection/enumerator
  * @includes Factory Types/_collection/enumerator/factory
-* @author Мальцев А.А.
+ * @author Мальцев А.А.
  */
 
 export {default as Arraywise}  from './enumerator/Arraywise';

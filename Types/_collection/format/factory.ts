@@ -13,11 +13,11 @@ import {register} from '../../di';
  * @param {Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} declaration Декларативное описание
  * @return {Types/_entity/format/Format}
  */
-export default function factory(declaration) {
+export default function factory(declaration: format.IFieldDeclaration[]): Format<format.Field> {
    if (!declaration || !(declaration instanceof Array)) {
       throw new TypeError('Types/_collection/format/factory: declaration should be an instance of Array');
    }
-   const instance = new Format();
+   const instance = new Format<format.Field>();
    for (let i = 0; i < declaration.length; i++) {
       instance.add(format.fieldsFactory(declaration[i]));
    }

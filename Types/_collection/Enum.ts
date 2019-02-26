@@ -15,42 +15,33 @@
 
 import IEnum, {IIndex} from './IEnum';
 import Dictionary from './Dictionary';
-import {ICloneable, IProducible, ManyToManyMixin, SerializableMixin, CloneableMixin} from '../entity';
+import {
+   ICloneable,
+   IProducible,
+   ManyToManyMixin,
+   SerializableMixin,
+   CloneableMixin,
+   format
+} from '../entity';
 import {register} from '../di';
 import {applyMixins} from '../util';
 
-interface ProduceOptions {
-   format?: Object;
+interface IProduceOptions {
+   format?: format.Field | format.UniversalField;
 }
 
-export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */{
-   readonly '[Types/_collection/IEnum]': boolean;
-   readonly '[Types/_entity/ICloneable]': boolean;
-   readonly '[Types/_entity/IProducible]': boolean;
-   readonly _moduleName: string;
-
-   // endregion
-
-   // region ICloneable
-
-   clone: <Enum>(shallow?: boolean) => Enum;
-
+export default class Enum<T>
+   extends Dictionary<T>
+   implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */ {
    /**
     * @cfg {Number|sting|null} Key of the selected item
     * @name Types/_collection/Enum#index
     */
    protected _$index: IIndex;
 
-   // region ObservableMixin
+   protected _childChanged: (data: any) => void;
 
-   protected _publish: (...events) => void;
-   protected _notify: (event: string, ...args) => void;
-
-   // endregion
-
-   // region ManyToManyMixin
-
-   protected _childChanged: (data) => void;
+   readonly _moduleName: string;
 
    constructor(options?: Object) {
       super(options);
@@ -59,32 +50,20 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
       this._checkIndex();
    }
 
-   // endregion
-
-   // region IProducible
-
-   static produceInstance<T>(data?: any, options?: ProduceOptions): Enum<T> {
-      return new this({
-         dictionary: this.prototype._getDictionaryByFormat(options && options.format),
-         localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-         index: data
-      });
-   }
-
-   destroy() {
+   destroy(): void {
       ManyToManyMixin.destroy.call(this);
       super.destroy();
    }
 
-   // endregion
-
    // region IEnum
+
+   readonly '[Types/_collection/IEnum]': boolean;
 
    get(): IIndex {
       return this._$index;
    }
 
-   set(index: IIndex) {
+   set(index: IIndex): void {
       const value = this._$dictionary[index];
       const defined = value !== undefined;
       const changed = this._$index !== index;
@@ -105,14 +84,16 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
       return this._getValue(this._$index, localize);
    }
 
-   setByValue(value: T, localize?: boolean) {
+   setByValue(value: T, localize?: boolean): void {
       const index = this._getIndex(value, localize);
       const changed = index !== this._$index;
 
       if (value === null) {
          this._$index = value as null;
       } else if (index === undefined) {
-         throw new ReferenceError(`${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`);
+         throw new ReferenceError(
+            `${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`
+         );
       } else {
          this._$index = index;
       }
@@ -121,6 +102,28 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
          this._notifyChange(index, value);
       }
    }
+
+   // endregion
+
+   // region IProducible
+
+   readonly '[Types/_entity/IProducible]': boolean;
+
+   static produceInstance<T>(data?: any, options?: IProduceOptions): Enum<T> {
+      return new this({
+         dictionary: this.prototype._getDictionaryByFormat(options && options.format),
+         localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
+         index: data
+      });
+   }
+
+   // endregion
+
+   // region ICloneable
+
+   readonly '[Types/_entity/ICloneable]': boolean;
+
+   clone: <Enum>(shallow?: boolean) => Enum;
 
    // endregion
 
@@ -137,6 +140,13 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
 
       return this.get() === to.get();
    }
+
+   // endregion
+
+   // region ObservableMixin
+
+   protected _publish: (...events: string[]) => void;
+   protected _notify: (event: string, ...args: any[]) => void;
 
    // endregion
 
@@ -159,7 +169,7 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
     * Converts key to the Number type
     * @protected
     */
-   protected _checkIndex() {
+   protected _checkIndex(): void {
       if (this._$index === null) {
          return;
       }
@@ -172,7 +182,7 @@ export default class Enum<T> extends Dictionary<T> implements IEnum<T>, ICloneab
     * @param {String} value Value of selected item
     * @protected
     */
-   protected _notifyChange(index: IIndex, value: T) {
+   protected _notifyChange(index: IIndex, value: T): void {
       const data = {};
       data[index] = value;
       this._childChanged(data);

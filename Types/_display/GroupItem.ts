@@ -17,7 +17,7 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
     */
    protected _$expanded: boolean;
 
-   constructor(options) {
+   constructor(options?: object) {
       super(options);
       this._$expanded = !!this._$expanded;
    }
@@ -35,7 +35,7 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
     * @param {Boolean} expanded Развернут или свернут узел
     * @param {Boolean} [silent=false] Не генерировать событие
     */
-   setExpanded(expanded: boolean, silent?: boolean) {
+   setExpanded(expanded: boolean, silent?: boolean): void {
       if (this._$expanded === expanded) {
          return;
       }
@@ -48,7 +48,7 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
    /**
     * Переключает признак, что узел развернут или свернут
     */
-   toggleExpanded() {
+   toggleExpanded(): void {
       this.setExpanded(!this.isExpanded());
    }
 }
