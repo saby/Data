@@ -1,6 +1,6 @@
 /// <amd-module name="Types/source" />
 /**
- * Data sources library
+ * Library that provides access to data sources
  * @library Types/source
  * @includes Base Types/_source/Base
  * @includes DataSet Types/_source/DataSet
@@ -18,6 +18,84 @@
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
  * @author Мальцев А.А.
+ */
+
+/**
+ * Library that provides access to data sources
+ * @class
+ * @name Types/source
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/**
+ * Class {@link Types/_source/Base}.
+ * @class
+ * @name Types/source:Base
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/DataSet}.
+ * @class
+ * @name Types/source:DataSet
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/HierarchicalMemory}.
+ * @class
+ * @name Types/source:HierarchicalMemory
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/Local}.
+ * @class
+ * @name Types/source:Local
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/Memory}.
+ * @class
+ * @name Types/source:Memory
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/PrefetchProxy}.
+ * @class
+ * @name Types/source:PrefetchProxy
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/Query}.
+ * @class
+ * @name Types/source:Query
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/Remote}.
+ * @class
+ * @name Types/source:Remote
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/Rpc}.
+ * @class
+ * @name Types/source:Rpc
+ * @public
+ */
+
+/**
+ * Class {@link Types/_source/SbisService}.
+ * @class
+ * @name Types/source:SbisService
+ * @public
  */
 
 export {default as Base} from './_source/Base';
