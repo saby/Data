@@ -1035,6 +1035,19 @@ define([
             assert.strictEqual(newModel.getId(), modelData.id);
          });
 
+         it('should do nothing with itself', function() {
+            var model = new Model({
+               idProperty: 'id',
+               rawData: {
+                  foo: 'bar',
+               }
+            });
+
+            sinon.spy(model, 'set');
+            model.merge(model);
+            assert.isFalse(model.set.called);
+         });
+
          context('with various adapter types', function() {
             var getSbisData = function() {
                   return {

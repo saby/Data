@@ -728,7 +728,10 @@ export default class Model extends mixin(
     *    user.get('group_name');//'Domain Users'
     * </pre>
     */
-   merge(model: Record): void {
+   merge(model: Model): void {
+      if (model === this) {
+         return;
+      }
       try {
          const modelData = {};
          model.each((key, val) => {
