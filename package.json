@@ -1,6 +1,6 @@
 {
    "name": "saby-types",
-   "version": "19.210.0",
+   "version": "19.200.0",
    "repository": {
       "type": "git",
       "url": "git@github.com:saby/Types.git"
@@ -52,9 +52,9 @@
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.7",
       "eslint": "^5.13.0",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.210",
-      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.210",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.210",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.210"
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.200",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.200",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.200"
    }
 }
