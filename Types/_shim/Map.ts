@@ -6,7 +6,8 @@
  */
 
 import Set from './Set';
-
+//@ts-ignore
+import 'Core/polyfill'
 // Use native implementation if supported
 let MapImplementation;
 
