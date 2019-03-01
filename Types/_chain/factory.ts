@@ -36,13 +36,13 @@
  * </pre>
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
- * @class Types/_chain
+ * @class Types/_chain/factory
  * @public
  * @author Мальцев А.А.
  */
 
 /**
- * @alias Types/_chain
+ * @alias Types/_chain/factory
  * @param {Array|Object|Types/_collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая
  * цепочкой
  * @return {Types/_chain/Abstract}
