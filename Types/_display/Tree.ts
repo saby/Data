@@ -29,6 +29,7 @@ import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import RootStrategy from './itemsStrategy/Root';
 import {register} from '../di';
 import {object} from '../util';
+import {Object as EventObject} from 'Env/Event';
 
 /**
  * Обрабатывает событие об изменении коллекции

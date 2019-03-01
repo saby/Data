@@ -33,6 +33,7 @@ import {EnumeratorCallback, IList, EventRaisingMixin} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
+import {Object as EventObject} from 'Env/Event';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');

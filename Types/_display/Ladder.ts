@@ -18,6 +18,7 @@ import {
 import {IObservable} from '../collection';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
+import {Object as EventObject} from 'Env/Event';
 
 /**
  * Возвращает уникальный идентификатор объекта

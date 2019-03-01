@@ -11,6 +11,7 @@ import CollectionItem from './CollectionItem';
 import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
 import {register} from '../di';
+import {Object as EventObject} from 'Env/Event';
 
 function onSourceChange(event: EventObject, index: number): void {
    this.setCurrentPosition(this.getIndexBySourceIndex(index));

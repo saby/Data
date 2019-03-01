@@ -6,7 +6,7 @@
  * @author Мальцев А.А.
  */
 
-import { Bus as EventBus } from 'Env/Event';
+import {Bus as EventBus, Channel as EventCannel} from 'Env/Event';
 
 interface IOptions {
    handlers?: Object;
@@ -20,7 +20,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
    /**
     * Канал событий
     */
-   protected _eventBusChannel: EventBusChannel;
+   protected _eventBusChannel: EventCannel;
 
    /**
     * @property {Array.<Array>} Очередь событий
@@ -73,7 +73,6 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
       }
 
       if (!this._eventBusChannel) {
-         // @ts-ignore
          this._eventBusChannel = EventBus.channel();
 
          if (this._publishedEvents) {

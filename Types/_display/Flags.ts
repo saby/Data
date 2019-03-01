@@ -11,6 +11,7 @@ import Collection from './Collection';
 import {register} from '../di';
 import './FlagsItem';
 import {IFlagsValue} from '../collection';
+import {Object as EventObject} from 'Env/Event';
 
 /**
  * Обрабатывает событие об изменении состояния Flags
