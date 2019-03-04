@@ -37,8 +37,3 @@ export {default as Query, ExpandMode as QueryExpandMode, IMeta as IQueryMeta} fr
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
 export {default as SbisService} from './_source/SbisService';
-
-import * as QueryExt from './_source/Query';
-export {QueryExt};
-import * as SbisServiceExt from './_source/SbisService';
-export {SbisServiceExt};
