@@ -285,7 +285,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from record', function(done) {
+            it('should generate request with valid meta data from record', function(done) {
                var model = getSampleModel();
                service.create(model).addCallbacks(function() {
                   try {
@@ -300,7 +300,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from object', function(done) {
+            it('should generate request with valid meta data from object', function(done) {
                var meta = getSampleMeta();
                service.create(meta).addCallbacks(function() {
                   try {
@@ -323,7 +323,7 @@ define([
                });
             });
 
-            it('should generate a request with Date field', function(done) {
+            it('should generate request with Date field', function(done) {
                var date = new Date();
                if (!date.setSQLSerializationMode) {
                   done();
@@ -346,7 +346,7 @@ define([
                });
             });
 
-            it('should generate a request with Time field', function(done) {
+            it('should generate request with Time field', function(done) {
                var date = new Date();
                if (!date.setSQLSerializationMode) {
                   done();
@@ -369,7 +369,7 @@ define([
                });
             });
 
-            it('should generate a request with custom method name in the filter', function(done) {
+            it('should generate request with custom method name in the filter', function(done) {
                var service = new SbisService({
                   endpoint: 'Товар',
                   binding: {
@@ -470,7 +470,7 @@ define([
                   });
                });
 
-               it('should generate a request with valid meta data from record', function(done) {
+               it('should generate request with valid meta data from record', function(done) {
                   service.read(
                      SbisBusinessLogic.existsId,
                      getSampleModel()
@@ -487,7 +487,7 @@ define([
                   });
                });
 
-               it('should generate a request with valid meta data from object', function(done) {
+               it('should generate request with valid meta data from object', function(done) {
                   service.read(
                      SbisBusinessLogic.existsId,
                      getSampleMeta()
@@ -625,7 +625,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from record', function(done) {
+            it('should generate request with valid meta data from record', function(done) {
                var meta = new Model({
                   adapter: 'Types/entity:adapter.Sbis'
                });
@@ -646,7 +646,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from object', function(done) {
+            it('should generate request with valid meta data from object', function(done) {
                service.update(
                   getSampleModel(),
                   getSampleMeta()
@@ -885,7 +885,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from record', function(done) {
+            it('should generate request with valid meta data from record', function(done) {
                service.destroy(
                   SbisBusinessLogic.existsId,
                   getSampleModel()
@@ -902,7 +902,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from object', function(done) {
+            it('should generate request with valid meta data from object', function(done) {
                service.destroy(
                   SbisBusinessLogic.existsId,
                   getSampleMeta()
@@ -1111,7 +1111,7 @@ define([
                });
             });
 
-            it('should generate a request with filter contains only given data', function(done) {
+            it('should generate request with filter contains only given data', function(done) {
                var MyModel = coreExtend.extend(Model, {
                      $protected: {
                         _options: {
@@ -1141,7 +1141,7 @@ define([
                });
             });
 
-            it('should generate a request with an empty filter', function(done) {
+            it('should generate request with an empty filter', function(done) {
                var query = new Query();
                query.where({});
                service.query(query).addCallbacks(function() {
@@ -1158,7 +1158,7 @@ define([
                });
             });
 
-            it('should generate a request with expand "None" mode', function() {
+            it('should generate request with expand "None" mode', function() {
                var query = new Query();
                query.meta({
                   expand: QueryModule.ExpandMode.None
@@ -1172,7 +1172,7 @@ define([
                });
             });
 
-            it('should generate a request with expand "Nodes" mode', function() {
+            it('should generate request with expand "Nodes" mode', function() {
                var query = new Query();
                query.meta({
                   expand: QueryModule.ExpandMode.Nodes
@@ -1188,7 +1188,7 @@ define([
                });
             });
 
-            it('should generate a request with expand "Leaves" mode', function() {
+            it('should generate request with expand "Leaves" mode', function() {
                var query = new Query();
                query.meta({
                   expand: QueryModule.ExpandMode.Leaves
@@ -1204,7 +1204,7 @@ define([
                });
             });
 
-            it('should generate a request with expand "All" mode', function() {
+            it('should generate request with expand "All" mode', function() {
                var query = new Query();
                query.meta({
                   expand: QueryModule.ExpandMode.All
@@ -1220,7 +1220,7 @@ define([
                });
             });
 
-            it('should generate a request with valid meta data from record', function(done) {
+            it('should generate request with valid meta data from record', function(done) {
                var query = new Query(),
                   meta = getSampleModel();
                query.meta(meta);
@@ -1243,7 +1243,7 @@ define([
                });
             });
 
-            it('should generate a request with null navigation with undefined limit', function(done) {
+            it('should generate request with null navigation and undefined limit', function(done) {
                var query = new Query();
                query.limit(undefined);
                service.query(query).addCallbacks(function() {
@@ -1259,7 +1259,7 @@ define([
                });
             });
 
-            it('should generate a request with null navigation with null limit', function(done) {
+            it('should generate request with null navigation and null limit', function(done) {
                var query = new Query();
                query.limit(null);
                service.query(query).addCallbacks(function() {
@@ -1275,7 +1275,7 @@ define([
                });
             });
 
-            it('should generate a request with offset type navigation', function(done) {
+            it('should generate request with offset type navigation', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1311,7 +1311,104 @@ define([
                });
             });
 
-            it('should generate a request with position type navigation without filter', function(done) {
+            it('should generate request with null navigation if there is no limit', function(done) {
+               var service = new SbisService({
+                  endpoint: 'Товар',
+                  options: {
+                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
+                  }
+               });
+               var query = new Query();
+
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+
+                     assert.isNull(args['Навигация']);
+                     assert.strictEqual(args['Фильтр'].d.length, 0);
+
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function(err) {
+                  done(err);
+               });
+            });
+
+            it('should generate request with position navigation and null position and "after" order', function(done) {
+               var service = new SbisService({
+                  endpoint: 'Товар',
+                  options: {
+                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
+                  }
+               });
+               var limit = 9;
+               var query = new Query()
+                  .where({'id>=': null})
+                  .limit(limit);
+
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+
+                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                     assert.strictEqual(args['Навигация'].d[0], true);
+
+                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                     assert.strictEqual(args['Навигация'].d[1], limit);
+
+                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                     assert.strictEqual(args['Навигация'].d[2], 'after');
+
+                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                     assert.strictEqual(args['Навигация'].d[3], null);
+
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, done);
+            });
+
+            it('should generate request with position navigation and null position and "before" order', function(done) {
+               var service = new SbisService({
+                  endpoint: 'Товар',
+                  options: {
+                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
+                  }
+               });
+               var limit = 9;
+               var query = new Query()
+                  .where({'id<=': null})
+                  .limit(limit);
+
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+
+                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                     assert.strictEqual(args['Навигация'].d[0], true);
+
+                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                     assert.strictEqual(args['Навигация'].d[1], limit);
+
+                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                     assert.strictEqual(args['Навигация'].d[2], 'before');
+
+                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                     assert.strictEqual(args['Навигация'].d[3], null);
+
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, done);
+            });
+
+            it('should generate request with position navigation and "after" order as default', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1350,32 +1447,7 @@ define([
                });
             });
 
-            it('should generate a request with null navigation if without limit', function(done) {
-               var service = new SbisService({
-                  endpoint: 'Товар',
-                  options: {
-                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                  }
-               });
-               var query = new Query();
-
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
-
-                     assert.isNull(args['Навигация']);
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
-               });
-            });
-
-            it('should generate a request with position type navigation and sort asc', function(done) {
+            it('should generate request with position navigation and "after" order', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1420,7 +1492,7 @@ define([
                });
             });
 
-            it('should generate a request with position type navigation and sort desc', function(done) {
+            it('should generate request with position navigation and "before" order', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1459,7 +1531,7 @@ define([
                });
             });
 
-            it('should generate a request with position type navigation and sort both', function(done) {
+            it('should generate request with position navigation and "both" order', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1491,7 +1563,7 @@ define([
                });
             });
 
-            it('should generate a request with "hasMore" from given meta property', function(done) {
+            it('should generate request with "hasMore" from given meta property', function(done) {
                var hasMore = 'test',
                   query = new Query();
                query

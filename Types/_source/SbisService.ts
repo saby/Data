@@ -4,126 +4,120 @@
  * <br/>
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'СообщениеОтКлиента'
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Employee'
  *    });
  * </pre>
  * <b>Пример 2</b>. Создадим источник данных для объекта БЛ, используя отдельную точку входа:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: {
- *             address: '/my-service/entry/point/',
- *             contract: 'СообщениеОтКлиента'
- *          }
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: {
+ *          address: '/my-service/entry/point/',
+ *          contract: 'Employee'
+ *       }
  *    });
  * </pre>
  * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка
  * записей, а также свой формат записи:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'СообщениеОтКлиента',
- *          binding: {
- *             read: 'Прочитать',
- *             query: 'СписокОбщий',
- *             format: 'Список'
- *          },
- *          idProperty: '@СообщениеОтКлиента'
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Employee',
+ *       binding: {
+ *          read: 'GetById',
+ *          query: 'GetList',
+ *          format: 'getListFormat'
+ *       },
+ *       idProperty: '@Employee'
  *    });
  * </pre>
  * <b>Пример 4</b>. Создадим новую статью:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'Статья',
- *          idProperty: 'id'
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
  *
- *       dataSource.create().addCallbacks(function(article) {
- *          var id = article.getId();
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    dataSource.create().addCallbacks((article) => {
+ *       const id = article.getId();
+ *    }, (error) => {
+ *       console.error(error);
  *    });
  * </pre>
  * <b>Пример 5</b>. Прочитаем статью:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'Статья',
- *          idProperty: 'id'
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
  *
- *       dataSource.read('article-1').addCallbacks(function(article) {
- *          var title = article.get('title');
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    dataSource.read('article-1').addCallbacks((article) => {
+ *       const title = article.get('title');
+ *    }, function(error) => {
+ *       console.error(error);
  *    });
  * </pre>
  * <b>Пример 6</b>. Сохраним статью:
  * <pre>
- *    require(['Types/source', 'Types/entity'], function(source, entity) {
- *       var dataSource = new source.SbisService({
- *             endpoint: 'Статья',
- *             idProperty: 'id'
- *          }),
- *          article = new entity.Model({
- *             adapter: new entity.adapter.Sbis(),
- *             format: [
- *                {name: 'id', type: 'integer'},
- *                {name: 'title', type: 'string'}
- *             ],
- *             idProperty: 'id'
- *          });
+ *    import {SbisService} from 'Types/source';
+ *    import {Model, adapter} from 'Types/entity';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
+ *    const article = new Model({
+ *       adapter: new adapter.Sbis(),
+ *       format: [
+ *          {name: 'id', type: 'integer'},
+ *          {name: 'title', type: 'string'}
+ *       ],
+ *       idProperty: 'id'
+ *    });
  *
- *       article.set({
- *          id: 'article-1',
- *          title: 'Article 1'
- *       });
+ *    article.set({
+ *       id: 'article-1',
+ *       title: 'Article 1'
+ *    });
  *
- *       dataSource.update(article).addCallbacks(function() {
- *          console.log('Article updated!');
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    dataSource.update(article).addCallbacks(() => {
+ *       console.log('Article updated!');
+ *    }, (error) => {
+ *       console.error(error);
  *    });
  * </pre>
  * <b>Пример 7</b>. Удалим статью:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *          endpoint: 'Статья',
- *          idProperty: 'id'
- *       });
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
  *
- *       dataSource.destroy('article-1').addCallbacks(function() {
- *          console.log('Article deleted!');
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    dataSource.destroy('article-1').addCallbacks(() => {
+ *       console.log('Article deleted!');
+ *    }, (error) => {
+ *       console.error(error);
  *    });
  * </pre>
  * <b>Пример 8</b>. Прочитаем первые сто статей:
  * <pre>
- *    require(['Types/source'], function(source) {
- *       var dataSource = new source.SbisService({
- *             endpoint: 'Статья'
- *          }),
- *          query = new source.Query();
+ *    import {SbisService, Query} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article'
+ *    });
  *
- *       query.limit(100);
- *       dataSource.query(query).addCallbacks(function(dataSet) {
- *          var articles = dataSet.getAll();
- *          console.log('Articles count: ' + articles.getCount());
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    const query = new Query();
+ *    query.limit(100);
+ *
+ *    dataSource.query(query).addCallbacks((response) => {
+ *       const articles = response.getAll();
+ *       console.log(`Articles count: ${articles.getCount()}`);
+ *    }, (error) => {
+ *       console.error(error);
  *    });
  * </pre>
  * @class Types/_source/SbisService
@@ -148,22 +142,31 @@ import {logger, object} from '../util';
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 /**
- * Типы навигации для query()
+ * Extended navigation types
  */
 const NAVIGATION_TYPE: any = {...Rpc.NAVIGATION_TYPE, ...{
    POSITION: 'Position' // Add POSITION navigation type
 }};
 
+enum PoitionNavigationOrder {
+   before = 'before',
+   after = 'after',
+   both = 'both'
+}
+
 /**
- * Разделитель частей сложного идентификатора
+ * Separator for Identity type
  */
 const COMPLEX_ID_SEPARATOR = ',';
 
 /**
- * Детектор сложного идентификатора
+ * Regexp for Identity type detection
  */
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
 
+/**
+ * Extended IBinding
+ */
 export interface IBinding extends IDefaultBinding {
    updateBatch?: string;
    moveBefore?: string;
@@ -171,14 +174,28 @@ export interface IBinding extends IDefaultBinding {
    format?: string;
 }
 
+/**
+ * Extended IOptions from Remote
+ */
 export interface IOptions extends IRemoteOptions {
    hasMoreProperty?: string;
 }
 
+/**
+ * Move metadata interface
+ */
 export interface IMoveMeta {
    parentProperty?: string;
    objectName?: string;
    position?: string;
+}
+
+/**
+ * Old move metadata interface
+ */
+interface IOldMoveMeta {
+   before: string;
+   hierField: string;
 }
 
 /**
@@ -217,7 +234,7 @@ function createComplexId(id: string, defaults: string): string[] {
 /**
  * Joins BL objects into groups be its names
  */
-function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): Object {
+function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): object {
    const groups = {};
    let name;
    for (let i = 0, len = ids.length; i < len; i++) {
@@ -250,21 +267,21 @@ function callDestroyWithComplexId(
 
 /**
  * Builds Record from plain object
- * @param data Данные полей записи
+ * @param data Record data as JSON
  * @param adapter
  */
-export function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
+function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
    const Record = resolve<any>('Types/entity:Record');
    return Record.fromObject(data, adapter);
 }
 
 /**
  * Builds RecordSet from array of plain objects
- * @param data Данные рекордсета
- * @param adapter Адаптер
+ * @param data RecordSet data as JSON
+ * @param adapter
  * @param idProperty
  */
-export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet<Record> | null {
+function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet<Record> | null {
    if (data === null) {
       return data;
    }
@@ -287,9 +304,9 @@ export function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty:
 }
 
 /**
- * Returns sorting params
+ * Returns sorting parameters
  */
-export function getSortingParams(query: Query): string[] | null {
+function getSortingParams(query: Query): string[] | null {
    if (!query) {
       return null;
    }
@@ -314,7 +331,7 @@ export function getSortingParams(query: Query): string[] | null {
 /**
  * Returns navigation parameters
  */
-export function getPagingParams(query: Query, options: IOptions, adapter: adapter.IAdapter): Object | null {
+function getNavigationParams(query: Query, options: IOptions, adapter: adapter.IAdapter): object | null {
    if (!query) {
       return null;
    }
@@ -348,40 +365,52 @@ export function getPagingParams(query: Query, options: IOptions, adapter: adapte
       case NAVIGATION_TYPE.POSITION:
          if (!withoutLimit) {
             const where = query.getWhere();
-            const pattern = /(.+)([<>]=|~)$/;
-            let fields = null;
-            let order = '';
-            let parts;
+            const pattern = /(.+)([<>]=?|~)$/;
+            let position = null;
+            let order;
 
             Object.keys(where).forEach((expr) => {
-               parts = expr.match(pattern);
-               if (parts) {
-                  if (!fields) {
-                     fields = {};
-                  }
-                  fields[parts[1]] = where[expr];
-                  if (!order) {
-                     switch (parts[2]) {
-                        case '~':
-                           order = 'both';
-                           break;
-                        case '<=':
-                           order = 'before';
-                           break;
-                     }
-                  }
-
-                  // delete in query by link
-                  delete where[expr];
+               const parts = expr.match(pattern);
+               // Check next if there's no operand
+               if (!parts) {
+                  return;
                }
+
+               const field = parts[1];
+               const operand = parts[2];
+               const value = where[expr];
+
+               // Add field value to position if it's not null
+               if (value !== null) {
+                  if (!position) {
+                     position = {};
+                  }
+                  position[field] = value;
+               }
+
+               // We can use only one kind of order so take it from the first operand
+               if (!order) {
+                  switch (operand) {
+                     case '~':
+                        order = PoitionNavigationOrder.both;
+                        break;
+
+                     case '<':
+                     case '<=':
+                        order = PoitionNavigationOrder.before;
+                        break;
+                  }
+               }
+
+               // Also delete property with operand in query (by link)
+               delete where[expr];
             });
-            order = order || 'after';
 
             params = {
                HaveMore: more,
                Limit: limit,
-               Order: order,
-               Position: buildRecord(fields, adapter)
+               Order: order || PoitionNavigationOrder.after,
+               Position: buildRecord(position, adapter)
             };
          }
          break;
@@ -400,9 +429,9 @@ export function getPagingParams(query: Query, options: IOptions, adapter: adapte
 }
 
 /**
- * Returns filtration parameters
+ * Returns filtering parameters
  */
-function getFilterParams(query: Query): Object | null {
+function getFilterParams(query: Query): object | null {
    let params = null;
    if (query) {
       params = query.getWhere();
@@ -434,9 +463,8 @@ function getFilterParams(query: Query): Object | null {
 
 /**
  * Returns additional paramters
- * @return {Array}
  */
-export function getAdditionalParams(query: Query): any[] {
+function getAdditionalParams(query: Query): any[] {
    let meta: any = [];
    if (query) {
       meta = query.getMeta();
@@ -465,7 +493,10 @@ export function getAdditionalParams(query: Query): any[] {
    return meta;
 }
 
-function passCreate(meta?: any): Object {
+/**
+ * Returns data to send in create()
+ */
+function passCreate(meta?: any): object {
    if (!DataMixin.isModelInstance(meta)) {
       meta = {...meta || {}};
       if (!('ВызовИзБраузера' in meta)) {
@@ -480,7 +511,10 @@ function passCreate(meta?: any): Object {
    };
 }
 
-function passRead(key: string | number, meta?: Object): Object {
+/**
+ * Returns data to send in read()
+ */
+function passRead(key: string | number, meta?: object): object {
    const args: any = {
       ИдО: key,
       ИмяМетода: this._$binding.format || null
@@ -491,7 +525,10 @@ function passRead(key: string | number, meta?: Object): Object {
    return args;
 }
 
-function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
+/**
+ * Returns data to send in update()
+ */
+function passUpdate(data: Record | RecordSet<Record>, meta?: object): object {
    // @ts-ignore
    const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
    const args: any = {};
@@ -506,7 +543,10 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: Object): Object {
    return args;
 }
 
-function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Object {
+/**
+ * Returns data to send in update() if updateBatch uses
+ */
+function passUpdateBatch(items: Record | RecordSet<Record>, meta?: object): object {
    const RecordSet = resolve<any>('Types/collection:RecordSet');
    const patch = RecordSet.patch(items);
    return {
@@ -516,7 +556,10 @@ function passUpdateBatch(items: Record | RecordSet<Record>, meta?: Object): Obje
    };
 }
 
-function passDestroy(keys: string | string[], meta?: Object): Object {
+/**
+ * Returns data to send in destroy()
+ */
+function passDestroy(keys: string | string[], meta?: object): object {
    const args: any = {
       ИдО: keys
    };
@@ -526,8 +569,11 @@ function passDestroy(keys: string | string[], meta?: Object): Object {
    return args;
 }
 
-function passQuery(query: Query): Object {
-   const nav = getPagingParams(query, this._$options, this._$adapter);
+/**
+ * Returns data to send in query()
+ */
+function passQuery(query: Query): object {
+   const nav = getNavigationParams(query, this._$options, this._$adapter);
    const filter = getFilterParams(query);
    const sort = getSortingParams(query);
    const add = getAdditionalParams(query);
@@ -540,7 +586,10 @@ function passQuery(query: Query): Object {
    };
 }
 
-function passCopy(key: string | number, meta?: Object): Object {
+/**
+ * Returns data to send in copy()
+ */
+function passCopy(key: string | number, meta?: object): object {
    const args: any = {
       ИдО: key,
       ИмяМетода: this._$binding.format
@@ -551,14 +600,20 @@ function passCopy(key: string | number, meta?: Object): Object {
    return args;
 }
 
-function passMerge(from: string | number, to: string | number): Object {
+/**
+ * Returns data to send in merge()
+ */
+function passMerge(from: string | number, to: string | number): object {
    return {
       ИдО: from,
       ИдОУд: to
    };
 }
 
-function passMove(from: string | number, to: string | number, meta?: IMoveMeta): Object {
+/**
+ * Returns data to send in move()
+ */
+function passMove(from: string | number, to: string | number, meta?: IMoveMeta): object {
    return {
       IndexNumber: this._$orderProperty,
       HierarchyName: meta.parentProperty || null,
@@ -569,11 +624,6 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
       ReadMethod: meta.objectName + '.' + this._$binding.read,
       UpdateMethod: meta.objectName + '.' + this._$binding.update
    };
-}
-
-interface IOldMoveMeta {
-   before: string;
-   hierField: string;
 }
 
 /**
@@ -593,13 +643,12 @@ function oldMove(
       'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.'
    );
 
-   from = <string> from;
    const moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
    const params = {
       ПорядковыйНомер: instance._$orderProperty,
       Иерархия: meta.hierField || null,
       Объект: instance._$endpoint.moveContract,
-      ИдО: createComplexId(from, instance._$endpoint.contract)
+      ИдО: createComplexId(from as string, instance._$endpoint.contract)
    };
 
    params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, instance._$endpoint.contract);
@@ -627,9 +676,9 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @typedef {String} NavigationType
     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
     * @variant Offset По смещению: передается смещение от начала выборки и количество записей на странице.
+    * @variant Position По курсору: передается позиция курсора, количество записей на странице и направление обхода
+    * относительно курсора.
     */
-   // @variant Position По курсору: передается набор значений ключевых полей начальной записи выборки, количество
-   // записей на странице и направление сортировки.
 
    /**
     * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника
@@ -642,21 +691,19 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @example
     * Подключаем объект БЛ 'Сотрудник', используя сокращенную запись:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник'
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee'
     *    });
     * </pre>
     * Подключаем объект БЛ 'Сотрудник', используя отдельную точку входа:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: {
-    *             address: '/my-service/entry/point/',
-    *             contract: 'Сотрудник'
-    *          }
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: {
+    *          address: '/my-service/entry/point/',
+    *          contract: 'Employee'
+    *       }
     *    });
     * </pre>
     */
@@ -678,26 +725,24 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @example
     * Зададим свои реализации для методов create, read и update:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             create: 'МойМетодСоздать',
-    *             read: 'МойМетодПрочитать',
-    *             update: 'МойМетодЗаписать'
-    *          }
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee'
+    *       binding: {
+    *          create: 'new',
+    *          read: 'get',
+    *          update: 'save'
+    *       }
     *    });
     * </pre>
     * Зададим реализацию для метода create на другом объекте БЛ:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          binding: {
-    *             create: 'Персонал.Создать'
-    *          }
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee'
+    *       binding: {
+    *          create: 'Personnel.Create'
+    *       }
     *    });
     * </pre>
     */
@@ -725,11 +770,11 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @example
     * Используем провайдер нотификатора:
     * <pre>
-    *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source, SbisPluginProvider) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          provider: new SbisPluginProvider()
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    import SbisPluginProvider from 'Plugin/DataSource/Provider/SbisPlugin';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee'
+    *       provider: new SbisPluginProvider()
     *    });
     * </pre>
     */
@@ -744,7 +789,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
    protected _$options: IOptions;
 
-   constructor(options?: Object) {
+   constructor(options?: IOptions) {
       super(options);
 
       if (!this._$endpoint.moveContract) {
@@ -776,37 +821,35 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     * @example
     * Создадим нового сотрудника:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *        var dataSource = new source.SbisService({
-    *           endpoint: 'Сотрудник',
-    *           idProperty: '@Сотрудник'
-    *        });
-    *        dataSource.create().addCallbacks(function(employee) {
-    *           console.log(employee.get('Имя'));
-    *        }, function(error) {
-    *           console.error(error);
-    *        });
-    *     });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee',
+    *       idProperty: '@Employee'
+    *    });
+    *    dataSource.create().addCallbacks((employee) => {
+    *       console.log(employee.get('FirstName'));
+    *    }, (error) => {
+    *       console.error(error);
+    *    });
     * </pre>
     * Создадим нового сотрудника по формату:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *        var dataSource = new source.SbisService({
-    *           endpoint: 'Сотрудник',
-    *           idProperty: '@Сотрудник',
-    *           binding: {
-    *              format: 'СписокДляПрочитать'
-    *           }
-    *        });
-    *        dataSource.create().addCallbacks(function(employee) {
-    *           console.log(employee.get('Имя'));
-    *        }, function(error) {
-    *           console.error(error);
-    *        });
-    *     });
+    *    import {SbisService} from 'Types/source';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee',
+    *       idProperty: '@Employee',
+    *       binding: {
+    *          format: 'getListFormat'
+    *       }
+    *    });
+    *    dataSource.create().addCallbacks(function(employee) {
+    *       console.log(employee.get('FirstName'));
+    *    }, function(error) {
+    *       console.error(error);
+    *    });
     * </pre>
     */
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: object): ExtendPromise<Record> {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies((def) => {
          this._connectAdditionalDependencies(
@@ -816,7 +859,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       });
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet<Record>, meta?: object): ExtendPromise<null> {
       if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
          return this._loadAdditionalDependencies((def) => {
             this._connectAdditionalDependencies(
@@ -834,7 +877,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       return super.update(data, meta);
    }
 
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
       if (!(keys instanceof Array)) {
          return callDestroyWithComplexId(
             this,
@@ -921,7 +964,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
             endpoint: this._$endpoint,
             options: this._$options,
 
-            //TODO: remove pass 'service' and 'resource'
+            // TODO: remove pass 'service' and 'resource'
             service: this._$endpoint.address,
             resource: this._$endpoint.contract
          });
@@ -941,6 +984,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    // endregion
 }
 
+// There are properties owned by the prototype
 Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.prototype */ {
    '[Types/_source/SbisService]': true,
    _moduleName: 'Types/source:SbisService',
@@ -952,24 +996,22 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @example
        * Зададим свою реализацию для метода create:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             create: 'МойМетодСоздать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          create: 'FastCreate'
+       *       }
        *    });
        * </pre>
        * Зададим реализацию для метода create на другом объекте БЛ:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             create: 'Персонал.Создать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          create: 'Personnel.Create'
+       *       }
        *    });
        * </pre>
        */
@@ -981,24 +1023,22 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @example
        * Зададим свою реализацию для метода read:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             read: 'МойМетодПрочитать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          read: 'getById'
+       *       }
        *    });
        * </pre>
        * Зададим реализацию для метода create на другом объекте БЛ:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             read: 'Персонал.Прочитать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          read: 'Personnel.Read'
+       *       }
        *    });
        * </pre>
        */
@@ -1010,24 +1050,22 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @example
        * Зададим свою реализацию для метода update:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             update: 'МойМетодЗаписать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          update: 'FastSave'
+       *       }
        *    });
        * </pre>
        * Зададим реализацию для метода update на другом объекте БЛ:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             update: 'Персонал.Записать'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          update: 'Personnel.Update'
+       *       }
        *    });
        * </pre>
        */
@@ -1052,24 +1090,22 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @example
        * Зададим свою реализацию для метода destroy:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             destroy: 'МойМетодУдалить'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          destroy: 'SafeDelete'
+       *       }
        *    });
        * </pre>
        * Зададим реализацию для метода destroy на другом объекте БЛ:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             destroy: 'Персонал.Удалить'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          destroy: 'Personnel.Delete'
+       *       }
        *    });
        * </pre>
        */
@@ -1081,24 +1117,22 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @example
        * Зададим свою реализацию для метода query:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             query: 'МойСписок'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          query: 'CustomizedList'
+       *       }
        *    });
        * </pre>
        * Зададим реализацию для метода query на другом объекте БЛ:
        * <pre>
-       *    require(['Types/source'], function(source) {
-       *       var dataSource = new source.SbisService({
-       *          endpoint: 'Сотрудник',
-       *          binding: {
-       *             query: 'Персонал.Список'
-       *          }
-       *       });
+       *    import {SbisService} from 'Types/source';
+       *    const dataSource = new SbisService({
+       *       endpoint: 'Employee',
+       *       binding: {
+       *          query: 'Personnel.List'
+       *       }
        *    });
        * </pre>
        */
@@ -1203,11 +1237,11 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
     * @example
     * Используем провайдер нотификатора:
     * <pre>
-    *    require(['Types/source', 'Plugin/DataSource/Provider/SbisPlugin'], function (source SbisPluginProvider) {
-    *       var dataSource = new source.SbisService({
-    *          endpoint: 'Сотрудник',
-    *          provider: new SbisPluginProvider()
-    *       });
+    *    import {SbisService} from 'Types/source';
+    *    import SbisPluginProvider from 'Plugin/DataSource/Provider/SbisPlugin';
+    *    const dataSource = new SbisService({
+    *       endpoint: 'Employee',
+    *       provider: new SbisPluginProvider()
     *    });
     * </pre>
     */

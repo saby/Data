@@ -1,12 +1,13 @@
 /* global define, describe, it, assert */
 define([
-   'Types/source'
+   'Types/_source/Query'
 ], function(
-   source
+   QueryModule
 ) {
    'use strict';
 
-   var Order = source.QueryExt.Order;
+   var Query = QueryModule.default;
+   var Order = QueryModule.Order;
 
    describe('Types/_source/Query.Order', function() {
       describe('.getSelector', function() {
