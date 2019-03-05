@@ -2456,7 +2456,6 @@ define([
 
             it('should return meta data with results of given type', function() {
                var Foo = coreExtend.extend(Model, {});
-               Foo.produceInstance = Model.produceInstance;
                var data = {
                   r: {
                      d: [],
