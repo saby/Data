@@ -1,10 +1,10 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "types" : ["requirejs"]
+    "types" : ["requirejs"],
+    "skipLibCheck": true
   },
   "include": [
-    "node_modules/rmi/src/client/types.d.ts",
     "Browser/**/*.ts",
     "Env/**/*.ts",
     "Types/**/*.ts",
