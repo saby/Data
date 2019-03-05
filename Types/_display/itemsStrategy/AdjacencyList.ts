@@ -358,13 +358,17 @@ export default class AdjacencyList extends mixin(
       const removed = [];
       if (deleteCount > 0) {
          // Remove deleted in _itemsOrder, _items and _sourceItems
+         let deletedCount = 0;
          const removeDeleted = (deleted) => (outer, inner) => {
+            // 'inner' is always ordered by ascending
             const isRemoved = deleted.indexOf(outer) > -1;
             if (isRemoved) {
+               // Splice in 'items' should mind the shift of the index by previously deleted elements count
                removed.push(
-                  items.splice(inner, 1)[0]
+                  items.splice(inner - deletedCount, 1)[0]
                );
                sourceItems.splice(outer, 1);
+               deletedCount++;
             }
             return !isRemoved;
          };
