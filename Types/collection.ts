@@ -1,6 +1,6 @@
 /// <amd-module name="Types/collection" />
 /**
- * Библиотека коллекций.
+ * Library that provides various kinds of collections
  * @library Types/collection
  * @includes Array Types/_collection/Array
  * @includes enumerableComparator Types/_collection/enumerableComparator
@@ -23,6 +23,63 @@
  * @includes RecordSet Types/_collection/RecordSet
  * @public
  * @author Мальцев А.А.
+ */
+
+/**
+ * Library that provides various kinds of collections
+ * @class
+ * @name Types/collection
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/**
+ * Class {@link Types/_collection/Enum}.
+ * @class
+ * @name Types/collection:Enum
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/factory}.
+ * @class
+ * @name Types/collection:factory
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/format}.
+ * @class
+ * @name Types/collection:format
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/Flags}.
+ * @class
+ * @name Types/collection:Flags
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/List}.
+ * @class
+ * @name Types/collection:List
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/ObservableList}.
+ * @class
+ * @name Types/collection:ObservableList
+ * @public
+ */
+
+/**
+ * Class {@link Types/_collection/RecordSet}.
+ * @class
+ * @name Types/collection:RecordSet
+ * @public
  */
 
 export {default as enumerableComparator} from './_collection/enumerableComparator';
