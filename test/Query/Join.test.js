@@ -1,12 +1,13 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/source'
+   'Types/_source/Query'
 ], function(
-   source
+   QueryModule
 ) {
    'use strict';
 
-   var QueryJoin = source.QueryExt.Join;
+   var Query = QueryModule.default;
+   var QueryJoin = QueryModule.Join;
 
    describe('Types/_source/Query.Join', function() {
       var select,
