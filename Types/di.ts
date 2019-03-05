@@ -28,6 +28,8 @@ function checkAlias(alias: string): void {
 
 /**
  * Регистрирует зависимость
+ * @function
+ * @name Types/di#register
  * @param {String} alias Название зависимости
  * @param {Function|Object} factory Фабрика объектов или готовый инстанс
  * @param {DependencyOptions} [options] Опции
@@ -71,6 +73,8 @@ export function register(alias: string, factory: Function|Object, options?: Obje
 
 /**
  * Удаляет регистрацию зависимости
+ * @function
+ * @name Types/di#unregister
  * @param {String} alias Название зависимости
  * @example
  * <pre>
@@ -84,6 +88,8 @@ export function unregister(alias: string): void {
 
 /**
  * Проверяет регистрацию зависимости
+ * @function
+ * @name Types/di#isRegistered
  * @param {String} alias Название зависимости
  * @return Boolean
  * @example
@@ -98,6 +104,8 @@ export function isRegistered(alias: string): boolean {
 
 /**
  * Создает экземпляр зарегистрированной зависимости.
+ * @function
+ * @name Types/di#create
  * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
  * @param {Object} [options] Опции конструктора
  * @return Object
@@ -121,6 +129,8 @@ export function create<T>(alias: string|Function|Object, options?: Object): T {
 
 /**
  * Разрешает зависимость
+ * @function
+ * @name Types/di#resolve
  * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
  * @param {Object} [options] Опции конструктора
  * @return {Object|Function}

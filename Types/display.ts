@@ -1,6 +1,6 @@
 /// <amd-module name="Types/display" />
 /**
- * Displays library
+ * Library that provides various views over collections
  * @library Types/display
  * @includes DestroyableMixin Types/_display/DestroyableMixin
  * @includes Collection Types/_display/Collection
@@ -10,6 +10,49 @@
  * @includes Search Types/_display/Search
  * @includes Tree Types/_display/Tree
  * @author Мальцев А.А.
+ */
+
+/**
+ * Library that provides various views over collections
+ * @class
+ * @name Types/display
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/**
+ * Класс {@link Types/_display/Collection}.
+ * @class
+ * @name Types/display:Collection
+ * @public
+ */
+
+/**
+ * Класс {@link Types/_display/Enum}.
+ * @class
+ * @name Types/display:Enum
+ * @public
+ */
+
+/**
+ * Класс {@link Types/_display/Flags}.
+ * @class
+ * @name Types/display:Flags
+ * @public
+ */
+
+/**
+ * Класс {@link Types/_display/Ladder}.
+ * @class
+ * @name Types/display:Ladder
+ * @public
+ */
+
+/**
+ * Класс {@link Types/_display/Tree}.
+ * @class
+ * @name Types/display:Tree
+ * @public
  */
 
 export {default as Abstract} from './_display/Abstract';
