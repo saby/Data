@@ -2,7 +2,8 @@
 define([
    'Types/_collection/RecordSet',
    'Types/_collection/IObservable',
-   'Types/entity',
+   'Types/_entity/Record',
+   'Types/_entity/Model',
    'Types/_entity/format/fieldsFactory',
    'Types/_entity/adapter/Json',
    'Types/_entity/adapter/Sbis',
@@ -12,7 +13,8 @@ define([
 ], function(
    RecordSet,
    IBindCollection,
-   type,
+   Record,
+   Model,
    fieldsFactory,
    JsonAdapter,
    SbisAdapter,
@@ -22,6 +24,8 @@ define([
 ) {
    'use strict';
 
+   Record = Record.default;
+   Model = Model.default;
    RecordSet = RecordSet.default;
    IBindCollection = IBindCollection.default;
    fieldsFactory = fieldsFactory.default;
@@ -30,8 +34,6 @@ define([
    CowAdapter = CowAdapter.default;
 
    describe('Types/_collection/RecordSet', function() {
-      var Record = type.Record;
-      var Model = type.Model;
       var rs;
       var items;
       var getItems;
@@ -2202,7 +2204,7 @@ define([
                }),
                json = JSON.stringify(rs, serializer.serialize),
                clone = JSON.parse(json, serializer.deserialize);
-            assert.strictEqual(clone.getModel(), type.Record);
+            assert.strictEqual(clone.getModel(), Record);
          });
       });
 
@@ -2453,22 +2455,23 @@ define([
             });
 
             it('should return meta data with results of given type', function() {
-               var Foo = coreExtend.extend(Model, {}),
-                  data = {
-                     r: {
-                        d: [],
-                        s: []
-                     }
-                  },
-                  rs = new RecordSet({
-                     rawData: data,
-                     adapter: 'Types/entity:adapter.Sbis',
-                     metaFormat: {
-                        results: Foo
-                     }
-                  }),
-                  meta = rs.getMetaData();
+               var Foo = coreExtend.extend(Model, {});
+               Foo.produceInstance = Model.produceInstance;
+               var data = {
+                  r: {
+                     d: [],
+                     s: []
+                  }
+               };
+               var rs = new RecordSet({
+                  rawData: data,
+                  adapter: 'Types/entity:adapter.Sbis',
+                  metaFormat: {
+                     results: Foo
+                  }
+               });
 
+               var meta = rs.getMetaData();
                assert.instanceOf(meta.results, Foo);
             });
 
