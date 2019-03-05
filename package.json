@@ -29,7 +29,8 @@
          "node_modules/rmi/src/client/Env": "Env",
          "node_modules/sbis3-ws/WS.Core": "WS.Core",
          "node_modules/sbis3-ws/Inferno": "Inferno",
-         "node_modules/sbis3-ws/View": "View"
+         "node_modules/sbis3-ws/View": "View",
+         "node_modules/saby-i18n/I18n": "I18n"
       },
       "initializer": "init-testing.js",
       "url": {
@@ -55,6 +56,7 @@
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.300",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.300",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300"
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300"
    }
 }
