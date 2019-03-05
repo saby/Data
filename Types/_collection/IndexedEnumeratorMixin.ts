@@ -10,6 +10,7 @@
 import IObservable from './IObservable';
 import {ObservableMixin} from '../entity';
 import {object} from '../util';
+import {Object as EventObject} from 'Env/Event';
 
 const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMixin.prototype */ {
    '[Types/_collection/IndexedEnumeratorMixin]': true,

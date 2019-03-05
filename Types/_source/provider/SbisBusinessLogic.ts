@@ -12,8 +12,7 @@ import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
 import {mixin} from '../../util';
-// @ts-ignore
-import { RPCJSON as RpcJson } from 'Browser/Transport';
+import {RPCJSON} from 'Browser/Transport';
 
 interface IEndPoint {
    contract?: string;
@@ -84,7 +83,7 @@ export default class SbisBusinessLogic extends mixin(
 }
 
 SbisBusinessLogic.prototype['[Types/_source/provider/SbisBusinessLogic]'] = true;
-SbisBusinessLogic.prototype._$transport = RpcJson;
+SbisBusinessLogic.prototype._$transport = RPCJSON;
 SbisBusinessLogic.prototype._nameSpaceSeparator = '.';
 
 register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});

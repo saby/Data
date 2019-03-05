@@ -4,8 +4,7 @@
  * @author Мальцев А.А.
  */
 
-// @ts-ignore
-import { IoC } from 'Env/Env';
+import {IoC} from 'Env/Env';
 
 const STACK_DETECTOR = /:[0-9]+:[0-9]+/;
 const SELF_STACK_DEPTH = 2;
