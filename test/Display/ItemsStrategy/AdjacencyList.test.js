@@ -722,6 +722,26 @@ define([
             assert.strictEqual(strategy.count, expected.length);
          });
 
+         it('should return removed items', function() {
+            var items = [
+               {id: 1, pid: 0},
+               {id: 2, pid: 0},
+               {id: 3, pid: 0},
+               {id: 4, pid: 0},
+            ];
+            var source = getSource(items, 0);
+            var strategy = new AdjacencyList({
+               source: source,
+               idProperty: 'id',
+               parentProperty: 'pid'
+            });
+
+            var expected = [strategy.at(1), strategy.at(2)];
+            var result = strategy.splice(1, 2, []);
+
+            assert.deepEqual(result, expected);
+         });
+
          it('should return undefined for item that\'s not created yet', function() {
             var items = [
                   {id: 1, pid: 0},
