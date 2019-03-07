@@ -182,10 +182,6 @@ define([
             );
             assert.strictEqual(
                0,
-               new SbisTable([]).getCount()
-            );
-            assert.strictEqual(
-               0,
                new SbisTable({}).getCount()
             );
             assert.strictEqual(
