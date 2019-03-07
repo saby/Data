@@ -6,8 +6,10 @@
 .settings
 /package-lock.json
 /tsconfig.base.json
-/node_modules
 /artifacts
+/node_modules
+/Browser
+/Env
 /Inferno
 /View
 /WS.Core

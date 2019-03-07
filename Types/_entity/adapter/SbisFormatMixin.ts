@@ -105,9 +105,15 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
    _sharedFieldMeta: null,
 
    constructor(data: IRecordFormat | ITableFormat): void {
-      if (data && data._type && data._type !== this._type) {
-         throw new TypeError(`Argument "data" has "${data._type}" type signature but "${this._type}" expected.`);
+      if (data) {
+         if (Object.getPrototypeOf(data) !== Object.prototype) {
+            throw new TypeError('Argument \'data\' should be an instance of plain Object');
+         }
+         if (data._type && data._type !== this._type) {
+            throw new TypeError(`Argument 'data' has '${data._type}' type signature but '${this._type}' is expected.`);
+         }
       }
+
       if (fieldIndicesSymbol && data && data.s) {
          data.s[fieldIndicesSymbol] = null;
       }
