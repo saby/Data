@@ -11,18 +11,6 @@ define([
    'use strict';
    var format = formatter.date;
    describe('Types/formatter.date', function() {
-      var saveI18nEnabled = i18n.isEnabled(),
-         saveI18nLang = i18n.getLang();
-
-      beforeEach(function() {
-         i18n.setEnable(true);
-      });
-
-      afterEach(function() {
-         i18n.setLang(saveI18nLang);
-         i18n.setEnable(saveI18nEnabled);
-      });
-
 
       var check = function(date, pattern, expected) {
          return function() {
@@ -107,15 +95,20 @@ define([
 
       Object.keys(localized).forEach(function(locale) {
          context('for locale"' + locale + '"', function() {
+            var stubEnabled;
+            var stubGetLang;
+
             beforeEach(function() {
-               if (i18n.isEnabled()) {
-                  i18n.setLang(locale);
-                  if (i18n.getLang() !== locale) {
-                     this.skip();
-                  }
-               } else {
-                  this.skip();
-               }
+               stubEnabled = sinon.stub(i18n, 'isEnabled');
+               stubGetLang = sinon.stub(i18n, 'getLang');
+               stubEnabled.returns(true);
+               stubGetLang.returns(locale);
+            });
+            afterEach(function() {
+               stubEnabled.restore();
+               stubGetLang.restore();
+               stubEnabled = undefined;
+               stubGetLang = undefined;
             });
 
             var data = localized[locale];
