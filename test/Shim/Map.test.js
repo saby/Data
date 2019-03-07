@@ -6,19 +6,13 @@ define([
 ) {
    'use strict';
 
-   Map = Map.default;
+   var MapPolyfill = Map.MapPolyfill;
 
    describe('Types/_shim/Map', function() {
-      var global = (0, eval)('this'), // eslint-disable-line no-eval
-         isNative = Map === global.Map,
-         map;
+      var map;
 
       beforeEach(function() {
-         if (isNative) {
-            this.skip();
-         } else {
-            map = new Map();
-         }
+         map = new MapPolyfill();
       });
 
       afterEach(function() {
@@ -39,6 +33,12 @@ define([
             var foo = {};
             map.set(foo, 'bar');
             assert.strictEqual(map.size, 1);
+         });
+
+         it('should return new size after remove entry', function() {
+            map.set('foo', 'bar');
+            map.delete('foo');
+            assert.strictEqual(map.size, 0);
          });
       });
 
