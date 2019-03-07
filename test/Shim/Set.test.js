@@ -6,19 +6,13 @@ define([
 ) {
    'use strict';
 
-   Set = Set.default;
+   var SetPolyfill = Set.SetPolyfill;
 
    describe('Types/_shim/Set', function() {
-      var global = (0, eval)('this'), // eslint-disable-line no-eval
-         isNative = Set === global.Set,
-         set;
+      var set;
 
       beforeEach(function() {
-         if (isNative) {
-            this.skip();
-         } else {
-            set = new Set();
-         }
+         set = new SetPolyfill();
       });
 
       afterEach(function() {
@@ -33,6 +27,12 @@ define([
          it('should return new size after set new entry', function() {
             set.add('foo');
             assert.strictEqual(set.size, 1);
+         });
+
+         it('should return new size after delete entry', function() {
+            set.add('foo');
+            set.delete('foo');
+            assert.strictEqual(set.size, 0);
          });
       });
 
