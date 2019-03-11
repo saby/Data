@@ -1183,6 +1183,43 @@ define([
                assert.deepEqual(given, expected);
             });
 
+            it('should fire with only removed node if filter used', function() {
+               var data = [
+                  {id: 1, pid: 0},
+                  {id: 11, pid: 1},
+                  {id: 2, pid: 0},
+                  {id: 3, pid: 0},
+               ];
+               var list = new ObservableList({
+                  items: data
+               });
+               var tree = new Tree({
+                  collection: list,
+                  root: 0,
+                  idProperty: 'id',
+                  parentProperty: 'pid',
+                  filter: function(item) {
+                     return item.pid === 0;
+                  }
+               });
+               var given = [];
+               var handler = getCollectionChangeHandler(given);
+
+               var expected = [{
+                  action: IBindCollectionDisplay.ACTION_REMOVE,
+                  newItems: [],
+                  newItemsIndex: 0,
+                  oldItems: [tree.at(0)],
+                  oldItemsIndex: 0
+               }];
+
+               tree.subscribe('onCollectionChange', handler);
+               tree.getCollection().removeAt(0);
+               tree.unsubscribe('onCollectionChange', handler);
+
+               assert.deepEqual(given, expected);
+            });
+
             it('should fire on move a node down', function() {
                var items = [
                      {id: 1, pid: 0},
