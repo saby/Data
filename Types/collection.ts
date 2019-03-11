@@ -2,84 +2,23 @@
 /**
  * Library that provides various kinds of collections
  * @library Types/collection
- * @includes Array Types/_collection/Array
  * @includes enumerableComparator Types/_collection/enumerableComparator
- * @includes Dictionary Types/_collection/Dictionary
  * @includes Enum Types/_collection/Enum
+ * @includes enumerator Types/_collection/enumerator
  * @includes factory Types/_collection/factory
  * @includes format Types/_collection/format
  * @includes Flags Types/_collection/Flags
- * @includes IObservable Types/_collection/IObservable
  * @includes IEnum Types/_collection/IEnum
  * @includes IFlags Types/_collection/IFlags
  * @includes IEnumerable Types/_collection/IEnumerable
  * @includes IEnumerator Types/_collection/IEnumerator
  * @includes IList Types/_collection/IList
- * @includes IndexedEnumeratorMixin Types/_collection/IndexedEnumeratorMixin
+ * @includes IObservable Types/_collection/IObservable
  * @includes List Types/_collection/List
- * @includes Mapwise Types/_collection/Mapwise
- * @includes Objectwise Types/_collection/Objectwise
  * @includes ObservableList Types/_collection/ObservableList
  * @includes RecordSet Types/_collection/RecordSet
  * @public
  * @author Мальцев А.А.
- */
-
-/**
- * Library that provides various kinds of collections
- * @class
- * @name Types/collection
- * @public
- * @author Мальцев А.А.
- */
-
-/**
- * Class {@link Types/_collection/Enum}.
- * @class
- * @name Types/collection:Enum
- * @public
- */
-
-/**
- * Class {@link Types/_collection/factory}.
- * @class
- * @name Types/collection:factory
- * @public
- */
-
-/**
- * Class {@link Types/_collection/format}.
- * @class
- * @name Types/collection:format
- * @public
- */
-
-/**
- * Class {@link Types/_collection/Flags}.
- * @class
- * @name Types/collection:Flags
- * @public
- */
-
-/**
- * Class {@link Types/_collection/List}.
- * @class
- * @name Types/collection:List
- * @public
- */
-
-/**
- * Class {@link Types/_collection/ObservableList}.
- * @class
- * @name Types/collection:ObservableList
- * @public
- */
-
-/**
- * Class {@link Types/_collection/RecordSet}.
- * @class
- * @name Types/collection:RecordSet
- * @public
  */
 
 export {default as enumerableComparator} from './_collection/enumerableComparator';

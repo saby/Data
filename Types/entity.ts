@@ -4,7 +4,6 @@
  * @library Types/entity
  * @includes adapter Types/_entity/adapter
  * @includes descriptor Types/_entity/descriptor
- * @includes DestroyableMixin Types/_entity/DestroyableMixin
  * @includes factory Types/_entity/factory
  * @includes format Types/_entity/format
  * @includes functor Types/_entity/functor
@@ -19,114 +18,10 @@
  * @includes Model Types/_entity/Model
  * @includes Record Types/_entity/Record
  * @includes relation Types/_entity/relation
+ * @includes TimeInterval Types/_entity/TimeInterval
+ * @includes Guid Types/_entity/Guid
  * @public
  * @author Мальцев А.А.
- */
-
-/**
- * Library that provides various kinds of entities.
- * @class
- * @name Types/entity
- * @public
- * @author Мальцев А.А.
- */
-
-/**
- * Class {@link Types/_entity/adapter}.
- * @class
- * @name Types/entity:adapter
- * @public
- */
-
-/**
- * Class {@link Types/_entity/descriptor}.
- * @class
- * @name Types/entity:descriptor
- * @public
- */
-
-/**
- * Class {@link Types/_entity/DestroyableMixin}.
- * @class
- * @name Types/entity:DestroyableMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/format}.
- * @class
- * @name Types/entity:format
- * @public
- */
-
-/**
- * Class {@link Types/_entity/functor}.
- * @class
- * @name Types/entity:functor
- * @public
- */
-
-/**
- * Class {@link Types/_entity/InstantiableMixin}.
- * @class
- * @name Types/entity:InstantiableMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/Model}.
- * @class
- * @name Types/entity:Model
- * @public
- */
-
-/**
- * Class {@link Types/_entity/OptionsToPropertyMixin}.
- * @class
- * @name Types/entity:OptionsToPropertyMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/ObservableMixin}.
- * @class
- * @name Types/entity:ObservableMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/Record}.
- * @class
- * @name Types/entity:Record
- * @public
- */
-
-/**
- * Class {@link Types/_entity/SerializableMixin}.
- * @class
- * @name Types/entity:SerializableMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/VersionableMixin}.
- * @class
- * @name Types/entity:VersionableMixin
- * @public
- */
-
-/**
- * Class {@link Types/_entity/TimeInterval}.
- * @class
- * @name Types/entity:TimeInterval
- * @public
- */
-
-/**
- * Class {@link Types/_entity/Guid}.
- * @class
- * @name Types/entity:Guid
- * @public
  */
 
 import * as adapter from './_entity/adapter';
