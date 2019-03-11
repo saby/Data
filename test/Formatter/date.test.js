@@ -202,7 +202,7 @@ define([
       });
 
       context('constants', function() {
-         var config = locales.current.config,
+         var
             map = {
                FULL_DATE_DOW: 'fullDateDayOfWeekFormat',
                FULL_DATE: 'fullDateFormat',
@@ -227,16 +227,16 @@ define([
 
          Object.keys(map).forEach(function(constant) {
             it(constant, function() {
-               assert.strictEqual(format[constant], config[map[constant]]);
+               assert.strictEqual(format[constant], locales.current.config[map[constant]]);
             });
          });
 
          it('SHORT_DATETIME', function() {
-            assert.strictEqual(format.SHORT_DATETIME, config.shortDateShortMonthFormat + ' ' + config.shortTimeFormat);
+            assert.strictEqual(format.SHORT_DATETIME, locales.current.config.shortDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat);
          });
 
          it('FULL_DATETIME', function() {
-            assert.strictEqual(format.FULL_DATETIME, config.fullDateShortMonthFormat + ' ' + config.shortTimeFormat);
+            assert.strictEqual(format.FULL_DATETIME, locales.current.config.fullDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat);
          });
       });
    });
