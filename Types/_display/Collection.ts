@@ -127,7 +127,7 @@ function onCollectionChange(
          // FIXME: oldItems.length - FIXME[OrderMatch]
          this._removeItems(oldItemsIndex, oldItems.length);
          this._reSort();
-         if (this._isFiltered() && this._isFilteredByIndex()) {
+         if (this._isFiltered()) {
             this._reFilter();
          }
          break;
