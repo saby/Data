@@ -2,8 +2,8 @@
 /**
  * Библиотека утилит.
  * @library Types/util
- * @includes object Types/_util/object
  * @includes logger Types/_util/logger
+ * @includes object Types/_util/object
  * @includes mixin Types/_util/mixin
  * @includes protect Types/_util/protect
  * @public

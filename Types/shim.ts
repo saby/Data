@@ -2,8 +2,8 @@
 /**
  * Compatibility layer library
  * @library Types/shim
- * @includes DestroyableMixin Types/_shim/Map
- * @includes DestroyableMixin Types/_shim/Set
+ * @includes Map Types/_shim/Map
+ * @includes Set Types/_shim/Set
  * @author Мальцев А.А.
  */
 
