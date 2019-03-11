@@ -39,24 +39,6 @@ define([
          adapter = undefined;
       });
 
-      describe('.constructor()', function() {
-         it('should throw an error on invalid data', function() {
-            assert.throws(function() {
-               new SbisRecord([]);
-            });
-
-            assert.throws(function() {
-               new SbisRecord(new Date());
-            });
-
-            assert.throws(function() {
-               new SbisRecord({
-                  _type: 'recordset'
-               });
-            });
-         });
-      });
-
       describe('.clone()', function() {
          it('should return new instance', function() {
             assert.notEqual(adapter.clone(), adapter);
