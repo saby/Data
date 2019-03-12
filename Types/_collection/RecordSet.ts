@@ -87,6 +87,8 @@ import {create, register} from '../di';
 import {mixin, logger} from '../util';
 import {isEqual} from '../object';
 
+export type EnumeratorCallback<T = Record> = (item: T, index: number) => void;
+
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
@@ -120,7 +122,7 @@ function checkNullId(value: any, idProperty: string): void {
    }
 }
 
-export default class RecordSet<T> extends mixin(
+export default class RecordSet<T = Record> extends mixin(
    ObservableList,
    FormattableMixin,
    InstantiableMixin
@@ -400,7 +402,7 @@ export default class RecordSet<T> extends mixin(
     *    });
     * </pre>
     */
-   each(callback: Function, state?: any, context?: object): void {
+   each(callback: EnumeratorCallback, state?: any, context?: object): void {
       if (state instanceof Object) {
          context = state;
          state = undefined;
@@ -1495,7 +1497,7 @@ export default class RecordSet<T> extends mixin(
     * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
     * @return {Types/_entity/Record} Патч
     */
-   static patch(items: RecordSet<any>, names?: string[]): Record {
+   static patch(items: RecordSet, names?: string[]): Record {
       names = names || ['changed', 'added', 'removed'];
 
       const filter = (state) => {
