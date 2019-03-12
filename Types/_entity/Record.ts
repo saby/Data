@@ -54,7 +54,7 @@
  * @class Types/_entity/Record
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/IObject
- * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/IObservableObject
  * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @implements Types/_entity/IEquatable

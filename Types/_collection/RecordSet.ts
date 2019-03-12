@@ -54,7 +54,7 @@
  * </pre>
  * @class Types/_collection/RecordSet
  * @extends Types/_collection/ObservableList
- * @implements Types/_entity/IObjectNotify
+ * @implements Types/_entity/IObservableObject
  * @implements Types/_entity/IInstantiable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/FormattableMixin
