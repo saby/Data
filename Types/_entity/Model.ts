@@ -459,7 +459,7 @@ export default class Model extends mixin(
                }
             }
 
-            pairs.push([key, value, this._getRawDataValue(key)]);
+            pairs.push([key, value, Record.prototype.get.call(this, key)]);
          } catch (err) {
             // Collecting errors for every property
             propertiesErrors.push(err);

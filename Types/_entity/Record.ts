@@ -369,14 +369,15 @@ export default class Record extends mixin(
    readonly '[Types/_entity/IObject]': boolean;
 
    get(name: string): any {
-      if (this._fieldsCache.has(name)) {
-         return this._fieldsCache.get(name);
+      const cache = this._fieldsCache;
+      if (cache.has(name)) {
+         return cache.get(name);
       }
 
       const value = this._getRawDataValue(name);
       if (this._isFieldValueCacheable(value)) {
          this._addChild(value, this._getRelationNameForField(name));
-         this._fieldsCache.set(name, value);
+         cache.set(name, value);
          if (this._haveToClone(value)) {
             this._fieldsClone.set(name, value.clone());
          }
@@ -859,7 +860,7 @@ export default class Record extends mixin(
     *    article.isChanged();//true
     * </pre>
     */
-   isChanged(name: string): boolean {
+   isChanged(name?: string): boolean {
       return name
          ? this._hasChangedField(name)
          : this.getChanged().length > 0;

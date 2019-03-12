@@ -304,7 +304,7 @@ define([
             });
          });
 
-         it('should write adn read updated cached value inside set', function() {
+         it('should write and read updated cached value inside set', function() {
             var updatedValue;
 
             var model = new Model({
@@ -324,6 +324,22 @@ define([
 
             assert.deepEqual(updatedValue, [2]);
             assert.deepEqual(model.get('foo'), [2]);
+         });
+
+         it('shouldn\'t change cached field value taken from format if model has any properties', function() {
+            var model = new Model({
+               format: {
+                  foo: Model
+               },
+               rawData: {
+                  foo: {bar: 1}
+               },
+               properties: {}
+            });
+            var foo = model.get('foo');
+            model.set('foo', foo);
+
+            assert.isFalse(model.isChanged('foo'));
          });
 
          it('should throw an Error for read only property', function() {
