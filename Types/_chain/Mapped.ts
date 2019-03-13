@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Mapped" />
 /**
  * Преобразующее звено цепочки.
  * @class Types/_chain/Mapped

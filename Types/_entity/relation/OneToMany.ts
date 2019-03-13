@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/relation/OneToMany" />
 /**
  * Посредник, реализующий отношения "один ко многим".
  * @class Types/_entity/relation/OneToMany

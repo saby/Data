@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/HierarchicalMemory" />
 /**
  * Source which returns "breadcrumbs" to the root of hierarchy in the result of query() method.
  * "Breadcrumbs" stores as Array in property "path" of RecordSet's meta data.

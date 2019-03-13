@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/CollectionItem" />
 /**
  * Элемент коллекции
  * @class Types/_display/CollectionItem

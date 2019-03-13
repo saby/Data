@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/functor" />
 /**
  * Functors library.
  * @library Types/_entity/functor

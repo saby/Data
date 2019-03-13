@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/XmlField" />
 /**
  * Формат поля для строки в формате XML.
  *

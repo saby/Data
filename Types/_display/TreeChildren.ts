@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/TreeChildren" />
 /**
  * Список дочерних элементов узла дерева.
  * @class Types/_display/TreeChildren

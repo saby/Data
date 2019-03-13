@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/ManyToManyMixin" />
 /**
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
  * @mixin Types/_entity/ManyToManyMixin

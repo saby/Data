@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/DateTimeField" />
 /**
  * Формат поля для даты и времени.
  *

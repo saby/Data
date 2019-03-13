@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Arraywise" />
 /**
  * Цепочка по массиву.
  * @class Types/_chain/Array

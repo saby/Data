@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/SbisFieldType" />
 /**
  * @class Types/_entity/adapter/SbisFieldType
  * @description Класс используют, чтобы для строкового названия типа данных WS получить соответствующее ему строковое

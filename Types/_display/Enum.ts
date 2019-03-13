@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/Enum" />
 /**
  * Проекция типа "Перечисляемое".
  * @class Types/_display/Enum

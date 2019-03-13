@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_formatter/numberRoman" />
-
 const boundaries = {
    M: 1000,
    CM: 900,

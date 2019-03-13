@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Zipped" />
 /**
  * Объединяющее звено цепочки.
  * @class Types/_chain/Zipped

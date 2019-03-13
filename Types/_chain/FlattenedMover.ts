@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/FlattenedMover" />
 /**
  * Передвигаемый рекурсивный указатель.
  * @author Мальцев А.А.

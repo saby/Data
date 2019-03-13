@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/ObservableMixin" />
 /**
  * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
  * @class Types/_entity/ObservableMixin

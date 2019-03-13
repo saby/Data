@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/Cow" />
 /**
  * Адаптер для работы с даными в режиме Copy-on-write.
  * \|/         (__)

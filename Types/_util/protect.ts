@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_util/protect" />
 /**
  * Возвращает имя для защищенного свойства
  * @param {String} property Название свойства.

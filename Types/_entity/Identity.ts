@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/Identity" />
 /**
  * Тип данных "Идентификатор".
  * @class Types/_entity/Identity

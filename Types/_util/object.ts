@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_util/object" />
 /**
  * Набор утилит для работы с объектами
  * @public

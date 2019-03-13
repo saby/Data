@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/IBind" />
 /**
  * Интерфейс привязки к проекции коллекции
  * @interface Types/_display/IBindCollection

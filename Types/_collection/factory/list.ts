@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/factory/list" />
 /**
  * Фабрика для получения списка из Types/_collection/IEnumerable.
  * @class Types/_collection/Factory/List

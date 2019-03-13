@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/FlagsItem" />
 /**
  * Элемент коллекции флагов
  * @class Types/_display/FlagsItem

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter" />
 /**
  * Adapters library.
  * @library Types/_entity/adapter

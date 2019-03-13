@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/factory" />
 /**
  * Factories library.
  * @library Types/_collection/factory

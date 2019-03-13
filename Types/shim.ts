@@ -1,4 +1,3 @@
-/// <amd-module name="Types/shim" />
 /**
  * Compatibility layer library
  * @library Types/shim

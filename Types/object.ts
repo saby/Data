@@ -1,4 +1,3 @@
-/// <amd-module name="Types/object" />
 /**
  * Library that improves work with objects
  * @library Types/object

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/MaterializedPath" />
 /**
  * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
  * @class Types/_display/ItemsStrategy/MaterializedPath

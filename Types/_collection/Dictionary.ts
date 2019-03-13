@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/Dictionary" />
 /**
  * An abstract enity which have the dictionary as collection of keys and values.
  * It's an abstract class and it's can't have instances.

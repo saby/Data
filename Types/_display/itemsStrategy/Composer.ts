@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/Composer" />
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
  * @class Types/_display/ItemsStrategy/Composer

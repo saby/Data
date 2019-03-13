@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/descriptor" />
 /**
  * Модуль описания типа.
  * @class Types/_entity/descriptor

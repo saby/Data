@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/IDecorator" />
 
 import IAdapter from './IAdapter';
 import ITable from './ITable';

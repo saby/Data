@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_function/throttle" />
 /**
  *
  * Модуль, в котором описана функция <b>throttle(original, delay, last)</b>.

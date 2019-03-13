@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/ArrayField" />
 /**
  * Формат поля для массива значений.
  *

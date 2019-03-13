@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_object/merge" />
 /**
  *
  * Модуль, в котором описана функция <b>merge.ts(obj1[, obj2, ...])</b>,

@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_function/once" />
-
 /**
  * Модуль, в котором описана функция <b>once(original)</b>.
  *

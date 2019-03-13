@@ -1,4 +1,3 @@
-/// <amd-module name="Types/source" />
 /**
  * Library that provides access to data sources
  * @library Types/source

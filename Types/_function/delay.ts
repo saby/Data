@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_function/delay" />
-
 const win = typeof window !== 'undefined' ? window : null;
 
 /**

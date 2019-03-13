@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/IProvider" />
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
  * @interface Types/_source/IProvider

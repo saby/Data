@@ -1,11 +1,9 @@
-/// <amd-module name="Types/_formatter/dateFromSql" />
-
-import { constants } from 'Env/Env';
-
 /**
  * @public
  * @author Мальцев А.А.
  */
+
+import { constants } from 'Env/Env';
 
 /**
  * Формат даты, используемый в SQL

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/IndexedEnumeratorMixin" />
 /**
  * Миксин, позволящий использовать индексацию элементов в экземплярах,
  * реализующих интерфейс Types/_collection/IEnumerator.

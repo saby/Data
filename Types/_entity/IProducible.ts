@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/IProducible" />
 /**
  * Интерфейс получения экземпляра класса через фабричный метод
  * @interface Types/_entity/IProducible

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Reversed" />
 /**
  * Реверсивное звено цепочки.
  * @class Types/_chain/Reversed

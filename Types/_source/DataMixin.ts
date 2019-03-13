@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/DataMixin" />
 /**
  * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
  * @mixin Types/_source/DataMixin

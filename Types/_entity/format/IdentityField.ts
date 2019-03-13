@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/IdentityField" />
 /**
  * Формат поля для идентификатора.
  *

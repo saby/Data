@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/BindingMixin" />
 /**
  * Миксин, позволяющий задавать привязку CRUD к контракту источника.
  * @mixin Types/_source/BindingMixin

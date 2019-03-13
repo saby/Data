@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Flattened" />
 /**
  * Разворачивающее звено цепочки.
  * @class Types/_chain/Flattened

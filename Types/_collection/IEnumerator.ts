@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/IEnumerator" />
 /**
  * Интерфейс коллекции c последовательным доступом
  * @interface Types/_collection/IEnumerator

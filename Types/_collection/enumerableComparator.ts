@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/enumerableComparator" />
 /**
  * Позволяет сравнить две коллекции до и после набора изменений
  * @class Types/_collection/Comparer

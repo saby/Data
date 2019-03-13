@@ -1,4 +1,3 @@
-/// <amd-module name="Types/display" />
 /**
  * Library that provides various views over collections
  * @library Types/display

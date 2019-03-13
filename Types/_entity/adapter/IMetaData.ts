@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/IMetaData" />
 /**
  * Интерфейс адаптера для работы с метаданными
  * @interface Types/_entity/adapter/IMetaData

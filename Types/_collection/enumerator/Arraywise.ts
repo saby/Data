@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/enumerator/Arraywise" />
 /**
  * Энумератор для массива
  * @class Types/_collection/ArrayEnumerator

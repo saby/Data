@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_shim/Map" />
 /**
  * Limited emulation of standard built-in object "Map" if it's not supported.
  * Follow {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Map} for details.

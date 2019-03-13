@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/OptionsMixin" />
 /**
  * Миксин, позволяющий задавать опциональные настройки источника данных.
  * @mixin Types/_source/OptionsMixin

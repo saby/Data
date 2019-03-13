@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/Ladder" />
 /**
  * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
  * @class Types/_display/Ladder

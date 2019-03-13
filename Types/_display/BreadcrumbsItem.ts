@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/BreadcrumbsItem" />
 /**
  * Хлебная крошка
  * @class Types/_display/BreadcrumbsItem

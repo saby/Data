@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/enumerator/Mapwise" />
 /**
  * Энумератор для Map
  * @class Types/_collection/MapEnumerator

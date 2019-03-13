@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/GroupItem" />
 /**
  * Группа элементов
  * @class Types/_display/GroupItem

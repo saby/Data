@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/DictionaryField" />
 /**
  * Формат поля со словарём (абстрактный класс)
  * @class Types/_entity/format/DictionaryField

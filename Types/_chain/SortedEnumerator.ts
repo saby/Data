@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/SortedEnumerator" />
 /**
  * Сортирующий энумератор
  * @author Мальцев А.А.

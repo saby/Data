@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/IRpc" />
 /**
  * Интерфейс источника данных, поддерживающего {@link https://en.wikipedia.org/wiki/Remote_procedure_call RPC}.
  *

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/function" />
 /**
  * Library that improves work with functions
  * @library Types/function

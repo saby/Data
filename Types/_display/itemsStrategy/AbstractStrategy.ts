@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/AbstractStrategy" />
 /**
  * Абстрактная стратегия получения элементов проекции
  * @class Types/_display/ItemsStrategy/Abstract

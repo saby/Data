@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_formatter/numberWords" />
 import numberWordsRu from './_numberWords/ru';
 import numberWordsEN from './_numberWords/en';
 // @ts-ignore

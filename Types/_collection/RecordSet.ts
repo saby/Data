@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_collection/RecordSet" />
-
 /* tslint:disable:max-line-length member-ordering */
 
 /**

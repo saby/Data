@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/factory" />
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
  * @class Types/_entity/factory

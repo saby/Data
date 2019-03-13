@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_formatter/_numberWords/ru" />
-
 import {iterateNumber} from './utils';
 
 const DIGITS = {

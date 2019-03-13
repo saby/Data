@@ -1,4 +1,3 @@
-/// <amd-module name="Types/chain" />
 /**
  * Library that provides chained lazy calculations over various kinds of collections
  * @library Types/chain

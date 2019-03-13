@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_formatter/jsonReviver" />
-
 import {logger} from '../util';
 
 const DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;

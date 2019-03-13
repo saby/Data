@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_entity/format/UniversalField" />
-
 /**
  * Универсальное поле.
  * @class Types/_entity/format/UniversalField

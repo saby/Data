@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/ConcatenatedEnumerator" />
 /**
  * Объединяющий энумератор.
  * @public

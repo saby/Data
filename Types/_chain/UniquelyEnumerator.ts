@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/UniquelyEnumerator" />
 /**
  * Энумератор уникальных элементов
  * @author Мальцев А.А.

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_object/isEqual" />
 /**
  *
  * Модуль, в котором описана функция <b>isEqual(obj1, obj2)</b>,

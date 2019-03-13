@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/TreeItem" />
 /**
  * Элемент дерева
  * @class Types/_display/TreeItem

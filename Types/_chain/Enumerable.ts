@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Enumerable" />
 /**
  * Цепочка по IEnumerable.
  * @class Types/_chain/Enumerable

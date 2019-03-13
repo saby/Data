@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/IEnum" />
 /**
  * Enumerable interface. It's an enumerable collection of keys and values one of which can be selected or not.
  * @interface Types/_collection/IEnum

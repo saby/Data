@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/factory/recordSet" />
 /**
  * Фабрика для получения рекордсета из Types/_collection/IEnumerable.
  * @class Types/_collection/Factory/RecordSet

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/Query" />
 /**
  * Запрос на выборку.
  *

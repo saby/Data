@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/ObservableList" />
 /**
  * Список, в котором можно отслеживать изменения.
  * <pre>

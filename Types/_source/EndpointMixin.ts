@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/EndpointMixin" />
 /**
  * Миксин, позволяющий задавать конечную точку доступа.
  * @mixin Types/_source/EndpointMixin

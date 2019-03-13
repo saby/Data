@@ -1,4 +1,3 @@
-/// <amd-module name="Types/entity" />
 /**
  * Library that provides various kinds of entities.
  * @library Types/entity

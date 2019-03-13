@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/IRecord" />
 /**
  * Интерфейс адаптера для записи таблицы данных
  * @interface Types/_entity/adapter/IRecord

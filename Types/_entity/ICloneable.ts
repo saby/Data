@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/ICloneable" />
 /**
  * Интерфейс клонирования объекта.
  * @interface Types/_entity/ICloneable
