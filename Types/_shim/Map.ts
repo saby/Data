@@ -6,6 +6,8 @@
  */
 
 import {SetPolyfill} from './Set';
+//@ts-ignore
+import 'Core/polyfill';
 
 export class MapPolyfill<K, V> {
    protected _hash: object;
