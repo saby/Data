@@ -4,12 +4,14 @@
 .nyc_output
 .project
 .settings
+/index.js
 /package-lock.json
 /tsconfig.base.json
 /artifacts
 /node_modules
 /Browser
 /Env
+/I18n
 /Inferno
 /View
 /WS.Core

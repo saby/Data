@@ -4,6 +4,7 @@
  * @author Мальцев А.А.
  */
 
+import {CompareFunction} from '../_declarations';
 import IndexedEnumerator from './IndexedEnumerator';
 import SortWrapper from './SortWrapper';
 import Abstract from './Abstract';
