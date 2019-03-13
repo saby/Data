@@ -31,7 +31,7 @@ All you need is just saby-types package on npm.
 
 1. Clone the repository in separated folder:
 
-        git clone git@github.com:saby/Types.git ./saby-Types
+        git clone git@github.com:saby/Types.git ./
 
 1. Install development dependencies:
 
