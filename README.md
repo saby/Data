@@ -1,14 +1,37 @@
 # Type system
 
-## Setup in development mode
+This TypeScript package provides Wasaby type system for efficient work with types, data structures, collections and types transformation.
 
-1. Clone the repository (saby-Types for example):
+## Installation in production mode
 
-        git clone git@github.com:saby/Types.git ./saby-Types
+All you need is just saby-types package on npm.
 
-1. Change current dir to the saby-Types:
+1. Create a new npm package in separated folder:
 
-        cd ./saby-Types
+        npm init
+
+1. Install *typescript* and *saby-types* packages:
+
+        npm install typescript
+        npm install git+https://github.com/saby/Types.git
+
+1. Create a new hello-world.ts file:
+
+    ```typescript
+        import {entity} from 'saby-types';
+        
+        const record = new entity.Record({
+            rawData: {hello: 'Hello world!'}
+        });
+        
+        console.log(record.get('hello'));
+    ```
+
+## Installation in development mode
+
+1. Clone the repository in separated folder:
+
+        git clone git@github.com:saby/Types.git ./
 
 1. Install development dependencies:
 
@@ -18,7 +41,7 @@
 
         npm run build
 
-## Available scripts
+### Available scripts
 
 - Compile TypeScript:
 
@@ -48,7 +71,7 @@
 
         npm test:browser-coverage
 
-# Integration with Jenkins
+## Integration with Jenkins
 
 With checkbox
 

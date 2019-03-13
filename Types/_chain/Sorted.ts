@@ -7,6 +7,7 @@
  * @author Мальцев А.А.
  */
 
+import {CompareFunction} from '../_declarations';
 import Abstract from './Abstract';
 import SortedEnumerator from './SortedEnumerator';
 

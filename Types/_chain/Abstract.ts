@@ -13,6 +13,7 @@ import {DestroyableMixin} from '../entity';
 import {IEnumerable} from '../collection';
 import {object} from '../util';
 import {resolve} from '../di';
+import {CompareFunction} from '../_declarations';
 import IEnumerator from '../_collection/IEnumerator';
 import Zipped from './Zipped';
 import Mapped from './Mapped';

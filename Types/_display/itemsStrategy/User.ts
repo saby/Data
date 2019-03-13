@@ -14,6 +14,7 @@ import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy
 import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
+import {CompareFunction} from '../../_declarations';
 import {mixin} from '../../util';
 
 interface IOptions {
