@@ -1,0 +1,16 @@
+{
+  "include": [
+    "Types/chain",
+    "Types/collection",
+    "Types/di",
+    "Types/display",
+    "Types/entity",
+    "Types/formatter",
+    "Types/function",
+    "Types/object",
+    "Types/shim",
+    "Types/source",
+    "Types/util"
+  ],
+  "output": "types-libraries.package.js"
+}
