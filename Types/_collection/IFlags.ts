@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/IFlags" />
 /**
  * Flags interface. It's an enumerable collection of keys and values every one of which can be selected or not.
  * @interface Types/_collection/IFlags

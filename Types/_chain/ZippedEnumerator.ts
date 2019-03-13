@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/ZippedEnumerator" />
 /**
  * Объединяющий энумератор
  * @author Мальцев А.А.

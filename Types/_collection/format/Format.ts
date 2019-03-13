@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/format/Format" />
 /**
  * Формат полей.
  * Представляет собой список полей записи: Types/_collection/List.<Types/_entity/format/Field>

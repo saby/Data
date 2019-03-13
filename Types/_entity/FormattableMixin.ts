@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/FormattableMixin" />
 /**
  * Миксин, предоставляющий поведение владения форматом полей и доступа к их значениям в сырых данных через адаптер.
  * @mixin Types/_entity/FormattableMixin

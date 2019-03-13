@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/LazyMixin" />
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
  * @mixin Types/_source/LazyMixin

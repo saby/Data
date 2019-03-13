@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/IItemsStrategy" />
 /**
  * Интерфейс стратегии получения элементов проекции.
  * @interface Types/_display/IItemsStrategy

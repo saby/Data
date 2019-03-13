@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/JsonFormatMixin" />
 /**
  * Миксин для работы с JSON-форматом в адаптерах
  * @mixin Types/_entity/adapter/JsonFormatMixin

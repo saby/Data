@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/IEquatable" />
 /**
  * Интерфейс сравнения объектов.
  * @interface Types/_entity/IEquatable

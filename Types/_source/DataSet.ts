@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/DataSet" />
 /**
  * Набор данных, полученный из источника.
  * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также

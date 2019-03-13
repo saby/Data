@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/FlattenedEnumerator" />
 /**
  * Разворачивающий энумератор
  */

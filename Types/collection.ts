@@ -1,4 +1,3 @@
-/// <amd-module name="Types/collection" />
 /**
  * Library that provides various kinds of collections
  * @library Types/collection

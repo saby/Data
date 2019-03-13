@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/IInstantiable" />
 /**
  * Интерфейс получения уникального идентификатора для экземпляра класса
  * @interface Types/_entity/IInstantiable

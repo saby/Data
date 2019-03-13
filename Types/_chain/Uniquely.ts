@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Uniquely" />
 /**
  * Звено цепочки, обеспечивающее уникальность.
  * @class Types/_chain/Uniquely

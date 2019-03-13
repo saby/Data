@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/SbisFormatMixin" />
 /**
  * Миксин для работы с СБИС-форматом в адаптерах
  * @mixin Types/_entity/adapter/SbisFormatMixin

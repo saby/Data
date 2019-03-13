@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/ITable" />
 /**
  * Интерфейс адаптера для таблицы данных
  * @interface Types/_entity/adapter/ITable

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/ReadWriteMixin" />
 /**
  * Миксин, позволяющий ограничивать запись и чтение.
  * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов

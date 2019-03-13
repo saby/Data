@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/provider/IAbstract" />
 /**
  * Интерфейс абстрактного провайдера
  * @interface Types/_source/provider/IAbstract

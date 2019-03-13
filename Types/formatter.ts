@@ -1,4 +1,3 @@
-/// <amd-module name="Types/formatter" />
 /**
  * Library that formats types to strings
  * @library Types/formatter

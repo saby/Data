@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/IntegerField" />
 /**
  * Формат целочисленного поля.
  *

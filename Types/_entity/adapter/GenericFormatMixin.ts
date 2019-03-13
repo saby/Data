@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/GenericFormatMixin" />
 /**
  * Миксин для работы с форматом в адаптерах
  * @mixin Types/_entity/adapter/GenericFormatMixin

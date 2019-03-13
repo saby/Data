@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/Group" />
 /**
  * Стратегия-декоратор для формирования групп элементов
  * @class Types/_display/ItemsStrategy/Group

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/RecordSetTable" />
 /**
  * Адаптер для таблицы данных в формате рекордсета.
  * Работает с данными, представленными в виде экземлпяра {@link Types/_collection/RecordSet}.

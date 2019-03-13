@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/IObservableObject" />
 /**
  * Интерфейс уведомлений об изменении к свойств объекта.
  * @interface Types/_entity/IObservableObject

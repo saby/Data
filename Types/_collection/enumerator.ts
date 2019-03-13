@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/enumerator" />
 /**
  * Enumerators library.
  * @library Types/_collection/enumerator

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/Direct" />
 /**
  * Стратегия получения элементов проекции напрямую по коллекции
  * @class Types/_display/ItemsStrategy/Direct

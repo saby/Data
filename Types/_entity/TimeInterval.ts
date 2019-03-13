@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/TimeInterval" />
 /**
  * Реализация объекта "Временной интервал".
  *

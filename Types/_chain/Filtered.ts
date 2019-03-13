@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Filtered" />
 /**
  * Фильтрующее звено цепочки.
  * @class Types/_chain/Filtered

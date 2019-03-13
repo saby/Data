@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/CloneableMixin" />
 /**
  * Миксин, позволяющий клонировать объекты.
  * Для корректной работы требуется подмешать {@link Types/_entity/SerializableMixin}.

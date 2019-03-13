@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/AdjacencyList" />
 /**
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
  * @class Types/_display/ItemsStrategy/AdjacencyList

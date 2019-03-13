@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/SlicedEnumerator" />
 /**
  * Вырезающий энумератор
  * @author Мальцев А.А.

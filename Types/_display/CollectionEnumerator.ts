@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/CollectionEnumerator" />
 /**
  * Энумератор для проекции коллекции
  * @class Types/_display/CollectionEnumerator

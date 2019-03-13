@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/format/factory" />
 /**
  * Фабрика форматов - конструирует формат по декларативному описанию
  * @author Мальцев А.А.

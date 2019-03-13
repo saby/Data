@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/DataCrudMixin" />
 /**
  * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
  * @mixin Types/_source/DataCrudMixin

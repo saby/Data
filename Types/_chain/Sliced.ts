@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Sliced" />
 /**
  * Вырезающее звено цепочки.
  * @class Types/_chain/Sliced

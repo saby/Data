@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/VersionableMixin" />
 /**
  * Миксин, позволяющий получать и измениять номер версии объекта.
  * @mixin Types/_entity/VersionableMixin

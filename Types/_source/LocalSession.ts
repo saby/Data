@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_source/LocalSession" />
-
 /* tslint:disable:max-classes-per-file */
 
 /**

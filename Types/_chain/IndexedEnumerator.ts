@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/IndexedEnumerator" />
 /**
  * Индексирующий энумератор
  * @author Мальцев А.А.

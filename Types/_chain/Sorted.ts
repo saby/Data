@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Sorted" />
 /**
  * Сортирующее звено цепочки.
  * @class Types/_chain/Sorted

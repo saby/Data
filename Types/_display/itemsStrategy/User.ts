@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/User" />
 /**
  * Стратегия-декоратор для пользовательского порядка элементов
  * @class Types/_display/ItemsStrategy/User

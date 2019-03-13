@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Objectwise" />
 /**
  * Цепочка по объекту.
  * @class Types/_chain/Object

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/SbisService" />
 /**
  * Класс источника данных на сервисах бизнес-логики СБИС.
  * <br/>

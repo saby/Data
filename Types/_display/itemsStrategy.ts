@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy" />
 /**
  * Items strategy library
  * @library Types/_display/itemsStrategy

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/ICrudPlus" />
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
  * @interface Types/_source/ICrudPlus

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/Flags" />
 /**
  * Проекция типа "Флаги".
  * @class Types/_display/Flags

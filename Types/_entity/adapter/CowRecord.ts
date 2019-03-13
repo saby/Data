@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/CowRecord" />
 /**
  * Адаптер записи таблицы для работы в режиме Copy-on-write.
  * @class Types/_entity/adapter/CowRecord

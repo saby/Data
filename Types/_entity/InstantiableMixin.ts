@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/InstantiableMixin" />
 /**
  * Миксин, позволяющий генерировать уникальный (в рамках миксина) идентификатор для каждого экземпляра класса.
  * @mixin Types/_entity/InstantiableMixin

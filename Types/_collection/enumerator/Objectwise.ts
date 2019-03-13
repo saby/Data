@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/enumerator/Objectwise" />
 /**
  * Энумератор для собственных свойств объекта
  * @class Types/_collection/ObjectEnumerator

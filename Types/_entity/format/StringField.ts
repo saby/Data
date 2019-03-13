@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/StringField" />
 /**
  * Формат поля для строк.
  *

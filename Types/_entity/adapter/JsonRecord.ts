@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/JsonRecord" />
 /**
  * Адаптер для записи таблицы данных в формате JSON
  * Работает с данными, представленными в виде объекта (Object).

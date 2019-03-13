@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/Root" />
 /**
  * Стратегия-декоратор для формирования корня дерева
  * @class Types/_display/ItemsStrategy/Root

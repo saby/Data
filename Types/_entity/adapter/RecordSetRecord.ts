@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/RecordSetRecord" />
 /**
  * Адаптер для записи таблицы данных в формате записи.
  * Работает с данными, представленными в виде экземлпяра {@link Types/_entity/Record}.

@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/Guid" />
 /**
  * Guid
  * @class Types/_entity/Guid

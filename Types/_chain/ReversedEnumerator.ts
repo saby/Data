@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/ReversedEnumerator" />
 /**
  * Реверсивный энумератор
  * @author Мальцев А.А.

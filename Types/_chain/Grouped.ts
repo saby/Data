@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Grouped" />
 /**
  * Группирующее звено цепочки.
  * @class Types/_chain/Grouped

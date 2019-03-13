@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/Indexer" />
 /**
  * Индексатор коллекции
  * @class Types/_collection/Indexer

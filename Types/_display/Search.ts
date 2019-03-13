@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/Search" />
 /**
  * Проекция для режима поиска. Объединяет развернутые узлы в один элемент с "хлебной крошкой" внутри.
  * @class Types/_display/Search

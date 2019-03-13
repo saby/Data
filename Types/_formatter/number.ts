@@ -1,5 +1,3 @@
-/// <amd-module name="Types/_formatter/number" />
-
 // @ts-ignore
 import i18n = require('Core/i18n');
 

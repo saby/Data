@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_display/itemsStrategy/Search" />
 /**
  * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
  * @class Types/_display/ItemsStrategy/Search

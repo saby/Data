@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/provider/SbisBusinessLogic" />
 /**
  * JSON-RPC Провайдер для бизнес-логики СБиС
  * @class Types/_source/provider/SbisBusinessLogic

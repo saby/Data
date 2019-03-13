@@ -1,4 +1,3 @@
-/// <amd-module name="Types/di" />
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
  * @author Мальцев А.А.

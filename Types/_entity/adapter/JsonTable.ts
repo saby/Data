@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/adapter/JsonTable" />
 /**
  * Адаптер для таблицы данных в формате JSON.
  * Работает с данными, представленными в виде массива (Array.<Object>).

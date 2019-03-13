@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_collection/IIndexedCollection" />
 /**
  * Интерфейс коллекции с поиском элементов по значению свойств.
  * @interface Types/_collection/IIndexedCollection

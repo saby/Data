@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/MappedEnumerator" />
 /**
  * Преобразующующий энумератор
  * @author Мальцев А.А.

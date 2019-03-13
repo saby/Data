@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format" />
 /**
  * Formats library.
  * @library Types/_entity/format

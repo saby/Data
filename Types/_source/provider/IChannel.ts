@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/provider/IChannel" />
 /**
  * Интерфейс канала серверных событий
  * @interface Types/_source/provider/IChannel

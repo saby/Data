@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_chain/Concatenated" />
 /**
  * Объединяющее звено цепочки.
  * @class Types/_chain/Concatenated

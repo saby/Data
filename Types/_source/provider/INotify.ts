@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_source/provider/INotify" />
 /**
  * Интерфейс провайдера c доступом к серверным событиям
  * @interface Types/_source/provider/INotify

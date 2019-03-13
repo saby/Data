@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/TimeIntervalField" />
 /**
  * Формат поля временной интервал.
  *

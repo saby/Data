@@ -1,4 +1,3 @@
-/// <amd-module name="Types/_entity/format/fieldsFactory" />
 /**
  * Фабрика полей - конструирует поля по декларативному описанию
  * @author Мальцев А.А.

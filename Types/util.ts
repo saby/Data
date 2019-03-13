@@ -1,4 +1,3 @@
-/// <amd-module name="Types/util" />
 /**
  * Библиотека утилит.
  * @library Types/util
