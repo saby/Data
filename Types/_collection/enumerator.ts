@@ -1,7 +1,9 @@
 /**
  * Enumerators library.
  * @library Types/_collection/enumerator
- * @includes Factory Types/_collection/enumerator/factory
+ * @includes Arraywise Types/_collection/enumerator/Arraywise
+ * @includes Mapwise Types/_collection/enumerator/Mapwise
+ * @includes Objectwise Types/_collection/enumerator/Objectwise
  * @author Мальцев А.А.
  */
 

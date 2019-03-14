@@ -1,11 +1,3 @@
-/**
- * Список дочерних элементов узла дерева.
- * @class Types/_display/TreeChildren
- * @extends Types/_collection/List
- * @public
- * @author Мальцев А.А.
- */
-
 import TreeItem from './TreeItem';
 import {List, IListOptions} from '../collection';
 import {register} from '../di';
@@ -14,6 +6,13 @@ export interface IOptions extends IListOptions<TreeItem> {
    owner?: TreeItem;
 }
 
+/**
+ * Список дочерних элементов узла дерева.
+ * @class Types/_display/TreeChildren
+ * @extends Types/_collection/List
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class TreeChildren extends List<TreeItem> /** @lends Types/_display/TreeChildren.prototype */{
    /**
     * @cfg {Types/_display/TreeItem} Узел-владелец

@@ -1,10 +1,3 @@
-/**
- * Миксин, предоставляющий поведение владения форматом полей и доступа к их значениям в сырых данных через адаптер.
- * @mixin Types/_entity/FormattableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {Field, fieldsFactory, UniversalField, IFieldDeclaration} from './format';
 import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator} from './adapter';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
@@ -17,7 +10,7 @@ const defaultAdapter = 'Types/entity:adapter.Json';
 export interface IOptions {
    adapter?: IAdapter | string;
    rawData?: any;
-   format?: format.Format<Field> | IFieldDeclaration[];
+   format?: format.Format | IFieldDeclaration[];
    cow?: boolean;
 }
 
@@ -31,7 +24,7 @@ export interface ISerializableState extends IDefaultSerializableState {
  * @param {Types/_collection/format/Format>} rawDataFormat Формат из сырых данных
  * @return {Types/_collection/format/Format}
  */
-function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Format<Field>): format.Format<Field> {
+function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Format): format.Format {
    let field;
    let fieldIndex;
    for (const name in slicedFormat) {
@@ -63,8 +56,8 @@ function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Forma
  * Строит формат полей сырым данным
  * @return {Types/_collection/format/Format}
  */
-function buildFormatByRawData(): format.Format<Field> {
-   const format = create<format.Format<Field>>('Types/collection:format.Format');
+function buildFormatByRawData(): format.Format {
+   const format = create<format.Format>('Types/collection:format.Format');
    const adapter = this._getRawDataAdapter();
    const fields = this._getRawDataFields();
    const count = fields.length;
@@ -106,6 +99,12 @@ function buildRawData(): void {
    }
 }
 
+/**
+ * Миксин, предоставляющий поведение владения форматом полей и доступа к их значениям в сырых данных через адаптер.
+ * @mixin Types/_entity/FormattableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    '[Types/_entity/FormattableMixin]': true,
 
@@ -522,7 +521,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     *    });
     * </pre>
     */
-   getFormat(shared?: boolean): format.Format<Field> {
+   getFormat(shared?: boolean): format.Format {
       if (shared) {
          return this._getFormat(true);
       }
@@ -762,7 +761,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {Types/_collection/format/Format}
     * @protected
     */
-   _getFormat(build?: boolean): format.Format<Field> {
+   _getFormat(build?: boolean): format.Format {
       if (!this._format) {
          if (this._hasFormat()) {
             this._format = this._$format = FormattableMixin._buildFormat(this._$format, () => {
@@ -871,9 +870,9 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @protected
     */
    _buildFormat(
-      format: format.Format<Field> | IFieldDeclaration[],
+      format: format.Format | IFieldDeclaration[],
       fullFormatCallback?: Function
-   ): format.Format<Field> {
+   ): format.Format {
       const Format = resolve<any>('Types/collection:format.Format');
 
       if (format) {
@@ -892,7 +891,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
          format = new Format();
       }
 
-      return format as format.Format<Field>;
+      return format as format.Format;
    }
 
    // endregion Protected methods

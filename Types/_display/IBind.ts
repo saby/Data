@@ -1,13 +1,12 @@
+import {IObservable as IObservableCollection} from '../collection';
+
 /**
  * Интерфейс привязки к проекции коллекции
- * @interface Types/_display/IBindCollection
+ * @interface Types/_display/IBind
  * @public
  * @author Мальцев А.А.
  */
-
-import {IObservable as IObservableCollection} from '../collection';
-
-const IBind = /** @lends Types/_display/IBindCollection.prototype */ {
+const IBind = /** @lends Types/_display/IBind.prototype */ {
    '[Types/_display/IBind]': true,
 
    /**

@@ -1,12 +1,3 @@
-/**
- * Стратегия-декоратор для формирования групп элементов
- * @class Types/_display/ItemsStrategy/Group
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
- */
-
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Abstract from '../Abstract';
 import CollectionItem from '../CollectionItem';
@@ -33,6 +24,14 @@ interface ISerializableState extends IDefaultSerializableState {
    _itemsOrder: number[];
 }
 
+/**
+ * Стратегия-декоратор для формирования групп элементов
+ * @class Types/_display/ItemsStrategy/Group
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
+ * @author Мальцев А.А.
+ */
 export default class Group extends mixin(
    DestroyableMixin, SerializableMixin
 ) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Group.prototype */ {

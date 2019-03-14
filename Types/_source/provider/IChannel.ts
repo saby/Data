@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 export default interface IChannel /** @lends Types/_source/provider/IChannel.prototype */{
    readonly '[Types/_source/provider/IChannel]': boolean;
 

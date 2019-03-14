@@ -1,3 +1,5 @@
+import DataSet from './DataSet';
+
 /**
  * Интерфейс источника данных, поддерживающего {@link https://en.wikipedia.org/wiki/Remote_procedure_call RPC}.
  *
@@ -16,9 +18,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DataSet from './DataSet';
-
 export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
    readonly '[Types/_source/IRpc]': boolean;
 

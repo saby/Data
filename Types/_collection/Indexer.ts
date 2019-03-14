@@ -1,11 +1,4 @@
 /**
- * Индексатор коллекции
- * @class Types/_collection/Indexer
- * @public
- * @author Мальцев А.А.
- */
-
-/**
  * Ищет позицию вставки значения в массив методом деления пополам.
  * @param {Array} items Массив, значения котрого отсортированы по возрастанию.
  * @param {Number} value Вставляемое значение
@@ -29,6 +22,12 @@ function getPosition(items: any[], value: number): number {
    return position;
 }
 
+/**
+ * Индексатор коллекции
+ * @class Types/_collection/Indexer
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype */{
    /**
     * @property {Object} Коллекция

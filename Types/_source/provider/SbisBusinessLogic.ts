@@ -1,12 +1,3 @@
-/**
- * JSON-RPC Провайдер для бизнес-логики СБиС
- * @class Types/_source/provider/SbisBusinessLogic
- * @implements Types/_source/provider/IAbstract
- * @mixes Types/_entity/OptionsMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
@@ -18,6 +9,14 @@ interface IEndPoint {
    address?: string;
 }
 
+/**
+ * JSON-RPC Провайдер для бизнес-логики СБиС
+ * @class Types/_source/provider/SbisBusinessLogic
+ * @implements Types/_source/provider/IAbstract
+ * @mixes Types/_entity/OptionsMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class SbisBusinessLogic extends mixin(
    Object, OptionsToPropertyMixin
 ) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */ {

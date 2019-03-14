@@ -1,14 +1,3 @@
-/**
- * Абстрактная проекция данных.
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_display/Abstract
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/ObservableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
 import {IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
 import {create} from '../di';
@@ -37,6 +26,16 @@ interface IOptions {
    collection?: IEnumerable<any>;
 }
 
+/**
+ * Абстрактная проекция данных.
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @class Types/_display/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Abstract extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
 ) /** @lends Types/_display/Abstract.prototype */{

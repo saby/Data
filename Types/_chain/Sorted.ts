@@ -1,3 +1,7 @@
+import {CompareFunction} from '../_declarations';
+import Abstract from './Abstract';
+import SortedEnumerator from './SortedEnumerator';
+
 /**
  * Сортирующее звено цепочки.
  * @class Types/_chain/Sorted
@@ -5,11 +9,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import {CompareFunction} from '../_declarations';
-import Abstract from './Abstract';
-import SortedEnumerator from './SortedEnumerator';
-
 export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorted.prototype */{
    /**
     * @property {function(*, *): Number} Функция сравнения
@@ -31,7 +30,7 @@ export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorte
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): SortedEnumerator<T> {
       return new SortedEnumerator(
@@ -40,7 +39,7 @@ export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorte
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Sorted.prototype, {

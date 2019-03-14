@@ -1,39 +1,5 @@
 /* tslint:disable:max-classes-per-file */
 
-/**
- * Общий локальный источник данных для всех вкладок.
- * Источник позволяет хранить данные в локальной сессии браузера.
- * Во всех вкладках будут одни и те же данные.
- *
- * @class Types/_source/LocalSession
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_source/ICrud
- * @implements Types/_source/ICrudPlus
- * @implements Types/_source/IData
- * @mixes Types/_entity/OptionsMixin
- * @author Санников Кирилл
- * @public
- * @example
- * Создадим источник со списком объектов солнечной системы:
- * <pre>
- *    var solarSystem = new LocalSession({
- *       data: [
- *          {id: '1', name: 'Sun', kind: 'Star'},
- *          {id: '2', name: 'Mercury', kind: 'Planet'},
- *          {id: '3', name: 'Venus', kind: 'Planet'},
- *          {id: '4', name: 'Earth', kind: 'Planet'},
- *          {id: '5', name: 'Mars', kind: 'Planet'},
- *          {id: '6', name: 'Jupiter', kind: 'Planet'},
- *          {id: '7', name: 'Saturn', kind: 'Planet'},
- *          {id: '8', name: 'Uranus', kind: 'Planet'},
- *          {id: '9', name: 'Neptune', kind: 'Planet'},
- *          {id: '10', name: 'Pluto', kind: 'Dwarf planet'}
- *       ],
- *       idProperty: 'id'
- *    });
- * </pre>
- */
-
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IData from './IData';
@@ -523,7 +489,7 @@ class Converter {
       this.modelManager = modelManager;
    }
 
-   get(data: object[]): RecordSet<Record> | object {
+   get(data: object[]): RecordSet | object {
       data = object.clonePlain(data, true);
       switch (this.adapter) {
          case 'Types/entity:adapter.RecordSet':
@@ -537,7 +503,7 @@ class Converter {
       }
    }
 
-   recordSet(data: object[]): RecordSet<Record> {
+   recordSet(data: object[]): RecordSet {
       const _data = [];
       if (data.length === 0) {
          return new RecordSet({
@@ -585,6 +551,39 @@ class Converter {
    }
 }
 
+/**
+ * Общий локальный источник данных для всех вкладок.
+ * Источник позволяет хранить данные в локальной сессии браузера.
+ * Во всех вкладках будут одни и те же данные.
+ *
+ * @class Types/_source/LocalSession
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IData
+ * @mixes Types/_entity/OptionsMixin
+ * @author Санников Кирилл
+ * @public
+ * @example
+ * Создадим источник со списком объектов солнечной системы:
+ * <pre>
+ *    var solarSystem = new LocalSession({
+ *       data: [
+ *          {id: '1', name: 'Sun', kind: 'Star'},
+ *          {id: '2', name: 'Mercury', kind: 'Planet'},
+ *          {id: '3', name: 'Venus', kind: 'Planet'},
+ *          {id: '4', name: 'Earth', kind: 'Planet'},
+ *          {id: '5', name: 'Mars', kind: 'Planet'},
+ *          {id: '6', name: 'Jupiter', kind: 'Planet'},
+ *          {id: '7', name: 'Saturn', kind: 'Planet'},
+ *          {id: '8', name: 'Uranus', kind: 'Planet'},
+ *          {id: '9', name: 'Neptune', kind: 'Planet'},
+ *          {id: '10', name: 'Pluto', kind: 'Dwarf planet'}
+ *       ],
+ *       idProperty: 'id'
+ *    });
+ * </pre>
+ */
 export default class LocalSession extends mixin(
    DestroyableMixin, OptionsToPropertyMixin
 ) implements ICrud, ICrudPlus, IData /** @lends Types/_source/LocalSession.prototype */{
@@ -761,7 +760,7 @@ export default class LocalSession extends mixin(
     *    });
     * </pre>
     */
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       const updateRecord = (record) => {
          let key;
          const idProperty = record.getIdProperty ? record.getIdProperty() : this.getIdProperty();

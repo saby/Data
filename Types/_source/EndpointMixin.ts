@@ -1,16 +1,15 @@
-/**
- * Миксин, позволяющий задавать конечную точку доступа.
- * @mixin Types/_source/EndpointMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {IEndpoint} from './IProvider';
 
 interface IOptions {
    endpoint?: IEndpoint | string;
 }
 
+/**
+ * Миксин, позволяющий задавать конечную точку доступа.
+ * @mixin Types/_source/EndpointMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
    '[Types/_source/EndpointMixin]': true,
 

@@ -1,3 +1,10 @@
+import Abstract from './Abstract';
+import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisTable from './SbisTable';
+import SbisRecord from './SbisRecord';
+import FIELD_TYPE from './SbisFieldType';
+import {register} from '../../di';
+
 /**
  * Адаптер для данных в формате СБиС.
  * Работает с форматом данных, который использует БЛ СБИС.
@@ -8,14 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
-import SbisTable from './SbisTable';
-import SbisRecord from './SbisRecord';
-import FIELD_TYPE from './SbisFieldType';
-import {register} from '../../di';
-
 export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis.prototype */{
 
    forTable(data: ITableFormat): SbisTable {

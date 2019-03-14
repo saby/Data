@@ -1,21 +1,3 @@
-/**
- * Источник данных, работающий удаленно.
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_source/Remote
- * @extends Types/_source/Base
- * @implements Types/_source/ICrud
- * @implements Types/_source/ICrudPlus
- * @implements Types/_source/IProvider
- * @mixes Types/_entity/ObservableMixin
- * @mixes Types/_source/DataCrudMixin
- * @mixes Types/_source/BindingMixin
- * @mixes Types/_source/EndpointMixin
- * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy
- * passing.merge passing.move
- * @public
- * @author Мальцев А.А.
- */
-
 import Base, {IOptions as IBaseOptions} from './Base';
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
@@ -38,7 +20,7 @@ import Deferred = require('Core/Deferred');
 export interface IPassing {
    create: (meta?: Object) => Object;
    read: (key: string | number, meta?: Object) => Object;
-   update: (data: Record | RecordSet<Record>, meta?: Object) => Object;
+   update: (data: Record | RecordSet, meta?: Object) => Object;
    destroy: (keys: string | string[], meta?: Object) => Object;
    query: (query: Query) => Object;
    copy: (key: string | number, meta?: Object) => Object;
@@ -93,7 +75,7 @@ function passRead(key: string, meta?: Object): any[] {
  * @param data Обновляемая запись или рекордсет
  * @param [meta] Дополнительные мета данные
  */
-function passUpdate(data: Record|RecordSet<Record>, meta?: Object): any[] {
+function passUpdate(data: Record | RecordSet, meta?: Object): any[] {
    if (this._$options.updateOnlyChanged) {
       const idProperty = this._getValidIdProperty(data);
       if (!isEmpty(idProperty)) {
@@ -171,6 +153,23 @@ function passMove(from: any[], to: string, meta?: object): any[] {
    return [from, to, meta];
 }
 
+/**
+ * Источник данных, работающий удаленно.
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @class Types/_source/Remote
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @implements Types/_source/IProvider
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_source/DataCrudMixin
+ * @mixes Types/_source/BindingMixin
+ * @mixes Types/_source/EndpointMixin
+ * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy
+ * passing.merge passing.move
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Remote extends mixin(
    Base, ObservableMixin, DataCrudMixin, BindingMixin, EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
@@ -261,7 +260,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.update,
          this._$passing.update.call(this, data, meta)

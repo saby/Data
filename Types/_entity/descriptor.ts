@@ -1,11 +1,4 @@
 /**
- * Модуль описания типа.
- * @class Types/_entity/descriptor
- * @public
- * @author Мальцев А.А.
- */
-
-/**
  * @typedef {Function} Chained
  * @property {Function} required Функция проверки обязательности
  * @property {Function} oneOf Функция проверки по списку разрешенных значений
@@ -45,8 +38,8 @@ function normalizeType(type: Descriptor): Descriptor {
 /**
  * Returns validator for certain type.
  * @name Types/_entity/descriptor#validate
- * @param {Function|String} type Type descriptor.
- * @returns {Function} Validator.
+ * @param type Type descriptor
+ * @returns Validator
  */
 function validate(type: Descriptor): ValidateFunc {
    type = normalizeType(type);
@@ -90,7 +83,7 @@ function validate(type: Descriptor): ValidateFunc {
 /**
  * Returns validator for required value.
  * @name Types/_entity/descriptor#required
- * @returns {Chained} Validator
+ * @returns Validator
  */
 function required(): IChained {
    const prev: IChained = this;
@@ -106,8 +99,8 @@ function required(): IChained {
 /**
  * Returns validator for "One of" restriction.
  * @name Types/_entity/descriptor#oneOf
- * @param {Array} values Allowed values.
- * @returns {Chained} Validator.
+ * @param values Allowed values
+ * @returns Validator
  */
 function oneOf(values: any[]): IChained {
    if (!(values instanceof Array)) {
@@ -127,8 +120,8 @@ function oneOf(values: any[]): IChained {
 /**
  * Returns validator for Array<T> restriction.
  * @name Types/_entity/descriptor#oneOf
- * @param {Function|String} type Type descriptor.
- * @returns {Chained} Validator.
+ * @param type Type descriptor
+ * @returns Validator
  */
 function arrayOf(type: Descriptor): IChained {
    const prev: IChained = this;
@@ -155,8 +148,8 @@ function arrayOf(type: Descriptor): IChained {
 /**
  * Creates chain element with all available validators.
  * @name Types/_entity/descriptor#chain
- * @param {Chained} parent Previous chain element.
- * @returns {Chained} New chain element.
+ * @param parent Previous chain element
+ * @returns New chain element
  */
 function chain(parent: IChained): IChained {
    const wrapper = (...args) => {
@@ -183,9 +176,11 @@ function chain(parent: IChained): IChained {
 
 /**
  * Creates type descriptor for given value type.
- * @name Types/_entity/descriptor#chain
- * @param {Descriptor} type Value type.
- * @returns {Chained} Type descriptor.
+ * @function Types/_entity/descriptor
+ * @param type Value type
+ * @returns Type descriptor
+ * @public
+ * @author Мальцев А.А.
  */
 export default function descriptor(type: Descriptor): IChained {
    return chain(

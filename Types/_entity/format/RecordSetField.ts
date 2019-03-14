@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для рекордсета.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class RecordSetField extends Field /** @lends Types/_entity/format/RecordSetField.prototype */{
 }
 

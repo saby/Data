@@ -1,17 +1,3 @@
-/**
- * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
- * @class Types/_collection/Flags
- * @extends Types/_collection/Dictionary
- * @implements Types/_collection/IFlags
- * @implements Types/_entity/ICloneable
- * @implements Types/_entity/IProducible
- * @mixes Types/_entity/ManyToManyMixin
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_entity/CloneableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import IFlags, {IValue} from './IFlags';
 import Dictionary from './Dictionary';
 import {
@@ -33,6 +19,19 @@ function prepareValue(value: any): IValue {
    return value === null || value === undefined ? null : !!value;
 }
 
+/**
+ * Flags type. It's an enumerable collection of keys and values every one of which can be selected or not.
+ * @class Types/_collection/Flags
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IFlags
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Flags<T>
    extends Dictionary<T>
    implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collection/Flags.prototype */ {

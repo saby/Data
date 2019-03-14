@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля иерархии
  *
@@ -5,9 +7,6 @@
  * @extends Types/_entity/format/Field
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class HierarchyField extends Field /** @lends Types/_entity/format/HierarchyField.prototype */{
    /**
     * @cfg {String} Тип элементов

@@ -1,12 +1,3 @@
-/**
- * Адаптер таблицы для работы в режиме Copy-on-write.
- * @class Types/_entity/adapter/CowTable
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_entity/adapter/ITable
- * @implements Types/_entity/adapter/IDecorator
- * @author Мальцев А.А.
- */
-
 import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IAdapter from './IAdapter';
@@ -15,6 +6,14 @@ import ICloneable from '../ICloneable';
 import {Field, UniversalField} from '../format';
 import {object} from '../../util';
 
+/**
+ * Адаптер таблицы для работы в режиме Copy-on-write.
+ * @class Types/_entity/adapter/CowTable
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/ITable
+ * @implements Types/_entity/adapter/IDecorator
+ * @author Мальцев А.А.
+ */
 export default class CowTable
    extends DestroyableMixin
    implements ITable, IDecorator /** @lends Types/_entity/adapter/CowTable.prototype */ {

@@ -1,12 +1,11 @@
+export type IValue = boolean | null;
+
 /**
- * Flags interface. It's an enumerable collection of keys and values every one of which can be selected or not.
+ * Flags type interface. It's an enumerable collection of keys and values every one of which can be selected or not.
  * @interface Types/_collection/IFlags
  * @public
  * @author Мальцев А.А.
  */
-
-export type IValue = boolean | null;
-
 export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype */{
    readonly '[Types/_collection/IFlags]': boolean;
 

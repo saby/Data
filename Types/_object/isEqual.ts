@@ -1,36 +1,3 @@
-/**
- *
- * Модуль, в котором описана функция <b>isEqual(obj1, obj2)</b>,
- *
- * Функция рекурсивно сравнивает два объекта или массива.
- * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них
- * одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или
- * массивы, то они сравниваются рекурсивно.
- * Функция возвращает true, когда оба объекта/массива идентичны.
- *
- * <h2>Параметры функции</h2>
- *
- * <ul>
- *   <li><b>obj1</b> {Object|Array}.</li>
- *   <li><b>obj2</b> {Object|Array}.</li>
- * </ul>
- *
- * <h2>Пример использования</h2>
- * <pre>
- *    require(['Types/object'], function(util) {
- *       // true
- *       console.log(util.isEqual({foo: 'bar'}, {foo: 'bar'}));
- *
- *       // false
- *       console.log(util.isEqual([0], ['0']));
- *    });
- * </pre>
- *
- * @class Types/_object/isEqual
- * @public
- * @author Мальцев А.А.
- */
-
 function isTraversable(v: any): boolean {
    let proto;
    if (v && typeof v === 'object') {
@@ -73,6 +40,38 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
    return Object.getPrototypeOf(obj1) === Object.getPrototypeOf(obj2);
 }
 
+/**
+ *
+ * Модуль, в котором описана функция <b>isEqual(obj1, obj2)</b>,
+ *
+ * Функция рекурсивно сравнивает два объекта или массива.
+ * Объекты считаются равными тогда, когда они равны по оператору ===, или когда они являются plain Object и у них
+ * одинаковые наборы внутренних ключей, и по каждому ключу значения равны, причём, если эти значения - объекты или
+ * массивы, то они сравниваются рекурсивно.
+ * Функция возвращает true, когда оба объекта/массива идентичны.
+ *
+ * <h2>Параметры функции</h2>
+ *
+ * <ul>
+ *   <li><b>obj1</b> {Object|Array}.</li>
+ *   <li><b>obj2</b> {Object|Array}.</li>
+ * </ul>
+ *
+ * <h2>Пример использования</h2>
+ * <pre>
+ *    require(['Types/object'], function(util) {
+ *       // true
+ *       console.log(util.isEqual({foo: 'bar'}, {foo: 'bar'}));
+ *
+ *       // false
+ *       console.log(util.isEqual([0], ['0']));
+ *    });
+ * </pre>
+ *
+ * @function Types/_object/isEqual
+ * @public
+ * @author Мальцев А.А.
+ */
 export default function isEqual(obj1: object, obj2: object): boolean {
    const equal = obj1 === obj2;
    let val1;

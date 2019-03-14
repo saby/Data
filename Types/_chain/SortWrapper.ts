@@ -1,12 +1,11 @@
+import { protect } from '../util';
+
 /**
  * Обертка для элемента коллекции, позволяющая сохранить информацию о его индексе в коллекции.
  * @param {*} item Элемент коллекции.
  * @param {*} index Индекс элемента коллекции.
  * @protected
  */
-
-import { protect } from '../util';
-
 export default class SortWrapper {
    static indexKey: string | Symbol;
    private item: any;

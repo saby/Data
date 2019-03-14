@@ -1,13 +1,3 @@
-/**
- * Абстрактная цепочка.
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_chain/Abstract
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_collection/IEnumerable
- * @public
- * @author Мальцев А.А.
- */
-
 import {DestroyableMixin} from '../entity';
 import {IEnumerable} from '../collection';
 import {object} from '../util';
@@ -27,9 +17,17 @@ import Reversed from './Reversed';
 import Sorted from './Sorted';
 
 type PropertyMapFunc = (item: any, property: string|number) => any;
-
 type ReduceFunc = (memo: any, item: any, index: number) => any;
 
+/**
+ * Абстрактная цепочка.
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @class Types/_chain/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_collection/IEnumerable
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Abstract<T>
    extends DestroyableMixin
    implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */ {

@@ -1,3 +1,32 @@
+import ICrud from './ICrud';
+import ICrudPlus from './ICrudPlus';
+import Base from './Base';
+import Query from './Query';
+import DataSet from './DataSet';
+import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin, ISerializableState} from '../entity';
+import {RecordSet} from '../collection';
+import {mixin} from '../util';
+// @ts-ignore
+import Deferred = require('Core/Deferred');
+
+interface IData {
+   read: Record;
+   query: DataSet;
+   copy: Record;
+}
+
+interface IDone {
+   read?: boolean;
+   query?: boolean;
+   copy?: boolean;
+}
+
+interface IPrefetchProxySerializableState extends ISerializableState {
+   _done: IDone;
+}
+
+declare type ITarget = ICrud | ICrudPlus | Base;
+
 /**
  * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода
  * чтения данных. Все последующие вызовы проксируются на целевой источник данных.
@@ -53,36 +82,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import ICrud from './ICrud';
-import ICrudPlus from './ICrudPlus';
-import Base from './Base';
-import Query from './Query';
-import DataSet from './DataSet';
-import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin, ISerializableState} from '../entity';
-import {RecordSet} from '../collection';
-import {mixin} from '../util';
-// @ts-ignore
-import Deferred = require('Core/Deferred');
-
-interface IData {
-   read: Record;
-   query: DataSet;
-   copy: Record;
-}
-
-interface IDone {
-   read?: boolean;
-   query?: boolean;
-   copy?: boolean;
-}
-
-interface IPrefetchProxySerializableState extends ISerializableState {
-   _done: IDone;
-}
-
-declare type ITarget = ICrud | ICrudPlus | Base;
-
 export default class PrefetchProxy extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
@@ -149,7 +148,7 @@ export default class PrefetchProxy extends mixin(
       return (<ICrud> this._$target).read(key, meta);
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       return (<ICrud> this._$target).update(data, meta);
    }
 

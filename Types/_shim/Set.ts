@@ -3,7 +3,6 @@
  * Follow {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set} for details.
  * @author Мальцев А.А.
  */
-
 export class SetPolyfill <T> {
    protected _hash: object;
    protected _objects: T[];

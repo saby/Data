@@ -1,13 +1,12 @@
+import UniversalField from '../format/UniversalField';
+import Field from '../format/Field';
+
 /**
  * Интерфейс адаптера для таблицы данных
  * @interface Types/_entity/adapter/ITable
  * @public
  * @author Мальцев А.А.
  */
-
-import UniversalField from '../format/UniversalField';
-import Field from '../format/Field';
-
 export default interface ITable /** @lends Types/_entity/adapter/ITable.prototype */{
    readonly '[Types/_entity/adapter/ITable]': boolean;
 

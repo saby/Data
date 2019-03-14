@@ -1,13 +1,12 @@
+import Field from '../format/Field';
+import UniversalField from '../format/UniversalField';
+
 /**
  * Интерфейс адаптера для записи таблицы данных
  * @interface Types/_entity/adapter/IRecord
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from '../format/Field';
-import UniversalField from '../format/UniversalField';
-
 export default interface IRecord /** @lends Types/_entity/adapter/IRecord.prototype */{
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 

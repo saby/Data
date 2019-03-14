@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для идентификатора.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class IdentityField extends Field /** @lends Types/_entity/format/IdentityField.prototype */{
    /**
     * @cfg {Array.<Number>} Значение поля по умолчанию

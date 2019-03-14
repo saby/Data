@@ -1,8 +1,8 @@
 /**
  * Factories library.
  * @library Types/_collection/factory
- * @includes Factory Types/_collection/factory/list
- * @includes Format Types/_collection/factory/recordSet
+ * @includes list Types/_collection/factory/list
+ * @includes recordSet Types/_collection/factory/recordSet
  * @author Мальцев А.А.
  */
 

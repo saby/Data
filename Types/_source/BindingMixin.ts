@@ -1,10 +1,3 @@
-/**
- * Миксин, позволяющий задавать привязку CRUD к контракту источника.
- * @mixin Types/_source/BindingMixin
- * @public
- * @author Мальцев А.А.
- */
-
 export interface IBinding {
    create?: string;
    read?: string;
@@ -20,6 +13,12 @@ export interface IOptions {
    binding?: IBinding;
 }
 
+/**
+ * Миксин, позволяющий задавать привязку CRUD к контракту источника.
+ * @mixin Types/_source/BindingMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
    '[Types/_source/BindingMixin]': true,
 

@@ -1,3 +1,6 @@
+import CollectionItem from './CollectionItem';
+import {register} from '../di';
+
 /**
  * Элемент коллекции флагов
  * @class Types/_display/FlagsItem
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import CollectionItem from './CollectionItem';
-import {register} from '../di';
-
 export default class FlagsItem extends CollectionItem /** @lends Types/_display/FlagsItem.prototype */{
    isSelected(): boolean {
       return this._$owner.getCollection().get(

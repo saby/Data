@@ -1,12 +1,3 @@
-/**
- * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
- * @class Types/_display/ItemsStrategy/Search
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
- */
-
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
@@ -22,6 +13,14 @@ interface ISortOptions {
    display: Collection;
 }
 
+/**
+ * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
+ * @class Types/_display/ItemsStrategy/Search
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
+ * @author Мальцев А.А.
+ */
 export default class Search extends mixin(
    DestroyableMixin, SerializableMixin
 ) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Search.prototype */ {

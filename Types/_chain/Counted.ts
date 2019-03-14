@@ -1,3 +1,9 @@
+import Abstract from './Abstract';
+import {enumerator} from '../collection';
+import {Map} from '../shim';
+
+type KeyFunc = (key: any) => string;
+
 /**
  * Агрегирующее звено цепочки, подсчитывающие количество элементов, объединенных по какому-то принципу.
  * @class Types/_chain/Counted
@@ -5,13 +11,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import {enumerator} from '../collection';
-import {Map} from '../shim';
-
-type KeyFunc = (key: any) => string;
-
 export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Counted.prototype */{
    /**
     * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
@@ -33,7 +32,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): enumerator.Mapwise<T> {
       const toKey = Abstract.propertyMapper(this._key);
@@ -49,7 +48,7 @@ export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Coun
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Counted.prototype, {

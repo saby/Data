@@ -1,8 +1,3 @@
-/**
- * Выполняет транслитерацию строки. Заменяет пробелы на _, вырезает мягкий и твердый знаки.
- * @param {String} string Исходная строка для преобразования.
- * @returns {String}
- */
 const charMap = {
    а: 'a',
    б: 'b',
@@ -73,6 +68,11 @@ const charMap = {
    Я: 'YA'
 };
 
+/**
+ * Выполняет транслитерацию строки. Заменяет пробелы на _, вырезает мягкий и твердый знаки.
+ * @param {String} string Исходная строка для преобразования.
+ * @returns {String}
+ */
 export default function cyrTranslit(str: String): String {
    const result = [];
    for (let i = 0, l = str.length; i < l; i++) {

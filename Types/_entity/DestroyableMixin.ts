@@ -1,11 +1,3 @@
-/**
- * Миксин, добавляющий аспект состояния "экземпляр разрушен".
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @mixin Types/_entity/DestroyableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {protect} from '../util';
 
 const $destroyed = protect('destroyed');
@@ -14,6 +6,13 @@ function dontTouchDeads(): void {
    throw new ReferenceError('This class instance is destroyed.');
 }
 
+/**
+ * Миксин, добавляющий аспект состояния "экземпляр разрушен".
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @mixin Types/_entity/DestroyableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class DestroyableMixin /** @lends Types/_entity/DestroyableMixin.prototype */{
    /**
     * Экземпляр был разрушен

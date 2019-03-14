@@ -1,10 +1,3 @@
-/**
- * Посредник, реализующий отношения "один ко многим".
- * @class Types/_entity/relation/OneToMany
- * @mixes Types/_entity/DestroyableMixin
- * @author Мальцев А.А.
- */
-
 import DestroyableMixin from '../DestroyableMixin';
 import {Map, Set} from '../../shim';
 
@@ -17,6 +10,12 @@ function isAlive(item: any): boolean {
    return item instanceof Object && item['[Types/_entity/DestroyableMixin]'] ? !item.destroyed : true;
 }
 
+/**
+ * Посредник, реализующий отношения "один ко многим".
+ * @class Types/_entity/relation/OneToMany
+ * @mixes Types/_entity/DestroyableMixin
+ * @author Мальцев А.А.
+ */
 export default class OneToMany extends DestroyableMixin /** @lends Types/_entity/relation/OneToMany.prototype */{
    /**
     * @property {Map<Object, Set<Object>>} Родитель -> [Ребенок, Ребенок, ...]

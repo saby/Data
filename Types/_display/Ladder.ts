@@ -1,12 +1,3 @@
-/**
- * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
- * @class Types/_display/Ladder
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
- * @public
- * @author Мальцев А.А. Александрович
- */
-
 import Collection from './Collection';
 import CollectionItem from './CollectionItem';
 import {
@@ -51,6 +42,14 @@ interface ISerializableState extends IDefaultSerializableState {
    _columnNames: string[];
 }
 
+/**
+ * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
+ * @class Types/_display/Ladder
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @public
+ * @author Мальцев А.А. Александрович
+ */
 export default class Ladder extends mixin(
    DestroyableMixin, SerializableMixin
 ) /** @lends Types/_display/Ladder.prototype */ {

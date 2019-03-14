@@ -4,7 +4,6 @@
  * @author Мальцев А.А.
  * @public
  */
-
 export default interface IIndexedCollection /** @lends Types/_collection/IIndexedCollection.prototype */{
    readonly '[Types/_collection/IIndexedCollection]': boolean;
 

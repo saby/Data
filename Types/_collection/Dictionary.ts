@@ -1,15 +1,3 @@
-/**
- * An abstract enity which have the dictionary as collection of keys and values.
- * It's an abstract class and it's can't have instances.
- * @class Types/_collection/Dictionary
- * @implements Types/_collection/IEnumerable
- * @implements Types/_entity/IEquatable
- * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/ObservableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import IEnumerable from './IEnumerable';
 import {EnumeratorCallback} from './IEnumerable';
 import IEnumerator from './IEnumerator';
@@ -29,6 +17,17 @@ interface IGenericObject<T> {}
 
 declare type DictionaryValues = string[] | IGenericObject<string>;
 
+/**
+ * An abstract enity which have the dictionary as collection of keys and values.
+ * It's an abstract class and it's can't have instances.
+ * @class Types/_collection/Dictionary
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Dictionary<T>
    extends DestroyableMixin
    implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */ {

@@ -1,13 +1,12 @@
+import DataSet from './DataSet';
+import {Model} from '../entity';
+
 /**
  * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
  * @mixin Types/_source/DataCrudMixin
  * @public
  * @author Мальцев А.А.
  */
-
-import DataSet from './DataSet';
-import {Model} from '../entity';
-
 const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
    '[Types/_source/DataCrudMixin]': true,
 

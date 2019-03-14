@@ -1,3 +1,8 @@
+import Abstract from './Abstract';
+import UniquelyEnumerator from './UniquelyEnumerator';
+
+type ExtractFunc = (item: any, index: string|number) => string|number;
+
 /**
  * Звено цепочки, обеспечивающее уникальность.
  * @class Types/_chain/Uniquely
@@ -5,12 +10,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import UniquelyEnumerator from './UniquelyEnumerator';
-
-type ExtractFunc = (item: any, index: string|number) => string|number;
-
 export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uniquely.prototype */{
    /**
     * @property {function(*): String|Number} [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
@@ -32,7 +31,7 @@ export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uni
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): UniquelyEnumerator<T> {
       return new UniquelyEnumerator(
@@ -41,7 +40,7 @@ export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uni
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Uniquely.prototype, {

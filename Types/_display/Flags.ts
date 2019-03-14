@@ -1,11 +1,3 @@
-/**
- * Проекция типа "Флаги".
- * @class Types/_display/Flags
- * @extends Types/_display/Collection
- * @public
- * @author Мальцев А.А.
- */
-
 import Collection from './Collection';
 import {register} from '../di';
 import './FlagsItem';
@@ -29,6 +21,13 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
    }
 }
 
+/**
+ * Проекция типа "Флаги".
+ * @class Types/_display/Flags
+ * @extends Types/_display/Collection
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Flags extends Collection /** @lends Types/_display/Flags.prototype */{
    constructor(options?: object) {
       super(options);

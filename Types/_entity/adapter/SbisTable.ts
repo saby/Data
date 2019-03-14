@@ -1,3 +1,13 @@
+import DestroyableMixin from '../DestroyableMixin';
+import ITable from './ITable';
+import IMetaData from './IMetaData';
+import ICloneable from '../ICloneable';
+import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisRecord from './SbisRecord';
+import {fieldsFactory, Field, UniversalField} from '../format';
+import {mixin} from '../../util';
+import {merge} from '../../object';
+
 /**
  * Адаптер для таблицы данных в формате СБиС.
  * Работает с данными, представленными в виде объекта ({_entity: 'recordset', d: [], s: []}), где
@@ -30,17 +40,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import ITable from './ITable';
-import IMetaData from './IMetaData';
-import ICloneable from '../ICloneable';
-import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
-import SbisRecord from './SbisRecord';
-import {fieldsFactory, Field, UniversalField} from '../format';
-import {mixin} from '../../util';
-import {merge} from '../../object';
-
 export default class SbisTable extends mixin(
    DestroyableMixin, SbisFormatMixin
 ) implements ITable, IMetaData, ICloneable /** @lends Types/_entity/adapter/SbisTable.prototype */{

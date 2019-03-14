@@ -1,3 +1,6 @@
+import enumerableComparator, {ISession} from './enumerableComparator';
+import { IList } from '../collection';
+
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией
  * состояния
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import enumerableComparator, {ISession} from './enumerableComparator';
-import { IList } from '../collection';
-
 const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype */{
    '[Types/_entity/EventRaisingMixin]': true,
 

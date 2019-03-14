@@ -1,3 +1,11 @@
+import Abstract from './Abstract';
+import RecordSetTable from './RecordSetTable';
+import RecordSetRecord from './RecordSetRecord';
+import Record from '../Record';
+import {RecordSet as collectionRecordSet} from '../../collection';
+import {register} from '../../di';
+import {object} from '../../util';
+
 /**
  * Адаптер для рекордсета.
  * Работает с данными, представленными в виде рекорда/рекордсета.
@@ -8,22 +16,13 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import RecordSetTable from './RecordSetTable';
-import RecordSetRecord from './RecordSetRecord';
-import Record from '../Record';
-import {RecordSet as collectionRecordSet} from '../../collection';
-import {register} from '../../di';
-import {object} from '../../util';
-
 export default class RecordSet extends Abstract /** @lends Types/_entity/adapter/RecordSet.prototype */{
    /**
     * Возвращает интерфейс доступа к рекордсету в виде таблицы
     * @param {Types/_collection/RecordSet} data Рекордсет
     * @return {Types/_entity/adapter/ITable}
     */
-   forTable(data: collectionRecordSet<Record>): RecordSetTable {
+   forTable(data: collectionRecordSet): RecordSetTable {
       return new RecordSetTable(data);
    }
 
@@ -33,7 +32,7 @@ export default class RecordSet extends Abstract /** @lends Types/_entity/adapter
     * @param {Types/_collection/RecordSet} [tableData] Таблица
     * @return {Types/_entity/adapter/IRecord}
     */
-   forRecord(data: Record, tableData?: collectionRecordSet<Record>): RecordSetRecord {
+   forRecord(data: Record, tableData?: collectionRecordSet): RecordSetRecord {
       return new RecordSetRecord(data, tableData);
    }
 

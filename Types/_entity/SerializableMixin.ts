@@ -1,24 +1,3 @@
-/**
- * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
- * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
- * имя модуля для requirejs.
- * @example
- * <pre>
- * define('My.SubModule', ['My.SuperModule'], function (SuperModule) {
- *    'use strict';
- *
- *    var SubModule = SuperModule.extend({
- *      _moduleName: 'My.SubModule'
- *    });
- *
- *    return SubModule;
- * });
- * </pre>
- * @mixin Types/_entity/SerializableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {protect, logger} from '../util';
 
 /**
@@ -109,6 +88,26 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
    }
 }
 
+/**
+ * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
+ * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
+ * имя модуля для requirejs.
+ * @example
+ * <pre>
+ * define('My.SubModule', ['My.SuperModule'], function (SuperModule) {
+ *    'use strict';
+ *
+ *    var SubModule = SuperModule.extend({
+ *      _moduleName: 'My.SubModule'
+ *    });
+ *
+ *    return SubModule;
+ * });
+ * </pre>
+ * @mixin Types/_entity/SerializableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */ {
    /**
     * Уникальный номер инстанса

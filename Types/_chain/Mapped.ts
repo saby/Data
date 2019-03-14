@@ -1,3 +1,9 @@
+import Abstract from './Abstract';
+import MappedEnumerator from './MappedEnumerator';
+import {IEnumerator} from '../collection';
+
+type MapFunc = (item: any, index: number) => any;
+
 /**
  * Преобразующее звено цепочки.
  * @class Types/_chain/Mapped
@@ -5,13 +11,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import MappedEnumerator from './MappedEnumerator';
-import {IEnumerator} from '../collection';
-
-type MapFunc = (item: any, index: number) => any;
-
 export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mapped.prototype */{
    /**
     * @property {Function(*, Number): *} Функция, возвращающая новый элемент
@@ -41,7 +40,7 @@ export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mappe
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): IEnumerator<T> {
       return new MappedEnumerator(
@@ -51,7 +50,7 @@ export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mappe
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Mapped.prototype, {

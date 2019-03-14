@@ -1,14 +1,13 @@
+import {Field, UniversalField} from '../format';
+import {IDeclaration} from '../format/fieldsFactory';
+import {format} from '../../collection';
+
 /**
  * Миксин для работы с форматом в адаптерах
  * @mixin Types/_entity/adapter/GenericFormatMixin
  * @public
  * @author Мальцев А.А.
  */
-
-import {Field, UniversalField} from '../format';
-import {IDeclaration} from '../format/fieldsFactory';
-import {format} from '../../collection';
-
 const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 
@@ -118,7 +117,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       return true;
    },
 
-   _getFieldsFormat(): format.Format<Field> {
+   _getFieldsFormat(): format.Format {
       throw new Error('Method must be implemented');
    },
 

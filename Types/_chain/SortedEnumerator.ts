@@ -1,13 +1,12 @@
-/**
- * Сортирующий энумератор
- * @author Мальцев А.А.
- */
-
 import {CompareFunction} from '../_declarations';
 import IndexedEnumerator from './IndexedEnumerator';
 import SortWrapper from './SortWrapper';
 import Abstract from './Abstract';
 
+/**
+ * Сортирующий энумератор
+ * @author Мальцев А.А.
+ */
 export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
    private compareFunction: CompareFunction;
 
@@ -20,10 +19,6 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
    constructor(previous: Abstract<T>, compareFunction?: CompareFunction) {
       super(previous);
       this.compareFunction = compareFunction || SortedEnumerator.defaultCompare;
-   }
-
-   static defaultCompare(a: any, b: any): number {
-      return a === b ? 0 : (a > b ? 1 : -1);
    }
 
    _getItems(): any[] {
@@ -44,6 +39,10 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
       }
 
       return this._items;
+   }
+
+   static defaultCompare(a: any, b: any): number {
+      return a === b ? 0 : (a > b ? 1 : -1);
    }
 }
 

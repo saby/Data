@@ -1,3 +1,16 @@
+import Abstract from './Abstract';
+import IAdapter from './IAdapter';
+import IDecorator from './IDecorator';
+import CowTable from './CowTable';
+import CowRecord from './CowRecord';
+import SerializableMixin, {IState as ICommonState} from '../SerializableMixin';
+import {register} from '../../di';
+import {mixin} from '../../util';
+
+interface ISerializableState extends ICommonState {
+   _original: IAdapter;
+}
+
 /**
  * Адаптер для работы с даными в режиме Copy-on-write.
  * \|/         (__)
@@ -12,20 +25,6 @@
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import IAdapter from './IAdapter';
-import IDecorator from './IDecorator';
-import CowTable from './CowTable';
-import CowRecord from './CowRecord';
-import SerializableMixin, {IState as ICommonState} from '../SerializableMixin';
-import {register} from '../../di';
-import {mixin} from '../../util';
-
-interface ISerializableState extends ICommonState {
-   _original: IAdapter;
-}
-
 export default class Cow extends mixin(
    Abstract, SerializableMixin
 ) implements IDecorator /** @lends Types/_entity/adapter/Cow.prototype */{

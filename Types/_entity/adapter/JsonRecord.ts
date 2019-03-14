@@ -1,3 +1,10 @@
+import DestroyableMixin from '../DestroyableMixin';
+import IRecord from './IRecord';
+import GenericFormatMixin from './GenericFormatMixin';
+import JsonFormatMixin from './JsonFormatMixin';
+import {Field, UniversalField} from '../format';
+import {mixin} from '../../util';
+
 /**
  * Адаптер для записи таблицы данных в формате JSON
  * Работает с данными, представленными в виде объекта (Object).
@@ -18,14 +25,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import IRecord from './IRecord';
-import GenericFormatMixin from './GenericFormatMixin';
-import JsonFormatMixin from './JsonFormatMixin';
-import {Field, UniversalField} from '../format';
-import {mixin} from '../../util';
-
 export default class JsonRecord extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
 ) implements IRecord /** @lends Types/_entity/adapter/JsonRecord.prototype */{

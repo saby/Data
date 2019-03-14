@@ -7,135 +7,6 @@ declare interface IDateFormatOptions {
    lower: boolean;
 }
 
-/**
- * Преобразует дату в строку указанного формата.
- *
- * <h2>Параметры функции</h2>
- * <ul>
- *     <li><b>date</b> {Date} Дата.</li>
- *     <li><b>format</b> {String} Формат вывода.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Дата в указанном формате.
- *
- * @remark
- * <h2>Доступные константы (следует использовать для вывода дат
- * {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
- * <ul>
- *    <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
- *    <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
- *    <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "DD MMMMlo'YY" для "Ru-ru";</li>
- *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для
- *        "Ru-ru";</li>
- *    <li>FULL_DATE_FULL_YEAR: полная дата с полным годом, "DD.MM.YYYY" для "Ru-ru";</li>
- *    <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "DD MMMl'YY" для "Ru-ru";</li>
- *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для
- *        "Ru-ru";</li>
- *    <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
- *    <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
- *    <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
- *    <li>FULL_QUATER: полный квартал и год, "QQQQr 'YY" для "Ru-ru";</li>
- *    <li>FULL_TIME: полное время, "HH:mm:ss" для "Ru-ru";</li>
- *    <li>SHORT_DATE: краткая дата, "DD.MM" для "Ru-ru";</li>
- *    <li>SHORT_DATE_DOW: краткая дата с днем недели, "DD MMMMlo, ddddl" для "Ru-ru";</li>
- *    <li>SHORT_DATE_FULL_MONTH: краткая дата с полным названием месяца, "DD MMMMlo" для "Ru-ru";</li>
- *    <li>SHORT_DATE_SHORT_MONTH: краткая дата с кратким названием месяца, "DD MMMl" для "Ru-ru";</li>
- *    <li>SHORT_DATETIME: краткий формат даты и времени, "DD MMMl HH:mm" для "Ru-ru";</li>
- *    <li>SHORT_HALF_YEAR: краткое полугодие, "YYhr 'YY" для "Ru-ru";</li>
- *    <li>SHORT_MONTH: краткое название месяца и год, "MMM'YY" для "Ru-ru";</li>
- *    <li>SHORT_QUATER: краткий квартал и год, "QQr 'YY" для "Ru-ru";</li>
- *    <li>SHORT_TIME: краткое время, "HH:mm" для "Ru-ru".</li>
- * </ul>
- *
- * <h2>Примеры использования констант.</h2>
- *
- * Выведем полную дату:
- * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, format.FULL_DATE));//07.05.18
- *    });
- * </pre>
- * Выведем полную дату с днем недели:
- * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, format.FULL_DATE_DOW));//07 мая'18, понедельник
- *    });
- * </pre>
- *
- * <h2>Доступные маски.</h2>
- * Отображение времени:
- * <ul>
- *    <li>s: секунды;</li>
- *    <li>ss: секунды с лидирующим нулем;</li>
- *    <li>m: минуты;</li>
- *    <li>mm: минуты с лидирующим нулем;</li>
- *    <li>h: часы в 12-часовом формате;</li>
- *    <li>hh: часы в 12-часовом формате с лидирующим нулем;</li>
- *    <li>H: часы в 24-часовом формате;</li>
- *    <li>HH: часы в 24-часовом формате с лидирующим нулем;</li>
- *    <li>a: интервал суток либо до полудня (ante meridiem), либо после полудня (post meridiem) в текущей локали;</li>
- *    <li>SSS: дробная часть секунд (миллисекунды).</li>
- * </ul>
- * Отображение даты:
- * <ul>
- *    <li>D: порядковый номер дня месяца;</li>
- *    <li>DD: порядковый номер дня месяца с лидирующим нулем;</li>
- *    <li>dd: краткое название дня недели в текущей локали с заглавной буквы (например, 'Пн' или 'Mo');</li>
- *    <li>ddl: краткое название дня недели в текущей локали в нижнем регистре (например, 'пн' или 'mo');</li>
- *    <li>ddd: сокращенное название дня недели в текущей локали с заглавной буквы (например, 'Пнд' или 'Mon');</li>
- *    <li>dddl: сокращенное название дня недели в текущей локали в нижнем регистре (например, 'пнд' или 'mon');</li>
- *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');
- *    </li>
- *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');
- *    </li>
- *    <li>M: порядковый номер месяца;</li>
- *    <li>MM: порядковый номер месяца с лидирующим нулем;</li>
- *    <li>MMM: сокращенное название месяца в текущей локали (например, 'Янв' или 'Jan');</li>
- *    <li>MMMl: сокращенное название месяца в текущей локали в нижнем регистре (например, 'янв' или 'jan');</li>
- *    <li>MMMM: полное название месяца в текущей локали (например, 'Январь' или 'January');</li>
- *    <li>MMMMl: полное название месяца в текущей локали в нижнем регистре (например, 'январь' или 'january');</li>
- *    <li>MMMMo: полное название месяца в текущей локали в плюральной форме (например, 'Января' или 'January');</li>
- *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или
- *        'january');</li>
- *    <li>Y: двузначный номер года;</li>
- *    <li>YY: двузначный номер года с лидирующим нулем;</li>
- *    <li>YYYY: четырехзначный номер года;</li>
- *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или
- *        'I hy');</li>
- *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие'
- *        или 'I half year');</li>
- *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или
- *        'I qt');</li>
- *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или
- *        'I qtr');</li>
- *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или
- *        'I quarter').</li>
- * </ul>
- *
- * <h2>Примеры использования масок.</h2>
- * Выведем дату:
- * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, 'Сегодня ddddl, D MMMMlo YYYY года.'));//Сегодня понедельник, 7 мая 2018 года.
- *    });
- * </pre>
- *
- * Для экранирования вывода следует использовать квадратные скобки:
- * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, '[Today is] YYYY/DD/MM'));//Today is 2018/07/05
- *    });
- * </pre>
- *
- * @class Types/_formatter/date
- * @public
- * @author Мальцев А.А.
- */
-
 let tokensRegex;
 const tokens = {};
 const locale = locales.current;
@@ -439,12 +310,137 @@ addToken('QQQr', getQuarterRomanShort);
 addToken('QQQQr', getQuarterRomanLong);
 
 /**
- * Formats Date
- * @param {Date} date Date to format
- * @param {String} format Format string
- * @return {String} Date as string
+ * Преобразует дату в строку указанного формата.
+ *
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *     <li><b>date</b> {Date} Дата.</li>
+ *     <li><b>format</b> {String} Формат вывода.</li>
+ * </ul>
+ * <h2>Возвращает</h2>
+ * {String} Дата в указанном формате.
+ *
+ * @remark
+ * <h2>Доступные константы (следует использовать для вывода дат
+ * {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
+ * <ul>
+ *    <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
+ *    <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
+ *    <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "DD MMMMlo'YY" для "Ru-ru";</li>
+ *    <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для
+ *        "Ru-ru";</li>
+ *    <li>FULL_DATE_FULL_YEAR: полная дата с полным годом, "DD.MM.YYYY" для "Ru-ru";</li>
+ *    <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "DD MMMl'YY" для "Ru-ru";</li>
+ *    <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для
+ *        "Ru-ru";</li>
+ *    <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
+ *    <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
+ *    <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
+ *    <li>FULL_QUATER: полный квартал и год, "QQQQr 'YY" для "Ru-ru";</li>
+ *    <li>FULL_TIME: полное время, "HH:mm:ss" для "Ru-ru";</li>
+ *    <li>SHORT_DATE: краткая дата, "DD.MM" для "Ru-ru";</li>
+ *    <li>SHORT_DATE_DOW: краткая дата с днем недели, "DD MMMMlo, ddddl" для "Ru-ru";</li>
+ *    <li>SHORT_DATE_FULL_MONTH: краткая дата с полным названием месяца, "DD MMMMlo" для "Ru-ru";</li>
+ *    <li>SHORT_DATE_SHORT_MONTH: краткая дата с кратким названием месяца, "DD MMMl" для "Ru-ru";</li>
+ *    <li>SHORT_DATETIME: краткий формат даты и времени, "DD MMMl HH:mm" для "Ru-ru";</li>
+ *    <li>SHORT_HALF_YEAR: краткое полугодие, "YYhr 'YY" для "Ru-ru";</li>
+ *    <li>SHORT_MONTH: краткое название месяца и год, "MMM'YY" для "Ru-ru";</li>
+ *    <li>SHORT_QUATER: краткий квартал и год, "QQr 'YY" для "Ru-ru";</li>
+ *    <li>SHORT_TIME: краткое время, "HH:mm" для "Ru-ru".</li>
+ * </ul>
+ *
+ * <h2>Примеры использования констант.</h2>
+ *
+ * Выведем полную дату:
+ * <pre>
+ *    require(['Core/helpers/Date/format'], function(format) {
+ *       var date = new Date(2018, 4, 7);
+ *       console.log(format(date, format.FULL_DATE));//07.05.18
+ *    });
+ * </pre>
+ * Выведем полную дату с днем недели:
+ * <pre>
+ *    require(['Core/helpers/Date/format'], function(format) {
+ *       var date = new Date(2018, 4, 7);
+ *       console.log(format(date, format.FULL_DATE_DOW));//07 мая'18, понедельник
+ *    });
+ * </pre>
+ *
+ * <h2>Доступные маски.</h2>
+ * Отображение времени:
+ * <ul>
+ *    <li>s: секунды;</li>
+ *    <li>ss: секунды с лидирующим нулем;</li>
+ *    <li>m: минуты;</li>
+ *    <li>mm: минуты с лидирующим нулем;</li>
+ *    <li>h: часы в 12-часовом формате;</li>
+ *    <li>hh: часы в 12-часовом формате с лидирующим нулем;</li>
+ *    <li>H: часы в 24-часовом формате;</li>
+ *    <li>HH: часы в 24-часовом формате с лидирующим нулем;</li>
+ *    <li>a: интервал суток либо до полудня (ante meridiem), либо после полудня (post meridiem) в текущей локали;</li>
+ *    <li>SSS: дробная часть секунд (миллисекунды).</li>
+ * </ul>
+ * Отображение даты:
+ * <ul>
+ *    <li>D: порядковый номер дня месяца;</li>
+ *    <li>DD: порядковый номер дня месяца с лидирующим нулем;</li>
+ *    <li>dd: краткое название дня недели в текущей локали с заглавной буквы (например, 'Пн' или 'Mo');</li>
+ *    <li>ddl: краткое название дня недели в текущей локали в нижнем регистре (например, 'пн' или 'mo');</li>
+ *    <li>ddd: сокращенное название дня недели в текущей локали с заглавной буквы (например, 'Пнд' или 'Mon');</li>
+ *    <li>dddl: сокращенное название дня недели в текущей локали в нижнем регистре (например, 'пнд' или 'mon');</li>
+ *    <li>dddd: полное название дня недели в текущей локали с заглавной буквы (например, 'Понедельник' или 'Monday');
+ *    </li>
+ *    <li>ddddl: полное название дня недели в текущей локали в нижнем регистре (например, 'понедельник' или 'monday');
+ *    </li>
+ *    <li>M: порядковый номер месяца;</li>
+ *    <li>MM: порядковый номер месяца с лидирующим нулем;</li>
+ *    <li>MMM: сокращенное название месяца в текущей локали (например, 'Янв' или 'Jan');</li>
+ *    <li>MMMl: сокращенное название месяца в текущей локали в нижнем регистре (например, 'янв' или 'jan');</li>
+ *    <li>MMMM: полное название месяца в текущей локали (например, 'Январь' или 'January');</li>
+ *    <li>MMMMl: полное название месяца в текущей локали в нижнем регистре (например, 'январь' или 'january');</li>
+ *    <li>MMMMo: полное название месяца в текущей локали в плюральной форме (например, 'Января' или 'January');</li>
+ *    <li>MMMMlo: полное название месяца в текущей локали в плюральной форме и нижнем регистре (например, 'января' или
+ *        'january');</li>
+ *    <li>Y: двузначный номер года;</li>
+ *    <li>YY: двузначный номер года с лидирующим нулем;</li>
+ *    <li>YYYY: четырехзначный номер года;</li>
+ *    <li>YYhr: номер полугодия в римской нотации и полугодие в текущей локали в краткой форме (например, 'I по' или
+ *        'I hy');</li>
+ *    <li>YYYYhr: номер полугодия в римской нотации и полугодие в текущей локали в полной форме (например, 'I полугодие'
+ *        или 'I half year');</li>
+ *    <li>QQr: номер квартала в римской нотации и квартал в текущей локали в краткой форме (например, 'I кв' или
+ *        'I qt');</li>
+ *    <li>QQQr: номер квартала в римской нотации и квартал в текущей локали в сокращенной форме (например, 'I квр' или
+ *        'I qtr');</li>
+ *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или
+ *        'I quarter').</li>
+ * </ul>
+ *
+ * <h2>Примеры использования масок.</h2>
+ * Выведем дату:
+ * <pre>
+ *    require(['Core/helpers/Date/format'], function(format) {
+ *       var date = new Date(2018, 4, 7);
+ *       console.log(format(date, 'Сегодня ddddl, D MMMMlo YYYY года.'));//Сегодня понедельник, 7 мая 2018 года.
+ *    });
+ * </pre>
+ *
+ * Для экранирования вывода следует использовать квадратные скобки:
+ * <pre>
+ *    require(['Core/helpers/Date/format'], function(format) {
+ *       var date = new Date(2018, 4, 7);
+ *       console.log(format(date, '[Today is] YYYY/DD/MM'));//Today is 2018/07/05
+ *    });
+ * </pre>
+ *
+ * @function Types/_formatter/date
+ * @param date Date to format
+ * @param format Format string
+ * @return Date as string
+ * @public
+ * @author Мальцев А.А.
  */
-function format(date: Date, format: string): string {
+export default function format(date: Date, format: string): string {
    return String(format).replace(getTokensRegex(), (token) => {
       // Check if to be escaped
       if (token[0] === '[' && token[token.length - 1] === ']') {
@@ -565,5 +561,3 @@ Object.defineProperties(format, {
       }
    }
 });
-
-export default format;

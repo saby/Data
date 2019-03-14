@@ -1,9 +1,3 @@
-/**
- * Позволяет сравнить две коллекции до и после набора изменений
- * @class Types/_collection/Comparer
- * @author Мальцев А.А.
- */
-
 import IObservable from './IObservable';
 import IEnumerable from './IEnumerable';
 
@@ -330,6 +324,11 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
    }
 }
 
+/**
+ * Позволяет сравнить две коллекции до и после набора изменений
+ * @class Types/_collection/enumerableComparator
+ * @author Мальцев А.А.
+ */
 const enumerableComparator = {
    '[Types/_collection/enumerableComparator]': true,
 

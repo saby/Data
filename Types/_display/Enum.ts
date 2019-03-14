@@ -1,11 +1,3 @@
-/**
- * Проекция типа "Перечисляемое".
- * @class Types/_display/Enum
- * @extends Types/_display/Collection
- * @public
- * @author Ганшнин Ярослав
- */
-
 import CollectionItem from './CollectionItem';
 import Collection, {ICollection} from './Collection';
 import {IEnum} from '../collection';
@@ -19,6 +11,13 @@ function onSourceChange(event: EventObject, index: number): void {
 interface IEnumCollection extends ICollection, IEnum<CollectionItem> {
 }
 
+/**
+ * Проекция типа "Перечисляемое".
+ * @class Types/_display/Enum
+ * @extends Types/_display/Collection
+ * @public
+ * @author Ганшнин Ярослав
+ */
 export default class Enum extends Collection /** @lends Types/_display/Enum.prototype */{
    protected _$collection: IEnumCollection;
 

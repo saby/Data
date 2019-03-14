@@ -1,10 +1,3 @@
-/**
- * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
- * @mixin Types/_source/DataMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import DataSet, {IOptions as IDataSetOptions} from './DataSet';
 import {ReadWriteMixin, adapter, Model} from '../entity';
 import {create} from '../di';
@@ -17,6 +10,12 @@ export interface IOptions {
    dataSetMetaProperty?: string;
 }
 
+/**
+ * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
+ * @mixin Types/_source/DataMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
    '[Types/_source/DataMixin]': true,
 

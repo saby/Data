@@ -1,3 +1,8 @@
+import Query from './Query';
+import DataSet from './DataSet';
+import {Record} from '../entity';
+import {RecordSet} from '../collection';
+
 /**
  * Интерфейс источника данных, поддерживающиего контракт
  * {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
@@ -49,12 +54,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Query from './Query';
-import DataSet from './DataSet';
-import {Record} from '../entity';
-import {RecordSet} from '../collection';
-
 export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
    readonly '[Types/_source/ICrud]': boolean;
 
@@ -180,7 +179,7 @@ export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
     *    });
     * </pre>
     */
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null>;
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null>;
 
    /**
     * Удаляет запись из источника данных

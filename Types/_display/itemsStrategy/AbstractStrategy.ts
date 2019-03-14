@@ -1,12 +1,3 @@
-/**
- * Абстрактная стратегия получения элементов проекции
- * @class Types/_display/ItemsStrategy/Abstract
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
- */
-
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
@@ -22,6 +13,14 @@ export interface ISerializableState extends IDefaultSerializableState {
    _items: CollectionItem[];
 }
 
+/**
+ * Абстрактная стратегия получения элементов проекции
+ * @class Types/_display/ItemsStrategy/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
+ * @author Мальцев А.А.
+ */
 export default abstract class Abstract extends mixin(
    DestroyableMixin, SerializableMixin
 ) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Abstract.prototype */{

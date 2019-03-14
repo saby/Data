@@ -1,3 +1,5 @@
+import IChannel from './IChannel';
+
 /**
  * Интерфейс провайдера c доступом к серверным событиям
  * @interface Types/_source/provider/INotify
@@ -24,9 +26,6 @@
  *    });
  * </pre>
  */
-
-import IChannel from './IChannel';
-
 export default interface INotify /** @lends Types/_source/provider/INotify.prototype */{
    readonly '[Types/_source/provider/INotify]': boolean;
 

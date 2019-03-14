@@ -22,7 +22,7 @@ const boundaries = {
  *     <li>{Number} num Арабское число.</li>
  * </ul>
  *
- * @class Types/_formatter/numberRoman
+ * @function Types/_formatter/numberRoman
  * @public
  * @author Мальцев А.А.
  */

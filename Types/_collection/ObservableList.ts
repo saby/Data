@@ -1,3 +1,12 @@
+import IObservable from './IObservable';
+import List, {IOptions as IListOptions} from './List';
+import EventRaisingMixin from './EventRaisingMixin';
+import {IReceiver} from '../_entity/relation';
+import {register} from '../di';
+import {mixin} from '../util';
+
+const arraySlice = Array.prototype.slice;
+
 /**
  * Список, в котором можно отслеживать изменения.
  * <pre>
@@ -27,16 +36,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IObservable from './IObservable';
-import List, {IOptions as IListOptions} from './List';
-import EventRaisingMixin from './EventRaisingMixin';
-import {IReceiver} from '../_entity/relation';
-import {register} from '../di';
-import {mixin} from '../util';
-
-const arraySlice = Array.prototype.slice;
-
 export default class ObservableList<T> extends mixin(
    List,
    IObservable,

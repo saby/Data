@@ -31,7 +31,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 const SbisFieldType = {
    boolean: 'Логическое',
    integer: 'Число целое',

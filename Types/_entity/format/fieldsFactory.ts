@@ -1,8 +1,3 @@
-/**
- * Фабрика полей - конструирует поля по декларативному описанию
- * @author Мальцев А.А.
- */
-
 import BooleanField from './BooleanField';
 import IntegerField from './IntegerField';
 import RealField from './RealField';
@@ -72,8 +67,8 @@ export interface IDeclaration {
 
 /**
  * Конструирует формат поля по декларативному описанию
- * @param {FieldDeclaration} declaration Декларативное описание
- * @return {Types/_entity/format/Field}
+ * @param declaration Декларативное описание
+ * @author Мальцев А.А.
  */
 export default function(declaration: IDeclaration): Field {
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {

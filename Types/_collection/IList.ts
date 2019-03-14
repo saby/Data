@@ -1,3 +1,5 @@
+import IEnumerable from './IEnumerable';
+
 /**
  * Интерфейс списка - коллекции c доступом по индексу.
  * Основные возможности:
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerable from './IEnumerable';
-
 export default interface IList<T> /** @lends Types/_collection/IList.prototype */{
    readonly '[Types/_collection/IList]': boolean;
 

@@ -1,16 +1,3 @@
-/**
- * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную
- * коллекцию.
- * Дерево может строиться по алгоритму
- * {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или
- * {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}.
- * Выбор алгоритма выполняется в зависимости от настроек.
- * @class Types/_display/Tree
- * @extends Types/_display/Collection
- * @public
- * @author Мальцев А.А.
- */
-
 import Collection, {
    ItemsFactory,
    ISessionItemState,
@@ -103,6 +90,18 @@ interface IItemsFactoryOptions {
    node?: boolean;
 }
 
+/**
+ * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную
+ * коллекцию.
+ * Дерево может строиться по алгоритму
+ * {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или
+ * {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}.
+ * Выбор алгоритма выполняется в зависимости от настроек.
+ * @class Types/_display/Tree
+ * @extends Types/_display/Collection
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Tree extends Collection /** @lends Types/_display/Tree.prototype */{
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится

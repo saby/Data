@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат вещественного поля.
  *
@@ -14,9 +16,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class RealField extends Field /** @lends Types/_entity/format/RealField.prototype */{
    _$defaultValue: number;
 

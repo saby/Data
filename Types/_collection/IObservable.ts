@@ -5,7 +5,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 const IObservable = /** @lends Types/_collection/IBind.prototype */{
    '[Types/_collection/IObservable]': true,
 

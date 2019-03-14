@@ -1,11 +1,4 @@
 /**
- * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
- * @class Types/_entity/factory
- * @public
- * @author Мальцев А.А.
- */
-
-/**
  * @faq Почему я вижу ошибки от Types/di:resolve?
  * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
  * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
@@ -172,7 +165,7 @@ function serializeFlags(data: any): boolean[] {
  * @param {Types/_collection/List} list Список
  * @return {Types/_collection/RecordSet}
  */
-function convertListToRecordSet(list: List<Record>): RecordSet<Record> {
+function convertListToRecordSet(list: List<Record>): RecordSet {
    let adapter = 'Types/entity:adapter.Json';
    const count = list.getCount();
    let record;
@@ -187,7 +180,7 @@ function convertListToRecordSet(list: List<Record>): RecordSet<Record> {
       }
    }
 
-   const rs = create<RecordSet<Record>>('Types/collection:RecordSet', {
+   const rs = create<RecordSet>('Types/collection:RecordSet', {
       adapter
    });
    for (let i = 0; i < count; i++) {
@@ -197,6 +190,12 @@ function convertListToRecordSet(list: List<Record>): RecordSet<Record> {
    return rs.getRawData(true);
 }
 
+/**
+ * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
+ * @class Types/_entity/factory
+ * @public
+ * @author Мальцев А.А.
+ */
 const factory = {
    '[Types/_entity/factory]': true,
 

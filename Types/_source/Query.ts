@@ -1,31 +1,3 @@
-/**
- * Запрос на выборку.
- *
- * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
- * <pre>
- *    require(['Types/source'], function (source) {
- *       var query = new source.Query(),
- *          date = new Date();
- *
- *       date.setDate(date.getDate() - 1);
- *
- *       query
- *          .select(['id', 'date', 'customerId'])
- *          .from('Orders')
- *          .where(function(order) {
- *             return order.date - date >= 0;
- *          })
- *          .orderBy('id')
- *          .limit(100);
- *    });
- * </pre>
- * @class Types/_source/Query
- * @implements Types/_entity/ICloneable
- * @mixes Types/_entity/OptionsMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {mixin} from '../util';
 
@@ -259,7 +231,31 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
 }
 
 /**
- * Query implementation
+ * Запрос на выборку.
+ *
+ * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
+ * <pre>
+ *    require(['Types/source'], function (source) {
+ *       var query = new source.Query(),
+ *          date = new Date();
+ *
+ *       date.setDate(date.getDate() - 1);
+ *
+ *       query
+ *          .select(['id', 'date', 'customerId'])
+ *          .from('Orders')
+ *          .where(function(order) {
+ *             return order.date - date >= 0;
+ *          })
+ *          .orderBy('id')
+ *          .limit(100);
+ *    });
+ * </pre>
+ * @class Types/_source/Query
+ * @implements Types/_entity/ICloneable
+ * @mixes Types/_entity/OptionsMixin
+ * @public
+ * @author Мальцев А.А.
  */
 export default class Query extends mixin(
    Object, OptionsToPropertyMixin

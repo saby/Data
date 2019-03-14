@@ -1,3 +1,7 @@
+import IItemsStrategy from '../IItemsStrategy';
+import {DestroyableMixin, SerializableMixin} from '../../entity';
+import {mixin} from '../../util';
+
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
  * @class Types/_display/ItemsStrategy/Composer
@@ -5,11 +9,6 @@
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-
-import IItemsStrategy from '../IItemsStrategy';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
-import {mixin} from '../../util';
-
 export default class Composer extends mixin(
    DestroyableMixin, SerializableMixin
 ) /** @lends Types/_display/ItemsStrategy/Composer.prototype */{

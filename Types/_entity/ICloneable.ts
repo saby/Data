@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 export default interface ICloneable /** @lends Types/_entity/ICloneable.prototype */{
    readonly '[Types/_entity/ICloneable]': boolean;
 

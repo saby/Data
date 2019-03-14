@@ -1,3 +1,6 @@
+import CollectionItem from './CollectionItem';
+import {register} from '../di';
+
 /**
  * Группа элементов
  * @class Types/_display/GroupItem
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import CollectionItem from './CollectionItem';
-import {register} from '../di';
-
 export default class GroupItem extends CollectionItem /** @lends Types/_display/GroupItem.prototype */{
    /**
     * @cfg {Boolean} Развернута или свернута группа. По умолчанию развернута.

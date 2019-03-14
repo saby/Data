@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для записи.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class RecordField extends Field /** @lends Types/_entity/format/RecordField.prototype */{
 }
 

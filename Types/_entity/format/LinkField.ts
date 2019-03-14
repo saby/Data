@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля "Связь".
  *
@@ -13,9 +15,6 @@
  * @deprecated Модуль будет удален в 3.18.10
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class LinkField extends Field /** @lends Types/_entity/format/LinkField.prototype */{
    _$defaultValue: number;
 }

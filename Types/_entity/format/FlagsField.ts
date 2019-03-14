@@ -1,3 +1,5 @@
+import DictionaryField from './DictionaryField';
+
 /**
  * Формат поля флагов.
  *
@@ -14,9 +16,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DictionaryField from './DictionaryField';
-
 export default class FlagsField extends DictionaryField /** @lends Types/_entity/format/FlagsField.prototype */{
 }
 

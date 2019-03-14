@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат двоичного поля.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class BinaryField extends Field /** @lends Types/_entity/format/BinaryField.prototype */{
 }
 

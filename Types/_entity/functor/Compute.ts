@@ -1,3 +1,8 @@
+export interface IFunctor {
+   readonly functor: Function;
+   readonly properties: string[];
+}
+
 /**
  * Функтор, хранящий информацию о свойствах, от значения которых зависит результат вычислений.
  * Создадим и выполним функтор, вычисляющий 20% налог на заказ в магазине:
@@ -20,23 +25,15 @@
  * @public
  * @author Мальцев А.А.
  */
-
-export interface IFunctor {
-   readonly functor: Function;
-   readonly properties: string[];
-}
-
-/**
- * Конструктор
- * @param {Function} fn Функция, производящая вычисления
- * @param {Array.<String>} [properties] Свойства, от которых зависит результат вычисления
- * @return {Function}
- * @protected
- */
 export default class Compute implements IFunctor {
    readonly functor: Function;
    readonly properties: string[];
 
+   /**
+    * Конструктор функтора.
+    * @param fn Функция, производящая вычисления
+    * @param properties Свойства, от которых зависит результат вычисления
+    */
    constructor(fn: Function, properties?: string[]) {
       properties = properties || [];
       if (!(fn instanceof Function)) {

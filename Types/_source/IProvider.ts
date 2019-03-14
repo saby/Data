@@ -1,10 +1,3 @@
-/**
- * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
- * @interface Types/_source/IProvider
- * @public
- * @author Мальцев А.А.
- */
-
 import {IAbstract} from './provider';
 
 export interface IEndpoint {
@@ -12,6 +5,12 @@ export interface IEndpoint {
    address?: string;
 }
 
+/**
+ * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
+ * @interface Types/_source/IProvider
+ * @public
+ * @author Мальцев А.А.
+ */
 export default interface IProvider /** @lends Types/_source/IProvider.prototype */{
    readonly '[Types/_source/IProvider]': boolean;
 

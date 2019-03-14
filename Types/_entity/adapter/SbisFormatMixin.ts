@@ -1,10 +1,3 @@
-/**
- * Миксин для работы с СБИС-форматом в адаптерах
- * @mixin Types/_entity/adapter/SbisFormatMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import FIELD_TYPE from './SbisFieldType';
 import factory from '../factory';
 import {fieldsFactory, IFieldDeclaration, Field, UniversalField} from '../format';
@@ -70,6 +63,12 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
    return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
+/**
+ * Миксин для работы с СБИС-форматом в адаптерах
+ * @mixin Types/_entity/adapter/SbisFormatMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototype */ {
    '[Types/_entity/adapter/SbisFormatMixin]': true,
 
@@ -142,7 +141,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       this._data.d.length = 0;
    },
 
-   getFormat(name: string): format.Format<Field> {
+   getFormat(name: string): format.Format {
       if (!this._has(name)) {
          throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
       }

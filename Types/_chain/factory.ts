@@ -1,3 +1,36 @@
+import {register} from '../di';
+import Abstract from './Abstract';
+import Arraywise from './Arraywise';
+import Objectwise from './Objectwise';
+import Enumerable from './Enumerable';
+import Concatenated from './Concatenated';
+import Counted from './Counted';
+import Filtered from './Filtered';
+import Flattened from './Flattened';
+import Grouped from './Grouped';
+import Mapped from './Mapped';
+import Reversed from './Reversed';
+import Sliced from './Sliced';
+import Sorted from './Sorted';
+import Uniquely from './Uniquely';
+import Zipped from './Zipped';
+
+register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
+register('Types/chain:Arraywise', Arraywise, { instantiate: false });
+register('Types/chain:Concatenated', Concatenated, { instantiate: false });
+register('Types/chain:Counted', Counted, { instantiate: false });
+register('Types/chain:Enumerable', Enumerable, { instantiate: false });
+register('Types/chain:Filtered', Filtered, { instantiate: false });
+register('Types/chain:Flattened', Flattened, { instantiate: false });
+register('Types/chain:Grouped', Grouped, { instantiate: false });
+register('Types/chain:Mapped', Mapped, { instantiate: false });
+register('Types/chain:Objectwise', Objectwise, { instantiate: false });
+register('Types/chain:Reversed', Reversed, { instantiate: false });
+register('Types/chain:Sliced', Sliced, { instantiate: false });
+register('Types/chain:Sorted', Sorted, { instantiate: false });
+register('Types/chain:Uniquely', Uniquely, { instantiate: false });
+register('Types/chain:Zipped', Zipped, { instantiate: false });
+
 /**
  * Создает последовательную цепочку вызовов, обрабатывающих коллекции различных типов.
  *
@@ -35,51 +68,13 @@
  * </pre>
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
- * @class Types/_chain/factory
- * @public
- * @author Мальцев А.А.
- */
-
-/**
- * @alias Types/_chain/factory
+ * @function Types/_chain/factory
  * @param {Array|Object|Types/_collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая
  * цепочкой
  * @return {Types/_chain/Abstract}
+ * @public
+ * @author Мальцев А.А.
  */
-
-import {register} from '../di';
-import Abstract from './Abstract';
-import Arraywise from './Arraywise';
-import Objectwise from './Objectwise';
-import Enumerable from './Enumerable';
-import Concatenated from './Concatenated';
-import Counted from './Counted';
-import Filtered from './Filtered';
-import Flattened from './Flattened';
-import Grouped from './Grouped';
-import Mapped from './Mapped';
-import Reversed from './Reversed';
-import Sliced from './Sliced';
-import Sorted from './Sorted';
-import Uniquely from './Uniquely';
-import Zipped from './Zipped';
-
-register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
-register('Types/chain:Arraywise', Arraywise, { instantiate: false });
-register('Types/chain:Concatenated', Concatenated, { instantiate: false });
-register('Types/chain:Counted', Counted, { instantiate: false });
-register('Types/chain:Enumerable', Enumerable, { instantiate: false });
-register('Types/chain:Filtered', Filtered, { instantiate: false });
-register('Types/chain:Flattened', Flattened, { instantiate: false });
-register('Types/chain:Grouped', Grouped, { instantiate: false });
-register('Types/chain:Mapped', Mapped, { instantiate: false });
-register('Types/chain:Objectwise', Objectwise, { instantiate: false });
-register('Types/chain:Reversed', Reversed, { instantiate: false });
-register('Types/chain:Sliced', Sliced, { instantiate: false });
-register('Types/chain:Sorted', Sorted, { instantiate: false });
-register('Types/chain:Uniquely', Uniquely, { instantiate: false });
-register('Types/chain:Zipped', Zipped, { instantiate: false });
-
 export default function factory(source: any): Abstract<any> {
    if (source instanceof Abstract) {
       return source;

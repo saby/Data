@@ -1,3 +1,6 @@
+import Field from './Field';
+import {dateToSql, TO_SQL_MODE} from '../../formatter';
+
 /**
  * Формат поля для времени.
  *
@@ -13,10 +16,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-import {dateToSql, TO_SQL_MODE} from '../../formatter';
-
 export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
 
    // region Public methods
