@@ -10,7 +10,7 @@ import Abstract from './Abstract';
 import FlattenedEnumerator from './FlattenedEnumerator';
 
 export default class Flattened<T> extends Abstract<T> /** @lends Types/_chain/Flattened.prototype */{
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): FlattenedEnumerator<T> {
       return new FlattenedEnumerator(
@@ -18,7 +18,7 @@ export default class Flattened<T> extends Abstract<T> /** @lends Types/_chain/Fl
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Flattened.prototype['[Types/_chain/Flattened]'] = true;

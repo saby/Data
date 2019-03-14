@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля со словарём (абстрактный класс)
  * @class Types/_entity/format/DictionaryField
@@ -5,9 +7,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class DictionaryField extends Field /** @lends Types/_entity/format/DictionaryField.prototype */{
       /**
        * @cfg {Array.<String>} Словарь возможных значений

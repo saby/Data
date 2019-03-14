@@ -1,3 +1,30 @@
+import IEnumerable from './IEnumerable';
+import IList from './IList';
+import IObservable from './IObservable';
+import IIndexedCollection from './IIndexedCollection';
+import Arraywise from './enumerator/Arraywise';
+import Indexer from './Indexer';
+import {
+   ICloneable,
+   IEquatable,
+   IVersionable,
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin,
+   SerializableMixin,
+   ISerializableState,
+   CloneableMixin,
+   ManyToManyMixin,
+   ReadWriteMixin,
+   VersionableMixin
+} from '../entity';
+import {register} from '../di';
+import {logger, mixin, object} from '../util';
+
+export interface IOptions<T> {
+   items?: T[];
+}
+
 /**
  * Список - коллекция c доступом по индексу.
  * Основные возможности:
@@ -46,34 +73,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerable from './IEnumerable';
-import IList from './IList';
-import IObservable from './IObservable';
-import IIndexedCollection from './IIndexedCollection';
-import Arraywise from './enumerator/Arraywise';
-import Indexer from './Indexer';
-import {
-   ICloneable,
-   IEquatable,
-   IVersionable,
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   ObservableMixin,
-   SerializableMixin,
-   ISerializableState,
-   CloneableMixin,
-   ManyToManyMixin,
-   ReadWriteMixin,
-   VersionableMixin
-} from '../entity';
-import {register} from '../di';
-import {logger, mixin, object} from '../util';
-
-export interface IOptions<T> {
-   items?: T[];
-}
-
 export default class List<T> extends mixin(
    DestroyableMixin,
    OptionsToPropertyMixin,

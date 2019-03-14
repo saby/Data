@@ -1,3 +1,5 @@
+import RealField from './RealField';
+
 /**
  * Формат денежного поля.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import RealField from './RealField';
-
 export default class MoneyField extends RealField /** @lends Types/_entity/format/MoneyField.prototype */{
    _$precision: number;
 

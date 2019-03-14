@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
    '[Types/_entity/VersionableMixin]': true,
 

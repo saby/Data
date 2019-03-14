@@ -1,3 +1,5 @@
+import DictionaryField from './DictionaryField';
+
 /**
  * Формат перечисляемого поля.
  *
@@ -14,9 +16,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DictionaryField from './DictionaryField';
-
 export default class EnumField extends DictionaryField /** @lends Types/_entity/format/EnumField.prototype */{
 }
 

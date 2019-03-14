@@ -1,3 +1,51 @@
+import Record, {IOptions as IRecordOptions} from './Record';
+import IInstantiable from './IInstantiable';
+import InstantiableMixin from './InstantiableMixin';
+import {IState as IDefaultSerializableState} from './SerializableMixin';
+import {Compute} from './functor';
+import {enumerator, EnumeratorCallback} from '../collection';
+import {create, register} from '../di';
+import {logger, mixin} from '../util';
+import {Map, Set} from '../shim';
+import { adapter } from '../entity';
+
+/**
+ * Separator for path in object
+ */
+const ROUTE_SEPEARTOR = '.';
+
+interface IGetter extends Function {
+   get: (name: string) => any;
+   properties: string[];
+}
+
+interface ISetter extends Function {
+   set: (name: string, value: any) => any;
+   properties: string[];
+}
+
+interface IProperty {
+   get: IGetter;
+   set?: ISetter;
+   default?: (name: string) => any;
+}
+
+// tslint:disable-next-line:no-empty-interface
+interface IProperties<T> {
+}
+
+interface IOptions extends IRecordOptions {
+   properties?: IProperties<IProperty>;
+   idProperty?: string;
+}
+
+interface ISerializableState extends IDefaultSerializableState {
+   $options: IOptions;
+   _instanceId: string;
+   _isDeleted: boolean;
+   _defaultPropertiesValues: object;
+}
+
 /**
  * Абстрактная модель.
  * Модели обеспечивают доступ к данным и поведению объектов предметной области (сущностям).
@@ -107,55 +155,6 @@
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
  */
-
-import Record, {IOptions as IRecordOptions} from './Record';
-import IInstantiable from './IInstantiable';
-import InstantiableMixin from './InstantiableMixin';
-import {IState as IDefaultSerializableState} from './SerializableMixin';
-import {Compute} from './functor';
-import {enumerator, EnumeratorCallback} from '../collection';
-import {create, register} from '../di';
-import {logger, mixin} from '../util';
-import {Map, Set} from '../shim';
-import { adapter } from '../entity';
-
-/**
- * Separator for path in object
- */
-const ROUTE_SEPEARTOR = '.';
-
-interface IGetter extends Function {
-   get: (name: string) => any;
-   properties: string[];
-}
-
-interface ISetter extends Function {
-   set: (name: string, value: any) => any;
-   properties: string[];
-}
-
-interface IProperty {
-   get: IGetter;
-   set?: ISetter;
-   default?: (name: string) => any;
-}
-
-// tslint:disable-next-line:no-empty-interface
-interface IProperties<T> {
-}
-
-interface IOptions extends IRecordOptions {
-   properties?: IProperties<IProperty>;
-   idProperty?: string;
-}
-
-interface ISerializableState extends IDefaultSerializableState {
-   $options: IOptions;
-   _instanceId: string;
-   _isDeleted: boolean;
-   _defaultPropertiesValues: object;
-}
-
 export default class Model extends mixin(
    Record, InstantiableMixin
 ) implements IInstantiable /** @lends Types/_entity/Model.prototype */{

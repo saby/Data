@@ -1,16 +1,11 @@
-/**
- * Фабрика форматов - конструирует формат по декларативному описанию
- * @author Мальцев А.А.
- */
-
 import Format from './Format';
 import {format} from '../../entity';
 import {register} from '../../di';
 
 /**
  * Конструирует формат полей по декларативному описанию
- * @param {Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} declaration Декларативное описание
- * @return {Types/_entity/format/Format}
+ * @param declaration Декларативное описание
+ * @author Мальцев А.А.
  */
 export default function factory(declaration: format.IFieldDeclaration[]): Format<format.Field> {
    if (!declaration || !(declaration instanceof Array)) {

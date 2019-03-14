@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 export default interface IAbstract /** @lends Types/_source/provider/IAbstract.prototype */{
    readonly '[Types/_source/provider/IAbstract]': boolean;
 

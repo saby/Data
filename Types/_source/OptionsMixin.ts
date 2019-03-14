@@ -1,10 +1,3 @@
-/**
- * Миксин, позволяющий задавать опциональные настройки источника данных.
- * @mixin Types/_source/OptionsMixin
- * @public
- * @author Мальцев А.А.
- */
-
 export interface IOptions {
    debug?: boolean;
 }
@@ -13,6 +6,12 @@ interface IConstructorOptions {
    options?: IOptions;
 }
 
+/**
+ * Миксин, позволяющий задавать опциональные настройки источника данных.
+ * @mixin Types/_source/OptionsMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
    '[Types/_source/OptionsMixin]': true,
 

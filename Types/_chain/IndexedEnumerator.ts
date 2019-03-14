@@ -1,10 +1,10 @@
+import Abstract from './Abstract';
+import {IEnumerator} from '../collection';
+
 /**
  * Индексирующий энумератор
  * @author Мальцев А.А.
  */
-import Abstract from './Abstract';
-import {IEnumerator} from '../collection';
-
 export default class IndexedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    protected previous: Abstract<T>;

@@ -1,12 +1,3 @@
-/**
- * Стратегия-декоратор получения элементов проекции по списку смежных вершин
- * @class Types/_display/ItemsStrategy/AdjacencyList
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
- */
-
 import IItemsStrategy from '../IItemsStrategy';
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
@@ -204,6 +195,14 @@ interface ISerializableState extends IDefaultSerializableState {
    _parentsMap: number[];
 }
 
+/**
+ * Стратегия-декоратор получения элементов проекции по списку смежных вершин
+ * @class Types/_display/ItemsStrategy/AdjacencyList
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
+ * @author Мальцев А.А.
+ */
 export default class AdjacencyList extends mixin(
    DestroyableMixin, SerializableMixin
 ) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/AdjacencyList.prototype */ {

@@ -1,14 +1,3 @@
-/**
- * Абстрактный адаптер для данных.
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_entity/adapter/Abstract
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_entity/adapter/IAdapter
- * @mixes Types/_entity/SerializableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import DestroyableMixin from '../DestroyableMixin';
 import IAdapter from './IAdapter';
 import ITable from './ITable';
@@ -85,6 +74,16 @@ const serialize = (() => {
    return serializeAny;
 })();
 
+/**
+ * Абстрактный адаптер для данных.
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @class Types/_entity/adapter/Abstract
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IAdapter
+ * @mixes Types/_entity/SerializableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Abstract extends mixin(
    DestroyableMixin, SerializableMixin
 ) implements IAdapter /** @lends Types/_entity/adapter/Abstract.prototype */{

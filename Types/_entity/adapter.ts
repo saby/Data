@@ -1,25 +1,16 @@
 /**
  * Adapters library.
  * @library Types/_entity/adapter
- * @includes DestroyableMixin Types/_entity/adapter/DestroyableMixin
+ * @includes Abstract Types/_entity/adapter/Abstract
  * @includes Cow Types/_entity/adapter/Cow
- * @includes CowRecord Types/_entity/adapter/CowRecord
- * @includes CowTable Types/_entity/adapter/CowTable
  * @includes Json Types/_entity/adapter/Json
- * @includes JsonRecord Types/_entity/adapter/JsonRecord
- * @includes JsonTable Types/_entity/adapter/JsonTable
  * @includes IAdapter Types/_entity/adapter/IAdapter
  * @includes IDecorator Types/_entity/adapter/IDecorator
  * @includes IMetaData Types/_entity/adapter/IMetaData
  * @includes IRecord Types/_entity/adapter/IRecord
  * @includes ITable Types/_entity/adapter/ITable
  * @includes RecordSet Types/_entity/adapter/RecordSet
- * @includes RecordSetRecord Types/_entity/adapter/RecordSetRecord
- * @includes RecordSetTable Types/_entity/adapter/RecordSetTable
  * @includes Sbis Types/_entity/adapter/Sbis
- * @includes SbisFieldType Types/_entity/adapter/SbisFieldType
- * @includes SbisRecord Types/_entity/adapter/SbisRecord
- * @includes SbisTable Types/_entity/adapter/SbisTable
  * @author Мальцев А.А.
  */
 

@@ -1,12 +1,11 @@
+import {fieldsFactory, Field, UniversalField} from '../format';
+
 /**
  * Миксин для работы с JSON-форматом в адаптерах
  * @mixin Types/_entity/adapter/JsonFormatMixin
  * @public
  * @author Мальцев А.А.
  */
-
-import {fieldsFactory, Field, UniversalField} from '../format';
-
 const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototype */{
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 

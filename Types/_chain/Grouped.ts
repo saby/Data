@@ -1,11 +1,3 @@
-/**
- * Группирующее звено цепочки.
- * @class Types/_chain/Grouped
- * @extends Types/_chain/Abstract
- * @public
- * @author Мальцев А.А.
- */
-
 import Abstract from './Abstract';
 import {enumerator} from '../collection';
 import {Map} from '../shim';
@@ -14,6 +6,13 @@ type GroupFunc = (item: any) => string;
 
 type ValueFunc = (item: any) => any;
 
+/**
+ * Группирующее звено цепочки.
+ * @class Types/_chain/Grouped
+ * @extends Types/_chain/Abstract
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grouped.prototype */{
    /**
     * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
@@ -43,7 +42,7 @@ export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grou
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): enumerator.Mapwise<T> {
       const toKey = Abstract.propertyMapper(this._key);
@@ -69,7 +68,7 @@ export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grou
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Grouped.prototype, {

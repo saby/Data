@@ -1,14 +1,13 @@
+import IEnumerator from './IEnumerator';
+
+export type EnumeratorCallback<T> = (item: T, index: number) => void;
+
 /**
  * Интерфейс коллекции c последовательным доступом
  * @interface Types/_collection/IEnumerable
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerator from './IEnumerator';
-
-export type EnumeratorCallback<T> = (item: T, index: number) => void;
-
 export default interface IEnumerable<T> /** @lends Types/_collection/IEnumerable.prototype */{
    readonly '[Types/_collection/IEnumerable]': boolean;
 

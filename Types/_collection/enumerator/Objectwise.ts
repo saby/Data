@@ -1,3 +1,5 @@
+import IEnumerator from '../IEnumerator';
+
 /**
  * Энумератор для собственных свойств объекта
  * @class Types/_collection/ObjectEnumerator
@@ -5,27 +7,24 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerator from '../IEnumerator';
-
 export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_collection/ObjectEnumerator.prototype */{
    /**
-    * @property {Object} Объект
+    * Объект
     */
-   private _items: Object;
+   private _items: object;
 
    /**
-    * @property {Array} Набор свойств объекта
+    * Набор свойств объекта
     */
    private _keys: string[];
 
    /**
-    * @property {Number} Текущий индекс
+    * Текущий индекс
     */
    private _index: number;
 
    /**
-    * @property {function(): Boolean} Фильтр элементов
+    * Фильтр элементов
     */
    private _filter: (item: any, index: any) => boolean;
 
@@ -47,7 +46,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
       this._keys = Object.keys(checkedItems);
    }
 
-   // region Types/_collection/IEnumerator
+   // region IEnumerator
 
    readonly '[Types/_collection/IEnumerator]': boolean = true;
 
@@ -75,7 +74,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
       this._index = -1;
    }
 
-   // endregion Types/_collection/IEnumerator
+   // endregion
 
    // region Public methods
 
@@ -92,7 +91,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
       this._filter = filter;
    }
 
-   // endregion Public methods
+   // endregion
 }
 
 Object.assign(Objectwise.prototype, {

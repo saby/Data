@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат логического поля.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class BooleanField extends Field /** @lends Types/_entity/format/BooleanField.prototype */{
 }
 

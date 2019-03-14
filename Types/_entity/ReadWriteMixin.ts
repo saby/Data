@@ -1,11 +1,3 @@
-/**
- * Миксин, позволяющий ограничивать запись и чтение.
- * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов
- * @mixin Types/_entity/ReadWriteMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin from './ObservableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
@@ -18,6 +10,13 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
  */
 const $writable = protect('writable');
 
+/**
+ * Миксин, позволяющий ограничивать запись и чтение.
+ * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов
+ * @mixin Types/_entity/ReadWriteMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
    '[Types/_entity/ReadWriteMixin]': true,
 

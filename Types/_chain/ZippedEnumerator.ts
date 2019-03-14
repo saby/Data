@@ -1,10 +1,10 @@
+import {IEnumerable, IEnumerator} from '../collection';
+import Abstract from './Abstract';
+
 /**
  * Объединяющий энумератор
  * @author Мальцев А.А.
  */
-import {IEnumerable, IEnumerator} from '../collection';
-import Abstract from './Abstract';
-
 export default class ZippedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;

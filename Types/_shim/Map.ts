@@ -1,13 +1,12 @@
+import {SetPolyfill} from './Set';
+//@ts-ignore
+import 'Core/polyfill';
+
 /**
  * Limited emulation of standard built-in object "Map" if it's not supported.
  * Follow {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Map} for details.
  * @author Мальцев А.А.
  */
-
-import {SetPolyfill} from './Set';
-//@ts-ignore
-import 'Core/polyfill';
-
 export class MapPolyfill<K, V> {
    protected _hash: object;
    protected _objects: V[];

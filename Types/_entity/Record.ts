@@ -1,79 +1,3 @@
-/**
- * Запись - обертка над данными, которые представлены в виде строки таблицы (объект с набором полей и их значений).
- *
- * Основные аспекты записи:
- * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}),
- *        например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс
- *        {@link Types/_entity/IObject};
- *    </li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс
- *        {@link Types/_collection/IEnumerable};
- *    </li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
- *    </li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
- *        {@link Types/_entity/FormattableMixin}.
- *    </li>
- * </ul>
- *
- * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
- * используется по умолчанию):
- * <pre>
- *    require(['Types/entity'], function (entity) {
- *       var employee = new entity.Record({
- *          rawData: {
- *             id: 1,
- *             firstName: 'John',
- *             lastName: 'Smith'
- *          }
- *       });
- *       employee.get('id');//1
- *       employee.get('firstName');//John
- *    });
- * </pre>
- * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
- * укажем явно):
- * <pre>
- *    require([
- *       'Types/entity',
- *       'Types/source'
- *    ], function (entity, source) {
- *       var source = new source.SbisService({endpoint: 'Employee'});
- *       source.call('read', {login: 'root'}).addCallback(function(response) {
- *          var employee = new entity.Record({
- *             rawData: response.getRawData(),
- *             adapter: response.getAdapter()
- *          });
- *          console.log(employee.get('id'));
- *          console.log(employee.get('firstName'));
- *       });
- *    });
- * </pre>
- * @class Types/_entity/Record
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_entity/IObject
- * @implements Types/_entity/IObservableObject
- * @implements Types/_entity/ICloneable
- * @implements Types/_entity/IProducible
- * @implements Types/_entity/IEquatable
- * @implements Types/_collection/IEnumerable
- * @implements Types/_entity/relation/IReceiver
- * @implements Types/_entity/IVersionable
- * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/ObservableMixin
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_entity/CloneableMixin
- * @mixes Types/_entity/ManyToManyMixin
- * @mixes Types/_entity/ReadWriteMixin
- * @mixes Types/_entity/FormattableMixin
- * @mixes Types/_entity/VersionableMixin
- * @ignoreOptions owner cloneChanged
- * @ignoreMethods detach
- * @public
- * @author Мальцев А.А.
- */
-
 /* tslint:disable:member-ordering */
 
 import IObject from './IObject';
@@ -147,12 +71,12 @@ const CACHE_MODE_ALL = protect('all');
 type pairsTuple = [string, any, any];
 
 export interface IOptions extends IFormattableOptions {
-   owner?: RecordSet<Record>;
+   owner?: RecordSet;
 }
 
 interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
    $options: IOptions;
-   _format: format.Format<Field>;
+   _format: format.Format;
    _changedFields: string[];
 }
 
@@ -229,6 +153,81 @@ function getValueType(value: any): string | IFieldDeclaration {
    }
 }
 
+/**
+ * Запись - обертка над данными, которые представлены в виде строки таблицы (объект с набором полей и их значений).
+ *
+ * Основные аспекты записи:
+ * <ul>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}),
+ *        например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс
+ *        {@link Types/_entity/IObject};
+ *    </li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс
+ *        {@link Types/_collection/IEnumerable};
+ *    </li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
+ *    </li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
+ *        {@link Types/_entity/FormattableMixin}.
+ *    </li>
+ * </ul>
+ *
+ * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
+ * используется по умолчанию):
+ * <pre>
+ *    require(['Types/entity'], function (entity) {
+ *       var employee = new entity.Record({
+ *          rawData: {
+ *             id: 1,
+ *             firstName: 'John',
+ *             lastName: 'Smith'
+ *          }
+ *       });
+ *       employee.get('id');//1
+ *       employee.get('firstName');//John
+ *    });
+ * </pre>
+ * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
+ * укажем явно):
+ * <pre>
+ *    require([
+ *       'Types/entity',
+ *       'Types/source'
+ *    ], function (entity, source) {
+ *       var source = new source.SbisService({endpoint: 'Employee'});
+ *       source.call('read', {login: 'root'}).addCallback(function(response) {
+ *          var employee = new entity.Record({
+ *             rawData: response.getRawData(),
+ *             adapter: response.getAdapter()
+ *          });
+ *          console.log(employee.get('id'));
+ *          console.log(employee.get('firstName'));
+ *       });
+ *    });
+ * </pre>
+ * @class Types/_entity/Record
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/IObject
+ * @implements Types/_entity/IObservableObject
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @implements Types/_entity/IEquatable
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/relation/IReceiver
+ * @implements Types/_entity/IVersionable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/ReadWriteMixin
+ * @mixes Types/_entity/FormattableMixin
+ * @mixes Types/_entity/VersionableMixin
+ * @ignoreOptions owner cloneChanged
+ * @ignoreMethods detach
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Record extends mixin(
    DestroyableMixin,
    OptionsToPropertyMixin,
@@ -783,7 +782,7 @@ export default class Record extends mixin(
       }
    }
 
-   protected _getFormat(build: boolean): format.Format<Field> {
+   protected _getFormat(build: boolean): format.Format {
       const owner = this.getOwner();
       if (owner) {
          return owner._getFormat(build);
@@ -887,7 +886,7 @@ export default class Record extends mixin(
     *    rs2.at(0).getOwner() === rs2;//true
     * </pre>
     */
-   getOwner(): RecordSet<Record> {
+   getOwner(): RecordSet {
       return this._$owner;
    }
 

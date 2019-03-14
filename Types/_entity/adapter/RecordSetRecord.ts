@@ -1,3 +1,12 @@
+import DestroyableMixin from '../DestroyableMixin';
+import IRecord from './IRecord';
+import GenericFormatMixin from './GenericFormatMixin';
+import {Field, UniversalField} from '../format';
+import {create} from '../../di';
+import {mixin} from '../../util';
+import Record from '../Record';
+import {RecordSet, format} from '../../collection';
+
 /**
  * Адаптер для записи таблицы данных в формате записи.
  * Работает с данными, представленными в виде экземлпяра {@link Types/_entity/Record}.
@@ -20,16 +29,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import IRecord from './IRecord';
-import GenericFormatMixin from './GenericFormatMixin';
-import {Field, UniversalField} from '../format';
-import {create} from '../../di';
-import {mixin} from '../../util';
-import Record from '../Record';
-import {RecordSet, format} from '../../collection';
-
 export default class RecordSetRecord extends mixin(
    DestroyableMixin, GenericFormatMixin
 ) implements IRecord /** @lends Types/_entity/adapter/RecordSetRecord.prototype */{
@@ -41,7 +40,7 @@ export default class RecordSetRecord extends mixin(
    /**
     * @property Таблица
     */
-   _tableData: RecordSet<Record>;
+   _tableData: RecordSet;
 
    // region IRecord
 
@@ -56,7 +55,7 @@ export default class RecordSetRecord extends mixin(
     * @param {Types/_entity/Record} data Сырые данные
     * @param {Types/_collection/RecordSet} [tableData] Таблица
     */
-   constructor(data: Record, tableData?: RecordSet<Record>) {
+   constructor(data: Record, tableData?: RecordSet) {
       if (data && !data['[Types/_entity/Record]']) {
          throw new TypeError('Argument "data" should be an instance of Types/entity:Record');
       }
@@ -165,10 +164,10 @@ export default class RecordSetRecord extends mixin(
       return this._data && this._data['[Types/_entity/Record]'];
    }
 
-   _getFieldsFormat(): format.Format<Field> {
+   _getFieldsFormat(): format.Format {
       return this._isValidData()
          ? this._data.getFormat()
-         : create<format.Format<Field>>('Types/collection:format.Format');
+         : create<format.Format>('Types/collection:format.Format');
    }
 
    // endregion

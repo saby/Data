@@ -1,3 +1,21 @@
+const optionPrefix = '_$';
+const optionPrefixLen = optionPrefix.length;
+
+function defineProperty(instance: Object, name: string, key: string, scope: Object): void {
+   Object.defineProperty(instance, name, {
+      enumerable: true,
+      configurable: true,
+      get(): any {
+         delete instance[name];
+         return (instance[name] = scope[key]);
+      },
+      set(value: any): void {
+         delete instance[name];
+         instance[name] = value;
+      }
+   });
+}
+
 /**
  * Примесь, позволяющая передавать в конструктор сущности набор опций (объект вида ключ-значение).
  * Для разделения защищенных свойств и опций последние должны именоваться определенным образом - имя должно
@@ -35,25 +53,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-const optionPrefix = '_$';
-const optionPrefixLen = optionPrefix.length;
-
-function defineProperty(instance: Object, name: string, key: string, scope: Object): void {
-   Object.defineProperty(instance, name, {
-      enumerable: true,
-      configurable: true,
-      get(): any {
-         delete instance[name];
-         return (instance[name] = scope[key]);
-      },
-      set(value: any): void {
-         delete instance[name];
-         instance[name] = value;
-      }
-   });
-}
-
 export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/OptionsMixin.prototype */{
    protected _options: any;
 

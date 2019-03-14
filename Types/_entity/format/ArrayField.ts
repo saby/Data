@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для массива значений.
  *
@@ -14,9 +16,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class ArrayField extends Field /** @lends Types/_entity/format/ArrayField.prototype */{
     /**
      * @cfg {String} Тип элементов

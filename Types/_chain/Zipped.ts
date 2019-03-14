@@ -1,3 +1,7 @@
+import Abstract from './Abstract';
+import ZippedEnumerator from './ZippedEnumerator';
+import {IEnumerable} from '../collection';
+
 /**
  * Объединяющее звено цепочки.
  * @class Types/_chain/Zipped
@@ -5,11 +9,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import ZippedEnumerator from './ZippedEnumerator';
-import {IEnumerable} from '../collection';
-
 export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zipped.prototype */{
    /**
     * @property {Array.<Array>|Array.<Types/_collection/IEnumerable>} Коллекции для объединения
@@ -31,7 +30,7 @@ export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zippe
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): ZippedEnumerator<T> {
       return new ZippedEnumerator(
@@ -40,7 +39,7 @@ export default class Zipped<T> extends Abstract<T> /** @lends Types/_chain/Zippe
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Zipped.prototype, {

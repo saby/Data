@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import {enumerator} from '../collection';
+
 /**
  * Цепочка по массиву.
  * @class Types/_chain/Array
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import {enumerator} from '../collection';
-
 export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Array.prototype */{
    protected _source: any[];
 
@@ -35,7 +34,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
       }
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 
    // region Types/_chain/DestroyableMixin
 
@@ -43,7 +42,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
       return this._source.slice();
    }
 
-   // endregion Types/_chain/DestroyableMixin
+   // endregion
 }
 
 Arraywise.prototype['[Types/_chain/Arraywise]'] = true;

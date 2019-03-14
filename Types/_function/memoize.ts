@@ -1,20 +1,3 @@
-/**
- * Возвращает функцию, запоминающую результат первого вызова оборачиваемого метода объекта и возвращающую при
- * повторных вызовах единожды вычисленный результат.
- *
- * <h2>Параметры функции</h2>
- * <ul>
- *     <li><b>func</b> {Function} - Метод, результат вызова которого будет запомнен.</li>
- *     <li><b>cachedFuncName</b> {String} - Имя метода в экземпляре объекта, которому он принадлежит.</li>
- * </ul>
- *
- * <h2>Возвращает</h2>
- * {Function} Результирующая функция.
- *
- * @class Types/_function/memoize
- * @public
- * @author Мальцев А.А.
- */
 const storage = new WeakMap();
 
 class Memoize {
@@ -56,4 +39,21 @@ const memoize = instance.memoize.bind(instance);
 memoize.clear = instance.clear.bind(instance);
 memoize.prototype = {_moduleName: 'Types/_function/memoize'};
 
+/**
+ * Возвращает функцию, запоминающую результат первого вызова оборачиваемого метода объекта и возвращающую при
+ * повторных вызовах единожды вычисленный результат.
+ *
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *     <li><b>func</b> {Function} - Метод, результат вызова которого будет запомнен.</li>
+ *     <li><b>cachedFuncName</b> {String} - Имя метода в экземпляре объекта, которому он принадлежит.</li>
+ * </ul>
+ *
+ * <h2>Возвращает</h2>
+ * {Function} Результирующая функция.
+ *
+ * @function Types/_function/memoize
+ * @public
+ * @author Мальцев А.А.
+ */
 export default memoize;

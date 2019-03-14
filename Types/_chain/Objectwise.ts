@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import {enumerator} from '../collection';
+
 /**
  * Цепочка по объекту.
  * @class Types/_chain/Object
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import {enumerator} from '../collection';
-
 export default class Objectwise<T> extends Abstract<T> /** @lends Types/_chain/Object.prototype */{
    protected _source: Object;
 
@@ -19,7 +18,7 @@ export default class Objectwise<T> extends Abstract<T> /** @lends Types/_chain/O
       super(source);
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): enumerator.Objectwise<T> {
       return new enumerator.Objectwise(this._source);
@@ -48,7 +47,7 @@ export default class Objectwise<T> extends Abstract<T> /** @lends Types/_chain/O
       return this.toObject();
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Objectwise.prototype['[Types/_chain/Objectwise]'] = true;

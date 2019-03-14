@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для даты и времени.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class DateTimeField extends Field /** @lends Types/_entity/format/DateTimeField.prototype */{
       /**
        * @cfg {Boolean} Без указания временной зоны

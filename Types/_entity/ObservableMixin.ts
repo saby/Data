@@ -1,16 +1,15 @@
-/**
- * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
- * @class Types/_entity/ObservableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import {Bus as EventBus, Channel as EventCannel} from 'Env/Event';
 
 interface IOptions {
    handlers?: Object;
 }
 
+/**
+ * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
+ * @class Types/_entity/ObservableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class ObservableMixin /** @lends Types/_entity/ObservableMixin.prototype */{
    /**
     * @cfg {Object.<Function>} handlers Обработчики событий

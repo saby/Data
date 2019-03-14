@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 export default interface IInstantiable /** @lends Types/_entity/IInstantiable.prototype */{
    readonly '[Types/_entity/IInstantiable]': boolean;
 

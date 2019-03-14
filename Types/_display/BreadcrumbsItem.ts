@@ -1,11 +1,3 @@
-/**
- * Хлебная крошка
- * @class Types/_display/BreadcrumbsItem
- * @extends Types/_display/CollectionItem
- * @public
- * @author Мальцев А.А.
- */
-
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import {register} from '../di';
 
@@ -13,6 +5,13 @@ export interface IOptions extends ICollectionItemOptions {
    last: CollectionItem;
 }
 
+/**
+ * Хлебная крошка
+ * @class Types/_display/BreadcrumbsItem
+ * @extends Types/_display/CollectionItem
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_display/BreadcrumbsItem.prototype */{
    _instancePrefix: 'breadcrumbs-item-';
 

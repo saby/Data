@@ -1,9 +1,3 @@
-/**
- * Logger
- * @public
- * @author Мальцев А.А.
- */
-
 import {IoC} from 'Env/Env';
 
 const STACK_DETECTOR = /:[0-9]+:[0-9]+/;
@@ -11,6 +5,11 @@ const SELF_STACK_DEPTH = 2;
 
 const stackPoints = {};
 
+/**
+ * Logger
+ * @public
+ * @author Мальцев А.А.
+ */
 const logger = {
 
    /**

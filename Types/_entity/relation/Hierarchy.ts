@@ -1,3 +1,9 @@
+import DestroyableMixin from '../DestroyableMixin';
+import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
+import IObject from '../IObject';
+import {RecordSet} from '../../collection';
+import {mixin} from '../../util';
+
 /**
  * Класс, предоставляющий возможность построить иерархические отношения.
  *
@@ -54,13 +60,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
-import IObject from '../IObject';
-import {RecordSet} from '../../collection';
-import {mixin} from '../../util';
-
 export default class Hierarchy extends mixin(
    DestroyableMixin, OptionsToPropertyMixin
 ) /** @lends Types/_entity/relation/Hierarchy.prototype */ {

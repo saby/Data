@@ -1,17 +1,3 @@
-/**
- * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
- * @class Types/_collection/Enum
- * @extends Types/_collection/Dictionary
- * @implements Types/_collection/IEnum
- * @implements Types/_entity/ICloneable
- * @implements Types/_entity/IProducible
- * @mixes Types/_entity/ManyToManyMixin
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_entity/CloneableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import IEnum, {IIndex} from './IEnum';
 import Dictionary from './Dictionary';
 import {
@@ -29,6 +15,19 @@ interface IProduceOptions {
    format?: format.Field | format.UniversalField;
 }
 
+/**
+ * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
+ * @class Types/_collection/Enum
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IEnum
+ * @implements Types/_entity/ICloneable
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Enum<T>
    extends Dictionary<T>
    implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */ {

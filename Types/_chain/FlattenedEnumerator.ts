@@ -1,10 +1,10 @@
-/**
- * Разворачивающий энумератор
- */
 import FlattenedMover from './FlattenedMover';
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
+/**
+ * Разворачивающий энумератор
+ */
 export default class FlattenedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;

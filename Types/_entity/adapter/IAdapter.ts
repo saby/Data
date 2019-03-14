@@ -1,3 +1,6 @@
+import ITable from './ITable';
+import IRecord from './IRecord';
+
 /**
  * Интерфейс адаптера, осуществляющиего операции с "сырыми" данными.
  * Назначение адаптера - предоставить общий интерфейс для работы различными форматами данных.
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import ITable from './ITable';
-import IRecord from './IRecord';
-
 export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prototype */{
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 

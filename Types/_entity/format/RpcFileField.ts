@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля файл-RPC.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class RpcFileField extends Field /** @lends Types/_entity/format/RpcFileField.prototype */{
 }
 

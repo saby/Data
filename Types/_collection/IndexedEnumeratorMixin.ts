@@ -1,3 +1,8 @@
+import IObservable from './IObservable';
+import {ObservableMixin} from '../entity';
+import {object} from '../util';
+import {Object as EventObject} from 'Env/Event';
+
 /**
  * Миксин, позволящий использовать индексацию элементов в экземплярах,
  * реализующих интерфейс Types/_collection/IEnumerator.
@@ -5,12 +10,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IObservable from './IObservable';
-import {ObservableMixin} from '../entity';
-import {object} from '../util';
-import {Object as EventObject} from 'Env/Event';
-
 const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMixin.prototype */ {
    '[Types/_collection/IndexedEnumeratorMixin]': true,
 

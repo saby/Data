@@ -1,18 +1,3 @@
-/**
- * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
- * не меняя при этом оригинальную коллекцию.
- * @class Types/_display/Collection
- * @extends Types/_display/Abstract
- * @implements Types/_collection/IEnumerable
- * @implements Types/_collection/IList
- * @implements Types/_display/IBindCollection
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_collection/EventRaisingMixin
- * @ignoreMethods notifyItemChange
- * @public
- * @author Мальцев А.А.
- */
-
 import IBind from './IBind';
 import Abstract, {IEnumerable} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
@@ -248,6 +233,20 @@ export interface ISerializableState extends IDefaultSerializableState {
    _composer: ItemsStrategyComposer;
 }
 
+/**
+ * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
+ * не меняя при этом оригинальную коллекцию.
+ * @class Types/_display/Collection
+ * @extends Types/_display/Abstract
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_collection/IList
+ * @implements Types/_display/IBindCollection
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_collection/EventRaisingMixin
+ * @ignoreMethods notifyItemChange
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class Collection extends mixin<Abstract>(
    Abstract, SerializableMixin, EventRaisingMixin
 ) implements IEnumerable<CollectionItem>, IList<CollectionItem> /** @lends Types/_display/Collection.prototype */ {

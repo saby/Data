@@ -1,3 +1,18 @@
+import DestroyableMixin from '../DestroyableMixin';
+import ITable from './ITable';
+import IAdapter from './IAdapter';
+import GenericFormatMixin from './GenericFormatMixin';
+import {UniversalField, Field} from '../format';
+import {create} from '../../di';
+import {mixin} from '../../util';
+import Record from '../Record';
+import {RecordSet, format} from '../../collection';
+
+interface IRecordSetOptions {
+   adapter?: string | IAdapter;
+   idProperty?: string;
+}
+
 /**
  * Адаптер для таблицы данных в формате рекордсета.
  * Работает с данными, представленными в виде экземлпяра {@link Types/_collection/RecordSet}.
@@ -23,29 +38,13 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import ITable from './ITable';
-import IAdapter from './IAdapter';
-import GenericFormatMixin from './GenericFormatMixin';
-import {UniversalField, Field} from '../format';
-import {create} from '../../di';
-import {mixin} from '../../util';
-import Record from '../Record';
-import {RecordSet, format} from '../../collection';
-
-interface IRecordSetOptions {
-   adapter?: string | IAdapter;
-   idProperty?: string;
-}
-
 export default class RecordSetTable extends mixin(
    DestroyableMixin, GenericFormatMixin
 ) implements ITable /** @lends Types/_entity/adapter/RecordSetTable.prototype */{
    /**
     * @property Список
     */
-   _data: RecordSet<Record>;
+   _data: RecordSet;
 
    // region ITable
 
@@ -59,7 +58,7 @@ export default class RecordSetTable extends mixin(
     * Конструктор
     * @param {Types/_collection/RecordSet} data Таблица
     */
-   constructor(data: RecordSet<Record>) {
+   constructor(data: RecordSet) {
       if (data && !data['[Types/_collection/RecordSet]']) {
          throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
       }
@@ -198,7 +197,7 @@ export default class RecordSetTable extends mixin(
       return this._data && this._data['[Types/_collection/RecordSet]'];
    }
 
-   _getFieldsFormat(): format.Format<Field> {
+   _getFieldsFormat(): format.Format {
       return this._data.getFormat();
    }
 

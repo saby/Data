@@ -1,5 +1,63 @@
 /* tslint:disable:max-line-length member-ordering */
 
+import IObservable from './IObservable';
+import ObservableList from './ObservableList';
+import {IOptions as IListOptions} from './List';
+import Arraywise from './enumerator/Arraywise';
+import Indexer from './Indexer';
+import {
+   FormattableMixin,
+   IFormattableOptions,
+   IObservableObject,
+   IInstantiable,
+   IProducible,
+   InstantiableMixin,
+   ISerializableState as IDefaultSerializableState,
+   IFormattableSerializableState,
+   factory,
+   format,
+   Record,
+   adapter
+} from '../entity';
+import {create, register} from '../di';
+import {mixin, logger} from '../util';
+import {isEqual} from '../object';
+
+export type EnumeratorCallback<T = Record> = (item: T, index: number) => void;
+
+const DEFAULT_MODEL = 'Types/entity:Model';
+const RECORD_STATE = Record.RecordState;
+const developerMode = false;
+
+interface IOptions extends IListOptions<Record>, IFormattableOptions {
+   model?: Function | string;
+   idProperty?: string;
+   meta?: any;
+}
+
+interface ISerializableOptions extends IOptions, IFormattableOptions {
+}
+
+interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
+   $options: ISerializableOptions;
+   _instanceId: string;
+}
+
+/**
+ *
+ */
+function checkNullId(value: any, idProperty: string): void {
+   if (developerMode && idProperty) {
+      if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
+         logger.info('Types/_collection/RecordSet: Id propery must not be null');
+      } else if (value instanceof RecordSet) {
+         value.each((item) => {
+            checkNullId(item, idProperty);
+         });
+      }
+   }
+}
+
 /**
  * Рекордсет - список записей, имеющих общий формат полей.
  *
@@ -61,65 +119,6 @@
  * @author Мальцев А.А.
  * @public
  */
-
-import IObservable from './IObservable';
-import ObservableList from './ObservableList';
-import {IOptions as IListOptions} from './List';
-import Arraywise from './enumerator/Arraywise';
-import Indexer from './Indexer';
-import {
-   FormattableMixin,
-   IFormattableOptions,
-   IObservableObject,
-   IInstantiable,
-   IProducible,
-   InstantiableMixin,
-   ISerializableState as IDefaultSerializableState,
-   IFormattableSerializableState,
-   factory,
-   format,
-   Record,
-   adapter
-} from '../entity';
-import {create, register} from '../di';
-import {mixin, logger} from '../util';
-import {isEqual} from '../object';
-
-export type EnumeratorCallback<T = Record> = (item: T, index: number) => void;
-
-const DEFAULT_MODEL = 'Types/entity:Model';
-const RECORD_STATE = Record.RecordState;
-const developerMode = false;
-
-interface IOptions extends IListOptions<Record>, IFormattableOptions {
-   model?: Function | string;
-   idProperty?: string;
-   meta?: any;
-}
-
-interface ISerializableOptions extends IOptions, IFormattableOptions {
-}
-
-interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
-   $options: ISerializableOptions;
-   _instanceId: string;
-}
-
-/**
- *
- */
-function checkNullId(value: any, idProperty: string): void {
-   if (developerMode && idProperty) {
-      if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
-         logger.info('Types/_collection/RecordSet: Id propery must not be null');
-      } else if (value instanceof RecordSet) {
-         value.each((item) => {
-            checkNullId(item, idProperty);
-         });
-      }
-   }
-}
-
 export default class RecordSet<T = Record> extends mixin(
    ObservableList,
    FormattableMixin,

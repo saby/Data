@@ -1,3 +1,8 @@
+import Abstract from './Abstract';
+import FilteredEnumerator from './FilteredEnumerator';
+
+type CallbackFunc = (item: any, index: number) => boolean;
+
 /**
  * Фильтрующее звено цепочки.
  * @class Types/_chain/Filtered
@@ -5,12 +10,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import FilteredEnumerator from './FilteredEnumerator';
-
-type CallbackFunc = (item: any, index: number) => boolean;
-
 export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Filtered.prototype */{
    /**
     * @property {Function(*, Number): Boolean} Фильтр
@@ -50,11 +49,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Fil
       );
    }
 
-   // endregion Types/_collection/IEnumerable
-
-   // region Types/_chain/DestroyableMixin
-
-   // endregion Types/_chain/DestroyableMixin
+   // endregion
 }
 
 Filtered.prototype['[Types/_chain/Filtered]'] = true;

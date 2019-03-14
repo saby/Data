@@ -1,10 +1,3 @@
-/**
- * Интерфейс стратегии получения элементов проекции.
- * @interface Types/_display/IItemsStrategy
- * @public
- * @author Мальцев А.А.
- */
-
 import Abstract from './Abstract';
 import CollectionItem from './CollectionItem';
 
@@ -12,6 +5,12 @@ export interface IOptions {
    display: Abstract;
 }
 
+/**
+ * Интерфейс стратегии получения элементов проекции.
+ * @interface Types/_display/IItemsStrategy
+ * @public
+ * @author Мальцев А.А.
+ */
 export default interface IItemsStrategy /** @lends Types/_display/IItemsStrategy.prototype */ {
    readonly '[Types/_display/IItemsStrategy]': boolean;
 

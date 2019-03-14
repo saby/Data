@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import SlicedEnumerator from './SlicedEnumerator';
+
 /**
  * Вырезающее звено цепочки.
  * @class Types/_chain/Sliced
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import SlicedEnumerator from './SlicedEnumerator';
-
 export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Sliced.prototype */{
    /**
     * @property {Number} Индекс, по которому начинать извлечение
@@ -31,7 +30,7 @@ export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Slice
       this._end = end;
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): SlicedEnumerator<T> {
       return new SlicedEnumerator(
@@ -41,7 +40,7 @@ export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Slice
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Sliced.prototype, {

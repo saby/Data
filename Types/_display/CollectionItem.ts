@@ -1,15 +1,3 @@
-/**
- * Элемент коллекции
- * @class Types/_display/CollectionItem
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/OptionsMixin
- * @implements Types/_entity/IInstantiable
- * @mixes Types/_entity/InstantiableMixin
- * @mixes Types/_entity/SerializableMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import Abstract from './Abstract';
 import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
 import Collection from './Collection';
@@ -29,6 +17,17 @@ export interface ISerializableState extends IDefaultSerializableState {
    iid: string;
 }
 
+/**
+ * Элемент коллекции
+ * @class Types/_display/CollectionItem
+ * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/_entity/OptionsMixin
+ * @implements Types/_entity/IInstantiable
+ * @mixes Types/_entity/InstantiableMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class CollectionItem extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin
 ) implements IInstantiable /** @lends Types/_display/CollectionItem.prototype */{

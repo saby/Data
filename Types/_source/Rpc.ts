@@ -1,3 +1,7 @@
+import Remote from './Remote';
+import DataSet from './DataSet';
+import IRpc from './IRpc';
+
 /**
  * Источник данных, работающий по технологии RPC.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
@@ -7,11 +11,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Remote from './Remote';
-import DataSet from './DataSet';
-import IRpc from './IRpc';
-
 export default abstract class Rpc extends Remote implements IRpc /** @lends Types/_source/Rpc.prototype */{
 
    // region IRpc

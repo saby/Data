@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат целочисленного поля.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class IntegerField extends Field /** @lends Types/_entity/format/IntegerField.prototype */{
    _$defaultValue: number;
 }

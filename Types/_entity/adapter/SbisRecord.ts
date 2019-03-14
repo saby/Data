@@ -1,3 +1,10 @@
+import DestroyableMixin from '../DestroyableMixin';
+import IRecord from './IRecord';
+import ICloneable from '../ICloneable';
+import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
+import {Field, UniversalField} from '../format';
+import {mixin} from '../../util';
+
 /**
  * Адаптер для записи таблицы данных в формате СБиС.
  * Работает с данными, представленными в виде объекта ({_entity: 'record', d: [], s: []}), где
@@ -26,14 +33,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import IRecord from './IRecord';
-import ICloneable from '../ICloneable';
-import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
-import {Field, UniversalField} from '../format';
-import {mixin} from '../../util';
-
 export default class SbisRecord extends mixin(
    DestroyableMixin, SbisFormatMixin
 ) implements IRecord, ICloneable /** @lends Types/_entity/adapter/SbisRecord.prototype */{

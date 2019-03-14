@@ -1,130 +1,3 @@
-/**
- * Класс источника данных на сервисах бизнес-логики СБИС.
- * <br/>
- * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Employee'
- *    });
- * </pre>
- * <b>Пример 2</b>. Создадим источник данных для объекта БЛ, используя отдельную точку входа:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: {
- *          address: '/my-service/entry/point/',
- *          contract: 'Employee'
- *       }
- *    });
- * </pre>
- * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка
- * записей, а также свой формат записи:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Employee',
- *       binding: {
- *          read: 'GetById',
- *          query: 'GetList',
- *          format: 'getListFormat'
- *       },
- *       idProperty: '@Employee'
- *    });
- * </pre>
- * <b>Пример 4</b>. Создадим новую статью:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Article',
- *       idProperty: 'Id'
- *    });
- *
- *    dataSource.create().addCallbacks((article) => {
- *       const id = article.getId();
- *    }, (error) => {
- *       console.error(error);
- *    });
- * </pre>
- * <b>Пример 5</b>. Прочитаем статью:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Article',
- *       idProperty: 'Id'
- *    });
- *
- *    dataSource.read('article-1').addCallbacks((article) => {
- *       const title = article.get('title');
- *    }, function(error) => {
- *       console.error(error);
- *    });
- * </pre>
- * <b>Пример 6</b>. Сохраним статью:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    import {Model, adapter} from 'Types/entity';
- *    const dataSource = new SbisService({
- *       endpoint: 'Article',
- *       idProperty: 'Id'
- *    });
- *    const article = new Model({
- *       adapter: new adapter.Sbis(),
- *       format: [
- *          {name: 'id', type: 'integer'},
- *          {name: 'title', type: 'string'}
- *       ],
- *       idProperty: 'id'
- *    });
- *
- *    article.set({
- *       id: 'article-1',
- *       title: 'Article 1'
- *    });
- *
- *    dataSource.update(article).addCallbacks(() => {
- *       console.log('Article updated!');
- *    }, (error) => {
- *       console.error(error);
- *    });
- * </pre>
- * <b>Пример 7</b>. Удалим статью:
- * <pre>
- *    import {SbisService} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Article',
- *       idProperty: 'Id'
- *    });
- *
- *    dataSource.destroy('article-1').addCallbacks(() => {
- *       console.log('Article deleted!');
- *    }, (error) => {
- *       console.error(error);
- *    });
- * </pre>
- * <b>Пример 8</b>. Прочитаем первые сто статей:
- * <pre>
- *    import {SbisService, Query} from 'Types/source';
- *    const dataSource = new SbisService({
- *       endpoint: 'Article'
- *    });
- *
- *    const query = new Query();
- *    query.limit(100);
- *
- *    dataSource.query(query).addCallbacks((response) => {
- *       const articles = response.getAll();
- *       console.log(`Articles count: ${articles.getCount()}`);
- *    }, (error) => {
- *       console.error(error);
- *    });
- * </pre>
- * @class Types/_source/SbisService
- * @extends Types/_source/Rpc
- * @public
- * @author Мальцев А.А.
- */
-
 import Rpc from './Rpc';
 import {IOptions as IRemoteOptions, IPassing as IRemotePassing} from './Remote';
 import {IBinding as IDefaultBinding} from './BindingMixin';
@@ -280,7 +153,7 @@ function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
  * @param adapter
  * @param idProperty
  */
-function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet<Record> | null {
+function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet | null {
    if (data === null) {
       return data;
    }
@@ -527,7 +400,7 @@ function passRead(key: string | number, meta?: object): object {
 /**
  * Returns data to send in update()
  */
-function passUpdate(data: Record | RecordSet<Record>, meta?: object): object {
+function passUpdate(data: Record | RecordSet, meta?: object): object {
    // @ts-ignore
    const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
    const args: any = {};
@@ -545,7 +418,7 @@ function passUpdate(data: Record | RecordSet<Record>, meta?: object): object {
 /**
  * Returns data to send in update() if updateBatch uses
  */
-function passUpdateBatch(items: Record | RecordSet<Record>, meta?: object): object {
+function passUpdateBatch(items: Record | RecordSet, meta?: object): object {
    const RecordSet = resolve<any>('Types/collection:RecordSet');
    const patch = RecordSet.patch(items);
    return {
@@ -658,6 +531,132 @@ function oldMove(
    );
 }
 
+/**
+ * Класс источника данных на сервисах бизнес-логики СБИС.
+ * <br/>
+ * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Employee'
+ *    });
+ * </pre>
+ * <b>Пример 2</b>. Создадим источник данных для объекта БЛ, используя отдельную точку входа:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: {
+ *          address: '/my-service/entry/point/',
+ *          contract: 'Employee'
+ *       }
+ *    });
+ * </pre>
+ * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка
+ * записей, а также свой формат записи:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Employee',
+ *       binding: {
+ *          read: 'GetById',
+ *          query: 'GetList',
+ *          format: 'getListFormat'
+ *       },
+ *       idProperty: '@Employee'
+ *    });
+ * </pre>
+ * <b>Пример 4</b>. Создадим новую статью:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
+ *
+ *    dataSource.create().addCallbacks((article) => {
+ *       const id = article.getId();
+ *    }, (error) => {
+ *       console.error(error);
+ *    });
+ * </pre>
+ * <b>Пример 5</b>. Прочитаем статью:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
+ *
+ *    dataSource.read('article-1').addCallbacks((article) => {
+ *       const title = article.get('title');
+ *    }, function(error) => {
+ *       console.error(error);
+ *    });
+ * </pre>
+ * <b>Пример 6</b>. Сохраним статью:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    import {Model, adapter} from 'Types/entity';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
+ *    const article = new Model({
+ *       adapter: new adapter.Sbis(),
+ *       format: [
+ *          {name: 'id', type: 'integer'},
+ *          {name: 'title', type: 'string'}
+ *       ],
+ *       idProperty: 'id'
+ *    });
+ *
+ *    article.set({
+ *       id: 'article-1',
+ *       title: 'Article 1'
+ *    });
+ *
+ *    dataSource.update(article).addCallbacks(() => {
+ *       console.log('Article updated!');
+ *    }, (error) => {
+ *       console.error(error);
+ *    });
+ * </pre>
+ * <b>Пример 7</b>. Удалим статью:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article',
+ *       idProperty: 'Id'
+ *    });
+ *
+ *    dataSource.destroy('article-1').addCallbacks(() => {
+ *       console.log('Article deleted!');
+ *    }, (error) => {
+ *       console.error(error);
+ *    });
+ * </pre>
+ * <b>Пример 8</b>. Прочитаем первые сто статей:
+ * <pre>
+ *    import {SbisService, Query} from 'Types/source';
+ *    const dataSource = new SbisService({
+ *       endpoint: 'Article'
+ *    });
+ *
+ *    const query = new Query();
+ *    query.limit(100);
+ *
+ *    dataSource.query(query).addCallbacks((response) => {
+ *       const articles = response.getAll();
+ *       console.log(`Articles count: ${articles.getCount()}`);
+ *    }, (error) => {
+ *       console.error(error);
+ *    });
+ * </pre>
+ * @class Types/_source/SbisService
+ * @extends Types/_source/Rpc
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class SbisService extends Rpc /** @lends Types/_source/SbisService.prototype */{
    /**
     * @typedef {Object} Endpoint
@@ -858,7 +857,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
       });
    }
 
-   update(data: Record | RecordSet<Record>, meta?: object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
          return this._loadAdditionalDependencies((def) => {
             this._connectAdditionalDependencies(

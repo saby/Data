@@ -4,7 +4,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
 export default interface IObservableObject /** @lends Types/_entity/IObservableObject.prototype */{
    readonly '[Types/_entity/IObservableObject]': boolean;
 

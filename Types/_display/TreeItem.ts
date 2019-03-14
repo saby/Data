@@ -1,11 +1,3 @@
-/**
- * Элемент дерева
- * @class Types/_display/TreeItem
- * @extends Types/_display/CollectionItem
- * @public
- * @author Мальцев А.А.
- */
-
 import CollectionItem, {
    IOptions as ICollectionItemOptions,
    ISerializableState as IDefaultSerializableState
@@ -24,6 +16,13 @@ interface ISerializableState extends IDefaultSerializableState {
    $options: IOptions;
 }
 
+/**
+ * Элемент дерева
+ * @class Types/_display/TreeItem
+ * @extends Types/_display/CollectionItem
+ * @public
+ * @author Мальцев А.А.
+ */
 export default class TreeItem extends CollectionItem /** @lends Types/_display/TreeItem.prototype */{
    /**
     * @cfg {Types/_display/TreeItem} Родительский узел

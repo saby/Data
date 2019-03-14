@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для JSON-объекта.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class ObjectField extends Field /** @lends Types/_entity/format/ObjectField.prototype */{
 }
 

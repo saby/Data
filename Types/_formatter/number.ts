@@ -70,10 +70,10 @@ import i18n = require('Core/i18n');
  *    });
  * </pre>
  * More info https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
- * @class Types/_formatter/number
+ * @function Types/_formatter/number
  * @public
  * @author Мальцев А.А.
  */
-export default function format(source: number, options?: Intl.NumberFormatOptions): string {
+export default function number(source: number, options?: Intl.NumberFormatOptions): string {
    return (new Intl.NumberFormat(i18n.getLang(), options)).format(source);
 }

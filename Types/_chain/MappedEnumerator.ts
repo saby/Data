@@ -1,13 +1,12 @@
-/**
- * Преобразующующий энумератор
- * @author Мальцев А.А.
- */
-
 import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 type MapFunc = (item: any, index: number) => any;
 
+/**
+ * Преобразующующий энумератор
+ * @author Мальцев А.А.
+ */
 export default class MappedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: any;

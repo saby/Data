@@ -1,9 +1,3 @@
-/**
- * Универсальное поле.
- * @class Types/_entity/format/UniversalField
- * @author Мальцев А.А.
- */
-
 interface IDateTimeMeta {
    withoutTimeZone: boolean;
 }
@@ -23,6 +17,11 @@ interface IMoneyMeta extends IRealdMeta {
 interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta {
 }
 
+/**
+ * Универсальное поле.
+ * @class Types/_entity/format/UniversalField
+ * @author Мальцев А.А.
+ */
 export default class UniversalField /** @lends Types/_entity/format/UniversalField.prototype */{
    /**
     * Field type

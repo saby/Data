@@ -1,3 +1,6 @@
+import IEnumerator from '../IEnumerator';
+import {Map} from '../../shim';
+
 /**
  * Энумератор для Map
  * @class Types/_collection/MapEnumerator
@@ -5,17 +8,13 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerator from '../IEnumerator';
-import {Map} from '../../shim';
-
 export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_collection/MapEnumerator.prototype */{
    /**
-    * @property {Map} Объект
+    * @property Объект
     */
    protected _items: Map<any, T>;
    /**
-    * @property {Number} Текущий индекс
+    * @property Текущий индекс
     */
    protected _index: number;
 
@@ -52,7 +51,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
       this._items = items;
    }
 
-   // region Types/_collection/IEnumerator
+   // region IEnumerator
 
    readonly '[Types/_collection/IEnumerator]': boolean = true;
 
@@ -75,7 +74,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
       this._index = -1;
    }
 
-   // endregion Types/_collection/IEnumerator
+   // endregion
 
    // region Public methods
 
@@ -83,7 +82,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
       return this._keys[this._index];
    }
 
-   // endregion Public methods
+   // endregion
 }
 
 Object.assign(Mapwise.prototype, {

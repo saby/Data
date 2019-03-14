@@ -1,3 +1,30 @@
+import Local, {IOptions as ILocalOptions} from './Local';
+import DataSet from './DataSet';
+import Query, {IMeta, Join} from './Query';
+import {adapter} from '../entity';
+import {register} from '../di';
+import {protect, object} from '../util';
+import {Map} from '../shim';
+
+/**
+ * Protected 'cachedAdapter' property symbol
+ */
+const $cachedAdapter = protect('cachedAdapter');
+
+/**
+ * All injected data by contracts
+ */
+const contracts = {};
+
+interface IEndpoint {
+   contract?: string;
+}
+
+export interface IOptions extends ILocalOptions {
+   data?: any;
+   endpoint?: IEndpoint;
+}
+
 /**
  * Источник данных в памяти ОС.
  * Позволяет получать данные из объектов в оперативной памяти.
@@ -66,34 +93,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Local, {IOptions as ILocalOptions} from './Local';
-import DataSet from './DataSet';
-import Query, {IMeta, Join} from './Query';
-import {adapter} from '../entity';
-import {register} from '../di';
-import {protect, object} from '../util';
-import {Map} from '../shim';
-
-/**
- * Protected 'cachedAdapter' property symbol
- */
-const $cachedAdapter = protect('cachedAdapter');
-
-/**
- * All injected data by contracts
- */
-const contracts = {};
-
-interface IEndpoint {
-   contract?: string;
-}
-
-export interface IOptions extends ILocalOptions {
-   data?: any;
-   endpoint?: IEndpoint;
-}
-
 export default class Memory extends Local /** @lends Types/_source/Memory.prototype */{
    /**
     * @cfg {Object} Данные, с которыми работает источник.

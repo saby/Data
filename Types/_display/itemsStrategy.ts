@@ -1,8 +1,15 @@
 /**
  * Items strategy library
  * @library Types/_display/itemsStrategy
- * @includes DestroyableMixin Types/_display/itemsStrategy/DestroyableMixin
+ * @includes AbstractStrategy Types/_display/itemsStrategy/AbstractStrategy
+ * @includes AdjacencyList Types/_display/itemsStrategy/AdjacencyList
+ * @includes Composer Types/_display/itemsStrategy/Composer
  * @includes Direct Types/_display/itemsStrategy/Direct
+ * @includes Group Types/_display/itemsStrategy/Group
+ * @includes MaterializedPath Types/_display/itemsStrategy/MaterializedPath
+ * @includes Root Types/_display/itemsStrategy/Root
+ * @includes Search Types/_display/itemsStrategy/Search
+ * @includes User Types/_display/itemsStrategy/User
  * @author Мальцев А.А.
  */
 

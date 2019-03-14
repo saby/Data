@@ -1,12 +1,11 @@
+export type IIndex = number | string | null;
+
 /**
- * Enumerable interface. It's an enumerable collection of keys and values one of which can be selected or not.
+ * Enum type interface. It's an enumerable collection of keys and values one of which can be selected or not.
  * @interface Types/_collection/IEnum
  * @public
  * @author Мальцев А.А.
  */
-
-export type IIndex = number | string | null;
-
 export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype */{
    readonly '[Types/_collection/IEnum]': boolean;
 

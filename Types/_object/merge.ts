@@ -1,3 +1,7 @@
+function isObject(obj: any): boolean {
+   return obj !== null && typeof obj === 'object';
+}
+
 /**
  *
  * Модуль, в котором описана функция <b>merge.ts(obj1[, obj2, ...])</b>,
@@ -22,15 +26,10 @@
  *    });
  * </pre>
  *
- * @class Types/_object/merge
+ * @function Types/_object/merge
  * @public
  * @author Мальцев А.А.
  */
-
-function isObject(obj: any): boolean {
-   return obj !== null && typeof obj === 'object';
-}
-
 export default function merge(target: any, ...sources: any[]): any {
    if (isObject(target)) {
       sources.forEach((source) => {

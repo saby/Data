@@ -1,3 +1,6 @@
+// @ts-ignore
+import Serializer = require('Core/Serializer');
+
 /**
  * Миксин, позволяющий клонировать объекты.
  * Для корректной работы требуется подмешать {@link Types/_entity/SerializableMixin}.
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-// @ts-ignore
-import Serializer = require('Core/Serializer');
-
 const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
    '[Types/_entity/CloneableMixin]': true,
 

@@ -59,7 +59,7 @@
  * });
  * </pre>
  *
- * @class Core/helpers/Function/debounce
+ * @function Core/helpers/Function/debounce
  * @public
  * @author Мальцев А.А.
  * @example

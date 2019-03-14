@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля для строки в формате XML.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class XmlField extends Field /** @lends Types/_entity/format/XmlField.prototype */{
    _$defaultValue: string;
 }

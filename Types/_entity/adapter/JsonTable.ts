@@ -1,3 +1,13 @@
+import DestroyableMixin from '../DestroyableMixin';
+import ITable from './ITable';
+import GenericFormatMixin from './GenericFormatMixin';
+import JsonFormatMixin from './JsonFormatMixin';
+import JsonRecord from './JsonRecord';
+import {UniversalField, Field} from '../format';
+import {Set} from '../../shim';
+import {mixin} from '../../util';
+import {merge} from '../../object';
+
 /**
  * Адаптер для таблицы данных в формате JSON.
  * Работает с данными, представленными в виде массива (Array.<Object>).
@@ -21,17 +31,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import DestroyableMixin from '../DestroyableMixin';
-import ITable from './ITable';
-import GenericFormatMixin from './GenericFormatMixin';
-import JsonFormatMixin from './JsonFormatMixin';
-import JsonRecord from './JsonRecord';
-import {UniversalField, Field} from '../format';
-import {Set} from '../../shim';
-import {mixin} from '../../util';
-import {merge} from '../../object';
-
 export default class JsonTable extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
 ) implements ITable /** @lends Types/_entity/adapter/JsonTable.prototype */{

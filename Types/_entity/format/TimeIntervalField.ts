@@ -1,3 +1,5 @@
+import Field from './Field';
+
 /**
  * Формат поля временной интервал.
  *
@@ -13,9 +15,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Field from './Field';
-
 export default class TimeIntervalField extends Field /** @lends Types/_entity/format/TimeIntervalField.prototype */{
    _$defaultValue: number;
 }

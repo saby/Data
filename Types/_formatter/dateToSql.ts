@@ -1,10 +1,4 @@
 /**
- * Serializes Date to the preferred SQL format.
- * @public
- * @author Мальцев А.А.
- */
-
-/**
  * @typedef {String} SerializeMode
  * @variant MODE_DATETIME Дата в время
  * @variant MODE_DATE Дата
@@ -66,6 +60,15 @@ function getTimeZone(date: Date): string {
    return `${isEast ? '+' : '-'}${hours}${minutes ? ':' + minutes : ''}`;
 }
 
+/**
+ * Serializes Date to the preferred SQL format.
+ * @function
+ * @name Types/_formatter/dateToSql
+ * @param date Date to serialize
+ * @param mode Serialization mode
+ * @public
+ * @author Мальцев А.А.
+ */
 export default function toSQL(date: Date, mode: string = MODE.DATETIME): string {
    let result = dateFormatter(date, FORMAT[mode]);
 

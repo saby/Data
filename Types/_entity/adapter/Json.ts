@@ -1,3 +1,8 @@
+import Abstract from './Abstract';
+import JsonTable from './JsonTable';
+import JsonRecord from './JsonRecord';
+import {register} from '../../di';
+
 /**
  * Адаптер для данных в формате JSON.
  * Работает с данными, представленными в виде обычных JSON объектов.
@@ -8,12 +13,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import JsonTable from './JsonTable';
-import JsonRecord from './JsonRecord';
-import {register} from '../../di';
-
 export default class Json extends Abstract /** @lends Types/_entity/adapter/Json.prototype */{
    forTable(data: object[]): JsonTable {
       return new JsonTable(data);

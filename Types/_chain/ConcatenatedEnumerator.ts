@@ -1,12 +1,11 @@
+import {enumerator, IEnumerable, IEnumerator} from '../collection';
+import Abstract from './Abstract';
+
 /**
  * Объединяющий энумератор.
  * @public
  * @author Мальцев А.А.
  */
-
-import {enumerator, IEnumerable, IEnumerator} from '../collection';
-import Abstract from './Abstract';
-
 export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    private previous: Abstract<T>;

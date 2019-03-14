@@ -1,10 +1,3 @@
-/**
- * Стратегия получения элементов проекции напрямую по коллекции
- * @class Types/_display/ItemsStrategy/Direct
- * @extends Types/_display/ItemsStrategy/Abstract
- * @author Мальцев А.А.
- */
-
 import AbstractStrategy, {
    IOptions as IAbstractOptions,
    ISerializableState as IDefaultSerializableState
@@ -27,6 +20,12 @@ interface ISerializableState extends IDefaultSerializableState {
    _itemsOrder: number[];
 }
 
+/**
+ * Стратегия получения элементов проекции напрямую по коллекции
+ * @class Types/_display/ItemsStrategy/Direct
+ * @extends Types/_display/ItemsStrategy/Abstract
+ * @author Мальцев А.А.
+ */
 export default class Direct extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/Direct.prototype */{
    protected _options: IOptions;
 

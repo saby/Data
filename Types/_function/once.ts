@@ -1,3 +1,5 @@
+const storage = new WeakMap();
+
 /**
  * Модуль, в котором описана функция <b>once(original)</b>.
  *
@@ -30,8 +32,6 @@
  * @public
  * @author Мальцев А.А.
  */
-const storage = new WeakMap();
-
 export default function once(original: Function): Function {
    return function(...args: any[]): any {
       if (!storage.has(original)) {

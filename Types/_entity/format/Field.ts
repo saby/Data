@@ -1,3 +1,12 @@
+import {mixin} from '../../util';
+import DestroyableMixin from '../DestroyableMixin';
+import ICloneable from '../ICloneable';
+import IEquatable from '../IEquatable';
+import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
+import SerializableMixin from '../SerializableMixin';
+import CloneableMixin from '../CloneableMixin';
+import {isEqual} from '../../object';
+
 /**
  * Прототип поля записи.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
@@ -11,16 +20,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import {mixin} from '../../util';
-import DestroyableMixin from '../DestroyableMixin';
-import ICloneable from '../ICloneable';
-import IEquatable from '../IEquatable';
-import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
-import SerializableMixin from '../SerializableMixin';
-import CloneableMixin from '../CloneableMixin';
-import {isEqual} from '../../object';
-
 export default abstract class Field extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{

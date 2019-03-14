@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import {IEnumerator} from '../collection';
+
 /**
  * Цепочка по IEnumerable.
  * @class Types/_chain/Enumerable
@@ -5,10 +8,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import {IEnumerator} from '../collection';
-
 export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/Enumerable.prototype */{
    constructor(source: any) {
       if (!source || !source['[Types/_collection/IEnumerable]']) {
@@ -17,7 +16,7 @@ export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/E
       super(source);
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): IEnumerator<T> {
       return this._source.getEnumerator();
@@ -27,9 +26,9 @@ export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/E
       return this._source.each(callback, context);
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 
-   // region Types/_chain/DestroyableMixin
+   // region IObject
 
    toObject(): object {
       if (this._source['[Types/_entity/IObject]']) {
@@ -42,7 +41,7 @@ export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/E
       return super.toObject();
    }
 
-   // endregion Types/_chain/DestroyableMixin
+   // endregion
 }
 
 Enumerable.prototype['[Types/_chain/Enumerable]'] = true;

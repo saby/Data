@@ -1,3 +1,8 @@
+import IEnumerator from '../IEnumerator';
+import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
+import {register} from '../../di';
+import {mixin} from '../../util';
+
 /**
  * Энумератор для массива
  * @class Types/_collection/ArrayEnumerator
@@ -6,12 +11,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IEnumerator from '../IEnumerator';
-import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
-import {register} from '../../di';
-import {mixin} from '../../util';
-
 export default class Arraywise<T> extends mixin(
    Object,
    IndexedEnumeratorMixin
@@ -33,7 +32,7 @@ export default class Arraywise<T> extends mixin(
       IndexedEnumeratorMixin.constructor.call(this);
    }
 
-   // region Types/_collection/IEnumerator
+   // region IEnumerator
 
    readonly '[Types/_collection/IEnumerator]': boolean = true;
 
@@ -93,22 +92,22 @@ export default class Arraywise<T> extends mixin(
 Arraywise.prototype['[Types/_collection/enumerator/Arraywise]'] = true;
 
 /**
- * @property {Array} Массив
+ * Array to traverse
  */
 Arraywise.prototype._items = null;
 
 /**
- * @property {Number} Текущий индекс
+ * Current index
  */
 Arraywise.prototype._index = -1;
 
 /**
- * @property {function(Number): *} Резолвер элементов
+ * {function(Number): *} Elements resolver
  */
 Arraywise.prototype._resolver = null;
 
 /**
- * @property {function(*): Boolean} Фильтр элементов
+ * {function(*): Boolean} Elements filter
  */
 Arraywise.prototype._filter = null;
 

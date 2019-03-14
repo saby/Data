@@ -1,3 +1,13 @@
+import IData from './IData';
+import SourceOptionsMixin, {IOptions as IDefaultOptions} from './OptionsMixin';
+import LazyMixin from './LazyMixin';
+import DataMixin, {IOptions as IDataOptions} from './DataMixin';
+import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
+import {logger, mixin} from '../util';
+
+export interface IOptions extends IDefaultOptions, IDataOptions {
+}
+
 /**
  * Базовый источник данных.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
@@ -13,17 +23,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import IData from './IData';
-import SourceOptionsMixin, {IOptions as IDefaultOptions} from './OptionsMixin';
-import LazyMixin from './LazyMixin';
-import DataMixin, {IOptions as IDataOptions} from './DataMixin';
-import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
-import {logger, mixin} from '../util';
-
-export interface IOptions extends IDefaultOptions, IDataOptions {
-}
-
 export default abstract class Base extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
 ) implements IData /** @lends Types/_source/Base.prototype */{

@@ -3,7 +3,6 @@
  * @interface Types/_entity/IProducible
  * @author Мальцев А.А.
  */
-
 export default interface IProducible extends Object {
    readonly '[Types/_entity/IProducible]': boolean;
 }

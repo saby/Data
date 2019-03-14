@@ -1,10 +1,9 @@
+import {enumerator, IEnumerable, IEnumerator} from '../collection';
+
 /**
  * Передвигаемый рекурсивный указатель.
  * @author Мальцев А.А.
  */
-
-import {enumerator, IEnumerable, IEnumerator} from '../collection';
-
 export default class FlattenedMover {
    private readonly parent: IEnumerator<any>;
    private current: FlattenedMover | IEnumerable<any> | any[];

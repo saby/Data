@@ -3,7 +3,6 @@
  * @interface Types/_entity/relation/IReceiver
  * @author Мальцев А.А.
  */
-
 export default interface IReceiver /** @lends Types/_entity/relation/IReceiver.prototype */{
    readonly '[Types/_entity/relation/IReceiver]': boolean;
 

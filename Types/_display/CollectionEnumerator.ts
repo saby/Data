@@ -1,3 +1,8 @@
+import CollectionItem from './CollectionItem';
+import {DestroyableMixin, OptionsToPropertyMixin} from '../entity';
+import {IEnumerator, IndexedEnumeratorMixin} from '../collection';
+import {mixin} from '../util';
+
 /**
  * Энумератор для проекции коллекции
  * @class Types/_display/CollectionEnumerator
@@ -8,12 +13,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import CollectionItem from './CollectionItem';
-import {DestroyableMixin, OptionsToPropertyMixin} from '../entity';
-import {IEnumerator, IndexedEnumeratorMixin} from '../collection';
-import {mixin} from '../util';
-
 export default class CollectionEnumerator extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, IndexedEnumeratorMixin
 ) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{

@@ -1,3 +1,14 @@
+import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, Model, adapter} from '../entity';
+import {create, register} from '../di';
+import {mixin} from '../util';
+import {RecordSet} from '../collection';
+
+declare type TypeDeclaration = Function | string;
+
+export interface IOptions {
+   rawData: any;
+}
+
 /**
  * Набор данных, полученный из источника.
  * Представляет собой набор {@link Types/_collection/RecordSet выборок}, {@link Types/_entity/Model записей}, а также
@@ -121,18 +132,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, Model, adapter} from '../entity';
-import {create, register} from '../di';
-import {mixin} from '../util';
-import {RecordSet} from '../collection';
-
-declare type TypeDeclaration = Function | string;
-
-export interface IOptions {
-   rawData: any;
-}
-
 export default class DataSet extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) /** @lends Types/_source/DataSet.prototype */{

@@ -1,3 +1,29 @@
+import ICrud from './ICrud';
+import ICrudPlus from './ICrudPlus';
+import Memory, {IOptions as IMemoryOptions} from './Memory';
+import Query from './Query';
+import DataSet from './DataSet';
+import {
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin,
+   ISerializableState as IDefaultSerializableState,
+   Record,
+   relation
+} from '../entity';
+import {RecordSet} from '../collection';
+import {mixin} from '../util';
+// @ts-ignore
+import Deferred = require('Core/Deferred');
+
+interface IOptions extends IMemoryOptions {
+   parentProperty: string;
+}
+
+interface ISerializableState extends IDefaultSerializableState {
+   _source: Memory;
+}
+
 /**
  * Source which returns "breadcrumbs" to the root of hierarchy in the result of query() method.
  * "Breadcrumbs" stores as Array in property "path" of RecordSet's meta data.
@@ -41,33 +67,6 @@
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-
-import ICrud from './ICrud';
-import ICrudPlus from './ICrudPlus';
-import Memory, {IOptions as IMemoryOptions} from './Memory';
-import Query from './Query';
-import DataSet from './DataSet';
-import {
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   SerializableMixin,
-   ISerializableState as IDefaultSerializableState,
-   Record,
-   relation
-} from '../entity';
-import {RecordSet} from '../collection';
-import {mixin} from '../util';
-// @ts-ignore
-import Deferred = require('Core/Deferred');
-
-interface IOptions extends IMemoryOptions {
-   parentProperty: string;
-}
-
-interface ISerializableState extends IDefaultSerializableState {
-   _source: Memory;
-}
-
 export default class HierarchicalMemory extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
@@ -132,7 +131,7 @@ export default class HierarchicalMemory extends mixin(
       return this._source.read(key, meta);
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       return this._source.update(data, meta);
    }
 

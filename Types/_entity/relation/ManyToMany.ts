@@ -1,10 +1,3 @@
-/**
- * Посредник, реализующий отношения "многие ко многим".
- * @class Types/_entity/relation/ManyToMany
- * @mixes Types/_entity/DestroyableMixin
- * @author Мальцев А.А.
- */
-
 import DestroyableMixin from '../DestroyableMixin';
 import {Map, Set} from '../../shim';
 
@@ -17,6 +10,12 @@ function isAlive(entity: any): boolean {
    return entity instanceof Object && entity['[Types/_entity/DestroyableMixin]'] ? !entity.destroyed : true;
 }
 
+/**
+ * Посредник, реализующий отношения "многие ко многим".
+ * @class Types/_entity/relation/ManyToMany
+ * @mixes Types/_entity/DestroyableMixin
+ * @author Мальцев А.А.
+ */
 export default class ManyToMany extends DestroyableMixin /** @lends Types/_entity/relation/ManyToMany.prototype */{
    /**
     * @property {Map<Object, Set<Object>>} master -> [slave, slave, ...]

@@ -1,13 +1,12 @@
+import ManyToMany from './relation/ManyToMany';
+import IReceiver from './relation/IReceiver';
+
 /**
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
  * @mixin Types/_entity/ManyToManyMixin
  * @public
  * @author Мальцев А.А.
  */
-
-import ManyToMany from './relation/ManyToMany';
-import IReceiver from './relation/IReceiver';
-
 const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
    '[Types/_entity/ManyToManyMixin]': true,
 

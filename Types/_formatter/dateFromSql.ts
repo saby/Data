@@ -1,8 +1,3 @@
-/**
- * @public
- * @author Мальцев А.А.
- */
-
 import { constants } from 'Env/Env';
 
 /**
@@ -15,10 +10,11 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
  * местному.
  * @function
  * @name Types/_formatter/dateFromSql
- * @param {String} dateTime Дата и/или время в формате SQL
- * @param {Number} [defaultTimeZone] Использовать указанная временную зону (смещение относительно часового пояса UTC в
+ * @param dateTime Дата и/или время в формате SQL
+ * @param defaultTimeZone Использовать указанная временную зону (смещение относительно часового пояса UTC в
  * минутах), если в строке временная зона не задана.
- * @return {Date}
+ * @public
+ * @author Мальцев А.А.
  */
 export default function fromSQL(dateTime: string, defaultTimeZone?: number): Date {
    let dateSep = dateTime.indexOf('-');

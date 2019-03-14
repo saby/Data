@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import ReversedEnumerator from './ReversedEnumerator';
+
 /**
  * Реверсивное звено цепочки.
  * @class Types/_chain/Reversed
@@ -5,12 +8,8 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import ReversedEnumerator from './ReversedEnumerator';
-
 export default class Reversed<T> extends Abstract<T> /** @lends Types/_chain/Reversed.prototype */{
-   // region Types/_collection/IEnumerable
+   // IEnumerable
 
    getEnumerator(): ReversedEnumerator<T> {
       return new ReversedEnumerator(
@@ -18,7 +17,7 @@ export default class Reversed<T> extends Abstract<T> /** @lends Types/_chain/Rev
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Reversed.prototype['[Types/_chain/Reversed]'] = true;

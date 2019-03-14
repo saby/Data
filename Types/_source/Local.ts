@@ -1,15 +1,3 @@
-/**
- * Источник данных, работающий локально.
- * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_source/Local
- * @extends Types/_source/Base
- * @implements Types/_source/ICrud
- * @implements Types/_source/ICrudPlus
- * @mixes Types/_source/DataCrudMixin
- * @public
- * @author Мальцев А.А.
- */
-
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import Base, {IOptions as IBaseOptions} from './Base';
@@ -67,6 +55,17 @@ export interface IOptions extends IBaseOptions {
    filter?: FilterFunction;
 }
 
+/**
+ * Источник данных, работающий локально.
+ * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
+ * @class Types/_source/Local
+ * @extends Types/_source/Base
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_source/DataCrudMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 export default abstract class Local extends mixin(
    Base, DataCrudMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
@@ -185,7 +184,7 @@ export default abstract class Local extends mixin(
       }
    }
 
-   update(data: Record | RecordSet<Record>, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       const updateRecord = (record) => {
          const idProperty = this.getIdProperty();
          let key = idProperty ? record.get(idProperty) : undefined;
@@ -212,7 +211,7 @@ export default abstract class Local extends mixin(
       let keys = [];
 
       if (DataMixin.isListInstance(data)) {
-         (data as RecordSet<Record>).each((record) => {
+         (data as RecordSet).each((record) => {
             keys.push(updateRecord(record));
          });
       } else {

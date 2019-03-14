@@ -1,12 +1,3 @@
-/**
- * Адаптер записи таблицы для работы в режиме Copy-on-write.
- * @class Types/_entity/adapter/CowRecord
- * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_entity/adapter/IRecord
- * @implements Types/_entity/adapter/IDecorator
- * @author Мальцев А.А.
- */
-
 import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import IAdapter from './IAdapter';
@@ -15,6 +6,14 @@ import ICloneable from '../ICloneable';
 import {Field, UniversalField} from '../format';
 import {object} from '../../util';
 
+/**
+ * Адаптер записи таблицы для работы в режиме Copy-on-write.
+ * @class Types/_entity/adapter/CowRecord
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_entity/adapter/IRecord
+ * @implements Types/_entity/adapter/IDecorator
+ * @author Мальцев А.А.
+ */
 export default class CowRecord
    extends DestroyableMixin
    implements IRecord, IDecorator /** @lends Types/_entity/adapter/CowRecord.prototype */ {

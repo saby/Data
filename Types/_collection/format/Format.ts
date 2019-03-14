@@ -1,18 +1,16 @@
-/**
- * Формат полей.
- * Представляет собой список полей записи: Types/_collection/List.<Types/_entity/format/Field>
- * @class Types/_entity/format/Format
- * @extends Types/_collection/List
- * @public
- * @author Мальцев А.А.
- */
-
 import {IEquatable} from '../../entity';
 import {format} from '../../entity';
 import List, {IOptions as IListOptions} from '../List';
 import {register} from '../../di';
 
-export default class Format<T>
+/**
+ * Формат полей: список полей записи.
+ * @class Types/_entity/format/Format
+ * @extends Types/_collection/List
+ * @public
+ * @author Мальцев А.А.
+ */
+export default class Format<T = format.Field>
    extends List<T>
    implements IEquatable /** @lends Types/_entity/format/Format.prototype */ {
    _$items: any[];

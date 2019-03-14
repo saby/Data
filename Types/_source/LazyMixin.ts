@@ -1,10 +1,3 @@
-/**
- * Миксин, позволяющий загружать некоторые зависимости лениво.
- * @mixin Types/_source/LazyMixin
- * @public
- * @author Мальцев А.А.
- */
-
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 
@@ -12,6 +5,12 @@ import Deferred = require('Core/Deferred');
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
+/**
+ * Миксин, позволяющий загружать некоторые зависимости лениво.
+ * @mixin Types/_source/LazyMixin
+ * @public
+ * @author Мальцев А.А.
+ */
 const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
    '[Types/_source/LazyMixin]': true,
 

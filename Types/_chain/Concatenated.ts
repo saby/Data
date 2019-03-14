@@ -1,3 +1,7 @@
+import Abstract from './Abstract';
+import ConcatenatedEnumerator from './ConcatenatedEnumerator';
+import {IEnumerable} from '../collection';
+
 /**
  * Объединяющее звено цепочки.
  * @class Types/_chain/Concatenated
@@ -5,11 +9,6 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import ConcatenatedEnumerator from './ConcatenatedEnumerator';
-import {IEnumerable} from '../collection';
-
 export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain/Concatenated.prototype */{
    /**
     * @property {Array.<Array>|Array.<Types/_collection/IEnumerable>} Коллекции для объединения
@@ -31,7 +30,7 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): ConcatenatedEnumerator<T> {
       return new ConcatenatedEnumerator(
@@ -40,7 +39,7 @@ export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain
       );
    }
 
-   // endregion Types/_collection/IEnumerable
+   // endregion
 }
 
 Object.assign(Concatenated.prototype, {

@@ -1,7 +1,7 @@
 /**
  * Formats library.
  * @library Types/_collection/format
- * @includes Factory Types/_collection/format/factory
+ * @includes factory Types/_collection/format/factory
  * @includes Format Types/_collection/format/Format
  * @author Мальцев А.А.
  */

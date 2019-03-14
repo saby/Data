@@ -1,3 +1,5 @@
+import {register} from '../di';
+
 /**
  * Тип данных "Идентификатор".
  * @class Types/_entity/Identity
@@ -13,9 +15,6 @@
  *    });
  * </pre>
  */
-
-import {register} from '../di';
-
 export default class Identity /** @lends Types/_entity/Identity.prototype */{
    /**
     * @property {String} Разделитель значений

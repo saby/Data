@@ -1,10 +1,3 @@
-/**
- * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
- * @class Types/_display/ItemsStrategy/MaterializedPath
- * @extends Types/_display/ItemsStrategy/Abstract
- * @author Мальцев А.А.
- */
-
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import {IEnumerable, IList} from '../../collection';
@@ -26,6 +19,12 @@ interface ISorter {
    options: () => object;
 }
 
+/**
+ * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
+ * @class Types/_display/ItemsStrategy/MaterializedPath
+ * @extends Types/_display/ItemsStrategy/Abstract
+ * @author Мальцев А.А.
+ */
 export default class MaterializedPath
    extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */ {
    /**
