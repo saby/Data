@@ -9,6 +9,8 @@
     "Env/**/*.ts",
     "Types/**/*.ts",
     "I18n/**/*.ts",
+    "View/**/*.ts",
+    "WS.Core/core/**/*.ts",
     "WS.Core/lib/Storage/**/*.ts",
     "WS.Core/transport/**/*.ts",
     "WS.Core/ws.d.ts"
