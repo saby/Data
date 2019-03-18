@@ -56,7 +56,7 @@
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
       "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.300",
       "saby-units": "git+https://github.com/saby/Units.git#rc-19.300",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#19.300/bugfix/view-compilation-errors",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300",
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300"
    }
 }
