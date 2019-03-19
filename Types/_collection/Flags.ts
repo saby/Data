@@ -145,14 +145,6 @@ export default class Flags<T> extends mixin<
 
    // endregion
 
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <Flags>(shallow?: boolean) => Flags;
-
-   // endregion
-
    // region IEquatable
 
    isEqual(to: any): boolean {

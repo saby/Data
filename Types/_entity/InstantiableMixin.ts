@@ -42,6 +42,6 @@ Object.assign(InstantiableMixin.prototype, {
 });
 
 // Deprecated implementation
-Object.assign(InstantiableMixin, InstantiableMixin.prototype);
 // @ts-ignore
-InstantiableMixin.getHash = InstantiableMixin.getInstanceId;
+InstantiableMixin.prototype.getHash = InstantiableMixin.prototype.getInstanceId;
+Object.assign(InstantiableMixin, InstantiableMixin.prototype);

@@ -95,9 +95,9 @@ export default class SbisRecord extends mixin(
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone<SbisRecord>(shallow?: boolean): any {
+   clone<T = this>(shallow?: boolean): T {
       // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
-      return new SbisRecord(shallow ? this.getData() : this._cloneData(true));
+      return new SbisRecord(shallow ? this.getData() : this._cloneData(true)) as any;
    }
 
    // endregion

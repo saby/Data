@@ -2723,7 +2723,12 @@ export default class Collection extends mixin(
     * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
     * @protected
     */
-   protected _checkItemsDiff(session: IEnumerableComparatorSession, items: CollectionItem[], state: any[], beforeCheck: Function): void {
+   protected _checkItemsDiff(
+      session: IEnumerableComparatorSession,
+      items: CollectionItem[],
+      state: any[],
+      beforeCheck: Function
+   ): void {
       const diff = state ? this._getItemsDiff(
          state,
          this._getItemsState(items)

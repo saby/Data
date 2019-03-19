@@ -740,7 +740,7 @@ export default class Record extends mixin<
 
    addField(format: Field | IFieldDeclaration, at?: number, value?: any): void {
       this._checkFormatIsWritable();
-      format = this._buildField(format) as Field;
+      format = this._buildField(format);
       FormattableMixin.prototype.addField.call(this, format, at);
       if (value !== undefined) {
          this.set(format.getName(), value);

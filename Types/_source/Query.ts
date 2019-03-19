@@ -1,5 +1,4 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
-import {mixin} from '../util';
 
 declare type Where = Object | ((item: any, index: number) => boolean);
 declare type Expression = Object | string[] | string;
@@ -20,7 +19,7 @@ export interface IMeta {
  * @param data Object to clone
  * @return {Object}
  */
-function duplicate(data: any): Object {
+function duplicate(data: any): object {
    if (data['[Types/_entity/ICloneable]']) {
       return data.clone();
    }
@@ -61,7 +60,7 @@ function parseSelectExpression(expression: Expression): object {
  * @mixes Types/_entity/OptionsMixin
  * @public
  */
-export class Join extends mixin(Object, OptionsToPropertyMixin) {
+export class Join extends OptionsToPropertyMixin {
    /**
     * @cfg {String} Правое множество
     * @name Types/_source/Query/Join#resource
@@ -78,13 +77,13 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
     * @cfg {Object} Правило объединения
     * @name Types/_source/_source/Query/Join#on
     */
-   protected _$on: Object = {};
+   protected _$on: object = {};
 
    /**
     * @cfg {Object} Выбираемые поля
     * @name Types/_source/Query/Join#select
     */
-   protected _$select: Object = {};
+   protected _$select: object = {};
 
    /**
     * @cfg {Boolean} Внутреннее объединение
@@ -92,7 +91,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
     */
    protected _$inner: boolean = true;
 
-   constructor(options?: Object) {
+   constructor(options?: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
    }
@@ -117,7 +116,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
     * Возвращает правило объеднения
     * @return {Object}
     */
-   getOn(): Object {
+   getOn(): object {
       return this._$on;
    }
 
@@ -125,7 +124,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
     * Возвращает правило объеднения
     * @return {Object}
     */
-   getSelect(): Object {
+   getSelect(): object {
       return this._$select;
    }
 
@@ -144,7 +143,7 @@ export class Join extends mixin(Object, OptionsToPropertyMixin) {
  * @mixes Types/_entity/OptionsMixin
  * @public
  */
-export class Order extends mixin(Object, OptionsToPropertyMixin) {
+export class Order extends OptionsToPropertyMixin {
    /**
     * @typedef {Boolean} Order
     * @variant false По возрастанию
@@ -163,7 +162,7 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
     */
    protected _$order: boolean | string = false;
 
-   constructor(options?: Object) {
+   constructor(options?: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
 
@@ -197,7 +196,7 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
       return this._$order;
    }
 
-   //region Static
+   // region Static
 
    /**
     * Сортировка по возрастанию
@@ -227,7 +226,7 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
       return 'DESC';
    }
 
-   //endregion Static
+   // endregion
 }
 
 /**
@@ -257,13 +256,13 @@ export class Order extends mixin(Object, OptionsToPropertyMixin) {
  * @public
  * @author Мальцев А.А.
  */
-export default class Query extends mixin(
-   Object, OptionsToPropertyMixin
-) implements ICloneable /** @lends Types/_source/Query.prototype */ {
+export default class Query
+   extends OptionsToPropertyMixin
+   implements ICloneable /** @lends Types/_source/Query.prototype */ {
    /**
     * Выбираемые поля
     */
-   protected _select: Object = {};
+   protected _select: object = {};
 
    /**
     * Объект выборки
@@ -310,16 +309,16 @@ export default class Query extends mixin(
     */
    protected _meta: IMeta = {};
 
-   constructor(options?: Object) {
+   constructor(options?: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
    }
 
-   //region ICloneable
+   // region ICloneable
 
-   readonly '[Types/_entity/ICloneable]': boolean = true;
+   readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone<Query>(): any {
+   clone<T = this>(): T {
       // TODO: deeper clone?
       const clone = new Query();
       clone._select = duplicate(this._select);
@@ -333,18 +332,18 @@ export default class Query extends mixin(
       clone._limit = this._limit;
       clone._meta = duplicate(this._meta);
 
-      return clone;
+      return clone as any;
    }
 
-   //endregion ICloneable
+   // endregion
 
-   //region Public methods
+   // region Public methods
 
    /**
     * Сбрасывает все параметры запроса
     * @return {Types/_source/Query}
     */
-   clear(): Query {
+   clear(): this {
       this._select = {};
       this._from = '';
       this._as = '';
@@ -372,7 +371,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   getSelect(): Object {
+   getSelect(): object {
       return this._select;
    }
 
@@ -398,7 +397,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   select(expression: Expression): Query {
+   select(expression: Expression): this {
       this._select = parseSelectExpression(expression);
 
       return this;
@@ -455,7 +454,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   from(resource: string, as?: string): Query {
+   from(resource: string, as?: string): this {
       this._from = resource;
       this._as = as;
 
@@ -518,7 +517,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   join(resource: string | string[], on: any, expression: Expression, inner?: boolean): Query {
+   join(resource: string | string[], on: any, expression: Expression, inner?: boolean): this {
       if (typeof resource === 'string') {
          resource = resource.split(' ');
       }
@@ -589,7 +588,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   where(expression: Where): Query {
+   where(expression: Where): this {
       expression = expression || {};
       const type = typeof expression;
       if (type !== 'object' && type !== 'function') {
@@ -661,7 +660,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   orderBy(selector: string | boolean[], desc?: boolean): Query {
+   orderBy(selector: string | boolean[], desc?: boolean): this {
       if (desc === undefined) {
          desc = true;
       }
@@ -739,7 +738,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   groupBy(expression: string | string[]): Query {
+   groupBy(expression: string | string[]): this {
       if (typeof expression === 'string') {
          expression = [expression];
       }
@@ -788,7 +787,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   offset(start: number | string): Query {
+   offset(start: number | string): this {
       this._offset = parseInt(start as string, 10) || 0;
 
       return this;
@@ -829,7 +828,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   limit(count: number): Query {
+   limit(count: number): this {
       this._limit = count;
 
       return this;
@@ -871,7 +870,7 @@ export default class Query extends mixin(
     *    });
     * </pre>
     */
-   meta(data: IMeta): Query {
+   meta(data: IMeta): this {
       data = data || {};
       if (typeof data !== 'object') {
          throw new TypeError('Invalid argument "data"');
@@ -882,8 +881,10 @@ export default class Query extends mixin(
       return this;
    }
 
-   //endregion Public methods
+   // endregion
 }
-Query.prototype._moduleName = 'Types/source:Query';
 
-Query.prototype['[Types/_source/Query]'] = true;
+Object.assign(Query.prototype, {
+   '[Types/_source/Query]': true,
+   _moduleName: 'Types/source:Query'
+});
