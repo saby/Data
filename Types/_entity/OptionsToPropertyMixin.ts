@@ -60,7 +60,7 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
     * Конструктор объекта, принимающий набор опций в качестве первого аргумента
     * @param {Object} [options] Значения опций
     */
-   constructor(options?: Object) {
+   constructor(options?: object) {
       if (options && typeof options === 'object') {
          const prefix = optionPrefix;
          const keys = Object.keys(options);

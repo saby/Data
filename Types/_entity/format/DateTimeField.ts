@@ -16,28 +16,30 @@ import Field from './Field';
  * @author Мальцев А.А.
  */
 export default class DateTimeField extends Field /** @lends Types/_entity/format/DateTimeField.prototype */{
-      /**
-       * @cfg {Boolean} Без указания временной зоны
-       * @name Types/_entity/format/DateTimeField#withoutTimeZone
-       * @see hasTimeZone
-       */
-      _$withoutTimeZone: boolean;
+   /**
+    * @cfg {Boolean} Без указания временной зоны
+    * @name Types/_entity/format/DateTimeField#withoutTimeZone
+    * @see hasTimeZone
+    */
+   _$withoutTimeZone: boolean;
 
-      // region Public methods
+   // region Public methods
 
-      /**
-       * Возвращает признак указания временной зоны
-       * @return {Boolean}
-       */
-      isWithoutTimeZone(): boolean {
-         return this._$withoutTimeZone;
-      }
+   /**
+    * Возвращает признак указания временной зоны
+    * @return {Boolean}
+    */
+   isWithoutTimeZone(): boolean {
+      return this._$withoutTimeZone;
+   }
 
-      // endregion Public methods
+   // endregion Public methods
 
 }
 
-DateTimeField.prototype['[Types/_entity/format/DateTimeField]'] = true;
-DateTimeField.prototype._moduleName = 'Types/entity:format.DateTimeField';
-DateTimeField.prototype._typeName = 'DateTime';
-DateTimeField.prototype._$withoutTimeZone = false;
+Object.assign(DateTimeField.prototype, {
+   '[Types/_entity/format/DateTimeField]': true,
+   _moduleName: 'Types/entity:format.DateTimeField',
+   _typeName: 'DateTime',
+   _$withoutTimeZone: false
+});

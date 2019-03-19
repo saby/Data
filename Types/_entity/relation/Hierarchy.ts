@@ -205,7 +205,7 @@ export default class Hierarchy extends mixin(
     * @return {Array.<Types/_entity/Record>}
     * @see nodeProperty
     */
-   getChildren(parent: IObject, rs: RecordSet<IObject>): IObject[] {
+   getChildren(parent: IObject, rs: RecordSet): IObject[] {
       if (!this._$parentProperty) {
          return parent === null || parent === undefined ? (() => {
             const result = [];
@@ -222,7 +222,7 @@ export default class Hierarchy extends mixin(
 
       // If nothing found by that property value, return all if null(root) requested
       if (indices.length === 0 && parentId === null) {
-         indices = rs.getIndicesByValue(this._$parentProperty);
+         indices = rs.getIndicesByValue(this._$parentProperty, undefined);
       }
 
       for (let i = 0; i < indices.length; i++) {
@@ -250,7 +250,7 @@ export default class Hierarchy extends mixin(
     * @return {Boolean}
     * @see nodeProperty
     */
-   hasParent(child: IObject, rs: RecordSet<IObject>): boolean {
+   hasParent(child: IObject, rs: RecordSet): boolean {
       child = this._asRecord(child, rs);
       const parentId = child.get(this._$parentProperty);
       const idProperty = this._$idProperty || rs.getIdProperty();
@@ -268,7 +268,7 @@ export default class Hierarchy extends mixin(
     * @return {Types/_entity/Record|Null}
     * @see nodeProperty
     */
-   getParent(child: IObject, rs: RecordSet<IObject>): IObject {
+   getParent(child: IObject, rs: RecordSet): IObject {
       child = this._asRecord(child, rs);
       const parentId = child.get(this._$parentProperty);
 
@@ -286,7 +286,7 @@ export default class Hierarchy extends mixin(
     * @return {Types/_entity/Record}
     * @protected
     */
-   _asRecord(value: IObject, rs: RecordSet<IObject>): IObject {
+   _asRecord(value: IObject, rs: RecordSet): IObject {
       if (value && value['[Types/_entity/Record]']) {
          return value;
       }

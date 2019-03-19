@@ -115,7 +115,7 @@ export default class HierarchicalMemory extends mixin(
    constructor(options?: IOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
       this._source = new Memory(options);
    }
 

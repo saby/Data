@@ -1,4 +1,5 @@
 import IObservable from './IObservable';
+import IEnumerator from './IEnumerator';
 import {ObservableMixin} from '../entity';
 import {object} from '../util';
 import {Object as EventObject} from 'Env/Event';
@@ -10,18 +11,22 @@ import {Object as EventObject} from 'Env/Event';
  * @public
  * @author Мальцев А.А.
  */
-const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMixin.prototype */ {
-   '[Types/_collection/IndexedEnumeratorMixin]': true,
+export default abstract class IndexedEnumeratorMixin<T> {
+   '[Types/_collection/IndexedEnumeratorMixin]': boolean;
 
    /**
-    * @member {Object} Индексы, распределенные по полям
+    * Индексы, распределенные по полям
     */
-   _enumeratorIndexes: null,
+   _enumeratorIndexes: object;
 
-   constructor(): void {
+   constructor() {
       this._enumeratorIndexes = {};
       this._onCollectionChange = this._onCollectionChange.bind(this);
-   },
+   }
+
+   // region IEnumerator
+
+   // endregion
 
    // region Public methods
 
@@ -47,7 +52,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
          default:
             this._resetIndex();
       }
-   },
+   }
 
    /**
     * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
@@ -58,7 +63,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
    getIndexByValue(property: string, value: any): number {
       const index = this._getIndexForPropertyValue(property, value);
       return index.length ? index[0] : -1;
-   },
+   }
 
    /**
     * Возвращает индексы всех элементов с указанным значением свойства.
@@ -68,7 +73,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     */
    getIndicesByValue(property: string, value: any): number[] {
       return this._getIndexForPropertyValue(property, value);
-   },
+   }
 
    /**
     * Устанавливает коллекцию при изменении которой поисходит переиндексация энумератора
@@ -76,7 +81,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     */
    setObservableCollection(collection: ObservableMixin): void {
       collection.subscribe('onCollectionChange', this._onCollectionChange);
-   },
+   }
 
    /**
     * Сбрасывает коллекцию при изменении которой поисходит переиндексация энумератора
@@ -84,7 +89,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     */
    unsetObservableCollection(collection: ObservableMixin): void {
       collection.unsubscribe('onCollectionChange', this._onCollectionChange);
-   },
+   }
 
    // endregion
 
@@ -97,10 +102,10 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @return {Array.<Number>}
     * @protected
     */
-   _getIndexForPropertyValue(property: string, value: any): number[] {
+   protected _getIndexForPropertyValue(property: string, value: any): number[] {
       const index = this._getIndex(property);
       return (index && index[value]) || [];
-   },
+   }
 
    /**
     * Проверяет наличие индекса для указанного свойства.
@@ -108,12 +113,12 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @return {Boolean}
     * @protected
     */
-   _hasIndex(property?: string): boolean {
+   protected _hasIndex(property?: string): boolean {
       if (property) {
          return Object.prototype.hasOwnProperty.call(this._enumeratorIndexes, property);
       }
       return Object.keys(this._enumeratorIndexes).length === 0;
-   },
+   }
 
    /**
     * Возвращает индекс для указанного свойства.
@@ -121,28 +126,28 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @return {Object}
     * @protected
     */
-   _getIndex(property: string): object {
+   protected _getIndex(property: string): object {
       if (property && !this._hasIndex(property)) {
          this._createIndex(property);
       }
       return this._enumeratorIndexes[property];
-   },
+   }
 
    /**
     * Сбрасывает индекс
     */
-   _resetIndex(): void {
+   protected _resetIndex(): void {
       this._enumeratorIndexes = {};
-   },
+   }
 
    /**
     * Удаляет индекс для указанного свойства.
     * @param {String} property Название свойства.
     * @protected
     */
-   _deleteIndex(property: string): void {
+   protected _deleteIndex(property: string): void {
       delete this._enumeratorIndexes[property];
-   },
+   }
 
    /**
     * Создает индекс для указанного свойства.
@@ -154,18 +159,19 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
       let position = 0;
 
       this._enumeratorIndexes[property] = index;
-      this.reset();
+      const enumerator = this as any as IEnumerator<T>;
+      enumerator.reset();
 
-      while (this.moveNext()) {
+      while (enumerator.moveNext()) {
          this._setToIndex(
             index,
             property,
-            this.getCurrent(),
+            enumerator.getCurrent(),
             position
          );
          position++;
       }
-   },
+   }
 
    /**
     * Добавляет элементы в индекс
@@ -173,22 +179,24 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @param {Number} count Число переиндексируемых элементов
     * @protected
     */
-   _addToIndex(start: number, count: number): void {
+   protected _addToIndex(start: number, count: number): void {
       let index;
       const finish = start + count;
       let position;
+
+      const enumerator = this as any as IEnumerator<T>;
 
       for (const property in this._enumeratorIndexes) {
          if (this._enumeratorIndexes.hasOwnProperty(property)) {
             index = this._enumeratorIndexes[property];
             position = 0;
-            this.reset();
-            while (this.moveNext()) {
+            enumerator.reset();
+            while (enumerator.moveNext()) {
                if (position >= start) {
                   this._setToIndex(
                      index,
                      property,
-                     this.getCurrent(),
+                     enumerator.getCurrent(),
                      position
                   );
                }
@@ -199,7 +207,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
             }
          }
       }
-   },
+   }
 
    /**
     * Удаляет элементы из индекса
@@ -207,7 +215,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @param {Number} count Число переиндексируемых элементов
     * @protected
     */
-   _removeFromIndex(start: number, count: number): void {
+   protected _removeFromIndex(start: number, count: number): void {
       let index;
       let value;
       let elem;
@@ -229,7 +237,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
             }
          }
       }
-   },
+   }
 
    /**
     * Заменяет элементы в индексе
@@ -237,10 +245,10 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @param {Number} count Число замененных элементов
     * @protected
     */
-   _replaceInIndex(start: number, count: number): void {
+   protected _replaceInIndex(start: number, count: number): void {
       this._removeFromIndex(start, count);
       this._addToIndex(start, count);
-   },
+   }
 
    /**
     * Сдвигает позицию элементов индекса
@@ -248,7 +256,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @param {Number} offset Сдвиг
     * @protected
     */
-   _shiftIndex(start: number, offset: number): void {
+   protected _shiftIndex(start: number, offset: number): void {
       let index;
       let item;
 
@@ -267,13 +275,13 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
             }
          }
       }
-   },
+   }
 
    /**
     * Устанавливает элемент в индекс
     * @protected
     */
-   _setToIndex(index: object, property: string, item: any, position: number): void {
+   protected _setToIndex(index: object, property: string, item: any, position: number): void {
       let value = object.getPropertyValue(item, property);
 
       // FIXME: should figure out when search can be either CollectionItem instance and their contents
@@ -290,7 +298,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
       }
 
       index[value as string].push(position);
-   },
+   }
 
    /**
     * Удаляет индексы при изменении исходной коллекции
@@ -302,7 +310,7 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
     * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
     * @protected
     */
-   _onCollectionChange(
+   protected _onCollectionChange(
       event: EventObject,
       action: string,
       newItems: any[],
@@ -324,6 +332,9 @@ const IndexedEnumeratorMixin = /** @lends Types/_collection/IndexedEnumeratorMix
    }
 
    // endregion
-};
+}
 
-export default IndexedEnumeratorMixin;
+Object.assign(IndexedEnumeratorMixin.prototype, {
+   '[Types/_collection/IndexedEnumeratorMixin]': true,
+   _enumeratorIndexes: null
+});

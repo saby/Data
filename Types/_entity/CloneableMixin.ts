@@ -8,20 +8,18 @@ import Serializer = require('Core/Serializer');
  * @public
  * @author Мальцев А.А.
  */
-const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
-   '[Types/_entity/CloneableMixin]': true,
-
+export default class CloneableMixin {
    // region Types/_entity/ICloneable
 
-   '[Types/_entity/ICloneable]': true,
+   '[Types/_entity/ICloneable]': boolean;
 
-   clone(shallow?: boolean): Object {
+   clone<T = this>(shallow?: boolean): T {
       let clone;
 
       if (shallow) {
          const proto = Object.getPrototypeOf(this);
          const Module = proto.constructor;
-         const data = this.toJSON();
+         const data = (this as any).toJSON();
 
          data.state = this._unlinkCollection(data.state);
          if (data.state.$options) {
@@ -41,13 +39,13 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       delete clone._instanceId;
 
       return clone;
-   },
+   }
 
-   // endregion Types/_entity/ICloneable
+   // endregion
 
    // region Protected methods
 
-   _unlinkCollection(collection: any): void {
+   protected _unlinkCollection(collection: any): void {
       let result;
 
       if (collection instanceof Array) {
@@ -68,16 +66,19 @@ const CloneableMixin = /** @lends Types/_entity/CloneableMixin.prototype */{
       }
 
       return collection;
-   },
+   }
 
-   _unlinkObject(object: any): any {
+   protected _unlinkObject(object: any): any {
       if (object instanceof Array) {
          return object.slice();
       }
       return object;
    }
 
-   // endregion Protected methods
-};
+   // endregion
+}
 
-export default CloneableMixin;
+Object.assign(CloneableMixin.prototype, {
+   '[Types/_entity/CloneableMixin]': true,
+   '[Types/_entity/ICloneable]': true
+});

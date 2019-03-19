@@ -18,6 +18,8 @@ import Field from './Field';
 export default class ObjectField extends Field /** @lends Types/_entity/format/ObjectField.prototype */{
 }
 
-ObjectField.prototype['[Types/_entity/format/ObjectField]'] = true;
-ObjectField.prototype._moduleName = 'Types/entity:format.ObjectField';
-ObjectField.prototype._typeName = 'Object';
+Object.assign(ObjectField.prototype, {
+   '[Types/_entity/format/ObjectField]': true,
+   _moduleName: 'Types/entity:format.ObjectField',
+   _typeName: 'Object'
+});

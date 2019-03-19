@@ -73,7 +73,7 @@ export default class CollectionEnumerator extends mixin(
    constructor(options: object) {
       super();
       OptionsToPropertyMixin.call(this, options);
-      IndexedEnumeratorMixin.constructor.call(this);
+      IndexedEnumeratorMixin.call(this);
 
       if (!(this._$items instanceof Array) && !(this._$items instanceof Function)) {
          throw new TypeError(this._moduleName + '::constructor(): items should be instance of an Array or Function');
@@ -131,7 +131,7 @@ export default class CollectionEnumerator extends mixin(
    // region IndexedEnumeratorMixin
 
    reIndex(action?: string, start?: number, count?: number): void {
-      IndexedEnumeratorMixin.reIndex.call(this, action, start, count);
+      IndexedEnumeratorMixin.prototype.reIndex.call(this, action, start, count);
       this._itemsCache = null;
       this._internalToSource = null;
       this._sourceToInternal = [];
@@ -144,7 +144,7 @@ export default class CollectionEnumerator extends mixin(
    _createIndex(property: string): void {
       const savedPosition = this._position;
       const savedCurrent = this._current;
-      IndexedEnumeratorMixin._createIndex.call(this, property);
+      IndexedEnumeratorMixin.prototype._createIndex.call(this, property);
       this._position = savedPosition;
       this._current = savedCurrent;
    }

@@ -20,7 +20,10 @@
  * @author Мальцев А.А.
  */
 
-export {default as enumerableComparator} from './_collection/enumerableComparator';
+export {
+   default as enumerableComparator,
+   ISession as IEnumerableComparatorSession
+} from './_collection/enumerableComparator';
 export {default as Enum} from './_collection/Enum';
 import * as enumerator from './_collection/enumerator';
 export {enumerator};

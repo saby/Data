@@ -1077,7 +1077,7 @@ export default class LocalSession extends mixin(
 Object.assign(LocalSession.prototype, {
    '[Types/_source/LocalSession]': true,
    _moduleName: 'Types/source:LocalSession',
-   _writable: ReadWriteMixin.writable,
+   _writable: ReadWriteMixin.prototype.writable,
    _dataSetModule: 'Types/source:DataSet',
    _$adapter: 'Types/entity:adapter.Json',
    _$listModule: 'Types/collection:RecordSet',

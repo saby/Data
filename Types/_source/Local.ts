@@ -8,6 +8,7 @@ import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
+import {IHashMap} from '../_declarations';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
@@ -46,10 +47,6 @@ function compareValues(given: any, expect: any, operator: string): boolean {
 }
 
 type FilterFunction = (item: adapter.IRecord, query: Object) => boolean;
-
-interface IGenericObject<T> {
-   __proto?: object;
-}
 
 export interface IOptions extends IBaseOptions {
    filter?: FilterFunction;
@@ -149,7 +146,7 @@ export default abstract class Local extends mixin(
    /**
     * Индекс для быстрого поиска записи по ключу
     */
-   protected _index: IGenericObject<Number>;
+   protected _index: IHashMap<number>;
 
    /**
     * Data which source work with

@@ -18,6 +18,8 @@ import Field from './Field';
 export default class RpcFileField extends Field /** @lends Types/_entity/format/RpcFileField.prototype */{
 }
 
-RpcFileField.prototype['[Types/_entity/format/RpcFileField]'] = true;
-RpcFileField.prototype._moduleName = 'Types/entity:format.RpcFileField';
-RpcFileField.prototype._typeName = 'RpcFile';
+Object.assign(RpcFileField.prototype, {
+   '[Types/_entity/format/RpcFileField]': true,
+   _moduleName: 'Types/entity:format.RpcFileField',
+   _typeName: 'RpcFile'
+});

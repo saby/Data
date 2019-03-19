@@ -75,14 +75,14 @@ function passRead(key: string, meta?: Object): any[] {
  * @param data Обновляемая запись или рекордсет
  * @param [meta] Дополнительные мета данные
  */
-function passUpdate(data: Record | RecordSet, meta?: Object): any[] {
+function passUpdate(data: Record | RecordSet, meta?: object): any[] {
    if (this._$options.updateOnlyChanged) {
       const idProperty = this._getValidIdProperty(data);
       if (!isEmpty(idProperty)) {
-         if (DataMixin.isModelInstance(data) && !isNull(data.get(idProperty))) {
+         if (DataMixin.isModelInstance(data) && !isNull((data as Record).get(idProperty))) {
             // Filter record fields
             const Record = require('Types/entity').Record;
-            const changed = data.getChanged();
+            const changed = (data as Record).getChanged();
             changed.unshift(idProperty);
             data = Record.filterFields(data, changed);
          } else if (DataMixin.isListInstance(data)) {
@@ -91,7 +91,7 @@ function passUpdate(data: Record | RecordSet, meta?: Object): any[] {
                const RecordSet = require('Types/collection').RecordSet;
                const result = new RecordSet({
                   adapter: source._$adapter,
-                  idProperty: source._$idProperty
+                  idProperty: (source as RecordSet).getIdProperty()
                });
 
                source.each((record) => {

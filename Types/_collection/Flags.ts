@@ -9,7 +9,7 @@ import {
    format
 } from '../entity';
 import {register} from '../di';
-import {applyMixins} from '../util';
+import {mixin} from '../util';
 
 interface IProduceOptions {
    format?: format.Field | format.UniversalField;
@@ -32,9 +32,17 @@ function prepareValue(value: any): IValue {
  * @public
  * @author Мальцев А.А.
  */
-export default class Flags<T>
-   extends Dictionary<T>
-   implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collection/Flags.prototype */ {
+export default class Flags<T> extends mixin<
+   Dictionary<any>,
+   ManyToManyMixin,
+   SerializableMixin,
+   CloneableMixin
+>(
+   Dictionary,
+   ManyToManyMixin,
+   SerializableMixin,
+   CloneableMixin
+) implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collection/Flags.prototype */ {
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
@@ -45,13 +53,13 @@ export default class Flags<T>
 
    constructor(options?: object) {
       super(options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
       this._publish('onChange');
       this._$values = this._$values || [];
    }
 
    destroy(): void {
-      ManyToManyMixin.destroy.call(this);
+      ManyToManyMixin.prototype.destroy.call(this);
       super.destroy();
    }
 
@@ -269,8 +277,6 @@ export default class Flags<T>
 
    // endregion
 }
-
-applyMixins(Flags, ManyToManyMixin, SerializableMixin, CloneableMixin);
 
 Object.assign(Flags.prototype, {
    '[Types/_collection/Flags]': true,

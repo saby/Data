@@ -36,7 +36,9 @@ export default class HierarchyField extends Field /** @lends Types/_entity/forma
    // endregion Public methods
 }
 
-HierarchyField.prototype['[Types/_entity/format/HierarchyField]'] = true;
-HierarchyField.prototype._moduleName = 'Types/entity:format.HierarchyField';
-HierarchyField.prototype._typeName = 'Hierarchy';
-HierarchyField.prototype._$kind = '';
+Object.assign(HierarchyField.prototype, {
+   '[Types/_entity/format/HierarchyField]': true,
+   _moduleName: 'Types/entity:format.HierarchyField',
+   _typeName: 'Hierarchy',
+   _$kind: ''
+});

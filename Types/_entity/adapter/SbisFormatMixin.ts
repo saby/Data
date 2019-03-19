@@ -1,9 +1,19 @@
 import FIELD_TYPE from './SbisFieldType';
 import factory from '../factory';
-import {fieldsFactory, IFieldDeclaration, Field, UniversalField} from '../format';
+import {
+   fieldsFactory,
+   IFieldDeclaration,
+   Field,
+   UniversalField,
+   MoneyField,
+   DictionaryField,
+   DateTimeField,
+   ArrayField
+} from '../format';
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {format} from '../../collection';
+import {IHashMap} from '../../_declarations';
 
 /**
  * @const {Object} Инвертированный FIELD_TYPE
@@ -27,7 +37,7 @@ export interface IMoneyFieldType extends IFieldType {
 }
 
 export interface IDictFieldType extends IFieldType {
-   s: string[];
+   s: string[] | IHashMap<string>;
 }
 
 export interface IDateTeimeFieldType extends IFieldType {
@@ -428,7 +438,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
       const type = (format.getTypeName() + '').toLowerCase();
       switch (type) {
          case 'money':
-            if (format.isLarge()) {
+            if ((format as MoneyField).isLarge()) {
                (data.t as IMoneyFieldType) = {
                   n: FIELD_TYPE[type],
                   l: true
@@ -440,21 +450,22 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
 
          case 'enum':
          case 'flags':
-            let dict = format.getDictionary();
+            const dict = (format as DictionaryField).getDictionary();
+            let dictHash: IHashMap<string>;
             if (dict instanceof Array) {
-               dict = dict.reduce((prev, curr, index) => {
+               dictHash = dict.reduce((prev, curr, index) => {
                   prev[index] = curr;
                   return prev;
                }, {});
             }
             (data.t as IDictFieldType) = {
                n: FIELD_TYPE[type],
-               s: dict
+               s: dictHash || dict
             };
             break;
 
          case 'datetime':
-            const withoutTimeZone = format.isWithoutTimeZone();
+            const withoutTimeZone = (format as DateTimeField).isWithoutTimeZone();
             if (withoutTimeZone) {
                (data.t as IDateTeimeFieldType) = {
                   n: FIELD_TYPE[type],
@@ -468,7 +479,7 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
          case 'array':
             (data.t as IArrayFieldType) = {
                n: FIELD_TYPE[type],
-               t: getFieldInnerTypeNameByOuter(format.getKind())
+               t: getFieldInnerTypeNameByOuter((format as ArrayField).getKind())
             };
             break;
 

@@ -29,6 +29,8 @@ export default class DateField extends Field /** @lends Types/_entity/format/Dat
       // endregion Public methods
 }
 
-DateField.prototype['[Types/_entity/format/DateField]'] = true;
-DateField.prototype._moduleName = 'Types/entity:format.DateField';
-DateField.prototype._typeName = 'Date';
+Object.assign(DateField.prototype, {
+   '[Types/_entity/format/DateField]': true,
+   _moduleName: 'Types/entity:format.DateField',
+   _typeName: 'Date'
+});

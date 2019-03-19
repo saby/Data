@@ -1,5 +1,11 @@
 import Abstract from './Abstract';
-import {DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin, IInstantiable} from '../entity';
+import {
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   InstantiableMixin,
+   SerializableMixin,
+   IInstantiable
+} from '../entity';
 import Collection from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
 import {IEnumerable} from '../collection';
@@ -65,7 +71,7 @@ export default class CollectionItem extends mixin(
    constructor(options: IOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
    }
 
    // endregion

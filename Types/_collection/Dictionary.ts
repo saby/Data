@@ -10,12 +10,10 @@ import {
    ObservableMixin,
    format
 } from '../entity';
-import {applyMixins} from '../util';
+import {mixin} from '../util';
+import {IHashMap} from '../_declarations';
 
-// tslint:disable-next-line:no-empty-interface
-interface IGenericObject<T> {}
-
-declare type DictionaryValues = string[] | IGenericObject<string>;
+declare type DictionaryValues<T> = T[] | IHashMap<T>;
 
 /**
  * An abstract enity which have the dictionary as collection of keys and values.
@@ -29,19 +27,21 @@ declare type DictionaryValues = string[] | IGenericObject<string>;
  * @author Мальцев А.А.
  */
 export default abstract class Dictionary<T>
-   extends DestroyableMixin
+   extends mixin<
+      DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
+   >(DestroyableMixin, OptionsToPropertyMixin, ObservableMixin)
    implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */ {
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
     * @name Types/_collection/Dictionary#dictionary
     */
-   protected _$dictionary: DictionaryValues;
+   protected _$dictionary: DictionaryValues<T>;
 
    /**
     * @cfg {Array.<String>|Object.<String>} Localized collection of keys and values
     * @name Types/_collection/Dictionary#localeDictionary
     */
-   protected _$localeDictionary: DictionaryValues;
+   protected _$localeDictionary: DictionaryValues<T>;
 
    /**
     * Name of the concrete type which used during the serialization. Should be overrided.
@@ -67,14 +67,14 @@ export default abstract class Dictionary<T>
    getEnumerator(localize?: boolean): IEnumerator<T> {
       const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
       const enumerator = dictionary instanceof Array
-         ? new ArrayEnumerator(dictionary)
-         : new Objectwise(dictionary);
+         ? new ArrayEnumerator<T>(dictionary)
+         : new Objectwise<T>(dictionary);
 
       enumerator.setFilter((item: any, index: any): boolean => {
          return index !== 'null';
       });
 
-      return enumerator as IEnumerator<T>;
+      return enumerator;
    }
 
    each(callback: EnumeratorCallback<T>, context?: Object, localize?: boolean): void {
@@ -133,7 +133,7 @@ export default abstract class Dictionary<T>
     * @return {Array.<String>|Object.<String>}
     * @protected
     */
-   getDictionary(localize?: boolean): DictionaryValues {
+   getDictionary(localize?: boolean): DictionaryValues<T> {
       const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
       return dictionary
          ? (Array.isArray(dictionary) ? dictionary.slice() : {...dictionary})
@@ -183,9 +183,9 @@ export default abstract class Dictionary<T>
          return [];
       }
       return (
-         (format as format.Field).getDictionary
-            ? (format as format.Field).getDictionary()
-            : format.meta && format.meta.dictionary
+         (format as format.DictionaryField).getDictionary
+            ? (format as format.DictionaryField).getDictionary()
+            : (format as format.UniversalField).meta && (format as format.UniversalField).meta.dictionary
       ) || [];
    }
 
@@ -200,16 +200,14 @@ export default abstract class Dictionary<T>
          return;
       }
       return (
-         (format as format.Field).getLocaleDictionary
-            ? (format as format.Field).getLocaleDictionary()
-            : format.meta && format.meta.localeDictionary
+         (format as format.DictionaryField).getLocaleDictionary
+            ? (format as format.DictionaryField).getLocaleDictionary()
+            : (format as format.UniversalField).meta && (format as format.UniversalField).meta.localeDictionary
       ) || undefined;
    }
 
    // endregion
 }
-
-applyMixins(Dictionary, OptionsToPropertyMixin, ObservableMixin);
 
 Object.assign(Dictionary.prototype, {
    '[Types/_collection/Dictionary]': true,

@@ -20,7 +20,9 @@ import {isEqual} from '../../object';
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Field extends mixin(
+export default abstract class Field extends mixin<
+   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
+>(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{
    /**
@@ -63,14 +65,6 @@ export default abstract class Field extends mixin(
       super(options);
       OptionsToPropertyMixin.call(this, options);
    }
-
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <Field>(shallow?: boolean) => Field;
-
-   // endregion
 
    // region Types/_entity/IEquatable
 

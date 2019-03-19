@@ -7,16 +7,16 @@ import IReceiver from './relation/IReceiver';
  * @public
  * @author Мальцев А.А.
  */
-const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
-   '[Types/_entity/ManyToManyMixin]': true,
+export default abstract class ManyToManyMixin {
+   '[Types/_entity/ManyToManyMixin]': boolean;
 
    // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[WS.Data/Entity/ManyToManyMixin]': true,
+   '[WS.Data/Entity/ManyToManyMixin]': boolean;
 
    /**
-    * @property {Types/_entity/relation/ManyToMany} Медиатор, отвечающий за связи между сущностями
+    * Медиатор, отвечающий за связи между сущностями
     */
-   _mediator: null,
+   _mediator: ManyToMany;
 
    // region Public methods
 
@@ -39,7 +39,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
       }
 
       this._setMediator(null);
-   },
+   }
 
    // endregion
 
@@ -51,7 +51,7 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     * @param {String} [name] Название отношения
     * @protected
     */
-   _addChild(child: IReceiver | any, name?: string): void {
+   protected _addChild(child: IReceiver | any, name?: string): void {
       if (child instanceof Object) {
          const mediator = this._getMediator();
          mediator.addRelationship(this, child, name);
@@ -65,14 +65,14 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
             child._getMediator().addRelationship(this, child, name);
          }
       }
-   },
+   }
 
    /**
     * Удаляет отношение с другой сущностью
     * @param {Types/_entity/relation/IReceiver} child Другая сущность
     * @protected
     */
-   _removeChild(child: IReceiver | any): void {
+   protected _removeChild(child: IReceiver | any): void {
       if (child instanceof Object) {
          const mediator = this._getMediator();
          mediator.removeRelationship(this, child);
@@ -84,14 +84,14 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
             child._getMediator().removeRelationship(this, child);
          }
       }
-   },
+   }
 
    /**
     * Уведомляет дочерние сущности об изменении родительской
     * @param {*} [data] Данные об изменениях
     * @protected
     */
-   _parentChanged(data: any): void {
+   protected _parentChanged(data: any): void {
       const which = {
          target: this,
          data,
@@ -102,14 +102,14 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
             slave.relationChanged(which, [name]);
          }
       });
-   },
+   }
 
    /**
     * Рекурсивно уведомляет родительские сущности об изменении дочерней
     * @param {*} [data] Данные об изменениях
     * @protected
     */
-   _childChanged(data: any): void {
+   protected _childChanged(data?: any): void {
       const original = data;
       const notifyParent = (mediator, child, route) => {
          mediator.belongsTo(child, (parent, name) => {
@@ -136,16 +136,16 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
       };
 
       notifyParent(this._getMediator(), this, []);
-   },
+   }
 
    /**
     * Возвращает признак наличия посредника
     * @return {Boolean}
     * @protected
     */
-   _hasMediator(): boolean {
+   protected _hasMediator(): boolean {
       return !!this._mediator;
-   },
+   }
 
    /**
     * Возвращает признак наличия одинакового посредника
@@ -153,38 +153,42 @@ const ManyToManyMixin = /** @lends Types/_entity/ManyToManyMixin.prototype */{
     * @return {Boolean}
     * @protected
     */
-   _hasSameMediator(mediator: ManyToMany): boolean {
+   protected _hasSameMediator(mediator: ManyToMany): boolean {
       return this._mediator === mediator;
-   },
+   }
 
    /**
     * Создает посредника для установления отношений с детьми
     * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
-   _createMediator(): ManyToMany {
+   protected _createMediator(): ManyToMany {
       return new ManyToMany();
-   },
+   }
 
    /**
     * Возвращает посредника для установления отношений с детьми
     * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
-   _getMediator(): ManyToMany {
+   protected _getMediator(): ManyToMany {
       return this._mediator || (this._mediator = this._createMediator());
-   },
+   }
 
    /**
     * Устанавливает посредника для установления отношений с детьми
     * @param {Types/_entity/relation/ManyToMany|null} mediator
     * @protected
     */
-   _setMediator(mediator: ManyToMany): void {
+   protected _setMediator(mediator: ManyToMany): void {
       this._mediator = mediator;
    }
 
    // endregion
-};
+}
 
-export default ManyToManyMixin;
+Object.assign(ManyToManyMixin.prototype, {
+   '[Types/_entity/ManyToManyMixin]': true,
+   '[WS.Data/Entity/ManyToManyMixin]': true,
+   _mediator: null
+});

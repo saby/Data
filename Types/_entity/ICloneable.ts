@@ -27,5 +27,5 @@ export default interface ICloneable /** @lends Types/_entity/ICloneable.prototyp
     *    book.isEqual(clone);//true
     * </pre>
     */
-   clone<T>(shallow?: boolean): T;
+   clone<T = this>(shallow?: boolean): T;
 }

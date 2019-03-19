@@ -196,7 +196,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState = super._getSerializableState(state) as ISerializableState;
 
       resultState._root = this._root;
@@ -204,7 +204,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSuper = super._setSerializableState(state);
       return function(): void {
          this._root = state._root;

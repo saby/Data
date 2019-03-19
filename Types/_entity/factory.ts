@@ -131,11 +131,14 @@ function isLargeMoney(format: MoneyField | UniversalField): boolean {
  * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {Number}
  */
-function getPrecision(format: RealField): number {
+function getPrecision(format: RealField | UniversalField): number {
    if (!format) {
       return 0;
    }
-   return (format.getPrecision ? format.getPrecision() : format.meta && format.meta.precision) || 0;
+   return ((format as RealField).getPrecision
+      ? (format as RealField).getPrecision()
+      : (format as UniversalField).meta && (format as UniversalField).meta.precision
+   ) || 0;
 }
 
 /**
@@ -143,8 +146,11 @@ function getPrecision(format: RealField): number {
  * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
  * @return {String}
  */
-function getKind(format: ArrayField): string {
-   return (format.getKind ? format.getKind() : format.meta && format.meta.kind) || '';
+function getKind(format: ArrayField | UniversalField): string {
+   return ((format as ArrayField).getKind
+      ? (format as ArrayField).getKind()
+      : (format as UniversalField).meta && (format as UniversalField).meta.kind
+   ) || '';
 }
 
 /**

@@ -38,7 +38,7 @@ interface IOptions {
  */
 export default abstract class Abstract extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
-) /** @lends Types/_display/Abstract.prototype */{
+) {
    constructor(options?: IOptions) {
       super(options);
       OptionsToPropertyMixin.call(this, options);

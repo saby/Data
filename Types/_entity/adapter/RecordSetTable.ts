@@ -185,8 +185,8 @@ export default class RecordSetTable extends mixin(
             if (sample.getAdapter) {
                config.adapter = sample.getAdapter();
             }
-            if (sample.getIdProperty) {
-               config.idProperty = sample.getIdProperty();
+            if ((sample as any).getIdProperty) {
+               config.idProperty = (sample as any).getIdProperty();
             }
          }
          this._data = create('Types/collection:RecordSet', config);

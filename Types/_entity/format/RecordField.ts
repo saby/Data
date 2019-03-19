@@ -18,6 +18,8 @@ import Field from './Field';
 export default class RecordField extends Field /** @lends Types/_entity/format/RecordField.prototype */{
 }
 
-RecordField.prototype['[Types/_entity/format/RecordField]'] = true;
-RecordField.prototype._moduleName = 'Types/entity:format.RecordField';
-RecordField.prototype._typeName = 'Record';
+Object.assign(RecordField.prototype, {
+   '[Types/_entity/format/RecordField]': true,
+   _moduleName: 'Types/entity:format.RecordField',
+   _typeName: 'Record'
+});

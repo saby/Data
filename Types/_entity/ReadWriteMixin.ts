@@ -17,16 +17,20 @@ const $writable = protect('writable');
  * @public
  * @author Мальцев А.А.
  */
-const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
-   '[Types/_entity/ReadWriteMixin]': true,
+export default abstract class ReadWriteMixin {
+   '[Types/_entity/ReadWriteMixin]': boolean;
 
-   // region Types/_entity/ReadWriteMixin
+   /**
+    * Old-fashioned options
+    * @deprecated
+    */
+   _options: any;
 
    get writable(): boolean {
       return this[$writable];
-   },
+   }
 
-   constructor(options: any): void {
+   constructor(options: any) {
       if (this._options && hasOwnProperty.call(this._options, 'writable')) {
          this[$writable] = this._options.writable;
       }
@@ -36,50 +40,50 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
       if (this[$writable]) {
          ObservableMixin.apply(this, arguments);
       }
-   },
+   }
 
    destroy(): void {
       if (this[$writable]) {
          ObservableMixin.prototype.destroy.call(this);
-         ManyToManyMixin.destroy.call(this);
+         ManyToManyMixin.prototype.destroy.call(this);
       }
-   },
+   }
 
    // endregion
 
-   // region Types/_entity/ObservableMixin
+   // region ObservableMixin
 
    subscribe(event: string, handler: Function, ctx?: object): void {
       if (this[$writable]) {
          return ObservableMixin.prototype.subscribe.call(this, event, handler, ctx);
       }
-   },
+   }
 
    unsubscribe(event: string, handler: Function, ctx?: object): void {
       if (this[$writable]) {
          return ObservableMixin.prototype.unsubscribe.call(this, event, handler, ctx);
       }
-   },
+   }
 
-   _publish(): void {
+   protected _publish(): void {
       if (this[$writable]) {
          // @ts-ignore
          return ObservableMixin.prototype._publish.apply(this, arguments);
       }
-   },
+   }
 
-   _notify(): void {
+   protected _notify(): void {
       if (this[$writable]) {
          // @ts-ignore
          return ObservableMixin.prototype._notify.apply(this, arguments);
       }
-   },
+   }
 
    // endregion
 
-   // region Types/_entity/OptionsToPropertyMixin
+   // region OptionsToPropertyMixin
 
-   _getOptions(): object {
+   protected _getOptions(): object {
       // @ts-ignore
       const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
 
@@ -89,7 +93,11 @@ const ReadWriteMixin = /** @lends Types/_entity/ReadWriteMixin.prototype */{
    }
 
    // endregion
-};
+}
+
+Object.assign(ReadWriteMixin.prototype, {
+   '[Types/_entity/ReadWriteMixin]': true
+});
 
 // @ts-ignore
 const IS_BROWSER = typeof window !== 'undefined';
@@ -100,9 +108,7 @@ const IS_TESTING = !!(typeof global !== 'undefined' && global.assert && global.a
  * @property {Boolean} Объект можно модифицировать.
  * Запрет модификации выключит механизмы генерации событий (ObservableMixin).
  */
-Object.defineProperty(ReadWriteMixin, $writable, {
+Object.defineProperty(ReadWriteMixin.prototype, $writable, {
    writable: true,
    value: IS_BROWSER || IS_TESTING
 });
-
-export default ReadWriteMixin;

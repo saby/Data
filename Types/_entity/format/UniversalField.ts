@@ -4,6 +4,7 @@ interface IDateTimeMeta {
 
 interface IDictionaryMeta {
    dictionary: any[];
+   localeDictionary?: any[];
 }
 
 interface IRealdMeta {
@@ -14,7 +15,11 @@ interface IMoneyMeta extends IRealdMeta {
    large: boolean;
 }
 
-interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta {
+interface IArrayMeta {
+   kind: string;
+}
+
+interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IArrayMeta {
 }
 
 /**

@@ -1,21 +1,24 @@
+import ManyToMany from './relation/ManyToMany';
+
 /**
  * Миксин, позволяющий получать и измениять номер версии объекта.
  * @mixin Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
  */
-const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
-   '[Types/_entity/VersionableMixin]': true,
+export default abstract class VersionableMixin {
+   readonly '[Types/_entity/VersionableMixin]': boolean;
+   protected _version: number;
 
    // region IVersionable
 
-   _version: 0,
+   readonly '[Types/_entity/IVersionable]': boolean;
 
    getVersion(): number {
       return this._version;
-   },
+   }
 
-   _nextVersion(): void {
+   protected _nextVersion(): void {
       this._version++;
       if (this['[Types/_entity/ManyToManyMixin]']) {
          this._getMediator().belongsTo(this, (parent) => {
@@ -27,6 +30,19 @@ const VersionableMixin = /** @lends Types/_entity/VersionableMixin.prototype */{
    }
 
    // endregion
-};
 
-export default VersionableMixin;
+   // region ManyToManyMixin
+
+   protected _getMediator: () => ManyToMany;
+
+   // endregion
+}
+
+Object.assign(VersionableMixin.prototype, {
+   '[Types/_entity/VersionableMixin]': true,
+   '[Types/_entity/IVersionable]': true,
+   _version: 0
+});
+
+// Deprecated implementation
+Object.assign(VersionableMixin, VersionableMixin.prototype);

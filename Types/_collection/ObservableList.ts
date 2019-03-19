@@ -1,6 +1,7 @@
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
+import Indexer from './Indexer';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {mixin} from '../util';
@@ -36,21 +37,30 @@ const arraySlice = Array.prototype.slice;
  * @public
  * @author Мальцев А.А.
  */
-export default class ObservableList<T> extends mixin(
+export default class ObservableList<T> extends mixin<
+   List<any>,
+   EventRaisingMixin
+>(
    List,
    IObservable,
    EventRaisingMixin
 ) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
+   _$items: T[];
+   _indexer: Indexer<T[]>;
 
    /**
-    * @property {Number} Количество измененившихся элементов, при превышении которого генерируется одно событие
-    * onCollectionChange с ACTION_RESET, вместо нескольких c другими action
+    * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
     */
    _resetChangesCount: number;
 
+   /**
+    * Items changed during event raising was switched off
+    */
+   _silentChangedItems: T[];
+
    constructor(options?: IListOptions<T>) {
       super(options);
-      EventRaisingMixin.constructor.call(this, options);
+      EventRaisingMixin.call(this, options);
 
       this._publish('onCollectionChange', 'onCollectionItemChange');
    }
@@ -221,7 +231,7 @@ export default class ObservableList<T> extends mixin(
    // region EventRaisingMixin
 
    setEventRaising(enabled: boolean, analyze?: boolean): void {
-      EventRaisingMixin.setEventRaising.call(this, enabled, analyze);
+      EventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
 
       // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
       if (enabled && analyze && this._silentChangedItems) {
@@ -236,8 +246,7 @@ export default class ObservableList<T> extends mixin(
             );
          } else {
             // Собираем изменившиеся элементы в пачки
-            EventRaisingMixin._extractPacksByList(
-               //@ts-ignore
+            this._extractPacksByList(
                this,
                this._silentChangedItems,
                (pack, index) => {

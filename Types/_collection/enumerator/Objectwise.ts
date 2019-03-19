@@ -7,7 +7,7 @@ import IEnumerator from '../IEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_collection/ObjectEnumerator.prototype */{
+export default class Objectwise<T> implements IEnumerator<T> {
    /**
     * Объект
     */
@@ -32,7 +32,7 @@ export default class Objectwise<T> implements IEnumerator<T> /** @lends Types/_c
     * Конструктор
     * @param {Object} items Массив
     */
-   constructor(items: Object) {
+   constructor(items: object) {
       let checkedItems = items;
       if (checkedItems === undefined) {
          checkedItems = {};

@@ -9,18 +9,18 @@ let counter = 0;
  * @public
  * @author Мальцев А.А.
  */
-const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype */{
-   '[Types/_entity/InstantiableMixin]': true,
+export default class InstantiableMixin {
+   '[Types/_entity/InstantiableMixin]': boolean;
 
    /**
-    * @property {String} Префикс значений идентификатора
+    * Префикс значений идентификатора
     */
-   _instancePrefix: 'id-',
+   _instancePrefix: string;
 
    /**
-    * @property {String} Уникальный идентификатор
+    * Уникальный идентификатор
     */
-   _instanceId: '',
+   _instanceId: string;
 
    // region IInstantiable
 
@@ -33,10 +33,15 @@ const InstantiableMixin = /** @lends Types/_entity/InstantiableMixin.prototype *
    }
 
    // endregion
-};
+}
 
-// Deprecated methods
+Object.assign(InstantiableMixin.prototype, {
+   '[Types/_entity/InstantiableMixin]': true,
+   _instancePrefix: 'id-',
+   _instanceId: ''
+});
+
+// Deprecated implementation
+Object.assign(InstantiableMixin, InstantiableMixin.prototype);
 // @ts-ignore
 InstantiableMixin.getHash = InstantiableMixin.getInstanceId;
-
-export default InstantiableMixin;

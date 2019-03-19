@@ -8,8 +8,8 @@ import { IList } from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype */{
-   '[Types/_entity/EventRaisingMixin]': true,
+export default class EventRaisingMixin {
+   '[Types/_entity/EventRaisingMixin]': boolean;
 
    /**
     * @event onEventRaisingChange После изменения режима генерации событий
@@ -18,23 +18,31 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     */
 
    /**
-    * @member {Boolean} Генерация событий включена
+    * Генерация событий включена
     */
-   _eventRaising: true,
+   protected _eventRaising: boolean;
 
    /**
-    * @member {String} Метод получения содержимого элемента коллекции (если такое поведение поддерживается)
+    * Метод получения содержимого элемента коллекции (если такое поведение поддерживается)
     */
-   _sessionItemContentsGetter: '',
+   protected _sessionItemContentsGetter: string;
 
    /**
-    * @member {Object|null} Состояние коллекции до выключения генерации событий
+    * Состояние коллекции до выключения генерации событий
     */
-   _beforeRaiseOff: null,
+   protected _beforeRaiseOff: ISession;
 
-   constructor(): void {
+   constructor() {
       this._publish('onEventRaisingChange');
-   },
+   }
+
+   // region ObservableMixin
+
+   hasEventHandlers: (event: string) => boolean;
+   protected _publish: (...events: string[]) => void;
+   protected _notify: (event: string, ...args: any[]) => void;
+
+   // endregion
 
    // region Public methods
 
@@ -95,7 +103,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
       if (!isEqual) {
          this._notify('onEventRaisingChange', enabled, analyze);
       }
-   },
+   }
 
    /**
     * Возвращает признак, включена ли генерация событий об изменении проекции
@@ -103,7 +111,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     */
    isEventRaising(): boolean {
       return this._eventRaising;
-   },
+   }
 
    // endregion
 
@@ -114,12 +122,12 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @return {Object}
     * @protected
     */
-   _startUpdateSession(): ISession {
+   protected _startUpdateSession(): ISession {
       if (!this._eventRaising) {
          return null;
       }
-      return enumerableComparator.startSession(this, this._sessionItemContentsGetter);
-   },
+      return enumerableComparator.startSession(this as any, this._sessionItemContentsGetter);
+   }
 
    /**
     * Завершает серию обновлений
@@ -127,31 +135,31 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @param {Boolean} [analize=true] Запустить анализ изменений
     * @protected
     */
-   _finishUpdateSession(session: ISession, analize?: boolean): void {
+   protected _finishUpdateSession(session: ISession, analize?: boolean): void {
       if (!session) {
          return;
       }
 
       analize = analize === undefined ? true : analize;
 
-      enumerableComparator.finishSession(session, this, this._sessionItemContentsGetter);
+      enumerableComparator.finishSession(session, this as any, this._sessionItemContentsGetter);
 
       if (analize) {
          this._analizeUpdateSession(session);
       }
-   },
+   }
 
    /**
     * Анализирует серию обновлений, генерирует события об изменениях
     * @param {Object} session Серия обновлений
     * @protected
     */
-   _analizeUpdateSession(session: ISession): void {
+   protected _analizeUpdateSession(session: ISession): void {
       if (!session) {
          return;
       }
 
-      enumerableComparator.analizeSession(session, this, (action, changes) => {
+      enumerableComparator.analizeSession(session, this as any, (action, changes) => {
          this._notifyCollectionChange(
             action,
             changes.newItems,
@@ -161,7 +169,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
             session
          );
       });
-   },
+   }
 
    /**
     * Генерирует событие об изменении коллекции
@@ -173,12 +181,13 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @param {Object} [session] Серия обновлений
     * @protected
     */
-   _notifyCollectionChange(
+   protected _notifyCollectionChange(
       action: string,
       newItems: any[],
       newItemsIndex: number,
       oldItems: any[],
-      oldItemsIndex: number
+      oldItemsIndex: number,
+      session?: ISession
    ): void {
       if (!this._isNeedNotifyCollectionChange()) {
          return;
@@ -192,7 +201,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
          oldItems,
          oldItemsIndex
       );
-   },
+   }
 
    /**
     * Разбивает элементы списка на пачки в порядке их следования в списке.
@@ -202,7 +211,7 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
     * @protected
     * @static
     */
-   _extractPacksByList(list: IList<any>, items: any[], callback: Function): void {
+   protected _extractPacksByList(list: IList<any>, items: any[], callback: Function): void {
       const send = (pack, index) => {
          callback(pack.slice(), index);
          pack.length = 0;
@@ -239,18 +248,23 @@ const EventRaisingMixin = /** @lends Types/_entity/EventRaisingMixin.prototype *
       if (pack.length) {
          send(pack, packIndex);
       }
-   },
+   }
 
    /**
     * Возвращает признак, что нужно генерировать события об изменениях коллекции
     * @return {Boolean}
     * @protected
     */
-   _isNeedNotifyCollectionChange(): boolean {
+   protected _isNeedNotifyCollectionChange(): boolean {
       return this._eventRaising && this.hasEventHandlers('onCollectionChange');
    }
 
    // endregion Protected methods
-};
+}
 
-export default EventRaisingMixin;
+Object.assign(EventRaisingMixin.prototype, {
+   '[Types/_entity/EventRaisingMixin]': true,
+   _eventRaising: true,
+   _sessionItemContentsGetter: '',
+   _beforeRaiseOff: null
+});
