@@ -10,17 +10,10 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Format<T = format.Field>
-   extends List<T>
-   implements IEquatable /** @lends Types/_entity/format/Format.prototype */ {
-   _$items: any[];
+export default class Format<T = format.Field> extends List<T> implements IEquatable {
+   protected  _$items: any[];
 
    protected _moduleName: string;
-
-   /**
-    * @cfg {Array.<Types/_entity/format/Field>} Элементы списка
-    * @name Types/_entity/format/Format#items
-    */
 
    constructor(options?: IListOptions<T>) {
       super(options);

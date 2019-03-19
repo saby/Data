@@ -103,12 +103,12 @@ export default class List<T> extends mixin<
     * @cfg {Array.<*>} Элементы списка
     * @name Types/_collection/List#items
     */
-   _$items: T[];
+   protected _$items: T[];
 
    /**
     * Items indexer
     */
-   _indexer: Indexer<T[]>;
+   protected _indexer: Indexer<T[]>;
 
    constructor(options?: IOptions<T>) {
       if (options && 'items' in options && !(options.items instanceof Array)) {
@@ -363,7 +363,6 @@ export default class List<T> extends mixin<
 
    /**
     * Возвращает индексатор коллекции
-    * @return {Types/_collection/Indexer}
     * @protected
     */
    protected _getIndexer(): Indexer<T[]> {
@@ -385,9 +384,8 @@ export default class List<T> extends mixin<
 
    /**
     * Проверяет корректность индекса
-    * @param {Number} index Индекс
-    * @param {Boolean} [addMode=false] Режим добавления
-    * @return {Boolean}
+    * @param index Индекс
+    * @param [addMode=false] Режим добавления
     * @protected
     */
    protected _isValidIndex(index: number, addMode?: boolean): boolean {
@@ -401,8 +399,8 @@ export default class List<T> extends mixin<
    /**
     * Переиндексирует список
     * @param {Types/_collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
-    * @param {Number} [start=0] С какой позиции переиндексировать
-    * @param {Number} [count=0] Число переиндексируемых элементов
+    * @param [start=0] С какой позиции переиндексировать
+    * @param [count=0] Число переиндексируемых элементов
     * @protected
     */
    protected _reindex(action?: string, start?: number, count?: number): void {
@@ -439,10 +437,9 @@ export default class List<T> extends mixin<
 
    /**
     * Вызывает метод splice
-    * @param {Types/_collection/IEnumerable|Array} items Коллекция с элементами для замены
-    * @param {Number} start Индекс в массиве, с которого начинать добавление.
+    * @param items Коллекция с элементами для замены
+    * @param start Индекс в массиве, с которого начинать добавление.
     * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
-    * @return {Array}
     * @protected
     */
    protected _splice(items: T[], start: number, action: string): T[] {
@@ -455,8 +452,6 @@ export default class List<T> extends mixin<
 
    /**
     * Приводит переденные элементы к массиву
-    * @param items
-    * @return {Array}
     * @protected
     */
    protected _itemsToArray(items: any): T[] {

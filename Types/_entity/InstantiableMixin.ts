@@ -24,6 +24,8 @@ export default class InstantiableMixin {
 
    // region IInstantiable
 
+   readonly '[Types/_entity/IInstantiable]': boolean;
+
    getInstanceId(): string {
       if (counter >= MAX_VALUE) {
          counter = 0;
@@ -37,6 +39,7 @@ export default class InstantiableMixin {
 
 Object.assign(InstantiableMixin.prototype, {
    '[Types/_entity/InstantiableMixin]': true,
+   '[Types/_entity/IInstantiable]': true,
    _instancePrefix: 'id-',
    _instanceId: ''
 });

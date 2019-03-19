@@ -10,24 +10,24 @@ type CallbackFunc = (item: any, index: number) => boolean;
  * @public
  * @author Мальцев А.А.
  */
-export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Filtered.prototype */{
+export default class Filtered<T> extends Abstract<T> {
    /**
-    * @property {Function(*, Number): Boolean} Фильтр
+    * Фильтр
     */
    protected _callback: CallbackFunc;
 
    /**
-    * @property {Object} Контекст вызова _callback
+    * Контекст вызова _callback
     */
-   protected _callbackContext: Object;
+   protected _callbackContext: object;
 
    /**
     * Конструктор фильтрующего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {Function(*, Number): Boolean} callback Фильтр
-    * @param {Object} [callbackContext] Контекст вызова callback
+    * @param source Предыдущее звено.
+    * @param callback Фильтр
+    * @param [callbackContext] Контекст вызова callback
     */
-   constructor(source: Abstract<T>, callback: CallbackFunc, callbackContext: Object) {
+   constructor(source: Abstract<T>, callback: CallbackFunc, callbackContext: object) {
       super(source);
       this._callback = callback;
       this._callbackContext = callbackContext;
@@ -39,7 +39,7 @@ export default class Filtered<T> extends Abstract<T> /** @lends Types/_chain/Fil
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): FilteredEnumerator<T> {
       return new FilteredEnumerator(

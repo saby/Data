@@ -62,7 +62,7 @@ function checkNullId(value: any, idProperty: string): void {
 
 /**
  * Рекордсет - список записей, имеющих общий формат полей.
- *
+ * @remark
  * Основные аспекты рекордсета (дополнительно к аспектам {@link Types/_collection/ObservableList}):
  * <ul>
  *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
@@ -647,7 +647,6 @@ export default class RecordSet extends mixin<
 
    /**
     * Возвращает индексатор коллекции
-    * @return {Types/_collection/Indexer}
     * @protected
     */
    protected _getIndexer(): Indexer<T[]> {
@@ -787,8 +786,8 @@ export default class RecordSet extends mixin<
 
    /**
     * Переустанавливает сырые данные
-    * @param {Object} data Данные в "сыром" виде
-    * @param {Boolean} [keepFormat=false] Сохранить формат
+    * @param data Данные в "сыром" виде
+    * @param [keepFormat=false] Сохранить формат
     * @protected
     */
    protected _assignRawData(data: any, keepFormat?: boolean): void {
@@ -799,14 +798,6 @@ export default class RecordSet extends mixin<
       }
       this._nextVersion();
    }
-
-   // endregion
-
-   // region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
 
    // endregion
 
@@ -1330,9 +1321,8 @@ export default class RecordSet extends mixin<
 
    /**
     * Вставляет сырые данные записей в сырые данные рекордсета
-    * @param {Types/_collection/IEnumerable|Array} items Коллекция записей
-    * @param {Number} [at] Позиция вставки
-    * @return {Array}
+    * @param items Коллекция записей
+    * @param [at] Позиция вставки
     * @protected
     */
    protected _addItemsToRawData(items: T[], at?: number): T[] {
@@ -1353,9 +1343,8 @@ export default class RecordSet extends mixin<
 
    /**
     * Нормализует записи при добавлении в рекордсет: клонирует и приводит к формату рекордсета
-    * @param {Array.<Types/_entity/Record>} items Записи
+    * @param items Записи
     * @param {RecordState} [state] С каким состояним создать
-    * @return {Array.<Types/_entity/Record>}
     * @protected
     */
    protected _normalizeItems(items: T[], state?: string): T[] {
@@ -1389,9 +1378,8 @@ export default class RecordSet extends mixin<
 
    /**
     * Возращает копию записи с сырыми данными, приведенными к нужному формату
-    * @param {Types/_entity/Record} item Запись
-    * @param {Types/_entity/format/Format} format Формат, к которому следует привести данные
-    * @return {Array.<Types/_entity/Record>}
+    * @param item Запись
+    * @param format Формат, к которому следует привести данные
     * @protected
     */
    protected _normalizeItemData(item: any, format: Format): T[] {
@@ -1421,7 +1409,7 @@ export default class RecordSet extends mixin<
 
    /**
     * Проверяет, что переданный элемент - это запись с идентичным форматом
-    * @param {*} item Запись
+    * @param item Запись
     * @protected
     */
    protected _checkItem(item: any): void {
@@ -1434,8 +1422,7 @@ export default class RecordSet extends mixin<
 
    /**
     * Создает новый экземпляр модели
-    * @param {*} data Данные модели
-    * @return {Types/_entity/Record}
+    * @param data Данные модели
     * @protected
     */
    protected _buildRecord(data: any): T {
@@ -1453,8 +1440,7 @@ export default class RecordSet extends mixin<
 
    /**
     * Возвращает запись по индексу
-    * @param {Number} at Индекс
-    * @return {Types/_entity/Record}
+    * @param at Индекс
     * @protected
     */
    protected _getRecord(at: number): T {
@@ -1477,7 +1463,6 @@ export default class RecordSet extends mixin<
 
    /**
     * Пересоздает элементы из сырых данных
-    * @param {Object} data Сырые данные
     * @protected
     */
    protected _initByRawData(): void {
@@ -1492,9 +1477,8 @@ export default class RecordSet extends mixin<
 
    /**
     * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.
-    * @param {Types/_collection/RecordSet} items Исходный рекордсет
-    * @param {Array.<String>} [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
-    * @return {Types/_entity/Record} Патч
+    * @param items Исходный рекордсет
+    * @param [names] Имена полей результирующей записи, по умолчанию ['changed', 'added', 'removed']
     */
    static patch(items: RecordSet, names?: string[]): Record {
       names = names || ['changed', 'added', 'removed'];

@@ -1,3 +1,6 @@
+import Abstract from './Abstract';
+import FlattenedEnumerator from './FlattenedEnumerator';
+
 /**
  * Разворачивающее звено цепочки.
  * @class Types/_chain/Flattened
@@ -5,11 +8,7 @@
  * @public
  * @author Мальцев А.А.
  */
-
-import Abstract from './Abstract';
-import FlattenedEnumerator from './FlattenedEnumerator';
-
-export default class Flattened<T> extends Abstract<T> /** @lends Types/_chain/Flattened.prototype */{
+export default class Flattened<T> extends Abstract<T> {
    // region IEnumerable
 
    getEnumerator(): FlattenedEnumerator<T> {

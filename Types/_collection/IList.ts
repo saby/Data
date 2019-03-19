@@ -15,7 +15,7 @@ import IEnumerable from './IEnumerable';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IList<T> /** @lends Types/_collection/IList.prototype */{
+export default interface IList<T> {
    readonly '[Types/_collection/IList]': boolean;
 
    /**

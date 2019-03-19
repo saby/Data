@@ -8,7 +8,7 @@ import ReversedEnumerator from './ReversedEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Reversed<T> extends Abstract<T> /** @lends Types/_chain/Reversed.prototype */{
+export default class Reversed<T> extends Abstract<T> {
    // IEnumerable
 
    getEnumerator(): ReversedEnumerator<T> {

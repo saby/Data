@@ -28,39 +28,36 @@ type ReduceFunc = (memo: any, item: any, index: number) => any;
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Abstract<T>
-   extends DestroyableMixin
-   implements IEnumerable<T> /** @lends Types/_chain/Abstract.prototype */ {
-
+export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> {
    /**
-    * @property {Types/_chain/Abstract} Первый элемент цепочки
+    * Первый элемент цепочки
     */
    get start(): Abstract<T> {
       return this._previous ? this._previous.start : this;
    }
 
    /**
-    * @property {Boolean} Требуется сохранять оригинальные индексы элементов
+    * Требуется сохранять оригинальные индексы элементов
     */
    get shouldSaveIndices(): boolean {
       return this._previous ? this._previous.shouldSaveIndices : true;
    }
 
    /**
-    * @property {*} Данные, обрабатываемые цепочкой
+    * Данные, обрабатываемые цепочкой
     */
    protected _source: any;
 
    /**
-    * @property {Types/_chain/Abstract|null>} Предыдущий элемент цепочки
+    * Предыдущий элемент цепочки
     */
    protected _previous: Abstract<T>;
 
    /**
     * Конструктор цепочки
-    * @param {Types/_chain/Abstract|*} source Данные, обрабатываемые цепочкой
+    * @param source Данные, обрабатываемые цепочкой
     */
-   constructor(source: Abstract<T>|any) {
+   constructor(source: Abstract<T> | any) {
       super();
 
       if (source['[Types/_chain/Abstract]']) {
@@ -77,7 +74,7 @@ export default abstract class Abstract<T>
       super.destroy();
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    readonly '[Types/_collection/IEnumerable]': boolean = true;
 
@@ -87,8 +84,8 @@ export default abstract class Abstract<T>
 
    /**
     * Перебирает все элементы коллекции, начиная с первого.
-    * @param {Function(*, *)} callback Колбэк для каждого элемента (аргументами придут элемент коллекции и его индекс)
-    * @param {Object} [context] Контекст вызова callback
+    * @param callback Колбэк для каждого элемента (аргументами придут элемент коллекции и его индекс)
+    * @param [context] Контекст вызова callback
     * @example
     * Получим элементы коллекции:
     * <pre>
@@ -225,7 +222,7 @@ export default abstract class Abstract<T>
     * factory(record).toObject();//{id: 1, title: 'New One'}
     * </pre>
     */
-   toObject(): Object {
+   toObject(): object {
       const result = {};
       const enumerator = this.getEnumerator();
       while (enumerator.moveNext()) {
@@ -236,11 +233,10 @@ export default abstract class Abstract<T>
 
    /**
     * Сводит коллекцию к одному значению.
-    * @param {function(*, *, Number): *} callback Функция, вычисляющая очередное значение.
+    * @param callback Функция, вычисляющая очередное значение.
     * Принимает аргументы: предыдущее вычисленное значение, текущий элемент, индекс текущего элемента.
-    * @param {*} [initialValue] Значение первого аргумента callback, передаваемое в первый вызов.
+    * @param [initialValue] Значение первого аргумента callback, передаваемое в первый вызов.
     * Если не указано, то в первый вызов первым аргументом будет передан первый элемент коллекции.
-    * @return {*}
     * @example
     * Просуммируем массив:
     * <pre>
@@ -266,11 +262,10 @@ export default abstract class Abstract<T>
 
    /**
     * Сводит коллекцию к одному значению, проходя ее справа-налево.
-    * @param {function(*, *, Number): *} callback Функция, вычисляющая очередное значение.
+    * @param callback Функция, вычисляющая очередное значение.
     * Принимает аргументы: предыдущее вычисленное значение, текущий элемент, индекс текущего элемента.
-    * @param {*} [initialValue] Значение первого аргумента callback, передаваемое в первый вызов.
+    * @param [initialValue] Значение первого аргумента callback, передаваемое в первый вызов.
     * Если не указано, то в первый вызов первым аргументом будет передан последний элемент коллекции.
-    * @return {*}
     * @example
     * Поделим элементы массива, проходя их справа-налево:
     * <pre>
@@ -292,10 +287,9 @@ export default abstract class Abstract<T>
 
    /**
     * Преобразует коллекцию с использованием вызова функции-преобразователя для каждого элемента.
-    * @param {function(*, Number): *} callback Функция, возвращающая новый элемент.
+    * @param callback Функция, возвращающая новый элемент.
     * Принимает аргументы: элемент коллекции и его порядковый номер.
-    * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/_chain/Mapped}
+    * @param [thisArg] Контекст вызова callback.
     * @example
     * Преобразуем массив в записи:
     * <pre>
@@ -309,7 +303,7 @@ export default abstract class Abstract<T>
     * ).value();//[Record({id: 1, name: 'SpongeBob SquarePants'}), Record({id: 2, name: 'Patrick Star'})]
     * </pre>
     */
-   map(callback: (item: any, index: number) => any, thisArg?: Object): Mapped<T> {
+   map(callback: (item: any, index: number) => any, thisArg?: object): Mapped<T> {
       const Next = resolve<any>('Types/chain:Mapped');
       return new Next(
          this,
@@ -321,8 +315,7 @@ export default abstract class Abstract<T>
    /**
     * Перекомбинирует коллекцию, каждый n-ый элемент которой является массивом, первым элементом которого является n-ый
     * элемент исходной коллекции, вторым - n-ый элемент второй коллекции и т.д.
-    * @param {...Array} [args] Коллекции для комбинирования.
-    * @return {Types/_chain/Zipped}
+    * @param [args] Коллекции для комбинирования.
     * @example
     * Скомбинируем массивы:
     * <pre>
@@ -346,8 +339,7 @@ export default abstract class Abstract<T>
    /**
     * Преобразует коллекцию в объект, используя исходную коллекцию в качестве названий свойств, а вторую - в качестве
     * значений свойств.
-    * @param {Array.<*>} values Значения свойств.
-    * @return {Object}
+    * @param values Значения свойств.
     * @example
     * Получим данные учетной записи:
     * <pre>
@@ -359,7 +351,7 @@ export default abstract class Abstract<T>
     * );//{login: 'root', password: '123', email: 'root@localhost'}
     * </pre>
     */
-   zipObject(values: any[]): Object {
+   zipObject(values: any[]): object {
       const result = Object.create(null);
       this.zip(values).each((item) => {
          const [key, value]: [any, any] = item;
@@ -370,8 +362,7 @@ export default abstract class Abstract<T>
 
    /**
     * Преобразует коллекцию, возвращая значение свойства для каждого элемента.
-    * @param {String} propertyName Название свойства.
-    * @return {Types/_chain/Mapped}
+    * @param propertyName Название свойства.
     * @example
     * Получим имена персонажей из массива:
     * <pre>
@@ -399,9 +390,8 @@ export default abstract class Abstract<T>
 
    /**
     * Преобразует коллекцию, вызывая метод каждого элемента.
-    * @param {String} methodName Название метода.
-    * @param {...*} [args] Аргументы метода.
-    * @return {Types/_chain/Mapped}
+    * @param methodName Название метода.
+    * @param [args] Аргументы метода.
     * @example
     * Получим список названий фруктов в верхнем регистре:
     * <pre>
@@ -428,8 +418,7 @@ export default abstract class Abstract<T>
 
    /**
     * Соединяет коллекцию с другими коллекциями, добавляя их элементы в конец.
-    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, с которыми объединить.
-    * @return {Types/_chain/Concatenated}
+    * @param [args] Коллекции, с которыми объединить.
     * @example
     * Объединим коллекцию с двумя массивами:
     * <pre>
@@ -445,7 +434,6 @@ export default abstract class Abstract<T>
    /**
     * Разворачивает иерархическую коллекцию в плоскую: каждый итерируемый элемент коллекции рекрурсивно вставляется
     * в виде коллекции.
-    * @return {Types/_chain/Flattened}
     * @example
     * Развернем массив:
     * <pre>
@@ -460,9 +448,8 @@ export default abstract class Abstract<T>
 
    /**
     * Группирует коллекцию, создавая новую из элементов, сгруппированных в массивы.
-    * @param {String|Function(*): String} key Поле группировки или функция, группировки для каждого элемента.
-    * @param {String|Function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
-    * @return {Types/_chain/Grouped}
+    * @param key Поле группировки или функция, группировки для каждого элемента.
+    * @param [value] Поле значения или функция, возвращающая значение для каждого элемента.
     * @example
     * Сгруппируем четные и нечетные значения массива:
     * <pre>
@@ -494,9 +481,8 @@ export default abstract class Abstract<T>
 
    /**
     * Агрегирует коллекцию, подсчитывая число элементов, объединенных по заданному критерию.
-    * @param {String|function(*): String} [by] Поле агрегации или функция агрегации для каждого элемента.
+    * @param [by] Поле агрегации или функция агрегации для каждого элемента.
     * Если не указан, возвращается общее количество элементов.
-    * @return {Number|Types/_chain/Counted}
     * @example
     * Подсчитаем число элементов массива:
     * <pre>
@@ -533,7 +519,6 @@ export default abstract class Abstract<T>
 
    /**
     * Агрегирует коллекцию, находя максимальный элемент.
-    * @return {Number}
     * @example
     * Найдем максимальный элемент массива:
     * <pre>
@@ -547,7 +532,6 @@ export default abstract class Abstract<T>
 
    /**
     * Агрегирует коллекцию, находя минимальный элемент.
-    * @return {Number}
     * @example
     * Найдем минимальный элемент массива:
     * <pre>
@@ -561,8 +545,7 @@ export default abstract class Abstract<T>
 
    /**
     * Преобразует коллекцию, удаляя из нее повторяющиеся элементы (используется строгое сравнение ===).
-    * @param {function(*): String|Number>} [idExtractor] Функция, возвращающая уникальный идентификатор элемента.
-    * @return {Types/_chain/Uniquely}
+    * @param [idExtractor] Функция, возвращающая уникальный идентификатор элемента.
     * @example
     * Оставим уникальные значения массива:
     * <pre>
@@ -590,8 +573,7 @@ export default abstract class Abstract<T>
 
    /**
     * Преобразует коллекцию, добавляя в нее элементы других коллекций, которых в ней еще нет.
-    * @param {...Array.<Array>|Array.<Types/_collection/IEnumerable>} [args] Коллекции, элементы которых надо добавить.
-    * @return {Types/_chain/Uniquely}
+    * @param [args] Коллекции, элементы которых надо добавить.
     * @example
     * Оставим уникальные значения массива:
     * <pre>
@@ -611,9 +593,8 @@ export default abstract class Abstract<T>
 
    /**
     * Фильтрует коллекцию, оставляя в ней те элементы, которые прошли фильтр.
-    * @param {function(*, Number): Boolean} callback Фильтр c аргументами: элемент коллекции и его порядковый номер.
-    * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/_chain/Filtered}
+    * @param callback Фильтр c аргументами: элемент коллекции и его порядковый номер.
+    * @param [thisArg] Контекст вызова callback.
     * @example
     * Выберем четные значения массива:
     * <pre>
@@ -623,7 +604,7 @@ export default abstract class Abstract<T>
     *    .value();//[2, 4]
     * </pre>
     */
-   filter(callback: (item: any, index: number) => boolean, thisArg?: Object): Filtered<T> {
+   filter(callback: (item: any, index: number) => boolean, thisArg?: object): Filtered<T> {
       const Next = resolve<any>('Types/chain:Filtered');
       return new Next(
          this,
@@ -634,9 +615,8 @@ export default abstract class Abstract<T>
 
    /**
     * Фильтрует коллекцию, исключая из нее те элементы, которые прошли фильтр.
-    * @param {function(*, Number): Boolean} callback Функция c аргументами: элемент коллекции и его порядковый номер.
-    * @param {Object} [thisArg] Контекст вызова callback.
-    * @return {Types/_chain/Filtered}
+    * @param callback Функция c аргументами: элемент коллекции и его порядковый номер.
+    * @param [thisArg] Контекст вызова callback.
     * @example
     * Исключим значения от 2 до 4:
     * <pre>
@@ -646,14 +626,13 @@ export default abstract class Abstract<T>
     *    .value();//[1, 5]
     * </pre>
     */
-   reject(callback: (item: any, index: number) => boolean, thisArg?: Object): Filtered<T> {
+   reject(callback: (item: any, index: number) => boolean, thisArg?: object): Filtered<T> {
       return this.filter((...args) => !callback.apply(thisArg, args));
    }
 
    /**
     * Фильтрует коллекцию, оставляя в ней элементы, имеющие указанный набор значений свойств.
-    * @param {Object} properties Объект, с набором проверяемых свойств и их значений.
-    * @return {Types/_chain/Filtered}
+    * @param properties Объект, с набором проверяемых свойств и их значений.
     * @example
     * Получим персонажей мужского пола из дома Старков:
     * <pre>
@@ -676,7 +655,7 @@ export default abstract class Abstract<T>
     * //{name: 'Jon Snow', house: 'House Stark', gender: 'm'}]
     * </pre>
     */
-   where(properties: Object): Filtered<T> {
+   where(properties: object): Filtered<T> {
       const keys = Object.keys(properties);
       return this.filter((item) => keys.reduce(
          (prev, key) => prev && object.getPropertyValue(item, key) === properties[key],
@@ -686,8 +665,7 @@ export default abstract class Abstract<T>
 
    /**
     * Возвращает первый элемент коллекции или фильтрует ее, оставляя в ней первые n элементов.
-    * @param {Number} [n] Количество элементов, которые нужно выбрать. Если не указан, то возвращается первый элемент.
-    * @return {Types/_chain/Sliced|*}
+    * @param [n] Количество элементов, которые нужно выбрать. Если не указан, то возвращается первый элемент.
     * @example
     * Выберем первый элемент:
     * <pre>
@@ -712,8 +690,7 @@ export default abstract class Abstract<T>
 
    /**
     * Возвращает последний элемент коллекции или фильтрует ее, оставляя в ней последние n элементов.
-    * @param {Number} [n] Количество выбираемых элементов. Если не указано, то возвращается последний элемент.
-    * @return {Types/_chain/Reversed|*}
+    * @param [n] Количество выбираемых элементов. Если не указано, то возвращается последний элемент.
     * @example
     * Выберем последний элемент:
     * <pre>
@@ -740,7 +717,6 @@ export default abstract class Abstract<T>
 
    /**
     * Меняет порядок элементов коллекции на обратный
-    * @return {Types/_chain/Reversed}
     * @example
     * Изменим порядок элементов:
     * <pre>
@@ -756,9 +732,8 @@ export default abstract class Abstract<T>
    /**
     * Сортирует коллекцию с использованием функции сортировки, алгоритм работы и сигнатура которой аналогичны методу
     * {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort sort}.
-    * @param {function(*, *): Number} [compareFunction] Функция сортировки. Принимает аргументами два элемента
+    * @param [compareFunction] Функция сортировки. Принимает аргументами два элемента
     * коллекции, которые нужно сравнить.
-    * @return {Types/_chain/Sorted}
     * @example
     * Отсортируем массив чисел по возрастанию:
     * <pre>

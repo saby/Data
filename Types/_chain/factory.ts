@@ -1,4 +1,3 @@
-import {register} from '../di';
 import Abstract from './Abstract';
 import Arraywise from './Arraywise';
 import Objectwise from './Objectwise';
@@ -14,6 +13,9 @@ import Sliced from './Sliced';
 import Sorted from './Sorted';
 import Uniquely from './Uniquely';
 import Zipped from './Zipped';
+import {IEnumerable} from '../collection';
+import {IHashMap} from '../_declarations';
+import {register} from '../di';
 
 register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
 register('Types/chain:Arraywise', Arraywise, { instantiate: false });
@@ -69,13 +71,12 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
  * @function Types/_chain/factory
- * @param {Array|Object|Types/_collection/IEnumerable|Types/_chain/Abstract|Function} source Коллекция, обрабатываемая
+ * @param source Коллекция, обрабатываемая
  * цепочкой
- * @return {Types/_chain/Abstract}
  * @public
  * @author Мальцев А.А.
  */
-export default function factory(source: any): Abstract<any> {
+export default function factory<T>(source: Abstract<T> | IEnumerable<T> | T[] | IHashMap<T>): Abstract<T> {
    if (source instanceof Abstract) {
       return source;
    } else if (source && source['[Types/_collection/IEnumerable]']) {

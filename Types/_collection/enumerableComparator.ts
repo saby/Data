@@ -5,7 +5,6 @@ let sessionId = 0;
 
 /**
  * Возвращает уникальный идентификатор сессии
- * @return {Number}
  */
 function getId(): number {
    if (sessionId > 65534) {
@@ -16,9 +15,8 @@ function getId(): number {
 
 /**
  * Извлекает элементы коллекции
- * @param {Types/_collection/IEnumerable} collection Коллекция
- * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
- * @return {Object}
+ * @param collection Коллекция
+ * @param [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
  */
 function extractItems(collection: IEnumerable<any>, contentsWrapper?: string): any {
    const enumerator = collection.getEnumerator();
@@ -52,12 +50,11 @@ export interface ISession {
 
 /**
  * Возвращает изменения группы
- * @param {String} groupName Название группы
- * @param {Object} session Сессия изменений
- * @param {Types/_collection/IEnumerable} collection Коллекция
- * @param {Number} [startFrom=0] Начать с элемента номер
- * @param {Number} [offset=0] Смещение элеметов в after относительно before
- * @return {Object}
+ * @param groupName Название группы
+ * @param session Сессия изменений
+ * @param collection Коллекция
+ * @param [startFrom=0] Начать с элемента номер
+ * @param [offset=0] Смещение элеметов в after относительно before
  */
 function getGroupChanges(
    groupName: string,
@@ -252,9 +249,9 @@ function getGroupChanges(
 
 /**
  * Применяет изменения группы
- * @param {String} groupName Название группы
- * @param {Object} changes Изменения группы
- * @param {Object} session Сессия изменений
+ * @param groupName Название группы
+ * @param changes Изменения группы
+ * @param session Сессия изменений
  */
 function applyGroupChanges(groupName: string, changes: any, session: ISession): void {
    const before = session.before;
@@ -334,9 +331,8 @@ const enumerableComparator = {
 
    /**
     * Запускает сессию изменений коллекции (фиксирует ее состояние до изменений)
-    * @param {Types/_collection/IEnumerable} collection Коллекция
-    * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
-    * @return {Object}
+    * @param collection Коллекция
+    * @param [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     */
    startSession(collection: IEnumerable<any>, contentsWrapper?: string): ISession {
       const items = extractItems(collection, contentsWrapper);
@@ -350,9 +346,9 @@ const enumerableComparator = {
 
    /**
     * Завершает сессию изменений коллекции (фиксирует ее состояние после изменений)
-    * @param {Object} session Сессия изменений
-    * @param {Types/_collection/IEnumerable} collection Коллекция
-    * @param {String} [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
+    * @param session Сессия изменений
+    * @param collection Коллекция
+    * @param [contentsWrapper] Название метода, возвращающего содержимое элемента коллекции
     */
    finishSession(session: ISession, collection: IEnumerable<any>, contentsWrapper?: string): void {
       const items = extractItems(collection, contentsWrapper);
@@ -363,9 +359,9 @@ const enumerableComparator = {
 
    /**
     * Анализирует изменения в коллекции по завершенной сессии
-    * @param {Object} session Сессия изменений
-    * @param {Types/_collection/IEnumerable} collection Коллекция
-    * @param {Function} callback Функция обратного вызова для каждой пачки изменений
+    * @param session Сессия изменений
+    * @param collection Коллекция
+    * @param callback Функция обратного вызова для каждой пачки изменений
     */
    analizeSession(session: ISession, collection: IEnumerable<any>, callback: Function): void {
       // сначала удаление, потому что в listview при удалении/добалении одного элемента он сначала дублируется потом

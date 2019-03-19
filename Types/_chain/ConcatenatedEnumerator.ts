@@ -18,8 +18,8 @@ export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор объединяющего энумератора.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
+    * @param previous Предыдущее звено.
+    * @param items Коллекции для объединения.
     */
    constructor(previous: Abstract<T>, items: Array<any | IEnumerable<T>>) {
       this.previous = previous;

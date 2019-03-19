@@ -26,11 +26,15 @@ declare type DictionaryValues<T> = T[] | IHashMap<T>;
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Dictionary<T>
-   extends mixin<
-      DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
-   >(DestroyableMixin, OptionsToPropertyMixin, ObservableMixin)
-   implements IEnumerable<T>, IEquatable /** @lends Types/_collection/Dictionary.prototype */ {
+export default abstract class Dictionary<T> extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin
+) implements IEnumerable<T>, IEquatable {
    /**
     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
     * @name Types/_collection/Dictionary#dictionary

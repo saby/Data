@@ -1,5 +1,5 @@
 import enumerableComparator, {ISession} from './enumerableComparator';
-import { IList } from '../collection';
+import {IList} from '../collection';
 
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией
@@ -119,7 +119,6 @@ export default class EventRaisingMixin {
 
    /**
     * Запускает серию обновлений
-    * @return {Object}
     * @protected
     */
    protected _startUpdateSession(): ISession {
@@ -131,8 +130,8 @@ export default class EventRaisingMixin {
 
    /**
     * Завершает серию обновлений
-    * @param {Object} session Серия обновлений
-    * @param {Boolean} [analize=true] Запустить анализ изменений
+    * @param session Серия обновлений
+    * @param [analize=true] Запустить анализ изменений
     * @protected
     */
    protected _finishUpdateSession(session: ISession, analize?: boolean): void {
@@ -151,7 +150,7 @@ export default class EventRaisingMixin {
 
    /**
     * Анализирует серию обновлений, генерирует события об изменениях
-    * @param {Object} session Серия обновлений
+    * @param session Серия обновлений
     * @protected
     */
    protected _analizeUpdateSession(session: ISession): void {
@@ -173,12 +172,12 @@ export default class EventRaisingMixin {
 
    /**
     * Генерирует событие об изменении коллекции
-    * @param {String} action Действие, приведшее к изменению.
-    * @param {Array} newItems Новые исходной коллекции.
-    * @param {Number} newItemsIndex Индекс коллекции, в котором появились новые элементы.
-    * @param {Array} oldItems Удаленные элементы коллекции.
-    * @param {Number} oldItemsIndex Индекс коллекции, в котором удалены элементы.
-    * @param {Object} [session] Серия обновлений
+    * @param action Действие, приведшее к изменению.
+    * @param newItems Новые исходной коллекции.
+    * @param newItemsIndex Индекс коллекции, в котором появились новые элементы.
+    * @param oldItems Удаленные элементы коллекции.
+    * @param oldItemsIndex Индекс коллекции, в котором удалены элементы.
+    * @param [session] Серия обновлений
     * @protected
     */
    protected _notifyCollectionChange(
@@ -205,11 +204,10 @@ export default class EventRaisingMixin {
 
    /**
     * Разбивает элементы списка на пачки в порядке их следования в списке.
-    * @param {Types/_collection/IList} list Список, в котором содержатся элементы.
-    * @param {Array} items Элементы в произвольном порядке.
-    * @param {Function} callback Функция обратного вызова для каждой пачки
+    * @param list Список, в котором содержатся элементы.
+    * @param items Элементы в произвольном порядке.
+    * @param callback Функция обратного вызова для каждой пачки
     * @protected
-    * @static
     */
    protected _extractPacksByList(list: IList<any>, items: any[], callback: Function): void {
       const send = (pack, index) => {
@@ -252,7 +250,6 @@ export default class EventRaisingMixin {
 
    /**
     * Возвращает признак, что нужно генерировать события об изменениях коллекции
-    * @return {Boolean}
     * @protected
     */
    protected _isNeedNotifyCollectionChange(): boolean {

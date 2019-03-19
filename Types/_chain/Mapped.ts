@@ -11,24 +11,24 @@ type MapFunc = (item: any, index: number) => any;
  * @public
  * @author Мальцев А.А.
  */
-export default class Mapped<T> extends Abstract<T> /** @lends Types/_chain/Mapped.prototype */{
+export default class Mapped<T> extends Abstract<T> {
    /**
-    * @property {Function(*, Number): *} Функция, возвращающая новый элемент
+    * Функция, возвращающая новый элемент
     */
    protected _callback: MapFunc;
 
    /**
-    * @property {Object} Контекст вызова _callback
+    * Контекст вызова _callback
     */
-   protected _callbackContext: Object;
+   protected _callbackContext: object;
 
    /**
     * Конструктор преобразующего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {Function(*, Number): *} callback Функция, возвращающая новый элемент.
-    * @param {Object} [callbackContext] Контекст вызова callback
+    * @param source Предыдущее звено.
+    * @param callback Функция, возвращающая новый элемент.
+    * @param [callbackContext] Контекст вызова callback
     */
-   constructor(source: Abstract<T>, callback: MapFunc, callbackContext: Object) {
+   constructor(source: Abstract<T>, callback: MapFunc, callbackContext: object) {
       super(source);
       this._callback = callback;
       this._callbackContext = callbackContext;

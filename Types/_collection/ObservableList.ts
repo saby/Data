@@ -44,7 +44,7 @@ export default class ObservableList<T> extends mixin<
    List,
    IObservable,
    EventRaisingMixin
-) implements IReceiver /** @lends Types/_collection/ObservableList.prototype */{
+) implements IReceiver {
    _$items: T[];
    _indexer: Indexer<T[]>;
 
@@ -270,8 +270,8 @@ export default class ObservableList<T> extends mixin<
 
    /**
     * Генерирует событие об изменении элемента
-    * @param {*} item Элемент
-    * @param {Object} properties Изменившиеся свойства
+    * @param item Элемент
+    * @param properties Изменившиеся свойства
     */
    protected _notifyItemChange(item: T, properties: object): void {
       if (this._isNeedNotifyCollectionItemChange()) {
@@ -297,9 +297,8 @@ export default class ObservableList<T> extends mixin<
 
    /**
     * Извлекает элементы, входящие в указанный отрезок
-    * @param {Number} [begin] Индекс, по которому начинать извлечение.
-    * @param {Number} [end] Индекс, по которому заканчивать извлечение.
-    * @return {Array}
+    * @param [begin] Индекс, по которому начинать извлечение.
+    * @param [end] Индекс, по которому заканчивать извлечение.
     * @protected
     */
    protected _itemsSlice(begin?: number, end?: number): T[] {
@@ -308,7 +307,6 @@ export default class ObservableList<T> extends mixin<
 
    /**
     * Возвращает признак, что нужно генерировать события об изменениях элементов коллекции
-    * @return {Boolean}
     * @protected
     */
    protected _isNeedNotifyCollectionItemChange(): boolean {

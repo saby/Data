@@ -1,8 +1,7 @@
 /**
  * Ищет позицию вставки значения в массив методом деления пополам.
- * @param {Array} items Массив, значения котрого отсортированы по возрастанию.
- * @param {Number} value Вставляемое значение
- * @return {Number}
+ * @param items Массив, значения котрого отсортированы по возрастанию.
+ * @param value Вставляемое значение
  */
 function getPosition(items: any[], value: number): number {
    const count = items.length;
@@ -28,38 +27,38 @@ function getPosition(items: any[], value: number): number {
  * @public
  * @author Мальцев А.А.
  */
-export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype */{
+export default class Indexer<T> {
    /**
-    * @property {Object} Коллекция
+    * Коллекция
     */
    _collection: T;
 
    /**
-    * @property {Function} Метод, возвращающий кол-во элементов коллекции
+    * Метод, возвращающий кол-во элементов коллекции
     */
    _count: (items: T) => number;
 
    /**
-    * @property {Function} Метод, возвращающий элемент коллекции по индексу
+    * Метод, возвращающий элемент коллекции по индексу
     */
    _at: (items: T, index: number) => any;
 
    /**
-    * @property {Function} Метод, возвращающий значение свойства элемента коллекции
+    * Метод, возвращающий значение свойства элемента коллекции
     */
    _prop: (item: any, prop: string) => any;
 
    /**
-    * @property {Object.<Object>} Индексы, распределенные по полям
+    * Индексы, распределенные по полям
     */
-   _indices: Object;
+   _indices: object;
 
    /**
     * Конструктор
-    * @param {Object} collection Коллекция
-    * @param {Function: Number} count Метод, возвращающий кол-во элементов коллекции
-    * @param {Function: Object} at Метод, возвращающий элемент коллекции по индексу
-    * @param {Function} prop Метод, возвращающий значение свойства элемента коллекции
+    * @param collection Коллекция
+    * @param count Метод, возвращающий кол-во элементов коллекции
+    * @param at Метод, возвращающий элемент коллекции по индексу
+    * @param prop Метод, возвращающий значение свойства элемента коллекции
     */
    constructor(
       collection: T,
@@ -78,9 +77,8 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
-    * @param {String} property Название свойства элемента.
-    * @param {*} value Значение свойства элемента.
-    * @return {Number}
+    * @param property Название свойства элемента.
+    * @param value Значение свойства элемента.
     */
    getIndexByValue(property: string, value: any): number {
       const indices = this.getIndicesByValue(property, value);
@@ -89,9 +87,8 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Возвращает индексы всех элементов с указанным значением свойства.
-    * @param {String} property Название свойства элемента.
-    * @param {*} value Значение свойства элемента.
-    * @return {Array.<Number>}
+    * @param property Название свойства элемента.
+    * @param value Значение свойства элемента.
     */
    getIndicesByValue(property: string, value: any): number[] {
       const index = this._getIndex(property);
@@ -116,8 +113,8 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Обновляет индекс элементов
-    * @param {Number} start С какой позиции
-    * @param {Number} count Число обновляемых элементов
+    * @param start С какой позиции
+    * @param count Число обновляемых элементов
     */
    updateIndex(start: number, count: number): void {
       const indices = this._indices;
@@ -134,9 +131,9 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Сдвигает индекс элементов
-    * @param {Number} start С какой позиции
-    * @param {Number} count Число сдвигаемых элементов
-    * @param {Number} offset На сколько сдвинуть индексы
+    * @param start С какой позиции
+    * @param count Число сдвигаемых элементов
+    * @param offset На сколько сдвинуть индексы
     */
    shiftIndex(start: number, count: number, offset: number): void {
       const finish = start + count;
@@ -151,8 +148,8 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Удаляет элементы из индекса
-    * @param {Number} start С какой позиции
-    * @param {Number} count Число удаляемых элементов
+    * @param start С какой позиции
+    * @param count Число удаляемых элементов
     */
    removeFromIndex(start: number, count: number): void {
       this._eachIndexItem((data) => {
@@ -171,7 +168,7 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Перебирает проиндексированные значения для всех свойств
-    * @param {Function} callback Метод обратного вызова
+    * @param callback Метод обратного вызова
     * @protected
     */
    protected _eachIndexItem(callback: Function): void {
@@ -193,8 +190,7 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Возвращает индекс для указанного свойства.
-    * @param {String} property Название свойства.
-    * @return {Array}
+    * @param property Название свойства.
     * @protected
     */
    protected _getIndex(property: string): any[] {
@@ -209,8 +205,7 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Проверяет наличие индекса для указанного свойства.
-    * @param {String} [property] Название свойства.
-    * @return {Boolean}
+    * @param [property] Название свойства.
     * @protected
     */
    protected _hasIndex(property: string): boolean {
@@ -219,7 +214,7 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Удаляет индекс для указанного свойства.
-    * @param {String} property Название свойства.
+    * @param property Название свойства.
     * @protected
     */
    protected _deleteIndex(property: string): void {
@@ -228,7 +223,7 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Создает индекс для указанного свойства.
-    * @param {String} property Название свойства.
+    * @param property Название свойства.
     * @protected
     */
    protected _createIndex(property: string): void {
@@ -245,9 +240,9 @@ export default class Indexer<T> /** @lends Types/_collection/Indexer.prototype *
 
    /**
     * Обновляет индекс указанного свойства
-    * @param {String} property Название свойства.
-    * @param {Number} start С какой позиции
-    * @param {Number} count Число элементов
+    * @param property Название свойства.
+    * @param start С какой позиции
+    * @param count Число элементов
     * @protected
     */
    protected _updateIndex(property: string, start: number, count: number): void {

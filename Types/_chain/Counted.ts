@@ -11,16 +11,16 @@ type KeyFunc = (key: any) => string;
  * @public
  * @author Мальцев А.А.
  */
-export default class Counted<T> extends Abstract<T> /** @lends Types/_chain/Counted.prototype */{
+export default class Counted<T> extends Abstract<T> {
    /**
-    * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
+    * Функция, возвращающая ключ группировки для каждого элемента
     */
    protected _key: string|KeyFunc;
 
    /**
     * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {String|function(*): String} key Поле агрегации или функция агрегации для каждого элемента.
+    * @param source Предыдущее звено.
+    * @param key Поле агрегации или функция агрегации для каждого элемента.
     */
    constructor(source: Abstract<T>, key: string|KeyFunc) {
       super(source);

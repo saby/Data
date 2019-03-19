@@ -15,10 +15,9 @@ export default class SlicedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор вырезающего энумератора.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {Number} begin Индекс, по которому начинать извлечение
-    * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
-    * @protected
+    * @param previous Предыдущее звено.
+    * @param begin Индекс, по которому начинать извлечение
+    * @param end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
     */
    constructor(previous: Abstract<T>, begin: number, end: number) {
       this.previous = previous;

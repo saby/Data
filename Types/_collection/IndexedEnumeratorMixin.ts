@@ -12,21 +12,17 @@ import {Object as EventObject} from 'Env/Event';
  * @author Мальцев А.А.
  */
 export default abstract class IndexedEnumeratorMixin<T> {
-   '[Types/_collection/IndexedEnumeratorMixin]': boolean;
+   readonly '[Types/_collection/IndexedEnumeratorMixin]': boolean;
 
    /**
     * Индексы, распределенные по полям
     */
-   _enumeratorIndexes: object;
+   protected _enumeratorIndexes: object;
 
    constructor() {
       this._enumeratorIndexes = {};
       this._onCollectionChange = this._onCollectionChange.bind(this);
    }
-
-   // region IEnumerator
-
-   // endregion
 
    // region Public methods
 
@@ -97,9 +93,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Возвращает индекс для указанного значения свойства.
-    * @param {String} property Название свойства элемента.
-    * @param {*} value Значение свойства элемента.
-    * @return {Array.<Number>}
+    * @param property Название свойства элемента.
+    * @param value Значение свойства элемента.
     * @protected
     */
    protected _getIndexForPropertyValue(property: string, value: any): number[] {
@@ -109,8 +104,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Проверяет наличие индекса для указанного свойства.
-    * @param {String} [property] Название свойства.
-    * @return {Boolean}
+    * @param [property] Название свойства.
     * @protected
     */
    protected _hasIndex(property?: string): boolean {
@@ -122,8 +116,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Возвращает индекс для указанного свойства.
-    * @param {String} property Название свойства.
-    * @return {Object}
+    * @param property Название свойства.
     * @protected
     */
    protected _getIndex(property: string): object {
@@ -142,7 +135,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Удаляет индекс для указанного свойства.
-    * @param {String} property Название свойства.
+    * @param property Название свойства.
     * @protected
     */
    protected _deleteIndex(property: string): void {
@@ -151,10 +144,10 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Создает индекс для указанного свойства.
-    * @param {String} property Название свойства.
+    * @param property Название свойства.
     * @protected
     */
-   _createIndex(property: string): void {
+   protected _createIndex(property: string): void {
       const index = {};
       let position = 0;
 
@@ -175,8 +168,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Добавляет элементы в индекс
-    * @param {Number} start С какой позиции переиндексировать
-    * @param {Number} count Число переиндексируемых элементов
+    * @param start С какой позиции переиндексировать
+    * @param count Число переиндексируемых элементов
     * @protected
     */
    protected _addToIndex(start: number, count: number): void {
@@ -211,8 +204,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Удаляет элементы из индекса
-    * @param {Number} start С какой позиции переиндексировать
-    * @param {Number} count Число переиндексируемых элементов
+    * @param start С какой позиции переиндексировать
+    * @param count Число переиндексируемых элементов
     * @protected
     */
    protected _removeFromIndex(start: number, count: number): void {
@@ -241,8 +234,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Заменяет элементы в индексе
-    * @param {Number} start С какой позиции заменять
-    * @param {Number} count Число замененных элементов
+    * @param start С какой позиции заменять
+    * @param count Число замененных элементов
     * @protected
     */
    protected _replaceInIndex(start: number, count: number): void {
@@ -252,8 +245,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Сдвигает позицию элементов индекса
-    * @param {Number} start С какой позиции
-    * @param {Number} offset Сдвиг
+    * @param start С какой позиции
+    * @param offset Сдвиг
     * @protected
     */
    protected _shiftIndex(start: number, offset: number): void {
@@ -302,12 +295,12 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
    /**
     * Удаляет индексы при изменении исходной коллекции
-    * @param {Env/Event.Object} event Дескриптор события.
-    * @param {String} action Действие, приведшее к изменению.
-    * @param {Array.<*>} newItems Новые элементы коллекции.
-    * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {Array.<*>} oldItems Удаленные элементы коллекции.
-    * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+    * @param event Дескриптор события.
+    * @param action Действие, приведшее к изменению.
+    * @param newItems Новые элементы коллекции.
+    * @param newItemsIndex Индекс, в котором появились новые элементы.
+    * @param oldItems Удаленные элементы коллекции.
+    * @param oldItemsIndex Индекс, в котором удалены элементы.
     * @protected
     */
    protected _onCollectionChange(
