@@ -20,8 +20,8 @@ import FormattableMixin, {
 import VersionableMixin from './VersionableMixin';
 import Factory from './factory';
 import {IReceiver} from './relation';
-import {IAdapter, IRecord} from './adapter';
-import {Field, IFieldDeclaration} from './format';
+import {IAdapter, IRecord, ITable} from './adapter';
+import {Field, IFieldDeclaration, UniversalField} from './format';
 import {IEnumerable, enumerator, RecordSet, format} from '../collection';
 import {register, create} from '../di';
 import {protect, mixin, logger} from '../util';
@@ -74,7 +74,7 @@ export interface IOptions extends IFormattableOptions {
    owner?: RecordSet;
 }
 
-interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
+export interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
    $options: IOptions;
    _format: format.Format;
    _changedFields: string[];
@@ -228,7 +228,17 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @public
  * @author Мальцев А.А.
  */
-export default class Record extends mixin(
+export default class Record extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin,
+   SerializableMixin,
+   CloneableMixin,
+   ManyToManyMixin,
+   ReadWriteMixin,
+   FormattableMixin,
+   VersionableMixin
+>(
    DestroyableMixin,
    OptionsToPropertyMixin,
    ObservableMixin,
@@ -249,23 +259,23 @@ export default class Record extends mixin(
    IVersionable /** @lends Types/_entity/Record.prototype */ {
 
    /**
-    * @property Объект содержащий закэшированные значения полей
+    * Объект содержащий закэшированные значения полей
     */
-   get _fieldsCache(): Map<string, any> {
+   protected get _fieldsCache(): Map<string, any> {
       return this[$fieldsCache as string] || (this[$fieldsCache as string] = new Map());
    }
 
    /**
-    * @property Объект содержащий клонированные значения полей
+    * Объект содержащий клонированные значения полей
     */
-   get _fieldsClone(): Map<string, any> {
+   protected get _fieldsClone(): Map<string, any> {
       return this[$fieldsClone as string] || (this[$fieldsClone as string] = new Map());
    }
 
    /**
-    * @property Данные об измененных полях
+    * Данные об измененных полях
     */
-   get _changedFields(): Object {
+   protected get _changedFields(): Object {
       const result = {};
       const changedFields = this[$changedFields as string];
 
@@ -294,9 +304,9 @@ export default class Record extends mixin(
    }
 
    /**
-    * @property {RecordState} Состояние записи после последнего вызова {@link acceptChanges}
+    * Состояние записи после последнего вызова {@link acceptChanges}
     */
-   _acceptedState: string;
+   protected _acceptedState: string;
 
    /**
     * @typedef {String} RecordState
@@ -317,12 +327,12 @@ export default class Record extends mixin(
     * @see setState
     * @see getOwner
     */
-   _$state: string;
+   protected _$state: string;
 
    /**
     * @cfg {String} Режим кеширования
     */
-   _$cacheMode: string | symbol;
+   protected _$cacheMode: string | symbol;
 
    /**
     * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при
@@ -330,13 +340,13 @@ export default class Record extends mixin(
     * @name Types/_entity/Record#cloneChanged
     * @see rejectChanges
     */
-   _$cloneChanged: boolean;
+   protected _$cloneChanged: boolean;
 
    /**
     * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
     * @name Types/_entity/Record#owner
     */
-   _$owner: any;
+   protected _$owner: any;
 
    constructor(options?: IOptions) {
       if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
@@ -345,9 +355,9 @@ export default class Record extends mixin(
 
       super(options);
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
-      FormattableMixin.constructor.call(this, options);
-      ReadWriteMixin.constructor.call(this, options);
+      SerializableMixin.call(this);
+      FormattableMixin.call(this, options);
+      ReadWriteMixin.call(this, options);
 
       this._publish('onPropertyChange');
       this._clearChangedFields();
@@ -358,7 +368,7 @@ export default class Record extends mixin(
       this[$changedFields as string] = null;
       this._clearFieldsCache();
 
-      ReadWriteMixin.destroy.call(this);
+      ReadWriteMixin.prototype.destroy.call(this);
       DestroyableMixin.prototype.destroy.call(this);
    }
 
@@ -676,31 +686,15 @@ export default class Record extends mixin(
 
    // endregion
 
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <Record>(shallow?: boolean) => Record;
-
-   // endregion
-
-   // region IVersionable
-
-   readonly '[Types/_entity/IVersionable]': boolean;
-
-   getVersion: () => number;
-
-   // endregion
-
    // region SerializableMixin
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       let resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
-      resultState = FormattableMixin._getSerializableState.call(this, resultState);
+      resultState = FormattableMixin.prototype._getSerializableState.call(this, resultState);
       resultState._changedFields = this[$changedFields as string];
 
       // Keep format if record has owner with format
-      if (resultState.$options.owner && resultState.$options.owner._hasFormat()) {
+      if (resultState.$options.owner && resultState.$options.owner.hasDecalredFormat()) {
          resultState._format = resultState.$options.owner.getFormat();
       }
 
@@ -711,7 +705,7 @@ export default class Record extends mixin(
 
    _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      const fromFormattableMixin = FormattableMixin._setSerializableState(state);
+      const fromFormattableMixin = FormattableMixin.prototype._setSerializableState(state);
 
       return function(): void {
          fromSerializableMixin.call(this);
@@ -728,19 +722,26 @@ export default class Record extends mixin(
 
    // region FormattableMixin
 
-   getRawData: (shared?: boolean) => any;
-
    setRawData(rawData: any): void {
-      FormattableMixin.setRawData.call(this, rawData);
+      FormattableMixin.prototype.setRawData.call(this, rawData);
       this._nextVersion();
       this._clearFieldsCache();
       this._notifyChange();
    }
 
+   hasDecalredFormat(): boolean {
+      const owner = this.getOwner();
+      if (owner) {
+         return owner.hasDecalredFormat();
+      } else {
+         return super.hasDecalredFormat.call(this);
+      }
+   }
+
    addField(format: Field | IFieldDeclaration, at?: number, value?: any): void {
       this._checkFormatIsWritable();
-      format = this._buildField(format) as Field;
-      FormattableMixin.addField.call(this, format, at);
+      format = this._buildField(format);
+      FormattableMixin.prototype.addField.call(this, format, at);
       if (value !== undefined) {
          this.set(format.getName(), value);
       }
@@ -755,7 +756,7 @@ export default class Record extends mixin(
       this._fieldsCache.delete(name);
       this._fieldsClone.delete(name);
 
-      FormattableMixin.removeField.call(this, name);
+      FormattableMixin.prototype.removeField.call(this, name);
       this._childChanged(Record.prototype.removeField);
    }
 
@@ -769,36 +770,31 @@ export default class Record extends mixin(
          this._fieldsClone.delete(field.getName());
       }
 
-      FormattableMixin.removeFieldAt.call(this, at);
+      FormattableMixin.prototype.removeFieldAt.call(this, at);
       this._childChanged(Record.prototype.removeFieldAt);
-   }
-
-   protected _hasFormat(): boolean {
-      const owner = this.getOwner();
-      if (owner) {
-         return owner._hasFormat();
-      } else {
-         return FormattableMixin._hasFormat.call(this);
-      }
    }
 
    protected _getFormat(build: boolean): format.Format {
       const owner = this.getOwner();
       if (owner) {
+         // @ts-ignore
          return owner._getFormat(build);
       } else {
-         return FormattableMixin._getFormat.call(this, build);
+         return super._getFormat.call(this, build);
       }
    }
 
-   protected _getFieldFormat(name: string, adapter: IAdapter): Field {
+   protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
       const owner = this.getOwner();
       if (owner) {
+         // @ts-ignore
          return owner._getFieldFormat(name, adapter);
       } else {
-         return FormattableMixin._getFieldFormat.call(this, name, adapter);
+         return super._getFieldFormat.call(this, name, adapter);
       }
    }
+
+   protected _getRawDataAdapter: () => IRecord;
 
    /**
     * Создает адаптер для сырых данных
@@ -806,7 +802,7 @@ export default class Record extends mixin(
     * @protected
     */
    protected _createRawDataAdapter(): IRecord {
-      return this._getAdapter().forRecord(this._getRawData(true));
+      return (this._getAdapter() as IAdapter).forRecord(this._getRawData(true));
    }
 
    /**
@@ -1021,7 +1017,7 @@ export default class Record extends mixin(
     *    article.getState() === RecordState.CHANGED;//true
     * </pre>
     */
-   acceptChanges(fields?: string[], spread?: false): void {
+   acceptChanges(fields?: string[], spread?: boolean): void {
       if (spread === undefined && typeof fields === 'boolean') {
          spread = fields;
          fields = undefined;
@@ -1108,7 +1104,7 @@ export default class Record extends mixin(
     *    article.get('password');//'123'
     * </pre>
     */
-   rejectChanges(fields?: string[], spread?: false): void {
+   rejectChanges(fields?: string[], spread?: boolean): void {
       if (spread === undefined && typeof fields === 'boolean') {
          spread = fields;
          fields = undefined;

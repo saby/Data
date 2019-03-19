@@ -125,7 +125,7 @@ export default class PrefetchProxy extends mixin(
    constructor(options?: Object) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
 
       if (!this._$target) {
          throw new ReferenceError('Option "target" is required.');

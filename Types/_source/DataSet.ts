@@ -300,7 +300,7 @@ export default class DataSet extends mixin(
    constructor(options?: IOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
    }
 
    // region Public methods
@@ -538,7 +538,7 @@ export default class DataSet extends mixin(
     *    });
     * </pre>
     */
-   getAll(property?: string): RecordSet<Model> {
+   getAll(property?: string): RecordSet {
       this._checkAdapter();
       if (property === undefined) {
          property = this._$itemsProperty;
@@ -840,8 +840,8 @@ export default class DataSet extends mixin(
     * @return {Types/_collection/RecordSet}
     * @protected
     */
-   protected _getListInstance(rawData: any): RecordSet<Model> {
-      return create<RecordSet<Model>>(this._$listModule, {
+   protected _getListInstance(rawData: any): RecordSet {
+      return create<RecordSet>(this._$listModule, {
          writable: this._$writable,
          rawData,
          adapter: this._$adapter,

@@ -9,7 +9,7 @@ import {
    format
 } from '../entity';
 import {register} from '../di';
-import {applyMixins} from '../util';
+import {mixin} from '../util';
 
 interface IProduceOptions {
    format?: format.Field | format.UniversalField;
@@ -28,9 +28,17 @@ interface IProduceOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class Enum<T>
-   extends Dictionary<T>
-   implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */ {
+export default class Enum<T> extends mixin<
+   Dictionary<any>,
+   ManyToManyMixin,
+   SerializableMixin,
+   CloneableMixin
+>(
+   Dictionary,
+   ManyToManyMixin,
+   SerializableMixin,
+   CloneableMixin
+) implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */ {
    /**
     * @cfg {Number|sting|null} Key of the selected item
     * @name Types/_collection/Enum#index
@@ -43,13 +51,13 @@ export default class Enum<T>
 
    constructor(options?: Object) {
       super(options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
       this._publish('onChange');
       this._checkIndex();
    }
 
    destroy(): void {
-      ManyToManyMixin.destroy.call(this);
+      ManyToManyMixin.prototype.destroy.call(this);
       super.destroy();
    }
 
@@ -117,14 +125,6 @@ export default class Enum<T>
 
    // endregion
 
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <Enum>(shallow?: boolean) => Enum;
-
-   // endregion
-
    // region IEquatable
 
    isEqual(to: Object): boolean {
@@ -189,8 +189,6 @@ export default class Enum<T>
 
    // endregion
 }
-
-applyMixins(Enum, ManyToManyMixin, SerializableMixin, CloneableMixin);
 
 Object.assign(Enum.prototype, {
    '[Types/_collection/Enum]': true,

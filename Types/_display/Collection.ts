@@ -14,7 +14,7 @@ import {
    ISerializableState as IDefaultSerializableState,
    functor
 } from '../entity';
-import {EnumeratorCallback, IList, EventRaisingMixin} from '../collection';
+import {EnumeratorCallback, IList, EventRaisingMixin, IEnumerableComparatorSession} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
@@ -215,11 +215,6 @@ export type SortFunction = (a: ISortItem, b: ISortItem) => number;
 
 export type ItemsFactory = (item: any) => CollectionItem;
 
-interface ISession {
-   before: any;
-   after: any;
-}
-
 interface ISessionItems extends Array<CollectionItem> {
    properties?: object;
 }
@@ -247,7 +242,7 @@ export interface ISerializableState extends IDefaultSerializableState {
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection extends mixin<Abstract>(
+export default class Collection extends mixin(
    Abstract, SerializableMixin, EventRaisingMixin
 ) implements IEnumerable<CollectionItem>, IList<CollectionItem> /** @lends Types/_display/Collection.prototype */ {
    /**
@@ -520,8 +515,8 @@ export default class Collection extends mixin<Abstract>(
 
    constructor(options: Object) {
       super(options);
-      SerializableMixin.constructor.call(this);
-      EventRaisingMixin.constructor.call(this, options);
+      SerializableMixin.call(this);
+      EventRaisingMixin.call(this, options);
       this._$filter = this._$filter || [];
       this._$sort = this._$sort || [];
       this._$importantItemProperties = this._$importantItemProperties || [];
@@ -1850,7 +1845,7 @@ export default class Collection extends mixin<Abstract>(
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
 
       resultState._composer = this._composer;
@@ -1858,7 +1853,7 @@ export default class Collection extends mixin<Abstract>(
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -1950,12 +1945,12 @@ export default class Collection extends mixin<Abstract>(
 
    // region EventRaisingMixin
 
-   protected _analizeUpdateSession(session: ISession): void {
+   protected _analizeUpdateSession(session: IEnumerableComparatorSession): void {
       if (session) {
          this._notifyBeforeCollectionChange();
       }
 
-      EventRaisingMixin._analizeUpdateSession.call(this, session);
+      super._analizeUpdateSession.call(this, session);
 
       if (session) {
          this._notifyAfterCollectionChange();
@@ -1968,7 +1963,7 @@ export default class Collection extends mixin<Abstract>(
       newItemsIndex: number,
       oldItems: CollectionItem[],
       oldItemsIndex: number,
-      session?: ISession
+      session?: IEnumerableComparatorSession
    ): void {
       if (!this._isNeedNotifyCollectionChange()) {
          return;
@@ -2728,7 +2723,12 @@ export default class Collection extends mixin<Abstract>(
     * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
     * @protected
     */
-   protected _checkItemsDiff(session: ISession, items: CollectionItem[], state: any[], beforeCheck: Function): void {
+   protected _checkItemsDiff(
+      session: IEnumerableComparatorSession,
+      items: CollectionItem[],
+      state: any[],
+      beforeCheck: Function
+   ): void {
       const diff = state ? this._getItemsDiff(
          state,
          this._getItemsState(items)
@@ -2741,7 +2741,7 @@ export default class Collection extends mixin<Abstract>(
       // Notify changes by the diff
       if (diff.length) {
          this._notifyBeforeCollectionChange();
-         EventRaisingMixin._extractPacksByList(this, diff, (items, index) => {
+         this._extractPacksByList(this, diff, (items, index) => {
             this._notifyCollectionChange(
                IBind.ACTION_CHANGE,
                items,
@@ -2789,7 +2789,7 @@ export default class Collection extends mixin<Abstract>(
     * @param {Number} index Индекс исходной коллекции, в котором находятся элементы.
     * @protected
     */
-   protected _notifyCollectionItemsChange(changed: any[], index: number, session: ISession): void {
+   protected _notifyCollectionItemsChange(changed: any[], index: number, session: IEnumerableComparatorSession): void {
       const items = this._getItems();
       const last = index + changed.length;
       const changedItems = [];
@@ -2800,7 +2800,7 @@ export default class Collection extends mixin<Abstract>(
       }
 
       this._notifyBeforeCollectionChange();
-      EventRaisingMixin._extractPacksByList(
+      this._extractPacksByList(
          this,
          changedItems,
          (pack, index) => {

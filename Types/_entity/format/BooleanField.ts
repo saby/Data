@@ -18,6 +18,8 @@ import Field from './Field';
 export default class BooleanField extends Field /** @lends Types/_entity/format/BooleanField.prototype */{
 }
 
-BooleanField.prototype['[Types/_entity/format/BooleanField]'] = true;
-BooleanField.prototype._moduleName = 'Types/entity:format.BooleanField';
-BooleanField.prototype._typeName = 'Boolean';
+Object.assign(BooleanField.prototype, {
+   '[Types/_entity/format/BooleanField]': true,
+   _moduleName: 'Types/entity:format.BooleanField',
+   _typeName: 'Boolean'
+});

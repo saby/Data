@@ -3,6 +3,9 @@ import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
 import {register} from '../../di';
 import {mixin} from '../../util';
 
+type FilterFunc<T> = (item: T, index: number) => boolean;
+type ResolveFunc<T> = (index: number) => T;
+
 /**
  * Энумератор для массива
  * @class Types/_collection/ArrayEnumerator
@@ -11,10 +14,31 @@ import {mixin} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class Arraywise<T> extends mixin(
-   Object,
+export default class Arraywise<T> extends mixin<
+   IndexedEnumeratorMixin<any>
+>(
    IndexedEnumeratorMixin
 ) implements IEnumerator<T> /** @lends Types/_collection/ArrayEnumerator.prototype */{
+   /**
+    * Array to traverse
+    */
+   protected _items: T[];
+
+   /**
+    * Current index
+    */
+   _index: number;
+
+   /**
+    * Elements resolver
+    */
+   _resolver: ResolveFunc<T>;
+
+   /**
+    * Elements filter
+    */
+   _filter: FilterFunc<T>;
+
    /**
     * Конструктор
     * @param {Array} items Массив
@@ -29,14 +53,14 @@ export default class Arraywise<T> extends mixin(
          throw new Error('Argument items should be an instance of Array');
       }
       this._items = checkedItems;
-      IndexedEnumeratorMixin.constructor.call(this);
+      IndexedEnumeratorMixin.call(this);
    }
 
    // region IEnumerator
 
    readonly '[Types/_collection/IEnumerator]': boolean = true;
 
-   getCurrent(): any {
+   getCurrent(): T {
       if (this._index < 0) {
          return undefined;
       }
@@ -73,7 +97,7 @@ export default class Arraywise<T> extends mixin(
     * Устанавливает резолвер элементов по позиции
     * @param {function(Number): *} resolver Функция обратного вызова, которая должна по позиции вернуть элемент
     */
-   setResolver(resolver: (index: number) => any): void {
+   setResolver(resolver: ResolveFunc<T>): void {
       this._resolver = resolver;
    }
 
@@ -82,33 +106,19 @@ export default class Arraywise<T> extends mixin(
     * @param {function(*): Boolean} filter Функция обратного вызова, которая должна для каждого элемента вернуть
     * признак, проходит ли он фильтр
     */
-   setFilter(filter: (item: any, index: any) => boolean): void {
+   setFilter(filter: FilterFunc<T>): void {
       this._filter = filter;
    }
 
    // endregion
 }
 
-Arraywise.prototype['[Types/_collection/enumerator/Arraywise]'] = true;
-
-/**
- * Array to traverse
- */
-Arraywise.prototype._items = null;
-
-/**
- * Current index
- */
-Arraywise.prototype._index = -1;
-
-/**
- * {function(Number): *} Elements resolver
- */
-Arraywise.prototype._resolver = null;
-
-/**
- * {function(*): Boolean} Elements filter
- */
-Arraywise.prototype._filter = null;
+Object.assign(Arraywise.prototype, {
+   ['[Types/_collection/enumerator/Arraywise]']: true,
+   _items: null,
+   _index: -1,
+   _resolver: null,
+   _filter: null
+});
 
 register('Types/collection:enumerator.Arraywise', Arraywise, {instantiate: false});

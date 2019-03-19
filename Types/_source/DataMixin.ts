@@ -148,7 +148,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     */
    _dataSetMetaProperty: '',
 
-   _writable: ReadWriteMixin.writable,
+   _writable: ReadWriteMixin.prototype.writable,
 
    constructor(options?: IOptions): void {
       options = options || {};

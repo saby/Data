@@ -1,11 +1,9 @@
 /**
- * Наследует статические свойства
- * @param Base Базовый класс.
- * @param Sub Класс-наследник.
+ * Inherits static class members
  */
-function inheritStatic<T>(Base: Function, Sub: Function): void {
+function inheritStatic<T>(Base: T, Sub: Function): void {
    // Don't inherit from plain object
-   if (Base === Object) {
+   if ((Base as any) === Object) {
       return;
    }
 
@@ -26,18 +24,21 @@ function inheritStatic<T>(Base: Function, Sub: Function): void {
    });
 }
 
-export function applyMixins(Sub: Function, ...mixins: Array<Function | object>): void {
+/**
+ * Puts mixins into given class
+ */
+export function applyMixins<M>(Sub: Function, ...mixins: M[]): void {
    // FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
    if (mixins.length && !Sub.prototype._mixins) {
       Sub.prototype._mixins = [];
    }
 
-   mixins.forEach((mixin) => {
+   mixins.forEach((mixin: M) => {
       const isClass = typeof mixin === 'function';
-      const proto = isClass ? (mixin as Function).prototype : mixin;
+      const proto = isClass ? (mixin as any).prototype : mixin;
 
       if (isClass) {
-         inheritStatic(mixin as Function, Sub);
+         inheritStatic(mixin as any, Sub);
       }
 
       const inject = (name) => {
@@ -51,13 +52,39 @@ export function applyMixins(Sub: Function, ...mixins: Array<Function | object>):
    });
 }
 
+type MixinConstructor1<M1> = new (...args: any[]) => M1;
+type MixinConstructor2<M1, M2> = new (...args: any[]) => M1 & M2;
+type MixinConstructor3<M1, M2, M3> = new (...args: any[]) => M1 & M2 & M3;
+type MixinConstructor4<M1, M2, M3, M4> = new (...args: any[]) => M1 & M2 & M3 & M4;
+type MixinConstructor5<M1, M2, M3, M4, M5> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5;
+type MixinConstructor6<M1, M2, M3, M4, M5, M6> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6;
+type MixinConstructor7<M1, M2, M3, M4, M5, M6, M7> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7;
+type MixinConstructor8<
+   M1, M2, M3, M4, M5, M6, M7, M8
+> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8;
+type MixinConstructor9<
+   M1, M2, M3, M4, M5, M6, M7, M8, M9
+> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9;
+
+export function mixin(...mixins: any[]): any;
+export function mixin<M1>(...mixins: any[]): MixinConstructor1<M1>;
+export function mixin<M1, M2>(...mixins: any[]): MixinConstructor2<M1, M2>;
+export function mixin<M1, M2, M3>(...mixins: any[]): MixinConstructor3<M1, M2, M3>;
+export function mixin<M1, M2, M3, M4>(...mixins: any[]): MixinConstructor4<M1, M2, M3, M4>;
+export function mixin<M1, M2, M3, M4, M5>(...mixins: any[]): MixinConstructor5<M1, M2, M3, M4, M5>;
+export function mixin<M1, M2, M3, M4, M5, M6>(...mixins: any[]): MixinConstructor6<M1, M2, M3, M4, M5, M6>;
+export function mixin<M1, M2, M3, M4, M5, M6, M7>(...mixins: any[]): MixinConstructor7<M1, M2, M3, M4, M5, M6, M7>;
+export function mixin<
+   M1, M2, M3, M4, M5, M6, M7, M8
+>(...mixins: any[]): MixinConstructor8<M1, M2, M3, M4, M5, M6, M7, M8>;
+export function mixin<
+   M1, M2, M3, M4, M5, M6, M7, M8, M9
+>(...mixins: any[]): MixinConstructor9<M1, M2, M3, M4, M5, M6, M7, M8, M9>;
+
 /**
- * Создает наследника с набором миксинов
- * @param Base Базовый класс
- * @param mixins Миксины
- * @return Наследник с миксинами.
+ * Creates a subclass with given mixins
  */
-export function mixin<T>(Base: any, ...mixins: Array<Function | Object>): any {
+export function mixin(Base: any, ...mixins: Array<Function | object>): any {
    class Sub extends Base  {
       constructor(...args: any[]) {
          if (Base !== Object) {

@@ -18,6 +18,8 @@ import Field from './Field';
 export default class StringField extends Field /** @lends Types/_entity/format/StringField.prototype */{
 }
 
-StringField.prototype['[Types/_entity/format/StringField]'] = true;
-StringField.prototype._moduleName = 'Types/entity:format.StringField';
-StringField.prototype._typeName = 'String';
+Object.assign(StringField.prototype, {
+   '[Types/_entity/format/StringField]': true,
+   _moduleName: 'Types/entity:format.StringField',
+   _typeName: 'String'
+});

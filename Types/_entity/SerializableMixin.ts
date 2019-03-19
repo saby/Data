@@ -127,7 +127,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    /**
     * Method implemented in OptionsToPropertyMixin
     */
-   private _getOptions: () => Object;
+   protected _getOptions: () => object;
 
    // region Public methods
 

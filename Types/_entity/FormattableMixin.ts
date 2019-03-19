@@ -1,5 +1,5 @@
 import {Field, fieldsFactory, UniversalField, IFieldDeclaration} from './format';
-import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator} from './adapter';
+import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData} from './adapter';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
@@ -75,7 +75,7 @@ function buildFormatByRawData(): format.Format {
  * Строит сырые данные по формату если он был явно задан
  */
 function buildRawData(): void {
-   if (this._hasFormat()) {
+   if (this.hasDecalredFormat()) {
       let adapter = this._getRawDataAdapter();
       const fields = adapter.getFields();
 
@@ -105,11 +105,8 @@ function buildRawData(): void {
  * @public
  * @author Мальцев А.А.
  */
-const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
-   '[Types/_entity/FormattableMixin]': true,
-
-   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[WS.Data/Entity/FormattableMixin]': true,
+export default abstract class FormattableMixin {
+   '[Types/_entity/FormattableMixin]': boolean;
 
    /**
     * @cfg {Object} Данные в "сыром" виде.
@@ -166,10 +163,12 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     *    });
     * </pre>
     */
-   _$rawData: null,
+   _$rawData: any;
 
-   // При работе с сырыми данными использовать режим Copy-On-Write.
-   _$cow: false,
+   /**
+    * При работе с сырыми данными использовать режим Copy-On-Write.
+    */
+   _$cow: boolean;
 
    /**
     * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с данными, по умолчанию
@@ -199,7 +198,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     *    });
     * </pre>
     */
-   _$adapter: defaultAdapter,
+   _$adapter: IAdapter | IDecorator | string;
 
    /**
     * @cfg {Types/_collection/format/Format|
@@ -371,50 +370,56 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * </pre>
     * Формат поля для массива значений смотрите в описании {@link Types/_entity/format/ArrayField}.
     */
-   _$format: null,
+   _$format: format.Format | IFieldDeclaration[];
 
    /**
-    * @member {Types/_collection/format/Format} Формат полей (собранный из опции format или в результате манипуляций)
+    * Формат полей (собранный из опции format или в результате манипуляций)
     */
-   _format: null,
+   _format: format.Format;
 
    /**
-    * @member {Types/_collection/format/Format} Клон формата полей (для кэшеирования результата getFormat())
+    * Клон формата полей (для кэшеирования результата getFormat())
     */
-   _formatClone: null,
+   _formatClone: format.Format;
 
    /**
-    * @member {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} Адаптер для данных в "сыром" виде
+    * Адаптер для данных в "сыром" виде
     */
-   _rawDataAdapter: null,
+   _rawDataAdapter: ITable | IRecord;
 
    /**
-    * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+    * Описание всех полей, полученных из данных в "сыром" виде
     */
-   _rawDataFields: null,
+   _rawDataFields: string[];
 
-   constructor(): void {
+   /**
+    * Old-fashioned options
+    * @deprecated
+    */
+   _options: any;
+
+   constructor() {
       // FIXME: get rid of _options
       if (!this._$format && this._options && this._options.format) {
          this._$format = this._options.format;
       }
 
       buildRawData.call(this);
-   },
+   }
 
-   // region Types/_entity/SerializableMixin
+   // region SerializableMixin
 
    _getSerializableState(state: ISerializableState): ISerializableState {
       state.$options.rawData = this._getRawData();
       return state;
-   },
+   }
 
    _setSerializableState(state: ISerializableState): Function {
       // tslint:disable-next-line:only-arrow-functions no-empty
       return function(): void {};
-   },
+   }
 
-   // endregion Types/_entity/SerializableMixin
+   // endregion
 
    // region Public methods
 
@@ -440,7 +445,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     */
    getRawData(shared?: boolean): any {
       return shared ? this._getRawData() : object.clone(this._getRawData());
-   },
+   }
 
    /**
     * Устанавливает данные в "сыром" виде.
@@ -462,7 +467,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       this._resetRawDataFields();
       this._clearFormatClone();
       buildRawData.call(this);
-   },
+   }
 
    /**
     * Возвращает адаптер для работы с данными в "сыром" виде.
@@ -480,10 +485,17 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    getAdapter(): IAdapter {
       let adapter = this._getAdapter();
       if (adapter['[Types/_entity/adapter/IDecorator]']) {
-         adapter = adapter.getOriginal();
+         adapter = (adapter as IDecorator).getOriginal() as IAdapter;
       }
-      return adapter;
-   },
+      return adapter as IAdapter;
+   }
+
+   /**
+    * Возвращает признак, что формат полей был установлен явно
+    */
+   hasDecalredFormat(): boolean {
+      return !!this._$format;
+   }
 
    /**
     * Возвращает формат полей (в режиме только для чтения)
@@ -529,7 +541,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
          this._formatClone = this._getFormat(true).clone(true);
       }
       return this._formatClone;
-   },
+   }
 
    /**
     * Добавляет поле в формат.
@@ -566,10 +578,10 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       format = this._buildField(format);
       this._$format = this._getFormat(true);
       this._$format.add(format, at);
-      this._getRawDataAdapter().addField(format, at);
+      (this._getRawDataAdapter() as ITable).addField(format, at);
       this._resetRawDataFields();
       this._clearFormatClone();
-   },
+   }
 
    /**
     * Удаляет поле из формата по имени.
@@ -588,10 +600,10 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    removeField(name: string): void {
       this._$format = this._getFormat(true);
       this._$format.removeField(name);
-      this._getRawDataAdapter().removeField(name);
+      (this._getRawDataAdapter() as ITable).removeField(name);
       this._resetRawDataFields();
       this._clearFormatClone();
-   },
+   }
 
    /**
     * Удаляет поле из формата по позиции.
@@ -610,12 +622,12 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
    removeFieldAt(at: number): void {
       this._$format = this._getFormat(true);
       this._$format.removeAt(at);
-      this._getRawDataAdapter().removeFieldAt(at);
+      (this._getRawDataAdapter() as ITable).removeFieldAt(at);
       this._resetRawDataFields();
       this._clearFormatClone();
-   },
+   }
 
-   // endregion Public methods
+   // endregion
 
    // region Protected methods
 
@@ -625,74 +637,74 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {Object}
     * @protected
     */
-   _getRawData(direct?: boolean): any {
+   protected _getRawData(direct?: boolean): any {
       if (!direct && this._rawDataAdapter) {
          return this._rawDataAdapter.getData();
       }
       return typeof this._$rawData === 'function' ? this._$rawData() : this._$rawData;
-   },
+   }
 
    /**
     * Возвращает адаптер по-умолчанию в случае, если опция 'adapter' не была переопределена в подмешивающем миксин коде.
     * @protected
     * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию. Используйте опцию adapter.
     */
-   _getDefaultAdapter(): string {
+   protected _getDefaultAdapter(): string {
       return defaultAdapter;
-   },
+   }
 
    /**
     * Возвращает адаптерр для сырых данных
     * @return {Types/_entity/adapter/IAdapter}
     * @protected
     */
-   _getAdapter(): IAdapter {
+   protected _getAdapter(): IAdapter | IDecorator {
       if (
          this._$adapter === defaultAdapter &&
-         FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
+         FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
       ) {
          this._$adapter = this._getDefaultAdapter();
       }
 
       if (this._$adapter && !(this._$adapter instanceof Object)) {
-         this._$adapter = create(this._$adapter);
+         this._$adapter = create<IAdapter>(this._$adapter);
       }
 
       if (this._$cow && !this._$adapter['[Types/_entity/adapter/IDecorator]']) {
-         this._$adapter = new CowAdapter(this._$adapter);
+         this._$adapter = new CowAdapter(this._$adapter as IAdapter);
       }
 
-      return this._$adapter;
-   },
+      return this._$adapter as IAdapter;
+   }
 
    /**
     * Возвращает адаптер для сырых данных заданного вида
     * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
-   _getRawDataAdapter(): ITable | IRecord {
+   protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
       if (!this._rawDataAdapter) {
          this._rawDataAdapter = this._createRawDataAdapter();
       }
 
       return this._rawDataAdapter;
-   },
+   }
 
    /**
     * Создает адаптер для сырых данных
     * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
-   _createRawDataAdapter(): ITable | IRecord {
+   protected _createRawDataAdapter(): ITable | IRecord {
       throw new Error('Method must be implemented');
-   },
+   }
 
    /**
     * Сбрасывает адаптер для сырых данных
     * @param {*} [data] Сырые данные
     * @protected
     */
-   _resetRawDataAdapter(data?: any): void {
+   protected _resetRawDataAdapter(data?: any): void {
       if (data === undefined) {
          if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
             // Save possible rawData changes
@@ -703,57 +715,57 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       }
 
       this._rawDataAdapter = null;
-   },
+   }
 
    /**
     * Проверяет совместимость адаптеров
     * @param {Types/_entity/adapter/IAdapter} foreign Адаптер внешнего объекта
     * @protected
     */
-   _checkAdapterCompatibility(foreign: IAdapter | IDecorator): void {
+   protected _checkAdapterCompatibility(foreign: IAdapter | IDecorator): void {
       let internal = this._getAdapter();
 
       if (foreign['[Types/_entity/adapter/IDecorator]']) {
          foreign = (foreign as IDecorator).getOriginal() as IAdapter;
       }
       if (internal['[Types/_entity/adapter/IDecorator]']) {
-         internal = internal.getOriginal();
+         internal = (internal as IDecorator).getOriginal() as IAdapter;
       }
 
       const internalProto = Object.getPrototypeOf(internal);
       if (!internalProto.isPrototypeOf(foreign)) {
          throw new TypeError(
             `The foreign adapter "${(foreign as any)._moduleName}" is incompatible with the internal adapter ` +
-            `"${internal._moduleName}"`
+            `"${(internal as any)._moduleName}"`
          );
       }
-   },
+   }
 
    /**
     * Возвращает список полей записи, полученный из "сырых" данных
     * @return {Array.<String>}
     * @protected
     */
-   _getRawDataFields(): string[] {
-      return this._rawDataFields || (this._rawDataFields = this._getRawDataAdapter().getFields());
-   },
+   protected _getRawDataFields(): string[] {
+      return this._rawDataFields || (this._rawDataFields = (this._getRawDataAdapter() as ITable).getFields());
+   }
 
    /**
     * Добавляет поле в список полей
     * @param {String} name Название поля
     * @protected
     */
-   _addRawDataField(name: string): void {
+   protected _addRawDataField(name: string): void {
       this._getRawDataFields().push(name);
-   },
+   }
 
    /**
     * Сбрасывает список полей записи, полученный из "сырых" данных
     * @protected
     */
-   _resetRawDataFields(): void {
+   protected _resetRawDataFields(): void {
       this._rawDataFields = null;
-   },
+   }
 
    /**
     * Возвращает формат полей
@@ -761,10 +773,10 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {Types/_collection/format/Format}
     * @protected
     */
-   _getFormat(build?: boolean): format.Format {
+   protected _getFormat(build?: boolean): format.Format {
       if (!this._format) {
-         if (this._hasFormat()) {
-            this._format = this._$format = FormattableMixin._buildFormat(this._$format, () => {
+         if (this.hasDecalredFormat()) {
+            this._format = this._$format = FormattableMixin.prototype._buildFormat(this._$format, () => {
                return buildFormatByRawData.call(this);
             });
          } else if (build) {
@@ -773,36 +785,36 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       }
 
       return this._format;
-   },
+   }
 
    /**
     * Очищает формат полей. Это можно сделать только если формат не был установлен явно.
     * @protected
     */
-   _clearFormat(): void {
-      if (this._hasFormat()) {
-         throw new Error(`${this._moduleName}: format can't be cleared because it's defined directly`);
+   protected _clearFormat(): void {
+      if (this.hasDecalredFormat()) {
+         throw new Error(`${(this as any)._moduleName}: format can't be cleared because it's defined directly`);
       }
       this._format = null;
       this._clearFormatClone();
-   },
+   }
 
    /**
     * Очищает клон формата полей.
     * @protected
     */
-   _clearFormatClone(): void {
+   protected _clearFormatClone(): void {
       this._formatClone = null;
-   },
+   }
 
    /**
     * Возвращает признак, что формат полей был установлен явно
-    * @return {Boolean}
+    * @deprecated
     * @protected
     */
-   _hasFormat(): boolean {
-      return !!this._$format;
-   },
+   protected _hasFormat(): boolean {
+      return this.hasDecalredFormat();
+   }
 
    /**
     * Возвращает формат поля с указанным названием
@@ -811,8 +823,8 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {Types/_entity/format/Field|Types/_entity/format/UniversalField}
     * @protected
     */
-   _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
-      if (this._hasFormat()) {
+   protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
+      if (this.hasDecalredFormat()) {
          const fields = this._getFormat();
          const index = fields.getFieldIndex(name);
          if (index > -1) {
@@ -821,7 +833,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       }
 
       return adapter.getSharedFormat(name);
-   },
+   }
 
    /**
     * Возвращает тип значения поля по его формату
@@ -829,15 +841,15 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {String|Function}
     * @protected
     */
-   _getFieldType(format: Field | UniversalField): string | Function {
-      let Type = (format as Field).getType ? (format as Field).getType() : format.type;
+   protected _getFieldType(format: Field | UniversalField): string | Function {
+      let Type = (format as Field).getType ? (format as Field).getType() : (format as UniversalField).type;
       if (Type && typeof Type === 'string') {
          if (isRegistered(Type)) {
             Type = resolve(Type);
          }
       }
       return Type;
-   },
+   }
 
    /**
     * Строит формат поля по описанию
@@ -846,7 +858,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @return {Types/_entity/format/Field}
     * @protected
     */
-   _buildField(format: Field | IFieldDeclaration): Field {
+   protected _buildField(format: Field | IFieldDeclaration): Field {
       if (
          typeof format === 'string' ||
          Object.getPrototypeOf(format) === Object.prototype
@@ -854,10 +866,10 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
          format = fieldsFactory(format as IFieldDeclaration);
       }
       if (!format || !(format instanceof Field)) {
-         throw new TypeError(`${this._moduleName}: format should be an instance of Types/entity:format.Field`);
+         throw new TypeError(`${(this as any)._moduleName}: format should be an instance of Types/entity:format.Field`);
       }
       return format;
-   },
+   }
 
    /**
     * Строит формат полей по описанию
@@ -869,7 +881,7 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
     * @static
     * @protected
     */
-   _buildFormat(
+   protected _buildFormat(
       format: format.Format | IFieldDeclaration[],
       fullFormatCallback?: Function
    ): format.Format {
@@ -894,7 +906,19 @@ const FormattableMixin = /** @lends Types/_entity/FormattableMixin.prototype */{
       return format as format.Format;
    }
 
-   // endregion Protected methods
-};
+   // endregion
+}
 
-export default FormattableMixin;
+Object.assign(FormattableMixin.prototype, {
+   '[Types/_entity/FormattableMixin]': true,
+   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
+   '[WS.Data/Entity/FormattableMixin]': true,
+   _$rawData: null,
+   _$cow: false,
+   _$adapter: defaultAdapter,
+   _$format: null,
+   _format: null,
+   _formatClone: null,
+   _rawDataAdapter: null,
+   _rawDataFields: null
+});

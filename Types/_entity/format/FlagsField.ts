@@ -19,6 +19,8 @@ import DictionaryField from './DictionaryField';
 export default class FlagsField extends DictionaryField /** @lends Types/_entity/format/FlagsField.prototype */{
 }
 
-FlagsField.prototype['[Types/_entity/format/FlagsField]'] = true;
-FlagsField.prototype._moduleName = 'Types/entity:format.FlagsField';
-FlagsField.prototype._typeName = 'Flags';
+Object.assign(FlagsField.prototype, {
+   '[Types/_entity/format/FlagsField]': true,
+   _moduleName: 'Types/entity:format.FlagsField',
+   _typeName: 'Flags'
+});

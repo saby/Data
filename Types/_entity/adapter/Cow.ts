@@ -45,7 +45,7 @@ export default class Cow extends mixin(
     */
    constructor(original: IAdapter, writeCallback?: Function) {
       super();
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
       this._original = original;
       if (writeCallback) {
          this._writeCallback = writeCallback;

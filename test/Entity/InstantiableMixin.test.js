@@ -8,7 +8,7 @@ define([
 ) {
    'use strict';
 
-   InstantiableMixin = InstantiableMixin.default;
+   InstantiableMixin = InstantiableMixin.default.prototype;
 
    describe('Types/_entity/InstantiableMixin', function() {
       describe('.getInstanceId()', function() {

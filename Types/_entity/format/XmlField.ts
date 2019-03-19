@@ -19,7 +19,9 @@ export default class XmlField extends Field /** @lends Types/_entity/format/XmlF
    _$defaultValue: string;
 }
 
-XmlField.prototype['[Types/_entity/format/XmlField]'] = true;
-XmlField.prototype._moduleName = 'Types/entity:format.XmlField';
-XmlField.prototype._typeName = 'Xml';
-XmlField.prototype._$defaultValue = '';
+Object.assign(XmlField.prototype, {
+   '[Types/_entity/format/XmlField]': true,
+   _moduleName: 'Types/entity:format.XmlField',
+   _typeName: 'Xml',
+   _$defaultValue: ''
+});

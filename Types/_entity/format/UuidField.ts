@@ -18,6 +18,8 @@ import Field from './Field';
 export default class UuidField extends Field /** @lends Types/_entity/format/UuidField.prototype */{
 }
 
-UuidField.prototype['[Types/_entity/format/UuidField]'] = true;
-UuidField.prototype._moduleName = 'Types/entity:format.UuidField';
-UuidField.prototype._typeName = 'Uuid';
+Object.assign(UuidField.prototype, {
+   '[Types/_entity/format/UuidField]': true,
+   _moduleName: 'Types/entity:format.UuidField',
+   _typeName: 'Uuid'
+});

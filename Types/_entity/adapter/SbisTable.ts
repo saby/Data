@@ -250,8 +250,8 @@ export default class SbisTable extends mixin(
 
    readonly '[Types/_entity/ICloneable]': boolean;
 
-   clone <SbisTable>(shallow?: boolean): any {
-      return new SbisTable(shallow ? this.getData() : this._cloneData());
+   clone <T = this>(shallow?: boolean): T {
+      return new SbisTable(shallow ? this.getData() : this._cloneData()) as any;
    }
 
    // endregion

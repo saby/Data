@@ -1,4 +1,6 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
+import TreeItem from './TreeItem';
+import Tree from './Tree';
 import {register} from '../di';
 
 export interface IOptions extends ICollectionItemOptions {
@@ -14,6 +16,7 @@ export interface IOptions extends ICollectionItemOptions {
  */
 export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_display/BreadcrumbsItem.prototype */{
    _instancePrefix: 'breadcrumbs-item-';
+   _$owner: Tree;
 
    /**
     * @cfg {Types/_collection/TreeItem} Последний элемент хлебной крошки
@@ -35,7 +38,7 @@ export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_di
       // Go up from last item until end
       while (current) {
          contents.unshift(current.getContents());
-         current = current.getParent();
+         current = (current as TreeItem).getParent();
          if (current === root) {
             break;
          }

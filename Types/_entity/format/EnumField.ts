@@ -19,6 +19,8 @@ import DictionaryField from './DictionaryField';
 export default class EnumField extends DictionaryField /** @lends Types/_entity/format/EnumField.prototype */{
 }
 
-EnumField.prototype['[Types/_entity/format/EnumField]'] = true;
-EnumField.prototype._moduleName = 'Types/entity:format.EnumField';
-EnumField.prototype._typeName = 'Enum';
+Object.assign(EnumField.prototype, {
+   '[Types/_entity/format/EnumField]': true,
+   _moduleName: 'Types/entity:format.EnumField',
+   _typeName: 'Enum'
+});

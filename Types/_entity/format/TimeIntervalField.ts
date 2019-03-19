@@ -19,7 +19,9 @@ export default class TimeIntervalField extends Field /** @lends Types/_entity/fo
    _$defaultValue: number;
 }
 
-TimeIntervalField.prototype['[Types/_entity/format/TimeIntervalField]'] = true;
-TimeIntervalField.prototype._moduleName = 'Types/entity:format.TimeIntervalField';
-TimeIntervalField.prototype._typeName = 'TimeInterval';
-TimeIntervalField.prototype._$defaultValue = 0;
+Object.assign(TimeIntervalField.prototype, {
+   '[Types/_entity/format/TimeIntervalField]': true,
+   _moduleName: 'Types/entity:format.TimeIntervalField',
+   _typeName: 'TimeInterval',
+   _$defaultValue: 0
+});

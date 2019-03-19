@@ -45,8 +45,10 @@ export default class DictionaryField extends Field /** @lends Types/_entity/form
       // endregion Public methods
 }
 
-DictionaryField.prototype['[Types/_entity/format/DictionaryField]'] = true;
-DictionaryField.prototype._moduleName = 'Types/entity:format.DictionaryField';
-DictionaryField.prototype._typeName = 'Dictionary';
-DictionaryField.prototype._$dictionary = null;
-DictionaryField.prototype._$localeDictionary = null;
+Object.assign(DictionaryField.prototype, {
+      ['[Types/_entity/format/DictionaryField]']: true,
+      _moduleName: 'Types/entity:format.DictionaryField',
+      _typeName: 'Dictionary',
+      _$dictionary: null,
+      _$localeDictionary: null
+});

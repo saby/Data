@@ -1,8 +1,10 @@
 /* tslint:disable:max-line-length member-ordering */
 
+import {EnumeratorCallback} from './IEnumerable';
 import IObservable from './IObservable';
 import ObservableList from './ObservableList';
 import {IOptions as IListOptions} from './List';
+import {Format} from './format';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
@@ -23,7 +25,7 @@ import {create, register} from '../di';
 import {mixin, logger} from '../util';
 import {isEqual} from '../object';
 
-export type EnumeratorCallback<T = Record> = (item: T, index: number) => void;
+type T = Record;
 
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
@@ -119,11 +121,15 @@ function checkNullId(value: any, idProperty: string): void {
  * @author Мальцев А.А.
  * @public
  */
-export default class RecordSet<T = Record> extends mixin(
+export default class RecordSet extends mixin<
+   ObservableList<T>,
+   FormattableMixin,
+   InstantiableMixin
+>(
    ObservableList,
    FormattableMixin,
    InstantiableMixin
-) implements IObservableObject, IInstantiable, IProducible /** @lends Types/_collection/RecordSet.prototype */{
+) implements IObservableObject, IInstantiable, IProducible {
    /**
     * @typedef {Object} MergeOptions
     * @property {Boolean} [add=true] Добавлять новые записи.
@@ -285,10 +291,10 @@ export default class RecordSet<T = Record> extends mixin(
          this._$format = this._$model.prototype._$format;
       }
 
-      FormattableMixin.constructor.call(this, options);
+      FormattableMixin.call(this, options);
 
       if (!this._$idProperty) {
-         this._$idProperty = this._getAdapter().getKeyField(this._getRawData());
+         this._$idProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
       }
 
       if (this._$rawData) {
@@ -349,8 +355,8 @@ export default class RecordSet<T = Record> extends mixin(
     *    });
     * </pre>
     */
-   getEnumerator(state: string): Arraywise<Record> {
-      const enumerator = new Arraywise<Record>(this._$items);
+   getEnumerator(state?: string): Arraywise<T> {
+      const enumerator = new Arraywise<T>(this._$items);
 
       enumerator.setResolver((index) => this.at(index));
 
@@ -399,7 +405,7 @@ export default class RecordSet<T = Record> extends mixin(
     *    });
     * </pre>
     */
-   each(callback: EnumeratorCallback, state?: any, context?: object): void {
+   each(callback: EnumeratorCallback<T>, state?: any, context?: object): void {
       if (state instanceof Object) {
          context = state;
          state = undefined;
@@ -408,14 +414,11 @@ export default class RecordSet<T = Record> extends mixin(
 
       const length = this.getCount();
       let index = 0;
-      let isMatching;
-      let record;
       for (let i = 0; i < length; i++) {
-         record = this.at(i);
+         const record = this.at(i);
+         let isMatching = true;
          if (state) {
             isMatching = record.getState() === state;
-         } else {
-            isMatching = true;
          }
          if (isMatching) {
             callback.call(
@@ -440,7 +443,7 @@ export default class RecordSet<T = Record> extends mixin(
             item.detach();
          }
       }
-      this._getRawDataAdapter().clear();
+      (this._getRawDataAdapter() as adapter.ITable).clear();
       super.clear();
    }
 
@@ -474,7 +477,7 @@ export default class RecordSet<T = Record> extends mixin(
     */
    add(item: any, at?: number): T {
       item = this._normalizeItems([item], RECORD_STATE.ADDED)[0];
-      this._getRawDataAdapter().add(item.getRawData(true), at);
+      (this._getRawDataAdapter() as adapter.ITable).add(item.getRawData(true), at);
       super.add(item, at);
 
       return item;
@@ -490,7 +493,7 @@ export default class RecordSet<T = Record> extends mixin(
    }
 
    removeAt(index: number): T {
-      this._getRawDataAdapter().remove(index);
+      (this._getRawDataAdapter() as adapter.ITable).remove(index);
 
       const item = this._$items[index];
       const result = super.removeAt(index);
@@ -545,7 +548,7 @@ export default class RecordSet<T = Record> extends mixin(
     */
    replace(item: any, at: number): T {
       item = this._normalizeItems([item], RECORD_STATE.CHANGED)[0];
-      this._getRawDataAdapter().replace(item.getRawData(true), at);
+      (this._getRawDataAdapter() as adapter.ITable).replace(item.getRawData(true), at);
       const oldItem = this._$items[at];
       super.replace(item, at);
       if (oldItem) {
@@ -557,7 +560,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    move(from: number, to: number): void {
       this._getRecord(from); // force create record instance
-      this._getRawDataAdapter().move(from, to);
+      (this._getRawDataAdapter() as adapter.ITable).move(from, to);
       super.move(from, to);
    }
 
@@ -580,7 +583,7 @@ export default class RecordSet<T = Record> extends mixin(
 
       if (items instanceof RecordSet) {
          this._$adapter = items.getAdapter();
-         this._assignRawData(items.getRawData(), this._hasFormat());
+         this._assignRawData(items.getRawData(), this.hasDecalredFormat());
          result = new Array(items.getCount());
          super.assign(result);
       } else {
@@ -589,7 +592,7 @@ export default class RecordSet<T = Record> extends mixin(
             this._$adapter = items[0].getAdapter();
          }
          items = this._normalizeItems(items, RECORD_STATE.ADDED);
-         this._assignRawData(null, this._hasFormat());
+         this._assignRawData(null, this.hasDecalredFormat());
          items = this._addItemsToRawData(items);
          super.assign(items);
          result = items;
@@ -657,10 +660,10 @@ export default class RecordSet<T = Record> extends mixin(
       // Custom model possible has different properties collection, this cause switch to the slow not lazy mode
       if (this._$model === this._defaultModel) {
          // Fast mode: indexing without record instances
-         const adapter = this._getAdapter();
-         const tableAdapter = this._getRawDataAdapter();
+         const adapter = this._getAdapter() as adapter.IAdapter;
+         const tableAdapter = this._getRawDataAdapter() as adapter.ITable;
 
-         indexer = new Indexer<any>(
+         indexer = new Indexer<T[]>(
             this._getRawData(),
             () => tableAdapter.getCount(),
             (items, at) => tableAdapter.at(at),
@@ -684,7 +687,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    // region ObservableList
 
-   protected _itemsSlice(begin: number, end: number): T[] {
+   protected _itemsSlice(begin?: number, end?: number): T[] {
       if (this._isNeedNotifyCollectionChange()) {
          if (begin === undefined) {
             begin = 0;
@@ -708,7 +711,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       let resultState = ObservableList.prototype._getSerializableState.call(this, state) as ISerializableState;
-      resultState = FormattableMixin._getSerializableState.call(this, resultState);
+      resultState = FormattableMixin.prototype._getSerializableState.call(this, resultState);
       resultState._instanceId = this.getInstanceId();
       delete resultState.$options.items;
       return resultState;
@@ -716,7 +719,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    _setSerializableState(state: ISerializableState): Function {
       const fromSuper = super._setSerializableState(state);
-      const fromFormattableMixin = FormattableMixin._setSerializableState(state as IFormattableSerializableState);
+      const fromFormattableMixin = FormattableMixin.prototype._setSerializableState(state as IFormattableSerializableState);
       return function(): void {
          fromSuper.call(this);
          fromFormattableMixin.call(this);
@@ -749,7 +752,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    addField(format: format.Field, at: number, value?: any): void {
       format = this._buildField(format);
-      FormattableMixin.addField.call(this, format, at);
+      FormattableMixin.prototype.addField.call(this, format, at);
 
       this._parentChanged(Record.prototype.addField);
 
@@ -763,24 +766,23 @@ export default class RecordSet<T = Record> extends mixin(
    }
 
    removeField(name: string): void {
-      FormattableMixin.removeField.call(this, name);
+      FormattableMixin.prototype.removeField.call(this, name);
       this._nextVersion();
       this._parentChanged(Record.prototype.removeField);
    }
 
    removeFieldAt(at: number): void {
-      FormattableMixin.removeFieldAt.call(this, at);
+      FormattableMixin.prototype.removeFieldAt.call(this, at);
       this._nextVersion();
       this._parentChanged(Record.prototype.removeFieldAt);
    }
 
-   /**
-    * Создает адаптер для сырых данных
-    * @return {Types/_entity/adapter/ITable}
-    * @protected
-    */
+   protected _getRawDataAdapter: () => adapter.ITable | adapter.IDecorator | adapter.IMetaData;
+
    protected _createRawDataAdapter(): adapter.ITable {
-      return this._getAdapter().forTable(this._getRawData(true));
+      return (this._getAdapter() as adapter.IAdapter).forTable(
+         this._getRawData(true)
+      );
    }
 
    /**
@@ -790,7 +792,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @protected
     */
    protected _assignRawData(data: any, keepFormat?: boolean): void {
-      FormattableMixin.setRawData.call(this, data);
+      FormattableMixin.prototype.setRawData.call(this, data);
       this._clearIndexer();
       if (!keepFormat) {
          this._clearFormat();
@@ -818,7 +820,7 @@ export default class RecordSet<T = Record> extends mixin(
 
    readonly '[Types/_entity/IProducible]': boolean;
 
-   static produceInstance<T>(data: any, options: IOptions): RecordSet<T> {
+   static produceInstance(data: any, options: IOptions): RecordSet {
       const instanceOptions: any = {
          rawData: data
       };
@@ -830,7 +832,7 @@ export default class RecordSet<T = Record> extends mixin(
             instanceOptions.model = options.model;
          }
       }
-      return new this<T>(instanceOptions);
+      return new this(instanceOptions);
    }
 
    // endregion
@@ -841,11 +843,11 @@ export default class RecordSet<T = Record> extends mixin(
       const index = this.getIndex(which.target);
       if (index > -1) {
          // Apply record's raw data to the self raw data if necessary
-         const adapter = this._getRawDataAdapter();
+         const adapter = this._getRawDataAdapter() as adapter.ITable;
          const selfData = adapter.at(index);
          const recordData = which.target.getRawData(true);
          if (selfData !== recordData) {
-            this._getRawDataAdapter().replace(
+            adapter.replace(
                recordData,
                index
             );
@@ -859,12 +861,12 @@ export default class RecordSet<T = Record> extends mixin(
 
    // region ICloneable
 
-   clone<T>(shallow?: boolean): RecordSet<T> {
-      const clone = super.clone(shallow);
+   clone<U = this>(shallow?: boolean): U {
+      const clone = super.clone<RecordSet>(shallow);
       if (shallow) {
          clone._$items = this._$items.slice();
       }
-      return clone;
+      return clone as any;
    }
 
    // endregion
@@ -1075,7 +1077,7 @@ export default class RecordSet<T = Record> extends mixin(
       }
 
       this._$idProperty = name;
-      this.each((record) => {
+      this.each((record: any) => {
          if (record.setIdProperty) {
             record.setIdProperty(name);
          }
@@ -1133,7 +1135,7 @@ export default class RecordSet<T = Record> extends mixin(
             }
          );
       };
-      const metaFormat = this._$metaFormat ? FormattableMixin._buildFormat(this._$metaFormat) : null;
+      const metaFormat = this._$metaFormat ? super._buildFormat(this._$metaFormat) : null;
       let metaData = {};
 
       if (this._$metaData) {
@@ -1161,11 +1163,11 @@ export default class RecordSet<T = Record> extends mixin(
 
          // Unwrap if needed
          if (adapter['[Types/_entity/adapter/IDecorator]']) {
-            adapter = adapter.getOriginal();
+            adapter = (adapter as adapter.IDecorator).getOriginal() as adapter.ITable;
          }
 
          if (adapter['[Types/_entity/adapter/IMetaData]']) {
-            adapter.getMetaDataDescriptor().forEach((format) => {
+            (adapter as adapter.IMetaData).getMetaDataDescriptor().forEach((format) => {
                const fieldName = format.getName();
                let fieldFormat;
                if (metaFormat) {
@@ -1176,7 +1178,7 @@ export default class RecordSet<T = Record> extends mixin(
                }
 
                metaData[fieldName] = cast(
-                  adapter.getMetaData(fieldName),
+                  (adapter as adapter.IMetaData).getMetaData(fieldName),
                   fieldFormat ? fieldFormat.getType() : this._getFieldType(format)
                );
             });
@@ -1203,7 +1205,7 @@ export default class RecordSet<T = Record> extends mixin(
       this._metaData = this._$metaData = meta;
 
       if (meta instanceof Object) {
-         const adapter = this._getRawDataAdapter();
+         const adapter = this._getRawDataAdapter() as adapter.IMetaData;
          if (adapter['[Types/_entity/adapter/IMetaData]']) {
             adapter.getMetaDataDescriptor().forEach((format) => {
                const name = format.getName();
@@ -1233,7 +1235,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @see replace
     * @see remove
     */
-   merge(recordSet: RecordSet<T>, options?: any): void {
+   merge(recordSet: RecordSet, options?: any): void {
       // Backward compatibility for 'merge'
       if (options instanceof Object && options.hasOwnProperty('merge') && !options.hasOwnProperty('replace')) {
          options.replace = options.merge;
@@ -1334,7 +1336,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @protected
     */
    protected _addItemsToRawData(items: T[], at?: number): T[] {
-      const adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter() as adapter.ITable;
       items = this._itemsToArray(items);
 
       let item;
@@ -1357,7 +1359,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @protected
     */
    protected _normalizeItems(items: T[], state?: string): T[] {
-      const formatDefined = this._hasFormat();
+      const formatDefined = this.hasDecalredFormat();
       let format;
       const result = [];
       let resultItem;
@@ -1392,7 +1394,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @return {Array.<Types/_entity/Record>}
     * @protected
     */
-   protected _normalizeItemData(item: any, format: format.Field): T[] {
+   protected _normalizeItemData(item: any, format: Format): T[] {
       const itemFormat = item.getFormat(true);
       let result;
 
@@ -1462,7 +1464,7 @@ export default class RecordSet<T = Record> extends mixin(
 
       let record = this._$items[at];
       if (!record) {
-         const adapter = this._getRawDataAdapter();
+         const adapter = this._getRawDataAdapter() as adapter.ITable;
          record = this._$items[at] = this._buildRecord(() => {
             return adapter.at(record ? this.getIndex(record) : at);
          });
@@ -1479,7 +1481,7 @@ export default class RecordSet<T = Record> extends mixin(
     * @protected
     */
    protected _initByRawData(): void {
-      const adapter = this._getRawDataAdapter();
+      const adapter = this._getRawDataAdapter() as adapter.ITable;
       this._$items.length = 0;
       this._$items.length = adapter.getCount();
    }

@@ -96,7 +96,7 @@ export default abstract class Abstract extends mixin(
 
    constructor() {
       super();
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
    }
 
    getProperty(data: any, property: string): any {

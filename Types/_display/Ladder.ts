@@ -104,7 +104,7 @@ export default class Ladder extends mixin(
     */
    constructor(collection: Collection) {
       super();
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
 
       this._onCollectionChangeHandler = this._onCollectionChange.bind(this);
       this._onAfterCollectionChangeHandler = this._onAfterCollectionChange.bind(this);

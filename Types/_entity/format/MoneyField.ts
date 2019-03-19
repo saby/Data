@@ -40,8 +40,10 @@ export default class MoneyField extends RealField /** @lends Types/_entity/forma
    // endregion Public methods
 }
 
-MoneyField.prototype['[Types/_entity/format/MoneyField]'] = true;
-MoneyField.prototype._moduleName = 'Types/entity:format.MoneyField';
-MoneyField.prototype._typeName = 'Money';
-MoneyField.prototype._$precision = 2;
-MoneyField.prototype._$large = false;
+Object.assign(MoneyField.prototype, {
+   '[Types/_entity/format/MoneyField]': true,
+   _moduleName: 'Types/entity:format.MoneyField',
+   _typeName: 'Money',
+   _$precision: 2,
+   _$large: false
+});

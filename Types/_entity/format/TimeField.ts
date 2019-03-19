@@ -30,6 +30,8 @@ export default class TimeField extends Field /** @lends Types/_entity/format/Tim
    // endregion Public methods
 }
 
-TimeField.prototype['[Types/_entity/format/TimeField]'] = true;
-TimeField.prototype._moduleName = 'Types/entity:format.TimeField';
-TimeField.prototype._typeName = 'Time';
+Object.assign(TimeField.prototype, {
+   '[Types/_entity/format/TimeField]': true,
+   _moduleName: 'Types/entity:format.TimeField',
+   _typeName: 'Time'
+});

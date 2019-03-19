@@ -1,7 +1,8 @@
-import Record, {IOptions as IRecordOptions} from './Record';
+import Record, {IOptions as IRecordOptions, ISerializableState as IRecordSerializableState} from './Record';
 import IInstantiable from './IInstantiable';
 import InstantiableMixin from './InstantiableMixin';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
+import {IAdapter} from './adapter';
 import {Compute} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
@@ -39,7 +40,7 @@ interface IOptions extends IRecordOptions {
    idProperty?: string;
 }
 
-interface ISerializableState extends IDefaultSerializableState {
+interface ISerializableState extends IRecordSerializableState {
    $options: IOptions;
    _instanceId: string;
    _isDeleted: boolean;
@@ -155,7 +156,9 @@ interface ISerializableState extends IDefaultSerializableState {
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
  */
-export default class Model extends mixin(
+export default class Model extends mixin<
+   Record, InstantiableMixin
+>(
    Record, InstantiableMixin
 ) implements IInstantiable /** @lends Types/_entity/Model.prototype */{
    /**
@@ -289,7 +292,7 @@ export default class Model extends mixin(
     *    console.log(user.get('birthDay'));//Mon Apr 04 2011 00:00:00
     * </pre>
     */
-   _$properties: IProperties<IProperty>;
+   protected _$properties: IProperties<IProperty>;
 
    /**
     * @cfg {String} Название свойства, содержащего первичный ключ
@@ -310,37 +313,47 @@ export default class Model extends mixin(
     *    article.getId();//1
     * </pre>
     */
-   _$idProperty: string;
+   protected _$idProperty: string;
 
    /**
-    * @property The model is deleted in data source which it's taken from
+    * The model is deleted in data source which it's taken from
     */
-   _isDeleted: boolean;
+   protected _isDeleted: boolean;
 
    /**
-    * @property Default values of calculated properties
+    * The model is changed
     */
-   _defaultPropertiesValues: object;
+   protected _isChanged: boolean;
 
    /**
-    * @property Properties dependency map like 'property name' -> ['property names that depend of that one']
+    * Default values of calculated properties
     */
-   _propertiesDependency: Map<string, Set<string>>;
+   protected _defaultPropertiesValues: object;
 
    /**
-    * @property Property name which now gathering dependencies for
+    * Properties dependency map like 'property name' -> ['property names that depend of that one']
     */
-   _propertiesDependencyGathering: string;
+   protected _propertiesDependency: Map<string, Set<string>>;
 
    /**
-    * @property Properties names which calculating right now
+    * Property name which now gathering dependencies for
     */
-   _calculatingProperties: Set<string>;
+   protected _propertiesDependencyGathering: string;
 
    /**
-    * @property Properties names and values which affected during the recurseve set() calls
+    * Properties injected via constructor options
     */
-   _deepChangedProperties: Object;
+   protected _propertiesInjected: boolean;
+
+   /**
+    * Properties names which calculating right now
+    */
+   protected _calculatingProperties: Set<string>;
+
+   /**
+    * Properties names and values which affected during the recurseve set() calls
+    */
+   protected _deepChangedProperties: object;
 
    constructor(options?: IOptions) {
       super(options);
@@ -365,7 +378,7 @@ export default class Model extends mixin(
       }
 
       if (!this._$idProperty) {
-         this._$idProperty = this._getAdapter().getKeyField(this._getRawData()) || '';
+         this._$idProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
       }
    }
 
@@ -1008,6 +1021,7 @@ Object.assign(Model.prototype, {
 // FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
 Model.prototype['[WS.Data/Entity/Model]'] = true;
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
+// @ts-ignore
 Model.produceInstance = Record.produceInstance;
 
 register('Types/entity:Model', Model, {instantiate: false});

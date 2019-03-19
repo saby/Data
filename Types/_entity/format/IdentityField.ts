@@ -39,8 +39,10 @@ export default class IdentityField extends Field /** @lends Types/_entity/format
    // endregion Public methods
 }
 
-IdentityField.prototype['[Types/_entity/format/IdentityField]'] = true;
-IdentityField.prototype._moduleName = 'Types/entity:format.IdentityField';
-IdentityField.prototype._typeName = 'Identity';
-IdentityField.prototype._separator = ',';
-IdentityField.prototype._$defaultValue = [null];
+Object.assign(IdentityField.prototype, {
+   '[Types/_entity/format/IdentityField]': true,
+   _moduleName: 'Types/entity:format.IdentityField',
+   _typeName: 'Identity',
+   _separator: ',',
+   _$defaultValue: [null]
+});

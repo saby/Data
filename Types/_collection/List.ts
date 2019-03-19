@@ -1,4 +1,4 @@
-import IEnumerable from './IEnumerable';
+import IEnumerable, {EnumeratorCallback} from './IEnumerable';
 import IList from './IList';
 import IObservable from './IObservable';
 import IIndexedCollection from './IIndexedCollection';
@@ -73,7 +73,16 @@ export interface IOptions<T> {
  * @public
  * @author Мальцев А.А.
  */
-export default class List<T> extends mixin(
+export default class List<T> extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin,
+   SerializableMixin,
+   CloneableMixin,
+   ManyToManyMixin,
+   ReadWriteMixin,
+   VersionableMixin
+>(
    DestroyableMixin,
    OptionsToPropertyMixin,
    ObservableMixin,
@@ -97,7 +106,7 @@ export default class List<T> extends mixin(
    _$items: T[];
 
    /**
-    * @property {Types/_collection/Indexer} Индексатор
+    * Items indexer
     */
    _indexer: Indexer<T[]>;
 
@@ -108,8 +117,8 @@ export default class List<T> extends mixin(
 
       super(options);
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
-      ReadWriteMixin.constructor.call(this, options);
+      SerializableMixin.call(this);
+      ReadWriteMixin.call(this, options);
 
       this._$items = this._$items || [];
       for (let i = 0, count = this._$items.length; i < count; i++) {
@@ -121,7 +130,7 @@ export default class List<T> extends mixin(
       this._$items = null;
       this._indexer = null;
 
-      ReadWriteMixin.destroy.call(this);
+      ReadWriteMixin.prototype.destroy.call(this);
       super.destroy();
    }
 
@@ -138,7 +147,7 @@ export default class List<T> extends mixin(
       return new Arraywise(this._$items);
    }
 
-   each(callback: Function, context?: object): void {
+   each(callback: EnumeratorCallback<T>, context?: object): void {
       // It's faster than use getEnumerator()
       for (let i = 0, count = this.getCount(); i < count; i++) {
          callback.call(
@@ -149,6 +158,8 @@ export default class List<T> extends mixin(
          );
       }
    }
+
+   forEach: (callback: EnumeratorCallback<T>, context?: object) => void;
 
    // endregion
 
@@ -304,22 +315,6 @@ export default class List<T> extends mixin(
    getIndicesByValue(property: string, value: any): number[] {
       return this._getIndexer().getIndicesByValue(property, value);
    }
-
-   // endregion
-
-   // region ICloneable
-
-   readonly '[Types/_entity/ICloneable]': boolean;
-
-   clone: <List>(shallow?: boolean) => List;
-
-   // endregion
-
-   // region IVersionable
-
-   readonly '[Types/_entity/IVersionable]': boolean;
-
-   getVersion: () => number;
 
    // endregion
 
@@ -508,7 +503,6 @@ Object.assign(List.prototype, {
    '[Types/_collection/IEnumerable]': true,
    '[Types/_collection/IIndexedCollection]': true,
    '[Types/_collection/IList]': true,
-   '[Types/_entity/ICloneable]': true,
    '[Types/_entity/IEquatable]': true,
    '[Types/_entity/IVersionable]': true,
    _moduleName: 'Types/collection:List',

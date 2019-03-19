@@ -52,8 +52,10 @@ export default class RealField extends Field /** @lends Types/_entity/format/Rea
    // endregion Public methods
 }
 
-RealField.prototype['[Types/_entity/format/RealField]'] = true;
-RealField.prototype._moduleName = 'Types/entity:format.RealField';
-RealField.prototype._typeName = 'Real';
-RealField.prototype._$defaultValue = 0;
-RealField.prototype._$precision = 16;
+Object.assign(RealField.prototype, {
+   '[Types/_entity/format/RealField]': true,
+   _moduleName: 'Types/entity:format.RealField',
+   _typeName: 'Real',
+   _$defaultValue: 0,
+   _$precision: 16
+});

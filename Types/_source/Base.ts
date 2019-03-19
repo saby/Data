@@ -32,7 +32,7 @@ export default abstract class Base extends mixin(
       super(options);
       SourceOptionsMixin.constructor.call(this, options);
       OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.constructor.call(this);
+      SerializableMixin.call(this);
       DataMixin.constructor.call(this, options);
    }
 

@@ -19,7 +19,9 @@ export default class IntegerField extends Field /** @lends Types/_entity/format/
    _$defaultValue: number;
 }
 
-IntegerField.prototype['[Types/_entity/format/IntegerField]'] = true;
-IntegerField.prototype._moduleName = 'Types/entity:format.IntegerField';
-IntegerField.prototype._typeName = 'Integer';
-IntegerField.prototype._$defaultValue = 0;
+Object.assign(IntegerField.prototype, {
+   '[Types/_entity/format/IntegerField]': true,
+   _moduleName: 'Types/entity:format.IntegerField',
+   _typeName: 'Integer',
+   _$defaultValue: 0
+});
