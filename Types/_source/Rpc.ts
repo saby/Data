@@ -11,7 +11,7 @@ import IRpc from './IRpc';
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Rpc extends Remote implements IRpc /** @lends Types/_source/Rpc.prototype */{
+export default abstract class Rpc extends Remote implements IRpc {
 
    // region IRpc
 

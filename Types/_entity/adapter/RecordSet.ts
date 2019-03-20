@@ -16,7 +16,7 @@ import {object} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSet extends Abstract /** @lends Types/_entity/adapter/RecordSet.prototype */{
+export default class RecordSet extends Abstract {
    /**
     * Возвращает интерфейс доступа к рекордсету в виде таблицы
     * @param {Types/_collection/RecordSet} data Рекордсет

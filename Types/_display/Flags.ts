@@ -6,8 +6,8 @@ import {Object as EventObject} from 'Env/Event';
 
 /**
  * Обрабатывает событие об изменении состояния Flags
- * @param {Env/Event.Object} event Дескриптор события
- * @param {String|Array.<boolean|null>} name Название флага
+ * @param event Дескриптор события
+ * @param name Название флага
  */
 function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void {
    if (Array.isArray(name)) {
@@ -28,7 +28,7 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
  * @public
  * @author Мальцев А.А.
  */
-export default class Flags extends Collection /** @lends Types/_display/Flags.prototype */{
+export default class Flags extends Collection {
    constructor(options?: object) {
       super(options);
 

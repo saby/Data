@@ -21,7 +21,7 @@ export default class CollectionEnumerator extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    IndexedEnumeratorMixin
-) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{
+) implements IEnumerator<CollectionItem> {
    protected readonly _moduleName: string;
 
    get items(): CollectionItem[] {
@@ -35,20 +35,17 @@ export default class CollectionEnumerator extends mixin<
 
    readonly '[Types/_collection/IEnumerator]': boolean = true;
    /**
-    * @cfg {Array.<Types/_display/CollectionItem>|Function} Элементы проекции
-    * @name Types/_display/CollectionEnumerator#items
+    * Элементы проекции
     */
    protected _$items: CollectionItem[] | Function = [];
 
    /**
-    * @cfg {Array.<Boolean>} Результат применения фильтра
-    * @name Types/_display/CollectionEnumerator#filterMap
+    * Результат применения фильтра
     */
    protected _$filterMap: boolean[] = [];
 
    /**
-    * @cfg {Array.<Number>} Результат применения сортировки
-    * @name Types/_display/CollectionEnumerator#sortMap
+    * Результат применения сортировки
     */
    protected _$sortMap: number[] = [];
 
@@ -99,9 +96,9 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
-    * @param {Array.<Number>} sortMap Индекс после сортировки -> индекс элемента проекции
-    * @param {Array.<Boolean>} filterMap Индекс элемента проекции -> прошел фильтр
-    * @return {Array.<Number>} Порядковый индекс -> индекс элемента проекции
+    * @param sortMap Индекс после сортировки -> индекс элемента проекции
+    * @param filterMap Индекс элемента проекции -> прошел фильтр
+    * @return Порядковый индекс -> индекс элемента проекции
     * @public
     * @static
     */
@@ -162,8 +159,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Возвращает элемент по индексу
-    * @param {Number} index Индекс
-    * @return {Types/_display/CollectionItem}
+    * @param index Индекс
     * @state mutable
     */
    at(index: number): CollectionItem {
@@ -174,7 +170,6 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Возвращает кол-во элементов
-    * @return {Number}
     */
    getCount(): number {
       this._initInternalMap();
@@ -183,7 +178,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Устанавливает текущий элемент
-    * @param {Types/_display/CollectionItem} item Текущий элемент
+    * item Текущий элемент
     */
    setCurrent(item: CollectionItem): void {
       this._itemsCache = null;
@@ -193,7 +188,6 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Возвращает текущую позицию проекции
-    * @return {Number}
     */
    getPosition(): number {
       return this._position;
@@ -201,7 +195,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Устанавливает текущую позицию
-    * @param {Number} position Позиция проекции
+    * @param position Позиция проекции
     */
    setPosition(position: number): void {
       this._itemsCache = null;
@@ -212,16 +206,14 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Возвращает признак корректности позиции
-    * @param {Number} position Позиция
-    * @return {Boolean}
+    * @param position Позиция
     */
    isValidPosition(position: number): boolean {
       return position >= -1 && position < this.getCount();
    }
 
    /**
-    * Возвращает предыдущий элемент
-    * @return {*}
+    * Сдвигает позицию на предыдущий элемент
     */
    movePrevious(): boolean {
       if (this._position < 1) {
@@ -243,8 +235,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Вычисляет позицию в проекции относительно позиции в коллекции
-    * @param {Number} source Позиция в коллекции
-    * @return {Number}
+    * @param source Позиция в коллекции
     */
    getInternalBySource(source: number): number {
       if (source === undefined || source === null || source === -1) {
@@ -260,8 +251,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Вычисляет позицию в исходной коллекции относительно позиции в проекции
-    * @param {Number} internal Позиция в проекции
-    * @return {Number}
+    * @param internal Позиция в проекции
     * @protected
     */
    getSourceByInternal(internal: number): number {
@@ -288,7 +278,7 @@ export default class CollectionEnumerator extends mixin<
 
    /**
     * Проверяет корректность позиции
-    * @param {Number} position Позиция
+    * @param position Позиция
     * @protected
     */
    protected _checkPosition(position: number): void {

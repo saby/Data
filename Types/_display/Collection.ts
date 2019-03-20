@@ -27,7 +27,6 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 
 /**
  * Преобразует проекцию в массив из ее элементов
- * @param display Проекция.
  */
 function toArray(display: Collection): CollectionItem[] {
    const result = [];
@@ -39,8 +38,6 @@ function toArray(display: Collection): CollectionItem[] {
 
 /**
  * Нормализует массив обработчиков
- * @param {Function|Array.<Function>} handlers Обработчики
- * @return {Array.<Function>}
  */
 function normalizeHandlers<T>(handlers: T | T[]): T[] {
    if (typeof handlers === 'function') {
@@ -244,7 +241,7 @@ export interface ISerializableState extends IDefaultSerializableState {
  */
 export default class Collection extends mixin(
    Abstract, SerializableMixin, EventRaisingMixin
-) implements IEnumerable<CollectionItem>, IList<CollectionItem> /** @lends Types/_display/Collection.prototype */ {
+) implements IEnumerable<CollectionItem>, IList<CollectionItem> {
    /**
     * Возвращать локализованные значения
     */
@@ -513,7 +510,7 @@ export default class Collection extends mixin(
     */
    protected _oEventRaisingChange: Function;
 
-   constructor(options: Object) {
+   constructor(options: object) {
       super(options);
       SerializableMixin.call(this);
       EventRaisingMixin.call(this, options);
@@ -1904,8 +1901,6 @@ export default class Collection extends mixin(
 
    /**
     * Рассчитывает идентификатор элемента коллекции.
-    * @param {Types/_display/CollectionItem} item Элемент коллекции
-    * @return {String}
     */
    protected _exctractItemId(item: CollectionItem): string {
       const contents = item.getContents();
@@ -1923,9 +1918,8 @@ export default class Collection extends mixin(
 
    /**
     * Рассчитывает уникальный идентификатор элемента коллекции.
-    * @param {Types/_display/CollectionItem} item Элемент коллекции
-    * @param {String} baseId Базовое значение
-    * @return {String}
+    * @param item Элемент коллекции
+    * @param baseId Базовое значение
     */
    protected _searchItemUid(item: CollectionItem, baseId: string): string {
       let uid = baseId;
@@ -2016,8 +2010,8 @@ export default class Collection extends mixin(
 
    /**
     * Устанавливает признак, переданным, элементам проекции.
-    * @param {Array} selecItems массив элементов проекции
-    * @param {Boolean} selected Элемент выбран.
+    * @param selecItems массив элементов проекции
+    * @param selected Элемент выбран.
     */
    protected _setSelectedItems(selecItems: CollectionItem[], selected: boolean): void {
       const items = [];
@@ -2050,7 +2044,7 @@ export default class Collection extends mixin(
 
    /**
     * Добавляет свойство в importantItemProperties, если его еще там нет
-    * @param {String} name Название свойства
+    * @param name Название свойства
     * @protected
     */
    protected _setImportantProperty(name: string): void {
@@ -2062,7 +2056,7 @@ export default class Collection extends mixin(
 
    /**
     * Удаляет свойство из importantItemProperties, если оно там есть
-    * @param {String} name Название свойства
+    * @param name Название свойства
     * @protected
     */
    protected _unsetImportantProperty(name: string): void {
@@ -2074,7 +2068,7 @@ export default class Collection extends mixin(
 
    /**
     * Модифицирует список важных свойств по наличию функторов среди пользовательских сортировок
-    * @param {Boolean} add Добавить или удалить свойства
+    * @param add Добавить или удалить свойства
     * @protected
     */
    protected _switchImportantPropertiesByUserSort(add: boolean): void {
@@ -2085,7 +2079,7 @@ export default class Collection extends mixin(
 
    /**
     * Модифицирует список важных свойств по функтору группировки
-    * @param {Boolean} add Добавить или удалить свойства
+    * @param add Добавить или удалить свойства
     * @protected
     */
    protected _switchImportantPropertiesByGroup(add: boolean): void {
@@ -2114,7 +2108,6 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
-    * @return {Array.<Types/_display/CollectionItem>}
     * @protected
     */
    protected _getItems(): CollectionItem[] {
@@ -2123,7 +2116,6 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает функцию, создающую элементы проекции
-    * @return {Function(Object):Types/_display/CollectionItem}
     * @protected
     */
    protected _getItemsFactory(): ItemsFactory {
@@ -2135,7 +2127,6 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает cтратегию получения элементов проекции
-    * @return {Types/_display/ItemsStrategy/Abstract}
     * @protected
     */
    protected _getItemsStrategy(): IItemsStrategy {
@@ -2156,7 +2147,6 @@ export default class Collection extends mixin(
 
    /**
     * Создает компоновщик стратегий
-    * @return {Types/_display/ItemsStrategy/Composer}
     * @protected
     */
    protected _createComposer(): ItemsStrategyComposer {
@@ -2178,8 +2168,7 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает энумератор
-    * @param {Boolean} unlink Отвязать от состояния проекции
-    * @return {Types/_display/CollectionEnumerator}
+    * @param unlink Отвязать от состояния проекции
     * @protected
     */
    protected _getEnumerator(unlink?: boolean): CollectionEnumerator {
@@ -2192,10 +2181,9 @@ export default class Collection extends mixin(
 
    /**
     * Конструирует энумератор по входным данным
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
-    * @param {Array.<Boolean>} filterMap Фильтр: индекс в коллекции -> прошел фильтр
-    * @param {Array.<Number>} sortMap Сортировка: индекс в проекции -> индекс в коллекции
-    * @return {Types/_display/CollectionEnumerator}
+    * @param items Элементы проекции
+    * @param filterMap Фильтр: индекс в коллекции -> прошел фильтр
+    * @param sortMap Сортировка: индекс в проекции -> индекс в коллекции
     * @protected
     */
    protected _buildEnumerator(items: CollectionItem[], filterMap: boolean[], sortMap: number[]): CollectionEnumerator {
@@ -2208,7 +2196,6 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает служебный энумератор для организации курсора
-    * @return {Types/_display/CollectionEnumerator}
     * @protected
     */
    protected _getCursorEnumerator(): CollectionEnumerator {
@@ -2218,7 +2205,6 @@ export default class Collection extends mixin(
    /**
     * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
     * относительно заданного
-    * @return {Types/_display/CollectionEnumerator}
     * @protected
     */
    protected _getUtilityEnumerator(): CollectionEnumerator {
@@ -2227,11 +2213,10 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает соседний элемент проекции
-    * @param {Types/_collection/IEnumerator} enumerator Энумератор элементов
-    * @param {Types/_display/CollectionItem} item Элемент проекции относительно которого искать
-    * @param {Boolean} isNext Следующий или предыдущий элемент
-    * @param {Boolean} [skipGroups=false] Пропускать группы
-    * @return {Types/_display/CollectionItem}
+    * @param enumerator Энумератор элементов
+    * @param item Элемент проекции относительно которого искать
+    * @param isNext Следующий или предыдущий элемент
+    * @param [skipGroups=false] Пропускать группы
     * @protected
     */
    protected _getNearbyItem(
@@ -2258,8 +2243,7 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает индекс элемента проекции по индексу в коллекции
-    * @param {Number} index Индекс в коллекции
-    * @return {Number}
+    * @param index Индекс в коллекции
     * @protected
     */
    protected _getItemIndex(index: number): number {
@@ -2268,8 +2252,7 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает индекс в коллекци по индексу в проекции
-    * @param {Number} index Индекс в проекции
-    * @return {Number}
+    * @param index Индекс в проекции
     * @protected
     */
    protected _getSourceIndex(index: number): number {
@@ -2282,7 +2265,7 @@ export default class Collection extends mixin(
 
    /**
     * Перерасчитывает все данные заново
-    * @param {Boolean} [reset=false] Сбросить все созданные элементы
+    * @param [reset=false] Сбросить все созданные элементы
     * @protected
     */
    protected _reBuild(reset?: boolean): void {
@@ -2304,8 +2287,8 @@ export default class Collection extends mixin(
 
    /**
     * Производит фильтрацию и сортировку и анализ изменений для набора элементов проекции
-    * @param {Number} [start=0] Начальный индекс (в коллекции)
-    * @param {Number} [count] Кол-во элементов (по умолчанию - все)
+    * @param [start=0] Начальный индекс (в коллекции)
+    * @param [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
    protected _reAnalize(start?: number, count?: number): void {
@@ -2362,8 +2345,8 @@ export default class Collection extends mixin(
 
    /**
     * Производит фильтрацию для набора элементов проекции
-    * @param {Number} [start=0] Начальный индекс
-    * @param {Number} [count] Кол-во элементов (по умолчанию - все)
+    * @param [start=0] Начальный индекс
+    * @param [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
    protected _reFilter(start?: number, count?: number): void {
@@ -2485,7 +2468,6 @@ export default class Collection extends mixin(
 
    /**
     * Производит построение sortMap
-    * @return {Array.<Number>}
     * @protected
     */
    protected _buildSortMap(): number[] {
@@ -2494,8 +2476,8 @@ export default class Collection extends mixin(
 
    /**
     * Производит группировку для набора элементов проекции
-    * @param {Number} [start=0] Начальный индекс (в коллекции)
-    * @param {Number} [count] Кол-во элементов (по умолчанию - все)
+    * @param [start=0] Начальный индекс (в коллекции)
+    * @param [count] Кол-во элементов (по умолчанию - все)
     * @protected
     */
    protected _reGroup(start?: number, count?: number): void {
@@ -2508,7 +2490,6 @@ export default class Collection extends mixin(
 
    /**
     * Проверяет, что используется фильтрация
-    * @return {Boolean}
     * @protected
     */
    protected _isFiltered(): boolean {
@@ -2517,7 +2498,6 @@ export default class Collection extends mixin(
 
    /**
     * Проверяет, что хотя бы в один из методов фильтрации использует аргумент index
-    * @return {Boolean}
     * @protected
     */
    protected _isFilteredByIndex(): boolean {
@@ -2526,8 +2506,6 @@ export default class Collection extends mixin(
 
    /**
     * Проверяет, что метод фильтрации использует аргумент index
-    * @param {Function} filter
-    * @return {Boolean}
     * @protected
     */
    protected _isFilterUseIndex(filter: FilterFunction): boolean {
@@ -2536,7 +2514,6 @@ export default class Collection extends mixin(
 
    /**
     * Проверяет, что используется группировка
-    * @return {Boolean}
     * @protected
     */
    protected _isGrouped(): boolean {
@@ -2545,9 +2522,9 @@ export default class Collection extends mixin(
 
    /**
     * Дробавляет набор элементов коллекции в проекцию
-    * @param {Number} start Начальный индекс (в коллекции)
-    * @param {Array} items Элементы
-    * @return {Number} Начальный индекс (в проекциии)
+    * @param start Начальный индекс (в коллекции)
+    * @param items Элементы
+    * @return Начальный индекс (в проекциии)
     * @protected
     */
    protected _addItems(start: number, items: any[]): number {
@@ -2575,9 +2552,9 @@ export default class Collection extends mixin(
 
    /**
     * Удаляет набор элементов проекции
-    * @param {Number} start Начальный индекс (в коллекции)
-    * @param {Number} [count] Кол-во элементов (по умолчанию - все)
-    * @return {Array.<Types/_display/CollectionItem>} Удаленные элементы
+    * @param start Начальный индекс (в коллекции)
+    * @param [count] Кол-во элементов (по умолчанию - все)
+    * @return Удаленные элементы
     * @protected
     */
    protected _removeItems(start: number, count?: number): CollectionItem[] {
@@ -2600,9 +2577,9 @@ export default class Collection extends mixin(
 
    /**
     * Заменяет набор элементов проекции
-    * @param {Number} start Начальный индекс (в коллекции)
-    * @param {Array} newItems Замененные элементы
-    * @return {Array.<Types/_display/CollectionItem>} Замененные элементы
+    * @param start Начальный индекс (в коллекции)
+    * @param newItems Замененные элементы
+    * @return Замененные элементы
     * @protected
     */
    protected _replaceItems(start: number, newItems: any[]): ISplicedArray<CollectionItem> {
@@ -2615,10 +2592,10 @@ export default class Collection extends mixin(
 
    /**
     * Перемещает набор элементов проекции
-    * @param {Number} newIndex Старый индекс (в коллекции)
-    * @param {Number} oldIndex Новый индекс (в коллекции)
-    * @param {Array} items Перемещаемые элементы
-    * @return {Array.<Types/_display/CollectionItem>} Перемещенные элементы
+    * @param newIndex Старый индекс (в коллекции)
+    * @param oldIndex Новый индекс (в коллекции)
+    * @param items Перемещаемые элементы
+    * @return Перемещенные элементы
     * @protected
     */
    protected _moveItems(newIndex: number, oldIndex: number, items: any[]): CollectionItem[] {
@@ -2635,12 +2612,11 @@ export default class Collection extends mixin(
 
    /**
     * Удаляет из индекса сортировки срез элементов
-    * @param {Number} start Начальный индекс (в коллекци)
-    * @param {Number} count Кол-во элементов
-    * @return {Array.<Number>}
+    * @param start Начальный индекс (в коллекци)
+    * @param count Кол-во элементов
     * @protected
     */
-   protected _removeFromSortMap(start: number, count: number): Object {
+   protected _removeFromSortMap(start: number, count: number): object {
       start = start || 0;
       count = count || 0;
       const finish = start + count;
@@ -2678,8 +2654,7 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает набор контрольных свойств элемента проекции для анализа его состояния
-    * @param {Types/_display/CollectionItem} item Элемент проекции
-    * @return {Object}
+    * @param item Элемент проекции
     * @protected
     */
    protected _getItemState(item: CollectionItem): ISessionItemState {
@@ -2691,8 +2666,7 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает состояния элементов
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции
-    * @return {Array.<Object>}
+    * @param items Элементы проекции
     * @protected
     */
    protected _getItemsState(items: CollectionItem[]): ISessionItemState[] {
@@ -2701,9 +2675,9 @@ export default class Collection extends mixin(
 
    /**
     * Возвращает разницу между двумя состояниями элементов (результатами работы метода _getItemsState)
-    * @param {Array.<Object>} before Состояния до изменений
-    * @param {Array.<Object>} after Состояния после изменений
-    * @return {Array.<CollectionItem>} Отличающиеся состояния
+    * @param before Состояния до изменений
+    * @param after Состояния после изменений
+    * @return Отличающиеся состояния
     * @protected
     */
    protected _getItemsDiff(before: ISessionItemState[], after: ISessionItemState[]): CollectionItem[] {
@@ -2717,10 +2691,10 @@ export default class Collection extends mixin(
 
    /**
     * Генерирует события об изменении элементов проекции при изменении их состояния
-    * @param {Object} session Сессия изменений
-    * @param {Array.<Types/_display/CollectionItem>} items Измененные элементы
-    * @param {Array} state Состояние элементов до изменений
-    * @param {Function} beforeCheck Функция обратного вызова перед проверкой изменений состояния
+    * @param session Сессия изменений
+    * @param items Измененные элементы
+    * @param state Состояние элементов до изменений
+    * @param beforeCheck Функция обратного вызова перед проверкой изменений состояния
     * @protected
     */
    protected _checkItemsDiff(
@@ -2757,10 +2731,10 @@ export default class Collection extends mixin(
 
    /**
     * Генерирует событие об изменении текущего элемента проекции коллекции
-    * @param {Types/_display/CollectionItem} newCurrent Новый текущий элемент
-    * @param {Types/_display/CollectionItem} oldCurrent Старый текущий элемент
-    * @param {Number} newPosition Новая позиция
-    * @param {Number} oldPosition Старая позиция
+    * @param newCurrent Новый текущий элемент
+    * @param oldCurrent Старый текущий элемент
+    * @param newPosition Новая позиция
+    * @param oldPosition Старая позиция
     * @protected
     */
    protected _notifyCurrentChange(
@@ -2785,8 +2759,8 @@ export default class Collection extends mixin(
 
    /**
     * Нотифицирует событие change для измененных элементов
-    * @param {Array} changed Измененные элементы исходной коллекции.
-    * @param {Number} index Индекс исходной коллекции, в котором находятся элементы.
+    * @param changed Измененные элементы исходной коллекции.
+    * @param index Индекс исходной коллекции, в котором находятся элементы.
     * @protected
     */
    protected _notifyCollectionItemsChange(changed: any[], index: number, session: IEnumerableComparatorSession): void {
@@ -2819,17 +2793,17 @@ export default class Collection extends mixin(
 
    /**
     * Генерирует событие об изменении элемента проекции
-    * @param {Env/Event.Object} event Дескриптор события.
-    * @param {*} item Измененный элемент коллекции.
-    * @param {Number} index Индекс измененного элемента.
-    * @param {Object} [properties] Изменившиеся свойства
+    * @param event Дескриптор события.
+    * @param item Измененный элемент коллекции.
+    * @param index Индекс измененного элемента.
+    * @param [properties] Изменившиеся свойства
     * @protected
     */
    protected _notifySourceCollectionItemChange(
       event: EventObject,
       item: any,
       index: number,
-      properties?: Object
+      properties?: object
    ): void {
       const enumerator = this._getUtilityEnumerator();
       const internalItems = this._getItems();

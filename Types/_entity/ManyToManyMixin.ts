@@ -47,8 +47,8 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Добавляет отношение с другой сущностью
-    * @param {Types/_entity/relation/IReceiver} child Другая сущность
-    * @param {String} [name] Название отношения
+    * @param child Другая сущность
+    * @param [name] Название отношения
     * @protected
     */
    protected _addChild(child: IReceiver | any, name?: string): void {
@@ -69,7 +69,7 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Удаляет отношение с другой сущностью
-    * @param {Types/_entity/relation/IReceiver} child Другая сущность
+    * @param child Другая сущность
     * @protected
     */
    protected _removeChild(child: IReceiver | any): void {
@@ -88,7 +88,7 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Уведомляет дочерние сущности об изменении родительской
-    * @param {*} [data] Данные об изменениях
+    * @param data Данные об изменениях
     * @protected
     */
    protected _parentChanged(data: any): void {
@@ -106,7 +106,7 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Рекурсивно уведомляет родительские сущности об изменении дочерней
-    * @param {*} [data] Данные об изменениях
+    * @param [data] Данные об изменениях
     * @protected
     */
    protected _childChanged(data?: any): void {
@@ -140,7 +140,6 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Возвращает признак наличия посредника
-    * @return {Boolean}
     * @protected
     */
    protected _hasMediator(): boolean {
@@ -149,8 +148,6 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Возвращает признак наличия одинакового посредника
-    * @param {Types/_entity/relation/ManyToMany} mediator
-    * @return {Boolean}
     * @protected
     */
    protected _hasSameMediator(mediator: ManyToMany): boolean {
@@ -159,7 +156,6 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Создает посредника для установления отношений с детьми
-    * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
    protected _createMediator(): ManyToMany {
@@ -168,7 +164,6 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Возвращает посредника для установления отношений с детьми
-    * @return {Types/_entity/relation/ManyToMany}
     * @protected
     */
    protected _getMediator(): ManyToMany {
@@ -177,7 +172,6 @@ export default abstract class ManyToManyMixin {
 
    /**
     * Устанавливает посредника для установления отношений с детьми
-    * @param {Types/_entity/relation/ManyToMany|null} mediator
     * @protected
     */
    protected _setMediator(mediator: ManyToMany): void {

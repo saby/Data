@@ -16,7 +16,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class ArrayField extends Field /** @lends Types/_entity/format/ArrayField.prototype */{
+export default class ArrayField extends Field {
    /**
     * @cfg {String} Тип элементов
     * @name Types/_entity/format/ArrayField#kind

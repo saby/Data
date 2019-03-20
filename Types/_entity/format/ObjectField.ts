@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class ObjectField extends Field /** @lends Types/_entity/format/ObjectField.prototype */{
+export default class ObjectField extends Field {
 }
 
 Object.assign(ObjectField.prototype, {

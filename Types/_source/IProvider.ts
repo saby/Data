@@ -11,7 +11,7 @@ export interface IEndpoint {
  * @public
  * @author Мальцев А.А.
  */
-export default interface IProvider /** @lends Types/_source/IProvider.prototype */{
+export default interface IProvider {
    readonly '[Types/_source/IProvider]': boolean;
 
    /**

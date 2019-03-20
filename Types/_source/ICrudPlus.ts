@@ -6,7 +6,7 @@ import {Record} from '../entity';
  * @public
  * @author Мальцев А.А.
  */
-export default interface ICrudPlus /** @lends Types/_source/ICrudPlus.prototype */{
+export default interface ICrudPlus {
    readonly '[Types/_source/ICrudPlus]': boolean;
 
    /** @typedef {String} MovePosition

@@ -8,12 +8,11 @@ import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
 import {logger, mixin} from '../util';
 import {Map, Set} from '../shim';
-import { adapter } from '../entity';
 
 /**
  * Separator for path in object
  */
-const ROUTE_SEPEARTOR = '.';
+const ROUTE_SEPARATOR = '.';
 
 interface IGetter extends Function {
    get: (name: string) => any;
@@ -432,7 +431,7 @@ export default class Model extends mixin<
       return value;
    }
 
-   set(name: string | Object, value?: any): void {
+   set(name: string | object, value?: any): void {
       if (!this._$properties) {
          super.set(name, value);
          return;
@@ -537,14 +536,6 @@ export default class Model extends mixin<
 
    // endregion
 
-   // region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
-   // endregion
-
    // region IReceiver
 
    relationChanged(which: any, route: string[]): any {
@@ -555,11 +546,11 @@ export default class Model extends mixin<
          const fieldName = this._getFieldFromRelationName(name);
          curr.push(fieldName);
          if (fieldName) {
-            this._deleteDependencyCache(curr.join(ROUTE_SEPEARTOR));
+            this._deleteDependencyCache(curr.join(ROUTE_SEPARATOR));
 
             if (index === routeLastIndex && which.data instanceof Object) {
                Object.keys(which.data).forEach((key) => {
-                  this._deleteDependencyCache(curr.concat([key]).join(ROUTE_SEPEARTOR));
+                  this._deleteDependencyCache(curr.concat([key]).join(ROUTE_SEPARATOR));
                });
             }
          }
@@ -842,7 +833,6 @@ export default class Model extends mixin<
 
    /**
     * Возвращает массив названий всех свойств (включая свойства в "сырых" данных)
-    * @return {Array.<String>}
     * @protected
     */
    protected _getAllProperties(): string[] {
@@ -860,11 +850,10 @@ export default class Model extends mixin<
 
    /**
     * Вычисляет/записывает значение свойства
-    * @param {String} name Имя свойства
-    * @param {*} value Значение свойства
-    * @param {Property} property Описание свойства
-    * @param {Boolean} isReading Вычисление или запись
-    * @return {*}
+    * @param name Имя свойства
+    * @param value Значение свойства
+    * @param property Описание свойства
+    * @param isReading Вычисление или запись
     * @protected
     */
    protected _processCalculatedValue(name: string, value: any, property: IProperty, isReading?: boolean): any {
@@ -913,7 +902,7 @@ export default class Model extends mixin<
 
    /**
     * Добавляет зависимое свойство для текущего рассчитываемого
-    * @param {String} name Название свойства.
+    * @param name Название свойства.
     * @protected
     */
    protected _pushDependency(name: string): void {
@@ -924,8 +913,8 @@ export default class Model extends mixin<
 
    /**
     * Добавляет зависимое свойство
-    * @param {String} name Название свойства.
-    * @param {String} dependFor Название свойства, котороое зависит от name
+    * @param name Название свойства.
+    * @param dependFor Название свойства, котороое зависит от name
     * @protected
     */
    protected _pushDependencyFor(name: string, dependFor: string): void {
@@ -948,7 +937,7 @@ export default class Model extends mixin<
 
    /**
     * Удаляет закешированное значение для свойства и всех от него зависимых свойств
-    * @param {String} name Название свойства.
+    * @param name Название свойства.
     * @protected
     */
    protected _deleteDependencyCache(name: string): void {
@@ -968,7 +957,7 @@ export default class Model extends mixin<
 
    // region Statics
 
-   static fromObject(data: any, adapter: adapter.IAdapter): Model | null {
+   static fromObject(data: any, adapter: IAdapter): Model | null {
       const record = Record.fromObject(data, adapter);
       if (!record) {
          return null;

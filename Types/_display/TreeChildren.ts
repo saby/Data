@@ -13,10 +13,9 @@ export interface IOptions extends IListOptions<TreeItem> {
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeChildren extends List<TreeItem> /** @lends Types/_display/TreeChildren.prototype */{
+export default class TreeChildren extends List<TreeItem> {
    /**
-    * @cfg {Types/_display/TreeItem} Узел-владелец
-    * @name Types/_display/TreeChildren#owner
+    * Узел-владелец
     */
    _$owner: TreeItem;
 

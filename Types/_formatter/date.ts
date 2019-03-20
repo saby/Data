@@ -13,9 +13,9 @@ const locale = locales.current;
 
 /**
  * Adds lead zeroes to the Number
- * @param {Number} value Number
- * @param {Number} count Max digits count
- * @return {String} Number with leading zeroes
+ * @param value Number
+ * @param count Max digits count
+ * @return Number with leading zeroes
  */
 function withLeadZeroes(value: number, count: number): string {
    const absValue = String(Math.abs(value));
@@ -29,8 +29,6 @@ function withLeadZeroes(value: number, count: number): string {
 
 /**
  * Returns hour in 12-hours format
- * @param {Date} date Date
- * @return {Number}
  */
 function getTwelveHours(date: Date): number {
    return date.getHours() % 12 || 12;
@@ -38,8 +36,6 @@ function getTwelveHours(date: Date): number {
 
 /**
  * Returns localized am/pm mark
- * @param {Date} date Date
- * @return {String}
  */
 function getAmPm(date: Date): string {
    return date.getHours() >= 12 ? locale.config.pm : locale.config.am;
@@ -47,8 +43,6 @@ function getAmPm(date: Date): string {
 
 /**
  * Returns localized day of week in minimized notation
- * @param {Date} date Date
- * @return {String}
  */
 function getDayOfWeekMin(date: Date): string {
    return locale.config.minDays[date.getDay()];
@@ -56,8 +50,6 @@ function getDayOfWeekMin(date: Date): string {
 
 /**
  * Returns localized day of week in short notation
- * @param {Date} date Date
- * @return {String}
  */
 function getDayOfWeekShort(date: Date): string {
    return locale.config.shortDays[date.getDay()];
@@ -65,8 +57,6 @@ function getDayOfWeekShort(date: Date): string {
 
 /**
  * Returns localized day of week in long notation
- * @param {Date} date Date
- * @return {String}
  */
 function getDayOfWeekLong(date: Date): string {
    return locale.config.longDays[date.getDay()];
@@ -74,8 +64,6 @@ function getDayOfWeekLong(date: Date): string {
 
 /**
  * Returns human-friendly month number
- * @param {Date} date Date
- * @return {Number}
  */
 function getHumanMonth(date: Date): number {
    return date.getMonth() + 1;
@@ -83,8 +71,6 @@ function getHumanMonth(date: Date): number {
 
 /**
  * Returns localized month name in short notation
- * @param {Date} date Date
- * @return {String}
  */
 function getMonthNameShort(date: Date): string {
    return locale.config.shortMonths[date.getMonth()];
@@ -92,8 +78,6 @@ function getMonthNameShort(date: Date): string {
 
 /**
  * Returns localized month name in long notation
- * @param {Date} date Date
- * @return {String}
  */
 function getMonthNameLong(date: Date): string {
    return locale.config.longMonths[date.getMonth()];
@@ -101,8 +85,6 @@ function getMonthNameLong(date: Date): string {
 
 /**
  * Returns localized month name in ordinal notation
- * @param {Date} date Date
- * @return {String}
  */
 function getMonthOrdinal(date: Date): string {
    return locale.config.ordinalMonths[date.getMonth()];
@@ -110,8 +92,6 @@ function getMonthOrdinal(date: Date): string {
 
 /**
  * Returns quarter number
- * @param {Date} date Date
- * @return {Number}
  */
 function getQuarter(date: Date): number {
    return 1 + Math.floor((date.getMonth()) / 3);
@@ -119,8 +99,6 @@ function getQuarter(date: Date): number {
 
 /**
  * Returns quarter number in roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getQuarterRoman(date: Date): string {
    return toRoman(getQuarter(date));
@@ -128,8 +106,6 @@ function getQuarterRoman(date: Date): string {
 
 /**
  * Returns quarter number in minimized roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getQuarterRomanMin(date: Date): string {
    return locale.config.minQuarter.replace(
@@ -140,8 +116,6 @@ function getQuarterRomanMin(date: Date): string {
 
 /**
  * Returns quarter number in short roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getQuarterRomanShort(date: Date): string {
    return locale.config.shortQuarter.replace(
@@ -152,8 +126,6 @@ function getQuarterRomanShort(date: Date): string {
 
 /**
  * Returns quarter number in long roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getQuarterRomanLong(date: Date): string {
    return locale.config.longQuarter.replace(
@@ -164,8 +136,6 @@ function getQuarterRomanLong(date: Date): string {
 
 /**
  * Returns year number in minimized notation
- * @param {Date} date Date
- * @return {Number}
  */
 function getYearMin(date: Date): number {
    return date.getFullYear() % 100;
@@ -173,8 +143,6 @@ function getYearMin(date: Date): number {
 
 /**
  * Returns half a year number (1 or 2)
- * @param {Date} date Date
- * @return {Number}
  */
 function getHalfYear(date: Date): number {
    return date.getMonth() < 6 ? 1 : 2;
@@ -182,8 +150,6 @@ function getHalfYear(date: Date): number {
 
 /**
  * Returns half a year number in roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getHalfYearRoman(date: Date): string {
    return toRoman(getHalfYear(date));
@@ -191,8 +157,6 @@ function getHalfYearRoman(date: Date): string {
 
 /**
  * Returns localized half a year in minimized roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getHalfYearRomanMin(date: Date): string {
    return locale.config.minHalfYear.replace(
@@ -203,8 +167,6 @@ function getHalfYearRomanMin(date: Date): string {
 
 /**
  * Returns localized half a year in long roman notation
- * @param {Date} date Date
- * @return {String}
  */
 function getHalfYearRomanLong(date: Date): string {
    return locale.config.longHalfYear.replace(
@@ -215,7 +177,6 @@ function getHalfYearRomanLong(date: Date): string {
 
 /**
  * Returns regular expression to match date tokens in a string
- * @return {RegExp}
  */
 function getTokensRegex(): RegExp {
    if (tokensRegex) {
@@ -233,9 +194,9 @@ function getTokensRegex(): RegExp {
 
 /**
  * Adds token to match
- * @param {String} token Token
- * @param {String|Function(Date): String} handler Token handler (for String is the method name in Date.prototype)
- * @param {Object} [options] Options to pass to the handler
+ * @param token Token
+ * @param handler Token handler (for String is the method name in Date.prototype)
+ * @param [options] Options to pass to the handler
  */
 function addToken(token: string, handler: string|Function, options: object = {} as IDateFormatOptions): void {
    tokens[token] = [handler, options];
@@ -244,10 +205,9 @@ function addToken(token: string, handler: string|Function, options: object = {} 
 
 /**
  * Formats date with a handler
- * @param {Date} date Date to format
- * @param {String|Function(Date): String} handler Token handler (for String is the method name in Date.prototype)
- * @param {Object} [options] Options to pass to the handler
- * @return {String}
+ * @param date Date to format
+ * @param handler Token handler (for String is the method name in Date.prototype)
+ * @param [options] Options to pass to the handler
  */
 function formatByToken(date: Date, handler: string|Function, options: IDateFormatOptions): string {
    if (typeof handler === 'string') {

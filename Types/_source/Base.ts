@@ -25,7 +25,7 @@ export interface IOptions extends IDefaultOptions, IDataOptions {
  */
 export default abstract class Base extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
-) implements IData /** @lends Types/_source/Base.prototype */{
+) implements IData {
    protected constructor(options?: IOptions) {
       options = {...(options || {})};
 

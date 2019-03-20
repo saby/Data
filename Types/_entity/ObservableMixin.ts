@@ -1,7 +1,7 @@
 import {Bus as EventBus, Channel as EventCannel} from 'Env/Event';
 
 interface IOptions {
-   handlers?: Object;
+   handlers?: object;
 }
 
 /**
@@ -21,7 +21,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
    protected _eventBusChannel: EventCannel;
 
    /**
-    * @property {Array.<Array>} Очередь событий
+    * Очередь событий
     */
    protected _eventsQueue: any[][];
 
@@ -53,9 +53,9 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Добавляет подписку на событие
-    * @param {String} event Имя события, на которое подписается обработчик
-    * @param {Function} handler Обработчик события.
-    * @param {Object} [ctx] Контекст выполнения
+    * @param event Имя события, на которое подписается обработчик
+    * @param handler Обработчик события.
+    * @param [ctx] Контекст выполнения
     * @example
     * Подпишемся на событие OnSomethingChanged:
     * <pre>
@@ -65,7 +65,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
     *    });
     * </pre>
     */
-   subscribe(event: string, handler: Function, ctx?: Object): void {
+   subscribe(event: string, handler: Function, ctx?: object): void {
       if (this._destroyed) {
          return;
       }
@@ -88,9 +88,9 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Отменяет подписку на событие
-    * @param {String} event Имя события, на которое подписается обработчик
-    * @param {Function} handler Обработчик события.
-    * @param {Object} [ctx] Контекст выполнения
+    * @param event Имя события, на которое подписается обработчик
+    * @param handler Обработчик события.
+    * @param [ctx] Контекст выполнения
     * @example
     * Подпишемся на событие OnSomethingChanged и обработаем его только один раз:
     * <pre>
@@ -102,7 +102,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
     *    instance.subscribe('OnSomethingChanged', handler);
     * </pre>
     */
-   unsubscribe(event: string, handler: Function, ctx?: Object): void {
+   unsubscribe(event: string, handler: Function, ctx?: object): void {
       if (this._eventBusChannel) {
          if (ctx === undefined) {
             ctx = this;
@@ -113,22 +113,20 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Возвращет массив подписчиков на событие
-    * @param {String} event Имя события
-    * @return {Array.<Env/Event.Object>}
+    * @param event Имя события
     * @example
     * Посмотрим, сколько подписчиков у события OnSomethingChanged
     * <pre>
     *    var handlersCount = instance.getEventHandlers().length;
     * </pre>
     */
-   getEventHandlers(event: string): Object[] {
+   getEventHandlers(event: string): Function[] {
       return this._eventBusChannel ? this._eventBusChannel.getEventHandlers(event) : [];
    }
 
    /**
     * Проверяет наличие подписки на событие
-    * @param {String} event Имя события
-    * @return {Boolean}
+    * @param event Имя события
     * @example
     * Посмотрим, есть ли подписчики у события OnSomethingChanged
     * <pre>
@@ -140,8 +138,8 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
    }
 
    /**
-    * Деклариует наличие события
-    * @param {...String} events Имя события
+    * Деклариует наличие событий
+    * @param events Имена событий
     * @protected
     */
    protected _publish(...events: string[]): void {
@@ -159,9 +157,9 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
    /**
     * Извещает о наступлении события. Если в процессе извещения приходит очередное событие, то извещение о нем будет
     * отправлено после выполнения обработчиков предыдущего.
-    * @param {String} event Имя события
-    * @param {...*} args Аргументы события
-    * @return {*} Результат обработки события (возвращается только в случае отсутствия очереди)
+    * @param event Имя события
+    * @param args Аргументы события
+    * @return Результат обработки события (возвращается только в случае отсутствия очереди)
     * @protected
     */
    protected _notify(event: string, ...args: any[]): void {
@@ -173,8 +171,8 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Ставит в очередь извещение о наступлении события.
-    * @param {String} event Имя события
-    * @param {...*} args Аргументы события
+    * @param event Имя события
+    * @param args Аргументы события
     * @protected
     */
    protected _notifyLater(event: string, ...args: any[]): void {
@@ -185,8 +183,8 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Добавляет извещение о событии в очередь.
-    * @param {String} event Имя события
-    * @param {...*} args Аргументы события
+    * @param event Имя события
+    * @param args Аргументы события
     * @protected
     */
    protected _notifyPushQueue(event: string, ...args: any[]): void {
@@ -196,8 +194,8 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Инициирует выполнение обработчиков из очереди событий
-    * @param {Array.<Array>} eventsQueue Очередь событий
-    * @return {Array} Результаты обработки событиий
+    * @param eventsQueue Очередь событий
+    * @return Результаты обработки событиий
     * @protected
     */
    protected _notifyQueue(eventsQueue: Function[][]): any[] {
@@ -225,7 +223,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
 
    /**
     * Удаляет из очереди все обработчики указанного события
-    * @param {String} eventName Имя события
+    * @param eventName Имя события
     * @protected
     */
    protected _removeFromQueue(eventName: string): void {

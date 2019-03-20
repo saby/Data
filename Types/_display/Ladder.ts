@@ -10,10 +10,10 @@ import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 import {Object as EventObject} from 'Env/Event';
 
+type Converter = (item: any) => string;
+
 /**
  * Возвращает уникальный идентификатор объекта
- * item Объект
- * @return {*}
  */
 function getObjectId(item: any): string {
    if (item.getInstanceId instanceof Function) {
@@ -28,14 +28,10 @@ function getObjectId(item: any): string {
 
 /**
  * Возвращает уникальный содержимого элемента коллекции
- * @param item Элемент коллекции
- * @return {*}
  */
 function getCollectionItemId(item: CollectionItem): string | number {
    return getObjectId(item.getContents());
 }
-
-type Converter = (item: any) => string;
 
 interface ISerializableState extends IDefaultSerializableState {
    _offset: number;
@@ -48,11 +44,9 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
- * @author Мальцев А.А. Александрович
+ * @author Мальцев А.А.
  */
-export default class Ladder extends mixin(
-   DestroyableMixin, SerializableMixin
-) /** @lends Types/_display/Ladder.prototype */ {
+export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
    /**
     * Проекция, по которой строится лесенка
     */
@@ -100,7 +94,7 @@ export default class Ladder extends mixin(
 
    /**
     * Конструктор лесенки.
-    * @param {Types/_display/Collection} collection Проекция, по которой строится лесенка.
+    * @param collection Коллекция, по которой строится лесенка.
     */
    constructor(collection: Collection) {
       super();
@@ -128,7 +122,6 @@ export default class Ladder extends mixin(
 
    /**
     * Возвращает проекцию коллекции, по которой строится лесенка.
-    * @return {Types/_display/Collection|null}
     */
    getCollection(): Collection {
       return this._collection;
@@ -136,7 +129,7 @@ export default class Ladder extends mixin(
 
    /**
     * Устанавливает проекцию коллекции, по которой строится лесенка.
-    * @param {Types/_display/Collection|null} collection Проекция, по которой строится лесенка.
+    * collection Проекция, по которой строится лесенка.
     */
    setCollection(collection: Collection): void {
       if (collection !== null && !(collection instanceof Collection)) {
@@ -169,7 +162,7 @@ export default class Ladder extends mixin(
 
    /**
     * Устанавливает позицию в коллекции, с которой начинает строиться лесенка
-    * @param {Number} offset Позиция.
+    * @param offset Позиция.
     */
    setOffset(offset: number | string): void {
       offset = parseInt(offset as string, 10);
@@ -191,9 +184,8 @@ export default class Ladder extends mixin(
 
    /**
     * Устанавливает конвертер значения поля
-    * @param {String} columnName Название поля
-    * @param {Function(*): String} converter Конвертер значения поля
-    * @return {*}
+    * @param columnName Название поля
+    * @param converter Конвертер значения поля
     */
    setConverter(columnName: string, converter: Converter): void {
       this._converters = this._converters || {};
@@ -202,9 +194,8 @@ export default class Ladder extends mixin(
 
    /**
     * Возвращает значение поля с учетом лесенки
-    * @param {*} item Элемент коллекции, для котрой построена проекция
-    * @param {String} columnName Название поля
-    * @return {String}
+    * @param item Элемент коллекции, для котрой построена проекция
+    * @param columnName Название поля
     */
    get(item: any, columnName: string): string {
       return this.isPrimary(item, columnName)
@@ -214,9 +205,8 @@ export default class Ladder extends mixin(
 
    /**
     * Возвращает признак, что значение является основным (отображается)
-    * @param {*} item Элемент коллекции, для котрой построена проекция
-    * @param {String} columnName Название поля
-    * @return {Boolean}
+    * @param item Элемент коллекции, для котрой построена проекция
+    * @param columnName Название поля
     */
    isPrimary(item: any, columnName: string): boolean {
       if (!this._collection) {
@@ -241,8 +231,7 @@ export default class Ladder extends mixin(
 
    /**
     * Проверяет, что колонка входит в лесенку
-    * @param {String} columnName Название поля
-    * @return {Boolean}
+    * @param columnName Название поля
     */
    isLadderColumn(columnName: string): boolean {
       return this._column2primaryId.has(columnName);

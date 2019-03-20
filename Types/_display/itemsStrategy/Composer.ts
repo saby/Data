@@ -9,9 +9,7 @@ import {mixin} from '../../util';
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Composer extends mixin(
-   DestroyableMixin, SerializableMixin
-) /** @lends Types/_display/ItemsStrategy/Composer.prototype */{
+export default class Composer extends mixin(DestroyableMixin, SerializableMixin) {
    /**
     * Композируемые модули
     */
@@ -20,16 +18,13 @@ export default class Composer extends mixin(
    /**
     * Параметры конструкторов композируемых модулей
     */
-   protected _options: Object[] = [];
+   protected _options: object[] = [];
 
    /**
     * Результат композиции
     */
    protected _result: IItemsStrategy;
 
-   /**
-    * Конструктор
-    */
    constructor() {
       super();
    }
@@ -44,12 +39,11 @@ export default class Composer extends mixin(
 
    /**
     * Добавляет стратегию в конец
-    * @param {Function} Module Конструктор стратегии
-    * @param {Object} [options] Опции конструктора
-    * @param {Function} [after] После какой стратегии добавить (по умолчанию в конец)
-    * @return {Types/_display/ItemsStrategy/Composer}
+    * @param Module Конструктор стратегии
+    * @param [options] Опции конструктора
+    * @param [after] После какой стратегии добавить (по умолчанию в конец)
     */
-   append(Module: Function, options?: Object, after?: Function): Composer {
+   append(Module: Function, options?: object, after?: Function): this {
       let index = this._modules.indexOf(after);
       if (index === -1) {
          index = this._modules.length;
@@ -66,12 +60,11 @@ export default class Composer extends mixin(
 
    /**
     * Добавляет стратегию в начало
-    * @param {Function} Module Конструктор стратегии
-    * @param {Object} options Опции конструктора
-    * @param {Function} [before] Перед какой стратегией добавить (по умолчанию в начало)
-    * @return {Types/_display/ItemsStrategy/Composer}
+    * @param Module Конструктор стратегии
+    * @param options Опции конструктора
+    * @param [before] Перед какой стратегией добавить (по умолчанию в начало)
     */
-   prepend(Module: Function, options: Object, before?: Function): Composer {
+   prepend(Module: Function, options: object, before?: Function): this {
       let index = this._modules.indexOf(before);
       if (index === -1) {
          index = 0;
@@ -86,8 +79,7 @@ export default class Composer extends mixin(
 
    /**
     * Удалает стратегию
-    * @param {Function} Module Конструктор стратегии
-    * @return {Types/_display/IItemsStrategy} Удаленный экземпляр стратегии
+    * @param Module Конструктор стратегии
     */
    remove(Module: Function): IItemsStrategy {
       const index = this._modules.indexOf(Module);
@@ -105,9 +97,8 @@ export default class Composer extends mixin(
 
    /**
     * Сбрасывает компоновщик
-    * @return {Types/_display/ItemsStrategy/Composer}
     */
-   reset(): Composer {
+   reset(): this {
       this._modules.length = 0;
       this._options.length = 0;
       this._result = null;
@@ -117,8 +108,7 @@ export default class Composer extends mixin(
 
    /**
     * Возвращает экземпляр стратегии
-    * @param {Function} Module Конструктор стратегии
-    * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
+    * @param Module Конструктор стратегии
     */
    getInstance(Module: Function): IItemsStrategy {
       const index = this._modules.indexOf(Module);
@@ -131,7 +121,6 @@ export default class Composer extends mixin(
 
    /**
     * Возвращает результат компоновки
-    * @return {Types/_display/IItemsStrategy} Экземпляр стратегии
     */
    getResult(): IItemsStrategy {
       return this._result;
@@ -139,7 +128,7 @@ export default class Composer extends mixin(
 
    // endregion Public members
 
-   // region Types/_entity/SerializableMixin
+   // region SerializableMixin
 
    protected _getSerializableState(state: any): void {
       state = SerializableMixin.prototype._getSerializableState.call(this, state);
@@ -163,7 +152,7 @@ export default class Composer extends mixin(
       };
    }
 
-   // endregion Types/_entity/SerializableMixin
+   // endregion
 
    // region Protected members
 
@@ -204,7 +193,7 @@ export default class Composer extends mixin(
       return item;
    }
 
-   // endregion Protected members
+   // endregion
 }
 
 Object.assign(Composer.prototype, {

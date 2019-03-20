@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class IntegerField extends Field /** @lends Types/_entity/format/IntegerField.prototype */{
+export default class IntegerField extends Field {
    _$defaultValue: number;
 }
 

@@ -3,8 +3,6 @@ import {Map, Set} from '../../shim';
 
 /**
  * Проверяет, что объект "живой" (не был уничтожен)
- * @param {Object} item Объект
- * @return {Boolean}
  */
 function isAlive(item: any): boolean {
    return item instanceof Object && item['[Types/_entity/DestroyableMixin]'] ? !item.destroyed : true;
@@ -16,19 +14,19 @@ function isAlive(item: any): boolean {
  * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
-export default class OneToMany extends DestroyableMixin /** @lends Types/_entity/relation/OneToMany.prototype */{
+export default class OneToMany extends DestroyableMixin {
    /**
-    * @property {Map<Object, Set<Object>>} Родитель -> [Ребенок, Ребенок, ...]
+    * {Map<Object, Set<Object>>} Родитель -> [Ребенок, Ребенок, ...]
     */
    _parentToChild: any;
 
    /**
-    * @property {Map<Object, Object>} Ребенок -> Родитель
+    * {Map<Object, Object>} Ребенок -> Родитель
     */
    _childToParent: any;
 
    /**
-    * @property {Map<Object, String>} Ребенок -> название отношения
+    * {Map<Object, String>} Ребенок -> название отношения
     */
    _childToRelation: any;
 
@@ -50,9 +48,9 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Добавляет отношение "родитель - ребенок"
-    * @param {Object} parent Родитель
-    * @param {Object} child Ребенок
-    * @param {String} [name] Название отношений
+    * @param parent Родитель
+    * @param child Ребенок
+    * @param [name] Название отношений
     */
    addTo(parent: object, child: object, name?: string): void {
       this._addForParent(parent, child);
@@ -61,8 +59,8 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Удаляет отношение "родитель - ребенок"
-    * @param {Object} parent Родитель
-    * @param {Object} child Ребенок
+    * @param parent Родитель
+    * @param child Ребенок
     */
    removeFrom(parent: object, child: object): void {
       this._removeForParent(parent, child);
@@ -71,7 +69,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Очищает все отношения c детьми у указанного родителя
-    * @param {Object} parent Родитель
+    * @param parent Родитель
     */
    clear(parent: object): void {
       if (this._parentToChild.has(parent)) {
@@ -84,8 +82,8 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Возвращает всех детей для указанного родителя
-    * @param {Object} parent Родитель
-    * @param {Function(Object, String)} callback Функция обратного вызова для каждого ребенка
+    * @param parent Родитель
+    * @param callback Функция обратного вызова для каждого ребенка
     */
    each(parent: object, callback: Function): void {
       if (this._parentToChild.has(parent)) {
@@ -103,8 +101,7 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Возвращает родителя для указанного ребенка
-    * @param {Object} child Ребенок
-    * @return {Object}
+    * @param child Ребенок
     */
    getParent(child: object): object {
       const parent = this._childToParent.get(child);
@@ -117,8 +114,8 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Добавляет ребенка в список родителя
-    * @param {Object} parent Родитель
-    * @param {Object} child Ребенок
+    * @param parent Родитель
+    * @param child Ребенок
     * @protected
     */
    _addForParent(parent: object, child: object): void {
@@ -134,8 +131,8 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Удаляет ребенка из списка родителя
-    * @param {Object} parent Родитель
-    * @param {Object} child Ребенок
+    * @param parent Родитель
+    * @param child Ребенок
     * @protected
     */
    _removeForParent(parent: object, child: object): void {
@@ -150,9 +147,9 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Добавляет связь ребенка с родителем
-    * @param {Object} child Ребенок
-    * @param {Object} parent Родитель
-    * @param {String} name Название отношения
+    * @param child Ребенок
+    * @param parent Родитель
+    * @param name Название отношения
     * @protected
     */
    _addForChild(child: object, parent: object, name: string): void {
@@ -162,8 +159,8 @@ export default class OneToMany extends DestroyableMixin /** @lends Types/_entity
 
    /**
     * Удаляет связь ребенка с родителем
-    * @param {Object} child Ребенок
-    * @param {Object} parent Родитель
+    * @param child Ребенок
+    * @param parent Родитель
     * @protected
     */
    _removeForChild(child: object, parent: object): void {

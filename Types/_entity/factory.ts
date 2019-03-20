@@ -18,14 +18,13 @@ import renders = require('Core/defaultRenders');
 declare type ValueType = string | Function | IProducible;
 
 /**
- * @const {RegExp} Выделяет временную зону в строковом представлении Date
+ * Выделяет временную зону в строковом представлении Date
  */
 const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
 
 /**
  * Возвращает словарь для поля типа "Словарь"
- * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
- * @return {Array}
+ * @param format Формат поля
  */
 function getDictionary(format: DictionaryField | UniversalField): any[] {
    return (format instanceof DictionaryField ? format.getDictionary() : format.meta && format.meta.dictionary) || [];
@@ -33,9 +32,8 @@ function getDictionary(format: DictionaryField | UniversalField): any[] {
 
 /**
  * Возвращает признак, что значение типа Enum может быть null
- * @param {*} value Значение.
- * @param {Object} options Опции.
- * @return {Boolean}
+ * @param value Значение.
+ * @param options Опции.
  */
 function isEnumNullable(value: any, options: any): boolean {
    const dict = getDictionary(options.format);
@@ -49,12 +47,11 @@ function isEnumNullable(value: any, options: any): boolean {
 
 /**
  * Возвращает признак, что значение типа может быть null
- * @param {String|Function} type Тип значения.
- * @param {*} value Значение.
- * @param {Object} [options] Опции.
- * @return {Boolean}
+ * @param type Тип значения.
+ * @param value Значение.
+ * @param [options] Опции.
  */
-function isNullable(type: ValueType, value: any, options?: Object): boolean {
+function isNullable(type: ValueType, value: any, options?: object): boolean {
    if (value === undefined || value === null) {
       switch (type) {
          case 'identity':
@@ -77,8 +74,6 @@ function isNullable(type: ValueType, value: any, options?: Object): boolean {
 
 /**
  * Возвращает скалярное значение из массива
- * @param {*} value Значение
- * @return {*}
  */
 function toScalar(value: any[]): any {
    if (Array.isArray(value) && value.length < 2) {
@@ -89,8 +84,7 @@ function toScalar(value: any[]): any {
 
 /**
  * Возвращает название типа поля
- * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Формат поля
- * @return {String}
+ * @param format Формат поля
  */
 function getTypeName(format: Field | UniversalField): string {
    let type;
@@ -104,8 +98,7 @@ function getTypeName(format: Field | UniversalField): string {
 
 /**
  * Возвращает признак указания временной зоны для поля типа "Дата и время"
- * @param {Types/_entity/format/DateTimeField|Types/_entity/format/UniversalField} format Формат поля
- * @return {Number}
+ * @param format Формат поля
  */
 function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
    if (!format) {
@@ -116,8 +109,7 @@ function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
 
 /**
  * Возвращает признак "Большие деньги"
- * @param {Types/_entity/format/MoneyField|Types/_entity/format/UniversalField} format Формат поля
- * @return {Boolean}
+ * @param format Формат поля
  */
 function isLargeMoney(format: MoneyField | UniversalField): boolean {
    if (!format) {
@@ -128,8 +120,7 @@ function isLargeMoney(format: MoneyField | UniversalField): boolean {
 
 /**
  * Возвращает точность для поля типа "Вещественное число"
- * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
- * @return {Number}
+ * @param format Формат поля
  */
 function getPrecision(format: RealField | UniversalField): number {
    if (!format) {
@@ -143,8 +134,7 @@ function getPrecision(format: RealField | UniversalField): number {
 
 /**
  * Возвращает тип элементов для поля типа "Массив"
- * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
- * @return {String}
+ * @param format Формат поля
  */
 function getKind(format: ArrayField | UniversalField): string {
    return ((format as ArrayField).getKind
@@ -156,7 +146,6 @@ function getKind(format: ArrayField | UniversalField): string {
 /**
  * Сериализует поле флагов
  * @param {Types/_collection/Flags} data
- * @return {Array.<Boolean>}
  */
 function serializeFlags(data: any): boolean[] {
    const d = [];
@@ -168,8 +157,7 @@ function serializeFlags(data: any): boolean[] {
 
 /**
  * Конвертирует список записей в рекордсет
- * @param {Types/_collection/List} list Список
- * @return {Types/_collection/RecordSet}
+ * @param list Список
  */
 function convertListToRecordSet(list: List<Record>): RecordSet {
    let adapter = 'Types/entity:adapter.Json';
@@ -222,10 +210,10 @@ const factory = {
 
    /**
     * Возвращает типизированное значение из исходного.
-    * @param {*} value Исходное значение
-    * @param {Function|SimpleType} Type Тип значения
-    * @param {Object} [options] Опции
-    * @return {*} Типизированное значение
+    * @param value Исходное значение
+    * @param Type Тип значения
+    * @param [options] Опции
+    * @return Типизированное значение
     */
    cast(value: any, Type: ValueType, options?: any): any {
       options = options || {};
@@ -345,9 +333,9 @@ const factory = {
 
    /**
     * Возвращет исходное значение из типизированного.
-    * @param {*} value Типизированное значение
-    * @param {Object} [options] Опции
-    * @return {*} Исходное значение
+    * @param value Типизированное значение
+    * @param [options] Опции
+    * @return Исходное значение
     */
    serialize(value: any, options?: any): any {
       options = options || {};

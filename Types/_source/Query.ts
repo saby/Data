@@ -17,7 +17,6 @@ export interface IMeta {
 /**
  * Clones object
  * @param data Object to clone
- * @return {Object}
  */
 function duplicate(data: any): object {
    if (data['[Types/_entity/ICloneable]']) {
@@ -32,7 +31,6 @@ function duplicate(data: any): object {
 /**
  * Parses expression from fields set
  * @param expression Expression with fields set
- * @return {Object}
  */
 function parseSelectExpression(expression: Expression): object {
    if (typeof expression === 'string') {
@@ -98,7 +96,6 @@ export class Join extends OptionsToPropertyMixin {
 
    /**
     * Возвращает правое множество
-    * @return {String}
     */
    getResource(): string {
       return this._$resource;
@@ -106,23 +103,20 @@ export class Join extends OptionsToPropertyMixin {
 
    /**
     * Возвращает синоним правого множества
-    * @return {String}
     */
    getAs(): string {
       return this._$as;
    }
 
    /**
-    * Возвращает правило объеднения
-    * @return {Object}
+    * Возвращает правило объединения
     */
    getOn(): object {
       return this._$on;
    }
 
    /**
-    * Возвращает правило объеднения
-    * @return {Object}
+    * Возвращает выбираемые поля
     */
    getSelect(): object {
       return this._$select;
@@ -130,7 +124,6 @@ export class Join extends OptionsToPropertyMixin {
 
    /**
     * Это внутреннее объединение
-    * @return {Boolean}
     */
    isInner(): boolean {
       return this._$inner;
@@ -182,7 +175,6 @@ export class Order extends OptionsToPropertyMixin {
 
    /**
     * Возвращает Объект сортировки
-    * @return {String}
     */
    getSelector(): string {
       return this._$selector;
@@ -190,7 +182,6 @@ export class Order extends OptionsToPropertyMixin {
 
    /**
     * Возвращает порядок сортировки
-    * @return {Order}
     */
    getOrder(): boolean | string {
       return this._$order;
@@ -256,9 +247,7 @@ export class Order extends OptionsToPropertyMixin {
  * @public
  * @author Мальцев А.А.
  */
-export default class Query
-   extends OptionsToPropertyMixin
-   implements ICloneable /** @lends Types/_source/Query.prototype */ {
+export default class Query extends OptionsToPropertyMixin implements ICloneable {
    /**
     * Выбираемые поля
     */
@@ -341,7 +330,6 @@ export default class Query
 
    /**
     * Сбрасывает все параметры запроса
-    * @return {Types/_source/Query}
     */
    clear(): this {
       this._select = {};
@@ -360,7 +348,6 @@ export default class Query
 
    /**
     * Возвращает поля выборки
-    * @return {Object.<String>}
     * @example
     * Получим поля выборки:
     * <pre>
@@ -378,7 +365,6 @@ export default class Query
    /**
     * Устанавливает поля выборки
     * @param {Array.<String>|Object.<String>|String} expression Выбираемые поля
-    * @return {Types/_source/Query}
     * @example
     * Выбираем все заказы с определенным набором полей:
     * <pre>
@@ -405,7 +391,6 @@ export default class Query
 
    /**
     * Возвращает объект выборки
-    * @return {String}
     * @example
     * Получим объект выборки:
     * <pre>
@@ -423,7 +408,6 @@ export default class Query
 
    /**
     * Возвращает псеводним выборки
-    * @return {String}
     * @example
     * Получим псеводним выборки:
     * <pre>
@@ -443,7 +427,6 @@ export default class Query
     * Устанавливает объект выборки
     * @param {String} resource Объект выборки
     * @param {String} [as] Псеводним объекта выборки
-    * @return {Types/_source/Query}
     * @example
     * Выбираем заказы с указанием полей через псеводним:
     * <pre>
@@ -463,7 +446,6 @@ export default class Query
 
    /**
     * Возвращает способы объединения
-    * @return {Types/_source/Query/Join[]}
     * @example
     * Получим способ объединения c объектом Customers:
     * <pre>
@@ -493,7 +475,6 @@ export default class Query
     * @param {Object} on Правило объединения
     * @param {Object|Array|String} expression Выбираемые поля
     * @param {Boolean} [inner=true] Внутреннее или внешнее объединение
-    * @return {Types/_source/Query}
     * @example
     * <pre>
     *    require(['Types/source'], function (source) {
@@ -539,7 +520,6 @@ export default class Query
 
    /**
     * Возвращает способ фильтрации
-    * @return {Object.<String>|Function(*, Number):Boolean}
     * @example
     * Получим способ фильтрации выборки:
     * <pre>
@@ -562,7 +542,6 @@ export default class Query
     * @remark
     * Если expression передан в виде функции, то она принимает аргументы: элемент коллекции и его порядковый номер.
     * @param {Object.<String>|Function(*, Number): Boolean} expression Условие фильтрации
-    * @return {Types/_source/Query}
     * @example
     * Выберем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
     * <pre>
@@ -602,7 +581,6 @@ export default class Query
 
    /**
     * Возвращает способы сортировки
-    * @return {Array.<Types/_source/Query/Order>}
     * @example
     * Получим способы сортировки выборки:
     * <pre>
@@ -627,7 +605,6 @@ export default class Query
     * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор
     * полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
     * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
-    * @return {Types/_source/Query}
     * @example
     * Отсортируем заказы по полю id по возрастанию:
     * <pre>
@@ -701,7 +678,6 @@ export default class Query
 
    /**
     * Возвращает способ группировки
-    * @return {Array.<String>}
     * @example
     * Получим способ группировки выборки:
     * <pre>
@@ -722,7 +698,6 @@ export default class Query
    /**
     * Устанавливает способ группировки выборки
     * @param {String|Array.<String>} expression Способ группировки элементов
-    * @return {Types/_source/Query}
     * @example
     * <pre>
     *    require(['Types/source'], function (source) {
@@ -754,7 +729,6 @@ export default class Query
 
    /**
     * Возвращает смещение
-    * @return {Number}
     * @example
     * Получим смещение выборки:
     * <pre>
@@ -775,7 +749,6 @@ export default class Query
    /**
     * Устанавливает смещение первого элемента выборки
     * @param {Number} start Смещение первого элемента выборки
-    * @return {Types/_source/Query}
     * @example
     * Выберем все заказы, начиная с пятидесятого:
     * <pre>
@@ -816,7 +789,6 @@ export default class Query
    /**
     * Устанавливает ограничение кол-ва элементов выборки
     * @param {Number} count Максимальное кол-во элементов выборки
-    * @return {Types/_source/Query}
     * @example
     * Выберем первые десять заказов:
     * <pre>
@@ -836,7 +808,6 @@ export default class Query
 
    /**
     * Возвращает мета-данные выборки
-    * @return {Object}
     * @example
     * Получим мета-данные выборки:
     * <pre>
@@ -857,7 +828,6 @@ export default class Query
    /**
     * Устанавливает мета-данные выборки
     * @param {Object} data Мета-данные
-    * @return {Types/_source/Query}
     * @example
     * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
     * <pre>

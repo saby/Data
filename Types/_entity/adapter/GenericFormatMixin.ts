@@ -12,23 +12,23 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 
    /**
-    * @property {Object} Сырые данные
+    * Сырые данные
     */
    _data: null,
 
    /**
-    * @property {Object} Формат поля, отдаваемый через getSharedFormat()
+    * Формат поля, отдаваемый через getSharedFormat()
     */
    _sharedFieldFormat: null,
 
    /**
-    * @property {Object} Мета данные поля, отдаваемого через getSharedFormat()
+    * Мета данные поля, отдаваемого через getSharedFormat()
     */
    _sharedFieldMeta: null,
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
+    * @param data Сырые данные
     */
    constructor(data: any): void {
       this._data = data;

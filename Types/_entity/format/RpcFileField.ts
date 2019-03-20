@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class RpcFileField extends Field /** @lends Types/_entity/format/RpcFileField.prototype */{
+export default class RpcFileField extends Field {
 }
 
 Object.assign(RpcFileField.prototype, {

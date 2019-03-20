@@ -25,8 +25,7 @@ interface ISorter {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class MaterializedPath
-   extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/MaterializedPath.prototype */ {
+export default class MaterializedPath extends AbstractStrategy {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/Collection} display Проекция
@@ -113,9 +112,8 @@ export default class MaterializedPath
 
    /**
     * Возвращает путь до элемента с порядковым номером
-    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
-    * @param {Number} index Порядковый номер
-    * @return {Array.<Number>}
+    * @param collection Коллекция
+    * @param index Порядковый номер
     * @protected
     */
    protected _getPathTo(collection: IEnumerable<any>, index: number): number[] {
@@ -194,9 +192,8 @@ export default class MaterializedPath
 
    /**
     * Возвращает элемент, находящийся по указанному пути
-    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Коллекция
-    * @param {Array.<Number>} path Путь до элемента
-    * @return {*}
+    * @param collection Коллекция
+    * @param path Путь до элемента
     * @protected
     */
    protected _getItemByPath(collection: IEnumerable<any>, path: number[]): any {
@@ -215,9 +212,8 @@ export default class MaterializedPath
 
    /**
     * Возвращает родителя элемента с указанными порядковым номером и путем
-    * @param {Number} index Порядковый номер элемента
-    * @param {Array.<Number>} path Путь до элемента
-    * @return {Types/_display/CollectionItem} Родитель элемента
+    * @param index Порядковый номер элемента
+    * @param path Путь до элемента
     * @protected
     */
    protected _getParent(index: number, path: number[]): CollectionItem {
@@ -239,9 +235,8 @@ export default class MaterializedPath
 
    /**
     * Возвращает элемент по индексу в родителе
-    * @param {Array|Types/_collection/IList|Types/_collection/IEnumerable} collection Родитель
-    * @param {Number} at Индекс элемента
-    * @return {*}
+    * @param collection Родитель
+    * @param at Индекс элемента
     * @protected
     */
    protected _getItemAt(collection: any[] | IEnumerable<any> | IList<any>, at: number): any {
@@ -284,10 +279,9 @@ export default class MaterializedPath
 
    /**
     * Создает индекс сортировки по материализованному пути - от корневой вершины вглубь до конечных вершин
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
-    * @param {Array.<Number>} current Текущий индекс сортировки
-    * @param {Object} options Опции
-    * @return {Array.<Number>}
+    * @param items Элементы проекции.
+    * @param current Текущий индекс сортировки
+    * @param options Опции
     */
    static sortItems(items: CollectionItem[], current: number[], options: ISortOptions): number[] {
       const indexToPath = options.indexToPath;

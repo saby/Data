@@ -343,9 +343,8 @@ export default abstract class Remote extends mixin(
 
    /**
     * Инстанциирует провайдер удаленного доступа
-    * @param {String|Types/_source/Provider/IAbstract} provider Алиас или инстанс
-    * @param {Object} options Аргументы конструктора
-    * @return {Types/_source/Provider}
+    * @param provider Алиас или инстанс
+    * @param options Аргументы конструктора
     * @protected
     */
    protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
@@ -361,9 +360,9 @@ export default abstract class Remote extends mixin(
 
    /**
     * Вызывает удаленный сервис через провайдер
-    * @param {String} name Имя сервиса
-    * @param {Object|Array} [args] Аргументы вызова
-    * @return {Core/Deferred} Асинхронный результат операции
+    * @param name Имя сервиса
+    * @param [args] Аргументы вызова
+    * @return Асинхронный результат операции
     * @protected
     */
    protected _callProvider(name: string, args: object): ExtendPromise<any> {
@@ -395,8 +394,7 @@ export default abstract class Remote extends mixin(
 
    /**
     * Подготавливает аргументы к передаче в удаленный сервис
-    * @param {Object} [args] Аргументы вызова
-    * @return {Object|undefined}
+    * @param [args] Аргументы вызова
     * @protected
     */
    protected _prepareProviderArguments(args: object): object {

@@ -6,10 +6,9 @@
  */
 export default class Guid {
    /**
-    * return random numbers that look like GUIDs
-    * @return {String}
+    * Returns a string filled with random numbers which looks like GUID
     */
-   static create(): Guid {
+   static create(): string {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
          // tslint:disable-next-line:no-bitwise
          const r = Math.random() * 16 | 0;

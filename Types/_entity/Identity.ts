@@ -15,20 +15,20 @@ import {register} from '../di';
  *    });
  * </pre>
  */
-export default class Identity /** @lends Types/_entity/Identity.prototype */{
+export default class Identity {
    /**
-    * @property {String} Разделитель значений
+    * Разделитель значений
     */
    _separator: string;
 
    /**
-    * @property {Array} Значение идентификатора
+    * Значение идентификатора
     */
    _value: any[];
 
    /**
     * Конструктор типа "Идентификатор".
-    * @param {Array|String|Number} value Значение идентификатора
+    * @param value Значение идентификатора
     */
    constructor(value: any[] | string | number) {
       if (!(value instanceof Array)) {
@@ -45,7 +45,6 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
 
    /**
     * Возвращает значение поля таблицы.
-    * @return {Number|Null}
     */
    getValue(): number | null {
       return this._value[0];
@@ -53,7 +52,6 @@ export default class Identity /** @lends Types/_entity/Identity.prototype */{
 
    /**
     * Возвращает название таблицы.
-    * @return {String|undefined}
     */
    getName(): string {
       return this._value[1];

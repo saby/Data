@@ -36,28 +36,26 @@ export interface ISerializableState extends IDefaultSerializableState {
  */
 export default class CollectionItem extends mixin(
    DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin
-) implements IInstantiable /** @lends Types/_display/CollectionItem.prototype */{
+) implements IInstantiable {
 
    // region IInstantiable
 
    readonly '[Types/_entity/IInstantiable]': boolean;
 
    getInstanceId: () => string;
+
    /**
-    * @cfg {Types/_collection/IEnumerable} Коллекция, которой принадлежит элемент
-    * @name Types/_display/CollectionItem#owner
+    * Коллекция, которой принадлежит элемент
     */
    protected _$owner: Abstract;
 
    /**
-    * @cfg {*} Содержимое элемента коллекции
-    * @name Types/_display/CollectionItem#contents
+    * Содержимое элемента коллекции
     */
    protected _$contents: any;
 
    /**
-    * @cfg {*} Элемент выбран
-    * @name Types/_display/CollectionItem#selected
+    * Элемент выбран
     */
    protected _$selected: boolean;
 
@@ -80,7 +78,6 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает коллекцию, которой принадлежит элемент
-    * @return {Types/_collection/IEnumerable}
     */
    getOwner(): Abstract {
       return this._$owner;
@@ -88,7 +85,7 @@ export default class CollectionItem extends mixin(
 
    /**
     * Устанавливает коллекцию, которой принадлежит элемент
-    * @param {Types/_collection/IEnumerable} owner Коллекция, которой принадлежит элемент
+    * @param owner Коллекция, которой принадлежит элемент
     */
    setOwner(owner: Abstract): void {
       this._$owner = owner;
@@ -96,7 +93,6 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает содержимое элемента коллекции
-    * @return {*}
     */
    getContents(): any {
       if (this._contentsIndex !== undefined) {
@@ -109,8 +105,8 @@ export default class CollectionItem extends mixin(
 
    /**
     * Устанавливает содержимое элемента коллекции
-    * @param {*} contents Новое содержимое
-    * @param {Boolean} [silent=false] Не уведомлять владельца об изменении содержимого
+    * @param contents Новое содержимое
+    * @param [silent=false] Не уведомлять владельца об изменении содержимого
     */
    setContents(contents: any, silent?: boolean): void {
       if (this._$contents === contents) {
@@ -124,7 +120,6 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link contents}.
-    * @return {String|undefined}
     */
    getUid(): string {
       if (!this._$owner) {
@@ -135,7 +130,6 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает признак, что элемент выбран
-    * @return {*}
     */
    isSelected(): boolean {
       return this._$selected;
@@ -143,8 +137,8 @@ export default class CollectionItem extends mixin(
 
    /**
     * Устанавливает признак, что элемент выбран
-    * @param {Boolean} selected Элемент выбран
-    * @param {Boolean} [silent=false] Не уведомлять владельца об изменении признака выбранности
+    * @param selected Элемент выбран
+    * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
     */
    setSelected(selected: boolean, silent?: boolean): void {
       if (this._$selected === selected) {
@@ -200,7 +194,6 @@ export default class CollectionItem extends mixin(
 
    /**
     * Возвращает коллекцию проекции
-    * @return {Types/_collection/IEnumerable}
     * @protected
     */
    protected _getSourceCollection(): IEnumerable<any> {
@@ -209,7 +202,7 @@ export default class CollectionItem extends mixin(
 
    /**
     * Генерирует событие у владельца об изменении свойства элемента
-    * @param {String} property Измененное свойство
+    * @param property Измененное свойство
     * @protected
     */
    protected _notifyItemChangeToOwner(property: string): void {

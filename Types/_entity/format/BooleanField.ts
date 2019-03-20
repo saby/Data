@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class BooleanField extends Field /** @lends Types/_entity/format/BooleanField.prototype */{
+export default class BooleanField extends Field {
 }
 
 Object.assign(BooleanField.prototype, {

@@ -24,9 +24,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class User extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/User.prototype */ {
+export default class User extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -43,10 +41,6 @@ export default class User extends mixin(
     */
    protected _itemsOrder: number[];
 
-   /**
-    * Конструктор
-    * @param {Options} options Опции
-    */
    constructor(options: IOptions) {
       super();
       if (!options || !(options.handlers instanceof Array)) {
@@ -165,7 +159,6 @@ export default class User extends mixin(
    /**
     * Возвращает соответствие индексов в стратегии оригинальным индексам
     * @protected
-    * @return {Array.<Number>}
     */
    protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
@@ -178,7 +171,6 @@ export default class User extends mixin(
    /**
     * Создает соответствие индексов в стратегии оригинальным индексам
     * @protected
-    * @return {Array.<Number>}
     */
    protected _createItemsOrder(): number[] {
       const items = this.source.items;
@@ -197,10 +189,9 @@ export default class User extends mixin(
 
    /**
     * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
-    * @param {Array.<Number>} current Текущий индекс сортировки
-    * @param {Array.<Function>} handlers Пользовательские обработчики для Array.prototype.sort
-    * @return {Array.<Number>}
+    * @param items Элементы проекции.
+    * @param current Текущий индекс сортировки
+    * @param handlers Пользовательские обработчики для Array.prototype.sort
     */
    static sortItems(items: CollectionItem[], current: number[], handlers: SortFunction[]): number[] {
       if (!handlers || handlers.length === 0) {

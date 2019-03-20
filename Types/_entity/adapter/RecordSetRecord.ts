@@ -29,16 +29,14 @@ import {RecordSet, format} from '../../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSetRecord extends mixin(
-   DestroyableMixin, GenericFormatMixin
-) implements IRecord /** @lends Types/_entity/adapter/RecordSetRecord.prototype */{
+export default class RecordSetRecord extends mixin(DestroyableMixin, GenericFormatMixin) implements IRecord {
    /**
-    * @property Запись
+    * Запись
     */
    _data: Record;
 
    /**
-    * @property Таблица
+    * Таблица
     */
    _tableData: RecordSet;
 
@@ -52,8 +50,8 @@ export default class RecordSetRecord extends mixin(
 
    /**
     * Конструктор
-    * @param {Types/_entity/Record} data Сырые данные
-    * @param {Types/_collection/RecordSet} [tableData] Таблица
+    * @param data Сырые данные
+    * @param [tableData] Таблица
     */
    constructor(data: Record, tableData?: RecordSet) {
       if (data && !data['[Types/_entity/Record]']) {

@@ -14,13 +14,12 @@ export interface IOptions extends ICollectionItemOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class BreadcrumbsItem extends CollectionItem /** @lends Types/_display/BreadcrumbsItem.prototype */{
-   _instancePrefix: 'breadcrumbs-item-';
-   _$owner: Tree;
+export default class BreadcrumbsItem extends CollectionItem {
+   protected _instancePrefix: 'breadcrumbs-item-';
+   protected _$owner: Tree;
 
    /**
-    * @cfg {Types/_collection/TreeItem} Последний элемент хлебной крошки
-    * @name Types/_display/BreadcrumbsItem#last
+    * Последний элемент хлебной крошки
     */
    protected _$last: CollectionItem;
 

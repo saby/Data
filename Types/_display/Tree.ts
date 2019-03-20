@@ -61,7 +61,6 @@ function onCollectionItemChange(event: EventObject, item: any, index: number, pr
 
 /**
  * Возвращает имя совйства с инвертированным смыслом
- * @param name Имя свойства.
  */
 function invertPropertyLogic(name: string): string {
    return name[0] === '!' ? name.slice(1) : '!' + name;
@@ -102,7 +101,7 @@ interface IItemsFactoryOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class Tree extends Collection /** @lends Types/_display/Tree.prototype */{
+export default class Tree extends Collection {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
     * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link idProperty}
@@ -167,9 +166,9 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
    protected _root: TreeItem;
 
    /**
-    * {Object.<Array.<Types/_display/TreeItem>>} Соответствие узлов и их потомков
+    * Соответствие узлов и их потомков
     */
-   protected _childrenMap: Object = {};
+   protected _childrenMap: object = {};
 
    // @ts-ignore
    constructor(options?: IOptions) {
@@ -223,7 +222,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает текущим следующий элемент родительского узла.
-    * @return {Boolean} Есть ли следующий элемент в родительском узле
+    * @return Есть ли следующий элемент в родительском узле
     */
    moveToNext(): boolean {
       return this._moveTo(true);
@@ -231,7 +230,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает текущим предыдущий элемент родительского узла
-    * @return {Boolean} Есть ли предыдущий элемент в родительском узле
+    * @return Есть ли предыдущий элемент в родительском узле
     */
    moveToPrevious(): boolean {
       return this._moveTo(false);
@@ -255,7 +254,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает название свойства, содержащего идентификатор родительского узла
-    * @return {String}
     */
    getParentProperty(): string {
       return this._$parentProperty;
@@ -263,7 +261,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает название свойства, содержащего идентификатор родительского узла
-    * @param {String} name
     */
    setParentProperty(name: string): void {
       this._unsetImportantProperty(this._$parentProperty);
@@ -276,7 +273,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает название свойства, содержащего признак узла
-    * @return {String}
     */
    getNodeProperty(): string {
       return this._$nodeProperty;
@@ -284,7 +280,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает название свойства, содержащего дочерние элементы узла
-    * @return {String}
     */
    getChildrenProperty(): string {
       return this._$childrenProperty;
@@ -292,7 +287,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает название свойства, содержащего признак наличия детей у узла
-    * @return {String}
     */
    getHasChildrenProperty(): string {
       return this._$hasChildrenProperty;
@@ -304,7 +298,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает корневой узел дерева
-    * @return {Types/_display/TreeItem}
     */
    getRoot(): TreeItem {
       if (this._root === null) {
@@ -325,7 +318,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает корневой узел дерева
-    * @param {Types/_display/TreeItem|*} root Корневой узел или его содержимое
+    * @param root Корневой узел или его содержимое
     */
    setRoot(root: TreeItem | any): void {
       if (this._$root === root) {
@@ -341,7 +334,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает признак, что корневой узел включен в список элементов
-    * @return {Boolean}
     */
    isRootEnumerable(): boolean {
       return this._$rootEnumerable;
@@ -349,7 +341,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает признак, что корневой узел включен в список элементов
-    * @param {Boolean} enumerable Корневой узел включен в список элементов
+    * @param enumerable Корневой узел включен в список элементов
     */
    setRootEnumerable(enumerable: boolean): void {
       if (this._$rootEnumerable === enumerable) {
@@ -372,9 +364,8 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает коллекцию потомков элемента коллекции
-    * @param {Types/_display/TreeItem} parent Родительский узел
-    * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-    * @return {Types/_display/TreeChildren}
+    * @param parent Родительский узел
+    * @param [withFilter=true] Учитывать {@link setFilter фильтр}
     */
    getChildren(parent: TreeItem, withFilter?: boolean): TreeChildren {
       return new TreeChildren({
@@ -385,7 +376,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает текущим родителя текущего элемента
-    * @return {Boolean} Есть ли родитель
+    * @return Есть ли родитель
     */
    moveToAbove(): boolean {
       const current = this.getCurrent();
@@ -404,7 +395,7 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Устанавливает текущим первого непосредственного потомка текущего элемента
-    * @return {Boolean} Есть ли первый потомок
+    * @return Есть ли первый потомок
     */
    moveToBelow(): boolean {
       const current = <TreeItem> this.getCurrent();
@@ -538,7 +529,6 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Проверяет валидность элемента проекции
-    * @param {*} item Элемент проекции
     * @protected
     */
    protected _checkItem(item: any): void {
@@ -551,9 +541,8 @@ export default class Tree extends Collection /** @lends Types/_display/Tree.prot
 
    /**
     * Возвращает массив детей для указанного родителя
-    * @param {Types/_display/TreeItem} parent Родительский узел
-    * @param {Boolean} [withFilter=true] Учитывать {@link setFilter фильтр}
-    * @return {Array.<Types/_display/TreeItem>}
+    * @param parent Родительский узел
+    * @param [withFilter=true] Учитывать фильтр
     * @protected
     */
    protected _getChildrenArray(parent: TreeItem, withFilter?: boolean): TreeItem[] {

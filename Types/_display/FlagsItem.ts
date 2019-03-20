@@ -8,7 +8,7 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class FlagsItem extends CollectionItem /** @lends Types/_display/FlagsItem.prototype */{
+export default class FlagsItem extends CollectionItem {
    isSelected(): boolean {
       return this._$owner.getCollection().get(
          this._$contents, this._$owner.localize

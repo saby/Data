@@ -10,7 +10,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
    '[Types/_entity/adapter/GenericFormatMixin]': true,
 
    /**
-    * @property {Object.<Types/_entity/format/Field>} Форматы полей
+    * {Object.<Types/_entity/format/Field>} Форматы полей
     */
    _format: null,
 

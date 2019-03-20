@@ -18,7 +18,7 @@ import DataSet from './DataSet';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IRpc /** @lends Types/_source/IRpc.prototype */{
+export default interface IRpc {
    readonly '[Types/_source/IRpc]': boolean;
 
    /**

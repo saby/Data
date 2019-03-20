@@ -10,8 +10,8 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Search extends Tree /** @lends Types/_display/Search.prototype */{
-   _createComposer(): ItemsStrategyComposer {
+export default class Search extends Tree {
+   protected _createComposer(): ItemsStrategyComposer {
       const composer = super._createComposer();
       composer.append(SearchStrategy);
 

@@ -21,9 +21,7 @@ export interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default abstract class Abstract extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Abstract.prototype */{
+export default abstract class Abstract extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
    /**
     * @typedef {Object} Options
     * @property {Boolean} localize Алиас зависимости или конструктора элементов проекции
@@ -45,10 +43,6 @@ export default abstract class Abstract extends mixin(
     */
    protected _options: IOptions;
 
-   /**
-    * Конструктор
-    * @param {Options} options Опции
-    */
    constructor(options: IOptions) {
       super();
       this._options = options;
@@ -127,7 +121,6 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает исходную коллекцию
-    * @return {Types/_collection/IEnumerable}
     * @protected
     */
    protected _getCollection(): Collection {
@@ -136,7 +129,6 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает энумератор коллекции
-    * @return {Types/_collection/IEnumerator}
     * @protected
     */
    protected _getCollectionEnumerator(): IEnumerator<any> {
@@ -145,7 +137,6 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает элементы проекции
-    * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
    protected _getItems(): CollectionItem[] {
@@ -185,7 +176,6 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Создает элемент проекции
-    * @return Types/_display/CollectionItem
     * @protected
     */
    protected _createItem(contents: any): CollectionItem {

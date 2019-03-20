@@ -586,7 +586,7 @@ class Converter {
  */
 export default class LocalSession extends mixin(
    DestroyableMixin, OptionsToPropertyMixin
-) implements ICrud, ICrudPlus, IData /** @lends Types/_source/LocalSession.prototype */{
+) implements ICrud, ICrudPlus, IData {
    protected _writable: boolean;
 
    /**
@@ -945,7 +945,7 @@ export default class LocalSession extends mixin(
 
    // endregion
 
-   // region {IData}
+   // region IData
 
    readonly '[Types/_source/IData]': boolean = true;
 
@@ -983,7 +983,6 @@ export default class LocalSession extends mixin(
 
    /**
     * Инициализирует данные источника, переданные в конструктор
-    * @param {Object} data данные
     * @protected
     */
    protected _initData(data: object): void {
@@ -1008,8 +1007,7 @@ export default class LocalSession extends mixin(
 
    /**
     * Создает новый экземпляр dataSet
-    * @param {Object} rawData данные
-    * @return {Types/_source/DataSet}
+    * @param rawData данные
     * @protected
     */
    protected _getDataSet(rawData: any): DataSet {

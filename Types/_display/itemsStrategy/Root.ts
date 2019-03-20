@@ -17,9 +17,7 @@ interface IOptions {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Root extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Root.prototype */ {
+export default class Root extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -31,10 +29,6 @@ export default class Root extends mixin(
     */
    protected _options: IOptions;
 
-   /**
-    * Конструктор
-    * @param {Options} options Опции
-    */
    constructor(options: IOptions) {
       super();
       this._options = options;

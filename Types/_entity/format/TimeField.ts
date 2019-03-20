@@ -16,7 +16,7 @@ import {dateToSql, TO_SQL_MODE} from '../../formatter';
  * @public
  * @author Мальцев А.А.
  */
-export default class TimeField extends Field /** @lends Types/_entity/format/TimeField.prototype */{
+export default class TimeField extends Field {
 
    // region Public methods
 

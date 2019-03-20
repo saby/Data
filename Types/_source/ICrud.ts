@@ -54,7 +54,7 @@ import {RecordSet} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default interface ICrud /** @lends Types/_source/ICrud.prototype */{
+export default interface ICrud {
    readonly '[Types/_source/ICrud]': boolean;
 
    /**

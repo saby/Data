@@ -16,9 +16,9 @@ interface IEnumCollection extends ICollection, IEnum<CollectionItem> {
  * @class Types/_display/Enum
  * @extends Types/_display/Collection
  * @public
- * @author Ганшнин Ярослав
+ * @author Мальцев А.А.
  */
-export default class Enum extends Collection /** @lends Types/_display/Enum.prototype */{
+export default class Enum extends Collection {
    protected _$collection: IEnumCollection;
 
    /**

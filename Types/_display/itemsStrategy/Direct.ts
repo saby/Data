@@ -26,7 +26,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct extends AbstractStrategy /** @lends Types/_display/ItemsStrategy/Direct.prototype */{
+export default class Direct extends AbstractStrategy {
    protected _options: IOptions;
 
    /**
@@ -149,9 +149,8 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
    }
 
    /**
-    * Возвращает сооconstтствие индексов в стратегии оригинальным инconstсам
+    * Returns relation between internal and original indices
     * @protected
-    * @return {Array.<Number>}
     */
    protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
@@ -173,10 +172,8 @@ export default class Direct extends AbstractStrategy /** @lends Types/_display/I
 
    /**
     * Создает индекс сортировки в том же порядке, что и коллекция
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
-    * @param {Array.<Number>} current Текущий индекс сортировки
-    * @param {Object} options Опции
-    * @return {Array.<Number>}
+    * @param items Элементы проекции.
+    * @param options Опции
     */
    static sortItems(items: CollectionItem[], options: ISortOptions): number[] {
       const idProperty = options.idProperty;

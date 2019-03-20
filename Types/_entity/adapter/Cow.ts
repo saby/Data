@@ -25,23 +25,21 @@ interface ISerializableState extends ICommonState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Cow extends mixin(
-   Abstract, SerializableMixin
-) implements IDecorator /** @lends Types/_entity/adapter/Cow.prototype */{
+export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator {
    /**
-    * @property Оригинальный адаптер
+    * Оригинальный адаптер
     */
    protected _original: IAdapter;
 
    /**
-    * @property Ф-я обратного вызова при событии записи
+    * Ф-я обратного вызова при событии записи
     */
    protected _writeCallback: Function;
 
    /**
     * Конструктор
-    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
-    * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
+    * @param original Оригинальный адаптер
+    * @param [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(original: IAdapter, writeCallback?: Function) {
       super();

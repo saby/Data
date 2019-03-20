@@ -25,33 +25,27 @@ interface ISerializableState extends IDefaultSerializableState {
  */
 export default class TreeItem extends CollectionItem /** @lends Types/_display/TreeItem.prototype */{
    /**
-    * @cfg {Types/_display/TreeItem} Родительский узел
-    * @name Types/_display/TreeItem#parent
+    * Родительский узел
     */
    protected _$parent: TreeItem;
 
    /**
-    * @cfg {Boolean} Является узлом
-    * @name Types/_display/TreeItem#node
+    * Является узлом
     */
    protected _$node: boolean;
 
    /**
-    * @cfg {Boolean} Развернут или свернут узел. По умолчанию свернут.
-    * @name Types/_display/TreeItem#expanded
+    * Развернут или свернут узел. По умолчанию свернут.
     */
    protected _$expanded: boolean;
 
    /**
-    * @cfg {Boolean} Есть ли дети у узла. По умолчанию есть.
-    * @name Types/_display/TreeItem#hasChildren
+    * Есть ли дети у узла. По умолчанию есть.
     */
    protected _$hasChildren: boolean;
 
    /**
-    * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних
-    * элементов.
-    * @name Types/_display/TreeItem#childrenProperty
+    * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
     */
    protected _$childrenProperty: string;
 
@@ -67,13 +61,10 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       this._$hasChildren = !!this._$hasChildren;
    }
 
-   // endregion Types/_entity/SerializableMixin
-
    // region Public methods
 
    /**
     * Возвращает родительский узел
-    * @return {Types/_display/TreeItem}
     */
    getParent(): TreeItem {
       return this._$parent;
@@ -81,7 +72,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Устанавливает родительский узел
-    * @param {Types/_display/TreeItem} parent Новый родительский узел
+    * @param parent Новый родительский узел
     */
    setParent(parent: TreeItem): void {
       this._$parent = parent;
@@ -89,7 +80,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает корневой элемент дерева
-    * @return {Types/_display/TreeItem}
     */
    getRoot(): TreeItem {
       const parent = this.getParent();
@@ -101,7 +91,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Является ли корнем дерева
-    * @return {Boolean}
     */
    isRoot(): boolean {
       return !this.getParent();
@@ -109,7 +98,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает уровень вложенности относительно корня
-    * @return {Number}
     */
    getLevel(): number {
       const parent = this.getParent();
@@ -123,7 +111,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает признак, является ли элемент узлом
-    * @return {Boolean}
     */
    isNode(): boolean {
       return this._$node;
@@ -131,7 +118,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Устанавливает признак, является ли элемент узлом
-    * @param {Boolean} node Является ли элемент узлом
+    * @param node Является ли элемент узлом
     */
    setNode(node: boolean): void {
       this._$node = node;
@@ -139,7 +126,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает признак, что узел развернут
-    * @return {Boolean}
     */
    isExpanded(): boolean {
       return this._$expanded;
@@ -147,8 +133,8 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Устанавливает признак, что узел развернут или свернут
-    * @param {Boolean} expanded Развернут или свернут узел
-    * @param {Boolean} [silent=false] Не генерировать событие
+    * @param expanded Развернут или свернут узел
+    * @param [silent=false] Не генерировать событие
     */
    setExpanded(expanded: boolean, silent?: boolean): void {
       if (this._$expanded === expanded) {
@@ -169,7 +155,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает признак наличия детей у узла
-    * @return {Boolean}
     */
    isHasChildren(): boolean {
       return this._$hasChildren;
@@ -177,7 +162,6 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Устанавливает признак наличия детей у узла
-    * @param {Boolean} value
     */
    setHasChildren(value: boolean): void {
       this._$hasChildren = value;
@@ -193,13 +177,12 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    /**
     * Возвращает название свойства, содержащего дочерние элементы узла
-    * @return {String}
     */
    getChildrenProperty(): string {
       return this._$childrenProperty;
    }
 
-   // region Types/_entity/SerializableMixin
+   // region SerializableMixin
 
    protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState = super._getSerializableState(state) as ISerializableState;
@@ -226,7 +209,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
    /**
     * Генерирует событие у владельца об изменении свойства элемента.
     * Помимо родительской коллекции уведомляет также и корневой узел дерева.
-    * @param {String} property Измененное свойство
+    * @param property Измененное свойство
     * @protected
     */
    protected _notifyItemChangeToOwner(property: string): void {

@@ -14,34 +14,32 @@ import {object} from '../../util';
  * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
-export default class CowRecord
-   extends DestroyableMixin
-   implements IRecord, IDecorator /** @lends Types/_entity/adapter/CowRecord.prototype */ {
+export default class CowRecord extends DestroyableMixin implements IRecord, IDecorator {
    /**
-    * @property Оригинальный адаптер
+    * Оригинальный адаптер
     */
    protected _original: IAdapter;
 
    /**
-    * @property Оригинальный адаптер записи
+    * Оригинальный адаптер записи
     */
    protected _originalRecord: IRecord | ICloneable;
 
    /**
-    * @property Ф-я обратного вызова при событии записи
+    * Ф-я обратного вызова при событии записи
     */
    protected _writeCallback: Function;
 
    /**
-    * @property Сырые данные были скопированы
+    * Сырые данные были скопированы
     */
    protected _copied: boolean;
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
-    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
-    * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
+    * @param data Сырые данные
+    * @param original Оригинальный адаптер
+    * @param [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(data: any, original: IAdapter, writeCallback?: Function) {
       super();
@@ -52,7 +50,7 @@ export default class CowRecord
       }
    }
 
-   // region Types/_entity/adapter/IRecord
+   // region IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
@@ -107,7 +105,7 @@ export default class CowRecord
 
    // endregion
 
-   // region Types/_entity/adapter/IDecorator
+   // region IDecorator
 
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
 
