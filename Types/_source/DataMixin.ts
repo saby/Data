@@ -16,8 +16,8 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
-   '[Types/_source/DataMixin]': true,
+export default abstract class DataMixin {
+   readonly '[Types/_source/DataMixin]': boolean;
 
    /**
     * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
@@ -48,7 +48,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     *    });
     * </pre>
     */
-   _$adapter: 'Types/entity:adapter.Json',
+   protected _$adapter: adapter.IAdapter | string;
 
    /**
     * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
@@ -82,7 +82,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     *    });
     * </pre>
     */
-   _$model: 'Types/entity:Model',
+   protected _$model: Function | string;
 
    /**
     * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
@@ -116,7 +116,7 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     *    });
     * </pre>
     */
-   _$listModule: 'Types/collection:RecordSet',
+   protected _$listModule: Function | string;
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
@@ -131,65 +131,65 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
     *    });
     * </pre>
     */
-   _$idProperty: '',
+   protected _$idProperty: string;
 
    /**
-    * @member {String|Function} Конструктор модуля, реализующего DataSet
+    * Конструктор модуля, реализующего DataSet
     */
-   _dataSetModule: 'Types/source:DataSet',
+   protected _dataSetModule: Function | string;
 
    /**
-    * @member {String} Свойство данных, в котором лежит основная выборка
+    * Свойство данных, в котором лежит основная выборка
     */
-   _dataSetItemsProperty: '',
+   protected _dataSetItemsProperty: string;
 
    /**
-    * @member {String} Свойство данных, в котором лежит общее кол-во строк, выбранных запросом
+    * Свойство данных, в котором лежит общее кол-во строк, выбранных запросом
     */
-   _dataSetMetaProperty: '',
+   protected _dataSetMetaProperty: string;
 
-   _writable: ReadWriteMixin.prototype.writable,
+   protected _writable: boolean;
 
-   constructor(options?: IOptions): void {
+   constructor(options?: IOptions) {
       options = options || {};
 
       if (options.dataSetMetaProperty) {
          this._dataSetMetaProperty = options.dataSetMetaProperty;
       }
-   },
+   }
 
    // region Public methods
 
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
-         this._$adapter = create(this._$adapter);
+         this._$adapter = create<adapter.IAdapter>(this._$adapter);
       }
       return this._$adapter;
-   },
+   }
 
    getModel(): Function | string {
       return this._$model;
-   },
+   }
 
    setModel(model: Function | string): void {
       this._$model = model;
-   },
+   }
 
    getListModule(): Function | string {
       return this._$listModule;
-   },
+   }
 
    setListModule(listModule: Function | string): void {
       this._$listModule = listModule;
-   },
+   }
 
    getIdProperty(): string {
       return this._$idProperty;
-   },
+   }
 
    setIdProperty(name: string): void {
       this._$idProperty = name;
-   },
+   }
 
    // endregion
 
@@ -197,36 +197,33 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
 
    /**
     * Определяет название свойства с первичным ключом по данным
-    * @param {*} data Сырые данные
-    * @return {String}
+    * @param data Сырые данные
     * @protected
     */
-   _getIdPropertyByData(data: any): string {
+   protected _getIdPropertyByData(data: any): string {
       return this.getAdapter().getKeyField(data) || '';
-   },
+   }
 
    /**
     * Создает новый экземпляр модели
-    * @param {*} data Данные модели
-    * @return {Types/_entity/Model}
+    * @param data Данные модели
     * @protected
     */
-   _getModelInstance(data: any): Model {
+   protected _getModelInstance(data: any): Model {
       return create(this._$model, {
          writable: this._writable,
          rawData: data,
          adapter: this.getAdapter(),
          idProperty: this.getIdProperty()
       });
-   },
+   }
 
    /**
     * Создает новый экземпляр DataSet
-    * @param {Object} cfg Опции конструктора
-    * @return {Types/_source/DataSet}
+    * @param {cfg Опции конструктора
     * @protected
     */
-   _getDataSetInstance(cfg: IDataSetOptions): DataSet {
+   protected _getDataSetInstance(cfg: IDataSetOptions): DataSet {
       return create(// eslint-disable-line new-cap
          this._dataSetModule,
          {
@@ -238,35 +235,33 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
             ...cfg
          }
       );
-   },
+   }
 
    /**
     * Оборачивает данные в DataSet
-    * @param {Object} data Данные
-    * @return {Types/_source/DataSet}
     * @protected
     */
-   _wrapToDataSet(data: any): DataSet {
+   protected _wrapToDataSet(data: any): DataSet {
       return this._getDataSetInstance({
          rawData: data,
          itemsProperty: this._dataSetItemsProperty,
          metaProperty: this._dataSetMetaProperty
       });
-   },
+   }
 
    /**
     * Перебирает все записи выборки
-    * @param {*} data Выборка
-    * @param {Function} callback Ф-я обратного вызова для каждой записи
-    * @param {Object} context Конекст
+    * @param data Выборка
+    * @param callback Ф-я обратного вызова для каждой записи
+    * @param context Конекст
     * @protected
     */
-   _each(data: any, callback: Function, context: object): void {
+   protected _each(data: any, callback: Function, context: object): void {
       const tableAdapter = this.getAdapter().forTable(data);
       for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
          callback.call(context || this, tableAdapter.at(index), index);
       }
-   },
+   }
 
    // endregion Protected methods
 
@@ -274,29 +269,35 @@ const DataMixin = /** @lends Types/_source/DataMixin.prototype */{
 
    /**
     * Проверяет, что это экземпляр модели
-    * @param {*} instance Экземпляр модели
-    * @return {Boolean}
-    * @static
+    * @param instance Экземпляр модели
     */
-   isModelInstance(instance: any): boolean {
+   static isModelInstance(instance: any): boolean {
       return instance &&
          instance['[Types/_entity/IObject]'] &&
          instance['[Types/_entity/FormattableMixin]'];
-   },
+   }
 
    /**
     * Проверяет, что это экземпляр списка
-    * @param {*} instance Экземпляр списка
-    * @return {Boolean}
-    * @static
+    * @param instance Экземпляр списка
     */
-   isListInstance(instance: any): boolean {
+   static isListInstance(instance: any): boolean {
       return instance &&
          instance['[Types/_collection/IList]'] &&
          instance['[Types/_entity/FormattableMixin]'];
    }
 
    // endregion Statics
-};
+}
 
-export default DataMixin;
+Object.assign(DataMixin.prototype,{
+   '[Types/_source/DataMixin]': true,
+   _$adapter: 'Types/entity:adapter.Json',
+   _$model: 'Types/entity:Model',
+   _$listModule: 'Types/collection:RecordSet',
+   _$idProperty: '',
+   _dataSetModule: 'Types/source:DataSet',
+   _dataSetItemsProperty: '',
+   _dataSetMetaProperty: '',
+   _writable: ReadWriteMixin.prototype.writable
+});

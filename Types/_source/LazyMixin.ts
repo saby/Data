@@ -11,26 +11,21 @@ const DeferredCanceledError = global.DeferredCanceledError;
  * @public
  * @author Мальцев А.А.
  */
-const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
-   '[Types/_source/LazyMixin]': true,
+export default abstract class LazyMixin {
+   readonly '[Types/_source/LazyMixin]': boolean;
 
    /**
-    * @property {Array.<String>} Список зависимостей, которые нужно загружать лениво
+    * Список зависимостей, которые нужно загружать лениво
     */
-   _additionalDependencies: [
-      'Types/source',
-      'Types/entity',
-      'Types/collection'
-   ],
+   protected _additionalDependencies: string[];
 
    /**
     * Загружает дополнительные зависимости
-    * @param {Function(Core/Deferred)} [callback] Функция обратного вызова при успешной загрузке зависимостей
-    * @return {Core/Deferred}
+    * @param [callback] Функция обратного вызова при успешной загрузке зависимостей
     * @protected
     */
    // tslint:disable-next-line:ban-types
-   _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
+   protected _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
       const deps = this._additionalDependencies;
       const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
       const result = new Deferred();
@@ -57,16 +52,16 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
       }
 
       return result;
-   },
+   }
 
    /**
     * Связывает два деферреда, назначая результат работы ведущего результом ведомого.
-    * @param {Core/Deferred} master Ведущий
-    * @param {Core/Deferred} slave Ведомый
+    * @param master Ведущий
+    * @param slave Ведомый
     * @protected
     */
    // tslint:disable-next-line:ban-types
-   _connectAdditionalDependencies(master: Deferred, slave: Deferred): void {
+   protected _connectAdditionalDependencies(master: Deferred, slave: Deferred): void {
       // Cancel master on slave cancelling
       if (!slave.isCallbacksLocked()) {
          slave.addErrback((err) => {
@@ -86,6 +81,13 @@ const LazyMixin = /** @lends Types/_source/LazyMixin.prototype */{
          return err;
       });
    }
-};
+}
 
-export default LazyMixin;
+Object.assign(LazyMixin.prototype, {
+   '[Types/_source/LazyMixin]': true,
+   _additionalDependencies: [
+      'Types/source',
+      'Types/entity',
+      'Types/collection'
+   ]
+});

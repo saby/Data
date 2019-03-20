@@ -12,28 +12,20 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
-   '[Types/_source/OptionsMixin]': true,
+export default abstract class OptionsMixin {
+   readonly '[Types/_source/OptionsMixin]': boolean;
 
    /**
-    * @cfg {Object} Дополнительные настройки источника данных.
-    * @name Types/_source/OptionsMixin#options
+    * Дополнительные настройки источника данных.
     */
-   _$options: {
+   _$options: IOptionsOption;
 
-      /**
-       * @cfg {Boolean} Режим отладки.
-       * @name Types/_source/OptionsMixin#options.debug
-       */
-      debug: false
-   },
-
-   constructor(options?: IOptions): void {
+   constructor(options?: IOptions) {
       if (options && options.options instanceof Object) {
          this._$options = {...(this._$options || {}), ...options.options};
          delete options.options;
       }
-   },
+   }
 
    /**
     * Возвращает дополнительные настройки источника данных.
@@ -41,11 +33,11 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     */
    getOptions(): IOptionsOption {
       return {...this._$options};
-   },
+   }
 
    setOptions(options: IOptionsOption): void {
       this._$options = {...this._$options, ...(options || {})};
-   },
+   }
 
    /**
     * Объединяет набор опций суперкласса с наследником
@@ -53,9 +45,23 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
     * @param options Опции наследника
     * @static
     */
-   addOptions<T>(Super: Function, options: T): T {
+   static addOptions<T>(Super: Function, options: T): T {
       return {...Super.prototype._$options, ...options};
    }
-};
+}
 
-export default OptionsMixin;
+Object.assign(OptionsMixin.prototype, {
+   '[Types/_source/OptionsMixin]': true,
+
+   /**
+    * @cfg {Object} Дополнительные настройки источника данных.
+    * @name Types/_source/OptionsMixin#options
+    */
+   _$options: {
+      /**
+       * @cfg {Boolean} Режим отладки.
+       * @name Types/_source/OptionsMixin#options.debug
+       */
+      debug: false
+   }
+});

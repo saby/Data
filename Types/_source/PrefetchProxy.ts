@@ -191,11 +191,11 @@ export default class PrefetchProxy extends mixin(
    // region Base
 
    getOptions(): object {
-      return (<Base> this._$target).getOptions();
+      return (this._$target as Base).getOptions();
    }
 
    setOptions(options: object): void {
-      return (<Base> this._$target).setOptions(options);
+      return (this._$target as Base).setOptions(options);
    }
 
    // endregion

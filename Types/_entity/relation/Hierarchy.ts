@@ -60,14 +60,18 @@ import {mixin} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) {
+export default class Hierarchy extends mixin<
+   DestroyableMixin, OptionsToPropertyMixin
+>(DestroyableMixin, OptionsToPropertyMixin) {
+   protected _moduleName: string;
+
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
     * @name Types/_entity/relation/Hierarchy#idProperty
     * @see getIdProperty
     * @see setIdProperty
     */
-   _$idProperty: string;
+   protected _$idProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
@@ -75,7 +79,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see getIdProperty
     * @see setIdProperty
     */
-   _$parentProperty: string;
+   protected _$parentProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак узла.
@@ -83,7 +87,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see getIdProperty
     * @see setIdProperty
     */
-   _$nodeProperty: string;
+   protected _$nodeProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего декларируемый признак наличия детей.
@@ -91,7 +95,7 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
     * @see getIdProperty
     * @see setIdProperty
     */
-   _$declaredChildrenProperty: string;
+   protected _$declaredChildrenProperty: string;
 
    constructor(options?: object) {
       super(options);
@@ -315,8 +319,10 @@ export default class Hierarchy extends mixin(DestroyableMixin, OptionsToProperty
    // endregion Protected methods
 }
 
-Hierarchy.prototype['[Types/_entity/relation/Hierarchy]'] = true;
-Hierarchy.prototype._$idProperty = '';
-Hierarchy.prototype._$parentProperty = '';
-Hierarchy.prototype._$nodeProperty = '';
-Hierarchy.prototype._$declaredChildrenProperty = '';
+Object.assign(Hierarchy.prototype, {
+   '[Types/_entity/relation/Hierarchy]': true,
+   _$idProperty: '',
+   _$parentProperty: '',
+   _$nodeProperty: '',
+   _$declaredChildrenProperty: ''
+});
