@@ -13,22 +13,22 @@ type ValueFunc = (item: any) => any;
  * @public
  * @author Мальцев А.А.
  */
-export default class Grouped<T> extends Abstract<T> /** @lends Types/_chain/Grouped.prototype */{
+export default class Grouped<T> extends Abstract<T> {
    /**
-    * @property {String|Function} Функция, возвращающая ключ группировки для каждого элемента
+    * Функция, возвращающая ключ группировки для каждого элемента
     */
-   protected _key: string|GroupFunc;
+   protected _key: string | GroupFunc;
 
    /**
-    * @property {String|Function} Функция, возвращающая значение для каждого элемента
+    * Функция, возвращающая значение для каждого элемента
     */
-   protected _value: string|ValueFunc;
+   protected _value: string | ValueFunc;
 
    /**
     * Конструктор группирующего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {String|function(*): String} key Поле группировки или функция группировки для каждого элемента.
-    * @param {String|function(*): *} [value] Поле значения или функция, возвращающая значение для каждого элемента.
+    * @param source Предыдущее звено.
+    * @param Поле группировки или функция группировки для каждого элемента.
+    * @param [value] Поле значения или функция, возвращающая значение для каждого элемента.
     */
    constructor(source: Abstract<T>, key: string|GroupFunc, value: string|ValueFunc) {
       super(source);

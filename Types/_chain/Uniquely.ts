@@ -10,16 +10,16 @@ type ExtractFunc = (item: any, index: string|number) => string|number;
  * @public
  * @author Мальцев А.А.
  */
-export default class Uniquely<T> extends Abstract<T> /** @lends Types/_chain/Uniquely.prototype */{
+export default class Uniquely<T> extends Abstract<T> {
    /**
-    * @property {function(*): String|Number} [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
+    * Возвращает уникальный идентификатор для каждого элемента.
     */
    protected _idExtractor: ExtractFunc;
 
    /**
     * Конструктор звена цепочки, обеспечивающего уникальность.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {function(*): String|Number} [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
+    * @param source Предыдущее звено.
+    * @param [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
     */
    constructor(source: Abstract<T>, idExtractor: ExtractFunc) {
       super(source);

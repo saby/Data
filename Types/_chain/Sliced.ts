@@ -8,21 +8,21 @@ import SlicedEnumerator from './SlicedEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sliced<T> extends Abstract<T> /** @lends Types/_chain/Sliced.prototype */{
+export default class Sliced<T> extends Abstract<T> {
    /**
-    * @property {Number} Индекс, по которому начинать извлечение
+    * Индекс, по которому начинать извлечение
     */
    protected _begin: number;
    /**
-    * @property {Number} Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
+    * Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
     */
    protected _end: number;
 
    /**
     * Конструктор вырезающего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {Number} begin Индекс, по которому начинать извлечение
-    * @param {Number} end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
+    * @param source Предыдущее звено.
+    * @param begin Индекс, по которому начинать извлечение
+    * @param end Индекс, по которому заканчивать извлечение (будут извлечены элементы с индексом меньше end)
     */
    constructor(source: Abstract<T>, begin: number, end: number) {
       super(source);

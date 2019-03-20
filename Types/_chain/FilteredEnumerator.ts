@@ -17,11 +17,11 @@ export default class FilteredEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор фильтрующего энумератора.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {Function(*, Number): Boolean} callback Фильтр
-    * @param {Object} [callbackContext] Контекст вызова callback
+    * @param previous Предыдущее звено.
+    * @param callback Фильтр
+    * @param [callbackContext] Контекст вызова callback
     */
-   constructor(previous: Abstract<T>, callback: CallbackFunc, callbackContext: Object) {
+   constructor(previous: Abstract<T>, callback: CallbackFunc, callbackContext: object) {
       this.previous = previous;
       this.callback = callback;
       this.callbackContext = callbackContext;

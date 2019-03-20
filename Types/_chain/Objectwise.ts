@@ -8,10 +8,10 @@ import {enumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Objectwise<T> extends Abstract<T> /** @lends Types/_chain/Object.prototype */{
-   protected _source: Object;
+export default class Objectwise<T> extends Abstract<T> {
+   protected _source: object;
 
-   constructor(source: Object) {
+   constructor(source: object) {
       if (!(source instanceof Object)) {
          throw new TypeError('Source should be an instance of Object');
       }

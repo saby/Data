@@ -8,9 +8,6 @@ export default class FlattenedMover {
    private readonly parent: IEnumerator<any>;
    private current: FlattenedMover | IEnumerable<any> | any[];
 
-   /**
-    * @param {Types/_collection/IEnumerator|Array} parent
-    */
    constructor(parent: IEnumerator<any> | any[]) {
       if (parent instanceof Array) {
          this.parent = new enumerator.Arraywise(parent);

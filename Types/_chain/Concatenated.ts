@@ -9,16 +9,16 @@ import {IEnumerable} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Concatenated<T> extends Abstract<T> /** @lends Types/_chain/Concatenated.prototype */{
+export default class Concatenated<T> extends Abstract<T> {
    /**
-    * @property {Array.<Array>|Array.<Types/_collection/IEnumerable>} Коллекции для объединения
+    * Коллекции для объединения
     */
    protected _items: Array<T[] | IEnumerable<T>>;
 
    /**
     * Конструктор объединяющего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {Array.<Array>|Array.<Types/_collection/IEnumerable>} items Коллекции для объединения.
+    * @param source Предыдущее звено.
+    * @param items Коллекции для объединения.
     */
    constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
       super(source);

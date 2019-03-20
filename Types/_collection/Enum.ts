@@ -38,7 +38,7 @@ export default class Enum<T> extends mixin<
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin
-) implements IEnum<T>, ICloneable, IProducible /** @lends Types/_collection/Enum.prototype */ {
+) implements IEnum<T>, ICloneable, IProducible {
    /**
     * @cfg {Number|sting|null} Key of the selected item
     * @name Types/_collection/Enum#index
@@ -46,8 +46,6 @@ export default class Enum<T> extends mixin<
    protected _$index: IIndex;
 
    protected _childChanged: (data: any) => void;
-
-   readonly _moduleName: string;
 
    constructor(options?: Object) {
       super(options);

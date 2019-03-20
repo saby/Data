@@ -9,16 +9,16 @@ import SortedEnumerator from './SortedEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sorted<T> extends Abstract<T> /** @lends Types/_chain/Sorted.prototype */{
+export default class Sorted<T> extends Abstract<T> {
    /**
-    * @property {function(*, *): Number} Функция сравнения
+    * Функция сравнения
     */
    protected _compareFunction: CompareFunction;
 
    /**
     * Конструктор сортирующего звена цепочки.
-    * @param {Types/_chain/Abstract} source Предыдущее звено.
-    * @param {function(*, *): Number} [compareFunction] Функция сравнения
+    * @param source Предыдущее звено.
+    * @param [compareFunction] Функция сравнения
     */
    constructor(source: Abstract<T>, compareFunction?: CompareFunction) {
       super(source);

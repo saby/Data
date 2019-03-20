@@ -8,7 +8,7 @@ import {IEnumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Enumerable<T> extends Abstract<T> /** @lends Types/_chain/Enumerable.prototype */{
+export default class Enumerable<T> extends Abstract<T> {
    constructor(source: any) {
       if (!source || !source['[Types/_collection/IEnumerable]']) {
          throw new TypeError('Source must implement Types/collection:IEnumerable');

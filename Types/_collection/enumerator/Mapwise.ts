@@ -8,23 +8,23 @@ import {Map} from '../../shim';
  * @public
  * @author Мальцев А.А.
  */
-export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_collection/MapEnumerator.prototype */{
+export default class Mapwise<T> implements IEnumerator<T> {
    /**
-    * @property Объект
+    * Объект
     */
    protected _items: Map<any, T>;
    /**
-    * @property Текущий индекс
+    * Текущий индекс
     */
    protected _index: number;
 
    /**
-    * @property {Array} Кэш ключей
+    * Кэш ключей
     */
    protected _cachedKeys: string[];
 
    /**
-    * @property {Array} Ключи
+    * Ключи
     */
    get _keys(): any[] {
       if (!this._cachedKeys) {
@@ -39,7 +39,7 @@ export default class Mapwise<T> implements IEnumerator<T> /** @lends Types/_coll
 
    /**
     * Конструктор
-    * @param {Map} items Массив
+    * @param items Массив
     */
    constructor(items: Map<any, any>) {
       if (items === undefined) {

@@ -8,7 +8,7 @@ import {enumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Array.prototype */{
+export default class Arraywise<T> extends Abstract<T> {
    protected _source: any[];
 
    constructor(source: any[]) {
@@ -18,7 +18,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
       super(source);
    }
 
-   // region Types/_collection/IEnumerable
+   // region IEnumerable
 
    getEnumerator(): enumerator.Arraywise<T> {
       return new enumerator.Arraywise(this._source);
@@ -36,7 +36,7 @@ export default class Arraywise<T> extends Abstract<T> /** @lends Types/_chain/Ar
 
    // endregion
 
-   // region Types/_chain/DestroyableMixin
+   // region Public
 
    toArray(): any[] {
       return this._source.slice();

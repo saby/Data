@@ -17,8 +17,8 @@ export default class UniquelyEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор энумератора уникальных элементов.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {function(*, String|Number): String|Number} [idExtractor] Возвращает уникальный идентификатор элемента.
+    * @param previous Предыдущее звено.
+    * @param [idExtractor] Возвращает уникальный идентификатор элемента.
     */
    constructor(previous: Abstract<T>, idExtractor?: ExtractFunc) {
       this.previous = previous;

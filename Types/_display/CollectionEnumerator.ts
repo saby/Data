@@ -13,9 +13,16 @@ import {mixin} from '../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class CollectionEnumerator extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, IndexedEnumeratorMixin
+export default class CollectionEnumerator extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   IndexedEnumeratorMixin<any>
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   IndexedEnumeratorMixin
 ) implements IEnumerator<CollectionItem> /** @lends Types/_display/CollectionEnumerator.prototype */{
+   protected readonly _moduleName: string;
 
    get items(): CollectionItem[] {
       if (!this._itemsCache) {
@@ -131,7 +138,7 @@ export default class CollectionEnumerator extends mixin(
    // region IndexedEnumeratorMixin
 
    reIndex(action?: string, start?: number, count?: number): void {
-      IndexedEnumeratorMixin.prototype.reIndex.call(this, action, start, count);
+      super.reIndex.call(this, action, start, count);
       this._itemsCache = null;
       this._internalToSource = null;
       this._sourceToInternal = [];
@@ -144,7 +151,7 @@ export default class CollectionEnumerator extends mixin(
    _createIndex(property: string): void {
       const savedPosition = this._position;
       const savedCurrent = this._current;
-      IndexedEnumeratorMixin.prototype._createIndex.call(this, property);
+      super._createIndex.call(this, property);
       this._position = savedPosition;
       this._current = savedCurrent;
    }

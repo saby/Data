@@ -12,8 +12,8 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
 
    /**
     * Конструктор сортирующего энумератора.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {function(*, Number): *} [compareFunction] Функция сравнения.
+    * @param previous Предыдущее звено.
+    * @param [compareFunction] Функция сравнения.
     * @protected
     */
    constructor(previous: Abstract<T>, compareFunction?: CompareFunction) {

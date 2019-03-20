@@ -17,11 +17,11 @@ export default class MappedEnumerator<T> implements IEnumerator<T> {
 
    /**
     * Конструктор преобразующего энумератора.
-    * @param {Types/_chain/Abstract} previous Предыдущее звено.
-    * @param {Function(*, Number): *} callback Функция, возвращающая новый элемент.
-    * @param {Object} [callbackContext] Контекст вызова callback
+    * @param previous Предыдущее звено.
+    * @param callback Функция, возвращающая новый элемент.
+    * @param [callbackContext] Контекст вызова callback
     */
-   constructor(previous: Abstract<T>, callback: MapFunc, callbackContext?: Object) {
+   constructor(previous: Abstract<T>, callback: MapFunc, callbackContext?: object) {
       this.previous = previous;
       this.callback = callback;
       this.callbackContext = callbackContext;

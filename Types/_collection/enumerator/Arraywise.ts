@@ -18,7 +18,7 @@ export default class Arraywise<T> extends mixin<
    IndexedEnumeratorMixin<any>
 >(
    IndexedEnumeratorMixin
-) implements IEnumerator<T> /** @lends Types/_collection/ArrayEnumerator.prototype */{
+) implements IEnumerator<T> {
    /**
     * Array to traverse
     */
@@ -41,7 +41,7 @@ export default class Arraywise<T> extends mixin<
 
    /**
     * Конструктор
-    * @param {Array} items Массив
+    * @param items Массив
     */
    constructor(items: T[]) {
       super();
@@ -95,7 +95,7 @@ export default class Arraywise<T> extends mixin<
 
    /**
     * Устанавливает резолвер элементов по позиции
-    * @param {function(Number): *} resolver Функция обратного вызова, которая должна по позиции вернуть элемент
+    * @param resolver Функция обратного вызова, которая должна по позиции вернуть элемент
     */
    setResolver(resolver: ResolveFunc<T>): void {
       this._resolver = resolver;
@@ -103,7 +103,7 @@ export default class Arraywise<T> extends mixin<
 
    /**
     * Устанавливает фильтр элементов
-    * @param {function(*): Boolean} filter Функция обратного вызова, которая должна для каждого элемента вернуть
+    * @param filter Функция обратного вызова, которая должна для каждого элемента вернуть
     * признак, проходит ли он фильтр
     */
    setFilter(filter: FilterFunc<T>): void {

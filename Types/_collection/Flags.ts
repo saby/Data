@@ -42,14 +42,12 @@ export default class Flags<T> extends mixin<
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin
-) implements IFlags<T>, ICloneable, IProducible /** @lends Types/_collection/Flags.prototype */ {
+) implements IFlags<T>, ICloneable, IProducible {
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
     */
    protected _$values: IValue[];
-
-   readonly _moduleName: string;
 
    constructor(options?: object) {
       super(options);
@@ -211,9 +209,8 @@ export default class Flags<T> extends mixin<
 
    /**
     * Returns an ordinal index of the flag.
-    * @param {String} name Name of the flag
-    * @param {Boolean} [localize=false] Is the localized flag name
-    * @return {Number|undefined}
+    * @param name Name of the flag
+    * @param [localize=false] Is the localized flag name
     * @protected
     */
    protected _getOrdinalIndex(name: T, localize?: boolean): number {
@@ -245,9 +242,9 @@ export default class Flags<T> extends mixin<
 
    /**
     * Triggers a change event
-    * @param {String} name Name of the flag
-    * @param {Number} index Index of the flag
-    * @param {String} value New value of selection of the flag
+    * @param name Name of the flag
+    * @param index Index of the flag
+    * @param value New value of selection of the flag
     * @protected
     */
    protected _notifyChange(name: T, index: number | string, value: IValue): void {
@@ -259,7 +256,7 @@ export default class Flags<T> extends mixin<
 
    /**
     * Triggers a mass change event
-    * @param {Array.<Boolean|Null>} values Selection
+    * @param values Selection
     * @protected
     */
    protected _notifyChanges(values: IValue[]): void {

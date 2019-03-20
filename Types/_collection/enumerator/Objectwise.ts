@@ -11,26 +11,26 @@ export default class Objectwise<T> implements IEnumerator<T> {
    /**
     * Объект
     */
-   private _items: object;
+   protected _items: object;
 
    /**
     * Набор свойств объекта
     */
-   private _keys: string[];
+   protected _keys: string[];
 
    /**
     * Текущий индекс
     */
-   private _index: number;
+   protected _index: number;
 
    /**
     * Фильтр элементов
     */
-   private _filter: (item: any, index: any) => boolean;
+   protected _filter: (item: any, index: any) => boolean;
 
    /**
     * Конструктор
-    * @param {Object} items Массив
+    * @param items Массив
     */
    constructor(items: object) {
       let checkedItems = items;
