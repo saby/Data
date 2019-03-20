@@ -1,5 +1,5 @@
 import Rpc from './Rpc';
-import {IOptions as IRemoteOptions, IPassing as IRemotePassing} from './Remote';
+import {IOptions as IRemoteOptions, IOptionsOption as IRpcOptionsOption, IPassing as IRemotePassing} from './Remote';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
@@ -47,9 +47,9 @@ export interface IBinding extends IDefaultBinding {
 }
 
 /**
- * Extended IOptions from Remote
+ * Extended _$options
  */
-export interface IOptions extends IRemoteOptions {
+export interface IOptionsOption extends IRpcOptionsOption {
    hasMoreProperty?: string;
 }
 
@@ -203,7 +203,7 @@ function getSortingParams(query: Query): string[] | null {
 /**
  * Returns navigation parameters
  */
-function getNavigationParams(query: Query, options: IOptions, adapter: adapter.IAdapter): object | null {
+function getNavigationParams(query: Query, options: IOptionsOption, adapter: adapter.IAdapter): object | null {
    if (!query) {
       return null;
    }
@@ -785,9 +785,9 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     */
    protected _$orderProperty: string;
 
-   protected _$options: IOptions;
+   protected _$options: IOptionsOption;
 
-   constructor(options?: IOptions) {
+   constructor(options?: IRemoteOptions) {
       super(options);
 
       if (!this._$endpoint.moveContract) {
@@ -1252,7 +1252,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
     */
    _$orderProperty: 'ПорНомер',
 
-   _$options: OptionsMixin.addOptions(Rpc, {
+   _$options: OptionsMixin.addOptions<IOptionsOption>(Rpc, {
       /**
        * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится
        * значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.

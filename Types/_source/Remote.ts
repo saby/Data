@@ -6,7 +6,7 @@ import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';
 import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
-import OptionsMixin from './OptionsMixin';
+import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
@@ -26,9 +26,12 @@ export interface IPassing {
    move: (from: string | number, to: string | number, meta?: Object) => Object;
 }
 
-export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
+export interface IOptionsOption extends IOptionsMixinOption {
    updateOnlyChanged?: boolean;
    navigationType?: string;
+}
+
+export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
 }
 
 // tslint:disable-next-line:ban-comma-operator
@@ -213,7 +216,7 @@ export default abstract class Remote extends mixin(
     */
    protected _$passing: IPassing;
 
-   protected _$options: IOptions;
+   protected _$options: IOptionsOption;
 
    /**
     * Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
@@ -476,7 +479,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        */
       move: passMove
    },
-   _$options: OptionsMixin.addOptions(Base, {
+   _$options: OptionsMixin.addOptions<IOptionsOption>(Base, {
       /**
        * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
        * измененые поля записи (если обновляется одна запись).
