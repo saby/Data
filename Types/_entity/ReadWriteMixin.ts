@@ -21,8 +21,7 @@ export default abstract class ReadWriteMixin {
    '[Types/_entity/ReadWriteMixin]': boolean;
 
    /**
-    * Old-fashioned options
-    * @deprecated
+    * @deprecated Old-fashioned options
     */
    _options: any;
 
@@ -30,7 +29,7 @@ export default abstract class ReadWriteMixin {
       return this[$writable];
    }
 
-   constructor(options: any) {
+   constructor(options?: any) {
       if (this._options && hasOwnProperty.call(this._options, 'writable')) {
          this[$writable] = this._options.writable;
       }

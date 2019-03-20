@@ -60,9 +60,7 @@ import {mixin} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class Hierarchy extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin
-) /** @lends Types/_entity/relation/Hierarchy.prototype */ {
+export default class Hierarchy extends mixin(DestroyableMixin, OptionsToPropertyMixin) {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
     * @name Types/_entity/relation/Hierarchy#idProperty
@@ -95,7 +93,7 @@ export default class Hierarchy extends mixin(
     */
    _$declaredChildrenProperty: string;
 
-   constructor(options?: Object) {
+   constructor(options?: object) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
    }
@@ -281,9 +279,8 @@ export default class Hierarchy extends mixin(
 
    /**
     * Возвращает инстанс записи
-    * @param {Types/_entity/Record|Sting|Number} value Запись или ее ПК
-    * @param {Types/_collection/RecordSet} rs Рекордсет
-    * @return {Types/_entity/Record}
+    * @param value Запись или ее ПК
+    * @param rs Рекордсет
     * @protected
     */
    _asRecord(value: IObject, rs: RecordSet): IObject {
@@ -303,9 +300,8 @@ export default class Hierarchy extends mixin(
 
    /**
     * Возвращает значение поля записи
-    * @param {Types/_entity/Record|Sting|Number} value Запись или значение ее поля
-    * @param {String} field Имя поля
-    * @return {*}
+    * @param value Запись или значение ее поля
+    * @param field Имя поля
     * @protected
     */
    _asField(value: IObject, field: string): any {

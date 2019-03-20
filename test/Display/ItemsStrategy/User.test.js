@@ -283,7 +283,7 @@ define([
                items = strategy.items,
                clone;
 
-            clone = User.prototype.fromJSON.call(User, strategy.toJSON());
+            clone = User.fromJSON(strategy.toJSON());
 
             assert.deepEqual(clone.items, items);
          });

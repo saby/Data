@@ -5,15 +5,13 @@
  * @public
  * @author Мальцев А.А.
  */
-
-export default interface IVersionable /** @lends Types/_entity/IVersionable.prototype */{
+export default interface IVersionable {
    readonly '[Types/_entity/IVersionable]': boolean;
 
    /**
     * Возвращает версию объекта.
     * Версия соответсвует некому состоянию объекта и меняется при измении как то значимых свойств объекта,
     * например для рекорда это будет изменение полей.
-    * @return {Number}
     * @example
     * Проверим изменился ли рекорд:
     * <pre>

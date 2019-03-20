@@ -1001,7 +1001,7 @@ define([
                items = strategy.items,
                clone;
 
-            clone = AdjacencyList.prototype.fromJSON.call(AdjacencyList, strategy.toJSON());
+            clone = AdjacencyList.fromJSON(strategy.toJSON());
 
             assert.deepEqual(clone.items, items);
          });

@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class UuidField extends Field /** @lends Types/_entity/format/UuidField.prototype */{
+export default class UuidField extends Field {
 }
 
 Object.assign(UuidField.prototype, {

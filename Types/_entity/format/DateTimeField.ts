@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class DateTimeField extends Field /** @lends Types/_entity/format/DateTimeField.prototype */{
+export default class DateTimeField extends Field {
    /**
     * @cfg {Boolean} Без указания временной зоны
     * @name Types/_entity/format/DateTimeField#withoutTimeZone

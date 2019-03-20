@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class BinaryField extends Field /** @lends Types/_entity/format/BinaryField.prototype */{
+export default class BinaryField extends Field {
 }
 
 Object.assign(BinaryField.prototype, {

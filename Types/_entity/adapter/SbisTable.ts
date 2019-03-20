@@ -47,7 +47,7 @@ export default class SbisTable extends mixin(
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
+    * @param data Сырые данные
     */
    constructor(data: ITableFormat) {
       super(data);

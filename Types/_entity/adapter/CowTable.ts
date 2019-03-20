@@ -14,34 +14,32 @@ import {object} from '../../util';
  * @implements Types/_entity/adapter/IDecorator
  * @author Мальцев А.А.
  */
-export default class CowTable
-   extends DestroyableMixin
-   implements ITable, IDecorator /** @lends Types/_entity/adapter/CowTable.prototype */ {
+export default class CowTable extends DestroyableMixin implements ITable, IDecorator {
    /**
-    * @property Оригинальный адаптер
+    * Оригинальный адаптер
     */
    protected _original: IAdapter;
 
    /**
-    * @property Оригинальный адаптер таблицы
+    * Оригинальный адаптер таблицы
     */
    protected _originalTable: ITable | ICloneable;
 
    /**
-    * @property Ф-я обратного вызова при событии записи
+    * Ф-я обратного вызова при событии записи
     */
    protected _writeCallback: Function;
 
    /**
-    * @property Сырые данные были скопированы
+    * Сырые данные были скопированы
     */
    protected _copied: boolean;
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
-    * @param {Types/_entity/adapter/IAdapter} original Оригинальный адаптер
-    * @param {Function} [writeCallback] Ф-я обратного вызова при событии записи
+    * @param data Сырые данные
+    * @param original Оригинальный адаптер
+    * @param [writeCallback] Ф-я обратного вызова при событии записи
     */
    constructor(data: any, original: IAdapter, writeCallback?: Function) {
       super();
@@ -52,7 +50,7 @@ export default class CowTable
       }
    }
 
-   // region Types/_entity/adapter/ITable
+   // region ITable
 
    readonly '[Types/_entity/adapter/ITable]': boolean;
 
@@ -132,7 +130,7 @@ export default class CowTable
 
    // endregion
 
-   // region Types/_entity/adapter/IDecorator
+   // region IDecorator
 
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
 

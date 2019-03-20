@@ -26,13 +26,12 @@ import IChannel from './IChannel';
  *    });
  * </pre>
  */
-export default interface INotify /** @lends Types/_source/provider/INotify.prototype */{
+export default interface INotify {
    readonly '[Types/_source/provider/INotify]': boolean;
 
    /**
     * Возвращает канал серверных событий
-    * @param {String} [name] Имя канала событий
-    * @return {Types/_source/provider/IChannel}
+    * @param [name] Имя канала событий
     */
    getEventsChannel(name: string): IChannel;
 }

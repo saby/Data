@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class XmlField extends Field /** @lends Types/_entity/format/XmlField.prototype */{
+export default class XmlField extends Field {
    _$defaultValue: string;
 }
 

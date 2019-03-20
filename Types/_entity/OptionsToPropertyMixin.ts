@@ -53,7 +53,10 @@ function defineProperty(instance: Object, name: string, key: string, scope: Obje
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/OptionsMixin.prototype */{
+export default abstract class OptionsToPropertyMixin {
+   /**
+    * @deprecated Only for old-fashioned inheritance
+    */
    protected _options: any;
 
    /**
@@ -78,7 +81,7 @@ export default abstract class OptionsToPropertyMixin /** @lends Types/_entity/Op
 
    /**
     * Возвращает опции объекта
-    * @return {Object} Значения опций
+    * @return Значения опций
     * @protected
     */
    protected _getOptions(): object {

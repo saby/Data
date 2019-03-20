@@ -3,18 +3,15 @@
  * @interface Types/_entity/IProducible
  * @author Мальцев А.А.
  */
-export default interface IProducible extends Object {
+export default interface IProducible {
    readonly '[Types/_entity/IProducible]': boolean;
 }
 
 export interface IProducibleConstructor extends Function {
    /**
-    * @name Types/_entity/IProducible#produceInstance
-    * @function
     * Создает экземпляр класса.
-    * @param {*} [data] Исходные данные.
-    * @param {Object} [options] Дополнительные данные.
-    * @return {Object}
+    * @param [data] Исходные данные.
+    * @param [options] Дополнительные данные.
     */
-   produceInstance(data?: any, options?: any): any;
+   produceInstance<T>(data?: any, options?: any): T;
 }

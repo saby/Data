@@ -17,9 +17,7 @@ interface IEndPoint {
  * @public
  * @author Мальцев А.А.
  */
-export default class SbisBusinessLogic extends mixin(
-   Object, OptionsToPropertyMixin
-) implements IAbstract /** @lends Types/_entity/SbisBusinessLogic.prototype */ {
+export default class SbisBusinessLogic extends OptionsToPropertyMixin implements IAbstract {
    readonly '[Types/_source/provider/IAbstract]': boolean = true;
 
    /**

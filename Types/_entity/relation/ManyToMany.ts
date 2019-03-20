@@ -3,8 +3,6 @@ import {Map, Set} from '../../shim';
 
 /**
  * Проверяет, что объект "живой" (не был уничтожен)
- * @param {Object} entity Объект
- * @return {Boolean}
  */
 function isAlive(entity: any): boolean {
    return entity instanceof Object && entity['[Types/_entity/DestroyableMixin]'] ? !entity.destroyed : true;
@@ -16,24 +14,24 @@ function isAlive(entity: any): boolean {
  * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
-export default class ManyToMany extends DestroyableMixin /** @lends Types/_entity/relation/ManyToMany.prototype */{
+export default class ManyToMany extends DestroyableMixin {
    /**
-    * @property {Map<Object, Set<Object>>} master -> [slave, slave, ...]
+    * {Map<Object, Set<Object>>} master -> [slave, slave, ...]
     */
    _hasMany: any;
 
    /**
-    * @property {Map<Object, Map<Object, String>>} master -> [name, name, ...]
+    * {Map<Object, Map<Object, String>>} master -> [name, name, ...]
     */
    _hasManyName: any;
 
    /**
-    * @property {Map<Object, Set<Object>>} slave -> [master, master, ...]
+    * {Map<Object, Set<Object>>} slave -> [master, master, ...]
     */
    _belongsTo: any;
 
    /**
-    * @property {Map<Object, Map<Object, String>>} slave -> [name, name, ...]
+    * {Map<Object, Map<Object, String>>} slave -> [name, name, ...]
     */
    _belongsToName: any;
 
@@ -57,9 +55,9 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Добавляет отношение между двумя сущностями
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
-    * @param {String} [name] Название отношения
+    * @param master Главная сущность
+    * @param slave Зависимая сущность
+    * @param [name] Название отношения
     */
    addRelationship(master: object, slave: object, name?: string): void {
       this._addHasMany(master, slave, name);
@@ -68,8 +66,8 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Удаляет отношение между двумя сущностями
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
+    * @param master Главная сущность
+    * @param slave Зависимая сущность
     */
    removeRelationship(master: object, slave: object): void {
       this._removeHasMany(master, slave);
@@ -78,7 +76,7 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Очищает все отношения указанной сущности
-    * @param {Object} entity Сущность
+    * @param entity Сущность
     */
    clear(entity: object): void {
       if (this._hasMany.has(entity)) {
@@ -100,8 +98,8 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Возвращает все зависимые сущности
-    * @param {Object} master Главная сущность
-    * @param {Function(Object, String)} callback Функция обратного вызова для каждой зависимой сущности
+    * @param master Главная сущность
+    * @param callback Функция обратного вызова для каждой зависимой сущности
     */
    hasMany(master: object, callback: Function): void {
       if (this._hasMany.has(master)) {
@@ -120,8 +118,8 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Возвращает все главные сущности
-    * @param {Object} slave Зависимая сущность
-    * @param {Function(Object, String)} callback Функция обратного вызова для каждой главной сущности
+    * @param slave Зависимая сущность
+    * @param callback Функция обратного вызова для каждой главной сущности
     */
    belongsTo(slave: object, callback: Function): void {
       if (this._belongsTo.has(slave)) {
@@ -144,9 +142,9 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Добавляет отношение вида hasMany
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
-    * @param {String} name Название отношения
+    * @param master Главная сущность
+    * @param slave Зависимая сущность
+    * @param name Название отношения
     * @protected
     */
    protected _addHasMany(master: object, slave: object, name: string): void {
@@ -167,8 +165,8 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Удаляет отношение вида hasMany
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
+    * @param master Главная сущность
+    * @param slave Зависимая сущность
     * @protected
     */
    protected _removeHasMany(master: object, slave: object): void {
@@ -186,9 +184,9 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Добавляет отношение вида belongsTo
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
-    * @param {String} name Название отношения
+    * @param slave Зависимая сущность
+    * @param master Главная сущность
+    * @param name Название отношения
     * @protected
     */
    protected _addBelongsTo(slave: object, master: object, name: string): void {
@@ -209,8 +207,8 @@ export default class ManyToMany extends DestroyableMixin /** @lends Types/_entit
 
    /**
     * Удаляет отношение вида belongsTo
-    * @param {Object} master Главная сущность
-    * @param {Object} slave Зависимая сущность
+    * @param slave Зависимая сущность
+    * @param master Главная сущность
     * @protected
     */
    protected _removeBelongsTo(slave: object, master: object): void {

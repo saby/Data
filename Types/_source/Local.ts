@@ -374,15 +374,13 @@ export default abstract class Local extends mixin(
 
    /**
     * Возвращает адаптер для работы с таблицей
-    * @return {Types/_entity/adapter/ITable}
     * @protected
     */
    protected abstract _getTableAdapter(): adapter.ITable;
 
    /**
     * Возвращает данные модели с указанным ключом
-    * @param {String} key Значение ключа
-    * @return {Array|undefined}
+    * @param {key Значение ключа
     * @protected
     */
    protected _getRecordByKey(key: string): adapter.IRecord {
@@ -393,8 +391,8 @@ export default abstract class Local extends mixin(
 
    /**
     * Возвращает индекс модели с указанным ключом
-    * @param {String} key Значение ключа
-    * @return {Number} -1 - не найден, >=0 - индекс
+    * @param key Значение ключа
+    * @return -1 - не найден, >=0 - индекс
     * @protected
     */
    protected _getIndexByKey(key: string | number): number {
@@ -417,17 +415,15 @@ export default abstract class Local extends mixin(
 
    /**
     * Применяет источник выборки
-    * @param {String} [from] Источник выборки
-    * @return {*}
+    * @param [from] Источник выборки
     * @protected
     */
    protected abstract _applyFrom(from?: string): any;
 
    /**
     * Применяет объединение
-    * @param {*} data Данные
-    * @param {Types/_source/Query#Join[]} join Выборки для объединения
-    * @return {*}
+    * @param data Данные
+    * @param join Выборки для объединения
     * @protected
     */
    protected abstract _applyJoin(data: any, join: Join[]): any;
@@ -437,10 +433,9 @@ export default abstract class Local extends mixin(
     * @param data Data to handle
     * @param where Query filter
     * @param meta Query metadata
-    * @return {*}
     * @protected
     */
-   protected _applyWhere(data: any, where?: Object | Function, meta?: IMeta): any {
+   protected _applyWhere(data: any, where?: object | Function, meta?: IMeta): any {
       //TODO: support for IMeta.expand values
       where = where || {};
       if (!this._$filter && typeof where === 'object' && !Object.keys(where).length) {
@@ -489,9 +484,8 @@ export default abstract class Local extends mixin(
 
    /**
     * Применяет сортировку
-    * @param {*} data Данные
-    * @param {Array.<Types/_source/Query#Order>} order Параметры сортировки
-    * @return {*}
+    * @param data Данные
+    * @param order Параметры сортировки
     * @protected
     */
    protected _applyOrderBy(data: any, order: Order[]): any {
@@ -571,10 +565,9 @@ export default abstract class Local extends mixin(
 
    /**
     * Применяет срез
-    * @param {*} data Данные
-    * @param {Number} [offset=0] Смещение начала выборки
-    * @param {Number} [limit] Количество записей выборки
-    * @return {*}
+    * @param data Данные
+    * @param [offset=0] Смещение начала выборки
+    * @param [limit] Количество записей выборки
     * @protected
     */
    protected _applyPaging(data: any, offset?: number, limit?: number): any {

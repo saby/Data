@@ -27,7 +27,7 @@ interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IArrayMeta {
  * @class Types/_entity/format/UniversalField
  * @author Мальцев А.А.
  */
-export default class UniversalField /** @lends Types/_entity/format/UniversalField.prototype */{
+export default class UniversalField {
    /**
     * Field type
     */

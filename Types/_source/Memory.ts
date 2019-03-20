@@ -193,7 +193,8 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
    // region Local
 
    protected _getTableAdapter(): adapter.ITable {
-      return this[<string> $cachedAdapter] || (this[<string> $cachedAdapter] = this.getAdapter().forTable(this._$data));
+      return this[$cachedAdapter as string] ||
+         (this[$cachedAdapter as string] = this.getAdapter().forTable(this._$data));
    }
 
    protected _applyFrom(from?: string): any {
@@ -226,8 +227,7 @@ export default class Memory extends Local /** @lends Types/_source/Memory.protot
    /**
     * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
     * используемого адаптера)
-    * @param {Types/_source/Query} [query] Запрос
-    * @return {*}
+    * @param [query] Запрос
     * @protected
     */
    protected _getEmptyData(query?: Query): any {

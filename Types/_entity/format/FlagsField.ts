@@ -16,7 +16,7 @@ import DictionaryField from './DictionaryField';
  * @public
  * @author Мальцев А.А.
  */
-export default class FlagsField extends DictionaryField /** @lends Types/_entity/format/FlagsField.prototype */{
+export default class FlagsField extends DictionaryField {
 }
 
 Object.assign(FlagsField.prototype, {

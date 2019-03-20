@@ -15,7 +15,7 @@ import RealField from './RealField';
  * @public
  * @author Мальцев А.А.
  */
-export default class MoneyField extends RealField /** @lends Types/_entity/format/MoneyField.prototype */{
+export default class MoneyField extends RealField {
    _$precision: number;
 
    /**

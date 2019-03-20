@@ -7,7 +7,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class DictionaryField extends Field /** @lends Types/_entity/format/DictionaryField.prototype */{
+export default class DictionaryField extends Field {
       /**
        * @cfg {Array.<String>} Словарь возможных значений
        * @name Types/_entity/format/DictionaryField#dictionary

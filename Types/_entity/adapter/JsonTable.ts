@@ -35,13 +35,13 @@ export default class JsonTable extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
 ) implements ITable /** @lends Types/_entity/adapter/JsonTable.prototype */{
    /**
-    * @property {Array.<Object>} Сырые данные
+    * Сырые данные
     */
    _data: object[];
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
+    * @param data Сырые данные
     */
    constructor(data: object[]) {
       super(data);
@@ -60,7 +60,7 @@ export default class JsonTable extends mixin(
 
    // endregion
 
-   // region Types/_entity/adapter/JsonFormatMixin
+   // region JsonFormatMixin
 
    addField(format: Field, at: number): void {
       JsonFormatMixin.addField.call(this, format, at);

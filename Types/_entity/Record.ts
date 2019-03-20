@@ -22,7 +22,7 @@ import Factory from './factory';
 import {IReceiver} from './relation';
 import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
-import {IEnumerable, enumerator, RecordSet, format} from '../collection';
+import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
 import {register, create} from '../di';
 import {protect, mixin, logger} from '../util';
 import {Map} from '../shim';
@@ -45,7 +45,11 @@ const $changedFields = protect('changedFields');
 /**
  * Возможные состояния записи
  */
-const STATES = {
+type State = 'Added' | 'Deleted' | 'Changed' | 'Unchanged' | 'Detached';
+interface IStatesHash {
+   [key: string]: State;
+}
+const STATES: IStatesHash = {
    ADDED: 'Added',
    DELETED: 'Deleted',
    CHANGED: 'Changed',
@@ -275,7 +279,7 @@ export default class Record extends mixin<
    /**
     * Данные об измененных полях
     */
-   protected get _changedFields(): Object {
+   protected get _changedFields(): object {
       const result = {};
       const changedFields = this[$changedFields as string];
 
@@ -306,7 +310,7 @@ export default class Record extends mixin<
    /**
     * Состояние записи после последнего вызова {@link acceptChanges}
     */
-   protected _acceptedState: string;
+   protected _acceptedState: State;
 
    /**
     * @typedef {String} RecordState
@@ -327,7 +331,7 @@ export default class Record extends mixin<
     * @see setState
     * @see getOwner
     */
-   protected _$state: string;
+   protected _$state: State;
 
    /**
     * @cfg {String} Режим кеширования
@@ -394,7 +398,7 @@ export default class Record extends mixin<
       return value;
    }
 
-   set(name: string | Object, value?: any): void {
+   set(name: string | object, value?: any): void {
       const map = this._getHashMap(name, value);
       const errors = [];
 
@@ -416,9 +420,9 @@ export default class Record extends mixin<
 
    /**
     * Устанавливает значения полей из пар "новое значение => старое значение"
-    * @param {Array} pairs Массив элементов вида [имя поля, новое значение, старое значение]
-    * @param {Array} errors Ошибки установки значений по полям
-    * @return {Object|null} Изменившиеся значения
+    * @param pairs Массив элементов вида [имя поля, новое значение, старое значение]
+    * @param errors Ошибки установки значений по полям
+    * @return Изменившиеся значения
     * @protected
     */
    protected _setPairs(pairs: pairsTuple[], errors: string[]): object {
@@ -523,7 +527,10 @@ export default class Record extends mixin<
     * </pre>
     */
    getEnumerator(): enumerator.Arraywise<any> {
-      return create<enumerator.Arraywise<any>>('Types/collection:enumerator.Arraywise', this._getRawDataFields());
+      return create<enumerator.Arraywise<any>>(
+         'Types/collection:enumerator.Arraywise',
+         this._getRawDataFields()
+      );
    }
 
    /**
@@ -549,7 +556,7 @@ export default class Record extends mixin<
     *    fields.join(', ');//'id, login, group_id'
     * </pre>
     */
-   each(callback: Function, context?: object): void {
+   each(callback: EnumeratorCallback<any>, context?: object): void {
       const enumerator = this.getEnumerator();
       let name;
       while (enumerator.moveNext()) {
@@ -798,7 +805,6 @@ export default class Record extends mixin<
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/_entity/adapter/IRecord}
     * @protected
     */
    protected _createRawDataAdapter(): IRecord {
@@ -915,7 +921,7 @@ export default class Record extends mixin<
     *    record.getState() === RecordState.DETACHED;//true
     * </pre>
     */
-   getState(): string {
+   getState(): State {
       return this._$state;
    }
 
@@ -931,7 +937,7 @@ export default class Record extends mixin<
     *    record.setState(Record.RecordState.DELETED);
     * </pre>
     */
-   setState(state: string): void {
+   setState(state: State): void {
       this._$state = state;
    }
 
@@ -1164,7 +1170,7 @@ export default class Record extends mixin<
 
    /**
     * Проверяет наличие ошибок
-    * @param {Array.<Error>} errors Массив ошибок
+    * @param errors Массив ошибок
     * @protected
     */
    protected _checkErrors(errors: Error[]): void {
@@ -1182,12 +1188,11 @@ export default class Record extends mixin<
 
    /**
     * Возвращает hash map
-    * @param {String|Object} name Название поля или набор полей
-    * @param {String} [value] Значение поля
-    * @return {Object}
+    * @param name Название поля или набор полей
+    * @param [value] Значение поля
     * @protected
     */
-   protected _getHashMap(name: string | Object, value?: any): object {
+   protected _getHashMap(name: string | object, value?: any): object {
       let map = name;
       if (!(map instanceof Object)) {
          map = {};
@@ -1207,7 +1212,6 @@ export default class Record extends mixin<
 
    /**
     * Возвращает признак, что значение поля кэшируемое
-    * @return {Boolean}
     * @protected
     */
    protected _isFieldValueCacheable(value: any): boolean {
@@ -1222,8 +1226,8 @@ export default class Record extends mixin<
 
    /**
     * Возвращает режим работы с клонами значений, поддреживающих клонирование
-    * @param {*} value Значение поля
-    * @return {Boolean}
+    * @param value Значение поля
+    * @protected
     */
    protected _haveToClone(value: any): boolean {
       return this._$cloneChanged && value && value['[Types/_entity/ICloneable]'];
@@ -1231,8 +1235,7 @@ export default class Record extends mixin<
 
    /**
     * Возвращает значение поля из "сырых" данных, прогнанное через фабрику
-    * @param {String} name Название поля
-    * @return {*}
+    * @param name Название поля
     * @protected
     */
    protected _getRawDataValue(name: string): any {
@@ -1256,10 +1259,9 @@ export default class Record extends mixin<
 
    /**
     * Конвертирует значение поля через фабрику и сохраняет его в "сырых" данных
-    * @param {String} name Название поля
-    * @param {*} value Значение поля
-    * @param {Boolean} [compatible=false] Значение поля совместимо по типу
-    * @return {*} Значение поля, сконвертированное фабрикой
+    * @param name Название поля
+    * @param value Значение поля
+    * @param [compatible=false] Значение поля совместимо по типу
     * @protected
     */
    protected _setRawDataValue(name: string, value: any, compatible?: boolean): void {
@@ -1284,7 +1286,7 @@ export default class Record extends mixin<
 
    /**
     * Уведомляет об изменении полей записи
-    * @param {Object} [map] Измененные поля
+    * @param [map] Измененные поля
     * @protected
     */
    protected _notifyChange(map?: object): void {
@@ -1304,8 +1306,7 @@ export default class Record extends mixin<
 
    /**
     * Возвращает признак наличия изменений в поле
-    * @param {String} name Название поля
-    * @return {Boolean}
+    * @param name Название поля
     * @protected
     */
    protected _hasChangedField(name: string): boolean {
@@ -1314,8 +1315,7 @@ export default class Record extends mixin<
 
    /**
     * Возвращает оригинальное значение измененного поля
-    * @param {String} name Название поля
-    * @return {*}
+    * @param name Название поля
     * @protected
     */
    protected _getChangedFieldValue(name: string): any {
@@ -1324,9 +1324,9 @@ export default class Record extends mixin<
 
    /**
     * Устанавливает признак изменения поля
-    * @param {String} name Название поля
-    * @param {*} value Старое значение поля
-    * @param {Boolean} byLink Значение изменилось по ссылке
+    * @param name Название поля
+    * @param value Старое значение поля
+    * @param byLink Значение изменилось по ссылке
     * @protected
     */
    protected _setChangedField(name: string, value: any, byLink?: boolean): void {
@@ -1342,7 +1342,7 @@ export default class Record extends mixin<
 
    /**
     * Снимает признак изменения поля
-    * @param {String} name Название поля
+    * @param name Название поля
     * @protected
     */
    protected _unsetChangedField(name: string): void {
@@ -1372,7 +1372,7 @@ export default class Record extends mixin<
 
    // region Statics
 
-   static get RecordState(): any {
+   static get RecordState(): IStatesHash {
       return STATES;
    }
 
@@ -1385,31 +1385,6 @@ export default class Record extends mixin<
    }
 
    /**
-    * @name Types/_entity/Record#addFieldTo
-    * @function
-    * Добавляет поле в запись. Если формат не указан, то он строится по типу значения поля.
-    * @param {Types/_entity/Record} record Запись
-    * @param {String} name Имя поля
-    * @param {*} value Значение поля
-    * @param {Object} [format] Формат поля
-    * @static
-    */
-   static addFieldTo(record: Record, name: string, value: any, format?: IFieldDeclaration): void {
-      if (!format) {
-         let detectedFormat = getValueType(value);
-         if (typeof detectedFormat === 'string') {
-            detectedFormat = {name: '', type: detectedFormat};
-         }
-         detectedFormat.name = name;
-         format = detectedFormat;
-      }
-
-      record.addField(format, undefined, value);
-   }
-
-   /**
-    * @name Types/_entity/Record#fromObject
-    * @function
     * Создает запись по объекту c учетом типов значений полей. Поля добавляются в запись в алфавитном порядке.
     * @example
     * <pre>
@@ -1423,9 +1398,8 @@ export default class Record extends mixin<
     * });
     * //output: 'id: Integer', 'title: String'
     * </pre>
-    * @param {Object} data Объект вида "имя поля" -> "значение поля"
-    * @param {String|Types/_entity/adapter/IAdapter} [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
-    * @return {Types/_entity/Record}
+    * @param data Объект вида "имя поля" -> "значение поля"
+    * @param [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
     * @static
     */
    static fromObject(data: any, adapter?: IAdapter | string): Record | null {
@@ -1464,13 +1438,10 @@ export default class Record extends mixin<
    }
 
    /**
-    * @name Types/_entity/Record#filter
-    * @function
     * Создает запись c набором полей, ограниченным фильтром.
-    * @param {Types/_entity/Record} record Исходная запись
-    * @param {Function(String, *): Boolean} callback Функция фильтрации полей, аргументами приходят имя поля и его
+    * @param record Исходная запись
+    * @param callback Функция фильтрации полей, аргументами приходят имя поля и его
     * значение. Должна вернуть boolean - прошло ли поле фильтр.
-    * @return {Types/_entity/Record}
     * @static
     */
    static filter(record: Record, callback: (name: string, value: any) => boolean): Record {
@@ -1494,15 +1465,33 @@ export default class Record extends mixin<
    }
 
    /**
-    * @name Types/_entity/Record#filterFields
-    * @function
-    * Создает запись c указанным набором полей
-    * @param {Types/_entity/Record} record Исходная запись
-    * @param {Array.<String>} fields Набор полей, которые следует оставить в записи
-    * @return {Types/_entity/Record}
+    * Добавляет поле в запись. Если формат не указан, то он строится по типу значения поля.
+    * @param record Запись
+    * @param name Имя поля
+    * @param value Значение поля
+    * @param [format] Формат поля
     * @static
     */
-   static filterFields(record: Record, fields: string[]): Record {
+   protected static addFieldTo(record: Record, name: string, value: any, format?: IFieldDeclaration): void {
+      if (!format) {
+         let detectedFormat = getValueType(value);
+         if (typeof detectedFormat === 'string') {
+            detectedFormat = {name: '', type: detectedFormat};
+         }
+         detectedFormat.name = name;
+         format = detectedFormat;
+      }
+
+      record.addField(format, undefined, value);
+   }
+
+   /**
+    * Создает запись c указанным набором полей
+    * @param record Исходная запись
+    * @param fields Набор полей, которые следует оставить в записи
+    * @static
+    */
+   protected static filterFields(record: Record, fields: string[]): Record {
       if (!(fields instanceof Array)) {
          throw new TypeError('Argument "fields" should be an instance of Array');
       }

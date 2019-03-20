@@ -16,7 +16,7 @@ import {format} from '../../collection';
 import {IHashMap} from '../../_declarations';
 
 /**
- * @const {Object} Инвертированный FIELD_TYPE
+ * Инвертированный FIELD_TYPE
  */
 const FIELD_TYPE_INVERTED = Object.keys(FIELD_TYPE).reduce((memo, key) => {
    memo[FIELD_TYPE[key]] = key;
@@ -24,7 +24,7 @@ const FIELD_TYPE_INVERTED = Object.keys(FIELD_TYPE).reduce((memo, key) => {
 }, {});
 
 /**
- * {Symbol} Символ для кэширования индексов полей
+ * Символ для кэширования индексов полей
  */
 const fieldIndicesSymbol = typeof Symbol === 'undefined' ? undefined : Symbol('fieldIndices');
 
@@ -83,32 +83,32 @@ const SbisFormatMixin = /** @lends Types/_entity/adapter/SbisFormatMixin.prototy
    '[Types/_entity/adapter/SbisFormatMixin]': true,
 
    /**
-    * @member {Object} Сырые данные
+    * {Object} Сырые данные
     */
    _data: null,
 
    /**
-    * @member {String} Сигнатура типа
+    * Сигнатура типа
     */
    _type: '',
 
    /**
-    * @member {Map.<String, Number>} Название поля -> индекс в d
+    * {Map.<String, Number>} Название поля -> индекс в d
     */
    _fieldIndices: null,
 
    /**
-    * @member {Object.<Types/_entity/format/Field>} Форматы полей
+    * {Object.<Types/_entity/format/Field>} Форматы полей
     */
    _format: null,
 
    /**
-    * @member {Object} Формат поля, отдаваемый через getSharedFormat()
+    * {Object} Формат поля, отдаваемый через getSharedFormat()
     */
    _sharedFieldFormat: null,
 
    /**
-    * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
+    * {Object} Мета данные поля, отдаваемого через getSharedFormat()
     */
    _sharedFieldMeta: null,
 

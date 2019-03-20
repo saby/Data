@@ -16,7 +16,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class RealField extends Field /** @lends Types/_entity/format/RealField.prototype */{
+export default class RealField extends Field {
    _$defaultValue: number;
 
    /**

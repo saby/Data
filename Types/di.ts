@@ -65,7 +65,7 @@ function checkAlias(alias: string): void {
  *    });
  * </pre>
  */
-export function register(alias: string, factory: Function|Object, options?: Object): void {
+export function register(alias: string, factory: Function | object, options?: object): void {
    checkAlias(alias);
    map[alias] = [factory, options];
 }
@@ -118,7 +118,7 @@ export function isRegistered(alias: string): boolean {
  *    });
  * </pre>
  */
-export function create<T>(alias: string|Function|Object, options?: Object): T {
+export function create<T>(alias: string | Function | object, options?: object): T {
    const result = resolve<T>(alias, options);
    if (typeof result === 'function') {
       return resolve(result, options);
@@ -149,7 +149,7 @@ export function create<T>(alias: string|Function|Object, options?: Object): T {
  *    });
  * </pre>
  */
-export function resolve<T>(alias: string|Function|Object, options?: Object): T {
+export function resolve<T>(alias: string | Function | object, options?: object): T {
    const aliasType = typeof alias;
    let Factory;
    let config;

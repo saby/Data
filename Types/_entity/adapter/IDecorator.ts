@@ -8,11 +8,10 @@ import IRecord from './IRecord';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IDecorator /** @lends Types/_entity/adapter/IDecorator.prototype */{
+export default interface IDecorator {
    readonly '[Types/_entity/adapter/IDecorator]': boolean;
    /**
     * Возвращает оригинальный адаптер
-    * @return {Types/_entity/adapter/IAdapter|Types/_entity/adapter/IRecord|Types/_entity/adapter/ITable}
     */
    getOriginal(): IAdapter | ITable | IRecord;
 }

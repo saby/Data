@@ -16,7 +16,7 @@ define([
       var Mock = function (state) {
          this.state = state;
       };
-      Mock.prototype.fromJSON = function (state) {
+      Mock.fromJSON = function (state) {
          return new Mock(state);
       };
       return Mock;

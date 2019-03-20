@@ -20,9 +20,8 @@ export interface ISerializableState extends IDefaultSerializableState {
 
 /**
  * Строит формат, объединяя частичный формат и формат, построенный по сырым данным
- * @param {Object} slicedFormat Частичное описание формата
- * @param {Types/_collection/format/Format>} rawDataFormat Формат из сырых данных
- * @return {Types/_collection/format/Format}
+ * @param slicedFormat Частичное описание формата
+ * @param rawDataFormat Формат из сырых данных
  */
 function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Format): format.Format {
    let field;
@@ -54,7 +53,6 @@ function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Forma
 
 /**
  * Строит формат полей сырым данным
- * @return {Types/_collection/format/Format}
  */
 function buildFormatByRawData(): format.Format {
    const format = create<format.Format>('Types/collection:format.Format');
@@ -385,7 +383,7 @@ export default abstract class FormattableMixin {
    /**
     * Адаптер для данных в "сыром" виде
     */
-   _rawDataAdapter: ITable | IRecord;
+   _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
 
    /**
     * Описание всех полей, полученных из данных в "сыром" виде
@@ -633,13 +631,12 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает данные в "сыром" виде из _rawDataAdapter (если он был создан) или исходные
-    * @param {Boolean} [direct=false] Напрямую, не используя адаптер
-    * @return {Object}
+    * @param [direct=false] Напрямую, не используя адаптер
     * @protected
     */
    protected _getRawData(direct?: boolean): any {
       if (!direct && this._rawDataAdapter) {
-         return this._rawDataAdapter.getData();
+         return (this._rawDataAdapter as ITable | IRecord).getData();
       }
       return typeof this._$rawData === 'function' ? this._$rawData() : this._$rawData;
    }
@@ -655,7 +652,6 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает адаптерр для сырых данных
-    * @return {Types/_entity/adapter/IAdapter}
     * @protected
     */
    protected _getAdapter(): IAdapter | IDecorator {
@@ -679,7 +675,6 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает адаптер для сырых данных заданного вида
-    * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
    protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
@@ -692,23 +687,22 @@ export default abstract class FormattableMixin {
 
    /**
     * Создает адаптер для сырых данных
-    * @return {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord}
     * @protected
     */
-   protected _createRawDataAdapter(): ITable | IRecord {
+   protected _createRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
       throw new Error('Method must be implemented');
    }
 
    /**
     * Сбрасывает адаптер для сырых данных
-    * @param {*} [data] Сырые данные
+    * @param [data] Сырые данные
     * @protected
     */
    protected _resetRawDataAdapter(data?: any): void {
       if (data === undefined) {
          if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
             // Save possible rawData changes
-            this._$rawData = this._rawDataAdapter.getData();
+            this._$rawData = (this._rawDataAdapter as ITable | IRecord).getData();
          }
       } else {
          this._$rawData = data;
@@ -719,7 +713,7 @@ export default abstract class FormattableMixin {
 
    /**
     * Проверяет совместимость адаптеров
-    * @param {Types/_entity/adapter/IAdapter} foreign Адаптер внешнего объекта
+    * @param foreign Адаптер внешнего объекта
     * @protected
     */
    protected _checkAdapterCompatibility(foreign: IAdapter | IDecorator): void {
@@ -743,7 +737,6 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает список полей записи, полученный из "сырых" данных
-    * @return {Array.<String>}
     * @protected
     */
    protected _getRawDataFields(): string[] {
@@ -752,7 +745,7 @@ export default abstract class FormattableMixin {
 
    /**
     * Добавляет поле в список полей
-    * @param {String} name Название поля
+    * @param name Название поля
     * @protected
     */
    protected _addRawDataField(name: string): void {
@@ -769,8 +762,7 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает формат полей
-    * @param {Boolean} [build=false] Принудительно создать, если не задан
-    * @return {Types/_collection/format/Format}
+    * @param [build=false] Принудительно создать, если не задан
     * @protected
     */
    protected _getFormat(build?: boolean): format.Format {
@@ -818,9 +810,8 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает формат поля с указанным названием
-    * @param {String} name Название поля
-    * @param {Types/_entity/adapter/ITable|Types/_entity/adapter/IRecord} adapter Адаптер
-    * @return {Types/_entity/format/Field|Types/_entity/format/UniversalField}
+    * @param name Название поля
+    * @param adapter Адаптер
     * @protected
     */
    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
@@ -837,8 +828,7 @@ export default abstract class FormattableMixin {
 
    /**
     * Возвращает тип значения поля по его формату
-    * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField} format Формат поля
-    * @return {String|Function}
+    * @param format Формат поля
     * @protected
     */
    protected _getFieldType(format: Field | UniversalField): string | Function {
@@ -853,9 +843,7 @@ export default abstract class FormattableMixin {
 
    /**
     * Строит формат поля по описанию
-    * @param {Types/_entity/format/Field|Types/_entity/format/FieldsFactory/FieldDeclaration.typedef} format Описание
-    * формата поля
-    * @return {Types/_entity/format/Field}
+    * @param format Описание формата поля
     * @protected
     */
    protected _buildField(format: Field | IFieldDeclaration): Field {
@@ -873,12 +861,8 @@ export default abstract class FormattableMixin {
 
    /**
     * Строит формат полей по описанию
-    * @param {Types/_collection/format/Format|
-    * Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|
-    * Object} format Описание формата (полное либо частичное)
-    * @param {Function} fullFormatCallback Метод, возвращающий полный формат
-    * @return {Types/_collection/format/Format}
-    * @static
+    * @param format Описание формата (полное либо частичное)
+    * @param fullFormatCallback Метод, возвращающий полный формат
     * @protected
     */
    protected _buildFormat(

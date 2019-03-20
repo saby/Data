@@ -4,12 +4,11 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IInstantiable /** @lends Types/_entity/IInstantiable.prototype */{
+export default interface IInstantiable {
    readonly '[Types/_entity/IInstantiable]': boolean;
 
    /**
     * Возвращает уникальный идентификатор экземпляра класса.
-    * @return {String}
     */
    getInstanceId(): string;
 }

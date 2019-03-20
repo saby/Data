@@ -2185,7 +2185,7 @@ define([
       describe('.fromJSON()', function() {
          it('should restore an instance id', function() {
             var json = rs.toJSON(),
-               clone = RecordSet.prototype.fromJSON.call(RecordSet, json);
+               clone = RecordSet.fromJSON(json);
 
             assert.strictEqual(json.state._instanceId, clone.getInstanceId());
          });

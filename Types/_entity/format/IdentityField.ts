@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class IdentityField extends Field /** @lends Types/_entity/format/IdentityField.prototype */{
+export default class IdentityField extends Field {
    /**
     * @cfg {Array.<Number>} Значение поля по умолчанию
     * @name Types/_entity/format/IdentityField#defaultValue

@@ -1,6 +1,6 @@
 import {IEndpoint} from './IProvider';
 
-interface IOptions {
+export interface IOptions {
    endpoint?: IEndpoint | string;
 }
 

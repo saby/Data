@@ -54,10 +54,9 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Возвращает проекцию по умолчанию
-    * @param {Types/_collection/IEnumerable} collection Объект, для которого требуется получить проекцию
-    * @param {Object} [options] Опции конструктора проекции
-    * @param {Boolean} [single=false] Возвращать singleton для каждой collection
-    * @return {Types/_display/Abstract}
+    * @param collection Объект, для которого требуется получить проекцию
+    * @param [options] Опции конструктора проекции
+    * @param [single=false] Возвращать singleton для каждой collection
     * @static
     */
    static getDefaultDisplay(collection: IEnumerable<any>, options?: IOptions, single?: boolean): Abstract {
@@ -100,8 +99,8 @@ export default abstract class Abstract extends mixin(
 
    /**
     * Освобождает проекцию, которую запрашивали через getDefaultDisplay как singleton
-    * @param {Types/_display/Abstract} display Проекция, полученная через getDefaultDisplay с single=true
-    * @return {Boolean} Ссылка на проекцию была освобождена
+    * @param display Проекция, полученная через getDefaultDisplay с single=true
+    * @return Ссылка на проекцию была освобождена
     * @static
     */
    static releaseDefaultDisplay(display: Abstract): boolean {

@@ -1,11 +1,11 @@
 import IData from './IData';
-import SourceOptionsMixin, {IOptions as IDefaultOptions} from './OptionsMixin';
+import OptionsMixin, {IOptions as IOptionsOptions} from './OptionsMixin';
 import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
 import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
 import {logger, mixin} from '../util';
 
-export interface IOptions extends IDefaultOptions, IDataOptions {
+export interface IOptions extends IDataOptions, IOptionsOptions {
 }
 
 /**
@@ -14,7 +14,7 @@ export interface IOptions extends IDefaultOptions, IDataOptions {
  * @class Types/_source/Base
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/IData
- * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_source/OptionsMixin
  * @mixes Types/_source/LazyMixin
@@ -24,13 +24,13 @@ export interface IOptions extends IDefaultOptions, IDataOptions {
  * @author Мальцев А.А.
  */
 export default abstract class Base extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, SourceOptionsMixin, LazyMixin, DataMixin
-) implements IData /** @lends Types/_source/Base.prototype */{
+   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, OptionsMixin, LazyMixin, DataMixin
+) implements IData {
    protected constructor(options?: IOptions) {
       options = {...(options || {})};
 
       super(options);
-      SourceOptionsMixin.constructor.call(this, options);
+      OptionsMixin.constructor.call(this, options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
       DataMixin.constructor.call(this, options);

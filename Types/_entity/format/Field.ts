@@ -24,7 +24,7 @@ export default abstract class Field extends mixin<
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 >(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
-) implements ICloneable, IEquatable /** @lends Types/_entity/format/Field.prototype */{
+) implements ICloneable, IEquatable {
    /**
     * @cfg {String} Имя поля
     * @name Types/_entity/format/Field#name

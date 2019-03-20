@@ -32,9 +32,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Group extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Group.prototype */ {
+export default class Group extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -56,17 +54,13 @@ export default class Group extends mixin(
     */
    protected _itemsOrder: number[];
 
-   /**
-    * Конструктор
-    * @param {Options} options Опции
-    */
    constructor(options: IOptions) {
       super();
       this._options = options;
    }
 
    /**
-    * Метод, возвращающий группу элемента
+    * Sets the function which returns the group id for every element
     */
    set handler(value: GroupHandler) {
       this._options.handler = value;
@@ -100,7 +94,7 @@ export default class Group extends mixin(
       const itemIndex = itemsOrder[index];
 
       if (itemIndex === undefined) {
-         throw new ReferenceError('Index ' + index + ' is out of bounds.');
+         throw new ReferenceError(`Index ${index} is out of bounds.`);
       }
 
       return this._getItems()[itemIndex];
@@ -180,16 +174,14 @@ export default class Group extends mixin(
    /**
     * Возвращает группы + элементы оригинальной стратегии
     * @protected
-    * @return {Array.<CollectionItem>}
     */
    protected _getItems(): CollectionItem[] {
-      return (<CollectionItem[]> this._groups).concat(this.source.items);
+      return (this._groups as CollectionItem[]).concat(this.source.items);
    }
 
    /**
     * Возвращает соответствие индексов в стратегии оригинальным индексам
     * @protected
-    * @return {Array.<Number>}
     */
    protected _getItemsOrder(): number[] {
       if (!this._itemsOrder) {
@@ -202,7 +194,6 @@ export default class Group extends mixin(
    /**
     * Создает соответствие индексов в стратегии оригинальным оригинальный индексам
     * @protected
-    * @return {Array.<Number>}
     */
    protected _createItemsOrder(): number[] {
       return Group.sortItems(this.source.items, {
@@ -215,7 +206,6 @@ export default class Group extends mixin(
    /**
     * Возвращает число групп, в которых есть элементы
     * @protected
-    * @return {Number}
     */
    protected _getActiveGroupsCount(itemsOrder: number[]): number {
       return itemsOrder.length - this.source.items.length;
@@ -227,12 +217,8 @@ export default class Group extends mixin(
 
    /**
     * Создает индекс сортировки в порядке группировки
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
-    * @param {Object} options Опции
-    * @param {Array.<Types/_display/GroupItem>} options.groups Группы
-    * @param {Types/_display/Display} options.display Проекция
-    * @param {Function(Types/_display/CollectionItem):*>} options.handler Метод, возвращающий идентификатор группы
-    * @return {Array.<Number>}
+    * @param items Элементы проекции.
+    * @param options Опции
     */
    static sortItems(items: CollectionItem[], options: ISortOptions): number[] {
       const groups = options.groups;

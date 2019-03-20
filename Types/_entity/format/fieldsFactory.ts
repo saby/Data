@@ -167,6 +167,8 @@ export default function(declaration: IDeclaration): Field {
       }
    }
 
-   // tslint:disable-next-line:max-line-length
-   throw new TypeError(`Types/_entity/format/fieldsFactory(): unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`);
+   throw new TypeError(
+      'Types/_entity/format/fieldsFactory(): ' +
+      `unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`
+   );
 }

@@ -16,7 +16,7 @@ import DictionaryField from './DictionaryField';
  * @public
  * @author Мальцев А.А.
  */
-export default class EnumField extends DictionaryField /** @lends Types/_entity/format/EnumField.prototype */{
+export default class EnumField extends DictionaryField {
 }
 
 Object.assign(EnumField.prototype, {

@@ -28,5 +28,5 @@ export default interface IEquatable /** @lends Types/_entity/IEquatable.prototyp
     * });
     * </pre>
     */
-   isEqual(to: Object): boolean;
+   isEqual(to: object): boolean;
 }

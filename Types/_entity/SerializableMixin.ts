@@ -1,24 +1,24 @@
 import {protect, logger} from '../util';
 
 /**
- * @const {Symbol} Свойство, хранящее признак десериализованного экземпляра
+ * Свойство, хранящее признак десериализованного экземпляра
  */
 const $unserialized = protect('unserialized');
 
 /**
- * {Boolean} Поддерживается ли свойство __proto__ экземпляром Object
+ * Поддерживается ли свойство __proto__ экземпляром Object
  */
 // @ts-ignore
-const isProtoSupported = typeof ({}).__proto__ === 'object';
+const isProtoSupported: boolean = typeof ({}).__proto__ === 'object';
 
 /**
- * {Boolean} Поддерживается вывод места определения функции через getFunctionDefinition()
+ * Поддерживается вывод места определения функции через getFunctionDefinition()
  */
 // @ts-ignore
-const isFunctionDefinitionSupported = typeof getFunctionDefinition === 'function';
+const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 'function';
 
 /**
- * {Number} Счетчик экземляров
+ * Счетчик экземляров
  */
 let instanceCounter = 0;
 
@@ -35,7 +35,6 @@ interface ISignature {
 
 /**
  * Возвращает уникальный номер инстанса
- * @return {Number}
  */
 function getInstanceId(): number {
    return this._instanceNumber || (this._instanceNumber = ++instanceCounter);
@@ -43,7 +42,6 @@ function getInstanceId(): number {
 
 /**
  * Сериализует код модуля, чтобы его можно было идентифицировать.
- * @param {Object} instance Экземпляр модуля
  */
 function serializeCode(instance: object): string {
    const proto = Object.getPrototypeOf(instance);
@@ -74,9 +72,9 @@ function serializeCode(instance: object): string {
 
 /**
  * Создает ошибку сериализации
- * @param {Object} instance Экземпляр объекта
- * @param {Boolean} [critical=false] Выбросить исключение либо предупредить
- * @param {Number} [skip=3] Сколько уровней пропустить при выводе стека вызова метода
+ * @param instance Экземпляр объекта
+ * @param [critical=false] Выбросить исключение либо предупредить
+ * @param [skip=3] Сколько уровней пропустить при выводе стека вызова метода
  */
 function createModuleNameError(instance: object, critical?: boolean, skip?: number): void {
    const text = `Property "_moduleName" with module name for RequireJS's define() is not found` +
@@ -108,7 +106,7 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
  * @public
  * @author Мальцев А.А.
  */
-export default class SerializableMixin /** @lends Types/_entity/SerializableMixin.prototype */ {
+export default class SerializableMixin {
    /**
     * Уникальный номер инстанса
     */
@@ -129,37 +127,12 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
     */
    protected _getOptions: () => object;
 
-   // region Public methods
-
    constructor(options?: any) {
       // Just for signature
    }
 
    /**
-    * Конструирует экземпляр класса из сериализованного состояния
-    * @param {Object} data Сериализованное состояние
-    * @return {Object}
-    * @static
-    * @example
-    * Сериализуем сущность:
-    * <pre>
-    *    //data = {$serialized$: 'inst', module: ...}
-    *    var instance = Entity.prototype.fromJSON.call(Entity, data);
-    *    instance instanceof Entity;//true
-    * </pre>
-    */
-   static fromJSON(data: ISignature): SerializableMixin {
-      const initializer = this.prototype._setSerializableState(data.state);
-      const instance = new this(data.state.$options);
-      if (initializer) {
-         initializer.call(instance);
-      }
-      return instance;
-   }
-
-   /**
     * Возвращает сериализованный экземпляр класса
-    * @return {Object}
     * @example
     * Сериализуем сущность:
     * <pre>
@@ -181,8 +154,7 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    /**
     * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
     * это же состояние
-    * @param {Object} state Cостояние
-    * @return {Object}
+    * @param state Cостояние
     * @protected
     */
    _getSerializableState(state: IState): IState {
@@ -193,19 +165,14 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
    /**
     * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
     * после создания инстанса.
-    * @param {Object} state Cостояние
-    * @return {Function}
+    * @param state Cостояние
     * @protected
     */
-   _setSerializableState(state?: Object): Function {
+   _setSerializableState(state?: IState): Function {
       return function(): void {
          this[$unserialized] = true;
       };
    }
-
-   // endregion
-
-   // region Protected methods
 
    /**
     * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
@@ -230,7 +197,26 @@ export default class SerializableMixin /** @lends Types/_entity/SerializableMixi
       }
    }
 
-   // endregion
+   /**
+    * Конструирует экземпляр класса из сериализованного состояния
+    * @param data Сериализованное состояние
+    * @static
+    * @example
+    * Сериализуем сущность:
+    * <pre>
+    *    //data = {$serialized$: 'inst', module: ...}
+    *    var instance = Entity.fromJSON(data);
+    *    instance instanceof Entity;//true
+    * </pre>
+    */
+   static fromJSON(data: ISignature): SerializableMixin {
+      const initializer = this.prototype._setSerializableState(data.state);
+      const instance = new this(data.state.$options);
+      if (initializer) {
+         initializer.call(instance);
+      }
+      return instance;
+   }
 }
 
 Object.assign(SerializableMixin.prototype, {
@@ -238,6 +224,6 @@ Object.assign(SerializableMixin.prototype, {
    _instanceNumber: null
 });
 
-// FIXME: Core/Serializer is looking for dynamic method
+// FIXME: For subclasses created via Core/core-extend
 // @ts-ignore
 SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;

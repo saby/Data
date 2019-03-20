@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSetField extends Field /** @lends Types/_entity/format/RecordSetField.prototype */{
+export default class RecordSetField extends Field {
 }
 
 Object.assign(RecordSetField.prototype, {

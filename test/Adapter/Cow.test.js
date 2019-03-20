@@ -146,7 +146,7 @@ define([
       describe('.fromJSON()', function() {
          it('should restore the wrapped original', function() {
             var json = adapter.toJSON(),
-               clone = CowAdapter.prototype.fromJSON.call(CowAdapter, json);
+               clone = CowAdapter.fromJSON(json);
 
             assert.instanceOf(clone.getOriginal(), Mock);
          });

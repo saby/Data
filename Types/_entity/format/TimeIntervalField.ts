@@ -15,7 +15,7 @@ import Field from './Field';
  * @public
  * @author Мальцев А.А.
  */
-export default class TimeIntervalField extends Field /** @lends Types/_entity/format/TimeIntervalField.prototype */{
+export default class TimeIntervalField extends Field {
    _$defaultValue: number;
 }
 

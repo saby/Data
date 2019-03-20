@@ -70,8 +70,7 @@ const charMap = {
 
 /**
  * Выполняет транслитерацию строки. Заменяет пробелы на _, вырезает мягкий и твердый знаки.
- * @param {String} string Исходная строка для преобразования.
- * @returns {String}
+ * @param string Исходная строка для преобразования.
  */
 export default function cyrTranslit(str: String): String {
    const result = [];

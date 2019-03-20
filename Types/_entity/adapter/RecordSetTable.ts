@@ -38,11 +38,9 @@ interface IRecordSetOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSetTable extends mixin(
-   DestroyableMixin, GenericFormatMixin
-) implements ITable /** @lends Types/_entity/adapter/RecordSetTable.prototype */{
+export default class RecordSetTable extends mixin(DestroyableMixin, GenericFormatMixin) implements ITable {
    /**
-    * @property Список
+    * Список
     */
    _data: RecordSet;
 
@@ -56,7 +54,7 @@ export default class RecordSetTable extends mixin(
 
    /**
     * Конструктор
-    * @param {Types/_collection/RecordSet} data Таблица
+    * @param data Таблица
     */
    constructor(data: RecordSet) {
       if (data && !data['[Types/_collection/RecordSet]']) {

@@ -39,13 +39,13 @@ export default class SbisRecord extends mixin(
    _type: string;
 
    /**
-    * @property Разделитель значений при сериализации сложных типов
+    * Разделитель значений при сериализации сложных типов
     */
    _castSeparator: string;
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
+    * @param data Сырые данные
     */
    constructor(data: IRecordFormat) {
       super(data);

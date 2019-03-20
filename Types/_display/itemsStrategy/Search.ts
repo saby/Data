@@ -21,9 +21,7 @@ interface ISortOptions {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Search extends mixin(
-   DestroyableMixin, SerializableMixin
-) implements IItemsStrategy /** @lends Types/_display/ItemsStrategy/Search.prototype */ {
+export default class Search extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -34,10 +32,6 @@ export default class Search extends mixin(
     */
    protected _options: IOptions;
 
-   /**
-    * Конструктор
-    * @param {Options} options Опции
-    */
    constructor(options: IOptions) {
       super();
       this._options = options;
@@ -121,7 +115,6 @@ export default class Search extends mixin(
 
    /**
     * Возвращает элементы проекции
-    * @return Array.<Types/_display/CollectionItem>
     * @protected
     */
    protected _getItems(): CollectionItem[] {
@@ -136,10 +129,8 @@ export default class Search extends mixin(
 
    /**
     * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
-    * @param {Array.<Types/_display/CollectionItem>} items Элементы проекции.
-    * @param {Object} options Опции
-    * @param {Types/_display/Collection} options.display Проекция
-    * @return {Array.<Types/_display/CollectionItem>}
+    * @param items Элементы проекции.
+    * @param options Опции
     * @static
     */
    static sortItems(items: CollectionItem[], options: ISortOptions): CollectionItem[] {

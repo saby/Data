@@ -805,8 +805,7 @@ export default class DataSet extends mixin(
 
    /**
     * Возвращает свойство данных
-    * @param {String} property Свойство
-    * @return {*}
+    * @param property Свойство
     * @protected
     */
    protected _getDataProperty(property: string): any {
@@ -818,8 +817,7 @@ export default class DataSet extends mixin(
 
    /**
     * Возвращает инстанс модели
-    * @param {*} rawData Данные модели
-    * @return {Types/_entity/Model}
+    * @param rawData Данные модели
     * @protected
     */
    protected _getModelInstance(rawData: any): Model {
@@ -836,8 +834,7 @@ export default class DataSet extends mixin(
 
    /**
     * Возвращает инстанс рекордсета
-    * @param {*} rawData Данные рекордсета
-    * @return {Types/_collection/RecordSet}
+    * @param rawData Данные рекордсета
     * @protected
     */
    protected _getListInstance(rawData: any): RecordSet {

@@ -11,7 +11,7 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default interface IItemsStrategy /** @lends Types/_display/IItemsStrategy.prototype */ {
+export default interface IItemsStrategy {
    readonly '[Types/_display/IItemsStrategy]': boolean;
 
    /**

@@ -1,9 +1,9 @@
-export interface IOptions {
+export interface IOptionsOption {
    debug?: boolean;
 }
 
-interface IConstructorOptions {
-   options?: IOptions;
+export interface IOptions {
+   options?: IOptionsOption;
 }
 
 /**
@@ -28,7 +28,7 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
       debug: false
    },
 
-   constructor(options?: IConstructorOptions): void {
+   constructor(options?: IOptions): void {
       if (options && options.options instanceof Object) {
          this._$options = {...(this._$options || {}), ...options.options};
          delete options.options;
@@ -37,25 +37,23 @@ const OptionsMixin = /** @lends Types/_source/OptionsMixin.prototype */{
 
    /**
     * Возвращает дополнительные настройки источника данных.
-    * @return {Object}
     * @see options
     */
-   getOptions(): object {
+   getOptions(): IOptionsOption {
       return {...this._$options};
    },
 
-   setOptions(options: object): void {
+   setOptions(options: IOptionsOption): void {
       this._$options = {...this._$options, ...(options || {})};
    },
 
    /**
     * Объединяет набор опций суперкласса с наследником
-    * @param {Types/_source/OptionsMixin} Super Суперкласс
-    * @param {Object} options Опции наследника
-    * @return {Object}
+    * @param Super Суперкласс
+    * @param options Опции наследника
     * @static
     */
-   addOptions(Super: Function, options: object): object {
+   addOptions<T>(Super: Function, options: T): T {
       return {...Super.prototype._$options, ...options};
    }
 };

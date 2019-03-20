@@ -29,13 +29,13 @@ export default class JsonRecord extends mixin(
    DestroyableMixin, GenericFormatMixin, JsonFormatMixin
 ) implements IRecord /** @lends Types/_entity/adapter/JsonRecord.prototype */{
    /**
-    * @property {Object} Сырые данные
+    * Сырые данные
     */
    _data: object;
 
    /**
     * Конструктор
-    * @param {*} data Сырые данные
+    * @param data Сырые данные
     */
    constructor(data: object) {
       super(data);
@@ -54,7 +54,7 @@ export default class JsonRecord extends mixin(
 
    // endregion
 
-   // region Types/_entity/adapter/JsonFormatMixin
+   // region JsonFormatMixin
 
    addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {

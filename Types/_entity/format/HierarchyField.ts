@@ -7,7 +7,7 @@ import Field from './Field';
  * @extends Types/_entity/format/Field
  * @author Мальцев А.А.
  */
-export default class HierarchyField extends Field /** @lends Types/_entity/format/HierarchyField.prototype */{
+export default class HierarchyField extends Field {
    /**
     * @cfg {String} Тип элементов
     * @name Types/_entity/format/HierarchyField#kind

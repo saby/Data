@@ -7,7 +7,7 @@ import {adapter} from '../entity';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IData /** @lends Types/_source/IData.prototype */{
+export default interface IData {
    readonly '[Types/_source/IData]': boolean;
 
    /**

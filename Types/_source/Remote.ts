@@ -4,9 +4,9 @@ import ICrudPlus from './ICrudPlus';
 import IProvider, {IEndpoint} from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
-import BindingMixin from './BindingMixin';
-import EndpointMixin from './EndpointMixin';
-import OptionsMixin from './OptionsMixin';
+import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';
+import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
+import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
@@ -14,8 +14,6 @@ import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
-// @ts-ignore
-import Deferred = require('Core/Deferred');
 
 export interface IPassing {
    create: (meta?: Object) => Object;
@@ -28,9 +26,12 @@ export interface IPassing {
    move: (from: string | number, to: string | number, meta?: Object) => Object;
 }
 
-export interface IOptions extends IBaseOptions {
+export interface IOptionsOption extends IOptionsMixinOption {
    updateOnlyChanged?: boolean;
    navigationType?: string;
+}
+
+export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
 }
 
 // tslint:disable-next-line:ban-comma-operator
@@ -215,7 +216,7 @@ export default abstract class Remote extends mixin(
     */
    protected _$passing: IPassing;
 
-   protected _$options: IOptions;
+   protected _$options: IOptionsOption;
 
    /**
     * Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
@@ -223,7 +224,7 @@ export default abstract class Remote extends mixin(
    protected _provider: IAbstract;
 
    // @ts-ignore
-   protected constructor(options?: Object) {
+   protected constructor(options?: IOptions) {
       // @ts-ignore
       BindingMixin.constructor.call(this, options);
       // @ts-ignore
@@ -343,9 +344,8 @@ export default abstract class Remote extends mixin(
 
    /**
     * Инстанциирует провайдер удаленного доступа
-    * @param {String|Types/_source/Provider/IAbstract} provider Алиас или инстанс
-    * @param {Object} options Аргументы конструктора
-    * @return {Types/_source/Provider}
+    * @param provider Алиас или инстанс
+    * @param options Аргументы конструктора
     * @protected
     */
    protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
@@ -361,9 +361,9 @@ export default abstract class Remote extends mixin(
 
    /**
     * Вызывает удаленный сервис через провайдер
-    * @param {String} name Имя сервиса
-    * @param {Object|Array} [args] Аргументы вызова
-    * @return {Core/Deferred} Асинхронный результат операции
+    * @param name Имя сервиса
+    * @param [args] Аргументы вызова
+    * @return Асинхронный результат операции
     * @protected
     */
    protected _callProvider(name: string, args: object): ExtendPromise<any> {
@@ -395,8 +395,7 @@ export default abstract class Remote extends mixin(
 
    /**
     * Подготавливает аргументы к передаче в удаленный сервис
-    * @param {Object} [args] Аргументы вызова
-    * @return {Object|undefined}
+    * @param [args] Аргументы вызова
     * @protected
     */
    protected _prepareProviderArguments(args: object): object {
@@ -480,7 +479,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        */
       move: passMove
    },
-   _$options: OptionsMixin.addOptions(Base, {
+   _$options: OptionsMixin.addOptions<IOptionsOption>(Base, {
       /**
        * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
        * измененые поля записи (если обновляется одна запись).

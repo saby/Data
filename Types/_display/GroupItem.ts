@@ -8,10 +8,9 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class GroupItem extends CollectionItem /** @lends Types/_display/GroupItem.prototype */{
+export default class GroupItem extends CollectionItem {
    /**
-    * @cfg {Boolean} Развернута или свернута группа. По умолчанию развернута.
-    * @name Types/_display/GroupItem#expanded
+    * Развернута или свернута группа. По умолчанию развернута.
     */
    protected _$expanded: boolean;
 
@@ -22,7 +21,6 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
 
    /**
     * Возвращает признак, что узел развернут
-    * @return {Boolean}
     */
    isExpanded(): boolean {
       return this._$expanded;
@@ -30,8 +28,8 @@ export default class GroupItem extends CollectionItem /** @lends Types/_display/
 
    /**
     * Устанавливает признак, что узел развернут или свернут
-    * @param {Boolean} expanded Развернут или свернут узел
-    * @param {Boolean} [silent=false] Не генерировать событие
+    * @param expanded Развернут или свернут узел
+    * @param [silent=false] Не генерировать событие
     */
    setExpanded(expanded: boolean, silent?: boolean): void {
       if (this._$expanded === expanded) {
