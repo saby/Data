@@ -4,8 +4,8 @@ import ICrudPlus from './ICrudPlus';
 import IProvider, {IEndpoint} from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
-import BindingMixin from './BindingMixin';
-import EndpointMixin from './EndpointMixin';
+import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';
+import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
 import OptionsMixin from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
@@ -14,8 +14,6 @@ import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
-// @ts-ignore
-import Deferred = require('Core/Deferred');
 
 export interface IPassing {
    create: (meta?: Object) => Object;
@@ -28,7 +26,7 @@ export interface IPassing {
    move: (from: string | number, to: string | number, meta?: Object) => Object;
 }
 
-export interface IOptions extends IBaseOptions {
+export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
    updateOnlyChanged?: boolean;
    navigationType?: string;
 }
@@ -223,7 +221,7 @@ export default abstract class Remote extends mixin(
    protected _provider: IAbstract;
 
    // @ts-ignore
-   protected constructor(options?: Object) {
+   protected constructor(options?: IOptions) {
       // @ts-ignore
       BindingMixin.constructor.call(this, options);
       // @ts-ignore
