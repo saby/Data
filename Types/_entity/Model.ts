@@ -1013,6 +1013,10 @@ Model.prototype['[WS.Data/Entity/Model]'] = true;
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;
 
+// FIXME: For subclasses created via Core/core-extend
+// @ts-ignore
+Model.prototype.fromJSON = Model.fromJSON;
+
 register('Types/entity:Model', Model, {instantiate: false});
 // FIXME: deprecated
 register('entity.model', Model);
