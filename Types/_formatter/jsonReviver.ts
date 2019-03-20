@@ -24,12 +24,10 @@ function resolveInstances(): void {
             if (!Module.prototype) {
                throw new Error(`The module "${name}" is not a constructor.`);
             }
-            if (typeof Module.prototype.fromJSON !== 'function') {
+            if (typeof Module.fromJSON !== 'function') {
                throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
             }
-            instance = Module.fromJSON
-               ? Module.fromJSON.call(Module, item.value)
-               : Module.prototype.fromJSON.call(Module, item.value);
+            instance = Module.fromJSON(item.value);
          } catch (e) {
             logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
             instance = null;

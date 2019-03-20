@@ -26,7 +26,7 @@ export default class CloneableMixin {
             data.state.$options = this._unlinkCollection(data.state.$options);
          }
 
-         clone = Module.prototype.fromJSON.call(Module, data);
+         clone = Module.fromJSON(data);
       } else {
          const serializer = new Serializer();
          clone = JSON.parse(

@@ -205,7 +205,7 @@ export default class SerializableMixin {
     * Сериализуем сущность:
     * <pre>
     *    //data = {$serialized$: 'inst', module: ...}
-    *    var instance = Entity.prototype.fromJSON.call(Entity, data);
+    *    var instance = Entity.fromJSON(data);
     *    instance instanceof Entity;//true
     * </pre>
     */

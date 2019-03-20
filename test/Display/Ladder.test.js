@@ -1131,7 +1131,7 @@ define([
                ladder = new Ladder(collection),
                clone;
 
-            clone = Ladder.prototype.fromJSON.call(Ladder, ladder.toJSON());
+            clone = Ladder.fromJSON(ladder.toJSON());
 
             assert.equal(clone.getCollection(), collection);
          });
@@ -1140,7 +1140,7 @@ define([
             var ladder = new Ladder(),
                clone;
 
-            clone = Ladder.prototype.fromJSON.call(Ladder, ladder.toJSON());
+            clone = Ladder.fromJSON(ladder.toJSON());
 
             assert.isNull(clone.getCollection());
          });
@@ -1154,7 +1154,7 @@ define([
                offset = 1;
 
             ladder.setOffset(offset);
-            clone = Ladder.prototype.fromJSON.call(Ladder, ladder.toJSON());
+            clone = Ladder.fromJSON(ladder.toJSON());
 
             assert.equal(clone._offset, offset);
          });
@@ -1168,7 +1168,7 @@ define([
                clone;
 
             ladder.isPrimary(items[0], 'id');
-            clone = Ladder.prototype.fromJSON.call(Ladder, ladder.toJSON());
+            clone = Ladder.fromJSON(ladder.toJSON());
 
             assert.deepEqual(clone._columnNames, ['id']);
          });
@@ -1188,7 +1188,7 @@ define([
                lastAction;
 
             ladder.isPrimary(items.at(0), 'name');//force serialize _columnNames
-            Ladder.prototype.fromJSON.call(Ladder, ladder.toJSON());
+            Ladder.fromJSON(ladder.toJSON());
             ladder.destroy();//unsubscribe
 
             lastAction = null;

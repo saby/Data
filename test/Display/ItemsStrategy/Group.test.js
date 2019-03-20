@@ -560,7 +560,7 @@ define([
       describe('::fromJSON()', function() {
          it('should clone the strategy', function() {
             var groups = strategy.groups,
-               clone = Group.prototype.fromJSON.call(Group, strategy.toJSON());
+               clone = Group.fromJSON(strategy.toJSON());
 
             assert.deepEqual(clone.groups, groups);
          });

@@ -1406,7 +1406,7 @@ define([
       describe('.fromJSON()', function() {
          it('should restore an instance id', function() {
             var json = model.toJSON(),
-               clone = Model.prototype.fromJSON.call(Model, json);
+               clone = Model.fromJSON(json);
 
             assert.strictEqual(json.state._instanceId, clone.getInstanceId());
          });

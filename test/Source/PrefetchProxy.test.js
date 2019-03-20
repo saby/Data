@@ -295,7 +295,7 @@ define([
             source.read.apply(source, args);
 
             json = source.toJSON();
-            clone = PrefetchProxy.prototype.fromJSON.call(PrefetchProxy, json);
+            clone = PrefetchProxy.fromJSON(json);
 
             args = ['bar', 2];
             clone.read.apply(clone, args);
