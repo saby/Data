@@ -212,7 +212,7 @@ export default interface ICrud {
     *     });
     * </pre>
     */
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null>;
+   destroy(keys: any | any[], meta?: object): ExtendPromise<null>;
 
    /**
     * Выполняет запрос на выборку

@@ -7,6 +7,8 @@ declare type TypeDeclaration = Function | string;
 
 export interface IOptions {
    rawData: any;
+   itemsProperty?: string;
+   metaProperty?: string;
 }
 
 /**
@@ -132,8 +134,14 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class DataSet extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
+export default class DataSet extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin
 ) /** @lends Types/_source/DataSet.prototype */{
    /**
     * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию

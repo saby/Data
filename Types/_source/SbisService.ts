@@ -1,5 +1,6 @@
 import Rpc from './Rpc';
 import {IOptions as IRemoteOptions, IOptionsOption as IRpcOptionsOption, IPassing as IRemotePassing} from './Remote';
+import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
@@ -36,6 +37,9 @@ const COMPLEX_ID_SEPARATOR = ',';
  */
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
 
+export interface IEndpoint extends IProviderEndpoint {
+   moveContract?: string;
+}
 /**
  * Extended IBinding
  */
@@ -705,6 +709,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     *    });
     * </pre>
     */
+   protected _$endpoint: IEndpoint;
 
    /**
     * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому
@@ -849,17 +854,17 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
     */
    create(meta?: object): ExtendPromise<Record> {
       meta = object.clonePlain(meta, true);
-      return this._loadAdditionalDependencies((def) => {
+      return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
             super.create(meta),
-            def
+            ready
          );
       });
    }
 
    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
-         return this._loadAdditionalDependencies((def) => {
+         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
                this._callProvider(
                   this._$binding.updateBatch,
@@ -867,7 +872,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
                ).addCallback(
                   (key) => this._prepareUpdateResult(data, key)
                ),
-               def
+               ready
             );
          });
       }
@@ -903,10 +908,10 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
    query(query: Query): ExtendPromise<DataSet> {
       query = object.clonePlain(query, true);
-      return this._loadAdditionalDependencies((def) => {
+      return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
             super.query(query),
-            def
+            ready
          );
       });
    }

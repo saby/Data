@@ -1,5 +1,8 @@
 import DataSet from './DataSet';
+import Query from './Query';
+import DataMixin from './DataMixin';
 import {Model} from '../entity';
+import {mixin} from '../util';
 
 /**
  * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
@@ -7,19 +10,19 @@ import {Model} from '../entity';
  * @public
  * @author Мальцев А.А.
  */
-const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
-   '[Types/_source/DataCrudMixin]': true,
+export default abstract class DataCrudMixin extends mixin<DataMixin>(Object) {
+   readonly '[Types/_source/DataCrudMixin]': boolean;
 
-   _prepareCreateResult(data: any): Model {
+   protected _prepareCreateResult(data: any): Model {
       return this._getModelInstance(data);
-   },
+   }
 
-   _prepareReadResult(data: any): Model {
+   protected _prepareReadResult(data: any): Model {
       return this._getModelInstance(data);
-   },
+   }
 
-   _prepareUpdateResult(data: any, keys: string[]): string[] {
-      const idProperty = this.getIdProperty();
+   protected _prepareUpdateResult(data: any, keys: string[]): string[] {
+      const idProperty = (this as DataMixin).getIdProperty();
       const callback = (record, key) => {
          if (key &&
             idProperty &&
@@ -38,11 +41,13 @@ const DataCrudMixin = /** @lends Types/_source/DataCrudMixin.prototype */{
          callback(data, keys);
       }
       return keys;
-   },
+   }
 
-   _prepareQueryResult(data: any): DataSet {
+   protected _prepareQueryResult(data: any, query?: Query): DataSet {
       return this._wrapToDataSet(data);
    }
-};
+}
 
-export default DataCrudMixin;
+Object.assign(DataCrudMixin.prototype, {
+   '[Types/_source/DataCrudMixin]': true
+});

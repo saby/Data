@@ -331,7 +331,7 @@ class RawManager {
       this.setKeys(keys);
    }
 
-   remove(keys: string[]): boolean {
+   remove(keys: string | string[]): boolean {
       let count;
       if (!(keys instanceof Array)) {
          count = this.getCount();
@@ -349,7 +349,7 @@ class RawManager {
       return true;
    }
 
-   removeFromKeys(keys: string[]): void {
+   removeFromKeys(keys: string | string[]): void {
       let ks;
       if (keys instanceof Array) {
          ks = keys;
@@ -584,8 +584,11 @@ class Converter {
  *    });
  * </pre>
  */
-export default class LocalSession extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin
+export default class LocalSession extends mixin<
+   OptionsToPropertyMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin
 ) implements ICrud, ICrudPlus, IData {
    protected _writable: boolean;
 
@@ -670,6 +673,10 @@ export default class LocalSession extends mixin(
    protected _dataSetMetaProperty: string;
 
    protected _options: any;
+
+   readonly rawManager: RawManager;
+   readonly modelManager: ModelManager;
+   readonly converter: Converter;
 
    constructor(options?: IOptions) {
       super();
@@ -875,14 +882,14 @@ export default class LocalSession extends mixin(
     * </pre>
     */
    merge(from: string | number, to: string | number): ExtendPromise<any> {
-      const fromData = this.rawManager.get(from);
-      const toData = this.rawManager.get(to);
+      const fromData = this.rawManager.get(from as string);
+      const toData = this.rawManager.get(to as string);
       if (fromData === null || toData === null) {
          return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
       }
       const data = merge(fromData, toData);
-      this.rawManager.set(from, data);
-      this.rawManager.remove(to);
+      this.rawManager.set(from as string, data);
+      this.rawManager.remove(to as string);
       return Deferred.success(true);
    }
 
@@ -900,7 +907,7 @@ export default class LocalSession extends mixin(
     */
    copy(key: string | number, meta?: Object): ExtendPromise<Record> {
       const myId = this.rawManager.reserveId();
-      const from = this.rawManager.get(key);
+      const from = this.rawManager.get(key as string);
       if (from === null) {
          return Deferred.fail('Record with key ' + from + ' isn\'t exists');
       }
@@ -931,7 +938,7 @@ export default class LocalSession extends mixin(
          items = [items];
       }
       items.forEach((id) => {
-         const index = keys.indexOf(id);
+         const index = keys.indexOf(id as string);
          if (index === -1) {
             return Deferred.fail(`Record "items" with key "${items}" is not found.`);
          }
@@ -940,7 +947,7 @@ export default class LocalSession extends mixin(
       if (meta.position === 'on') {
          return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys));
       }
-      return Deferred.success(this.rawManager.move(sourceItems, target, meta));
+      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta));
    }
 
    // endregion

@@ -23,32 +23,29 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Base extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, OptionsMixin, LazyMixin, DataMixin
+export default abstract class Base extends mixin<
+   OptionsToPropertyMixin,
+   SerializableMixin,
+   OptionsMixin,
+   LazyMixin,
+   DataMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin,
+   OptionsMixin,
+   LazyMixin,
+   DataMixin
 ) implements IData {
    protected constructor(options?: IOptions) {
       options = {...(options || {})};
 
       super(options);
-      OptionsMixin.constructor.call(this, options);
+      OptionsMixin.call(this, options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
-      DataMixin.constructor.call(this, options);
+      DataMixin.call(this, options);
    }
-
-   // region IData
-
-   readonly '[Types/_source/IData]': boolean;
-
-   getAdapter: () => adapter.IAdapter;
-   getIdProperty: () => string;
-   setIdProperty: (name: string) => void;
-   getModel: () => Function | string;
-   setModel: (model: Function) => void;
-   getListModule: () => Function | string;
-   setListModule: (listModule: Function | string) => void;
-
-   // endregion
 
    /**
     * @deprecated
@@ -68,6 +65,5 @@ export default abstract class Base extends mixin(
 
 Object.assign(Base.prototype, {
    '[Types/_source/Base]': true,
-   '[Types/_source/IData]': true,
    _moduleName: 'Types/source:Base'
 });

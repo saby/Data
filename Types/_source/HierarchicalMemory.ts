@@ -67,8 +67,12 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class HierarchicalMemory extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
+export default class HierarchicalMemory extends mixin<
+   OptionsToPropertyMixin,
+   SerializableMixin
+>(
+   OptionsToPropertyMixin,
+   SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
     * @cfg {Object} See {@link Types/_source/Memory#data}.
@@ -216,14 +220,14 @@ export default class HierarchicalMemory extends mixin(
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
       resultState._source = this._source;
 
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);

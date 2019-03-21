@@ -17,11 +17,8 @@ export default abstract class Rpc extends Remote implements IRpc {
 
    readonly '[Types/_source/IRpc]': boolean = true;
 
-   call(command: string, data?: Object): ExtendPromise<DataSet> {
-      return this._callProvider(
-         command,
-         data
-      ).addCallback(
+   call(command: string, data?: object): ExtendPromise<DataSet> {
+      return this._callProvider(command, data).addCallback(
          (data) => this._loadAdditionalDependencies().addCallback(
             () => this._wrapToDataSet(data)
          )
@@ -31,5 +28,7 @@ export default abstract class Rpc extends Remote implements IRpc {
    // endregion
 }
 
-Rpc.prototype._moduleName = 'Types/source:Rpc';
-Rpc.prototype['[Types/_source/Rpc]'] = true;
+Object.assign(Rpc.prototype, {
+   '[Types/_source/Rpc]': true,
+   _moduleName: 'Types/source:Rpc'
+});

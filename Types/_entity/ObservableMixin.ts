@@ -162,7 +162,7 @@ export default abstract class ObservableMixin /** @lends Types/_entity/Observabl
     * @return Результат обработки события (возвращается только в случае отсутствия очереди)
     * @protected
     */
-   protected _notify(event: string, ...args: any[]): void {
+   protected _notify(event: string, ...args: any[]): any {
       if (this._eventBusChannel) {
          this._notifyPushQueue.apply(this, arguments);
          return this._notifyQueue(this._eventsQueue)[0];

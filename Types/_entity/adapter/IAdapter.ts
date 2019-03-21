@@ -16,7 +16,7 @@ export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prot
     * @param {*} data Сырые данные
     * @return {Types/_entity/adapter/ITable}
     */
-   forTable(data: any): ITable;
+   forTable(data?: any): ITable;
 
    /**
     * Возвращает интерфейс доступа к данным в виде записи
@@ -24,7 +24,7 @@ export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prot
     * @param {*} [tableData] Сырые данные таблицы (передаются, когда data пустой)
     * @return {Types/_entity/adapter/IRecord}
     */
-   forRecord(data: any, tableData?: any): IRecord;
+   forRecord(data?: any, tableData?: any): IRecord;
 
    /**
     * Возвращает название поля, которое является первичным ключом

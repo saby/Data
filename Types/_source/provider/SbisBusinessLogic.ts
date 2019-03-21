@@ -1,7 +1,6 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
-import {mixin} from '../../util';
 import {RPCJSON} from 'Browser/Transport';
 
 interface IEndPoint {
@@ -34,17 +33,17 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
     *    });
     * </pre>
     */
-   _$endpoint: IEndPoint = {};
+   protected _$endpoint: IEndPoint = {};
 
    /**
     * @cfg {Function} Конструктор сетевого транспорта
     */
-   _$transport: any;
+   protected _$transport: any;
 
    /**
     * Разделитель пространств имен
     */
-   _nameSpaceSeparator: string;
+   protected _nameSpaceSeparator: string;
 
    constructor(options?: object) {
       super();
@@ -78,8 +77,10 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
    }
 }
 
-SbisBusinessLogic.prototype['[Types/_source/provider/SbisBusinessLogic]'] = true;
-SbisBusinessLogic.prototype._$transport = RPCJSON;
-SbisBusinessLogic.prototype._nameSpaceSeparator = '.';
+Object.assign(SbisBusinessLogic.prototype, {
+   '[Types/_source/provider/SbisBusinessLogic]': true,
+   _$transport: RPCJSON,
+   _nameSpaceSeparator: '.'
+});
 
 register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});
