@@ -51,7 +51,7 @@ All you need is just saby-types package on npm.
 
         npm test
 
-- Start local HTTP server and check [unit tests in browser](http://localhost:1024/):
+- Start local HTTP server and check [unit tests in browser](http://localhost:1025/):
 
         npm start
 
