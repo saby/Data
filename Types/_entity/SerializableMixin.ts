@@ -223,3 +223,7 @@ Object.assign(SerializableMixin.prototype, {
    '[Types/_entity/SerializableMixin]': true,
    _instanceNumber: null
 });
+
+// FIXME: For subclasses created via Core/core-extend
+// @ts-ignore
+SerializableMixin.prototype.fromJSON = SerializableMixin.fromJSON;
