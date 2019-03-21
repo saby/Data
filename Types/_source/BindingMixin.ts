@@ -19,8 +19,8 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
-   '[Types/_source/BindingMixin]': true,
+export default abstract class BindingMixin {
+   readonly '[Types/_source/BindingMixin]': boolean;
 
    /**
     * @cfg {Object} Соответствие методов CRUD контракту. Определяет, как именно источник реализует каждый метод CRUD.
@@ -66,62 +66,53 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
     *    });
     * </pre>
     */
-   _$binding: {
+   protected _$binding: IBinding;
 
-      /**
-       * @cfg {String} Операция создания записи через метод {@link create}.
-       * @name Types/_source/BindingMixin#binding.create
-       */
-      create: 'create',
+   /**
+    * @cfg {String} Операция создания записи через метод {@link create}.
+    * @name Types/_source/BindingMixin#binding.create
+    */
 
-      /**
-       * @cfg {String} Операция чтения записи через метод {@link read}.
-       * @name Types/_source/BindingMixin#binding.read
-       */
-      read: 'read',
+   /**
+    * @cfg {String} Операция чтения записи через метод {@link read}.
+    * @name Types/_source/BindingMixin#binding.read
+    */
 
-      /**
-       * @cfg {String} Операция обновления записи через метод {@link update}.
-       * @name Types/_source/BindingMixin#binding.update
-       */
-      update: 'update',
+   /**
+    * @cfg {String} Операция обновления записи через метод {@link update}.
+    * @name Types/_source/BindingMixin#binding.update
+    */
 
-      /**
-       * @cfg {String} Операция удаления записи через метод {@link destroy}.
-       * @name Types/_source/BindingMixin#binding.destroy
-       */
-      destroy: 'delete',
+   /**
+    * @cfg {String} Операция удаления записи через метод {@link destroy}.
+    * @name Types/_source/BindingMixin#binding.destroy
+    */
 
-      /**
-       * @cfg {String} Операция получения списка записей через метод {@link query}.
-       * @name Types/_source/BindingMixin#binding.query
-       */
-      query: 'query',
+   /**
+    * @cfg {String} Операция получения списка записей через метод {@link query}.
+    * @name Types/_source/BindingMixin#binding.query
+    */
 
-      /**
-       * @cfg {String} Операция копирования записей через метод {@link copy}.
-       * @name Types/_source/BindingMixin#binding.copy
-       */
-      copy: 'copy',
+   /**
+    * @cfg {String} Операция копирования записей через метод {@link copy}.
+    * @name Types/_source/BindingMixin#binding.copy
+    */
 
-      /**
-       * @cfg {String} Операция объединения записей через метод {@link merge}.
-       * @name Types/_source/BindingMixin#binding.merge
-       */
-      merge: 'merge',
+   /**
+    * @cfg {String} Операция объединения записей через метод {@link merge}.
+    * @name Types/_source/BindingMixin#binding.merge
+    */
 
-      /**
-       * @cfg {String} Операция перемещения записи через метод {@link move}.
-       * @name Types/_source/BindingMixin#binding.move
-       */
-      move: 'move'
-   },
+   /**
+    * @cfg {String} Операция перемещения записи через метод {@link move}.
+    * @name Types/_source/BindingMixin#binding.move
+    */
 
-   constructor(options?: IOptions): void {
+   constructor(options?: IOptions) {
       if (options && options.binding instanceof Object) {
          options.binding = {...this._$binding, ...options.binding};
       }
-   },
+   }
 
    /**
     * Возвращает соответствие методов CRUD контракту источника.
@@ -156,11 +147,23 @@ const BindingMixin = /** @lends Types/_source/BindingMixin.prototype */{
     */
    getBinding(): IBinding {
       return {...this._$binding};
-   },
+   }
 
    setBinding(binding: IBinding): void {
       this._$binding = binding;
    }
-};
+}
 
-export default BindingMixin;
+Object.assign(BindingMixin.prototype, {
+   '[Types/_source/BindingMixin]': true,
+   _$binding: {
+      create: 'create',
+      read: 'read',
+      update: 'update',
+      destroy: 'delete',
+      query: 'query',
+      copy: 'copy',
+      merge: 'merge',
+      move: 'move'
+   }
+});

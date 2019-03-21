@@ -1,7 +1,7 @@
 import {IAbstract} from './provider';
 
 export interface IEndpoint {
-   contract: string;
+   contract?: string;
    address?: string;
 }
 

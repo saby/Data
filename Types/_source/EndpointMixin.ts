@@ -10,8 +10,8 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
-   '[Types/_source/EndpointMixin]': true,
+export default abstract class EndpointMixin {
+   readonly '[Types/_source/EndpointMixin]': boolean;
 
    /**
     * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к
@@ -47,9 +47,9 @@ const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
     *    });
     * </pre>
     */
-   _$endpoint: null,
+   protected _$endpoint: IEndpoint;
 
-   constructor(options?: IOptions): void {
+   constructor(options?: IOptions) {
       this._$endpoint = this._$endpoint || {};
       if (options) {
          // Shortcut support
@@ -61,11 +61,14 @@ const EndpointMixin = /** @lends Types/_source/EndpointMixin.prototype */{
             options.endpoint = {...this._$endpoint, ...options.endpoint};
          }
       }
-   },
+   }
 
    getEndpoint(): IEndpoint {
       return {...this._$endpoint};
    }
-};
+}
 
-export default EndpointMixin;
+Object.assign(EndpointMixin.prototype, {
+   '[Types/_source/EndpointMixin]': true,
+   _$endpoint: null
+});

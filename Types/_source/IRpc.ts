@@ -45,5 +45,5 @@ export default interface IRpc {
     *    });
     * </pre>
     */
-   call(command: string, data?: Object): ExtendPromise<DataSet>;
+   call(command: string, data?: object): ExtendPromise<DataSet>;
 }

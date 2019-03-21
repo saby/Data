@@ -82,21 +82,26 @@ declare type ITarget = ICrud | ICrudPlus | Base;
  * @public
  * @author Мальцев А.А.
  */
-export default class PrefetchProxy extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin
+export default class PrefetchProxy extends mixin<
+   OptionsToPropertyMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
    /**
     * @cfg {Types/_source/ICrud} Целевой источник данных.
     * @name Types/_source/PrefetchProxy#target
     */
-   _$target: ITarget = null;
+   protected _$target: ITarget = null;
 
    /**
     * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах
     * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
     * @name Types/_source/PrefetchProxy#data
     */
-   _$data: IData = {
+   protected _$data: IData = {
 
       /**
        * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
@@ -120,9 +125,9 @@ export default class PrefetchProxy extends mixin(
    /**
     * Методы, уже отдавший заранее приготовленные данные
     */
-   _done: IDone = {};
+   protected _done: IDone = {};
 
-   constructor(options?: Object) {
+   constructor(options?: object) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
@@ -148,11 +153,11 @@ export default class PrefetchProxy extends mixin(
       return (<ICrud> this._$target).read(key, meta);
    }
 
-   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       return (<ICrud> this._$target).update(data, meta);
    }
 
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
       return (<ICrud> this._$target).destroy(keys, meta);
    }
 
@@ -174,7 +179,7 @@ export default class PrefetchProxy extends mixin(
       return (<ICrudPlus> this._$target).merge(from, to);
    }
 
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: object): ExtendPromise<Record> {
       if (this._$data.copy && !this._done.copy) {
          this._done.copy = true;
          return Deferred.success(this._$data.copy);
@@ -182,7 +187,7 @@ export default class PrefetchProxy extends mixin(
       return (<ICrudPlus> this._$target).copy(key, meta);
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
+   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
       return (<ICrudPlus> this._$target).move(items, target, meta);
    }
 
@@ -221,5 +226,7 @@ export default class PrefetchProxy extends mixin(
    // endregion
 }
 
-PrefetchProxy.prototype._moduleName = 'Types/source:PrefetchProxy';
-PrefetchProxy.prototype['[Types/_source/PrefetchProxy]'] = true;
+Object.assign(PrefetchProxy.prototype, {
+   '[Types/_source/PrefetchProxy]': true,
+   _moduleName: 'Types/source:PrefetchProxy'
+});

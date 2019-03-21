@@ -16,14 +16,14 @@ import {create} from '../di';
 import {mixin, logger} from '../util';
 
 export interface IPassing {
-   create: (meta?: Object) => Object;
-   read: (key: string | number, meta?: Object) => Object;
-   update: (data: Record | RecordSet, meta?: Object) => Object;
-   destroy: (keys: string | string[], meta?: Object) => Object;
-   query: (query: Query) => Object;
-   copy: (key: string | number, meta?: Object) => Object;
-   merge: (from: string | number, to: string | number) => Object;
-   move: (from: string | number, to: string | number, meta?: Object) => Object;
+   create: (meta?: object) => object;
+   read: (key: string | number, meta?: object) => object;
+   update: (data: Record | RecordSet, meta?: object) => object;
+   destroy: (keys: string | string[], meta?: object) => object;
+   query: (query: Query) => object;
+   copy: (key: string | number, meta?: object) => object;
+   merge: (from: string | number, to: string | number) => object;
+   move: (from: string | number, to: string | number, meta?: object) => object;
 }
 
 export interface IOptionsOption extends IOptionsMixinOption {
@@ -67,7 +67,7 @@ function passCreate(meta?: object): object[] {
  * @param key Первичный ключ записи
  * @param [meta] Дополнительные мета данные
  */
-function passRead(key: string, meta?: Object): any[] {
+function passRead(key: string, meta?: object): any[] {
    return [key, meta];
 }
 
@@ -114,7 +114,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
  * @param keys Первичный ключ, или массив первичных ключей записи
  * @param [meta] Дополнительные мета данные
  */
-function passDestroy(keys: string | string[], meta?: Object|Record): any[] {
+function passDestroy(keys: string | string[], meta?: object|Record): any[] {
    return [keys, meta];
 }
 
@@ -131,7 +131,7 @@ function passQuery(query: Query): Query[] {
  * @param key Первичный ключ записи
  * @param [meta] Дополнительные мета данные
  */
-function passCopy(key: string, meta?: Object): any[] {
+function passCopy(key: string, meta?: object): any[] {
    return [key, meta];
 }
 
@@ -171,8 +171,18 @@ function passMove(from: any[], to: string, meta?: object): any[] {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Remote extends mixin(
-   Base, ObservableMixin, DataCrudMixin, BindingMixin, EndpointMixin
+export default abstract class Remote extends mixin<
+   Base,
+   ObservableMixin,
+   DataCrudMixin,
+   BindingMixin,
+   EndpointMixin
+>(
+   Base,
+   ObservableMixin,
+   DataCrudMixin,
+   BindingMixin,
+   EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
 
    /**
@@ -226,9 +236,9 @@ export default abstract class Remote extends mixin(
    // @ts-ignore
    protected constructor(options?: IOptions) {
       // @ts-ignore
-      BindingMixin.constructor.call(this, options);
+      BindingMixin.call(this, options);
       // @ts-ignore
-      EndpointMixin.constructor.call(this, options);
+      EndpointMixin.call(this, options);
       super(options);
       ObservableMixin.call(this, options);
 
@@ -239,7 +249,7 @@ export default abstract class Remote extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.create,
          this._$passing.create.call(this, meta)
@@ -250,7 +260,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   read(key: any, meta?: Object): ExtendPromise<Record> {
+   read(key: any, meta?: object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.read,
          this._$passing.read.call(this, key, meta)
@@ -261,7 +271,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.update,
          this._$passing.update.call(this, data, meta)
@@ -270,7 +280,8 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+   // @ts-ignore
+   destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
       return this._callProvider(
          this._$binding.destroy,
          this._$passing.destroy.call(this, keys, meta)
@@ -301,7 +312,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: object): ExtendPromise<Record> {
       return this._callProvider(
          this._$binding.copy,
          this._$passing.copy.call(this, key, meta)
@@ -310,7 +321,7 @@ export default abstract class Remote extends mixin(
       );
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: Object): ExtendPromise<any> {
+   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.move,
          this._$passing.move.call(this, items, target, meta)
@@ -322,10 +333,6 @@ export default abstract class Remote extends mixin(
    // region IProvider
 
    readonly '[Types/_source/IProvider]': boolean = true;
-
-   getEndpoint(): IEndpoint {
-      return EndpointMixin.getEndpoint.call(this);
-   }
 
    getProvider(): IAbstract {
       if (!this._provider) {

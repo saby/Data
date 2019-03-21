@@ -18,7 +18,7 @@ export default abstract class OptionsMixin {
    /**
     * Дополнительные настройки источника данных.
     */
-   _$options: IOptionsOption;
+   protected _$options: IOptionsOption;
 
    constructor(options?: IOptions) {
       if (options && options.options instanceof Object) {

@@ -25,7 +25,7 @@ export default abstract class LazyMixin {
     * @protected
     */
    // tslint:disable-next-line:ban-types
-   protected _loadAdditionalDependencies(callback?: () => Deferred): Deferred {
+   protected _loadAdditionalDependencies(callback?: (ready: Deferred) => void): Deferred {
       const deps = this._additionalDependencies;
       const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
       const result = new Deferred();

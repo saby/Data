@@ -1,3 +1,4 @@
+import IData from './IData';
 import DataSet, {IOptions as IDataSetOptions} from './DataSet';
 import {ReadWriteMixin, adapter, Model} from '../entity';
 import {create} from '../di';
@@ -16,7 +17,7 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class DataMixin {
+export default abstract class DataMixin implements IData {
    readonly '[Types/_source/DataMixin]': boolean;
 
    /**
@@ -158,7 +159,9 @@ export default abstract class DataMixin {
       }
    }
 
-   // region Public methods
+   // region IData
+
+   readonly '[Types/_source/IData]': boolean;
 
    getAdapter(): adapter.IAdapter {
       if (typeof this._$adapter === 'string') {
@@ -220,7 +223,7 @@ export default abstract class DataMixin {
 
    /**
     * Создает новый экземпляр DataSet
-    * @param {cfg Опции конструктора
+    * @param cfg Опции конструктора
     * @protected
     */
    protected _getDataSetInstance(cfg: IDataSetOptions): DataSet {
@@ -253,10 +256,10 @@ export default abstract class DataMixin {
     * Перебирает все записи выборки
     * @param data Выборка
     * @param callback Ф-я обратного вызова для каждой записи
-    * @param context Конекст
+    * @param [context] Конекст
     * @protected
     */
-   protected _each(data: any, callback: Function, context: object): void {
+   protected _each(data: any, callback: Function, context?: object): void {
       const tableAdapter = this.getAdapter().forTable(data);
       for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
          callback.call(context || this, tableAdapter.at(index), index);
@@ -290,8 +293,9 @@ export default abstract class DataMixin {
    // endregion Statics
 }
 
-Object.assign(DataMixin.prototype,{
+Object.assign(DataMixin.prototype, {
    '[Types/_source/DataMixin]': true,
+   '[Types/_source/IData]': true,
    _$adapter: 'Types/entity:adapter.Json',
    _$model: 'Types/entity:Model',
    _$listModule: 'Types/collection:RecordSet',

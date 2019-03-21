@@ -46,7 +46,7 @@ function compareValues(given: any, expect: any, operator: string): boolean {
    return given == expect;
 }
 
-type FilterFunction = (item: adapter.IRecord, query: Object) => boolean;
+type FilterFunction = (item: adapter.IRecord, query: object) => boolean;
 
 export interface IOptions extends IBaseOptions {
    filter?: FilterFunction;
@@ -63,8 +63,12 @@ export interface IOptions extends IBaseOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Local extends mixin(
-   Base, DataCrudMixin
+export default abstract class Local extends mixin<
+   Base,
+   DataCrudMixin
+>(
+   Base,
+   DataCrudMixin
 ) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
    /**
     * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода
@@ -165,14 +169,14 @@ export default abstract class Local extends mixin(
 
    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta?: Object): ExtendPromise<Record> {
+   create(meta?: object): ExtendPromise<Record> {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies().addCallback(() => {
          return this._prepareCreateResult(meta);
       });
    }
 
-   read(key: any, meta?: Object): ExtendPromise<Record> {
+   read(key: any, meta?: object): ExtendPromise<Record> {
       const data = this._getRecordByKey(key);
       if (data) {
          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
@@ -181,7 +185,7 @@ export default abstract class Local extends mixin(
       }
    }
 
-   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       const updateRecord = (record) => {
          const idProperty = this.getIdProperty();
          let key = idProperty ? record.get(idProperty) : undefined;
@@ -220,7 +224,7 @@ export default abstract class Local extends mixin(
       );
    }
 
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+   destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
       const destroyByKey = (key) => {
          const index = this._getIndexByKey(key);
          if (index !== -1) {
@@ -292,7 +296,7 @@ export default abstract class Local extends mixin(
       }
    }
 
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: object): ExtendPromise<Record> {
       const index = this._getIndexByKey(key);
       if (index === -1) {
          return Deferred.fail(`Record with key "${key}" does not exist`);
@@ -355,14 +359,14 @@ export default abstract class Local extends mixin(
    // region DataCrudMixin
 
    protected _prepareCreateResult(data: any): Model {
-      return DataCrudMixin._prepareCreateResult.call(
+      return super._prepareCreateResult.call(
          this,
          object.clonePlain(data, true)
       );
    }
 
    protected _prepareReadResult(data: any): Model {
-      return DataCrudMixin._prepareReadResult.call(
+      return super._prepareReadResult.call(
          this,
          object.clonePlain(data, true)
       );
