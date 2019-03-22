@@ -9,7 +9,7 @@ import {mixin} from '../../util';
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Composer extends mixin(DestroyableMixin, SerializableMixin) {
+export default class Composer<T> extends mixin(DestroyableMixin, SerializableMixin) {
    /**
     * Композируемые модули
     */
@@ -23,7 +23,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    /**
     * Результат композиции
     */
-   protected _result: IItemsStrategy;
+   protected _result: IItemsStrategy<T>;
 
    constructor() {
       super();
@@ -81,7 +81,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * Удалает стратегию
     * @param Module Конструктор стратегии
     */
-   remove(Module: Function): IItemsStrategy {
+   remove(Module: Function): IItemsStrategy<T> {
       const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
@@ -110,7 +110,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * Возвращает экземпляр стратегии
     * @param Module Конструктор стратегии
     */
-   getInstance(Module: Function): IItemsStrategy {
+   getInstance(Module: Function): IItemsStrategy<T> {
       const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
@@ -122,7 +122,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    /**
     * Возвращает результат компоновки
     */
-   getResult(): IItemsStrategy {
+   getResult(): IItemsStrategy<T> {
       return this._result;
    }
 
@@ -180,7 +180,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       }, null);
    }
 
-   protected _getInstance(index: number): IItemsStrategy {
+   protected _getInstance(index: number): IItemsStrategy<T> {
       const target = this._modules.length - index - 1;
       let current = 0;
       let item = this._result;

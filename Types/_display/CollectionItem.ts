@@ -1,4 +1,3 @@
-import Abstract from './Abstract';
 import {
    DestroyableMixin,
    OptionsToPropertyMixin,
@@ -6,19 +5,19 @@ import {
    SerializableMixin,
    IInstantiable
 } from '../entity';
-import Collection from './Collection';
+import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
-import {IEnumerable} from '../collection';
+import {IList} from '../collection';
 import {register} from '../di';
 import {mixin} from '../util';
 
-export interface IOptions {
-   contents?: any;
-   owner?: Collection;
+export interface IOptions<T> {
+   contents: T;
+   owner: Collection<T>;
 }
 
-export interface ISerializableState extends IDefaultSerializableState {
-   $options: IOptions;
+export interface ISerializableState<T> extends IDefaultSerializableState {
+   $options: IOptions<T>;
    ci: number;
    iid: string;
 }
@@ -34,8 +33,16 @@ export interface ISerializableState extends IDefaultSerializableState {
  * @public
  * @author Мальцев А.А.
  */
-export default class CollectionItem extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, InstantiableMixin, SerializableMixin
+export default class CollectionItem<T> extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   InstantiableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   InstantiableMixin,
+   SerializableMixin
 ) implements IInstantiable {
 
    // region IInstantiable
@@ -47,12 +54,12 @@ export default class CollectionItem extends mixin(
    /**
     * Коллекция, которой принадлежит элемент
     */
-   protected _$owner: Abstract;
+   protected _$owner: Collection<T>;
 
    /**
     * Содержимое элемента коллекции
     */
-   protected _$contents: any;
+   protected _$contents: T;
 
    /**
     * Элемент выбран
@@ -66,7 +73,7 @@ export default class CollectionItem extends mixin(
     */
    protected _contentsIndex: number;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<T>) {
       super();
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
@@ -79,7 +86,7 @@ export default class CollectionItem extends mixin(
    /**
     * Возвращает коллекцию, которой принадлежит элемент
     */
-   getOwner(): Abstract {
+   getOwner(): Collection<T> {
       return this._$owner;
    }
 
@@ -87,18 +94,21 @@ export default class CollectionItem extends mixin(
     * Устанавливает коллекцию, которой принадлежит элемент
     * @param owner Коллекция, которой принадлежит элемент
     */
-   setOwner(owner: Abstract): void {
+   setOwner(owner: Collection<T>): void {
       this._$owner = owner;
    }
 
    /**
     * Возвращает содержимое элемента коллекции
     */
-   getContents(): any {
+   getContents(): T {
       if (this._contentsIndex !== undefined) {
          // Ленивое восстановление _$contents по _contentsIndex после десериализации
-         this._$contents = this.getOwner().getCollection().at(this._contentsIndex);
-         this._contentsIndex = undefined;
+         const collection = this.getOwner().getCollection();
+         if (collection['[Types/_collection/IList]']) {
+            this._$contents = (collection as any as IList<T>).at(this._contentsIndex);
+            this._contentsIndex = undefined;
+         }
       }
       return this._$contents;
    }
@@ -108,7 +118,7 @@ export default class CollectionItem extends mixin(
     * @param contents Новое содержимое
     * @param [silent=false] Не уведомлять владельца об изменении содержимого
     */
-   setContents(contents: any, silent?: boolean): void {
+   setContents(contents: T, silent?: boolean): void {
       if (this._$contents === contents) {
          return;
       }
@@ -154,14 +164,14 @@ export default class CollectionItem extends mixin(
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
+      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
 
       if (resultState.$options.owner) {
          // save element index if collections implements Types/_collection/IList
          const collection = resultState.$options.owner.getCollection();
          const index = collection['[Types/_collection/IList]']
-            ? collection.getIndex(resultState.$options.contents)
+            ? (collection as any as IList<T>).getIndex(resultState.$options.contents)
             : -1;
          if (index > -1) {
             resultState.ci = index;
@@ -177,7 +187,7 @@ export default class CollectionItem extends mixin(
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState<T>): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -196,7 +206,7 @@ export default class CollectionItem extends mixin(
     * Возвращает коллекцию проекции
     * @protected
     */
-   protected _getSourceCollection(): IEnumerable<any> {
+   protected _getSourceCollection(): ISourceCollection<T> {
       return this.getOwner().getCollection();
    }
 
@@ -209,7 +219,7 @@ export default class CollectionItem extends mixin(
       if (this._$owner) {
          this._$owner.notifyItemChange(
             this,
-            property
+            {property}
          );
       }
    }

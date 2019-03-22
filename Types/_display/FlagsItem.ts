@@ -1,4 +1,5 @@
 import CollectionItem from './CollectionItem';
+import Flags from './Flags';
 import {register} from '../di';
 
 /**
@@ -8,7 +9,9 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class FlagsItem extends CollectionItem {
+export default class FlagsItem<T> extends CollectionItem<T> {
+   protected _$owner: Flags<T>;
+
    isSelected(): boolean {
       return this._$owner.getCollection().get(
          this._$contents, this._$owner.localize
@@ -25,7 +28,9 @@ export default class FlagsItem extends CollectionItem {
    }
 }
 
-FlagsItem.prototype._moduleName = 'Types/display:FlagsItem';
-FlagsItem.prototype['[Types/_display/FlagsItem]'] = true;
+Object.assign(FlagsItem.prototype, {
+   '[Types/_display/FlagsItem]': true,
+   _moduleName: 'Types/display:FlagsItem'
+});
 
 register('Types/display:FlagsItem', FlagsItem);

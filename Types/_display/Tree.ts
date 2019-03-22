@@ -1,7 +1,9 @@
 import Collection, {
    ItemsFactory,
+   IOptions as ICollectionOptions,
    ISessionItemState,
-   ISerializableState as IDefaultSerializableState
+   ISerializableState as IDefaultSerializableState,
+   ISplicedArray
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
@@ -12,10 +14,40 @@ import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
+import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
 import {register} from '../di';
 import {object} from '../util';
 import {Object as EventObject} from 'Env/Event';
+
+export interface ISerializableState<T> extends IDefaultSerializableState<T> {
+   _root: T;
+}
+
+export interface ITreeSessionItemState<T> extends ISessionItemState<T> {
+   parent: T;
+   childrenCount: number;
+   level: number;
+   node: boolean;
+   expanded: boolean;
+}
+
+interface IItemsFactoryOptions<S> {
+   contents?: S;
+   hasChildren?: boolean;
+   node?: boolean;
+}
+
+export interface IOptions<S, T> extends ICollectionOptions<S> {
+   idProperty: string;
+   parentProperty: string;
+   nodeProperty?: string;
+   childrenProperty?: string;
+   hasChildrenProperty?: string;
+   loadedProperty?: string;
+   root?: T | any;
+   rootEnumerable?: boolean;
+}
 
 /**
  * Обрабатывает событие об изменении коллекции
@@ -26,12 +58,12 @@ import {Object as EventObject} from 'Env/Event';
  * @param oldItems Удаленные элементы коллекции.
  * @param oldItemsIndex Индекс, в котором удалены элементы.
  */
-function onCollectionChange(
+function onCollectionChange<T>(
    event: EventObject,
    action: string,
-   newItems: any[],
+   newItems: T[],
    newItemsIndex: number,
-   oldItems: any[],
+   oldItems: T[],
    oldItemsIndex: number
 ): void {
    // Fix state of all nodes
@@ -54,7 +86,7 @@ function onCollectionChange(
  * @param index Индекс измененного элемента.
  * @param properties Объект содержащий измененные свойства элемента
  */
-function onCollectionItemChange(event: EventObject, item: any, index: number, properties: Object): void {
+function onCollectionItemChange<T>(event: EventObject, item: T, index: number, properties: object): void {
    this.instance._reIndex();
    this.prev(event, item, index, properties);
 }
@@ -66,27 +98,12 @@ function invertPropertyLogic(name: string): string {
    return name[0] === '!' ? name.slice(1) : '!' + name;
 }
 
-export interface IOptions {
-   hasChildrenProperty?: string;
-   loadedProperty?: string;
-}
-
-export interface ISerializableState extends IDefaultSerializableState {
-   _root: TreeItem;
-}
-
-export interface ITreeSessionItemState extends ISessionItemState {
-   parent: TreeItem;
-   childrenCount: number;
-   level: number;
-   node: boolean;
-   expanded: boolean;
-}
-
-interface IItemsFactoryOptions {
-   contents?: any;
-   hasChildren?: boolean;
-   node?: boolean;
+function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
+   // FIXME: must process options before superclass constructor because it's immediately used in _composer
+   if (options && !options.hasChildrenProperty && options.loadedProperty) {
+      options.hasChildrenProperty = invertPropertyLogic(options.loadedProperty);
+   }
+   return options;
 }
 
 /**
@@ -101,7 +118,7 @@ interface IItemsFactoryOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class Tree extends Collection {
+export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
     * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link idProperty}
@@ -142,7 +159,7 @@ export default class Tree extends Collection {
     * @cfg {Types/_display/TreeItem|*} Корневой узел или его содержимое
     * @name Types/_display/Tree#root
     */
-   protected _$root: TreeItem | any;
+   protected _$root: TreeItem<S> | any;
 
    /**
     * @cfg {Boolean} Включать корневой узел в список элементов
@@ -163,21 +180,15 @@ export default class Tree extends Collection {
    /**
     * Корневой элемент дерева
     */
-   protected _root: TreeItem;
+   protected _root: TreeItem<S>;
 
    /**
     * Соответствие узлов и их потомков
     */
    protected _childrenMap: object = {};
 
-   // @ts-ignore
-   constructor(options?: IOptions) {
-      // FIXME: must process options before superclass constructor because it's immediately used in _composer
-      if (options && !options.hasChildrenProperty && options.loadedProperty) {
-         options.hasChildrenProperty = invertPropertyLogic(options.loadedProperty);
-      }
-
-      super(options);
+   constructor(options?: IOptions<S, T>) {
+      super(validateOptions<S, T>(options));
 
       if (this._$parentProperty) {
          this._setImportantProperty(this._$parentProperty);
@@ -193,17 +204,19 @@ export default class Tree extends Collection {
       super.destroy();
    }
 
+   getCurrent: () => TreeItem<S>;
+
    // region SerializableMixin
 
-   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState = super._getSerializableState(state) as ISerializableState;
+   _getSerializableState(state: IDefaultSerializableState<TreeItem<S>>): ISerializableState<TreeItem<S>> {
+      const resultState = super._getSerializableState(state) as ISerializableState<TreeItem<S>>;
 
       resultState._root = this._root;
 
       return resultState;
    }
 
-   _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState<TreeItem<S>>): Function {
       const fromSuper = super._setSerializableState(state);
       return function(): void {
          this._root = state._root;
@@ -236,7 +249,7 @@ export default class Tree extends Collection {
       return this._moveTo(false);
    }
 
-   protected _exctractItemId(item: TreeItem): string {
+   protected _exctractItemId(item: TreeItem<S>): string {
       const path = [super._exctractItemId(item)];
 
       let parent;
@@ -299,13 +312,13 @@ export default class Tree extends Collection {
    /**
     * Возвращает корневой узел дерева
     */
-   getRoot(): TreeItem {
+   getRoot(): TreeItem<S> {
       if (this._root === null) {
          this._root = this._$root;
          if (!(this._root instanceof TreeItem)) {
-            this._root = new TreeItem({
+            this._root = new TreeItem<S>({
                contents: this._root,
-               owner: this,
+               owner: this as any,
                node: true,
                expanded: true,
                hasChildren: false
@@ -320,7 +333,7 @@ export default class Tree extends Collection {
     * Устанавливает корневой узел дерева
     * @param root Корневой узел или его содержимое
     */
-   setRoot(root: TreeItem | any): void {
+   setRoot(root: T | any): void {
       if (this._$root === root) {
          return;
       }
@@ -367,8 +380,8 @@ export default class Tree extends Collection {
     * @param parent Родительский узел
     * @param [withFilter=true] Учитывать {@link setFilter фильтр}
     */
-   getChildren(parent: TreeItem, withFilter?: boolean): TreeChildren {
-      return new TreeChildren({
+   getChildren(parent: TreeItem<S>, withFilter?: boolean): TreeChildren<S> {
+      return new TreeChildren<S>({
          owner: parent,
          items: this._getChildrenArray(parent, withFilter)
       });
@@ -398,7 +411,7 @@ export default class Tree extends Collection {
     * @return Есть ли первый потомок
     */
    moveToBelow(): boolean {
-      const current = <TreeItem> this.getCurrent();
+      const current = this.getCurrent();
       if (!current || !current.isNode()) {
          return false;
       }
@@ -416,10 +429,12 @@ export default class Tree extends Collection {
 
    // region Protected methods
 
-   protected _getItemsFactory(): ItemsFactory {
+   protected _getItemsStrategy: () => IItemsStrategy<S, TreeItem<S>>;
+
+   protected _getItemsFactory(): ItemsFactory<TreeItem<S>> {
       const parent = super._getItemsFactory();
 
-      return function TreeItemsFactory(options: IItemsFactoryOptions): TreeItem {
+      return function TreeItemsFactory(options: IItemsFactoryOptions<S>): TreeItem<S> {
          let hasChildrenProperty = this._$hasChildrenProperty;
          let invertLogic = false;
 
@@ -439,7 +454,7 @@ export default class Tree extends Collection {
       };
    }
 
-   protected _createComposer(): ItemsStrategyComposer {
+   protected _createComposer(): ItemsStrategyComposer<CollectionItem<S>> {
       const composer = super._createComposer();
 
       if (this._$childrenProperty) {
@@ -465,7 +480,7 @@ export default class Tree extends Collection {
       return composer;
    }
 
-   protected _wrapRootStrategy(composer: ItemsStrategyComposer): void {
+   protected _wrapRootStrategy(composer: ItemsStrategyComposer<CollectionItem<S>>): void {
       if (this._$rootEnumerable && !composer.getInstance(RootStrategy)) {
          composer.append(RootStrategy, {
             root: this.getRoot.bind(this)
@@ -473,7 +488,7 @@ export default class Tree extends Collection {
       }
    }
 
-   protected _unwrapRootStrategy(composer: ItemsStrategyComposer): void {
+   protected _unwrapRootStrategy(composer: ItemsStrategyComposer<CollectionItem<S>>): void {
       if (!this._$rootEnumerable) {
          composer.remove(RootStrategy);
       }
@@ -498,8 +513,8 @@ export default class Tree extends Collection {
       });
    }
 
-   protected _replaceItems(start: number, newItems: any[]): CollectionItem[] {
-      const replaced = super._replaceItems(start, newItems);
+   protected _replaceItems(start: number, newItems: S[]): ISplicedArray<TreeItem<S>> {
+      const replaced = super._replaceItems(start, newItems) as ISplicedArray<TreeItem<S>>;
       const strategy = this._getItemsStrategy();
       const count = strategy.count;
 
@@ -513,8 +528,8 @@ export default class Tree extends Collection {
       return replaced;
    }
 
-   protected _getItemState(item: CollectionItem): ITreeSessionItemState {
-      const state = <ITreeSessionItemState> super._getItemState(item);
+   protected _getItemState(item: TreeItem<S>): ITreeSessionItemState<TreeItem<S>> {
+      const state = super._getItemState(item) as ITreeSessionItemState<TreeItem<S>>;
 
       if (item instanceof TreeItem) {
          state.parent = item.getParent();
@@ -531,7 +546,7 @@ export default class Tree extends Collection {
     * Проверяет валидность элемента проекции
     * @protected
     */
-   protected _checkItem(item: any): void {
+   protected _checkItem(item: CollectionItem<S>): void {
       if (!item || !(item instanceof CollectionItem)) {
          throw new Error(
             `${this._moduleName}::_checkItem(): item should be in instance of Types/_display/CollectionItem`
@@ -545,7 +560,7 @@ export default class Tree extends Collection {
     * @param [withFilter=true] Учитывать фильтр
     * @protected
     */
-   protected _getChildrenArray(parent: TreeItem, withFilter?: boolean): TreeItem[] {
+   protected _getChildrenArray(parent: TreeItem<S>, withFilter?: boolean): Array<TreeItem<S>> {
       this._checkItem(parent);
 
       withFilter = withFilter === undefined ? true : !!withFilter;
@@ -589,11 +604,11 @@ export default class Tree extends Collection {
    }
 
    protected _getNearbyItem(
-      enumerator: CollectionEnumerator,
-      item: CollectionItem,
+      enumerator: CollectionEnumerator<CollectionItem<S>>,
+      item: TreeItem<S>,
       isNext: boolean,
-      skipGroups: boolean
-   ): CollectionItem {
+      skipGroups?: boolean
+   ): CollectionItem<S> {
       const method = isNext ? 'moveNext' : 'movePrevious';
       const parent = item && item.getParent && item.getParent() || this.getRoot();
       let hasItem = true;
@@ -638,14 +653,14 @@ export default class Tree extends Collection {
       return hasMove;
    }
 
-   protected _notifyItemsParent(treeItem: TreeItem, oldParent: TreeItem, properties: Object): void {
+   protected _notifyItemsParent(treeItem: TreeItem<S>, oldParent: TreeItem<S>, properties: object): void {
       if (properties.hasOwnProperty(this.getParentProperty())) {
          this._notifyItemsParentByItem(treeItem.getParent());
          this._notifyItemsParentByItem(oldParent);
       }
    }
 
-   protected _notifyItemsParentByItem(treeItem: TreeItem): void {
+   protected _notifyItemsParentByItem(treeItem: TreeItem<S>): void {
       while (treeItem !== this.getRoot()) {
          this.notifyItemChange(treeItem, {children: []});
          treeItem = treeItem.getParent();
@@ -668,7 +683,7 @@ Object.assign(Tree.prototype, {
    _root: null
 });
 
-// DIXME: deprecated
+// FIXME: deprecated
 Tree.prototype['[WS.Data/Display/Tree]'] = true;
 
 register('Types/display:Tree', Tree);

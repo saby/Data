@@ -6,7 +6,7 @@ import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
 import {Set} from '../../shim';
 
-interface IOptions extends IAbstractOptions {
+interface IOptions<S> extends IAbstractOptions<S> {
    unique: boolean;
    idProperty: string;
 }
@@ -26,8 +26,8 @@ interface ISerializableState extends IDefaultSerializableState {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct extends AbstractStrategy {
-   protected _options: IOptions;
+export default class Direct<S, T> extends AbstractStrategy<S, T> {
+   protected _options: IOptions<S>;
 
    /**
     * Индекс в в стратегии -> оригинальный индекс

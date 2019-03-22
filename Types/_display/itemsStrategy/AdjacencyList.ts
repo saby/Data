@@ -1,11 +1,33 @@
-import IItemsStrategy from '../IItemsStrategy';
-import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
+import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import CollectionItem from '../CollectionItem';
+import TreeItem from '../TreeItem';
 import GroupItem from '../GroupItem';
+import Abstract from '../Abstract';
+import Tree from '../Tree';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {mixin, protect, object, logger} from '../../util';
 import {Map} from '../../shim';
 import {throttle} from '../../function';
+
+interface IOptions<S, T> {
+   idProperty: string;
+   parentProperty: string;
+   source: IItemsStrategy<S, T>;
+}
+
+interface ISourceOptions<S, T> extends IItemsStrategyOptions<S, T> {
+   display: Tree<S, T>;
+}
+
+interface ISerializableState<T> extends IDefaultSerializableState {
+   _items: T[];
+   _itemsOrder: number[];
+   _parentsMap: number[];
+}
+
+interface ISplicedArray {
+   hasBeenRemoved?: boolean;
+}
 
 /**
  * Свойство, хранящее признак, что список элементов проинициализирован
@@ -28,17 +50,13 @@ function normalizeId(id: number | string): string {
    return id;
 }
 
-interface ISplicedArray {
-   hasBeenRemoved?: boolean;
-}
-
 /**
  * Создает список "родитель - дети".
  * @param sourceItems Массив элементов декорируемой стратегии
  * @param parentProperty Имя свойства, в котором хранится идентификатор родительского узла
  * @return Идентификатор узла -> Индексы детей в исходной коллекции
  */
-function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string): Map<number, number> {
+function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<number, number> {
    const parentToChildren = new Map(); // Map<Array<Number>>: parentId => [childIndex, childIndex, ...]
    const count = sourceItems.length;
    let item;
@@ -76,7 +94,7 @@ function buildChildrenMap(sourceItems: CollectionItem[], parentProperty: string)
  * @param sourceItems Массив элементов декорируемой стратегии
  * @return Элемент -> индекс группы в sourceItems
  */
-function buildGroupsMap(sourceItems: CollectionItem[]): Map<CollectionItem, number> {
+function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
    const itemToGroup = new Map();
    let currentGroup;
 
@@ -181,18 +199,6 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
    return result;
 }
 
-interface IOptions {
-   idProperty: string;
-   parentProperty: string;
-   source: AbstractStrategy;
-}
-
-interface ISerializableState extends IDefaultSerializableState {
-   _items: CollectionItem[];
-   _itemsOrder: number[];
-   _parentsMap: number[];
-}
-
 /**
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
  * @class Types/_display/ItemsStrategy/AdjacencyList
@@ -201,7 +207,13 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class AdjacencyList extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default class AdjacencyList<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -212,17 +224,17 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
    /**
     * Опции конструктора
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
    /**
     * Элементы стратегии
     */
-   protected _items: CollectionItem[];
+   protected _items: T[];
 
    /**
     * Элементы декорируемой стратегии
     */
-   protected _sourceItems: CollectionItem[];
+   protected _sourceItems: T[];
 
    /**
     * Внутренний индекс -> оригинальный индекс
@@ -234,7 +246,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     */
    protected _parentsMap: number[];
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
 
@@ -248,11 +260,11 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get options(): IAbstractOptions {
-      return this.source.options;
+   get options(): ISourceOptions<S, T> {
+      return this.source.options as ISourceOptions<S, T>;
    }
 
-   get source(): IItemsStrategy {
+   get source(): IItemsStrategy<S, T> {
       return this._options.source;
    }
 
@@ -261,7 +273,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return itemsOrder.length;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       // Force create every item
       const items = this._getItems();
       if (!items[$initialized]) {
@@ -276,7 +288,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return items;
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       const items = this._getItems();
       if (items[index]) {
          return items[index];
@@ -285,25 +297,27 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       const itemsOrder = this._getItemsOrder();
       const collectionIndex = itemsOrder[index];
       const sourceItem = this._getSourceItems()[collectionIndex];
-      let item;
 
       if (sourceItem === undefined) {
-         throw new ReferenceError('Collection index ' + index + ' is out of bounds.');
+         throw new ReferenceError(`Collection index ${index} is out of bounds.`);
       }
 
+      let item;
       if (sourceItem instanceof GroupItem) {
          item = sourceItem;
-      } else {
+      } else if (sourceItem instanceof CollectionItem) {
          item = this.options.display.createItem({
             contents: sourceItem.getContents(),
             parent: this._getParent(index)
          });
+      } else {
+         throw new TypeError('Unexpected item type');
       }
 
       return items[index] = item;
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       added = added || [];
 
       const shiftTail = (start, offset) => (value) => value >= start ? value + offset : value;
@@ -335,12 +349,14 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
             }
 
             // insert in sourceItems
+            // @ts-ignore why S inserts into T[]?
             sourceItems.splice(startInSource, 0, item);
             // shift itemsOrder values by +1 from startInSource
             itemsOrder = itemsOrder.map(shiftTail(startInSource, 1));
             // insert in itemsOrder
             itemsOrder.splice(startInInner, 0, startInSource);
             // insert in items
+            // @ts-ignore why S inserts into T[]?
             items.splice(startInInner, 0, item);
          });
       }
@@ -414,8 +430,8 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
+      const resultState: ISerializableState<T> = super._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
       resultState._items = this._items;
@@ -425,8 +441,8 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+   _setSerializableState(state: ISerializableState<T>): Function {
+      const fromSerializableMixin = super._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
 
@@ -444,7 +460,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     * Возвращает элементы проекции
     * @protected
     */
-   protected _getItems(): CollectionItem[] {
+   protected _getItems(): T[] {
       if (!this._items) {
          this._initItems();
       }
@@ -507,8 +523,8 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
 
       // Every item leaved the tree should lost their parent
       oldItems.forEach((item) => {
-         if (item.setParent) {
-            item.setParent(undefined);
+         if ((item as any as TreeItem<S>).setParent) {
+            (item as any as TreeItem<S>).setParent(undefined);
          }
       });
 
@@ -520,7 +536,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       });
    }
 
-   protected _getSourceItems(): CollectionItem[] {
+   protected _getSourceItems(): T[] {
       if (!this._sourceItems) {
          this._sourceItems = this.source.items;
       }
@@ -534,7 +550,7 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
       const options = this._options;
       const sourceItems = this._getSourceItems();
 
-      let root = this.options.display.getRoot();
+      let root: any = this.options.display.getRoot();
       root = root && root.getContents ? root.getContents() : root;
       if (root && root instanceof Object) {
          root = root.valueOf();
@@ -566,13 +582,13 @@ export default class AdjacencyList extends mixin(DestroyableMixin, SerializableM
     * Возращает родителя элемента проекции.
     * @param index Индекс элемента
     */
-   protected _getParent(index: number): CollectionItem {
+   protected _getParent(index: number): T {
       const parentsMap = this._parentsMap;
       const parentIndex = parentsMap[index];
       if (parentIndex === -1) {
          return undefined;
       }
-      return parentIndex === undefined ? this.options.display.getRoot() : this.at(parentIndex);
+      return parentIndex === undefined ? this.options.display.getRoot() as any : this.at(parentIndex);
    }
 
    // endregion

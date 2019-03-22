@@ -5,17 +5,17 @@ import GroupItem from '../GroupItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {mixin} from '../../util';
 
-type GroupHandler = (data: any, index: number, item: CollectionItem) => string | number;
+type GroupHandler<T> = (data: any, index: number, item: T) => string | number;
 
 interface IOptions {
    source: IItemsStrategy;
    display: Abstract;
-   handler: GroupHandler;
+   handler: GroupHandler<CollectionItem>;
 }
 
 interface ISortOptions {
    display: Abstract;
-   handler: GroupHandler;
+   handler: GroupHandler<CollectionItem>;
    groups: GroupItem[];
 }
 

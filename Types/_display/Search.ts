@@ -1,4 +1,5 @@
 import Tree from './Tree';
+import CollectionItem from './CollectionItem';
 import SearchStrategy from './itemsStrategy/Search';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
 import {register} from '../di';
@@ -10,8 +11,8 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Search extends Tree {
-   protected _createComposer(): ItemsStrategyComposer {
+export default class Search<S> extends Tree<S> {
+   protected _createComposer(): ItemsStrategyComposer<CollectionItem<S>> {
       const composer = super._createComposer();
       composer.append(SearchStrategy);
 
@@ -19,7 +20,9 @@ export default class Search extends Tree {
    }
 }
 
-Search.prototype._moduleName = 'Types/display:Search';
-Search.prototype['[Types/_display/Search]'] = true;
+Object.assign(Search.prototype, {
+   _moduleName: 'Types/display:Search',
+   '[Types/_display/Search]': true
+});
 
 register('Types/display:Search', Search);

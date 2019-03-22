@@ -29,7 +29,7 @@ function getObjectId(item: any): string {
 /**
  * Возвращает уникальный содержимого элемента коллекции
  */
-function getCollectionItemId(item: CollectionItem): string | number {
+function getCollectionItemId<T>(item: CollectionItem<T>): string | number {
    return getObjectId(item.getContents());
 }
 
@@ -46,16 +46,22 @@ interface ISerializableState extends IDefaultSerializableState {
  * @public
  * @author Мальцев А.А.
  */
-export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
+export default class Ladder<S, T = CollectionItem<S>> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) {
    /**
     * Проекция, по которой строится лесенка
     */
-   protected _collection: Collection = null;
+   protected _collection: Collection<S, T> = null;
 
    /**
     * Элементы проекции
     */
-   protected _collectionItems: CollectionItem[] = null;
+   protected _collectionItems: Array<CollectionItem<S>> = null;
 
    /**
     * Позиция в коллекции, с которой начинает строиться лесенка
@@ -65,7 +71,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
    /**
     * Конвертеры значений
     */
-   protected _converters: Object = null;
+   protected _converters: object = null;
 
    /**
     * Названия колонок, входящих в лесенку
@@ -96,7 +102,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
     * Конструктор лесенки.
     * @param collection Коллекция, по которой строится лесенка.
     */
-   constructor(collection: Collection) {
+   constructor(collection: Collection<S, T>) {
       super();
       SerializableMixin.call(this);
 
@@ -123,7 +129,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
    /**
     * Возвращает проекцию коллекции, по которой строится лесенка.
     */
-   getCollection(): Collection {
+   getCollection(): Collection<S, T> {
       return this._collection;
    }
 
@@ -131,7 +137,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
     * Устанавливает проекцию коллекции, по которой строится лесенка.
     * collection Проекция, по которой строится лесенка.
     */
-   setCollection(collection: Collection): void {
+   setCollection(collection: Collection<S, T>): void {
       if (collection !== null && !(collection instanceof Collection)) {
          throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
       }
@@ -239,7 +245,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState;
 
       if (this._collection) {
@@ -259,7 +265,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -295,7 +301,11 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
       });
    }
 
-   protected _spliceCollection(at: number, deleteCount: number, added: CollectionItem[]): CollectionItem[] {
+   protected _spliceCollection(
+      at: number,
+      deleteCount: number,
+      added: Array<CollectionItem<S>>
+   ): Array<CollectionItem<S>> {
       if (!this._collectionItems) {
          return;
       }
@@ -324,9 +334,9 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
    protected _onCollectionChange(
       event: EventObject,
       action: string,
-      newItems: CollectionItem[],
+      newItems: Array<CollectionItem<S>>,
       newItemsIndex: number,
-      oldItems: CollectionItem,
+      oldItems: Array<CollectionItem<S>>,
       oldItemsIndex: number
    ): void {
       const push = Array.prototype.push;
@@ -481,7 +491,12 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
       return result;
    }
 
-   protected _adjustPrimary(idx: number, item: CollectionItem, columnName: string, byOriginal?: boolean): any[] {
+   protected _adjustPrimary(
+      idx: number,
+      item: CollectionItem<S>,
+      columnName: string,
+      byOriginal?: boolean
+   ): any[] {
       if (!item) {
          return null;
       }
@@ -531,5 +546,7 @@ export default class Ladder extends mixin(DestroyableMixin, SerializableMixin) {
    }
 }
 
-Ladder.prototype._moduleName = 'Types/display:Ladder';
-Ladder.prototype['[Types/_display/Ladder]'] = true;
+Object.assign(Ladder.prototype, {
+   '[Types/_display/Ladder]': true,
+   _moduleName: 'Types/display:Ladder'
+});

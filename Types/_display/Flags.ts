@@ -1,8 +1,14 @@
-import Collection from './Collection';
+import Collection, {
+   ISourceCollection as IGeneralSourceCollection
+} from './Collection';
+import FlagsItem from './FlagsItem';
+import {IFlags, IFlagsValue} from '../collection';
+import {DestroyableMixin, ObservableMixin} from '../entity';
 import {register} from '../di';
-import './FlagsItem';
-import {IFlagsValue} from '../collection';
 import {Object as EventObject} from 'Env/Event';
+
+interface IFlagsCollection<T> extends IGeneralSourceCollection<T>, IFlags<T> {
+}
 
 /**
  * Обрабатывает событие об изменении состояния Flags
@@ -28,7 +34,10 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
  * @public
  * @author Мальцев А.А.
  */
-export default class Flags extends Collection {
+export default class Flags<S, T = FlagsItem<S>> extends Collection<S, T> {
+   protected _$collection: IFlagsCollection<S>;
+   protected _onSourceChange: (event: EventObject, name: string | IFlagsValue[]) => void;
+
    constructor(options?: object) {
       super(options);
 
@@ -51,6 +60,8 @@ export default class Flags extends Collection {
 
       super.destroy();
    }
+
+   getCollection: () => IFlagsCollection<S>;
 
    protected _bindHandlers(): void {
       super._bindHandlers();
