@@ -1,4 +1,4 @@
-import IItemsStrategy from '../IItemsStrategy';
+import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import {SortFunction} from '../Collection';
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
@@ -7,9 +7,9 @@ import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSeria
 import {CompareFunction} from '../../_declarations';
 import {mixin} from '../../util';
 
-interface IOptions {
-   handlers: SortFunction[];
-   source: AbstractStrategy;
+interface IOptions<S, T> {
+   handlers: Array<SortFunction<S>>;
+   source: AbstractStrategy<S, T>;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
@@ -24,7 +24,13 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class User extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default class User<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -34,14 +40,14 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    /**
     * Опции конструктора
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
    /**
     * Индекс в в стратегии -> оригинальный индекс
     */
    protected _itemsOrder: number[];
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       if (!options || !(options.handlers instanceof Array)) {
          throw new TypeError('Option "handlers" should be an instance of Array');
@@ -54,14 +60,14 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
    /**
     * Декорирумая стратегия
     */
-   get source(): AbstractStrategy {
+   get source(): IItemsStrategy<S, T> {
       return this._options.source;
    }
 
    /**
     * Пользовательские методы сортировки
     */
-   set handlers(value: SortFunction[]) {
+   set handlers(value: Array<SortFunction<S>>) {
       if (!(value instanceof Array)) {
          throw new TypeError('Option "handlers" should be an instance of Array');
       }
@@ -74,7 +80,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get options(): IAbstractOptions {
+   get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
    }
 
@@ -82,21 +88,21 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       return this.source.count;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       const items = this.source.items;
       const itemsOrder = this._getItemsOrder();
 
       return itemsOrder.map((index) => items[index]);
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       const itemsOrder = this._getItemsOrder();
       const sourceIndex = itemsOrder[index];
 
       return this.source.at(sourceIndex);
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       this._itemsOrder = null;
       return this.source.splice(start, deleteCount, added);
    }
@@ -130,7 +136,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
@@ -144,7 +150,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          this._itemsOrder = state._itemsOrder;
@@ -176,7 +182,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
       const items = this.source.items;
       const current = items.map((item, index) => index);
 
-      return User.sortItems(
+      return User.sortItems<T>(
          items,
          current,
          this._options && this._options.handlers || []
@@ -193,7 +199,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
     * @param current Текущий индекс сортировки
     * @param handlers Пользовательские обработчики для Array.prototype.sort
     */
-   static sortItems(items: CollectionItem[], current: number[], handlers: SortFunction[]): number[] {
+   static sortItems<T>(items: T[], current: number[], handlers: Function[]): number[] {
       if (!handlers || handlers.length === 0) {
          return current;
       }
@@ -222,7 +228,7 @@ export default class User extends mixin(DestroyableMixin, SerializableMixin) imp
 
       // Sort utilitary array
       for (let i = handlers.length - 1; i >= 0; i--) {
-         sorted.sort(<CompareFunction> handlers[i]);
+         sorted.sort(handlers[i] as CompareFunction);
       }
 
       // Create map from utilitary array

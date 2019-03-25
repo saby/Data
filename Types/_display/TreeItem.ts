@@ -1,10 +1,12 @@
 import CollectionItem, {
    IOptions as ICollectionItemOptions,
-   ISerializableState as IDefaultSerializableState
+   ISerializableState as ICollectionItemSerializableState
 } from './CollectionItem';
+import Tree from './Tree';
 import {register} from '../di';
 
-export interface IOptions extends ICollectionItemOptions {
+export interface IOptions<T> extends ICollectionItemOptions<T> {
+   owner: Tree<T>;
    node?: boolean;
    expanded?: boolean;
    hasChildren?: boolean;
@@ -12,8 +14,8 @@ export interface IOptions extends ICollectionItemOptions {
    parent?: Function;
 }
 
-interface ISerializableState extends IDefaultSerializableState {
-   $options: IOptions;
+interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
+   $options: IOptions<T>;
 }
 
 /**
@@ -23,11 +25,13 @@ interface ISerializableState extends IDefaultSerializableState {
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeItem extends CollectionItem /** @lends Types/_display/TreeItem.prototype */{
+export default class TreeItem<T> extends CollectionItem<T> {
+   protected _$owner: Tree<T>;
+
    /**
     * Родительский узел
     */
-   protected _$parent: TreeItem;
+   protected _$parent: TreeItem<T>;
 
    /**
     * Является узлом
@@ -49,7 +53,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     */
    protected _$childrenProperty: string;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<T>) {
       super(options);
 
       if (options && !options.hasOwnProperty('hasChildren') && options.hasOwnProperty('loaded')) {
@@ -63,10 +67,13 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    // region Public methods
 
+   getOwner: () => Tree<T>;
+   setOwner: (owner: Tree<T>) => void;
+
    /**
     * Возвращает родительский узел
     */
-   getParent(): TreeItem {
+   getParent(): TreeItem<T> {
       return this._$parent;
    }
 
@@ -74,14 +81,14 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
     * Устанавливает родительский узел
     * @param parent Новый родительский узел
     */
-   setParent(parent: TreeItem): void {
+   setParent(parent: TreeItem<T>): void {
       this._$parent = parent;
    }
 
    /**
     * Возвращает корневой элемент дерева
     */
-   getRoot(): TreeItem {
+   getRoot(): TreeItem<T> {
       const parent = this.getParent();
       if (parent === this) {
          return;
@@ -184,8 +191,8 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState = super._getSerializableState(state) as ISerializableState;
+   _getSerializableState(state: ICollectionItemSerializableState<T>): ISerializableState<T> {
+      const resultState = super._getSerializableState(state) as ISerializableState<T>;
 
       // It's too hard to serialize context related method. It should be restored at class that injects this function.
       if (typeof resultState.$options.parent === 'function') {
@@ -195,7 +202,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState<T>): Function {
       const fromSuper = super._setSerializableState(state);
       return function(): void {
          fromSuper.call(this);
@@ -218,7 +225,7 @@ export default class TreeItem extends CollectionItem /** @lends Types/_display/T
       const root = this.getRoot();
       const rootOwner = root ? root.getOwner() : undefined;
       if (rootOwner && rootOwner !== this._$owner) {
-         rootOwner.notifyItemChange(this, property);
+         rootOwner.notifyItemChange(this, {property});
       }
    }
 

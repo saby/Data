@@ -6,7 +6,7 @@ import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
 import {Set} from '../../shim';
 
-interface IOptions extends IAbstractOptions {
+interface IOptions<S, T> extends IAbstractOptions<S, T> {
    unique: boolean;
    idProperty: string;
 }
@@ -16,7 +16,7 @@ interface ISortOptions {
    idProperty: string;
 }
 
-interface ISerializableState extends IDefaultSerializableState {
+interface ISerializableState<T> extends IDefaultSerializableState<T> {
    _itemsOrder: number[];
 }
 
@@ -26,8 +26,8 @@ interface ISerializableState extends IDefaultSerializableState {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct extends AbstractStrategy {
-   protected _options: IOptions;
+export default class Direct<S, T> extends AbstractStrategy<S, T> {
+   protected _options: IOptions<S, T>;
 
    /**
     * Индекс в в стратегии -> оригинальный индекс
@@ -41,7 +41,7 @@ export default class Direct extends AbstractStrategy {
     * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
     */
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super(options);
    }
 
@@ -58,14 +58,14 @@ export default class Direct extends AbstractStrategy {
       return this._getItemsOrder().length;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       const items = this._getItems();
       const itemsOrder = this._getItemsOrder();
 
       return itemsOrder.map((position) => items[position]);
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       const items = this._getItems();
       const itemsOrder = this._getItemsOrder();
       const position = itemsOrder[index];
@@ -77,11 +77,11 @@ export default class Direct extends AbstractStrategy {
       return items[position];
    }
 
-   splice(start: number, deleteCount: number, added?: Array<CollectionItem | any>): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       added = added || [];
 
-      const reallyAdded = added.map(
-         (contents) => contents instanceof CollectionItem ? contents : this._createItem(contents)
+      const reallyAdded: T[] = added.map(
+         (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents)
       );
       const result = this._getItems().splice(start, deleteCount, ...reallyAdded);
 
@@ -117,15 +117,15 @@ export default class Direct extends AbstractStrategy {
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState = super._getSerializableState(state) as ISerializableState;
+   _getSerializableState(state: IDefaultSerializableState<T>): ISerializableState<T> {
+      const resultState = super._getSerializableState(state) as ISerializableState<T>;
 
       resultState._itemsOrder = this._itemsOrder;
 
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState<T>): Function {
       const fromSuper = super._setSerializableState(state);
       return function(): void {
          this._itemsOrder = state._itemsOrder;
@@ -160,7 +160,7 @@ export default class Direct extends AbstractStrategy {
    }
 
    protected _createItemsOrder(): number[] {
-      return Direct.sortItems(this._getItems(), {
+      return Direct.sortItems<T>(this._getItems(), {
          idProperty: this._options.idProperty,
          unique: this._options.unique
       });
@@ -175,7 +175,7 @@ export default class Direct extends AbstractStrategy {
     * @param items Элементы проекции.
     * @param options Опции
     */
-   static sortItems(items: CollectionItem[], options: ISortOptions): number[] {
+   static sortItems<T>(items: T[], options: ISortOptions): number[] {
       const idProperty = options.idProperty;
 
       if (!options.unique || !idProperty) {
@@ -186,12 +186,11 @@ export default class Direct extends AbstractStrategy {
       const result = [];
       let itemId;
 
-      items.forEach((item, index) => {
+      (items as any as Array<CollectionItem<any>>).forEach((item, index) => {
          itemId = object.getPropertyValue(
             item.getContents(),
             idProperty
          );
-
          if (processed.has(itemId)) {
             return;
          }

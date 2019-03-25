@@ -2,8 +2,8 @@ import TreeItem from './TreeItem';
 import {List, IListOptions} from '../collection';
 import {register} from '../di';
 
-export interface IOptions extends IListOptions<TreeItem> {
-   owner?: TreeItem;
+export interface IOptions<T> extends IListOptions<T> {
+   owner?: T;
 }
 
 /**
@@ -13,13 +13,13 @@ export interface IOptions extends IListOptions<TreeItem> {
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeChildren extends List<TreeItem> {
+export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
    /**
     * Узел-владелец
     */
-   _$owner: TreeItem;
+   _$owner: TreeItem<S>;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<T>) {
       super(options);
 
       if (!(this._$owner instanceof Object)) {
@@ -34,7 +34,7 @@ export default class TreeChildren extends List<TreeItem> {
     * Возвращает узел-владелец
     * @return {Types/_display/TreeItem}
     */
-   getOwner(): TreeItem {
+   getOwner(): TreeItem<S> {
       return this._$owner;
    }
 
