@@ -1,6 +1,8 @@
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
+ * @public
  * @author Мальцев А.А.
+ *
  */
 
 const SINGLETONE_MAP_INDEX = 2;

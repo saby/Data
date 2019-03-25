@@ -16,6 +16,7 @@
  * @includes Remote Types/_source/Remote
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
+ * @public
  * @author Мальцев А.А.
  */
 
