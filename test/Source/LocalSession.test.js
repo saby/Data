@@ -61,9 +61,6 @@ define([
       afterEach(function() {
          source = undefined;
          ls.clear();
-         if (window) {
-            window.localStorage.clear();
-         }
       });
 
       describe('.create()', function() {
@@ -616,9 +613,6 @@ define([
 
             afterEach(function() {
                ls5.clear();
-               if (window) {
-                  window.localStorage.clear();
-               }
             });
 
             it('should sort asc from right to left', function(done) {
@@ -1109,9 +1103,6 @@ define([
          });
          afterEach(function() {
             ls6.clear();
-            if (window) {
-               window.localStorage.clear();
-            }
          });
 
          describe('.create()', function() {
