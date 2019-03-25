@@ -137,7 +137,7 @@ export default abstract class Abstract<S, T> extends mixin<
     * Возвращает энумератор коллекции
     * @protected
     */
-   protected _getCollectionEnumerator(): IEnumerator<any> {
+   protected _getCollectionEnumerator(): IEnumerator<S> {
       return this._getCollection().getEnumerator(this._options.localize);
    }
 

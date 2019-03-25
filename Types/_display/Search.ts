@@ -11,8 +11,8 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Search<S> extends Tree<S> {
-   protected _createComposer(): ItemsStrategyComposer<CollectionItem<S>> {
+export default class Search<S, T = CollectionItem<S>> extends Tree<S, T> {
+   protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
       const composer = super._createComposer();
       composer.append(SearchStrategy);
 

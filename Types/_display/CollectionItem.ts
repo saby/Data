@@ -219,7 +219,8 @@ export default class CollectionItem<T> extends mixin<
       if (this._$owner) {
          this._$owner.notifyItemChange(
             this,
-            {property}
+            // @ts-ignore fix argument type
+            property
          );
       }
    }

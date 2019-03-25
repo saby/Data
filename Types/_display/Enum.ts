@@ -11,7 +11,7 @@ import {Object as EventObject} from 'Env/Event';
 interface IEnumCollection<T> extends IGeneralSourceCollection<T>, IEnum<T> {
 }
 
-interface IOptions<S> extends ICollectionOptions<S> {
+interface IOptions<S, T> extends ICollectionOptions<S, T> {
    collection: IEnumCollection<S>;
 }
 
@@ -34,7 +34,7 @@ export default class Enum<S, T = CollectionItem<S>> extends Collection<S, T> {
     */
    protected _onSourceChange: Function;
 
-   constructor(options?: IOptions<S>) {
+   constructor(options?: IOptions<S, T>) {
       super(options);
 
       if (!this._$collection['[Types/_collection/IEnum]']) {

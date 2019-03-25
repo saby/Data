@@ -1,26 +1,33 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Abstract from '../Abstract';
+import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
-import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
+import {
+   DestroyableMixin,
+   SerializableMixin,
+   ISerializableState as IDefaultSerializableState
+} from '../../entity';
 import {mixin} from '../../util';
 
-type GroupHandler<T> = (data: any, index: number, item: T) => string | number;
+type GroupContents = string | number;
 
-interface IOptions {
-   source: IItemsStrategy;
-   display: Abstract;
-   handler: GroupHandler<CollectionItem>;
+type GroupHandler<S, T> = (data: S, index: number, item: T) => string | number;
+
+interface IOptions<S, T> {
+   source: IItemsStrategy<S, T>;
+   display: Collection<S, T>;
+   handler: GroupHandler<S, T>;
 }
 
-interface ISortOptions {
-   display: Abstract;
-   handler: GroupHandler<CollectionItem>;
-   groups: GroupItem[];
+interface ISortOptions<S, T> {
+   display: Collection<S, T>;
+   handler: GroupHandler<S, T>;
+   groups: Array<GroupItem<GroupContents>>;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
-   _groups: GroupItem[];
+   _groups: Array<GroupItem<GroupContents>>;
    _itemsOrder: number[];
 }
 
@@ -32,7 +39,13 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Group extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default class Group<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -42,19 +55,19 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
    /**
     * Опции конструктора
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
    /**
     * Группы
     */
-   protected _groups: GroupItem[] = [];
+   protected _groups: Array<GroupItem<GroupContents>> = [];
 
    /**
     * Индекс в в стратегии -> оригинальный индекс
     */
    protected _itemsOrder: number[];
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
    }
@@ -62,7 +75,7 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
    /**
     * Sets the function which returns the group id for every element
     */
-   set handler(value: GroupHandler) {
+   set handler(value: GroupHandler<S, T>) {
       this._options.handler = value;
    }
 
@@ -70,11 +83,11 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get options(): IItemsStrategyOptions {
+   get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
    }
 
-   get source(): IItemsStrategy {
+   get source(): IItemsStrategy<S, T> {
       return this._options.source;
    }
 
@@ -82,14 +95,14 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
       return this._getItemsOrder().length;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       const itemsOrder = this._getItemsOrder();
       const items = this._getItems();
 
       return itemsOrder.map((index) => items[index]);
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       const itemsOrder = this._getItemsOrder();
       const itemIndex = itemsOrder[index];
 
@@ -100,7 +113,7 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
       return this._getItems()[itemIndex];
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       this._itemsOrder = null;
       return this.source.splice(
          start,
@@ -143,7 +156,7 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
+    _getSerializableState(state: IDefaultSerializableState): ISerializableState {
       const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
@@ -158,7 +171,7 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          this._groups = state._groups;
@@ -175,8 +188,8 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
     * Возвращает группы + элементы оригинальной стратегии
     * @protected
     */
-   protected _getItems(): CollectionItem[] {
-      return (this._groups as CollectionItem[]).concat(this.source.items);
+   protected _getItems(): T[] {
+      return (this._groups as any as T[]).concat(this.source.items);
    }
 
    /**
@@ -196,8 +209,8 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
     * @protected
     */
    protected _createItemsOrder(): number[] {
-      return Group.sortItems(this.source.items, {
-         display: this.options.display,
+      return Group.sortItems<S, T>(this.source.items, {
+         display: this.options.display as Collection<S, T>,
          handler: this._options.handler,
          groups: this._groups
       });
@@ -220,7 +233,7 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
     * @param items Элементы проекции.
     * @param options Опции
     */
-   static sortItems(items: CollectionItem[], options: ISortOptions): number[] {
+   static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): number[] {
       const groups = options.groups;
       const display = options.display;
       const handler = options.handler;
@@ -240,13 +253,15 @@ export default class Group extends mixin(DestroyableMixin, SerializableMixin) im
       // Check group ID and group instance for every item and join them all together
       for (let position = 0; position < items.length; position++) {
          const item = items[position];
-         const groupId = handler ? handler(item.getContents(), position, item) : undefined;
+         const groupId = handler
+            ? handler((item as any as CollectionItem<S>).getContents(), position, item)
+            : undefined;
          let groupIndex = groupsId.indexOf(groupId);
 
          // Create group with this groupId if necessary
          if (groupsId.indexOf(groupId) === -1) {
-            const group = new GroupItem({
-               owner: display,
+            const group = new GroupItem<GroupContents>({
+               owner: display as any,
                contents: groupId
             });
 

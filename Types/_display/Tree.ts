@@ -20,7 +20,7 @@ import {register} from '../di';
 import {object} from '../util';
 import {Object as EventObject} from 'Env/Event';
 
-export interface ISerializableState<T> extends IDefaultSerializableState<T> {
+export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
    _root: T;
 }
 
@@ -38,7 +38,7 @@ interface IItemsFactoryOptions<S> {
    node?: boolean;
 }
 
-export interface IOptions<S, T> extends ICollectionOptions<S> {
+export interface IOptions<S, T> extends ICollectionOptions<S, T> {
    idProperty: string;
    parentProperty: string;
    nodeProperty?: string;
@@ -208,15 +208,15 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
 
    // region SerializableMixin
 
-   _getSerializableState(state: IDefaultSerializableState<TreeItem<S>>): ISerializableState<TreeItem<S>> {
-      const resultState = super._getSerializableState(state) as ISerializableState<TreeItem<S>>;
+   _getSerializableState(state: IDefaultSerializableState<S, TreeItem<S>>): ISerializableState<S, TreeItem<S>> {
+      const resultState = super._getSerializableState(state) as ISerializableState<S, TreeItem<S>>;
 
       resultState._root = this._root;
 
       return resultState;
    }
 
-   _setSerializableState(state: ISerializableState<TreeItem<S>>): Function {
+   _setSerializableState(state: ISerializableState<S, TreeItem<S>>): Function {
       const fromSuper = super._setSerializableState(state);
       return function(): void {
          this._root = state._root;
@@ -454,7 +454,7 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
       };
    }
 
-   protected _createComposer(): ItemsStrategyComposer<CollectionItem<S>> {
+   protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
       const composer = super._createComposer();
 
       if (this._$childrenProperty) {
@@ -480,7 +480,7 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
       return composer;
    }
 
-   protected _wrapRootStrategy(composer: ItemsStrategyComposer<CollectionItem<S>>): void {
+   protected _wrapRootStrategy(composer: ItemsStrategyComposer<S, CollectionItem<S>>): void {
       if (this._$rootEnumerable && !composer.getInstance(RootStrategy)) {
          composer.append(RootStrategy, {
             root: this.getRoot.bind(this)
@@ -488,7 +488,7 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
       }
    }
 
-   protected _unwrapRootStrategy(composer: ItemsStrategyComposer<CollectionItem<S>>): void {
+   protected _unwrapRootStrategy(composer: ItemsStrategyComposer<S, CollectionItem<S>>): void {
       if (!this._$rootEnumerable) {
          composer.remove(RootStrategy);
       }

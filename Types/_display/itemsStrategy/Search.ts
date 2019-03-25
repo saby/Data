@@ -1,16 +1,16 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import Collection from '../Collection';
-import CollectionItem from '../CollectionItem';
+import Tree from '../Tree';
+import TreeItem from '../TreeItem';
 import BreadcrumbsItem from '../BreadcrumbsItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
 
-interface IOptions {
-   source: IItemsStrategy;
+interface IOptions<S, T> {
+   source: IItemsStrategy<S, T>;
 }
 
-interface ISortOptions {
-   display: Collection;
+interface ISortOptions<S, T> {
+   display: Tree<S, T>;
 }
 
 /**
@@ -21,7 +21,13 @@ interface ISortOptions {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Search extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default class Search<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -30,9 +36,9 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
    /**
     * Опции конструктора
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
    }
@@ -41,11 +47,11 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get options(): IItemsStrategyOptions {
+   get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
    }
 
-   get source(): IItemsStrategy {
+   get source(): IItemsStrategy<S, T> {
       return this._options.source;
    }
 
@@ -53,15 +59,15 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       return this._getItems().length;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       return this._getItems();
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       return this._getItems()[index];
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       return this.source.splice(start, deleteCount, added);
    }
 
@@ -94,7 +100,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: ISerializableState): ISerializableState {
+   _getSerializableState(state: ISerializableState): ISerializableState {
       const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
@@ -102,7 +108,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -117,9 +123,9 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
     * Возвращает элементы проекции
     * @protected
     */
-   protected _getItems(): CollectionItem[] {
-      return Search.sortItems(this.source.items, {
-         display: this.options.display as Collection
+   protected _getItems(): T[] {
+      return Search.sortItems<S, T>(this.source.items, {
+         display: this.options.display as Tree<S, T>
       });
    }
 
@@ -133,7 +139,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
     * @param options Опции
     * @static
     */
-   static sortItems(items: CollectionItem[], options: ISortOptions): CollectionItem[] {
+   static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): T[] {
       const display = options.display;
       const dump = {};
       let currentBreadcrumbs = null;
@@ -145,22 +151,26 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
          const itemIsNode = isNode(item);
          const nextIsNode = isNode(next);
 
-         if (itemIsNode) {
-            const isLastBreadcrumb = nextIsNode ? item.getLevel() >= next.getLevel() : true;
-            if (isLastBreadcrumb) {
-               currentBreadcrumbs = new BreadcrumbsItem({
-                  owner: display,
-                  last: item
-               });
+         if (item instanceof TreeItem) {
+            if (itemIsNode && next instanceof TreeItem) {
+               const isLastBreadcrumb = nextIsNode ? item.getLevel() >= next.getLevel() : true;
+               if (isLastBreadcrumb) {
+                  currentBreadcrumbs = new BreadcrumbsItem<S>({
+                     contents: null,
+                     owner: display as any,
+                     last: item
+                  });
 
-               return currentBreadcrumbs;
+                  return currentBreadcrumbs;
+               }
+
+               currentBreadcrumbs = null;
+               return dump;
             }
 
-            currentBreadcrumbs = null;
-            return dump;
+            item.setParent(currentBreadcrumbs);
          }
 
-         item.setParent(currentBreadcrumbs);
          return item;
       }).filter((item) => {
          return item !== dump;
@@ -170,5 +180,7 @@ export default class Search extends mixin(DestroyableMixin, SerializableMixin) i
    // endregion
 }
 
-Search.prototype._moduleName = 'Types/display:itemsStrategy.Search';
-Search.prototype['[Types/_display/itemsStrategy/Search]'] = true;
+Object.assign(Search.prototype, {
+   '[Types/_display/itemsStrategy/Search]': true,
+   _moduleName: 'Types/display:itemsStrategy.Search'
+});

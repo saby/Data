@@ -40,7 +40,7 @@ type FilterFunction<S> = (
    collectionIndex: number
 ) => boolean;
 
-type GroupFunction<S> = (item: S, index: number, collectionItem: CollectionItem<S>) => string | null;
+type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => string | null;
 
 interface ISortItem<S> {
    item: S;
@@ -62,13 +62,13 @@ export interface ISessionItemState<T> {
    selected: boolean;
 }
 
-export interface ISerializableState<T> extends IDefaultSerializableState {
-   _composer: ItemsStrategyComposer<T>;
+export interface ISerializableState<S, T> extends IDefaultSerializableState {
+   _composer: ItemsStrategyComposer<S, T>;
 }
 
-export interface IOptions<S> extends IAbstractOptions {
+export interface IOptions<S, T> extends IAbstractOptions {
    filter?: Array<FilterFunction<S>>;
-   group?: GroupFunction<S>;
+   group?: GroupFunction<S, T>;
    sort?: Array<SortFunction<S>>;
    idProperty?: string;
    unique?: boolean;
@@ -408,7 +408,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * @see getGroup
     * @see setGroup
     */
-   protected _$group: GroupFunction<S>;
+   protected _$group: GroupFunction<S, T>;
 
    /**
     * @cfg {
@@ -499,7 +499,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Компоновщик стратегий
     */
-   protected _composer: ItemsStrategyComposer<CollectionItem<S>>;
+   protected _composer: ItemsStrategyComposer<S, CollectionItem<S>>;
 
    /**
     * Коллекция синхронизирована с проекцией (все события, приходящие от нее, соответсвуют ее состоянию)
@@ -546,7 +546,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     */
    protected _oEventRaisingChange: Function;
 
-   constructor(options: IOptions<S>) {
+   constructor(options: IOptions<S, T>) {
       super(options);
       SerializableMixin.call(this);
       EventRaisingMixin.call(this, options);
@@ -1328,7 +1328,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * @see group
     * @see setGroup
     */
-   getGroup(): GroupFunction<S> {
+   getGroup(): GroupFunction<S, T> {
       return this._$group;
    }
 
@@ -1341,7 +1341,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * @see group
     * @see getGroup
     */
-   setGroup(group: GroupFunction<S>): void {
+   setGroup(group: GroupFunction<S, T>): void {
       if (this._$group === group) {
          return;
       }
@@ -1354,7 +1354,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       }
 
       const session = this._startUpdateSession();
-      const groupStrategy = this._composer.getInstance(GroupItemsStrategy) as GroupItemsStrategy;
+      const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
 
       this._$group = groupStrategy.handler = group;
       this._switchImportantPropertiesByGroup(true);
@@ -1736,7 +1736,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       const session = this._startUpdateSession();
 
       this._$unique = unique;
-      (this._composer.getInstance(DirectItemsStrategy) as any as DirectItemsStrategy<S, T>).unique = unique;
+      this._composer.getInstance<DirectItemsStrategy<S, T>>(DirectItemsStrategy).unique = unique;
       this._getItemsStrategy().invalidate();
       this._reSort();
 
@@ -1860,17 +1860,17 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    // region SerializableMixin
 
-   _getSerializableState(state: IDefaultSerializableState): ISerializableState<CollectionItem<S>> {
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, CollectionItem<S>> {
       const resultState = SerializableMixin.prototype._getSerializableState.call(
          this, state
-      ) as ISerializableState<CollectionItem<S>>;
+      ) as ISerializableState<S, CollectionItem<S>>;
 
       resultState._composer = this._composer;
 
       return resultState;
    }
 
-   _setSerializableState(state: ISerializableState<CollectionItem<S>>): Function {
+   _setSerializableState(state: ISerializableState<S, CollectionItem<S>>): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -2169,8 +2169,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * Создает компоновщик стратегий
     * @protected
     */
-   protected _createComposer(): ItemsStrategyComposer<CollectionItem<S>> {
-      const composer = new ItemsStrategyComposer<CollectionItem<S>>();
+   protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
+      const composer = new ItemsStrategyComposer<S, CollectionItem<S>>();
 
       composer.append(DirectItemsStrategy, {
          display: this,
@@ -2508,7 +2508,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       if (!this._composer) {
          return;
       }
-      const groupStrategy = this._composer.getInstance(GroupItemsStrategy) as GroupItemsStrategy;
+      const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
       groupStrategy.invalidate();
    }
 

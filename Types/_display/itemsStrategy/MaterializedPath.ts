@@ -3,7 +3,7 @@ import CollectionItem from '../CollectionItem';
 import {IEnumerable, IList} from '../../collection';
 import {object} from '../../util';
 
-interface IOptions extends IAbstractOptions {
+interface IOptions<S, T> extends IAbstractOptions<S, T> {
    childrenProperty: string;
    root: string | Function;
 }
@@ -25,7 +25,7 @@ interface ISorter {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class MaterializedPath extends AbstractStrategy {
+export default class MaterializedPath<S, T> extends AbstractStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/Collection} display Проекция
@@ -34,14 +34,14 @@ export default class MaterializedPath extends AbstractStrategy {
     * @property {Types/_display/TreeItem} root Корень
     */
 
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
    /**
     * Соответствие "индекс в коллекции" - "путь"
     */
    protected _indexToPath: number[][] = [];
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super(options);
    }
 
@@ -70,7 +70,7 @@ export default class MaterializedPath extends AbstractStrategy {
       return index;
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       let index = 0;
       while (this.at(index) !== undefined) {
          index++;
@@ -78,7 +78,7 @@ export default class MaterializedPath extends AbstractStrategy {
       return this._getItems();
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       const items = this._getItems();
       if (!items[index]) {
          const collection = this._getCollection();
@@ -100,7 +100,7 @@ export default class MaterializedPath extends AbstractStrategy {
       return items[index];
    }
 
-   splice(start: number): CollectionItem[] {
+   splice(start: number): T[] {
       this._getItems().length = start;
       this._indexToPath.length = start;
       return [];
@@ -216,14 +216,15 @@ export default class MaterializedPath extends AbstractStrategy {
     * @param path Путь до элемента
     * @protected
     */
-   protected _getParent(index: number, path: number[]): CollectionItem {
+   protected _getParent(index: number, path: number[]): T {
       const parentPath = path.slice(0, path.length - 1);
       if (parentPath.length) {
          const items = this._getItems();
          const parentContents = this._getItemByPath(this._getCollection(), parentPath);
          if (parentContents) {
             for (let i = index - 1; i >= 0; i--) {
-               if (items[i] && items[i].getContents() === parentContents) {
+               const item = items[i];
+               if (item instanceof CollectionItem && item.getContents() === parentContents) {
                   return items[i];
                }
             }
@@ -283,7 +284,7 @@ export default class MaterializedPath extends AbstractStrategy {
     * @param current Текущий индекс сортировки
     * @param options Опции
     */
-   static sortItems(items: CollectionItem[], current: number[], options: ISortOptions): number[] {
+   static sortItems<T>(items: T[], current: number[], options: ISortOptions): number[] {
       const indexToPath = options.indexToPath;
       let stringIndexToPath;
       const stringPathToIndex = {};
@@ -345,5 +346,7 @@ export default class MaterializedPath extends AbstractStrategy {
    // endregion
 }
 
-MaterializedPath.prototype._moduleName = 'Types/display:itemsStrategy.MaterializedPath';
-MaterializedPath.prototype['[Types/_display/itemsStrategy/MaterializedPath]'] = true;
+Object.assign(MaterializedPath.prototype, {
+   '[Types/_display/itemsStrategy/MaterializedPath]': true,
+   _moduleName: 'Types/display:itemsStrategy.MaterializedPath'
+});
