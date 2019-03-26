@@ -150,7 +150,7 @@ export default class TimeInterval {
 
          this.set(source);
       } else {
-         throw new Error(rk('TimeInterval вызывать через оператор new'));
+         throw new Error('TimeInterval call via operator new');
       }
    }
 

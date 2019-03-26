@@ -1,4 +1,7 @@
 import {iterateNumber} from './utils';
+// @ts-ignore
+import i18n = require('Core/i18n');
+import 'i18n!Types/_formatter/_numberWords/en'
 
 const DIGITS = [
    'zero',
@@ -104,7 +107,7 @@ export default function numberWordsEN(num: string): string {
          let word = prepareWord.reduceRight(concat).title;
          // tslint:disable-next-line:triple-equals
          if (counter > 0 && +three != 0) {
-            word += ' ' + (rk(THOUSANDS[counter], +three));
+            word += ' ' + (i18n.rk(THOUSANDS[counter], +three));
          }
 
          words.push(word);

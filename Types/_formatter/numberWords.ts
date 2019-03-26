@@ -2,6 +2,7 @@ import numberWordsRu from './_numberWords/ru';
 import numberWordsEN from './_numberWords/en';
 // @ts-ignore
 import i18n = require('Core/i18n');
+import 'i18n!Types/_formatter/numberWords';
 
 export default function numberWords(num: number|string, feminine: boolean = false): String {
    num = String(num);
