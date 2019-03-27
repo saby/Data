@@ -1,5 +1,6 @@
 /* global beforeEach, afterEach, describe, context, assert, it */
 define([
+   './data.sample',
    'Types/_source/LocalSession',
    'Types/_source/DataSet',
    'Types/_source/Query',
@@ -9,6 +10,7 @@ define([
    'Core/core-simpleExtend',
    'Browser/Storage'
 ], function(
+   dataSample,
    LocalSession,
    DataSet,
    Query,
@@ -484,20 +486,17 @@ define([
          });
 
          it('should keep functions in data', function(done) {
-            var data = [{
-                  a: function() {
-                  }
-               }],
-               source1 = new LocalSession({
-                  idProperty: 'id',
-                  prefix: 'mdl_solarsystem_1',
-                  data: data
-               });
+            var data = dataSample.arrayWithFunctions;
+            var source1 = new LocalSession({
+               idProperty: 'id',
+               prefix: 'mdl_solarsystem_1_1',
+               data: data
+            });
 
             source1.query().addCallbacks(function(ds) {
                try {
                   var rec = ds.getAll().at(0);
-                  assert.strictEqual(rec.get('a'), data[0].a);
+                  assert.strictEqual(rec.get('bar'), data[0].bar);
                   done();
                } catch (err) {
                   done(err);
