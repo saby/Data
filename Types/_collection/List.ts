@@ -398,7 +398,7 @@ export default class List<T> extends mixin<
 
    /**
     * Переиндексирует список
-    * @param {Types/_collection/IBind/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+    * @param {Types/_collection/IObservable/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
     * @param [start=0] С какой позиции переиндексировать
     * @param [count=0] Число переиндексируемых элементов
     * @protected
@@ -439,7 +439,7 @@ export default class List<T> extends mixin<
     * Вызывает метод splice
     * @param items Коллекция с элементами для замены
     * @param start Индекс в массиве, с которого начинать добавление.
-    * @param {Types/_collection/IBind/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+    * @param {Types/_collection/IObservable/ChangeAction.typedef[]} action Действие, приведшее к изменению.
     * @protected
     */
    protected _splice(items: T[], start: number, action: string): T[] {

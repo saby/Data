@@ -117,7 +117,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
 
    // region Protected methods
 
-   _copy(): void {
+   protected _copy(): void {
       if (!this._copied) {
          if (this._originalRecord['[Types/_entity/ICloneable]']) {
             this._originalRecord = (this._originalRecord as ICloneable).clone();

@@ -1,11 +1,18 @@
-/**
- * @faq Почему я вижу ошибки от Types/di:resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
- * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
- */
-
 import IProducible, {IProducibleConstructor} from './IProducible';
-import {Field, ArrayField, DateTimeField, DictionaryField, MoneyField, RealField, UniversalField} from './format';
+import {
+   Field,
+   ArrayField,
+   DateTimeField,
+   DictionaryField,
+   MoneyField,
+   RealField,
+   UniversalField,
+   IUniversalFieldDateTimeMeta,
+   IUniversalFieldRealMeta,
+   IUniversalFieldMoneyMeta,
+   IUniversalFieldDictionaryMeta,
+   IUniversalFieldArrayMeta
+} from './format';
 import Record from './Record';
 import TimeInterval from './TimeInterval';
 import {create, resolve, isRegistered} from '../di';
@@ -27,7 +34,10 @@ const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
  * @param format Формат поля
  */
 function getDictionary(format: DictionaryField | UniversalField): any[] {
-   return (format instanceof DictionaryField ? format.getDictionary() : format.meta && format.meta.dictionary) || [];
+   return (format instanceof DictionaryField
+      ? format.getDictionary()
+      : format.meta && (format.meta as IUniversalFieldDictionaryMeta).dictionary
+   ) || [];
 }
 
 /**
@@ -104,7 +114,9 @@ function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
    if (!format) {
       return false;
    }
-   return format instanceof DateTimeField ? format.isWithoutTimeZone() : format.meta && format.meta.withoutTimeZone;
+   return format instanceof DateTimeField
+      ? format.isWithoutTimeZone()
+      : format.meta && (format.meta as IUniversalFieldDateTimeMeta).withoutTimeZone;
 }
 
 /**
@@ -115,7 +127,9 @@ function isLargeMoney(format: MoneyField | UniversalField): boolean {
    if (!format) {
       return false;
    }
-   return format instanceof MoneyField ? format.isLarge() : format.meta && format.meta.large;
+   return format instanceof MoneyField
+      ? format.isLarge()
+      : format.meta && (format.meta as IUniversalFieldMoneyMeta).large;
 }
 
 /**
@@ -128,7 +142,8 @@ function getPrecision(format: RealField | UniversalField): number {
    }
    return ((format as RealField).getPrecision
       ? (format as RealField).getPrecision()
-      : (format as UniversalField).meta && (format as UniversalField).meta.precision
+      : (format as UniversalField).meta
+         && ((format as UniversalField).meta as IUniversalFieldRealMeta).precision
    ) || 0;
 }
 
@@ -139,7 +154,8 @@ function getPrecision(format: RealField | UniversalField): number {
 function getKind(format: ArrayField | UniversalField): string {
    return ((format as ArrayField).getKind
       ? (format as ArrayField).getKind()
-      : (format as UniversalField).meta && (format as UniversalField).meta.kind
+      : (format as UniversalField).meta
+         && ((format as UniversalField).meta as IUniversalFieldArrayMeta).kind
    ) || '';
 }
 
@@ -186,6 +202,9 @@ function convertListToRecordSet(list: List<Record>): RecordSet {
 
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
+ * @faq Почему я вижу ошибки от Types/di:resolve?
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
+ * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  * @class Types/_entity/factory
  * @public
  * @author Мальцев А.А.

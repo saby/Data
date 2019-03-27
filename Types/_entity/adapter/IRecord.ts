@@ -7,7 +7,7 @@ import UniversalField from '../format/UniversalField';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IRecord /** @lends Types/_entity/adapter/IRecord.prototype */{
+export default interface IRecord {
    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
    /**

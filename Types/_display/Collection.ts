@@ -1,4 +1,3 @@
-import IBind from './IBind';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
@@ -15,7 +14,13 @@ import {
    ISerializableState as IDefaultSerializableState,
    functor
 } from '../entity';
-import {EnumeratorCallback, IList, EventRaisingMixin, IEnumerableComparatorSession} from '../collection';
+import {
+   EnumeratorCallback,
+   IList,
+   IObservable,
+   EventRaisingMixin,
+   IEnumerableComparatorSession
+} from '../collection';
 import {create, resolve, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
@@ -116,7 +121,7 @@ function onCollectionChange<T>(
    let session;
 
    switch (action) {
-      case IBind.ACTION_RESET:
+      case IObservable.ACTION_RESET:
          const projectionOldItems = toArray(this);
          let projectionNewItems;
          this._reBuild(true);
@@ -132,7 +137,7 @@ function onCollectionChange<T>(
          this._notifyAfterCollectionChange();
          return;
 
-      case IBind.ACTION_CHANGE:
+      case IObservable.ACTION_CHANGE:
          session = this._startUpdateSession();
 
          // FIXME: newItems.length - FIXME[OrderMatch]
@@ -147,7 +152,7 @@ function onCollectionChange<T>(
    session = this._startUpdateSession();
 
    switch (action) {
-      case IBind.ACTION_ADD:
+      case IObservable.ACTION_ADD:
          this._addItems(newItemsIndex, newItems);
 
          // FIXME: newItems.length - FIXME[OrderMatch]
@@ -156,7 +161,7 @@ function onCollectionChange<T>(
          this._reFilter();
          break;
 
-      case IBind.ACTION_REMOVE:
+      case IObservable.ACTION_REMOVE:
          // FIXME: oldItems.length - FIXME[OrderMatch]
          this._removeItems(oldItemsIndex, oldItems.length);
          this._reSort();
@@ -165,7 +170,7 @@ function onCollectionChange<T>(
          }
          break;
 
-      case IBind.ACTION_REPLACE:
+      case IObservable.ACTION_REPLACE:
          // FIXME: newItems - FIXME[OrderMatch]
          this._replaceItems(newItemsIndex, newItems);
 
@@ -175,7 +180,7 @@ function onCollectionChange<T>(
          this._reFilter();
          break;
 
-      case IBind.ACTION_MOVE:
+      case IObservable.ACTION_MOVE:
          // FIXME: newItems - FIXME[OrderMatch]
          this._moveItems(newItemsIndex, oldItemsIndex, newItems);
          this._reSort();
@@ -262,7 +267,6 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @extends Types/_display/Abstract
  * @implements Types/_collection/IEnumerable
  * @implements Types/_collection/IList
- * @implements Types/_display/IBindCollection
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_collection/EventRaisingMixin
  * @ignoreMethods notifyItemChange
@@ -1774,7 +1778,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
       this._notifyBeforeCollectionChange();
       this._notifyCollectionChange(
-         IBind.ACTION_CHANGE,
+         IObservable.ACTION_CHANGE,
          items,
          index,
          items,
@@ -1847,7 +1851,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       }
       this._notifyBeforeCollectionChange();
       this._notifyCollectionChange(
-         IBind.ACTION_RESET,
+         IObservable.ACTION_RESET,
          items,
          0,
          items,
@@ -1984,7 +1988,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       }
       if (
          !session ||
-         action === IBind.ACTION_RESET ||
+         action === IObservable.ACTION_RESET ||
          !this._isGrouped()
       ) {
          this._notifyLater(
@@ -2011,7 +2015,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
             );
          }
       };
-      const isRemove = action === IBind.ACTION_REMOVE;
+      const isRemove = action === IObservable.ACTION_REMOVE;
       const max = isRemove ? oldItems.length : newItems.length;
       let notifyIndex = 0;
       let item;
@@ -2046,7 +2050,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
          const index = this.getIndex(items[0]);
          this._notifyBeforeCollectionChange();
          this._notifyCollectionChange(
-            IBind.ACTION_REPLACE,
+            IObservable.ACTION_REPLACE,
             items,
             index,
             items,
@@ -2744,7 +2748,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
          this._notifyBeforeCollectionChange();
          this._extractPacksByList(this, diff, (items, index) => {
             this._notifyCollectionChange(
-               IBind.ACTION_CHANGE,
+               IObservable.ACTION_CHANGE,
                items,
                index,
                items,
@@ -2806,7 +2810,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
          changedItems,
          (pack, index) => {
             this._notifyCollectionChange(
-               IBind.ACTION_CHANGE,
+               IObservable.ACTION_CHANGE,
                pack,
                index,
                pack,

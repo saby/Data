@@ -29,24 +29,26 @@ import {RecordSet, format} from '../../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSetRecord extends mixin(DestroyableMixin, GenericFormatMixin) implements IRecord {
+export default class RecordSetRecord extends mixin<
+   DestroyableMixin,
+   GenericFormatMixin
+>(
+   DestroyableMixin,
+   GenericFormatMixin
+) implements IRecord {
    /**
     * Запись
     */
-   _data: Record;
+   protected _data: Record;
 
    /**
     * Таблица
     */
-   _tableData: RecordSet;
+   protected _tableData: RecordSet;
 
    // region IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
 
    /**
     * Конструктор
@@ -58,7 +60,7 @@ export default class RecordSetRecord extends mixin(DestroyableMixin, GenericForm
          throw new TypeError('Argument "data" should be an instance of Types/entity:Record');
       }
       super(data);
-      GenericFormatMixin.constructor.call(this, data);
+      GenericFormatMixin.call(this, data);
       this._tableData = tableData;
    }
 
@@ -144,7 +146,7 @@ export default class RecordSetRecord extends mixin(DestroyableMixin, GenericForm
 
    // region Protected methods
 
-   _touchData(): void {
+   protected _touchData(): void {
       if (!this._data &&
          this._tableData &&
          this._tableData['[Types/_entity/FormattableMixin]']
@@ -158,11 +160,11 @@ export default class RecordSetRecord extends mixin(DestroyableMixin, GenericForm
       }
    }
 
-   _isValidData(): boolean {
+   protected _isValidData(): boolean {
       return this._data && this._data['[Types/_entity/Record]'];
    }
 
-   _getFieldsFormat(): format.Format {
+   protected _getFieldsFormat(): format.Format {
       return this._isValidData()
          ? this._data.getFormat()
          : create<format.Format>('Types/collection:format.Format');

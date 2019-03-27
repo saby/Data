@@ -4,7 +4,7 @@ define([
    'Types/_collection/List',
    'Types/_collection/ObservableList',
    'Types/_display/TreeItem',
-   'Types/_display/IBind',
+   'Types/_collection/IObservable',
    'Types/_collection/RecordSet',
    'Core/Serializer',
    'Types/display'

@@ -1,5 +1,16 @@
-import {Field, UniversalField} from '../format';
-import {IDeclaration} from '../format/fieldsFactory';
+import {
+   Field,
+   RealField,
+   DictionaryField,
+   IdentityField,
+   ArrayField,
+   UniversalField,
+   IUniversalFieldMeta,
+   IUniversalFieldMoneyMeta,
+   IUniversalFieldDictionaryMeta,
+   IUniversalFieldIdentityMeta,
+   IUniversalFieldArrayMeta
+} from '../format';
 import {format} from '../../collection';
 
 /**
@@ -8,41 +19,41 @@ import {format} from '../../collection';
  * @public
  * @author Мальцев А.А.
  */
-const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.prototype */{
-   '[Types/_entity/adapter/GenericFormatMixin]': true,
+export default abstract class GenericFormatMixin {
+   '[Types/_entity/adapter/GenericFormatMixin]': boolean;
+
+   protected _moduleName: string;
 
    /**
     * Сырые данные
     */
-   _data: null,
+   protected _data: any;
 
    /**
     * Формат поля, отдаваемый через getSharedFormat()
     */
-   _sharedFieldFormat: null,
+   protected _sharedFieldFormat: UniversalField;
 
    /**
     * Мета данные поля, отдаваемого через getSharedFormat()
     */
-   _sharedFieldMeta: null,
+   protected _sharedFieldMeta: IUniversalFieldMeta;
 
    /**
     * Конструктор
     * @param data Сырые данные
     */
-   constructor(data: any): void {
+   constructor(data: any) {
       this._data = data;
-   },
+   }
 
    // region Public methods
 
    getData(): any {
       return this._data;
-   },
+   }
 
-   getFields(): string[] {
-      throw new Error('Method must be implemented');
-   },
+   abstract getFields(): string[];
 
    getFormat(name: string): Field {
       const fields = this._getFieldsFormat();
@@ -51,7 +62,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
          throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
       }
       return fields.at(index);
-   },
+   }
 
    getSharedFormat(name: string): UniversalField {
       if (this._sharedFieldFormat === null) {
@@ -62,11 +73,11 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       const index = fields ? fields.getFieldIndex(name) : -1;
 
       fieldFormat.name = name;
-      fieldFormat.type = index === -1 ? 'String' : fields.at(index).getType();
+      fieldFormat.type = index === -1 ? 'String' : fields.at(index).getType() as string;
       fieldFormat.meta = index === -1 ? {} : this._getFieldMeta(name);
 
       return fieldFormat;
-   },
+   }
 
    addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
@@ -85,7 +96,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       }
       this._touchData();
       fields.add(format, at);
-   },
+   }
 
    removeField(name: string): void {
       const fields = this._getFieldsFormat();
@@ -95,7 +106,7 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       }
       this._touchData();
       fields.removeAt(index);
-   },
+   }
 
    removeFieldAt(index: number): void {
       this._touchData();
@@ -103,25 +114,25 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       if (fields) {
          fields.removeAt(index);
       }
-   },
+   }
 
    // endregion Public methods
 
    // region Protected methods
 
-   _touchData(): void {
+   protected _touchData(): void {
       // Could be implemented
-   },
+   }
 
-   _isValidData(): boolean {
+   protected _isValidData(): boolean {
       return true;
-   },
+   }
 
-   _getFieldsFormat(): format.Format {
+   protected _getFieldsFormat(): format.Format {
       throw new Error('Method must be implemented');
-   },
+   }
 
-   _getFieldMeta(name: string): IDeclaration {
+   protected _getFieldMeta(name: string): IUniversalFieldMeta {
       if (this._sharedFieldMeta === null) {
          this._sharedFieldMeta = {};
       }
@@ -131,17 +142,17 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
       switch (format.getType()) {
          case 'Real':
          case 'Money':
-            meta.precision = format.getPrecision();
+            (meta as IUniversalFieldMoneyMeta).precision = (format as RealField).getPrecision();
             break;
          case 'Enum':
          case 'Flags':
-            meta.dictionary = format.getDictionary();
+            (meta as IUniversalFieldDictionaryMeta).dictionary = (format as DictionaryField).getDictionary();
             break;
          case 'Identity':
-            meta.separator = format.getSeparator();
+            (meta as IUniversalFieldIdentityMeta).separator = (format as IdentityField).getSeparator();
             break;
          case 'Array':
-            meta.kind = format.getKind();
+            (meta as IUniversalFieldArrayMeta).kind = (format as ArrayField).getKind();
             break;
       }
 
@@ -149,6 +160,11 @@ const GenericFormatMixin = /** @lends Types/_entity/adapter/GenericFormatMixin.p
    }
 
    // endregion Protected methods
-};
+}
 
-export default GenericFormatMixin;
+Object.assign(GenericFormatMixin.prototype, {
+   '[Types/_entity/adapter/GenericFormatMixin]': true,
+   _data: null,
+   _sharedFieldFormat: null,
+   _sharedFieldMeta: null
+});

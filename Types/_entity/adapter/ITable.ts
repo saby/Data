@@ -7,7 +7,7 @@ import Field from '../format/Field';
  * @public
  * @author Мальцев А.А.
  */
-export default interface ITable /** @lends Types/_entity/adapter/ITable.prototype */{
+export default interface ITable {
    readonly '[Types/_entity/adapter/ITable]': boolean;
 
    /**

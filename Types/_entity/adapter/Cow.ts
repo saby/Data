@@ -25,7 +25,13 @@ interface ISerializableState extends ICommonState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Cow extends mixin(Abstract, SerializableMixin) implements IDecorator {
+export default class Cow extends mixin<
+   Abstract,
+   SerializableMixin
+>(
+   Abstract,
+   SerializableMixin
+) implements IDecorator {
    /**
     * Оригинальный адаптер
     */

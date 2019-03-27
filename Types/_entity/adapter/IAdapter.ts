@@ -8,7 +8,7 @@ import IRecord from './IRecord';
  * @public
  * @author Мальцев А.А.
  */
-export default interface IAdapter /** @lends Types/_entity/adapter/IAdapter.prototype */{
+export default interface IAdapter {
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
    /**
