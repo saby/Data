@@ -247,34 +247,39 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
 
             Object.keys(where).forEach((expr) => {
                const parts = expr.match(pattern);
+
                // Check next if there's no operand
                if (!parts) {
                   return;
                }
 
-               const field = parts[1];
-               const operand = parts[2];
                const value = where[expr];
 
-               // Add field value to position if it's not null
-               if (value !== null) {
-                  if (!position) {
-                     position = {};
+               // Skip undefined values
+               if (value !== undefined) {
+                  const field = parts[1];
+                  const operand = parts[2];
+
+                  // Add field value to position if it's not null because nulls used only for defining an order.
+                  if (value !== null) {
+                     if (!position) {
+                        position = {};
+                     }
+                     position[field] = value;
                   }
-                  position[field] = value;
-               }
 
-               // We can use only one kind of order so take it from the first operand
-               if (!order) {
-                  switch (operand) {
-                     case '~':
-                        order = PoitionNavigationOrder.both;
-                        break;
+                  // We can use only one kind of order so take it from the first operand
+                  if (!order) {
+                     switch (operand) {
+                        case '~':
+                           order = PoitionNavigationOrder.both;
+                           break;
 
-                     case '<':
-                     case '<=':
-                        order = PoitionNavigationOrder.before;
-                        break;
+                        case '<':
+                        case '<=':
+                           order = PoitionNavigationOrder.before;
+                           break;
+                     }
                   }
                }
 

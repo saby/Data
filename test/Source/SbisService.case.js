@@ -1408,6 +1408,42 @@ define([
                }, done);
             });
 
+            it('should generate request with position navigation and null position if there is undefined value in conditions', function(done) {
+               var service = new SbisService({
+                  endpoint: 'Товар',
+                  options: {
+                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
+                  }
+               });
+               var limit = 9;
+               var query = new Query()
+                  .where({'id>=': undefined})
+                  .limit(limit);
+
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+
+                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                     assert.strictEqual(args['Навигация'].d[0], true);
+
+                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                     assert.strictEqual(args['Навигация'].d[1], limit);
+
+                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                     assert.strictEqual(args['Навигация'].d[2], 'after');
+
+                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                     assert.strictEqual(args['Навигация'].d[3], null);
+
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, done);
+            });
+
             it('should generate request with position navigation and "after" order as default', function(done) {
                var service = new SbisService({
                      endpoint: 'Товар',
