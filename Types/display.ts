@@ -8,6 +8,7 @@
  * @includes Ladder Types/_display/Ladder
  * @includes Search Types/_display/Search
  * @includes Tree Types/_display/Tree
+ * @public
  * @author Мальцев А.А.
  */
 
