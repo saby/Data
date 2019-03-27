@@ -3,7 +3,7 @@ import ITable from './ITable';
 import GenericFormatMixin from './GenericFormatMixin';
 import JsonFormatMixin from './JsonFormatMixin';
 import JsonRecord from './JsonRecord';
-import {UniversalField, Field} from '../format';
+import {Field} from '../format';
 import {Set} from '../../shim';
 import {mixin} from '../../util';
 import {merge} from '../../object';
@@ -31,13 +31,19 @@ import {merge} from '../../object';
  * @public
  * @author Мальцев А.А.
  */
-export default class JsonTable extends mixin(
-   DestroyableMixin, GenericFormatMixin, JsonFormatMixin
-) implements ITable /** @lends Types/_entity/adapter/JsonTable.prototype */{
+export default class JsonTable extends mixin<
+   DestroyableMixin,
+   GenericFormatMixin,
+   JsonFormatMixin
+>(
+   DestroyableMixin,
+   GenericFormatMixin,
+   JsonFormatMixin
+) implements ITable {
    /**
     * Сырые данные
     */
-   _data: object[];
+   protected _data: object[];
 
    /**
     * Конструктор
@@ -45,25 +51,14 @@ export default class JsonTable extends mixin(
     */
    constructor(data: object[]) {
       super(data);
-      GenericFormatMixin.constructor.call(this, data);
-      JsonFormatMixin.constructor.call(this, data);
+      GenericFormatMixin.call(this, data);
+      JsonFormatMixin.call(this, data);
    }
-
-   // region ITable
-
-   readonly '[Types/_entity/adapter/ITable]': boolean;
-
-   getData: () => object[];
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-   removeFieldAt: (index: number) => void;
-
-   // endregion
 
    // region JsonFormatMixin
 
    addField(format: Field, at: number): void {
-      JsonFormatMixin.addField.call(this, format, at);
+      super.addField(format, at);
 
       const name = format.getName();
       const value = format.getDefaultValue();
@@ -77,7 +72,7 @@ export default class JsonTable extends mixin(
    }
 
    removeField(name: string): void {
-      JsonFormatMixin.removeField.call(this, name);
+      super.removeField(name);
       for (let i = 0; i < this._data.length; i++) {
          delete this._data[i][name];
       }
@@ -85,19 +80,20 @@ export default class JsonTable extends mixin(
 
    // endregion
 
-   // region Public methods
+   // region ITable
+
+   readonly '[Types/_entity/adapter/ITable]': boolean;
 
    getFields(): string[] {
       const count = this.getCount();
       const fieldSet = new Set();
       const fields = [];
-      let item;
       const collector = (field) => {
          fieldSet.add(field);
       };
 
       for (let i = 0; i < count; i++) {
-         item = this.at(i);
+         const item = this.at(i);
          if (item instanceof Object) {
             Object.keys(item).forEach(collector);
          }
@@ -183,23 +179,21 @@ export default class JsonTable extends mixin(
 
    // region Protected methods
 
-   _touchData(): void {
-      GenericFormatMixin._touchData.call(this);
+   protected _touchData(): void {
       if (!(this._data instanceof Array)) {
          this._data = [];
       }
    }
 
-   _isValidData(): boolean {
+   protected _isValidData(): boolean {
       return this._data instanceof Array;
    }
 
-   _has(name: string): boolean {
+   protected _has(name: string): boolean {
       const count = this.getCount();
       let has = false;
-      let item;
       for (let i = 0; i < count; i++) {
-         item = this.at(i);
+         const item = this.at(i);
          if (item instanceof Object) {
             has = item.hasOwnProperty(name);
             if (has) {
@@ -210,7 +204,7 @@ export default class JsonTable extends mixin(
       return has;
    }
 
-   _checkPosition(at: number): void {
+   protected _checkPosition(at: number): void {
       if (at < 0 || at > this._data.length) {
          throw new Error('Out of bounds');
       }
@@ -219,5 +213,7 @@ export default class JsonTable extends mixin(
    // endregion
 }
 
-JsonTable.prototype['[Types/_entity/adapter/JsonTable]'] = true;
-JsonTable.prototype._data = null;
+Object.assign(JsonTable.prototype, {
+   '[Types/_entity/adapter/JsonTable]': true,
+   _data: null
+});

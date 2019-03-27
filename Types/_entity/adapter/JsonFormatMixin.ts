@@ -1,4 +1,5 @@
-import {fieldsFactory, Field, UniversalField} from '../format';
+import {fieldsFactory, Field, UniversalField, IUniversalFieldMeta} from '../format';
+import {IHashMap} from '../../_declarations';
 
 /**
  * Миксин для работы с JSON-форматом в адаптерах
@@ -6,19 +7,29 @@ import {fieldsFactory, Field, UniversalField} from '../format';
  * @public
  * @author Мальцев А.А.
  */
-const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototype */{
-   '[Types/_entity/adapter/GenericFormatMixin]': true,
+export default abstract class JsonFormatMixin {
+   '[Types/_entity/adapter/GenericFormatMixin]': boolean;
+
+   protected _moduleName: string;
+
+   // region GenericFormatMixin
+
+   protected _data: any;
+   protected _sharedFieldFormat: UniversalField;
+   protected _getFieldMeta: (name: string) => IUniversalFieldMeta;
+
+   // endregion
 
    /**
-    * {Object.<Types/_entity/format/Field>} Форматы полей
+    * Форматы полей
     */
-   _format: null,
+   protected _format: IHashMap<Field>;
+
+   constructor() {
+      this._format = {};
+   }
 
    // region Public methods
-
-   constructor(): void {
-      this._format = {};
-   },
 
    getFormat(name: string): Field {
       if (!this._has(name)) {
@@ -28,7 +39,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
          this._format[name] = this._buildFormat(name);
       }
       return this._format[name];
-   },
+   }
 
    getSharedFormat(name: string): UniversalField {
       if (this._sharedFieldFormat === null) {
@@ -37,16 +48,16 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       const format = this._sharedFieldFormat;
       format.name = name;
       if (this._format.hasOwnProperty(name)) {
-         format.type = this.getFormat(name).getType();
+         format.type = this.getFormat(name).getType() as string;
          format.meta = this._getFieldMeta(name);
       } else {
          format.type = 'String';
       }
 
       return format;
-   },
+   }
 
-   addField(format: Field): void {
+   addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
          throw new TypeError(
             `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
@@ -58,7 +69,7 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       }
       this._touchData();
       this._format[name] = format;
-   },
+   }
 
    removeField(name: string): void {
       if (!this._has(name)) {
@@ -66,31 +77,29 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
       }
       this._touchData();
       delete this._format[name];
-   },
+   }
 
-   removeFieldAt(): void {
+   removeFieldAt(index: number): void {
       throw new Error(`Method ${this._moduleName}::removeFieldAt() doesn't supported`);
-   },
+   }
 
    // endregion
 
    // region Protected methods
 
-   _touchData(): void {
+   protected _touchData(): void {
       if (!(this._data instanceof Object)) {
          this._data = {};
       }
-   },
+   }
 
-   _isValidData(): boolean {
+   protected _isValidData(): boolean {
       return this._data instanceof Object;
-   },
+   }
 
-   _has(): boolean {
-      throw new Error('Method must be implemented');
-   },
+   protected abstract _has(name: string): boolean;
 
-   _buildFormat(name: string): Field {
+   protected _buildFormat(name: string): Field {
       return fieldsFactory({
          name,
          type: 'string'
@@ -98,6 +107,9 @@ const JsonFormatMixin = /** @lends Types/_entity/adapter/JsonFormatMixin.prototy
    }
 
    // endregion
-};
+}
 
-export default JsonFormatMixin;
+Object.assign(JsonFormatMixin.prototype, {
+   '[Types/_entity/adapter/GenericFormatMixin]': true,
+   _format: null
+});

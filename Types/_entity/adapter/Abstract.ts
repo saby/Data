@@ -84,13 +84,19 @@ const serialize = (() => {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Abstract extends mixin(DestroyableMixin, SerializableMixin) implements IAdapter {
+export default abstract class Abstract extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IAdapter {
    readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
    /**
     * Разделитель для обозначения пути в данных
     */
-   _pathSeparator: string;
+   protected _pathSeparator: string;
 
    constructor() {
       super();

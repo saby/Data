@@ -4,7 +4,7 @@ import IMetaData from './IMetaData';
 import ICloneable from '../ICloneable';
 import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
-import {fieldsFactory, Field, UniversalField} from '../format';
+import {fieldsFactory} from '../format';
 import {mixin} from '../../util';
 import {merge} from '../../object';
 
@@ -40,10 +40,17 @@ import {merge} from '../../object';
  * @public
  * @author Мальцев А.А.
  */
-export default class SbisTable extends mixin(
-   DestroyableMixin, SbisFormatMixin
-) implements ITable, IMetaData, ICloneable /** @lends Types/_entity/adapter/SbisTable.prototype */{
-   _type: string;
+export default class SbisTable extends mixin<
+   DestroyableMixin,
+   SbisFormatMixin
+>(
+   DestroyableMixin,
+   SbisFormatMixin
+) implements ITable, IMetaData, ICloneable {
+
+   get type(): string {
+      return 'recordset';
+   }
 
    /**
     * Конструктор
@@ -51,21 +58,12 @@ export default class SbisTable extends mixin(
     */
    constructor(data: ITableFormat) {
       super(data);
-      SbisFormatMixin.constructor.call(this, data);
+      SbisFormatMixin.call(this, data);
    }
 
    // region ITable
 
    readonly '[Types/_entity/adapter/ITable]': boolean;
-
-   addField: (format: Field, at: number) => void;
-   clear: () => void;
-   getData: () => any;
-   getFields: () => string[];
-   getFormat: (name: string) => any;
-   getSharedFormat: (name: string) => UniversalField;
-   removeField: (name: string) => void;
-   removeFieldAt: (index: number) => void;
 
    getCount(): number {
       return this._isValidData() ? this._data.d.length : 0;
@@ -73,7 +71,7 @@ export default class SbisTable extends mixin(
 
    add(record: IRecordFormat, at: null): void {
       this._touchData();
-      record = this._normalizeData(record, SbisRecord.prototype._type);
+      record = this._normalizeData(record, SbisRecord.prototype.type);
 
       if (this._data.d.length === 0 && record.s) {
          this._data.s = record.s;
@@ -258,6 +256,10 @@ export default class SbisTable extends mixin(
 
    // region SbisFormatMixin
 
+   protected _data: ITableFormat;
+
+   getData: () => ITableFormat;
+
    protected _buildD(at: number, value: any): void {
       this._data.d.forEach((item) => {
          item.splice(at, 0, value);
@@ -288,8 +290,7 @@ Object.assign(SbisTable.prototype, {
    '[Types/_entity/adapter/SbisTable]': true,
    '[Types/_entity/adapter/ITable]': true,
    '[Types/_entity/adapter/IMetaData]': true,
-   '[Types/_entity/ICloneable]': true,
-   _type: 'recordset'
+   '[Types/_entity/ICloneable]': true
 });
 
 // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()

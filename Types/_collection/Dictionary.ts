@@ -189,7 +189,8 @@ export default abstract class Dictionary<T> extends mixin<
       return (
          (format as format.DictionaryField).getDictionary
             ? (format as format.DictionaryField).getDictionary()
-            : (format as format.UniversalField).meta && (format as format.UniversalField).meta.dictionary
+            : (format as format.UniversalField).meta &&
+               ((format as format.UniversalField).meta as format.IUniversalFieldDictionaryMeta).dictionary
       ) || [];
    }
 
@@ -206,7 +207,8 @@ export default abstract class Dictionary<T> extends mixin<
       return (
          (format as format.DictionaryField).getLocaleDictionary
             ? (format as format.DictionaryField).getLocaleDictionary()
-            : (format as format.UniversalField).meta && (format as format.UniversalField).meta.localeDictionary
+            : (format as format.UniversalField).meta
+               && ((format as format.UniversalField).meta as format.IUniversalFieldDictionaryMeta).localeDictionary
       ) || undefined;
    }
 

@@ -15,8 +15,7 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis.prototype */{
-
+export default class Sbis extends Abstract {
    forTable(data: ITableFormat): SbisTable {
       return new SbisTable(data);
    }
@@ -49,8 +48,10 @@ export default class Sbis extends Abstract /** @lends Types/_entity/adapter/Sbis
    }
 }
 
-Sbis.prototype['[Types/_entity/adapter/Sbis]'] = true;
-Sbis.prototype._moduleName = 'Types/entity:adapter.Sbis';
+Object.assign(Sbis.prototype, {
+   '[Types/_entity/adapter/Sbis]': true,
+   _moduleName: 'Types/entity:adapter.Sbis'
+});
 
 register('Types/entity:adapter.Sbis', Sbis, {instantiate: false});
 // Deprecated

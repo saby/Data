@@ -1,6 +1,8 @@
 /**
  * Inherits static class members
  */
+import {Constructor} from "../../Browser/_Event/Server/_class/deliver/IndexedDB";
+
 function inheritStatic<T>(Base: T, Sub: Function): void {
    // Don't inherit from plain object
    if ((Base as any) === Object) {
@@ -66,26 +68,25 @@ type MixinConstructor9<
    M1, M2, M3, M4, M5, M6, M7, M8, M9
 > = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9;
 
-export function mixin(...mixins: any[]): any;
-export function mixin<M1>(...mixins: any[]): MixinConstructor1<M1>;
-export function mixin<M1, M2>(...mixins: any[]): MixinConstructor2<M1, M2>;
-export function mixin<M1, M2, M3>(...mixins: any[]): MixinConstructor3<M1, M2, M3>;
-export function mixin<M1, M2, M3, M4>(...mixins: any[]): MixinConstructor4<M1, M2, M3, M4>;
-export function mixin<M1, M2, M3, M4, M5>(...mixins: any[]): MixinConstructor5<M1, M2, M3, M4, M5>;
-export function mixin<M1, M2, M3, M4, M5, M6>(...mixins: any[]): MixinConstructor6<M1, M2, M3, M4, M5, M6>;
-export function mixin<M1, M2, M3, M4, M5, M6, M7>(...mixins: any[]): MixinConstructor7<M1, M2, M3, M4, M5, M6, M7>;
+export function mixin<M1>(...mixins: Function[]): MixinConstructor1<M1>;
+export function mixin<M1, M2>(...mixins: Function[]): MixinConstructor2<M1, M2>;
+export function mixin<M1, M2, M3>(...mixins: Function[]): MixinConstructor3<M1, M2, M3>;
+export function mixin<M1, M2, M3, M4>(...mixins: Function[]): MixinConstructor4<M1, M2, M3, M4>;
+export function mixin<M1, M2, M3, M4, M5>(...mixins: Function[]): MixinConstructor5<M1, M2, M3, M4, M5>;
+export function mixin<M1, M2, M3, M4, M5, M6>(...mixins: Function[]): MixinConstructor6<M1, M2, M3, M4, M5, M6>;
+export function mixin<M1, M2, M3, M4, M5, M6, M7>(...mixins: Function[]): MixinConstructor7<M1, M2, M3, M4, M5, M6, M7>;
 export function mixin<
    M1, M2, M3, M4, M5, M6, M7, M8
->(...mixins: any[]): MixinConstructor8<M1, M2, M3, M4, M5, M6, M7, M8>;
+>(...mixins: Function[]): MixinConstructor8<M1, M2, M3, M4, M5, M6, M7, M8>;
 export function mixin<
    M1, M2, M3, M4, M5, M6, M7, M8, M9
->(...mixins: any[]): MixinConstructor9<M1, M2, M3, M4, M5, M6, M7, M8, M9>;
+>(...mixins: Function[]): MixinConstructor9<M1, M2, M3, M4, M5, M6, M7, M8, M9>;
 
 /**
  * Creates a subclass with given mixins
  */
-export function mixin(Base: any, ...mixins: Array<Function | object>): any {
-   class Sub extends Base  {
+export function mixin(Base: Function, ...mixins: Function[]): Function {
+   class Sub extends (Base as any)  {
       constructor(...args: any[]) {
          if (Base !== Object) {
             super(...args);

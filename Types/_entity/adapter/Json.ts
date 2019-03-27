@@ -27,8 +27,10 @@ export default class Json extends Abstract /** @lends Types/_entity/adapter/Json
    }
 }
 
-Json.prototype['[Types/_entity/adapter/Json]'] = true;
-Json.prototype._moduleName = 'Types/entity:adapter.Json';
+Object.assign(Json.prototype, {
+   '[Types/_entity/adapter/Json]': true,
+   _moduleName: 'Types/entity:adapter.Json'
+});
 
 register('Types/entity:adapter.Json', Json, {instantiate: false});
 // FIXME: deprecated
