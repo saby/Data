@@ -16,7 +16,6 @@
 
 export {default as Abstract} from './adapter/Abstract';
 export {default as Cow} from './adapter/Cow';
-export {default as GenericFormatMixin} from './adapter/GenericFormatMixin';
 export {default as Json} from './adapter/Json';
 export {default as IAdapter} from './adapter/IAdapter';
 export {default as IDecorator} from './adapter/IDecorator';
@@ -30,3 +29,8 @@ export {default as Sbis} from './adapter/Sbis';
 export {default as SbisFieldType} from './adapter/SbisFieldType';
 export {default as SbisRecord} from './adapter/SbisRecord';
 export {default as SbisTable} from './adapter/SbisTable';
+
+//FIXME: deprecated implementation for externals
+import GenericFormatMixinOrig from './adapter/GenericFormatMixin';
+const GenericFormatMixin = GenericFormatMixinOrig.prototype;
+export {GenericFormatMixin};

@@ -31,9 +31,8 @@ const arraySlice = Array.prototype.slice;
  * </pre>
  * @class Types/_collection/ObservableList
  * @extends Types/_collection/List
- * @implements Types/_collection/IBind
+ * @implements Types/_collection/IObservable
  * @implements Types/_entity/relation/IReceiver
- * @mixes Types/_collection/IObservable
  * @mixes Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
@@ -43,6 +42,7 @@ export default class ObservableList<T> extends mixin<
    EventRaisingMixin
 >(
    List,
+   IObservable,
    EventRaisingMixin
 ) implements IReceiver {
    protected _$items: T[];
