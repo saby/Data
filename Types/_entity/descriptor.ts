@@ -12,6 +12,7 @@ type ValidateFunc = (value: any) => any;
 interface IChained extends ValidateFunc {
    required?: IChained;
    oneOf?: IChained;
+   not?: IChained;
    arrayOf?: IChained;
 }
 
@@ -118,6 +119,26 @@ function oneOf(values: any[]): IChained {
 }
 
 /**
+ * Returns validator for "Not" restriction.
+ * @param values Allowed values
+ * @returns Validator
+ */
+function not(values: any[]): IChained {
+   if (!(values instanceof Array)) {
+      throw new TypeError('Argument values should be an instance of Array');
+   }
+
+   const prev: IChained = this;
+
+   return chain(function isNot(value: any): IChained | TypeError {
+      if (value !== undefined && values.indexOf(value) !== -1) {
+         return new TypeError(`Invalid value ${value}`);
+      }
+      return prev(value);
+   });
+}
+
+/**
  * Returns validator for Array<T> restriction.
  * @name Types/_entity/descriptor#oneOf
  * @param type Type descriptor
@@ -164,6 +185,10 @@ function chain(parent: IChained): IChained {
       oneOf: {
          enumerable: true,
          value: oneOf
+      },
+      not: {
+         enumerable: true,
+         value: not
       },
       arrayOf: {
          enumerable: true,
