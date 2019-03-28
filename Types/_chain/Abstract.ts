@@ -162,7 +162,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * });
     * </pre>
     */
-   value(factory: Function, ...optional: any[]): any {
+   value(factory?: Function, ...optional: any[]): any {
       if (factory instanceof Function) {
          const args = [this, ...optional];
          return factory(...args);
