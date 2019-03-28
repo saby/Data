@@ -81,6 +81,22 @@ define([
             assert.strictEqual(index, expect.length);
          });
 
+         it('should return an enumerator which works well with empty arrays by the way', function() {
+            var items = [[], 1, [2, 3]];
+            var expect = [1, 2, 3];
+            var prev = new Mock(items);
+            var chain = new FlattenedChain(prev);
+            var enumerator = chain.getEnumerator();
+            var index = 0;
+
+            while (enumerator.moveNext()) {
+               assert.strictEqual(enumerator.getCurrent(), expect[index]);
+               assert.strictEqual(enumerator.getCurrentIndex(), index);
+               index++;
+            }
+            assert.strictEqual(index, expect.length);
+         });
+
          it('should return an enumerator with nesting IEnumerable', function() {
             var items = [
                   'one',

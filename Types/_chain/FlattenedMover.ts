@@ -52,12 +52,13 @@ export default class FlattenedMover {
 
       if (this.current instanceof Array) {
          this.current = new FlattenedMover(this.current);
-         return this.current.moveNext();
+         return this.moveNext();
       }
       if (this.current && this.current['[Types/_collection/IEnumerable]']) {
          this.current = new FlattenedMover((this.current as IEnumerable<any>).getEnumerator());
-         return this.current.moveNext();
+         return this.moveNext();
       }
+
       return true;
    }
 }
