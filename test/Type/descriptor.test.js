@@ -11,12 +11,22 @@ define([
    descriptor = descriptor.default;
 
    describe('Types/_entity/descriptor', function() {
+      it('should throw TypeError on call without arguments', function() {
+         assert.throws(function() {
+            descriptor();
+         }, TypeError);
+      });
+
       it('should return Function', function() {
          assert.instanceOf(descriptor(Number), Function);
       });
 
+      it('should return Function on composite type', function() {
+         assert.instanceOf(descriptor(Number, String), Function);
+      });
+
       it('should return valid Boolean value', function() {
-         assert.equal(descriptor(Boolean)(false), false);
+         assert.strictEqual(descriptor(Boolean)(false), false);
       });
 
       it('should return TypeError for not a Boolean value', function() {
@@ -27,7 +37,7 @@ define([
       });
 
       it('should return valid Number value', function() {
-         assert.equal(descriptor(Number)(1), 1);
+         assert.strictEqual(descriptor(Number)(1), 1);
       });
 
       it('should return TypeError for not a Number value', function() {
@@ -38,7 +48,7 @@ define([
       });
 
       it('should return valid String value', function() {
-         assert.equal(descriptor(String)('a'), 'a');
+         assert.strictEqual(descriptor(String)('a'), 'a');
       });
 
       it('should return valid subclass of String value', function() {
@@ -97,6 +107,17 @@ define([
             inst = new Module();
 
          assert.instanceOf(descriptor(IFace)(inst), TypeError);
+      });
+
+      it('should return valid composite value', function() {
+         assert.strictEqual(descriptor(Boolean, Number, String)(false), false);
+         assert.strictEqual(descriptor(Boolean, Number, String)(0), 0);
+         assert.strictEqual(descriptor(Boolean, Number, String)(''), '');
+      });
+
+      it('should return TypeError for invalid composite value', function() {
+         assert.instanceOf(descriptor(Boolean, Number)(''), TypeError);
+         assert.instanceOf(descriptor(Boolean, Number, String)({}), TypeError);
       });
 
       it('should return undefined for undefined value with any type', function() {

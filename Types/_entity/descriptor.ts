@@ -36,10 +36,41 @@ function normalizeType(type: Descriptor): Descriptor {
 }
 
 /**
+ * Returns validator for composite type which must be suitable for one of given simple types
+ * @param types Composite type descriptor
+ */
+function validateComposite(...types: Descriptor[]): ValidateFunc {
+   const validators = types.map((type) => validate(type));
+
+   return function validateCompoisiteFor(value: any): any {
+      let hasSuitable = false;
+      const errors = [];
+
+      for (let index = 0; index < validators.length; index++) {
+         const validator = validators[index];
+         const result = validator(value);
+         if (result instanceof Error) {
+            errors.push(result);
+         } else {
+            hasSuitable = true;
+            break;
+         }
+      }
+
+      if (!hasSuitable) {
+         return new TypeError(
+            'There are next restrictions for composite type: ' +
+            errors.map((err) => `"${err.message}"`).join(' or ')
+         );
+      }
+
+      return value;
+   };
+}
+
+/**
  * Returns validator for certain type.
- * @name Types/_entity/descriptor#validate
  * @param type Type descriptor
- * @returns Validator
  */
 function validate(type: Descriptor): ValidateFunc {
    type = normalizeType(type);
@@ -82,8 +113,6 @@ function validate(type: Descriptor): ValidateFunc {
 
 /**
  * Returns validator for required value.
- * @name Types/_entity/descriptor#required
- * @returns Validator
  */
 function required(): IChained {
    const prev: IChained = this;
@@ -98,9 +127,7 @@ function required(): IChained {
 
 /**
  * Returns validator for "One of" restriction.
- * @name Types/_entity/descriptor#oneOf
  * @param values Allowed values
- * @returns Validator
  */
 function oneOf(values: any[]): IChained {
    if (!(values instanceof Array)) {
@@ -119,9 +146,7 @@ function oneOf(values: any[]): IChained {
 
 /**
  * Returns validator for Array<T> restriction.
- * @name Types/_entity/descriptor#oneOf
  * @param type Type descriptor
- * @returns Validator
  */
 function arrayOf(type: Descriptor): IChained {
    const prev: IChained = this;
@@ -147,9 +172,7 @@ function arrayOf(type: Descriptor): IChained {
 
 /**
  * Creates chain element with all available validators.
- * @name Types/_entity/descriptor#chain
  * @param parent Previous chain element
- * @returns New chain element
  */
 function chain(parent: IChained): IChained {
    const wrapper = (...args) => {
@@ -175,15 +198,29 @@ function chain(parent: IChained): IChained {
 }
 
 /**
- * Creates type descriptor for given value type.
+ * Creates type descriptor which checks given value type.
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number)(0)); // 0
+ * console.log(descriptor(Number)('0')); // TypeError
+ *
+ * console.log(descriptor(Number, String)(0));// 0
+ * console.log(descriptor(Number, String)('0'));// '0'
+ * console.log(descriptor(Number, String)(true));// TypeError
+ * </pre>
  * @function Types/_entity/descriptor
- * @param type Value type
+ * @param types Desirable value types
  * @returns Type descriptor
  * @public
  * @author Мальцев А.А.
  */
-export default function descriptor(type: Descriptor): IChained {
+export default function descriptor(...types: Descriptor[]): IChained {
+   if (types.length === 0) {
+      throw new TypeError('You should specify one type descriptor at least');
+   }
+
    return chain(
-      validate(type)
+      types.length > 1 ? validateComposite(...types) : validate(types[0])
    );
 }
