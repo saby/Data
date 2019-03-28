@@ -45,9 +45,6 @@ export default class ObservableList<T> extends mixin<
    IObservable,
    EventRaisingMixin
 ) implements IReceiver {
-   protected _$items: T[];
-   protected _indexer: Indexer<T[]>;
-
    /**
     * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
     */
