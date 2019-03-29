@@ -1,7 +1,7 @@
 import Base, {IOptions as IBaseOptions} from './Base';
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
-import IProvider, {IEndpoint} from './IProvider';
+import IProvider from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';

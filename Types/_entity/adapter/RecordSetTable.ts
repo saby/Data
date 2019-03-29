@@ -2,7 +2,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IAdapter from './IAdapter';
 import GenericFormatMixin from './GenericFormatMixin';
-import {UniversalField, Field} from '../format';
+import {Field} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';

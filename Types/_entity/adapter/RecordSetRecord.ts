@@ -1,7 +1,7 @@
 import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
-import {Field, UniversalField} from '../format';
+import {Field} from '../format';
 import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';

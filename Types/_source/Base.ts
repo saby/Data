@@ -2,7 +2,7 @@ import IData from './IData';
 import OptionsMixin, {IOptions as IOptionsOptions} from './OptionsMixin';
 import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
-import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, adapter} from '../entity';
+import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin} from '../entity';
 import {logger, mixin} from '../util';
 
 export interface IOptions extends IDataOptions, IOptionsOptions {

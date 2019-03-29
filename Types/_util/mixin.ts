@@ -1,8 +1,6 @@
 /**
  * Inherits static class members
  */
-import {Constructor} from "../../Browser/_Event/Server/_class/deliver/IndexedDB";
-
 function inheritStatic<T>(Base: T, Sub: Function): void {
    // Don't inherit from plain object
    if ((Base as any) === Object) {

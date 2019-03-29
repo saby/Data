@@ -1,4 +1,3 @@
-import CollectionItem from './CollectionItem';
 import {DestroyableMixin, OptionsToPropertyMixin} from '../entity';
 import {IEnumerator, IndexedEnumeratorMixin} from '../collection';
 import {mixin} from '../util';

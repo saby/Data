@@ -1,7 +1,7 @@
 import {iterateNumber} from './utils';
 // @ts-ignore
 import i18n = require('Core/i18n');
-import 'i18n!Types/_formatter/_numberWords/en'
+import 'i18n!Types/_formatter/_numberWords/en';
 
 const DIGITS = [
    'zero',
