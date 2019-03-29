@@ -157,6 +157,50 @@ define([
 
             assert.equal(source.read(), '!read');
          });
+
+         it('should always return result from data.read', function() {
+            var expected = {foo: 'bar'};
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  read: expected
+               },
+               validators: {
+                  read: function () {
+                     return true;
+                  }
+               }
+            });
+
+            var given = null;
+            source.read().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+
+            given = null;
+            source.read().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+         });
+
+         it('should always return result from target', function() {
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  read: {}
+               },
+               validators: {
+                  read: function () {
+                     return false;
+                  }
+               }
+            });
+
+            assert.equal(source.read(), '!read');
+            assert.equal(source.read(), '!read');
+         });
       });
 
       describe('.update()', function() {
@@ -214,6 +258,50 @@ define([
 
             assert.equal(source.query(), '!query');
          });
+
+         it('should always return result from data.query', function() {
+            var expected = {foo: 'bar'};
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  query: expected
+               },
+               validators: {
+                  query: function () {
+                     return true;
+                  }
+               }
+            });
+
+            var given = null;
+            source.query().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+
+            given = null;
+            source.query().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+         });
+
+         it('should always return result from target', function() {
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  query: {}
+               },
+               validators: {
+                  query: function () {
+                     return false;
+                  }
+               }
+            });
+
+            assert.equal(source.query(), '!query');
+            assert.equal(source.query(), '!query');
+         });
       });
 
       describe('.merge()', function() {
@@ -256,6 +344,50 @@ define([
             });
             assert.equal(givenFirst, expected);
 
+            assert.equal(source.copy(), '!copy');
+         });
+
+         it('should always return result from data.copy', function() {
+            var expected = {foo: 'bar'};
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  copy: expected
+               },
+               validators: {
+                  copy: function () {
+                     return true;
+                  }
+               }
+            });
+
+            var given = null;
+            source.copy().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+
+            given = null;
+            source.copy().addCallback(function(data) {
+               given = data;
+            });
+            assert.equal(given, expected);
+         });
+
+         it('should always return result from target', function() {
+            var source = new PrefetchProxy({
+               target: target,
+               data: {
+                  copy: {}
+               },
+               validators: {
+                  copy: function () {
+                     return false;
+                  }
+               }
+            });
+
+            assert.equal(source.copy(), '!copy');
             assert.equal(source.copy(), '!copy');
          });
       });
