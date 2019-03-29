@@ -25,8 +25,6 @@ import {create, register} from '../di';
 import {mixin, logger} from '../util';
 import {isEqual} from '../object';
 
-type T = Record;
-
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
@@ -121,8 +119,8 @@ function checkNullId(value: any, idProperty: string): void {
  * @author Мальцев А.А.
  * @public
  */
-export default class RecordSet extends mixin<
-   ObservableList<T>,
+export default class RecordSet<T = Record> extends mixin<
+   ObservableList<any>,
    FormattableMixin,
    InstantiableMixin
 >(
@@ -361,7 +359,7 @@ export default class RecordSet extends mixin<
       enumerator.setResolver((index) => this.at(index));
 
       if (state) {
-         enumerator.setFilter((record) => record.getState() === state);
+         enumerator.setFilter((record) => record instanceof Record ? record.getState() === state : true);
       }
 
       return enumerator;
@@ -418,7 +416,7 @@ export default class RecordSet extends mixin<
          const record = this.at(i);
          let isMatching = true;
          if (state) {
-            isMatching = record.getState() === state;
+            isMatching = record instanceof Record ? record.getState() === state : true;
          }
          if (isMatching) {
             callback.call(
@@ -758,7 +756,9 @@ export default class RecordSet extends mixin<
       if (value !== undefined) {
          const name = format.getName();
          this.each((record) => {
-            record.set(name, value);
+            if (record instanceof Record) {
+               record.set(name, value);
+            }
          });
       }
       this._nextVersion();
@@ -993,10 +993,12 @@ export default class RecordSet extends mixin<
    acceptChanges(spread?: boolean): void {
       const toRemove = [];
       this.each((record, index) => {
-         if (record.getState() === RECORD_STATE.DELETED) {
-            toRemove.push(index);
+         if (record instanceof Record) {
+            if (record.getState() === RECORD_STATE.DELETED) {
+               toRemove.push(index);
+            }
+            record.acceptChanges();
          }
-         record.acceptChanges();
       });
 
       for (let index = toRemove.length - 1; index >= 0; index--) {
@@ -1250,7 +1252,9 @@ export default class RecordSet extends mixin<
       let index;
 
       this.each((record, index) => {
-         existsIdMap[record.get(idProperty)] = index;
+         if (record instanceof Record) {
+            existsIdMap[record.get(idProperty)] = index;
+         }
       });
 
       for (let i = 0; i < count; i++) {
@@ -1304,7 +1308,7 @@ export default class RecordSet extends mixin<
       if (options.remove) {
          const toRemove = [];
          this.each((record, index) => {
-            if (!newIdMap.hasOwnProperty(record.get(idProperty))) {
+            if (record instanceof Record && !newIdMap.hasOwnProperty(record.get(idProperty))) {
                toRemove.push(index);
             }
          });

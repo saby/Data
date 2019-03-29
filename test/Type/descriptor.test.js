@@ -11,12 +11,22 @@ define([
    descriptor = descriptor.default;
 
    describe('Types/_entity/descriptor', function() {
+      it('should throw TypeError on call without arguments', function() {
+         assert.throws(function() {
+            descriptor();
+         }, TypeError);
+      });
+
       it('should return Function', function() {
          assert.instanceOf(descriptor(Number), Function);
       });
 
+      it('should return Function on composite type', function() {
+         assert.instanceOf(descriptor(Number, String), Function);
+      });
+
       it('should return valid Boolean value', function() {
-         assert.equal(descriptor(Boolean)(false), false);
+         assert.strictEqual(descriptor(Boolean)(false), false);
       });
 
       it('should return TypeError for not a Boolean value', function() {
@@ -27,7 +37,7 @@ define([
       });
 
       it('should return valid Number value', function() {
-         assert.equal(descriptor(Number)(1), 1);
+         assert.strictEqual(descriptor(Number)(1), 1);
       });
 
       it('should return TypeError for not a Number value', function() {
@@ -38,7 +48,7 @@ define([
       });
 
       it('should return valid String value', function() {
-         assert.equal(descriptor(String)('a'), 'a');
+         assert.strictEqual(descriptor(String)('a'), 'a');
       });
 
       it('should return valid subclass of String value', function() {
@@ -99,6 +109,17 @@ define([
          assert.instanceOf(descriptor(IFace)(inst), TypeError);
       });
 
+      it('should return valid composite value', function() {
+         assert.strictEqual(descriptor(Boolean, Number, String)(false), false);
+         assert.strictEqual(descriptor(Boolean, Number, String)(0), 0);
+         assert.strictEqual(descriptor(Boolean, Number, String)(''), '');
+      });
+
+      it('should return TypeError for invalid composite value', function() {
+         assert.instanceOf(descriptor(Boolean, Number)(''), TypeError);
+         assert.instanceOf(descriptor(Boolean, Number, String)({}), TypeError);
+      });
+
       it('should return undefined for undefined value with any type', function() {
          assert.isUndefined(descriptor(Boolean)());
          assert.isUndefined(descriptor(Number)());
@@ -153,6 +174,42 @@ define([
 
             assert.throws(function() {
                descriptor(Boolean).oneOf({});
+            }, TypeError);
+         });
+      });
+
+      describe('.not()', function() {
+         it('should return valid value', function() {
+            assert.equal(descriptor(Boolean).not([true])(false), false);
+            assert.equal(descriptor(Number).not([1, 2, 3])(0), 0);
+            assert.equal(descriptor(String).not(['a', 'b'])('c'), 'c');
+         });
+
+         it('should return undefined as valid value', function() {
+            assert.isUndefined(descriptor(Number).not([0, 1])());
+         });
+
+         it('should return TypeError for undefined but required', function() {
+            assert.instanceOf(descriptor(Number).not([0, 1]).required()(), TypeError);
+         });
+
+         it('should return TypeError for invalid value', function() {
+            assert.instanceOf(descriptor(Boolean).not([true])(true), TypeError);
+            assert.instanceOf(descriptor(Number).not([1, 2])(1), TypeError);
+            assert.instanceOf(descriptor(String).not(['a'])('a'), TypeError);
+         });
+
+         it('should throw TypeError in invalid values argument', function() {
+            assert.throws(function() {
+               descriptor(Boolean).not();
+            }, TypeError);
+
+            assert.throws(function() {
+               descriptor(Boolean).not(null);
+            }, TypeError);
+
+            assert.throws(function() {
+               descriptor(Boolean).not({});
             }, TypeError);
          });
       });

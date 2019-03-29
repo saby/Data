@@ -1,5 +1,4 @@
 import Abstract from './Abstract';
-import CollectionItem from './CollectionItem';
 
 export interface IOptions<S, T> {
    display: Abstract<S, T>;
