@@ -129,7 +129,7 @@ define([
                },
                adapter = new SbisRecord(data);
 
-            assert.strictEqual(adapter.get('id'), '1');
+            assert.strictEqual(adapter.get('id'), 1);
          });
 
          it('should return type "Идентификатор" as is from Array with Number and String', function() {
