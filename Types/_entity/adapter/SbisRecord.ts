@@ -118,9 +118,13 @@ export default class SbisRecord extends mixin<
    protected _cast(format: IFieldFormat, value: any): any {
       switch (format && format.t) {
          case 'Идентификатор':
-            return value instanceof Array
-               ? (value[0] === null ? value[0] : value.join(this._castSeparator))
-               : value;
+            if (!(value instanceof Array)) {
+               return value;
+            }
+            if (value.length === 1 || value[0] === null) {
+               return value[0];
+            }
+            return value.join(this._castSeparator);
       }
       return value;
    }
@@ -131,9 +135,10 @@ export default class SbisRecord extends mixin<
             if (value instanceof Array) {
                return value;
             }
-            return typeof value === 'string'
-               ? value.split(this._castSeparator)
-               : [value];
+            if (typeof value === 'string') {
+               return value.split(this._castSeparator);
+            }
+            return [value];
       }
       return value;
    }
