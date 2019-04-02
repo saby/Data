@@ -26,6 +26,7 @@ export {default as HierarchicalMemory} from './_source/HierarchicalMemory';
 export {default as ICrud} from './_source/ICrud';
 export {default as ICrudPlus} from './_source/ICrudPlus';
 export {default as IData} from './_source/IData';
+export {default as IDecorator} from './_source/IDecorator';
 export {default as IProvider} from './_source/IProvider';
 export {default as IRpc} from './_source/IRpc';
 export {default as Local} from './_source/Local';

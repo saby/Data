@@ -1,9 +1,16 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
-import Base from './Base';
+import IDecorator from './IDecorator';
+import OptionsMixin from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
-import {DestroyableMixin, Record, OptionsToPropertyMixin, SerializableMixin, ISerializableState} from '../entity';
+import {
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   SerializableMixin,
+   Record,
+   ISerializableState
+} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
 // @ts-ignore
@@ -25,7 +32,7 @@ interface IPrefetchProxySerializableState extends ISerializableState {
    _done: IDone;
 }
 
-declare type ITarget = ICrud | ICrudPlus | Base;
+declare type ITarget = ICrud | ICrudPlus;
 
 /**
  * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода
@@ -75,6 +82,7 @@ declare type ITarget = ICrud | ICrudPlus | Base;
  * </pre>
  * @class Types/_source/PrefetchProxy
  * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/IDecorator
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @mixes Types/_entity/OptionsMixin
@@ -89,7 +97,7 @@ export default class PrefetchProxy extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    SerializableMixin
-) implements ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
+) implements IDecorator, ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
    /**
     * @cfg {Types/_source/ICrud} Целевой источник данных.
     * @name Types/_source/PrefetchProxy#target
@@ -136,6 +144,16 @@ export default class PrefetchProxy extends mixin<
          throw new ReferenceError('Option "target" is required.');
       }
    }
+
+   // region IDecorator
+
+   readonly '[Types/_source/IDecorator]': boolean = true;
+
+   getOriginal<T = ITarget>(): T {
+      return this._$target as any;
+   }
+
+   // endregion
 
    // region ICrud
 
@@ -193,14 +211,20 @@ export default class PrefetchProxy extends mixin<
 
    // endregion
 
-   // region Base
+   // region OptionsMixin
 
    getOptions(): object {
-      return (this._$target as Base).getOptions();
+      if (this._$target && (this._$target as any as OptionsMixin).getOptions) {
+         return (this._$target as any as OptionsMixin).getOptions();
+      }
+      return {};
    }
 
    setOptions(options: object): void {
-      return (this._$target as Base).setOptions(options);
+      if (this._$target && (this._$target as any as OptionsMixin).setOptions) {
+         return (this._$target as any as OptionsMixin).setOptions(options);
+      }
+      throw new TypeError('Option "target" should be an instance of Types/_source/OptionsMixin');
    }
 
    // endregion
@@ -208,15 +232,14 @@ export default class PrefetchProxy extends mixin<
    // region SerializableMixin
 
    _getSerializableState(state: ISerializableState): IPrefetchProxySerializableState {
-      const resultState: IPrefetchProxySerializableState =
-         SerializableMixin.prototype._getSerializableState.call(this, state);
+      const resultState = super._getSerializableState(state) as IPrefetchProxySerializableState;
       resultState._done = this._done;
 
       return resultState;
    }
 
    _setSerializableState(state?: IPrefetchProxySerializableState): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+      const fromSerializableMixin = super._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
          this._done = state._done;

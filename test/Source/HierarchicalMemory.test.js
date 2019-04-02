@@ -29,6 +29,12 @@ define([
          source = undefined;
       });
 
+      describe('.getOriginal()', function() {
+         it('should return Memory instance', function() {
+            assert.instanceOf(source.getOriginal(), dataSource.Memory);
+         });
+      });
+
       describe('.create()', function() {
          it('should return record', function() {
             return source.create().then(function(model) {
