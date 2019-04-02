@@ -1,5 +1,6 @@
 import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
+import IDecorator from './IDecorator';
 import Memory, {IOptions as IMemoryOptions} from './Memory';
 import Query from './Query';
 import DataSet from './DataSet';
@@ -61,6 +62,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * </pre>
  * @class Types/_source/HierarchicalMemory
  * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/IDecorator
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @mixes Types/_entity/SerializableMixin
@@ -72,7 +74,7 @@ export default class HierarchicalMemory extends mixin<
 >(
    OptionsToPropertyMixin,
    SerializableMixin
-) implements ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
+) implements IDecorator, ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
    /**
     * @cfg {Object} See {@link Types/_source/Memory#data}.
     * @name Types/_source/HierarchicalMemory#data
@@ -121,6 +123,16 @@ export default class HierarchicalMemory extends mixin<
       SerializableMixin.call(this);
       this._source = new Memory(options);
    }
+
+   // region IDecorator
+
+   readonly '[Types/_source/IDecorator]': boolean = true;
+
+   getOriginal<T = Memory>(): T {
+      return this._source as any;
+   }
+
+   // endregion
 
    // region ICrud
 

@@ -1,16 +1,24 @@
 /* global beforeEach, afterEach, describe, context, assert, it */
 define([
-   'Types/_source/PrefetchProxy'
+   'Types/_source/PrefetchProxy',
+   'Types/_source/OptionsMixin'
 ], function(
-   PrefetchProxy
+   PrefetchProxy,
+   OptionsMixin
 ) {
    'use strict';
 
+   OptionsMixin = OptionsMixin.default;
    PrefetchProxy = PrefetchProxy.default;
 
    describe('Types/_source/PrefetchProxy', function() {
       var getTarget = function(data) {
-            return {
+            var Target = function() {
+
+            };
+            Target.prototype = Object.create(OptionsMixin.prototype);
+
+            Object.assign(Target.prototype, {
                data: data,
                create: function() {
                   this.lastMethod = 'create';
@@ -67,7 +75,9 @@ define([
                   this.lastArgs = Array.prototype.slice.call(arguments);
                   return '!setOptions';
                }
-            };
+            });
+
+            return new Target();
          },
          targetData,
          target;
@@ -92,6 +102,16 @@ define([
             assert.throws(function() {
                new PrefetchProxy();
             }, ReferenceError);
+         });
+      });
+
+      describe('.getOriginal()', function() {
+         it('should return value from "target" option', function() {
+            var source = new PrefetchProxy({
+               target: target
+            });
+
+            assert.strictEqual(source.getOriginal(), target);
          });
       });
 
