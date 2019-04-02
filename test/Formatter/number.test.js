@@ -16,13 +16,8 @@ define([
             var stub;
 
             beforeEach(function() {
-               var opts = new Intl.NumberFormat(locale).resolvedOptions();
-               if (opts.locale === locale) {
-                  stub = sinon.stub(i18n, 'getLang');
-                  stub.returns(locale);
-               } else {
-                  this.skip();
-               }
+               stub = sinon.stub(i18n, 'getLang');
+               stub.returns(locale);
             });
 
             afterEach(function() {
