@@ -416,107 +416,107 @@ export default function format(date: Date, format: string): string {
  */
 Object.defineProperties(format, {
    FULL_DATE_DOW: {
-      get: (): string => {
+      get: function (): string {
          return locale.config.fullDateDayOfWeekFormat;
       }
    },
    FULL_DATE: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateFormat;
       }
    },
    FULL_DATE_FULL_MONTH: {
-      get: (): string => {
+      get: function (): string {
          return locale.config.fullDateFullMonthFormat;
       }
    },
    FULL_DATE_FULL_MONTH_FULL_YEAR: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateFullMonthFullYearFormat;
       }
    },
    FULL_DATE_FULL_YEAR: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateFullYearFormat;
       }
    },
    FULL_DATE_SHORT_MONTH: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateShortMonthFormat;
       }
    },
    FULL_DATE_SHORT_MONTH_FULL_YEAR: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateShortMonthFullYearFormat;
       }
    },
    FULL_DATETIME: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
       }
    },
    FULL_HALF_YEAR: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullHalfYearFormat;
       }
    },
    FULL_MONTH: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullMonthFormat;
       }
    },
    FULL_QUATER: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullQuarterFormat;
       }
    },
    FULL_TIME: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.fullTimeFormat;
       }
    },
    SHORT_DATE_DOW: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortDateDayOfWeekFormat;
       }
    },
    SHORT_DATE: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortDateFormat;
       }
    },
    SHORT_DATE_FULL_MONTH: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortDateFullMonthFormat;
       }
    },
    SHORT_DATE_SHORT_MONTH: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortDateShortMonthFormat;
       }
    },
    SHORT_DATETIME: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
       }
    },
    SHORT_HALF_YEAR: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortHalfYearFormat;
       }
    },
    SHORT_MONTH: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortMonthFormat;
       }
    },
    SHORT_QUATER: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortQuarterFormat;
       }
    },
    SHORT_TIME: {
-      get: (): string => {
+      get: function(): string {
          return locale.config.shortTimeFormat;
       }
    }
