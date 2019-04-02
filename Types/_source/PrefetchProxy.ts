@@ -214,15 +214,15 @@ export default class PrefetchProxy extends mixin<
    // region OptionsMixin
 
    getOptions(): object {
-      if (this._$target instanceof OptionsMixin) {
-         return this._$target.getOptions();
+      if (this._$target && (this._$target as any as OptionsMixin).getOptions) {
+         return (this._$target as any as OptionsMixin).getOptions();
       }
       return {};
    }
 
    setOptions(options: object): void {
-      if (this._$target instanceof OptionsMixin) {
-         return this._$target.setOptions(options);
+      if (this._$target && (this._$target as any as OptionsMixin).setOptions) {
+         return (this._$target as any as OptionsMixin).setOptions(options);
       }
       throw new TypeError('Option "target" should be an instance of Types/_source/OptionsMixin');
    }
