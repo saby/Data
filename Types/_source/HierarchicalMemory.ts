@@ -14,6 +14,7 @@ import {
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
+import {ExtendPromise} from '../_declarations';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 

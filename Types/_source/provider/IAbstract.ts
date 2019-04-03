@@ -1,3 +1,5 @@
+import {ExtendPromise} from '../../_declarations';
+
 /**
  * Интерфейс абстрактного провайдера
  * @interface Types/_source/provider/IAbstract

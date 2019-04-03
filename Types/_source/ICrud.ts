@@ -2,6 +2,7 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {Record} from '../entity';
 import {RecordSet} from '../collection';
+import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающиего контракт

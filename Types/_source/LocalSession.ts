@@ -17,7 +17,8 @@ import {RecordSet} from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
 import {merge} from '../object';
-import { LocalStorage } from 'Browser/Storage';
+import {ExtendPromise} from '../_declarations';
+import {LocalStorage} from 'Browser/Storage';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 

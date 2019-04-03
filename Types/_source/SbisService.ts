@@ -11,6 +11,7 @@ import {RecordSet} from '../collection';
 import {adapter, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
+import {ExtendPromise} from '../_declarations';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
 
