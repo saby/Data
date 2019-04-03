@@ -17,9 +17,9 @@ import {mixin} from '../util';
 import Deferred = require('Core/Deferred');
 
 interface IData {
-   read: Record;
-   query: DataSet;
-   copy: Record;
+   read?: Record;
+   query?: DataSet;
+   copy?: Record;
 }
 
 interface IDone {
@@ -34,51 +34,84 @@ interface IPrefetchProxySerializableState extends ISerializableState {
 
 declare type ITarget = ICrud | ICrudPlus;
 
+interface IValidators {
+   read?: (data: Record, done?: IDone) => boolean;
+   query?: (data: DataSet, done?: IDone) => boolean;
+   copy?: (data: Record, done?: IDone) => boolean;
+}
+
+interface IOptions {
+   target: ITarget;
+   data?: IData;
+   validators?: IValidators;
+}
+
+const defaultValidators = {
+   read: (data: Record, done?: IDone): boolean => {
+      if (data && !done.read) {
+         done.read = true;
+         return true;
+      }
+      return false;
+   },
+   query: (data: DataSet, done?: IDone): boolean => {
+      if (data && !done.query) {
+         done.query = true;
+         return true;
+      }
+      return false;
+   },
+   copy: (data: Record, done?: IDone): boolean => {
+      if (data && !done.copy) {
+         done.copy = true;
+         return true;
+      }
+      return false;
+   }
+};
+
 /**
- * Источник данных, содержащий предварительно загруженные данные и возвращающий их на первый вызов любого метода
- * чтения данных. Все последующие вызовы проксируются на целевой источник данных.
+ * Data source which contains prefetched data and returns them on the first call of any method for data reading.
+ * Second and further calls will be proxied to the target data source.
  *
- * Создадим источник с заранее загруженным результатом списочного метода:
+ * Let's create data source witch two lists of spots: first one is prefetched data and the second one is the target
+ * Memory source:
  * <pre>
- *    require(['Types/source'], function (source) {
- *       var fastFoods = new source.PrefetchProxy({
- *          target: new source.Memory({
- *             data: [
- *                {id: 1, name: 'Kurger Bing'},
- *                {id: 2, name: 'DcMonald\'s'},
- *                {id: 3, name: 'CFK'},
- *                {id: 4, name: 'Kuicq'}
- *             ],
- *          }),
- *          data: {
- *             query: new source.DataSet({
- *                rawData: [
- *                   {id: 1, name: 'Mret a Panger'},
- *                   {id: 2, name: 'Cofta Cosfee'},
- *                   {id: 3, name: 'AET'},
- *                ]
- *             })
- *          }
- *       });
+ *    import {PrefetchProxy, Memory, DataSet} from 'Types/source';
  *
- *       //First query will return prefetched data
- *       fastFoods.query().addCallbacks(function(spots) {
- *          spots.getAll().forEach(function(spot) {
- *             console.log(spot.get('name'));//'Mret a Panger', 'Cofta Cosfee', 'AET'
- *          });
- *       }, function(error) {
- *          console.error(error);
- *       });
- *
- *       //Second query will return real data
- *       fastFoods.query().addCallbacks(function(spots) {
- *          spots.getAll().forEach(function(spot) {
- *             console.log(spot.get('name'));//'Kurger Bing', 'DcMonald's', 'CFK', 'Kuicq'
- *          });
- *       }, function(error) {
- *          console.error(error);
- *       });
+ *    const fastFoods = new PrefetchProxy({
+ *       data: {
+ *          query: new DataSet({
+ *             rawData: [
+ *                {id: 1, name: 'Mret a Panger'},
+ *                {id: 2, name: 'Cofta Cosfee'},
+ *                {id: 3, name: 'AET'},
+ *             ]
+ *          })
+ *       },
+ *       target: new Memory({
+ *          data: [
+ *             {id: 1, name: 'Kurger Bing'},
+ *             {id: 2, name: 'DcMonald\'s'},
+ *             {id: 3, name: 'CFK'},
+ *             {id: 4, name: 'Kuicq'}
+ *          ],
+ *       })
  *    });
+ *
+ *    //First query will return prefetched data
+ *    fastFoods.query().then((spots) => {
+ *       spots.getAll().forEach((spot) => {
+ *          console.log(spot.get('name'));//'Mret a Panger', 'Cofta Cosfee', 'AET'
+ *       });
+ *    }, console.error);
+ *
+ *    //Second query will return real data from target source
+ *    fastFoods.query().then((spots) => {
+ *       spots.getAll().forEach((spot) => {
+ *          console.log(spot.get('name'));//'Kurger Bing', 'DcMonald's', 'CFK', 'Kuicq'
+ *       });
+ *    }, console.error);
  * </pre>
  * @class Types/_source/PrefetchProxy
  * @mixes Types/_entity/DestroyableMixin
@@ -99,46 +132,109 @@ export default class PrefetchProxy extends mixin<
    SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
    /**
-    * @cfg {Types/_source/ICrud} Целевой источник данных.
+    * @cfg {Types/_source/ICrud} Target data source
     * @name Types/_source/PrefetchProxy#target
     */
    protected _$target: ITarget = null;
 
    /**
-    * @cfg {Object} Предварительно загруженные данные для методов чтения, определенных в интерфейсах
+    * @cfg {Object} Prefetched data for methods which means reading.
     * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
     * @name Types/_source/PrefetchProxy#data
     */
    protected _$data: IData = {
 
       /**
-       * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#read}.
+       * @cfg {Types/_entity/Record} Prefetched data for {@link Types/_source/ICrud#read} method.
        * @name Types/_source/PrefetchProxy#data.read
        */
       read: null,
 
       /**
-       * @cfg {Types/_source/DataSet} Предварительно загруженные данные для метода {@link Types/_source/ICrud#query}.
+       * @cfg {Types/_source/DataSet} Prefetched data for {@link Types/_source/ICrud#query} method.
        * @name Types/_source/PrefetchProxy#data.query
        */
       query: null,
 
       /**
-       * @cfg {Types/_entity/Record} Предварительно загруженные данные для метода {@link Types/_source/ICrud#copy}.
+       * @cfg {Types/_entity/Record} Prefetched data for {@link Types/_source/ICrud#copy} method.
        * @name Types/_source/PrefetchProxy#data.copy
        */
       copy: null
    };
 
    /**
-    * Методы, уже отдавший заранее приготовленные данные
+    * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it
+    * return prefetched data or invoke target source.
+    * @name Types/_source/PrefetchProxy#validators
+    * @example
+    * Let's cache data for one minute
+    * <pre>
+    *    import {PrefetchProxy, Memory, DataSet} from 'Types/source';
+    *
+    *    const EXPIRATION_INTERVAL = 60000;
+    *    const EXPIRATION_TIME = Date.now() + EXPIRATION_INTERVAL;
+    *
+    *    const forecast = new PrefetchProxy({
+    *       target: new Memory({
+    *          data: [
+    *             {id: 1, name: 'Moscow', temperature: -25},
+    *             {id: 2, name: 'Los Angeles', temperature: 20}
+    *          ],
+    *       }),
+    *       data: {
+    *          query: new DataSet({
+    *             rawData: [
+    *                {id: 1, name: 'Moscow', temperature: -23},
+    *                {id: 2, name: 'Los Angeles', temperature: 22}
+    *             ]
+    *          })
+    *       },
+    *       validators: {
+    *          query: (data) => {
+    *             return Date.now() < EXPIRATION_TIME;
+    *          }
+    *       }
+    *    });
+    *
+    *    //First 60 seconds source will be returning prefetched data
+    *    forecast.query().then((cities) => {
+    *       cities.getAll().forEach((city) => {
+    *          console.log(city.get('name') + ': ' + city.get('temperature'));//'Moscow: -25', 'Los Angeles: 20'
+    *       });
+    *    }, console.error);
+    *
+    *    //60 seconds later source will be returning updated data
+    *    setTimeout(() => {
+    *       forecast.query().then((cities) => {
+    *          cities.getAll().forEach((city) => {
+    *             console.log(city.get('name') + ': ' + city.get('temperature'));//'Moscow: -23', 'Los Angeles: 22'
+    *          });
+    *       }, console.error);
+    *    }, EXPIRATION_INTERVAL);
+    * </pre>
+    */
+   protected _$validators: IValidators;
+
+   /**
+    * Default and injected via option validators which combined together
+    */
+   protected _validators: IValidators = defaultValidators;
+
+   /**
+    * The state of read prefetched data
     */
    protected _done: IDone = {};
 
-   constructor(options?: object) {
+   constructor(options?: IOptions) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
+
+      // Combine _$validators and _validators together
+      if (this._$validators) {
+         this._validators = {...this._validators, ...this._$validators};
+      }
 
       if (!this._$target) {
          throw new ReferenceError('Option "target" is required.');
@@ -160,31 +256,29 @@ export default class PrefetchProxy extends mixin<
    readonly '[Types/_source/ICrud]': boolean = true;
 
    create(meta?: object): ExtendPromise<Record> {
-      return (<ICrud> this._$target).create(meta);
+      return (this._$target as ICrud).create(meta);
    }
 
    read(key: any, meta?: object): ExtendPromise<Record> {
-      if (this._$data.read && !this._done.read) {
-         this._done.read = true;
+      if (this._validators.read(this._$data.read, this._done)) {
          return Deferred.success(this._$data.read);
       }
-      return (<ICrud> this._$target).read(key, meta);
+      return (this._$target as ICrud).read(key, meta);
    }
 
    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
-      return (<ICrud> this._$target).update(data, meta);
+      return (this._$target as ICrud).update(data, meta);
    }
 
    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
-      return (<ICrud> this._$target).destroy(keys, meta);
+      return (this._$target as ICrud).destroy(keys, meta);
    }
 
    query(query: Query): ExtendPromise<DataSet> {
-      if (this._$data.query && !this._done.query) {
-         this._done.query = true;
+      if (this._validators.query(this._$data.query, this._done)) {
          return Deferred.success(this._$data.query);
       }
-      return (<ICrud> this._$target).query(query);
+      return (this._$target as ICrud).query(query);
    }
 
    // endregion
@@ -194,19 +288,18 @@ export default class PrefetchProxy extends mixin<
    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
    merge(from: string | number, to: string | number): ExtendPromise<any> {
-      return (<ICrudPlus> this._$target).merge(from, to);
+      return (this._$target as ICrudPlus).merge(from, to);
    }
 
    copy(key: string | number, meta?: object): ExtendPromise<Record> {
-      if (this._$data.copy && !this._done.copy) {
-         this._done.copy = true;
+      if (this._validators.copy(this._$data.copy, this._done)) {
          return Deferred.success(this._$data.copy);
       }
-      return (<ICrudPlus> this._$target).copy(key, meta);
+      return (this._$target as ICrudPlus).copy(key, meta);
    }
 
    move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
-      return (<ICrudPlus> this._$target).move(items, target, meta);
+      return (this._$target as ICrudPlus).move(items, target, meta);
    }
 
    // endregion
@@ -251,5 +344,7 @@ export default class PrefetchProxy extends mixin<
 
 Object.assign(PrefetchProxy.prototype, {
    '[Types/_source/PrefetchProxy]': true,
-   _moduleName: 'Types/source:PrefetchProxy'
+   _moduleName: 'Types/source:PrefetchProxy',
+   _$data: null,
+   _$validators: null
 });

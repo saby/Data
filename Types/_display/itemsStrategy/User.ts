@@ -1,7 +1,6 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import {SortFunction} from '../Collection';
-import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
-import CollectionItem from '../CollectionItem';
+import AbstractStrategy from './AbstractStrategy';
 import GroupItem from '../GroupItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {CompareFunction} from '../../_declarations';

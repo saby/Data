@@ -31,8 +31,6 @@
  * @author Мальцев А.А.
  */
 
-import {IArrayMeta, IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IRealMeta} from "./format/UniversalField";
-
 export {default as Field} from './format/Field';
 export {default as ArrayField} from './format/ArrayField';
 export {default as BinaryField} from './format/BinaryField';

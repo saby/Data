@@ -1,5 +1,4 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import Abstract from '../Abstract';
 import Collection from '../Collection';
 import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
