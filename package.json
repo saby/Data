@@ -27,8 +27,10 @@
       "moduleType": "amd",
       "tests": "test",
       "links": {
+         "node_modules/wasaby-app/src/Application": "Application",
          "node_modules/rmi/src/client/Browser": "Browser",
          "node_modules/rmi/src/client/Env": "Env",
+         "node_modules/rmi/src/client/SbisEnv": "SbisEnv",
          "node_modules/sbis3-ws/WS.Core": "WS.Core",
          "node_modules/sbis3-ws/Inferno": "Inferno",
          "node_modules/sbis3-ws/View": "View",
@@ -56,6 +58,7 @@
       "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.400",
       "saby-units": "git+https://github.com/saby/Units.git#rc-19.400",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.400",
-      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.400"
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.400",
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.400"
    }
 }
