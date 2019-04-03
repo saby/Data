@@ -1,7 +1,6 @@
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
-import Indexer from './Indexer';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {mixin} from '../util';

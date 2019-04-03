@@ -5,7 +5,6 @@ import Memory, {IOptions as IMemoryOptions} from './Memory';
 import Query from './Query';
 import DataSet from './DataSet';
 import {
-   DestroyableMixin,
    OptionsToPropertyMixin,
    SerializableMixin,
    ISerializableState as IDefaultSerializableState,

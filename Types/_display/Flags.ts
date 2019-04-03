@@ -3,7 +3,6 @@ import Collection, {
 } from './Collection';
 import FlagsItem from './FlagsItem';
 import {IFlags, IFlagsValue} from '../collection';
-import {DestroyableMixin, ObservableMixin} from '../entity';
 import {register} from '../di';
 import {Object as EventObject} from 'Env/Event';
 

@@ -1,6 +1,4 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import CollectionItem from '../CollectionItem';
-import TreeItem from '../TreeItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
 
