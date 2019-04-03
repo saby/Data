@@ -17,9 +17,9 @@ import {mixin} from '../util';
 import Deferred = require('Core/Deferred');
 
 interface IData {
-   read: Record;
-   query: DataSet;
-   copy: Record;
+   read?: Record;
+   query?: DataSet;
+   copy?: Record;
 }
 
 interface IDone {
@@ -39,6 +39,36 @@ interface IValidators {
    query?: (data: DataSet, done?: IDone) => boolean;
    copy?: (data: Record, done?: IDone) => boolean;
 }
+
+interface IOptions {
+   target: ITarget;
+   data?: IData;
+   validators?: IValidators;
+}
+
+const defaultValidators = {
+   read: (data: Record, done?: IDone): boolean => {
+      if (data && !done.read) {
+         done.read = true;
+         return true;
+      }
+      return false;
+   },
+   query: (data: DataSet, done?: IDone): boolean => {
+      if (data && !done.query) {
+         done.query = true;
+         return true;
+      }
+      return false;
+   },
+   copy: (data: Record, done?: IDone): boolean => {
+      if (data && !done.copy) {
+         done.copy = true;
+         return true;
+      }
+      return false;
+   }
+};
 
 /**
  * Data source which contains prefetched data and returns them on the first call of any method for data reading.
@@ -184,39 +214,27 @@ export default class PrefetchProxy extends mixin<
     *    }, EXPIRATION_INTERVAL);
     * </pre>
     */
-   protected _$validators: IValidators = {
-      read: (data: Record, done?: IDone): boolean => {
-         if (data && !done.read) {
-            done.read = true;
-            return true;
-         }
-         return false;
-      },
-      query: (data: DataSet, done?: IDone): boolean => {
-         if (data && !done.query) {
-            done.query = true;
-            return true;
-         }
-         return false;
-      },
-      copy: (data: Record, done?: IDone): boolean => {
-         if (data && !done.copy) {
-            done.copy = true;
-            return true;
-         }
-         return false;
-      }
-   };
+   protected _$validators: IValidators;
 
    /**
-    * The state of reading prefetched data
+    * Default and injected via option validators which combined together
+    */
+   protected _validators: IValidators = defaultValidators;
+
+   /**
+    * The state of read prefetched data
     */
    protected _done: IDone = {};
 
-   constructor(options?: object) {
+   constructor(options?: IOptions) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
+
+      // Combine _$validators and _validators together
+      if (this._$validators) {
+         this._validators = {...this._validators, ...this._$validators};
+      }
 
       if (!this._$target) {
          throw new ReferenceError('Option "target" is required.');
@@ -242,7 +260,7 @@ export default class PrefetchProxy extends mixin<
    }
 
    read(key: any, meta?: object): ExtendPromise<Record> {
-      if (this._$validators.read(this._$data.read, this._done)) {
+      if (this._validators.read(this._$data.read, this._done)) {
          return Deferred.success(this._$data.read);
       }
       return (this._$target as ICrud).read(key, meta);
@@ -257,7 +275,7 @@ export default class PrefetchProxy extends mixin<
    }
 
    query(query: Query): ExtendPromise<DataSet> {
-      if (this._$validators.query(this._$data.query, this._done)) {
+      if (this._validators.query(this._$data.query, this._done)) {
          return Deferred.success(this._$data.query);
       }
       return (this._$target as ICrud).query(query);
@@ -274,7 +292,7 @@ export default class PrefetchProxy extends mixin<
    }
 
    copy(key: string | number, meta?: object): ExtendPromise<Record> {
-      if (this._$validators.copy(this._$data.copy, this._done)) {
+      if (this._validators.copy(this._$data.copy, this._done)) {
          return Deferred.success(this._$data.copy);
       }
       return (this._$target as ICrudPlus).copy(key, meta);
@@ -326,5 +344,7 @@ export default class PrefetchProxy extends mixin<
 
 Object.assign(PrefetchProxy.prototype, {
    '[Types/_source/PrefetchProxy]': true,
-   _moduleName: 'Types/source:PrefetchProxy'
+   _moduleName: 'Types/source:PrefetchProxy',
+   _$data: null,
+   _$validators: null
 });
