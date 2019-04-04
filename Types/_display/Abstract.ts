@@ -1,5 +1,5 @@
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
-import {IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
+import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
 import {create} from '../di';
 import {mixin} from '../util';
 
@@ -11,7 +11,7 @@ const displaysToCollections: Array<IEnumerable<any>> = [];
 /**
  * Массив соответствия индексов проекций и их инстансов
  */
-const displaysToInstances: Abstract[] = [];
+const displaysToInstances: Array<Abstract<any, any>> = [];
 
 /**
  * Счетчик ссылок на singlton-ы
@@ -20,9 +20,10 @@ const displaysCounter: number[] = [];
 
 export interface IEnumerable<T> extends IEnumerableCollection<T> {
    getEnumerator(localize?: boolean): IEnumerator<T>;
+   each(callback: EnumeratorCallback<T>, context?: object, localize?: boolean): void;
 }
 
-interface IOptions {
+export interface IOptions {
    collection?: IEnumerable<any>;
 }
 
@@ -36,8 +37,14 @@ interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Abstract extends mixin(
-   DestroyableMixin, OptionsToPropertyMixin, ObservableMixin
+export default abstract class Abstract<S, T> extends mixin<
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin
+>(
+   DestroyableMixin,
+   OptionsToPropertyMixin,
+   ObservableMixin
 ) {
    constructor(options?: IOptions) {
       super(options);
@@ -50,6 +57,8 @@ export default abstract class Abstract extends mixin(
       ObservableMixin.prototype.destroy.call(this);
    }
 
+   abstract createItem(options: object): T;
+
    // region Statics
 
    /**
@@ -59,7 +68,7 @@ export default abstract class Abstract extends mixin(
     * @param [single=false] Возвращать singleton для каждой collection
     * @static
     */
-   static getDefaultDisplay(collection: IEnumerable<any>, options?: IOptions, single?: boolean): Abstract {
+   static getDefaultDisplay<S, T>(collection: IEnumerable<S>, options?: IOptions, single?: boolean): Abstract<S, T> {
       if (arguments.length === 2 && (typeof options !== 'object')) {
          single = options;
          options = {};
@@ -103,7 +112,7 @@ export default abstract class Abstract extends mixin(
     * @return Ссылка на проекцию была освобождена
     * @static
     */
-   static releaseDefaultDisplay(display: Abstract): boolean {
+   static releaseDefaultDisplay<S, T>(display: Abstract<S, T>): boolean {
       const index = displaysToInstances.indexOf(display);
       if (index === -1) {
          return false;

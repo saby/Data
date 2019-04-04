@@ -3,8 +3,9 @@ import TreeItem from './TreeItem';
 import Tree from './Tree';
 import {register} from '../di';
 
-export interface IOptions extends ICollectionItemOptions {
-   last: CollectionItem;
+export interface IOptions<T> extends ICollectionItemOptions<T> {
+   owner: Tree<T>;
+   last: TreeItem<T>;
 }
 
 /**
@@ -14,22 +15,22 @@ export interface IOptions extends ICollectionItemOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class BreadcrumbsItem extends CollectionItem {
+export default class BreadcrumbsItem<T> extends CollectionItem<T> {
    protected _instancePrefix: 'breadcrumbs-item-';
-   protected _$owner: Tree;
+   protected _$owner: Tree<T>;
 
    /**
     * Последний элемент хлебной крошки
     */
-   protected _$last: CollectionItem;
+   protected _$last: TreeItem<T>;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<T>) {
       super(options);
    }
 
    // region Public methods
 
-   getContents(): any[] {
+   getContents(): T {
       const root = this._$owner ? this._$owner.getRoot() : {};
       let current = this._$last;
       const contents = [];
@@ -37,13 +38,13 @@ export default class BreadcrumbsItem extends CollectionItem {
       // Go up from last item until end
       while (current) {
          contents.unshift(current.getContents());
-         current = (current as TreeItem).getParent();
+         current = current.getParent();
          if (current === root) {
             break;
          }
       }
 
-      return contents;
+      return contents as any;
    }
 
    setContents(): void {

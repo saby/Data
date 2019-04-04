@@ -2,7 +2,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
 import JsonFormatMixin from './JsonFormatMixin';
-import {Field, UniversalField} from '../format';
+import {Field} from '../format';
 import {mixin} from '../../util';
 
 /**
@@ -25,13 +25,19 @@ import {mixin} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class JsonRecord extends mixin(
-   DestroyableMixin, GenericFormatMixin, JsonFormatMixin
-) implements IRecord /** @lends Types/_entity/adapter/JsonRecord.prototype */{
+export default class JsonRecord extends mixin<
+   DestroyableMixin,
+   GenericFormatMixin,
+   JsonFormatMixin
+>(
+   DestroyableMixin,
+   GenericFormatMixin,
+   JsonFormatMixin
+) implements IRecord {
    /**
     * Сырые данные
     */
-   _data: object;
+   protected _data: object;
 
    /**
     * Конструктор
@@ -39,20 +45,9 @@ export default class JsonRecord extends mixin(
     */
    constructor(data: object) {
       super(data);
-      GenericFormatMixin.constructor.call(this, data);
-      JsonFormatMixin.constructor.call(this, data);
+      GenericFormatMixin.call(this, data);
+      JsonFormatMixin.call(this, data);
    }
-
-   // region IRecord
-
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   getData: () => object;
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-   removeFieldAt: (index: number) => void;
-
-   // endregion
 
    // region JsonFormatMixin
 
@@ -67,18 +62,20 @@ export default class JsonRecord extends mixin(
          throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
       }
 
-      JsonFormatMixin.addField.call(this, format, at);
+      super.addField(format, at);
       this.set(name, format.getDefaultValue());
    }
 
    removeField(name: string): void {
-      JsonFormatMixin.removeField.call(this, name);
+      super.removeField(name);
       delete this._data[name];
    }
 
    // endregion
 
-   // region Public methods
+   // region IRecord
+
+   readonly '[Types/_entity/adapter/IRecord]': boolean;
 
    has(name: string): boolean {
       return this._isValidData() ? this._data.hasOwnProperty(name) : false;
@@ -117,7 +114,7 @@ export default class JsonRecord extends mixin(
 
    // region Protected methods
 
-   _has(name: string): boolean {
+   protected _has(name: string): boolean {
       return this.has(name);
    }
 

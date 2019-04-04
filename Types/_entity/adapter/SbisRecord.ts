@@ -2,7 +2,6 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
 import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
-import {Field, UniversalField} from '../format';
 import {mixin} from '../../util';
 
 /**
@@ -33,15 +32,23 @@ import {mixin} from '../../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class SbisRecord extends mixin(
-   DestroyableMixin, SbisFormatMixin
-) implements IRecord, ICloneable /** @lends Types/_entity/adapter/SbisRecord.prototype */{
-   _type: string;
+export default class SbisRecord extends mixin<
+   DestroyableMixin,
+   SbisFormatMixin
+>(
+   DestroyableMixin,
+   SbisFormatMixin
+) implements IRecord, ICloneable {
+   protected _data: IRecordFormat;
 
    /**
     * Разделитель значений при сериализации сложных типов
     */
-   _castSeparator: string;
+   protected _castSeparator: string;
+
+   get type(): string {
+      return 'record';
+   }
 
    /**
     * Конструктор
@@ -49,20 +56,12 @@ export default class SbisRecord extends mixin(
     */
    constructor(data: IRecordFormat) {
       super(data);
-      SbisFormatMixin.constructor.call(this, data);
+      SbisFormatMixin.call(this, data);
    }
 
    // region IRecord
 
    readonly '[Types/_entity/adapter/IRecord]': boolean;
-
-   addField: (format: Field, at?: number) => void;
-   getData: () => any;
-   getFields: () => string[];
-   getFormat: (name: string) => Field;
-   getSharedFormat: (name: string) => UniversalField;
-   removeField: (name: string) => void;
-   removeFieldAt: (index: number) => void;
 
    has(name: string): boolean {
       return this._has(name);
@@ -85,7 +84,7 @@ export default class SbisRecord extends mixin(
 
    clear(): void {
       this._touchData();
-      SbisFormatMixin.clear.call(this);
+      super.clear();
       this._data.s.length = 0;
    }
 
@@ -146,7 +145,6 @@ Object.assign(SbisRecord.prototype, {
    '[Types/_entity/adapter/SbisRecord]': true,
    '[Types/_entity/adapter/IRecord]': true,
    '[Types/_entity/ICloneable]': true,
-   _type: 'record',
    _castSeparator: ','
 });
 

@@ -13,7 +13,7 @@ import {mixin} from '../util';
  * @public
  * @author Мальцев А.А.
  */
-export default class CollectionEnumerator extends mixin<
+export default class CollectionEnumerator<T> extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    IndexedEnumeratorMixin<any>
@@ -21,10 +21,10 @@ export default class CollectionEnumerator extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    IndexedEnumeratorMixin
-) implements IEnumerator<CollectionItem> {
+) implements IEnumerator<T> {
    protected readonly _moduleName: string;
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       if (!this._itemsCache) {
          this._itemsCache = this._$items instanceof Function ? this._$items() : this._$items;
       }
@@ -37,7 +37,7 @@ export default class CollectionEnumerator extends mixin<
    /**
     * Элементы проекции
     */
-   protected _$items: CollectionItem[] | Function = [];
+   protected _$items: T[] | Function = [];
 
    /**
     * Результат применения фильтра
@@ -52,7 +52,7 @@ export default class CollectionEnumerator extends mixin<
    /**
     * Кэш элементов проекции
     */
-   protected _itemsCache: CollectionItem[];
+   protected _itemsCache: T[];
 
    /**
     * Текущая позиция
@@ -62,7 +62,7 @@ export default class CollectionEnumerator extends mixin<
    /**
     * Текущий элемент
     */
-   protected _current: CollectionItem;
+   protected _current: T;
 
    /**
     * Порядковый индекс -> индекс элемента проекции
@@ -116,7 +116,7 @@ export default class CollectionEnumerator extends mixin<
       return result;
    }
 
-   getCurrent(): CollectionItem {
+   getCurrent(): T {
       return this._current;
    }
 
@@ -162,7 +162,7 @@ export default class CollectionEnumerator extends mixin<
     * @param index Индекс
     * @state mutable
     */
-   at(index: number): CollectionItem {
+   at(index: number): T {
       return index === undefined
          ? undefined
          : this.items[this.getSourceByInternal(index)];
@@ -180,7 +180,7 @@ export default class CollectionEnumerator extends mixin<
     * Устанавливает текущий элемент
     * item Текущий элемент
     */
-   setCurrent(item: CollectionItem): void {
+   setCurrent(item: T): void {
       this._itemsCache = null;
       this._position = this.getInternalBySource(this.items.indexOf(item));
       this._setCurrentByPosition();

@@ -52,8 +52,10 @@ export default class RecordSet extends Abstract {
    }
 }
 
-RecordSet.prototype['[Types/_entity/adapter/RecordSet]'] = true;
-RecordSet.prototype._moduleName = 'Types/entity:adapter.RecordSet';
+Object.assign(RecordSet.prototype, {
+   '[Types/_entity/adapter/RecordSet]': true,
+   _moduleName: 'Types/entity:adapter.RecordSet'
+});
 
 register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});
 // FIXME: deprecated

@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
-   'Types/_display/IBind',
+   'Types/_collection/IObservable',
    'Types/_display/Abstract',
    'Types/_display/Collection',
    'Types/_display/GroupItem',

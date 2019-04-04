@@ -38,19 +38,17 @@ interface IRecordSetOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class RecordSetTable extends mixin(DestroyableMixin, GenericFormatMixin) implements ITable {
+export default class RecordSetTable extends mixin<
+   DestroyableMixin,
+   GenericFormatMixin
+>(
+   DestroyableMixin,
+   GenericFormatMixin
+) implements ITable {
    /**
     * Список
     */
-   _data: RecordSet;
-
-   // region ITable
-
-   readonly '[Types/_entity/adapter/ITable]': boolean;
-
-   getData: () => any;
-   getFormat: (name: string) => any;
-   getSharedFormat: (name: string) => UniversalField;
+   protected _data: RecordSet;
 
    /**
     * Конструктор
@@ -61,8 +59,12 @@ export default class RecordSetTable extends mixin(DestroyableMixin, GenericForma
          throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
       }
       super(data);
-      GenericFormatMixin.constructor.call(this, data);
+      GenericFormatMixin.call(this, data);
    }
+
+   // region ITable
+
+   readonly '[Types/_entity/adapter/ITable]': boolean;
 
    getFields(): string[] {
       const fields = [];
@@ -176,7 +178,7 @@ export default class RecordSetTable extends mixin(DestroyableMixin, GenericForma
 
    // region Protected methods
 
-   _buildData(sample: Record): void {
+   protected _buildData(sample: Record): void {
       if (!this._data) {
          const config = {} as IRecordSetOptions;
          if (sample) {
@@ -191,11 +193,11 @@ export default class RecordSetTable extends mixin(DestroyableMixin, GenericForma
       }
    }
 
-   _isValidData(): boolean {
+   protected _isValidData(): boolean {
       return this._data && this._data['[Types/_collection/RecordSet]'];
    }
 
-   _getFieldsFormat(): format.Format {
+   protected _getFieldsFormat(): format.Format {
       return this._data.getFormat();
    }
 

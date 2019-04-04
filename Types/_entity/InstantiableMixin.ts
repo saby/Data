@@ -15,12 +15,12 @@ export default class InstantiableMixin {
    /**
     * Префикс значений идентификатора
     */
-   _instancePrefix: string;
+   protected _instancePrefix: string;
 
    /**
     * Уникальный идентификатор
     */
-   _instanceId: string;
+   protected _instanceId: string;
 
    // region IInstantiable
 

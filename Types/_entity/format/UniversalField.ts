@@ -1,26 +1,29 @@
-interface IDateTimeMeta {
+export interface IDateTimeMeta {
    withoutTimeZone: boolean;
 }
 
-interface IDictionaryMeta {
+export interface IDictionaryMeta {
    dictionary: any[];
    localeDictionary?: any[];
 }
 
-interface IRealdMeta {
+export interface IRealMeta {
    precision: number;
 }
 
-interface IMoneyMeta extends IRealdMeta {
+export interface IMoneyMeta extends IRealMeta {
    large: boolean;
 }
 
-interface IArrayMeta {
+export interface IIdentityMeta {
+   separator: string;
+}
+
+export interface IArrayMeta {
    kind: string;
 }
 
-interface IMeta extends IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IArrayMeta {
-}
+export type IMeta = IDateTimeMeta | IDictionaryMeta | IRealMeta | IMoneyMeta | IIdentityMeta | IArrayMeta | {};
 
 /**
  * Универсальное поле.

@@ -4,8 +4,8 @@ import TreeItem from '../TreeItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
 
-interface IOptions {
-   source: IItemsStrategy;
+interface IOptions<S, T> {
+   source: IItemsStrategy<S, T>;
    root: Function;
 }
 
@@ -17,7 +17,13 @@ interface IOptions {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Root extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default class Root<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
@@ -27,9 +33,9 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
    /**
     * Опции конструктора
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
    }
@@ -37,7 +43,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
    /**
     * Корень дерева
     */
-   get root(): TreeItem {
+   get root(): T {
       return this._options.root();
    }
 
@@ -45,11 +51,11 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get source(): IItemsStrategy {
+   get source(): IItemsStrategy<S, T> {
       return this._options.source;
    }
 
-   get options(): IItemsStrategyOptions {
+   get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
    }
 
@@ -57,11 +63,11 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
       return this.source.count + 1;
    }
 
-   get items(): CollectionItem[] {
-      return [<CollectionItem> this.root].concat(this.source.items);
+   get items(): T[] {
+      return [this.root].concat(this.source.items);
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       if (index === 0) {
          return this.root;
       } else {
@@ -69,7 +75,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
       }
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       return this.source.splice(start, deleteCount, added);
    }
 
@@ -97,7 +103,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: ISerializableState): ISerializableState {
+   _getSerializableState(state: ISerializableState): ISerializableState {
       const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
@@ -105,7 +111,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
@@ -115,5 +121,7 @@ export default class Root extends mixin(DestroyableMixin, SerializableMixin) imp
    // endregion
 }
 
-Root.prototype._moduleName = 'Types/display:itemsStrategy.Root';
-Root.prototype['[Types/_display/itemsStrategy/Root]'] = true;
+Object.assign(Root.prototype, {
+   '[Types/_display/itemsStrategy/Root]': true,
+   _moduleName: 'Types/display:itemsStrategy.Root'
+});

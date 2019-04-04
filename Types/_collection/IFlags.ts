@@ -50,7 +50,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   get(name: T): IValue;
+   get(name: T, localize?: boolean): IValue;
 
    /**
     * Sets selection state by the flag name. If such name is not defined it throws an exception.
@@ -72,7 +72,7 @@ export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype
     *    });
     * </pre>
     */
-   set(name: T, value: IValue): void;
+   set(name: T, value: IValue, localize?: boolean): void;
 
    /**
     * Returns selection state by the flag index. If such index is not defined it throws an exception.

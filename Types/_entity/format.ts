@@ -31,6 +31,8 @@
  * @author Мальцев А.А.
  */
 
+import {IArrayMeta, IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IRealMeta} from "./format/UniversalField";
+
 export {default as Field} from './format/Field';
 export {default as ArrayField} from './format/ArrayField';
 export {default as BinaryField} from './format/BinaryField';
@@ -57,6 +59,15 @@ export {default as RpcFileField} from './format/RpcFileField';
 export {default as StringField} from './format/StringField';
 export {default as TimeField} from './format/TimeField';
 export {default as TimeIntervalField} from './format/TimeIntervalField';
-export {default as UniversalField} from './format/UniversalField';
+export {
+   default as UniversalField,
+   IMeta as IUniversalFieldMeta,
+   IDateTimeMeta as IUniversalFieldDateTimeMeta,
+   IDictionaryMeta as IUniversalFieldDictionaryMeta,
+   IRealMeta as IUniversalFieldRealMeta,
+   IMoneyMeta as IUniversalFieldMoneyMeta,
+   IIdentityMeta as IUniversalFieldIdentityMeta,
+   IArrayMeta as IUniversalFieldArrayMeta
+} from './format/UniversalField';
 export {default as UuidField} from './format/UuidField';
 export {default as XmlField} from './format/XmlField';

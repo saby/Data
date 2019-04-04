@@ -142,7 +142,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
 
    // region Protected methods
 
-   _copy(): void {
+   protected _copy(): void {
       if (!this._copied) {
          if (this._originalTable['[Types/_entity/ICloneable]']) {
             this._originalTable = (this._originalTable as ICloneable).clone();

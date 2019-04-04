@@ -1,42 +1,42 @@
 /**
  * Интерфейс привязки к коллекции.
  * Позволяет узнавать об изменения, происходящих с элементами коллекции.
- * @interface Types/_collection/IBind
+ * @interface Types/_collection/IObservable
  * @public
  * @author Мальцев А.А.
  */
-const IObservable = /** @lends Types/_collection/IBind.prototype */{
-   '[Types/_collection/IObservable]': true,
+export default abstract class IObservable {
+   '[Types/_collection/IObservable]': boolean;
 
    /**
-    * @const {String} Изменение коллекции: добавлены элементы
+    * Изменение коллекции: добавлены элементы
     */
-   ACTION_ADD: 'a',
+   static readonly ACTION_ADD: string;
 
    /**
-    * @const {String} Изменение коллекции: удалены элементы
+    * Изменение коллекции: удалены элементы
     */
-   ACTION_REMOVE: 'rm',
+   static readonly ACTION_REMOVE: string;
 
    /**
-    * @const {String} Изменение коллекции: изменены элементы
+    * Изменение коллекции: изменены элементы
     */
-   ACTION_CHANGE: 'ch',
+   static readonly ACTION_CHANGE: string;
 
    /**
-    * @const {String} Изменение коллекции: заменены элементы
+    * Изменение коллекции: заменены элементы
     */
-   ACTION_REPLACE: 'rp',
+   static readonly ACTION_REPLACE: string;
 
    /**
-    * @const {String} Изменение коллекции: перемещены элементы
+    * Изменение коллекции: перемещены элементы
     */
-   ACTION_MOVE: 'm',
+   static readonly ACTION_MOVE: string;
 
    /**
-    * @const {String} Изменение коллекции: значительное изменение
+    * Изменение коллекции: значительное изменение
     */
-   ACTION_RESET: 'rs'
+   static readonly ACTION_RESET: string;
 
    /**
     * @typedef {String} ChangeAction
@@ -103,6 +103,17 @@ const IObservable = /** @lends Types/_collection/IBind.prototype */{
     *    records[2].set('title', 'test');
     * </pre>
     */
-};
+}
 
-export default IObservable;
+Object.assign(IObservable.prototype, {
+   '[Types/_collection/IObservable]': true
+});
+
+Object.assign(IObservable, {
+   ACTION_ADD: 'a',
+   ACTION_REMOVE: 'rm',
+   ACTION_CHANGE: 'ch',
+   ACTION_REPLACE: 'rp',
+   ACTION_MOVE: 'm',
+   ACTION_RESET: 'rs'
+});

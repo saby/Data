@@ -1,27 +1,33 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import Collection from '../Collection';
-import CollectionItem from '../CollectionItem';
+import Collection, {ISourceCollection} from '../Collection';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {IEnumerator} from '../../collection';
 import {mixin} from '../../util';
 
-export interface IOptions extends  IItemsStrategyOptions {
+export interface IOptions<S, T> extends IItemsStrategyOptions<S, T> {
+   display: Collection<S, T>;
    localize?: boolean;
 }
 
-export interface ISerializableState extends IDefaultSerializableState {
-   _items: CollectionItem[];
+export interface ISerializableState<T> extends IDefaultSerializableState {
+   _items: T[];
 }
 
 /**
  * Абстрактная стратегия получения элементов проекции
  * @class Types/_display/ItemsStrategy/Abstract
- * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_display/IItemsStrategy
+ * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default abstract class Abstract extends mixin(DestroyableMixin, SerializableMixin) implements IItemsStrategy {
+export default abstract class Abstract<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
     * @property {Boolean} localize Алиас зависимости или конструктора элементов проекции
@@ -31,19 +37,19 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
    /**
     * Элементы проекции
     */
-   protected _items: CollectionItem[];
+   protected _items: T[];
 
    /**
     * Кэш элементов исходной коллекции
     */
-   protected _sourceItems: CollectionItem[];
+   protected _sourceItems: T[];
 
    /**
     * Опции
     */
-   protected _options: IOptions;
+   protected _options: IOptions<S, T>;
 
-   constructor(options: IOptions) {
+   constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
    }
@@ -52,11 +58,11 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
 
    readonly '[Types/_display/IItemsStrategy]': boolean = true;
 
-   get options(): IOptions {
+   get options(): IOptions<S, T> {
       return {...this._options};
    }
 
-   get source(): IItemsStrategy {
+   get source(): IItemsStrategy<S, T> {
       return null;
    }
 
@@ -64,15 +70,15 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
       throw new Error('Property must be implemented');
    }
 
-   get items(): CollectionItem[] {
+   get items(): T[] {
       return this._getItems();
    }
 
-   at(index: number): CollectionItem {
+   at(index: number): T {
       throw new Error('Method must be implemented');
    }
 
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[] {
+   splice(start: number, deleteCount: number, added?: S[]): T[] {
       throw new Error('Method must be implemented');
    }
 
@@ -97,8 +103,8 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: IDefaultSerializableState): ISerializableState {
-      const resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);
+   _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
+      const resultState: ISerializableState<T> = super._getSerializableState.call(this, state);
 
       resultState.$options = this._options;
       resultState._items = this._items;
@@ -106,8 +112,8 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
       return resultState;
    }
 
-   protected _setSerializableState(state: ISerializableState): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+   _setSerializableState(state: ISerializableState<T>): Function {
+      const fromSerializableMixin = super._setSerializableState(state);
 
       return function(): void {
          fromSerializableMixin.call(this);
@@ -123,7 +129,7 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
     * Возвращает исходную коллекцию
     * @protected
     */
-   protected _getCollection(): Collection {
+   protected _getCollection(): ISourceCollection<S> {
       return this._options.display.getCollection();
    }
 
@@ -131,7 +137,7 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
     * Возвращает энумератор коллекции
     * @protected
     */
-   protected _getCollectionEnumerator(): IEnumerator<any> {
+   protected _getCollectionEnumerator(): IEnumerator<S> {
       return this._getCollection().getEnumerator(this._options.localize);
    }
 
@@ -139,7 +145,7 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
     * Возвращает элементы проекции
     * @protected
     */
-   protected _getItems(): CollectionItem[] {
+   protected _getItems(): T[] {
       if (!this._items) {
          this._initItems();
       }
@@ -178,10 +184,10 @@ export default abstract class Abstract extends mixin(DestroyableMixin, Serializa
     * Создает элемент проекции
     * @protected
     */
-   protected _createItem(contents: any): CollectionItem {
+   protected _createItem(contents: S): T {
       return this.options.display.createItem({
          contents
-      });
+      }) as any as T;
    }
 
    // endregion

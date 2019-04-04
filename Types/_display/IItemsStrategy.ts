@@ -1,8 +1,8 @@
 import Abstract from './Abstract';
 import CollectionItem from './CollectionItem';
 
-export interface IOptions {
-   display: Abstract;
+export interface IOptions<S, T> {
+   display: Abstract<S, T>;
 }
 
 /**
@@ -11,18 +11,18 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default interface IItemsStrategy {
+export default interface IItemsStrategy<S, T> {
    readonly '[Types/_display/IItemsStrategy]': boolean;
 
    /**
     * Возвращает опции конструктора
     */
-   readonly options: IOptions;
+   readonly options: IOptions<S, T>;
 
    /**
     * Декорируемая стратегия
     */
-   readonly source: IItemsStrategy;
+   readonly source: IItemsStrategy<S, T>;
 
    /**
     * Возвращает количество элементов проекции
@@ -32,14 +32,14 @@ export default interface IItemsStrategy {
    /**
     * Возвращает элементы проекции
     */
-   readonly items: CollectionItem[];
+   readonly items: T[];
 
    /**
     * Возвращает элемент по позиции
     * @param {Number} index Позиция
     * @return {Types/_display/CollectionItem}
     */
-   at(index: number): CollectionItem;
+   at(index: number): T;
 
    /**
     * Модифицирует состав элементов проекции при модификации исходной коллекции
@@ -48,7 +48,7 @@ export default interface IItemsStrategy {
     * @param {Array} [added] Добавляемые элементы
     * @return {Types/_display/CollectionItem} Удаленные элементы
     */
-   splice(start: number, deleteCount: number, added?: CollectionItem[]): CollectionItem[];
+   splice(start: number, deleteCount: number, added?: S[]): T[];
 
    /**
     * Сбрасывает все сформированные результаты

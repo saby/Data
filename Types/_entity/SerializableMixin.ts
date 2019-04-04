@@ -1,4 +1,5 @@
 import {protect, logger} from '../util';
+import {IHashMap} from '../_declarations';
 
 /**
  * Свойство, хранящее признак десериализованного экземпляра
@@ -8,8 +9,7 @@ const $unserialized = protect('unserialized');
 /**
  * Поддерживается ли свойство __proto__ экземпляром Object
  */
-// @ts-ignore
-const isProtoSupported: boolean = typeof ({}).__proto__ === 'object';
+const isProtoSupported: boolean = typeof ({} as any).__proto__ === 'object';
 
 /**
  * Поддерживается вывод места определения функции через getFunctionDefinition()
@@ -23,7 +23,7 @@ const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 
 let instanceCounter = 0;
 
 export interface IState {
-   $options?: Object;
+   $options?: IHashMap<any>;
 }
 
 interface ISignature {
@@ -127,7 +127,7 @@ export default class SerializableMixin {
     */
    protected _getOptions: () => object;
 
-   constructor(options?: any) {
+   constructor(options?: IHashMap<any>) {
       // Just for signature
    }
 

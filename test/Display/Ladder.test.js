@@ -2,7 +2,7 @@
 define([
    'Types/_display/Ladder',
    'Types/_display/Collection',
-   'Types/_display/IBind',
+   'Types/_collection/IObservable',
    'Types/_collection/ObservableList',
    'Types/_entity/Record',
    'Types/_entity/Model'

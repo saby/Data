@@ -31,7 +31,7 @@ const arraySlice = Array.prototype.slice;
  * </pre>
  * @class Types/_collection/ObservableList
  * @extends Types/_collection/List
- * @implements Types/_collection/IBind
+ * @implements Types/_collection/IObservable
  * @implements Types/_entity/relation/IReceiver
  * @mixes Types/_collection/EventRaisingMixin
  * @public
@@ -45,18 +45,15 @@ export default class ObservableList<T> extends mixin<
    IObservable,
    EventRaisingMixin
 ) implements IReceiver {
-   _$items: T[];
-   _indexer: Indexer<T[]>;
-
    /**
     * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
     */
-   _resetChangesCount: number;
+   protected _resetChangesCount: number;
 
    /**
     * Items changed during event raising was switched off
     */
-   _silentChangedItems: T[];
+   protected _silentChangedItems: T[];
 
    constructor(options?: IListOptions<T>) {
       super(options);

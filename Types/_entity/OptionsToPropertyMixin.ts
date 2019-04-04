@@ -1,7 +1,9 @@
+import {IHashMap} from '../_declarations';
+
 const optionPrefix = '_$';
 const optionPrefixLen = optionPrefix.length;
 
-function defineProperty(instance: Object, name: string, key: string, scope: Object): void {
+function defineProperty(instance: Object, name: string, key: string, scope: object): void {
    Object.defineProperty(instance, name, {
       enumerable: true,
       configurable: true,
@@ -63,7 +65,7 @@ export default abstract class OptionsToPropertyMixin {
     * Конструктор объекта, принимающий набор опций в качестве первого аргумента
     * @param {Object} [options] Значения опций
     */
-   constructor(options?: object) {
+   constructor(options?: IHashMap<any>) {
       if (options && typeof options === 'object') {
          const prefix = optionPrefix;
          const keys = Object.keys(options);
@@ -84,7 +86,7 @@ export default abstract class OptionsToPropertyMixin {
     * @return Значения опций
     * @protected
     */
-   protected _getOptions(): object {
+   protected _getOptions(): IHashMap<any> {
       const options = {};
       const keys = Object.keys(this);
       let key;

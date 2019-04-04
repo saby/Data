@@ -1,5 +1,8 @@
-import CollectionItem from './CollectionItem';
+import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import {register} from '../di';
+
+interface IOptions<T> extends ICollectionItemOptions<T> {
+}
 
 /**
  * Группа элементов
@@ -8,13 +11,13 @@ import {register} from '../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class GroupItem extends CollectionItem {
+export default class GroupItem<T> extends CollectionItem<T> {
    /**
     * Развернута или свернута группа. По умолчанию развернута.
     */
    protected _$expanded: boolean;
 
-   constructor(options?: object) {
+   constructor(options?: IOptions<T>) {
       super(options);
       this._$expanded = !!this._$expanded;
    }

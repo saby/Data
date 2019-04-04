@@ -1,6 +1,12 @@
 import IItemsStrategy from '../IItemsStrategy';
-import {DestroyableMixin, SerializableMixin} from '../../entity';
+import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
+
+interface IState<S, T> extends ISerializableState {
+   _modules: Function[];
+   _options: object[];
+   _result: IItemsStrategy<S, T>;
+}
 
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
@@ -9,7 +15,13 @@ import {mixin} from '../../util';
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Composer extends mixin(DestroyableMixin, SerializableMixin) {
+export default class Composer<S, T> extends mixin<
+   DestroyableMixin,
+   SerializableMixin
+>(
+   DestroyableMixin,
+   SerializableMixin
+) {
    /**
     * Композируемые модули
     */
@@ -23,7 +35,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
    /**
     * Результат композиции
     */
-   protected _result: IItemsStrategy;
+   protected _result: IItemsStrategy<S, T>;
 
    constructor() {
       super();
@@ -81,13 +93,13 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * Удалает стратегию
     * @param Module Конструктор стратегии
     */
-   remove(Module: Function): IItemsStrategy {
+   remove<U>(Module: Function): U {
       const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
       }
 
-      const instance = this._getInstance(index);
+      const instance = this._getInstance<U>(index);
       this._modules.splice(index, 1);
       this._options.splice(index, 1);
       this._reBuild(index);
@@ -110,19 +122,19 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
     * Возвращает экземпляр стратегии
     * @param Module Конструктор стратегии
     */
-   getInstance(Module: Function): IItemsStrategy {
+   getInstance<U>(Module: Function): U {
       const index = this._modules.indexOf(Module);
       if (index === -1) {
          return;
       }
 
-      return this._getInstance(index);
+      return this._getInstance<U>(index);
    }
 
    /**
     * Возвращает результат компоновки
     */
-   getResult(): IItemsStrategy {
+   getResult(): IItemsStrategy<S, T> {
       return this._result;
    }
 
@@ -130,19 +142,19 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
 
    // region SerializableMixin
 
-   protected _getSerializableState(state: any): void {
-      state = SerializableMixin.prototype._getSerializableState.call(this, state);
+   _getSerializableState(state: ISerializableState): IState<S, T> {
+      const resultState: IState<S, T> = super._getSerializableState.call(this, state);
 
-      state.$options = {};
-      state._modules = this._modules;
-      state._options = this._options;
-      state._result = this._result;
+      resultState.$options = {};
+      resultState._modules = this._modules;
+      resultState._options = this._options;
+      resultState._result = this._result;
 
-      return state;
+      return resultState;
    }
 
-   protected _setSerializableState(state: any): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+   _setSerializableState(state: IState<S, T>): Function {
+      const fromSerializableMixin = super._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);
 
@@ -180,7 +192,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
       }, null);
    }
 
-   protected _getInstance(index: number): IItemsStrategy {
+   protected _getInstance<U>(index: number): U {
       const target = this._modules.length - index - 1;
       let current = 0;
       let item = this._result;
@@ -190,7 +202,7 @@ export default class Composer extends mixin(DestroyableMixin, SerializableMixin)
          current++;
       }
 
-      return item;
+      return item as any as U;
    }
 
    // endregion
