@@ -1,6 +1,7 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
+import {ExtendPromise} from '../../_declarations';
 import {RPCJSON} from 'Browser/Transport';
 
 interface IEndPoint {

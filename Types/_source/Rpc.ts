@@ -1,6 +1,7 @@
 import Remote from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
+import {ExtendPromise} from '../_declarations';
 
 /**
  * Источник данных, работающий по технологии RPC.

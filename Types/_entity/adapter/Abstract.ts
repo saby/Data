@@ -5,6 +5,7 @@ import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
 import {mixin} from '../../util';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
+import {ExtendDate, IExtendDateConstructor} from '../../_declarations';
 
 const serialize = (() => {
    interface ISerializableObject extends Object {
@@ -33,10 +34,10 @@ const serialize = (() => {
          let mode = TO_SQL_MODE.DATETIME;
          if ((obj as ExtendDate).getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
-               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
+               case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                   mode = TO_SQL_MODE.DATE;
                   break;
-               case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
+               case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
                   mode = TO_SQL_MODE.TIME;
                   break;
             }

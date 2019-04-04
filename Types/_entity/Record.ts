@@ -26,6 +26,7 @@ import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '..
 import {register, create} from '../di';
 import {protect, mixin, logger} from '../util';
 import {Map} from '../shim';
+import {ExtendDate, IExtendDateConstructor} from '../_declarations';
 
 /**
  * Свойство, хранящее кэш полей
@@ -133,9 +134,9 @@ function getValueType(value: any): string | IFieldDeclaration {
          } else if (value instanceof Date) {
             if (value.hasOwnProperty('_serializeMode')) {
                switch ((value as ExtendDate).getSQLSerializationMode()) {
-                  case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
+                  case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                      return 'date';
-                  case (Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
+                  case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
                      return 'time';
                }
             }

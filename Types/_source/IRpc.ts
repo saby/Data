@@ -1,4 +1,5 @@
 import DataSet from './DataSet';
+import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего {@link https://en.wikipedia.org/wiki/Remote_procedure_call RPC}.

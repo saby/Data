@@ -18,6 +18,7 @@ import TimeInterval from './TimeInterval';
 import {create, resolve, isRegistered} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
 import {List, RecordSet} from '../collection';
+import {IExtendDateConstructor} from '../_declarations';
 
 // @ts-ignore
 import renders = require('Core/defaultRenders');
@@ -299,13 +300,13 @@ const factory = {
                if (value.setSQLSerializationMode) {
                   switch (Type) {
                      case 'date':
-                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATE);
+                        value.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE);
                         break;
                      case 'time':
-                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_TIME);
+                        value.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME);
                         break;
                      case 'datetime':
-                        value.setSQLSerializationMode((Date as ExtendDateConstructor).SQL_SERIALIZE_MODE_DATETIME);
+                        value.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATETIME);
                         break;
                   }
                }

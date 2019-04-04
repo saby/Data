@@ -1,4 +1,5 @@
 import {Record} from '../entity';
+import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.

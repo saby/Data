@@ -14,6 +14,7 @@ import {Record, ObservableMixin} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
+import {ExtendPromise} from '../_declarations';
 
 export interface IPassing {
    create: (meta?: object) => object;

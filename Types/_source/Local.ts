@@ -8,7 +8,7 @@ import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
-import {IHashMap} from '../_declarations';
+import {IHashMap, ExtendPromise} from '../_declarations';
 // @ts-ignore
 import Deferred = require('Core/Deferred');
 // @ts-ignore
