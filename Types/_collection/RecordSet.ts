@@ -434,14 +434,19 @@ export default class RecordSet<T = Record> extends mixin<
    // region List
 
    clear(): void {
-      let item;
       for (let i = 0, count = this._$items.length; i < count; i++) {
-         item = this._$items[i];
+         const item = this._$items[i];
          if (item) {
             item.detach();
          }
       }
+
+      if (!this.hasDecalredFormat()) {
+         this._clearFormat();
+      }
       (this._getRawDataAdapter() as adapter.ITable).clear();
+      this._resetRawDataFields();
+
       super.clear();
    }
 

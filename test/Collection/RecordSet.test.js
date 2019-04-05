@@ -1601,6 +1601,7 @@ define([
                assert.isNull(records[i].getOwner());
             }
          });
+
          it('should set the records state to "Detached"', function() {
             var records = [];
             rs.each(function(record) {
@@ -1611,9 +1612,21 @@ define([
                assert.equal(records[i].getState(), Record.RecordState.DETACHED);
             }
          });
+
          it('should clear the raw data', function() {
             rs.clear();
             assert.deepEqual(rs.getRawData(), []);
+         });
+
+         it('should clear the format', function() {
+            rs.clear();
+            assert.deepEqual(rs.getFormat().getCount(), 0);
+         });
+
+         it('should clear the format even it was extrected before', function() {
+            assert.deepEqual(rs.getFormat().getCount(), 2);
+            rs.clear();
+            assert.deepEqual(rs.getFormat().getCount(), 0);
          });
       });
 

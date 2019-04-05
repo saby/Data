@@ -23,11 +23,7 @@ export default abstract class JsonFormatMixin {
    /**
     * Форматы полей
     */
-   protected _format: IHashMap<Field>;
-
-   constructor() {
-      this._format = {};
-   }
+   protected _format: IHashMap<Field> = {};
 
    // region Public methods
 
