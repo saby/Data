@@ -10,9 +10,6 @@ import IReceiver from './relation/IReceiver';
 export default abstract class ManyToManyMixin {
    '[Types/_entity/ManyToManyMixin]': boolean;
 
-   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[WS.Data/Entity/ManyToManyMixin]': boolean;
-
    /**
     * Медиатор, отвечающий за связи между сущностями
     */
@@ -183,6 +180,5 @@ export default abstract class ManyToManyMixin {
 
 Object.assign(ManyToManyMixin.prototype, {
    '[Types/_entity/ManyToManyMixin]': true,
-   '[WS.Data/Entity/ManyToManyMixin]': true,
    _mediator: null
 });

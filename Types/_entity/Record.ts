@@ -1524,14 +1524,8 @@ Object.assign(Record.prototype, {
 });
 
 /**
- * {Object} Измененные поля и оригинальные значения
+ * Измененные поля и оригинальные значения
  */
 Record.prototype[$changedFields as string] = null;
-
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Record.prototype['[WS.Data/Entity/Record]'] = true;
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Record.prototype['[WS.Data/Collection/IEnumerable]'] = true;
-Record.prototype['[WS.Data/Entity/ICloneable]'] = true;
 
 register('Types/entity:Record', Record, {instantiate: false});

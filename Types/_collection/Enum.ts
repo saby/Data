@@ -198,9 +198,4 @@ Object.assign(Enum.prototype, {
    _type: 'enum'
 });
 
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Enum.prototype['[WS.Data/Type/Enum]'] = true;
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Enum.prototype['[WS.Data/Entity/ICloneable]'] = true;
-
 register('Types/collection:Enum', Enum, {instantiate: false});
