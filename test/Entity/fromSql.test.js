@@ -64,5 +64,14 @@ define([
          assert.equal(date.getMinutes(), 59);
          assert.equal(date.getSeconds(), 41);
       });
+
+      it('should return corret time when it day on summer-winter time change', function () {
+         var stub = sinon.stub(Date.prototype, 'getTimezoneOffset').callsFake(function () {
+             return this > new Date('2019-03-12 1:00:00+3') ? 540 : 600;
+         });
+         assert.equal(fromSql('2019-03-10 03:00:00+03').getHours(), 14);
+         stub.restore();
+      });
+
    });
 });
