@@ -64,7 +64,7 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number): Dat
 
       retval.setFullYear(y, m, d);
    }
-
+   let timeZoneOffset = retval.getTimezoneOffset();
    // Apply time if defined
    if (timeSep !== -1) {
       retval.setHours(
@@ -83,7 +83,7 @@ export default function fromSQL(dateTime: string, defaultTimeZone?: number): Dat
 
       // Apply time zone by shifting minutes
       if (timeOffset !== undefined) {
-         retval.setMinutes(retval.getMinutes() - timeOffset - retval.getTimezoneOffset());
+         retval.setMinutes(retval.getMinutes() - timeOffset - timeZoneOffset);
       }
    }
 
