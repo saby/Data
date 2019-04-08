@@ -1007,8 +1007,6 @@ Object.assign(Model.prototype, {
    _deepChangedProperties: null
 });
 
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Model.prototype['[WS.Data/Entity/Model]'] = true;
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;

@@ -277,9 +277,4 @@ Object.assign(Flags.prototype, {
    _type: 'flags'
 });
 
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-Flags.prototype['[WS.Data/Type/Flags]'] = true;
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Flags.prototype['[WS.Data/Entity/ICloneable]'] = true;
-
 register('Types/collection:Flags', Flags, {instantiate: false});

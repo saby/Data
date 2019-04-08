@@ -59,7 +59,4 @@ Object.assign(GroupItem.prototype, {
    _$expanded: true
 });
 
-// FIXME: deprecated
-GroupItem.prototype['[WS.Data/Display/GroupItem]'] = true;
-
 register('Types/display:GroupItem', GroupItem);

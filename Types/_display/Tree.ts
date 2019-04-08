@@ -683,7 +683,4 @@ Object.assign(Tree.prototype, {
    _root: null
 });
 
-// FIXME: deprecated
-Tree.prototype['[WS.Data/Display/Tree]'] = true;
-
 register('Types/display:Tree', Tree);

@@ -152,6 +152,3 @@ Object.assign(SbisRecord.prototype, {
    '[Types/_entity/ICloneable]': true,
    _castSeparator: ','
 });
-
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-SbisRecord.prototype['[WS.Data/Entity/ICloneable]'] = true;

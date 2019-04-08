@@ -255,6 +255,3 @@ Object.assign(HierarchicalMemory.prototype, {
    _moduleName: 'Types/source:HierarchicalMemory',
    _$parentProperty: null
 });
-
-// FIXME: to pass check via cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')
-HierarchicalMemory.prototype['[WS.Data/Source/ICrud]'] = true;

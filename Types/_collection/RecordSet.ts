@@ -1554,7 +1554,4 @@ Object.assign(RecordSet.prototype, {
 // Aliases
 RecordSet.prototype.forEach = RecordSet.prototype.each;
 
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-RecordSet.prototype['[WS.Data/Collection/RecordSet]'] = true;
-
 register('Types/collection:RecordSet', RecordSet, {instantiate: false});

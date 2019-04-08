@@ -2950,7 +2950,4 @@ Object.assign(Collection.prototype, {
    _oEventRaisingChange: null
 });
 
-// FIXME: deprecated
-Collection.prototype['[WS.Data/Display/Collection]'] = true;
-
 register('Types/display:Collection', Collection);
