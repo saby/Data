@@ -238,7 +238,4 @@ Object.assign(CollectionItem.prototype, {
    _contentsIndex: undefined
 });
 
-// FIXME: deprecated
-CollectionItem.prototype['[WS.Data/Display/CollectionItem]'] = true;
-
 register('Types/display:CollectionItem', CollectionItem);

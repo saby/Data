@@ -243,7 +243,4 @@ Object.assign(TreeItem.prototype, {
    _instancePrefix: 'tree-item-'
 });
 
-// FIXME: deprecated
-TreeItem.prototype['[WS.Data/Display/TreeItem]'] = true;
-
 register('Types/display:TreeItem', TreeItem);

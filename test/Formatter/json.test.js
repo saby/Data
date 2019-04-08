@@ -1,14 +1,9 @@
 /* global define, describe, context, before, after, beforeEach, afterEach, it, assert */
 define([
    'Types/formatter',
-   // 'WS.Data/Entity/Model',
-   // 'WS.Data/Collection/List',
    'Env/Env'
-   //'Data/_type/adapter/Json'
 ], function (
-   formatter,
-   //Model,
-   //List
+   formatter
 ) {
    'use strict';
 
@@ -91,24 +86,6 @@ define([
          it('should work properly with deep structures', function () {
             var string = JSON.stringify(getSerializedObj(), formatter.jsonReplacer);
             assert.strictEqual(string, getSerializedSample());
-         });
-
-         it.skip('should work with serializable instance', function () {
-            var model = new Model(),
-               plainObj = JSON.parse(JSON.stringify(model, formatter.jsonReplacer));
-            assert.strictEqual(plainObj.$serialized$, 'inst');
-            assert.strictEqual(plainObj.module, 'WS.Data/Entity/Model');
-         });
-
-         it.skip('should work with serializable instance in deep structures', function () {
-            var model = new Model(),
-               plainObj = JSON.parse(JSON.stringify({
-                  a: {
-                     b: [model]
-                  }
-               }, formatter.jsonReplacer));
-            assert.strictEqual(plainObj.a.b[0].$serialized$, 'inst');
-            assert.strictEqual(plainObj.a.b[0].module, 'WS.Data/Entity/Model');
          });
 
          it('should serialize string if it contents function', function () {

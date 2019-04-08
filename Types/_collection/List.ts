@@ -508,12 +508,4 @@ Object.assign(List.prototype, {
 // Aliases
 List.prototype.forEach = List.prototype.each;
 
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfModule()
-List.prototype['[WS.Data/Collection/List]'] = true;
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-List.prototype['[WS.Data/Collection/IEnumerable]'] = true;
-List.prototype['[WS.Data/Collection/IList]'] = true;
-List.prototype['[WS.Data/Collection/IIndexedCollection]'] = true;
-List.prototype['[WS.Data/Entity/ICloneable]'] = true;
-
 register('Types/collection:List', List, {instantiate: false});

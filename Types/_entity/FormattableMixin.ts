@@ -895,8 +895,6 @@ export default abstract class FormattableMixin {
 
 Object.assign(FormattableMixin.prototype, {
    '[Types/_entity/FormattableMixin]': true,
-   // FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-   '[WS.Data/Entity/FormattableMixin]': true,
    _$rawData: null,
    _$cow: false,
    _$adapter: defaultAdapter,

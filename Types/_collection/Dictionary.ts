@@ -223,6 +223,3 @@ Object.assign(Dictionary.prototype, {
    _$localeDictionary: undefined,
    _type: undefined
 });
-
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-Dictionary.prototype['[WS.Data/Collection/IEnumerable]'] = true;

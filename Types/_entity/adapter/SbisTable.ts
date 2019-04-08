@@ -292,6 +292,3 @@ Object.assign(SbisTable.prototype, {
    '[Types/_entity/adapter/IMetaData]': true,
    '[Types/_entity/ICloneable]': true
 });
-
-// FIXME: backward compatibility for check via Core/core-instance::instanceOfMixin()
-SbisTable.prototype['[WS.Data/Entity/ICloneable]'] = true;
