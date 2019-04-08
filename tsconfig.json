@@ -7,6 +7,7 @@
   "include": [
     "Browser/**/*.ts",
     "Env/**/*.ts",
+    "test/**/*.ts",
     "Types/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
