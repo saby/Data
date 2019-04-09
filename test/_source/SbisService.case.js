@@ -1158,6 +1158,31 @@ define([
                });
             });
 
+            it('should generate request with given null policy', function(done) {
+               var query = new Query();
+               query.orderBy('id', true, true);
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+                     assert.strictEqual(args['Сортировка'].s.length, 3);
+                     assert.strictEqual(args['Сортировка'].s[0].n, 'l');
+                     assert.strictEqual(args['Сортировка'].s[1].n, 'n');
+                     assert.strictEqual(args['Сортировка'].s[2].n, 'o');
+
+                     assert.strictEqual(args['Сортировка'].d.length, 1);
+                     assert.strictEqual(args['Сортировка'].d[0].length, 3);
+                     assert.strictEqual(args['Сортировка'].d[0][0], true);
+                     assert.strictEqual(args['Сортировка'].d[0][1], 'id');
+                     assert.strictEqual(args['Сортировка'].d[0][2], true);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function(err) {
+                  done(err);
+               });
+            });
+
             it('should generate request with expand "None" mode', function() {
                var query = new Query();
                query.meta({

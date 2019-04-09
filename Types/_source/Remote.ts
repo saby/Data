@@ -16,6 +16,20 @@ import {create} from '../di';
 import {mixin, logger} from '../util';
 import {ExtendPromise} from '../_declarations';
 
+// tslint:disable-next-line:ban-comma-operator
+const global = (0, eval)('this');
+const DeferredCanceledError = global.DeferredCanceledError;
+
+/**
+ * Типы навигации для query()
+ */
+export type NavigationType = 'Page' | 'Offset';
+
+export enum NavigationTypes {
+   PAGE = 'Page',
+   OFFSET = 'Offset'
+}
+
 export interface IPassing {
    create: (meta?: object) => object;
    read: (key: string | number, meta?: object) => object;
@@ -29,23 +43,11 @@ export interface IPassing {
 
 export interface IOptionsOption extends IOptionsMixinOption {
    updateOnlyChanged?: boolean;
-   navigationType?: string;
+   navigationType?: NavigationType;
 }
 
 export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
 }
-
-// tslint:disable-next-line:ban-comma-operator
-const global = (0, eval)('this');
-const DeferredCanceledError = global.DeferredCanceledError;
-
-/**
- * Типы навигации для query()
- */
-const NAVIGATION_TYPE = {
-   PAGE: 'Page',
-   OFFSET: 'Offset'
-};
 
 function isNull(value: any): boolean {
    return value === null || value === undefined;
@@ -157,6 +159,7 @@ function passMove(from: any[], to: string, meta?: object): any[] {
 
 /**
  * Источник данных, работающий удаленно.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Remote
  * @extends Types/_source/Base
@@ -427,9 +430,10 @@ export default abstract class Remote extends mixin<
 
    // region Statics
 
-   static get NAVIGATION_TYPE(): any {
-      return NAVIGATION_TYPE;
+   static get NAVIGATION_TYPE(): typeof NavigationTypes {
+      return NavigationTypes;
    }
+
    // endregion
 }
 
@@ -438,6 +442,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
    _moduleName: 'Types/source:Remote',
    _provider: null,
    _$provider: null,
+
    _$passing: {
       /**
        * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
@@ -487,6 +492,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        */
       move: passMove
    },
+
    _$options: OptionsMixin.addOptions<IOptionsOption>(Base, {
       /**
        * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
@@ -507,7 +513,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        *    var dataSource = new RemoteSource({
        *          endpoint: 'Orders'
        *          options: {
-       *             navigationType: RemoteSource.prototype.NAVIGATION_TYPE.OFFSET
+       *             navigationType: RemoteSource.NAVIGATION_TYPE.OFFSET
        *          }
        *       }),
        *       query = new Query();
@@ -531,7 +537,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        *    });
        * </pre>
        */
-      navigationType: NAVIGATION_TYPE.PAGE
+      navigationType: NavigationTypes.PAGE
    })
 });
 

@@ -1,7 +1,8 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
+import {IHashMap} from '../_declarations';
 
-declare type Where = Object | ((item: any, index: number) => boolean);
-declare type Expression = Object | string[] | string;
+declare type Where = IHashMap<string> | ((item: any, index: number) => boolean);
+declare type Expression = IHashMap<string> | string[] | string;
 
 export enum ExpandMode {
    None,
@@ -10,7 +11,7 @@ export enum ExpandMode {
    All
 }
 
-export interface IMeta {
+export interface IMeta extends IHashMap<any> {
    expand?: ExpandMode;
 }
 
@@ -18,9 +19,9 @@ export interface IMeta {
  * Clones object
  * @param data Object to clone
  */
-function duplicate(data: any): object {
+function duplicate<T>(data: T): T {
    if (data['[Types/_entity/ICloneable]']) {
-      return data.clone();
+      return (data as any).clone();
    }
    if (data && typeof data === 'object') {
       return {...data};
@@ -32,7 +33,7 @@ function duplicate(data: any): object {
  * Parses expression from fields set
  * @param expression Expression with fields set
  */
-function parseSelectExpression(expression: Expression): object {
+function parseSelectExpression(expression: Expression): IHashMap<string> {
    if (typeof expression === 'string') {
       expression = expression.split(/[ ,]/);
    }
@@ -52,110 +53,125 @@ function parseSelectExpression(expression: Expression): object {
    return expression;
 }
 
+interface IJoinOptions {
+   resource: string;
+   as?: string;
+   on: IHashMap<string>;
+   select: IHashMap<string>;
+   inner?: boolean;
+}
+
 /**
- * Объект, задающий способ объединения множеств.
+ * An object which defines a way of joining of sets.
  * @class Types/_source/Query/Join
- * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  */
 export class Join extends OptionsToPropertyMixin {
    /**
-    * @cfg {String} Правое множество
+    * @cfg {String} The right set name
     * @name Types/_source/Query/Join#resource
     */
    protected _$resource: string = '';
 
    /**
-    * @cfg {String} Синоним правого множества
+    * @cfg {String} The alias of the right set name
     * @name Types/_source/Query/Join#as
     */
    protected _$as: string = '';
 
    /**
-    * @cfg {Object} Правило объединения
+    * @cfg {Object} Join rule
     * @name Types/_source/_source/Query/Join#on
     */
-   protected _$on: object = {};
+   protected _$on: IHashMap<string> = {};
 
    /**
-    * @cfg {Object} Выбираемые поля
+    * @cfg {Object} Field names to select
     * @name Types/_source/Query/Join#select
     */
-   protected _$select: object = {};
+   protected _$select: IHashMap<string> = {};
 
    /**
-    * @cfg {Boolean} Внутреннее объединение
+    * @cfg {Boolean} It's an inner join
     * @name Types/_source/Query/Join#inner
     */
    protected _$inner: boolean = true;
 
-   constructor(options?: object) {
+   constructor(options?: IJoinOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
    }
 
    /**
-    * Возвращает правое множество
+    * Returns the right set name
     */
    getResource(): string {
       return this._$resource;
    }
 
    /**
-    * Возвращает синоним правого множества
+    * Returns the alias of the right set name
     */
    getAs(): string {
       return this._$as;
    }
 
    /**
-    * Возвращает правило объединения
+    * Returns join rule
     */
-   getOn(): object {
+   getOn(): IHashMap<string> {
       return this._$on;
    }
 
    /**
-    * Возвращает выбираемые поля
+    * Returns field names to select
     */
-   getSelect(): object {
+   getSelect(): IHashMap<string> {
       return this._$select;
    }
 
    /**
-    * Это внутреннее объединение
+    * Returns flag that it's an inner join
     */
    isInner(): boolean {
       return this._$inner;
    }
 }
 
+interface IOrderOptions {
+   selector: string;
+   order: boolean | string;
+   nullPolicy?: boolean;
+}
+
 /**
- * Объект, задающий способ сортировки множества
+ * An object which defines a way of sorting of sets.
  * @class Types/_source/Query/Order
- * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  */
 export class Order extends OptionsToPropertyMixin {
    /**
-    * @typedef {Boolean} Order
-    * @variant false По возрастанию
-    * @variant true По убыванию
-    */
-
-   /**
-    * @cfg {String} Объект сортировки
+    * @cfg {String} Field name to apply the sorting for
     * @name Types/_source/Query/Order#selector
     */
    protected _$selector: string = '';
 
    /**
-    * @cfg {Order} Порядок сортировки
+    * @cfg {Boolean} Order of the sorting
     * @name Types/_source/Query/Order#order
     */
    protected _$order: boolean | string = false;
 
-   constructor(options?: object) {
+   /**
+    * @cfg {Boolean} NULL-like values positioning policy (undefined - depending on 'order' option, false - in the
+    * beginning, true - in the end)
+    * @name Types/_source/Query/Order#nullPolicy
+    */
+   protected _$nullPolicy: boolean = null;
+
+   constructor(options?: IOrderOptions) {
       super();
       OptionsToPropertyMixin.call(this, options);
 
@@ -174,44 +190,52 @@ export class Order extends OptionsToPropertyMixin {
    }
 
    /**
-    * Возвращает Объект сортировки
+    * Returns field name to apply the sorting for
     */
    getSelector(): string {
       return this._$selector;
    }
 
    /**
-    * Возвращает порядок сортировки
+    * Returns order of the sorting
     */
    getOrder(): boolean | string {
       return this._$order;
    }
 
+   /**
+    * Returns NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning,
+    * true - in the end)
+    */
+   getNullPolicy(): boolean {
+      return this._$nullPolicy === null ? !this.getOrder() : this._$nullPolicy;
+   }
+
    // region Static
 
    /**
-    * Сортировка по возрастанию
+    * 'Ascending' sort order
     */
    static get SORT_ASC(): boolean {
       return false;
    }
 
    /**
-    * Сортировка по убыванию
+    * 'Descending' sort order
     */
    static get SORT_DESC(): boolean {
       return true;
    }
 
    /**
-    * Сортировка по возрастанию (для строки)
+    * 'Ascending' sort order as a string
     */
    static get SORT_ASC_STR(): string {
       return 'ASC';
    }
 
    /**
-    * Сортировка по убыванию (для строки)
+    * 'Descending' sort order as a string
     */
    static get SORT_DESC_STR(): string {
       return 'DESC';
@@ -221,87 +245,78 @@ export class Order extends OptionsToPropertyMixin {
 }
 
 /**
- * Запрос на выборку.
+ * Query to build a selection from multiple sets within data source.
  *
- * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
+ * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
  * <pre>
- *    require(['Types/source'], function (source) {
- *       var query = new source.Query(),
- *          date = new Date();
+ *    import {Query} from 'Types/source';
  *
- *       date.setDate(date.getDate() - 1);
+ *    const twentyFourHoursAgo = new Date();
+ *    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
  *
- *       query
- *          .select(['id', 'date', 'customerId'])
- *          .from('Orders')
- *          .where(function(order) {
- *             return order.date - date >= 0;
- *          })
- *          .orderBy('id')
- *          .limit(100);
- *    });
+ *    const query = new Query();
+ *    query
+ *       .select(['id', 'date', 'customerId'])
+ *       .from('Orders')
+ *       .where((order) => order.date - twentyFourHoursAgo >= 0)
+ *       .orderBy('id')
+ *       .limit(100);
  * </pre>
  * @class Types/_source/Query
  * @implements Types/_entity/ICloneable
- * @mixes Types/_entity/OptionsMixin
  * @public
  * @author Мальцев А.А.
  */
-export default class Query extends OptionsToPropertyMixin implements ICloneable {
+export default class Query implements ICloneable {
    /**
-    * Выбираемые поля
+    * Field names to select
     */
-   protected _select: object = {};
+   protected _select: IHashMap<string> = {};
 
    /**
-    * Объект выборки
+    * The name of the set to select data from
     */
    protected _from: string = '';
 
    /**
-    * Псеводним объекта выборки
+    * Alias of the set to select data from
     */
    protected _as: string = '';
 
    /**
-    * Объединения с другими выборками
+    * Rules for join data from another sets
     */
    protected _join: Join[] = [];
 
    /**
-    * Способ фильтрации
+    * Rules for filtering data
     */
    protected _where: Where = {};
 
    /**
-    * Способ группировки
+    * Rules for grouping data
     */
    protected _groupBy: string[] = [];
 
    /**
-    * Способы сортировки
+    * Rules for sorting data
     */
    protected _orderBy: Order[] = [];
 
    /**
-    * Смещение
+    * Offset to slice the selection from the beginning
     */
    protected _offset: number = 0;
 
    /**
-    * Максимальное кол-во записей
+    * Maximum rows count in the selection
     */
    protected _limit: number = undefined;
 
    /**
-    * Мета-данные запроса
+    * Additional metadata to send to the data source
     */
    protected _meta: IMeta = {};
-
-   constructor(options?: object) {
-      super();
-      OptionsToPropertyMixin.call(this, options);
-   }
 
    // region ICloneable
 
@@ -329,7 +344,7 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    // region Public methods
 
    /**
-    * Сбрасывает все параметры запроса
+    * Resets all the previously defined settings
     */
    clear(): this {
       this._select = {};
@@ -347,40 +362,37 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает поля выборки
+    * Returns field names to select
     * @example
-    * Получим поля выборки:
+    * Get field names to select:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select(['id', 'date']);
-    *       console.log(query.getSelect());//{id: 'id', date: 'date'}
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select(['id', 'date']);
+    *    console.log(query.getSelect()); // {id: 'id', date: 'date'}
     * </pre>
     */
-   getSelect(): object {
+   getSelect(): IHashMap<string> {
       return this._select;
    }
 
    /**
-    * Устанавливает поля выборки
-    * @param {Array.<String>|Object.<String>|String} expression Выбираемые поля
+    * Sets field names to select
+    * @param expression Field names to select
     * @example
-    * Выбираем все заказы с определенным набором полей:
+    * Let's select shop orders with certain fields set:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select(['id', 'date', 'customerId' ])
-    *          .from('Orders');
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select(['id', 'date', 'customerId' ])
+    *       .from('Orders');
     * </pre>
-    * Выбираем все заказы со всеми полями:
+    * Let's select shop orders with all available fields:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders');
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders');
     * </pre>
     */
    select(expression: Expression): this {
@@ -390,16 +402,15 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает объект выборки
+    * Returns the name of the set to select data from
     * @example
-    * Получим объект выборки:
+    * Get the name of the set:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select(['id', 'date'])
-    *          .from('Orders');
-    *       console.log(query.getFrom());//'Orders'
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select(['id', 'date'])
+    *       .from('Orders');
+    *    console.log(query.getFrom()); // 'Orders'
     * </pre>
     */
    getFrom(): string {
@@ -407,16 +418,15 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает псеводним выборки
+    * Returns alias of the set to select data from
     * @example
-    * Получим псеводним выборки:
+    * Get the alias of the set:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select(['id', 'date'])
-    *          .from('Orders', 'o');
-    *       console.log(query.getAs());//'o'
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select(['o.id', 'o.date'])
+    *       .from('Orders', 'o');
+    *    console.log(query.getAs()); // 'o'
     * </pre>
     */
    getAs(): string {
@@ -424,45 +434,43 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает объект выборки
-    * @param {String} resource Объект выборки
-    * @param {String} [as] Псеводним объекта выборки
+    * Sets the name (and the alias if necessary) of the set to select data from
+    * @param name The name of the set
+    * @param [as] The alias of the set
     * @example
-    * Выбираем заказы с указанием полей через псеводним:
+    * Let's select shop orders with defining the alias:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select(['o.id', 'o.date', 'o.customerId'])
-    *          .from('Orders', 'o');
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select(['o.id', 'o.date', 'o.customerId'])
+    *       .from('Orders', 'o');
     * </pre>
     */
-   from(resource: string, as?: string): this {
-      this._from = resource;
+   from(name: string, as?: string): this {
+      this._from = name;
       this._as = as;
 
       return this;
    }
 
    /**
-    * Возвращает способы объединения
+    * Returns rules for join data from another sets
     * @example
-    * Получим способ объединения c объектом Customers:
+    * Get the rules for joining with 'Customers' set:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .join(
-    *             'Customers',
-    *             {id: 'customerId'},
-    *             ['name', 'email']
-    *          );
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .join(
+    *          'Customers',
+    *          {id: 'customerId'},
+    *          ['name', 'email']
+    *       );
     *
-    *       var join = query.getJoin()[0];
-    *       console.log(join.getResource());//'Customers'
-    *       console.log(join.getSelect());//{name: 'name', email: 'email'}
-    *    });
+    *    const join = query.getJoin()[0];
+    *    console.log(join.getResource()); // 'Customers'
+    *    console.log(join.getSelect()); // {name: 'name', email: 'email'}
     * </pre>
     */
    getJoin(): Join[] {
@@ -470,46 +478,46 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает объединение выборки с другой выборкой
-    * @param {String|Array} resource Объект выборки для объединения и его псеводним
-    * @param {Object} on Правило объединения
-    * @param {Object|Array|String} expression Выбираемые поля
-    * @param {Boolean} [inner=true] Внутреннее или внешнее объединение
+    * Sets rule to join data from another set
+    * @param name The name (and alias if necessary) of the another set
+    * @param on Joining conditions
+    * @param expression Field names (and aliases if necessary) to select from another set
+    * @param [inner=true] It is an inner or outer join
     * @example
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .join(
-    *             'Customers',
-    *             {id: 'customerId'},
-    *             '*'
-    *          );
+    *    import {Query} from 'Types/source';
     *
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .join(
-    *             'Customers',
-    *             {id: 'customerId'},
-    *             {customerName: 'name', customerEmail: 'email'}
-    *          );
-    *    });
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .join(
+    *          'Customers',
+    *          {id: 'customerId'},
+    *          '*'
+    *       );
+    *
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .join(
+    *          'Customers',
+    *          {id: 'customerId'},
+    *          {customerName: 'name', customerEmail: 'email'}
+    *       );
     * </pre>
     */
-   join(resource: string | string[], on: any, expression: Expression, inner?: boolean): this {
-      if (typeof resource === 'string') {
-         resource = resource.split(' ');
+   join(name: string | string[], on: IHashMap<string>, expression: Expression, inner?: boolean): this {
+      if (typeof name === 'string') {
+         name = name.split(' ');
       }
 
-      if (!(resource instanceof Array)) {
-         throw new Error('Invalid argument "resource"');
+      if (!(name instanceof Array)) {
+         throw new Error('Invalid argument "name"');
       }
 
       this._join.push(new Join({
-         resource: resource.shift(),
-         as: resource.shift() || '',
+         resource: name.shift(),
+         as: name.shift() || '',
          on,
          select: parseSelectExpression(expression),
          inner: inner === undefined ? true : inner
@@ -519,18 +527,27 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает способ фильтрации
+    * Returns rules for filtering data
     * @example
-    * Получим способ фильтрации выборки:
+    * Get rules for filtering data:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .where({host: 'my.store.com'});
+    *    import {Query} from 'Types/source';
     *
-    *       console.log(query.getWhere());//{'host': 'my.store.com'}
-    *    });
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .where({host: 'my.store.com'});
+    *
+    *    console.log(query.getWhere()); // {'host': 'my.store.com'}
+    *
+    *    const twentyFourHoursAgo = new Date();
+    *    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+    *    const dynamicQuery = new Query();
+    *       .select(['id', 'date', 'customerId'])
+    *       .from('Orders')
+    *       .where((order) => order.date - twentyFourHoursAgo >= 0)
+    *       .orderBy('id')
+    *       .limit(100);
     * </pre>
     */
    getWhere(): Where {
@@ -538,14 +555,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает фильтр выборки.
+    * Sets rules for filtering data
     * @remark
-    * Если expression передан в виде функции, то она принимает аргументы: элемент коллекции и его порядковый номер.
-    * @param {Object.<String>|Function(*, Number): Boolean} expression Условие фильтрации
+    * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its
+    * ordering number.
+    * @param expression Rules for filtering data
     * @example
-    * Выберем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
+    * Let's select landed flights to Moscow "Sheremetyevo" airport from New York or Los Angeles:
     * <pre>
-    *    var query = new Query()
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
     *       .select('*')
     *       .from('AirportsSchedule')
     *       .where({
@@ -555,16 +574,17 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
     *          fromCity: ['New York', 'Los Angeles']
     *       });
     * </pre>
-    * Выберем все заказы с номером больше 10, сделанные до текущего момента:
+    * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .where(function(order) {
-    *             return order.id > 10 && Number(order.date) < Date.now();
-    *          });
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const twentyFourHoursAgo = new Date();
+    *    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+    *    const dynamicQuery = new Query();
+    *       .select(['id', 'date', 'customerId'])
+    *       .from('Orders')
+    *       .where((order) => order.date - twentyFourHoursAgo >= 0)
+    *       .orderBy('id')
+    *       .limit(100);
     * </pre>
     */
    where(expression: Where): this {
@@ -580,20 +600,19 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает способы сортировки
+    * Returns rules for sorting data
     * @example
-    * Получим способы сортировки выборки:
+    * Get the rules for sorting:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .orderBy('id');
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .orderBy('id');
     *
-    *       var order = query.getOrderBy()[0];
-    *       console.log(order.getSelector());//'id'
-    *       console.log(order.getOrder());//false
-    *    });
+    *    const order = query.getOrderBy()[0];
+    *    console.log(order.getSelector()); // 'id'
+    *    console.log(order.getOrder()); // false
     * </pre>
     */
    getOrderBy(): Order[] {
@@ -601,43 +620,46 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает порядок сортировки выборки
-    * @param {String|Array.<Object.<Types/_source/Query/Order.typedef>>} selector Название поле сортировки или набор
-    * полей и направление сортировки в каждом (false - по возрастанию, true - по убыванию)
-    * @param {Types/_source/Query/Order.typedef} [desc=false] По убыванию
+    * Sets rules for sorting data
+    * @param selector Field name of field names and sorting directions for each of them (false - ascending,
+    * true - descending)
+    * @param [desc=false] Sort by descending (of selector is a string)
+    * @param [nullPolicy] NULL-like values positioning policy (undefined - depending on 'order' option, false - in the
+    * beginning, true - in the end)
     * @example
-    * Отсортируем заказы по полю id по возрастанию:
+    * Let's sort orders by ascending values of field 'id':
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .orderBy('id');
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .orderBy('id');
     * </pre>
-    * Отсортируем заказы по полю id по убыванию:
+    * Let's sort orders by descending values of field 'id':
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .orderBy('id', true);
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .orderBy('id', true);
     * </pre>
-    * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
+    * Let's sort orders by ascending values of field 'customerId' first and then by descending values of field 'date':
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .orderBy([
-    *             {customerId: false},
-    *             {date: true}
-    *          ]);
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .orderBy([
+    *          {customerId: false},
+    *          {date: true}
+    *       ]);
     * </pre>
     */
-   orderBy(selector: string | boolean[], desc?: boolean): this {
+   orderBy(
+      selector: string | IHashMap<boolean> | Array<IHashMap<boolean>>,
+      desc?: boolean,
+      nullPolicy?: boolean
+   ): this {
       if (desc === undefined) {
          desc = true;
       }
@@ -669,7 +691,8 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
       } else if (selector) {
          this._orderBy.push(new Order({
             selector,
-            order: desc
+            order: desc,
+            nullPolicy
          }));
       }
 
@@ -677,18 +700,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает способ группировки
+    * Returns rules for grouping data
     * @example
-    * Получим способ группировки выборки:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .groupBy('customerId');
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .groupBy('customerId');
     *
-    *       console.log(query.getGroupBy());//['customerId']
-    *    });
+    *    console.log(query.getGroupBy()); // ['customerId']
     * </pre>
     */
    getGroupBy(): string[] {
@@ -696,21 +717,21 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает способ группировки выборки
-    * @param {String|Array.<String>} expression Способ группировки элементов
+    * Sets rules for grouping data
+    * @param expression Rules for grouping data
     * @example
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .groupBy('customerId');
+    *    import {Query} from 'Types/source';
     *
-    *       var query = new Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .groupBy(['date', 'customerId']);
-    *    });
+    *    const querySimple = new source.Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .groupBy('customerId');
+    *
+    *    const queryComplex = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .groupBy(['date', 'customerId']);
     * </pre>
     */
    groupBy(expression: string | string[]): this {
@@ -728,18 +749,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает смещение
+    * Returns offset to slice the selection from the beginning
     * @example
-    * Получим смещение выборки:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .offset(50);
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .offset(50);
     *
-    *       query.getOffset();//50
-    *    });
+    *    query.getOffset(); // 50
     * </pre>
     */
    getOffset(): number {
@@ -747,17 +766,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает смещение первого элемента выборки
-    * @param {Number} start Смещение первого элемента выборки
+    * Sets offset to slice the selection from the beginning
+    * @param start Offset value
     * @example
-    * Выберем все заказы, начиная с пятидесятого:
+    * Skip first 50 orders:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .offset(50);
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .offset(50);
     * </pre>
     */
    offset(start: number | string): this {
@@ -767,19 +785,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает максимальное количество записей выборки
-    * @return {Number}
+    * Returns maximum rows count in the selection
     * @example
-    * Получим максимальное количество записей выборки:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .limit(10);
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .limit(10);
     *
-    *       console.log(query.getLimit());//10
-    *    });
+    *    console.log(query.getLimit()); // 10
     * </pre>
     */
    getLimit(): number {
@@ -787,17 +802,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает ограничение кол-ва элементов выборки
-    * @param {Number} count Максимальное кол-во элементов выборки
+    * Sets maximum rows count in the selection
+    * @param count Maximum rows count
     * @example
-    * Выберем первые десять заказов:
+    * Get first 10 orders:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Orders')
-    *          .limit(10);
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .limit(10);
     * </pre>
     */
    limit(count: number): this {
@@ -807,18 +821,16 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Возвращает мета-данные выборки
+    * Returns additional metadata
     * @example
-    * Получим мета-данные выборки:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Catalogue')
-    *          .meta({selectBreadCrumbs: true});
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Catalogue')
+    *       .meta({selectBreadCrumbs: true});
     *
-    *       console.log(query.getMeta());//{selectBreadCrumbs: true}
-    *    });
+    *    console.log(query.getMeta()); // {selectBreadCrumbs: true}
     * </pre>
     */
    getMeta(): IMeta {
@@ -826,18 +838,17 @@ export default class Query extends OptionsToPropertyMixin implements ICloneable 
    }
 
    /**
-    * Устанавливает мета-данные выборки
-    * @param {Object} data Мета-данные
+    * Sets additional metadata to send to the data source
+    * @param data Metadata
     * @example
-    * Укажем, что в результатах запроса хочем дополнительно получить "хлебные крошки":
+    * Let's set metadata field which point to necessity to put the "breadcrumbs" in result data set:
     * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var query = new source.Query()
-    *          .select('*')
-    *          .from('Catalogue')
-    *          .where({'parentId': 10})
-    *          .meta({selectBreadCrumbs: true});
-    *    });
+    *    import {Query} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Catalogue')
+    *       .where({'parentId': 10})
+    *       .meta({selectBreadCrumbs: true});
     * </pre>
     */
    meta(data: IMeta): this {

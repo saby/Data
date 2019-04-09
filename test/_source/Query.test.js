@@ -22,7 +22,7 @@ define([
          query = undefined;
       });
 
-      describe('.select', function() {
+      describe('.select()', function() {
          it('should set select from array', function() {
             var fields = ['id', 'name'];
             query.select(fields);
@@ -43,14 +43,14 @@ define([
          });
       });
 
-      describe('.clear', function() {
+      describe('.clear()', function() {
          it('should clear query', function() {
             query.clear();
             assert.deepEqual(query.getSelect(), {});
          });
       });
 
-      describe('.clone', function() {
+      describe('.clone()', function() {
          it('should clone query', function() {
             assert.deepEqual(query, query.clone());
          });
@@ -68,24 +68,71 @@ define([
          });
       });
 
-      describe('.getAs', function() {
+      describe('.getAs()', function() {
          it('should return as', function() {
             query.from('product', 'item');
             assert.equal(query.getAs(), 'item');
          });
       });
 
-      describe('.orderBy', function() {
-         it('should set order by', function() {
-            query.orderBy({
-               customerId: true,
-               date: false
-            });
-            assert.equal(query.getOrderBy().length, 2);
+      describe('.orderBy()', function() {
+         it('should set order from string', function() {
+            query.orderBy('customerId', true);
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return [item.getSelector(), item.getOrder()]
+               }),
+               [['customerId', true]]
+            );
+         });
+
+         it('should set order from Object', function() {
+            query.orderBy({customerId: true, date: false});
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return [item.getSelector(), item.getOrder()]
+               }),
+               [['customerId', true], ['date', false]]
+            );
+         });
+
+         it('should set order from Array', function() {
+            query.orderBy([{customerId: true}, {date: false}]);
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return [item.getSelector(), item.getOrder()]
+               }),
+               [['customerId', true], ['date', false]]
+            );
+         });
+
+         it('should set nullPolicy as false', function() {
+            query.orderBy('customerId', true, false);
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return item.getNullPolicy()
+               }),
+               [false]
+            );
+         });
+
+         it('should set nullPolicy as true', function() {
+            query.orderBy('customerId', true, true);
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return item.getNullPolicy()
+               }),
+               [true]
+            );
          });
       });
 
-      describe('.groupBy', function() {
+      describe('.groupBy()', function() {
          it('should set group by from array', function() {
             var groupBy = ['date', 'customerId'];
             query.groupBy(groupBy);
@@ -106,7 +153,7 @@ define([
          });
       });
 
-      describe('.where', function() {
+      describe('.where()', function() {
          it('should set expression as object', function() {
             var where  = {id: 10};
             query.where(where);
@@ -127,7 +174,7 @@ define([
          });
       });
 
-      describe('.join', function() {
+      describe('.join()', function() {
          it('should set join', function() {
             query.join(
                'Customers',
@@ -176,26 +223,29 @@ define([
          join = undefined;
       });
 
-      describe('.getResource', function() {
+      describe('.getResource()', function() {
          it('should return resource', function() {
             assert.equal(join.getResource(), resource);
          });
       });
-      describe('.getAs', function() {
+
+      describe('.getAs()', function() {
          it('should return as', function() {
             assert.equal(join.getAs(), as);
          });
       });
-      describe('.getOn', function() {
+      describe('.getOn()', function() {
          it('should return on', function() {
             assert.deepEqual(join.getOn(), on);
          });
       });
-      describe('.getSelect', function() {
+
+      describe('.getSelect()', function() {
          it('should return select', function() {
             assert.deepEqual(join.getSelect(), select);
          });
       });
+
       describe('.isInner', function() {
          it('should return inner', function() {
             assert.equal(join.isInner(), inner);
@@ -206,11 +256,12 @@ define([
    describe('Types/_source/Query.Order', function() {
       var Order = QueryModule.Order;
 
-      describe('.getSelector', function() {
+      describe('.getSelector()', function() {
          it('should return empty string by default', function() {
             var order = new Order();
             assert.strictEqual(order.getSelector(), '');
          });
+
          it('should return value passed to the constructor', function() {
             var order = new Order({
                selector: 'test'
@@ -219,17 +270,19 @@ define([
          });
       });
 
-      describe('.getOrder', function() {
+      describe('.getOrder()', function() {
          it('should return false by default', function() {
             var order = new Order();
             assert.isFalse(order.getOrder());
          });
+
          it('should return boolean value passed to the constructor', function() {
             var order = new Order({
                order: false
             });
             assert.isFalse(order.getOrder());
          });
+
          it('should return false from string "ASC" passed to the constructor', function() {
             var order = new Order({
                order: 'ASC'
@@ -246,6 +299,7 @@ define([
             });
             assert.isFalse(order.getOrder());
          });
+
          it('should return true from string "DESC" passed to the constructor', function() {
             var order = new Order({
                order: 'DESC'
@@ -261,6 +315,32 @@ define([
                order: 'Desc'
             });
             assert.isTrue(order.getOrder());
+         });
+      });
+
+      describe('.getNullPolicy()', function() {
+         it('should return false by default', function() {
+            var order = new Order();
+            assert.isTrue(order.getNullPolicy());
+         });
+
+         it('should return value opposite to "order" option', function() {
+            var orderAsc = new Order({order: false});
+            assert.isTrue(orderAsc.getNullPolicy());
+
+            var orderDesc = new Order({order: true});
+            assert.isFalse(orderDesc.getNullPolicy());
+         });
+
+         it('should return value passed to the constructor', function() {
+            var orderWithTrue = new Order({nullPolicy: true});
+            assert.isTrue(orderWithTrue.getNullPolicy());
+
+            var orderWithFalse = new Order({nullPolicy: false});
+            assert.isFalse(orderWithFalse.getNullPolicy());
+
+            var orderWithOption = new Order({nullPolicy: true, order: true});
+            assert.isTrue(orderWithOption.getNullPolicy());
          });
       });
    });
