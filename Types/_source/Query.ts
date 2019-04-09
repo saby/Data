@@ -241,6 +241,20 @@ export class Order extends OptionsToPropertyMixin {
       return 'DESC';
    }
 
+   /**
+    * NULL-like values positioning policy: in the beginning
+    */
+   static get NULL_POLICY_FIRST(): boolean {
+      return false;
+   }
+
+   /**
+    * NULL-like values positioning policy: in the end
+    */
+   static get NULL_POLICY_LAST(): boolean {
+      return true;
+   }
+
    // endregion
 }
 
