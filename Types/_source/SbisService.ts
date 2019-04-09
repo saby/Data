@@ -1,5 +1,11 @@
 import Rpc from './Rpc';
-import {IOptions as IRemoteOptions, IOptionsOption as IRpcOptionsOption, IPassing as IRemotePassing} from './Remote';
+import {
+   IOptions as IRemoteOptions,
+   IOptionsOption as IRemoteOptionsOption,
+   IPassing as IRemotePassing,
+   NavigationTypes as RemoteNavigationTypes,
+   NavigationType as RemoteNavigationType
+} from './Remote';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
@@ -18,9 +24,13 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 /**
  * Extended navigation types
  */
-const NAVIGATION_TYPE: any = {...Rpc.NAVIGATION_TYPE, ...{
-   POSITION: 'Position' // Add POSITION navigation type
-}};
+type NavigationType = RemoteNavigationType & 'Position';
+
+enum SbisNavigationTypes {
+   POSITION = 'Position'
+}
+
+type NavigationTypes = typeof RemoteNavigationTypes & typeof SbisNavigationTypes;
 
 enum PoitionNavigationOrder {
    before = 'before',
@@ -54,7 +64,8 @@ export interface IBinding extends IDefaultBinding {
 /**
  * Extended _$options
  */
-export interface IOptionsOption extends IRpcOptionsOption {
+export interface IOptionsOption extends IRemoteOptionsOption {
+   navigationType?: NavigationType;
    hasMoreProperty?: string;
 }
 
@@ -187,19 +198,19 @@ function getSortingParams(query: Query): string[] | null {
    if (!query) {
       return null;
    }
+
    const orders = query.getOrderBy();
    if (orders.length === 0) {
       return null;
    }
 
    const sort = [];
-   let order;
    for (let i = 0; i < orders.length; i++) {
-      order = orders[i];
+      const order = orders[i];
       sort.push({
          n: order.getSelector(),
          o: order.getOrder(),
-         l: !order.getOrder()
+         l: order.getNullPolicy()
       });
    }
    return sort;
@@ -229,7 +240,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
 
    let params = null;
    switch (options.navigationType) {
-      case NAVIGATION_TYPE.PAGE:
+      case RemoteNavigationTypes.PAGE:
          if (!withoutOffset || !withoutLimit) {
             params = {
                Страница: limit > 0 ? Math.floor(offset / limit) : 0,
@@ -239,7 +250,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
          }
          break;
 
-      case NAVIGATION_TYPE.POSITION:
+      case SbisNavigationTypes.POSITION:
          if (!withoutLimit) {
             const where = query.getWhere();
             const pattern = /(.+)([<>]=?|~)$/;
@@ -543,7 +554,7 @@ function oldMove(
 
 /**
  * Класс источника данных на сервисах бизнес-логики СБИС.
- * <br/>
+ * @remark
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
  * <pre>
  *    import {SbisService} from 'Types/source';
@@ -986,8 +997,8 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
 
    // region Statics
 
-   static get NAVIGATION_TYPE(): any {
-      return NAVIGATION_TYPE;
+   static get NAVIGATION_TYPE(): NavigationTypes {
+      return {...RemoteNavigationTypes, ...SbisNavigationTypes};
    }
 
    // endregion

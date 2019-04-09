@@ -166,14 +166,14 @@ class LocalQuery {
    }
 
    select(items: object[]): object[] {
-      const fields = this.query.getSelect() as string[];
+      const fields = this.query.getSelect();
       if (Object.keys(fields).length === 0) {
          return items;
       }
       return items.map((item) => {
          const res = {};
          let name;
-         for (let i = 0; i < fields.length; i++) {
+         for (let i = 0; i < (fields as any).length; i++) {
             name = fields[i];
             res[name] = item[name];
          }
