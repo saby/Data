@@ -285,7 +285,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from record', function(done) {
+            it('should generate request with additional fields from record', function(done) {
                var model = getSampleModel();
                service.create(model).addCallbacks(function() {
                   try {
@@ -300,7 +300,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from object', function(done) {
+            it('should generate request with additional fields from object', function(done) {
                var meta = getSampleMeta();
                service.create(meta).addCallbacks(function() {
                   try {
@@ -470,7 +470,7 @@ define([
                   });
                });
 
-               it('should generate request with valid meta data from record', function(done) {
+               it('should generate request with additional fields from record', function(done) {
                   service.read(
                      SbisBusinessLogic.existsId,
                      getSampleModel()
@@ -487,7 +487,7 @@ define([
                   });
                });
 
-               it('should generate request with valid meta data from object', function(done) {
+               it('should generate request with additional fields from object', function(done) {
                   service.read(
                      SbisBusinessLogic.existsId,
                      getSampleMeta()
@@ -625,7 +625,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from record', function(done) {
+            it('should generate request with additional fields from record', function(done) {
                var meta = new Model({
                   adapter: 'Types/entity:adapter.Sbis'
                });
@@ -646,7 +646,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from object', function(done) {
+            it('should generate request with additional fields from object', function(done) {
                service.update(
                   getSampleModel(),
                   getSampleMeta()
@@ -885,7 +885,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from record', function(done) {
+            it('should generate request with additional fields from record', function(done) {
                service.destroy(
                   SbisBusinessLogic.existsId,
                   getSampleModel()
@@ -902,7 +902,7 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from object', function(done) {
+            it('should generate request with additional fields from object', function(done) {
                service.destroy(
                   SbisBusinessLogic.existsId,
                   getSampleMeta()
@@ -1020,7 +1020,6 @@ define([
                   },
                   query = new Query();
                query
-                  .select(['fieldOne', 'fieldTwo'])
                   .from('Goods')
                   .where({
                      id: 5,
@@ -1245,15 +1244,32 @@ define([
                });
             });
 
-            it('should generate request with valid meta data from record', function(done) {
+            it('should generate request with additional fields from query select', function(done) {
+               var query = new Query();
+               query.select(['Foo']);
+
+               service.query(query).addCallbacks(function() {
+                  try {
+                     var args = SbisBusinessLogic.lastRequest.args;
+                     assert.deepEqual(args['ДопПоля'], ['Foo']);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function(err) {
+                  done(err);
+               });
+            });
+
+            it('should generate request with additional fields from record', function(done) {
                var query = new Query(),
                   meta = getSampleModel();
                query.meta(meta);
 
                service.query(query).addCallbacks(function() {
                   try {
-                     var args = SbisBusinessLogic.lastRequest.args,
-                        i = 0;
+                     var args = SbisBusinessLogic.lastRequest.args;
+                     var i = 0;
                      meta.each(function(name, value) {
                         assert.strictEqual(args['ДопПоля'][i], value);
                         i++;

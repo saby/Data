@@ -360,7 +360,11 @@ function getFilterParams(query: Query): object | null {
 function getAdditionalParams(query: Query): any[] {
    let meta: any = [];
    if (query) {
-      meta = query.getMeta();
+      meta = query.getSelect();
+      if (Object.keys(meta).length === 0) {
+         meta = query.getMeta();
+      }
+
       if (meta && DataMixin.isModelInstance(meta)) {
          const obj = {};
          meta.each((key, value) => {
@@ -368,6 +372,7 @@ function getAdditionalParams(query: Query): any[] {
          });
          meta = obj;
       }
+
       if (meta instanceof Object) {
          const arr = [];
          for (const key in meta) {
@@ -377,6 +382,7 @@ function getAdditionalParams(query: Query): any[] {
          }
          meta = arr;
       }
+
       if (!(meta instanceof Array)) {
          throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type. ' +
            'Only Array, Types/_entity/Record or Object are allowed.');
