@@ -130,6 +130,22 @@ define([
                [true]
             );
          });
+
+         it('should set nullPolicy from array', function() {
+            query.orderBy([
+               ['id', true, true],
+               ['customerId', true, false]
+            ]);
+
+            assert.deepEqual(
+               query.getOrderBy().map(function(item) {
+                  return [item.getSelector(), item.getOrder(), item.getNullPolicy()]
+               }), [
+                  ['id', true, true],
+                  ['customerId', true, false]
+               ]
+            );
+         });
       });
 
       describe('.groupBy()', function() {
