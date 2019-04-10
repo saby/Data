@@ -1261,29 +1261,6 @@ define([
                });
             });
 
-            it('should generate request with additional fields from record', function(done) {
-               var query = new Query(),
-                  meta = getSampleModel();
-               query.meta(meta);
-
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
-                     var i = 0;
-                     meta.each(function(name, value) {
-                        assert.strictEqual(args['ДопПоля'][i], value);
-                        i++;
-                     });
-                     assert.strictEqual(args['ДопПоля'].length, i);
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
-               });
-            });
-
             it('should generate request with null navigation and undefined limit', function(done) {
                var query = new Query();
                query.limit(undefined);

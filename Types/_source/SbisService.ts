@@ -358,38 +358,34 @@ function getFilterParams(query: Query): object | null {
  * Returns additional paramters
  */
 function getAdditionalParams(query: Query): any[] {
-   let meta: any = [];
+   let additional: any = [];
    if (query) {
-      meta = query.getSelect();
-      if (Object.keys(meta).length === 0) {
-         meta = query.getMeta();
-      }
-
-      if (meta && DataMixin.isModelInstance(meta)) {
+      additional = query.getSelect();
+      if (additional && DataMixin.isModelInstance(additional)) {
          const obj = {};
-         meta.each((key, value) => {
+         additional.each((key, value) => {
             obj[key] = value;
          });
-         meta = obj;
+         additional = obj;
       }
 
-      if (meta instanceof Object) {
+      if (additional instanceof Object) {
          const arr = [];
-         for (const key in meta) {
-            if (meta.hasOwnProperty(key)) {
-               arr.push(meta[key]);
+         for (const key in additional) {
+            if (additional.hasOwnProperty(key)) {
+               arr.push(additional[key]);
             }
          }
-         meta = arr;
+         additional = arr;
       }
 
-      if (!(meta instanceof Array)) {
-         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type. ' +
+      if (!(additional instanceof Array)) {
+         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported data type. ' +
            'Only Array, Types/_entity/Record or Object are allowed.');
       }
    }
 
-   return meta;
+   return additional;
 }
 
 /**
