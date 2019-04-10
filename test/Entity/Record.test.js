@@ -2224,7 +2224,8 @@ define([
             rec.set('id', 5);
             assert.notEqual(rec.getVersion(), version);
          });
-         it('should change version if has been changed a inner record', function() {
+
+         it('should change version if has been changed a inner Record', function() {
             var rec = new Record({
                   adapter: 'Types/entity:adapter.Sbis',
                   rawData: {
@@ -2247,7 +2248,8 @@ define([
             rec.get('record').set('id', 5);
             assert.notEqual(rec.getVersion(), version);
          });
-         it('should change version if has been changed a inner recordset', function() {
+
+         it('should change version if has been changed an inner RecordSet', function() {
             var rec = new Record({
                   adapter: 'Types/entity:adapter.Sbis',
                   rawData: {
@@ -2270,29 +2272,25 @@ define([
             rec.get('rs').at(0).set('id', 5);
             assert.notEqual(rec.getVersion(), version);
          });
-         it('should change version if has been changed a field flags', function() {
+
+         it('should change version if has been changed an inner Flags', function() {
             var rec = new Record({
-                  adapter: 'Types/entity:adapter.Sbis',
-                  rawData: {
-                     _type: 'record',
-                     d: [{
-                        _type: 'recordset',
-                        d: [[1], [2], [3], [4]],
-                        s: [{
-                           n: 'id',
-                           t: 'Число целое'
-                        }]
-                     }],
-                     s: [{
-                        n: 'rs',
-                        t: 'Выборка'
-                     }]
-                  }
-               }),
-               version = rec.getVersion();
-            rec.get('rs').at(0).set('id', 5);
+               adapter: 'Types/entity:adapter.Sbis',
+               rawData: {
+                  _type: 'record',
+                  d: [[]],
+                  s: [{
+                     n: 'foo',
+                     t: {n: 'Флаги', s: {0: 'one', 1: 'two'}}
+                  }]
+               }
+            });
+
+            var version = rec.getVersion();
+            rec.get('foo').set('one', true);
             assert.notEqual(rec.getVersion(), version);
          });
+
          it('should change version if a field has been added in the format', function() {
             var rec = new Record({
                   adapter: 'Types/entity:adapter.Sbis',
@@ -2309,6 +2307,7 @@ define([
             rec.addField({name: 'name', type: 'string'});
             assert.notEqual(rec.getVersion(), version);
          });
+
          it('should change version if a field has been removed from the format', function() {
             var format = getRecordFormat(),
                rec = new Record({
