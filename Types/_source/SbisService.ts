@@ -233,11 +233,6 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
    const withoutOffset = offset === 0;
    const withoutLimit = limit === undefined || limit === null;
 
-   if (hasMoreProp) {
-      delete meta[moreProp];
-      query.meta(meta);
-   }
-
    let params = null;
    switch (options.navigationType) {
       case RemoteNavigationTypes.PAGE:
