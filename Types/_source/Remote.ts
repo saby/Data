@@ -89,7 +89,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
             const changed = (data as Record).getChanged();
             changed.unshift(idProperty);
             data = Record.filterFields(data, changed);
-         } else if (DataMixin.isListInstance(data)) {
+         } else if (DataMixin.isRecordSetInstance(data)) {
             // Filter recordset fields
             data = ((source) => {
                const RecordSet = require('Types/collection').RecordSet;
@@ -187,7 +187,7 @@ export default abstract class Remote extends mixin<
    DataCrudMixin,
    BindingMixin,
    EndpointMixin
-) implements ICrud, ICrudPlus, IProvider /** @lends Types/_source/Remote.prototype */{
+) implements ICrud, ICrudPlus, IProvider {
 
    /**
     * @typedef {String} NavigationType

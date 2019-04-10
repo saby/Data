@@ -6,7 +6,7 @@ export type IValue = boolean | null;
  * @public
  * @author Мальцев А.А.
  */
-export default interface IFlags<T> /** @lends Types/_collection/IFlags.prototype */{
+export default interface IFlags<T> {
    readonly '[Types/_collection/IFlags]': boolean;
 
    /**

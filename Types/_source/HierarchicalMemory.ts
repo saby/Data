@@ -75,7 +75,7 @@ export default class HierarchicalMemory extends mixin<
 >(
    OptionsToPropertyMixin,
    SerializableMixin
-) implements IDecorator, ICrud, ICrudPlus /** @lends Data/_source/HierarchicalMemory.prototype */{
+) implements IDecorator, ICrud, ICrudPlus {
    /**
     * @cfg {Object} See {@link Types/_source/Memory#data}.
     * @name Types/_source/HierarchicalMemory#data

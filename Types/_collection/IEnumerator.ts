@@ -4,7 +4,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEnumerator<T> /** @lends Types/_collection/IEnumerator.prototype */{
+export default interface IEnumerator<T> {
    readonly '[Types/_collection/IEnumerator]': boolean;
 
    /**

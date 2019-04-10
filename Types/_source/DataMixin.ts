@@ -273,6 +273,13 @@ export default abstract class DataMixin implements IData {
    /**
     * Проверяет, что это экземпляр модели
     * @param instance Экземпляр модели
+    * @example
+    * <pre>
+    * import {Base} from 'Types/source';
+    * import {Model} from 'Types/entity';
+    * const instance = new Model();
+    * console.log(Base.isModelInstance(instance)); // true
+    * </pre>
     */
    static isModelInstance(instance: any): boolean {
       return instance &&
@@ -281,10 +288,17 @@ export default abstract class DataMixin implements IData {
    }
 
    /**
-    * Проверяет, что это экземпляр списка
-    * @param instance Экземпляр списка
+    * Проверяет, что это экземпляр рекордсета
+    * @param instance Экземпляр рекордсета
+    * @example
+    * <pre>
+    * import {Base} from 'Types/source';
+    * import {RecordSet} from 'Types/collection';
+    * const instance = new RecordSet();
+    * console.log(Base.isRecordSetInstance(instance)); // true
+    * </pre>
     */
-   static isListInstance(instance: any): boolean {
+   static isRecordSetInstance(instance: any): boolean {
       return instance &&
          instance['[Types/_collection/IList]'] &&
          instance['[Types/_entity/FormattableMixin]'];

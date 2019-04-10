@@ -9,10 +9,12 @@
 /tsconfig.base.json
 /artifacts
 /node_modules
+/Application
 /Browser
 /Env
 /I18n
 /Inferno
+/SbisEnv
 /View
 /WS.Core
 /Types/tslint.json

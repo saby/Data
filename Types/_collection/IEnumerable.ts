@@ -8,7 +8,7 @@ export type EnumeratorCallback<T> = (item: T, index: number) => void;
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEnumerable<T> /** @lends Types/_collection/IEnumerable.prototype */{
+export default interface IEnumerable<T> {
    readonly '[Types/_collection/IEnumerable]': boolean;
 
    /**

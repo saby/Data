@@ -142,7 +142,7 @@ export default class DataSet extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    SerializableMixin
-) /** @lends Types/_source/DataSet.prototype */{
+) {
    /**
     * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию
     * {@link Types/_entity/adapter/Json}

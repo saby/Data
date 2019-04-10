@@ -13,7 +13,7 @@ function dontTouchDeads(): void {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class DestroyableMixin /** @lends Types/_entity/DestroyableMixin.prototype */{
+export default abstract class DestroyableMixin {
    /**
     * Экземпляр был разрушен
     */

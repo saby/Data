@@ -13,7 +13,7 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Json extends Abstract /** @lends Types/_entity/adapter/Json.prototype */{
+export default class Json extends Abstract {
    forTable(data: object[]): JsonTable {
       return new JsonTable(data);
    }

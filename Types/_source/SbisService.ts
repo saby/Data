@@ -173,7 +173,7 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string
    if (data === null) {
       return data;
    }
-   if (data && DataMixin.isListInstance(data)) {
+   if (data && DataMixin.isRecordSetInstance(data)) {
       return data;
    }
 
@@ -422,7 +422,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): object {
    // @ts-ignore
    const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
    const args: any = {};
-   const recordArg = DataMixin.isListInstance(superArgs[0]) ? 'Записи' : 'Запись';
+   const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
    args[recordArg] = superArgs[0];
 
@@ -675,7 +675,7 @@ function oldMove(
  * @public
  * @author Мальцев А.А.
  */
-export default class SbisService extends Rpc /** @lends Types/_source/SbisService.prototype */{
+export default class SbisService extends Rpc {
    /**
     * @typedef {Object} Endpoint
     * @property {String} contract Контракт - определяет доступные операции
@@ -877,7 +877,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
    }
 
    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
-      if (this._$binding.updateBatch && DataMixin.isListInstance(data)) {
+      if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
          return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
                this._callProvider(

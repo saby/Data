@@ -4,7 +4,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEquatable /** @lends Types/_entity/IEquatable.prototype */{
+export default interface IEquatable {
    readonly '[Types/_entity/IEquatable]': boolean;
 
    /**
