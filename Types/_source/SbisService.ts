@@ -159,8 +159,8 @@ function callDestroyWithComplexId(
  * @param adapter
  */
 function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
-   const Record = resolve<any>('Types/entity:Record');
-   return Record.fromObject(data, adapter);
+   const RecordType = resolve<typeof Record>('Types/entity:Record');
+   return RecordType.fromObject(data, adapter);
 }
 
 /**
@@ -177,8 +177,8 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string
       return data;
    }
 
-   const RecordSet = resolve<any>('Types/collection:RecordSet');
-   const records = new RecordSet({
+   const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
+   const records = new RecordSetType({
       adapter,
       idProperty
    });
@@ -436,9 +436,9 @@ function passUpdate(data: Record | RecordSet, meta?: object): object {
 /**
  * Returns data to send in update() if updateBatch uses
  */
-function passUpdateBatch(items: Record | RecordSet, meta?: object): object {
-   const RecordSet = resolve<any>('Types/collection:RecordSet');
-   const patch = RecordSet.patch(items);
+function passUpdateBatch(items: RecordSet, meta?: object): object {
+   const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
+   const patch = RecordSetType.patch(items);
    return {
       changed: patch.get('changed'),
       added: patch.get('added'),
@@ -882,7 +882,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
             this._connectAdditionalDependencies(
                this._callProvider(
                   this._$binding.updateBatch,
-                  passUpdateBatch(data, meta)
+                  passUpdateBatch(data as RecordSet, meta)
                ).addCallback(
                   (key) => this._prepareUpdateResult(data, key)
                ),
