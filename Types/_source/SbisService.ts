@@ -159,8 +159,8 @@ function callDestroyWithComplexId(
  * @param adapter
  */
 function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
-   const Record = resolve<any>('Types/entity:Record');
-   return Record.fromObject(data, adapter);
+   const RecordType = resolve<typeof Record>('Types/entity:Record');
+   return RecordType.fromObject(data, adapter);
 }
 
 /**
@@ -177,8 +177,8 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string
       return data;
    }
 
-   const RecordSet = resolve<any>('Types/collection:RecordSet');
-   const records = new RecordSet({
+   const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
+   const records = new RecordSetType({
       adapter,
       idProperty
    });
@@ -232,11 +232,6 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
    const more = hasMoreProp ? meta[moreProp] : offset >= 0;
    const withoutOffset = offset === 0;
    const withoutLimit = limit === undefined || limit === null;
-
-   if (hasMoreProp) {
-      delete meta[moreProp];
-      query.meta(meta);
-   }
 
    let params = null;
    switch (options.navigationType) {
@@ -358,38 +353,34 @@ function getFilterParams(query: Query): object | null {
  * Returns additional paramters
  */
 function getAdditionalParams(query: Query): any[] {
-   let meta: any = [];
+   let additional: any = [];
    if (query) {
-      meta = query.getSelect();
-      if (Object.keys(meta).length === 0) {
-         meta = query.getMeta();
-      }
-
-      if (meta && DataMixin.isModelInstance(meta)) {
+      additional = query.getSelect();
+      if (additional && DataMixin.isModelInstance(additional)) {
          const obj = {};
-         meta.each((key, value) => {
+         additional.each((key, value) => {
             obj[key] = value;
          });
-         meta = obj;
+         additional = obj;
       }
 
-      if (meta instanceof Object) {
+      if (additional instanceof Object) {
          const arr = [];
-         for (const key in meta) {
-            if (meta.hasOwnProperty(key)) {
-               arr.push(meta[key]);
+         for (const key in additional) {
+            if (additional.hasOwnProperty(key)) {
+               arr.push(additional[key]);
             }
          }
-         meta = arr;
+         additional = arr;
       }
 
-      if (!(meta instanceof Array)) {
-         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported metadata type. ' +
+      if (!(additional instanceof Array)) {
+         throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported data type. ' +
            'Only Array, Types/_entity/Record or Object are allowed.');
       }
    }
 
-   return meta;
+   return additional;
 }
 
 /**
@@ -445,9 +436,9 @@ function passUpdate(data: Record | RecordSet, meta?: object): object {
 /**
  * Returns data to send in update() if updateBatch uses
  */
-function passUpdateBatch(items: Record | RecordSet, meta?: object): object {
-   const RecordSet = resolve<any>('Types/collection:RecordSet');
-   const patch = RecordSet.patch(items);
+function passUpdateBatch(items: RecordSet, meta?: object): object {
+   const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
+   const patch = RecordSetType.patch(items);
    return {
       changed: patch.get('changed'),
       added: patch.get('added'),
@@ -891,7 +882,7 @@ export default class SbisService extends Rpc /** @lends Types/_source/SbisServic
             this._connectAdditionalDependencies(
                this._callProvider(
                   this._$binding.updateBatch,
-                  passUpdateBatch(data, meta)
+                  passUpdateBatch(data as RecordSet, meta)
                ).addCallback(
                   (key) => this._prepareUpdateResult(data, key)
                ),

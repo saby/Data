@@ -169,7 +169,7 @@ export class Order extends OptionsToPropertyMixin {
     * beginning, true - in the end)
     * @name Types/_source/Query/Order#nullPolicy
     */
-   protected _$nullPolicy: boolean = null;
+   protected _$nullPolicy: boolean = undefined;
 
    constructor(options?: IOrderOptions) {
       super();
@@ -208,7 +208,7 @@ export class Order extends OptionsToPropertyMixin {
     * true - in the end)
     */
    getNullPolicy(): boolean {
-      return this._$nullPolicy === null ? !this.getOrder() : this._$nullPolicy;
+      return this._$nullPolicy === undefined ? !this.getOrder() : this._$nullPolicy;
    }
 
    // region Static
@@ -659,18 +659,29 @@ export default class Query implements ICloneable {
     * </pre>
     * Let's sort orders by ascending values of field 'customerId' first and then by descending values of field 'date':
     * <pre>
-    *    import {Query} from 'Types/source';
+    *    import {Query, QueryOrder} from 'Types/source';
     *    const query = new Query()
     *       .select('*')
     *       .from('Orders')
     *       .orderBy([
-    *          {customerId: false},
-    *          {date: true}
+    *          {customerId: QueryOrder.SORT_ASC},
+    *          {date: QueryOrder.SORT_DESC}
+    *       ]);
+    * </pre>
+    * Let's sort orders use various null policies for each field:
+    * <pre>
+    *    import {Query, QueryOrder} from 'Types/source';
+    *    const query = new Query()
+    *       .select('*')
+    *       .from('Orders')
+    *       .orderBy([
+    *          ['customerId', QueryOrder.SORT_DESC, QueryOrder.NULL_POLICY_FIRST],
+    *          [date, QueryOrder.SORT_ASC, QueryOrder.NULL_POLICY_LAST]
     *       ]);
     * </pre>
     */
    orderBy(
-      selector: string | IHashMap<boolean> | Array<IHashMap<boolean>>,
+      selector: string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>,
       desc?: boolean,
       nullPolicy?: boolean
    ): this {
@@ -697,7 +708,17 @@ export default class Query implements ICloneable {
 
          if (selector instanceof Array) {
             for (let i = 0; i < selector.length; i++) {
-               processObject(selector[i]);
+               const selectorItem = selector[i];
+               if (selectorItem instanceof Array) {
+                  const [selectorField, selectorOrder, selectorNullPolicy]: [string, boolean, boolean] = selectorItem;
+                  this._orderBy.push(new Order({
+                     selector: selectorField,
+                     order: selectorOrder,
+                     nullPolicy: selectorNullPolicy
+                  }));
+               } else {
+                  processObject(selectorItem);
+               }
             }
          } else {
             processObject(selector);

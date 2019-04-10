@@ -13,6 +13,8 @@
  * @includes Memory Types/_source/Memory
  * @includes PrefetchProxy Types/_source/PrefetchProxy
  * @includes Query Types/_source/Query
+ * @includes QueryJoin Types/_source/Query.Join
+ * @includes QueryOrder Types/_source/Query.Order
  * @includes Remote Types/_source/Remote
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
