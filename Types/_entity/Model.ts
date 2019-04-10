@@ -159,7 +159,7 @@ export default class Model extends mixin<
    Record, InstantiableMixin
 >(
    Record, InstantiableMixin
-) implements IInstantiable /** @lends Types/_entity/Model.prototype */{
+) implements IInstantiable {
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).

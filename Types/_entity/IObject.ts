@@ -5,7 +5,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IObject /** @lends Types/_entity/IObject.prototype */{
+export default interface IObject {
    readonly '[Types/_entity/IObject]': boolean;
 
    /**

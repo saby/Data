@@ -261,7 +261,7 @@ export default class Record extends mixin<
    IEquatable,
    IEnumerable<any>,
    IReceiver,
-   IVersionable /** @lends Types/_entity/Record.prototype */ {
+   IVersionable {
 
    /**
     * Объект содержащий закэшированные значения полей

@@ -6,7 +6,7 @@ export type IIndex = number | string | null;
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEnum<T> /** @lends Types/_collection/IEnum.prototype */{
+export default interface IEnum<T> {
    readonly '[Types/_collection/IEnum]': boolean;
 
    /**

@@ -69,7 +69,7 @@ export default abstract class Local extends mixin<
 >(
    Base,
    DataCrudMixin
-) implements ICrud, ICrudPlus /** @lends Types/_source/Local.prototype */{
+) implements ICrud, ICrudPlus {
    /**
     * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода
     * {@link query}.
@@ -211,7 +211,7 @@ export default abstract class Local extends mixin<
 
       let keys = [];
 
-      if (DataMixin.isListInstance(data)) {
+      if (DataMixin.isRecordSetInstance(data)) {
          (data as RecordSet).each((record) => {
             keys.push(updateRecord(record));
          });

@@ -10,7 +10,7 @@ interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class ObservableMixin /** @lends Types/_entity/ObservableMixin.prototype */{
+export default abstract class ObservableMixin {
    /**
     * @cfg {Object.<Function>} handlers Обработчики событий
     */

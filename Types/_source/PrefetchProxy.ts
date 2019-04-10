@@ -131,7 +131,7 @@ export default class PrefetchProxy extends mixin<
    DestroyableMixin,
    OptionsToPropertyMixin,
    SerializableMixin
-) implements IDecorator, ICrud, ICrudPlus /** @lends Types/_source/PrefetchProxy.prototype */{
+) implements IDecorator, ICrud, ICrudPlus {
    /**
     * @cfg {Types/_source/ICrud} Target data source
     * @name Types/_source/PrefetchProxy#target

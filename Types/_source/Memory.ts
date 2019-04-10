@@ -93,7 +93,7 @@ export interface IOptions extends ILocalOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class Memory extends Local /** @lends Types/_source/Memory.prototype */{
+export default class Memory extends Local {
    /**
     * @cfg {Object} Данные, с которыми работает источник.
     * @name Types/_source/Memory#data
