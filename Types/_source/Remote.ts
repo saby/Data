@@ -218,7 +218,7 @@ export default abstract class Remote extends mixin<
     * <pre>
     *    var dataSource = new HttpSource({
     *       endpoint: '//some.server/users/',
-    *       prepare: {
+    *       passing: {
     *          create: function(meta) {
     *             return {
     *                data: meta
