@@ -615,7 +615,7 @@ export default class Record extends mixin<
 
          this._setChangedField(fieldName, target, true);
          map[fieldName] = target;
-         this._notify('onPropertyChange', map);
+         this._notifyChange(map, false);
 
          return map;
       };
@@ -1288,11 +1288,14 @@ export default class Record extends mixin<
    /**
     * Уведомляет об изменении полей записи
     * @param [map] Измененные поля
+    * @param [spread=true] Распространить по иерархии родителей
     * @protected
     */
-   protected _notifyChange(map?: object): void {
+   protected _notifyChange(map?: object, spread?: boolean): void {
       map = map || {};
-      this._childChanged(map);
+      if (spread === undefined || spread === true) {
+         this._childChanged(map);
+      }
       this._nextVersion();
       this._notify('onPropertyChange', map);
    }
