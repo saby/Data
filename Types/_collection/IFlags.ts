@@ -10,7 +10,8 @@ export default interface IFlags<T> {
    readonly '[Types/_collection/IFlags]': boolean;
 
    /**
-    * @event onChange Triggers after change the selection
+    * @event Triggers after change the selection
+    * @name Types/_collection/IFlags#onChange
     * @param {Env/Event.Object} event Event descriptor
     * @param {String|Array.<Boolean|Null>} name Name of the flag or whole flags selection in case of mass operation
     * @param {Number} [index] Index of the flag

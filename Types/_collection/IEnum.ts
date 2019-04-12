@@ -10,7 +10,8 @@ export default interface IEnum<T> {
    readonly '[Types/_collection/IEnum]': boolean;
 
    /**
-    * @event onChange Triggers after change the selected item
+    * @event Triggers after change the selected item
+    * @name Types/_collection/IEnum#onChange
     * @param {Env/Event.Object} event Event descriptor
     * @param {Number} index Key of selected item
     * @param {String} value Value of selected item
