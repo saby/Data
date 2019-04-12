@@ -8,7 +8,8 @@ const IBind = {
    '[Types/_display/IBind]': true
 
    /**
-    * @event onCollectionChange После изменения коллекции
+    * @event После изменения коллекции
+    * @name Types/_display/IBind#onCollectionChange
     * @param {Env/Event.Object} event Дескриптор события.
     * @param {Types/_collection/IObservable#ChangeAction} action Действие, приведшее к изменению.
     * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.

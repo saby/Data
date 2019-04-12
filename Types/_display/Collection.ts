@@ -309,11 +309,13 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     */
 
    /**
-    * @event onBeforeCollectionChange Перед началом изменений коллекции
+    * @event Перед началом изменений коллекции
+    * @name Types/_display/Collection#onBeforeCollectionChange
     */
 
    /**
-    * @event onAfterCollectionChange После окончания изменений коллекции
+    * @event После окончания изменений коллекции
+    * @name Types/_display/Collection#onAfterCollectionChange
     */
 
    /**

@@ -12,7 +12,8 @@ export default class EventRaisingMixin {
    '[Types/_entity/EventRaisingMixin]': boolean;
 
    /**
-    * @event onEventRaisingChange После изменения режима генерации событий
+    * @event После изменения режима генерации событий
+    * @name Types/_collection/EventRaisingMixin#onEventRaisingChange
     * @param {Boolean} enabled Включена или выключена генерация событий
     * @param {Boolean} analyze Включен или выключен анализ изменений
     */
