@@ -1,4 +1,5 @@
 import DestroyableMixin from '../DestroyableMixin';
+import IAdapter from './IAdapter';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
 import {Field} from '../format';
@@ -6,6 +7,7 @@ import {create} from '../../di';
 import {mixin} from '../../util';
 import Record from '../Record';
 import {RecordSet, format} from '../../collection';
+import {IHashMap} from '../../_declarations';
 
 /**
  * Адаптер для записи таблицы данных в формате записи.
@@ -147,17 +149,25 @@ export default class RecordSetRecord extends mixin<
    // region Protected methods
 
    protected _touchData(): void {
-      if (!this._data &&
-         this._tableData &&
+      if (this._data) {
+         return;
+      }
+
+      let DataConstructor: string | Function = Record;
+      let adapter;
+
+      if (this._tableData &&
          this._tableData['[Types/_entity/FormattableMixin]']
       ) {
-         const model = this._tableData.getModel();
-         const adapter = this._tableData.getAdapter();
-
-         this._data = create(model, {
-            adapter
-         });
+         DataConstructor = this._tableData.getModel();
+         adapter = this._tableData.getAdapter();
       }
+
+      const options: IHashMap<IAdapter> = {};
+      if (adapter) {
+         options.adapter = adapter;
+      }
+      this._data = create<Record>(DataConstructor, options);
    }
 
    protected _isValidData(): boolean {
