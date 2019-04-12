@@ -22,7 +22,8 @@ export default interface IProvider {
     */
 
    /**
-    * @event onBeforeProviderCall Перед вызовом метода удаленного сервиса через провайдер
+    * @event Перед вызовом метода удаленного сервиса через провайдер
+    * @name Types/_source/IProvider#onBeforeProviderCall
     * @param {Env/Event.Object} eventObject Дескриптор события.
     * @param {String} name Имя метода
     * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует

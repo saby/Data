@@ -49,7 +49,8 @@ export default abstract class IObservable {
     */
 
    /**
-    * @event onCollectionChange После изменения коллекции
+    * @event После изменения коллекции
+    * @name Types/_collection/IObservable#onCollectionChange
     * @param {Env/Event.Object} event Дескриптор события.
     * @param {ChangeAction} action Действие, приведшее к изменению.
     * @param {Array} newItems Новые элементы коллекции.
@@ -81,7 +82,8 @@ export default abstract class IObservable {
     */
 
    /**
-    * @event onCollectionItemChange После изменения элемента коллекции
+    * @event После изменения элемента коллекции
+    * @name Types/_collection/IObservable#onCollectionItemChange
     * @param {Env/Event.Object} event Дескриптор события.
     * @param {*} item Измененный элемент коллекции.
     * @param {Number} index Индекс измененного элемента.
