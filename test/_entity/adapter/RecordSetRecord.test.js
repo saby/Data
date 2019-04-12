@@ -108,6 +108,15 @@ define([
       });
 
       describe('.set()', function() {
+         it('should init raw data as Record', function() {
+            var adapter = new RecordSetRecordAdapter();
+
+            adapter.set('foo', 'bar');
+
+            assert.instanceOf(adapter.getData(), Record);
+            assert.strictEqual(adapter.getData().get('foo'), 'bar');
+         });
+
          it('should set the exists property value', function() {
             adapter.set('id', 20);
             assert.strictEqual(
@@ -157,13 +166,6 @@ define([
                adapter.set(0);
             }, ReferenceError);
          });
-
-         it('should throw TypeError for empty data', function() {
-            var adapter = new RecordSetRecordAdapter();
-            assert.throws(function() {
-               adapter.set('id', 1);
-            }, TypeError);
-         });
       });
 
       describe('.clear()', function() {
@@ -181,11 +183,10 @@ define([
             assert.strictEqual(data, adapter.getData());
          });
 
-         it('should throw TypeError for empty data', function() {
+         it('should init empty data as Record', function() {
             var adapter = new RecordSetRecordAdapter();
-            assert.throws(function() {
-               adapter.clear();
-            }, TypeError);
+            adapter.clear();
+            assert.instanceOf(adapter.getData(), Record);
          });
       });
 
@@ -284,16 +285,15 @@ define([
             });
          });
 
-         it('should throw TypeError for empty data', function() {
-            var adapter = new RecordSetRecordAdapter(),
-               field = fieldsFactory({
-                  type: 'string',
-                  name: 'id'
-               });
+         it('should init empty data and add a field in there', function() {
+            var adapter = new RecordSetRecordAdapter();
+            var field = fieldsFactory({
+               type: 'string',
+               name: 'id'
+            });
 
-            assert.throws(function() {
-               adapter.addField(field);
-            }, TypeError);
+            adapter.addField(field);
+            assert.strictEqual(adapter.getData().getFormat().getFieldIndex('id'), 0);
          });
       });
 
@@ -316,11 +316,11 @@ define([
             });
          });
 
-         it('should throw TypeError for empty data', function() {
+         it('should throw ReferenceError for empty data', function() {
             var adapter = new RecordSetRecordAdapter();
             assert.throws(function() {
                adapter.removeField('id');
-            }, TypeError);
+            }, ReferenceError);
          });
       });
 
@@ -372,11 +372,11 @@ define([
             });
          });
 
-         it('should throw TypeError for empty data', function() {
+         it('should throw Error for empty data', function() {
             var adapter = new RecordSetRecordAdapter();
             assert.throws(function() {
                adapter.removeFieldAt(0);
-            }, TypeError);
+            }, Error);
          });
       });
    });
