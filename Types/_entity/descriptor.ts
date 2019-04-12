@@ -77,6 +77,16 @@ function validate(type: Descriptor): ValidateFunc {
    type = normalizeType(type);
    const typeName = typeof type;
 
+   switch (type) {
+      case null:
+         return function validateNull(value: any): null | TypeError {
+            if (value === null) {
+               return value;
+            }
+            return new TypeError(`Value "${value}" should be null`);
+         };
+   }
+
    switch (typeName) {
       case 'string':
          return function validateTypeName(value: any): any {
@@ -224,15 +234,53 @@ function chain(parent: IChained): IChained {
 
 /**
  * Creates type descriptor which checks given value type.
+ *
+ * You can set the type restriction:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
  * console.log(descriptor(Number)(0)); // 0
  * console.log(descriptor(Number)('0')); // TypeError
  *
- * console.log(descriptor(Number, String)(0));// 0
- * console.log(descriptor(Number, String)('0'));// '0'
- * console.log(descriptor(Number, String)(true));// TypeError
+ * console.log(descriptor(Number, null)(0)); // 0
+ * console.log(descriptor(Number, null)(null)); // null
+ * console.log(descriptor(Number, null)('0')); // TypeError
+ *
+ * console.log(descriptor(Number, String)(0)); // 0
+ * console.log(descriptor(Number, String)('0')); // '0'
+ * console.log(descriptor(Number, String)(true)); // TypeError
+ * </pre>
+ *
+ * necessity restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required()(1)); // 1
+ * console.log(descriptor(Number).required()()); // TypeError
+ * </pre>
+ *
+ * inclusion restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).oneOf('foo', 'bar')('foo')); // 'foo'
+ * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
+ * </pre>
+ *
+ * exclusion restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).not('foo', 'bar')('baz')); // 'baz'
+ * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
+ * </pre>
+ *
+ * kind restriction for arrays:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Array).arrayOf(Boolean)([true]); // [true]
+ * console.log(descriptor(Array).arrayOf(Boolean)([0]); // TypeError
  * </pre>
  * @function Types/_entity/descriptor
  * @param types Desirable value types
