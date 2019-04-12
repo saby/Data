@@ -153,7 +153,7 @@ export default class RecordSetRecord extends mixin<
          return;
       }
 
-      let DataConstructor: string | Function = Record;
+      let DataConstructor: string | Function = 'Types/entity:Record';
       let adapter;
 
       if (this._tableData &&
