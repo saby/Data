@@ -4,11 +4,12 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IObservableObject /** @lends Types/_entity/IObservableObject.prototype */{
+export default interface IObservableObject /** @lends Types/_entity/IObservableObject.prototype */ {
    readonly '[Types/_entity/IObservableObject]': boolean;
 
    /**
-    * @event onPropertyChange После изменения набора свойств объекта.
+    * @event После изменения набора свойств объекта.
+    * @name Types/_entity/IObservableObject#onPropertyChange
     * @param {Env/Event.Object} event Дескриптор события.
     * @param {Object} properties Названия и новые значения изменившихся свойств.
     * @example
