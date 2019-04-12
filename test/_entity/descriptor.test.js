@@ -25,6 +25,14 @@ define([
          assert.instanceOf(descriptor(Number, String), Function);
       });
 
+      it('should return valid null value', function() {
+         assert.strictEqual(descriptor(null)(null), null);
+      });
+
+      it('should return TypeError for not null value', function() {
+         assert.instanceOf(descriptor(null)(0), TypeError);
+      });
+
       it('should return valid Boolean value', function() {
          assert.strictEqual(descriptor(Boolean)(false), false);
       });
@@ -113,6 +121,9 @@ define([
          assert.strictEqual(descriptor(Boolean, Number, String)(false), false);
          assert.strictEqual(descriptor(Boolean, Number, String)(0), 0);
          assert.strictEqual(descriptor(Boolean, Number, String)(''), '');
+
+         assert.strictEqual(descriptor(Boolean, null)(false), false);
+         assert.strictEqual(descriptor(Boolean, null)(null), null);
       });
 
       it('should return TypeError for invalid composite value', function() {
