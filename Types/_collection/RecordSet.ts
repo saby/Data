@@ -827,6 +827,9 @@ export default class RecordSet<T = Record> extends mixin<
          if (options.model) {
             instanceOptions.model = options.model;
          }
+         if (options.idProperty) {
+            instanceOptions.idProperty = options.idProperty;
+         }
       }
       return new this(instanceOptions);
    }
@@ -1133,10 +1136,13 @@ export default class RecordSet<T = Record> extends mixin<
             }
          );
       };
+
+      // Build metadata format if it comes from option
       const metaFormat = this._$metaFormat ? super._buildFormat(this._$metaFormat) : null;
       let metaData = {};
 
       if (this._$metaData) {
+         // Build metadata from option
          if (this._$metaData instanceof Object && Object.getPrototypeOf(this._$metaData) === Object.prototype) {
             Object.keys(this._$metaData).forEach((fieldName) => {
                let fieldValue = this._$metaData[fieldName];
@@ -1157,6 +1163,7 @@ export default class RecordSet<T = Record> extends mixin<
             metaData = this._$metaData;
          }
       } else {
+         // Build metadata via adapter if supported
          let adapter = this._getRawDataAdapter();
 
          // Unwrap if needed
