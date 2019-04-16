@@ -70,6 +70,15 @@ export interface IOptionsOption extends IRemoteOptionsOption {
 }
 
 /**
+ * Constructor options
+ */
+interface IOptions extends IRemoteOptions {
+   endpoint?: IEndpoint;
+   binding?: IBinding;
+   options?: IOptionsOption;
+}
+
+/**
  * Move metadata interface
  */
 export interface IMoveMeta {
@@ -806,7 +815,7 @@ export default class SbisService extends Rpc {
 
    protected _$options: IOptionsOption;
 
-   constructor(options?: IRemoteOptions) {
+   constructor(options?: IOptions) {
       super(options);
 
       if (!this._$endpoint.moveContract) {
