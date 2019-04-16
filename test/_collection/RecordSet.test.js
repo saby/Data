@@ -2506,6 +2506,26 @@ define([
                assert.strictEqual(meta.path.at(2).get('id'), 5);
             });
 
+            it('should inherit idProperty in path', function() {
+               var data = {
+                  p: {
+                     d: [],
+                     s: [
+                        {n: 'id', t: 'Число целое'},
+                        {n: 'title', t: 'Строка'}
+                     ]
+                  }
+               };
+               var rs = new RecordSet({
+                  rawData: data,
+                  adapter: 'Types/entity:adapter.Sbis',
+                  idProperty: 'title'
+               });
+               var meta = rs.getMetaData();
+
+               assert.strictEqual(meta.path.getIdProperty(), 'title');
+            });
+
             it('should return pure meta data', function() {
                var data = {
                      m: {
@@ -2593,6 +2613,11 @@ define([
 
             assert.instanceOf(instance, Foo);
             assert.equal(instance.getModel(), 'fooModel');
+         });
+
+         it('should return an instance with the given idProperty', function() {
+            var instance = RecordSet.produceInstance(null, {idProperty: 'foo'});
+            assert.strictEqual(instance.getIdProperty(), 'foo');
          });
       });
 
