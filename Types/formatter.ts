@@ -1,13 +1,13 @@
 /**
  * Library that formats types to strings
  * @library Types/formatter
- * @includes cyrTranslit Types/_object/cyrTranslit
- * @includes date Types/_object/date
- * @includes jsonReplacer Types/_object/jsonReplacer
- * @includes jsonReviver Types/_object/jsonReviver
- * @includes numberRoman Types/_object/numberRoman
- * @includes numberWords Types/_object/numberWords
- * @includes number Types/_object/number
+ * @includes cyrTranslit Types/_formatter/cyrTranslit
+ * @includes date Types/_formatter/date
+ * @includes jsonReplacer Types/_formatter/jsonReplacer
+ * @includes jsonReviver Types/_formatter/jsonReviver
+ * @includes numberRoman Types/_formatter/numberRoman
+ * @includes numberWords Types/_formatter/numberWords
+ * @includes number Types/_formatter/number
  * @public
  * @author Мальцев А.А.
  */
