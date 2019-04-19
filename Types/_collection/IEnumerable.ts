@@ -3,7 +3,7 @@ import IEnumerator from './IEnumerator';
 export type EnumeratorCallback<T> = (item: T, index: number) => void;
 
 /**
- * Интерфейс коллекции c последовательным доступом
+ * Interface of collection which provides their members through simple iteration one by one.
  * @interface Types/_collection/IEnumerable
  * @public
  * @author Мальцев А.А.

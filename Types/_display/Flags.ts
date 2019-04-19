@@ -27,7 +27,7 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
 }
 
 /**
- * Проекция типа "Флаги".
+ * Проекция для типа "Флаги".
  * @class Types/_display/Flags
  * @extends Types/_display/Collection
  * @public

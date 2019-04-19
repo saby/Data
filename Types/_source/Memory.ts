@@ -28,7 +28,7 @@ export interface IOptions extends ILocalOptions {
 /**
  * Источник данных в памяти ОС.
  * Позволяет получать данные из объектов в оперативной памяти.
- *
+ * @remark
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
  *    require(['Types/source'], function (source) {

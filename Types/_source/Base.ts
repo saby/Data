@@ -10,6 +10,7 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
 
 /**
  * Базовый источник данных.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Base
  * @mixes Types/_entity/DestroyableMixin

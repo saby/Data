@@ -5,7 +5,7 @@ interface IOptions<T> extends ICollectionItemOptions<T> {
 }
 
 /**
- * Группа элементов
+ * Элемент коллекции "Группа"
  * @class Types/_display/GroupItem
  * @extends Types/_display/CollectionItem
  * @public

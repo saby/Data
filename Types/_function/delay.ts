@@ -1,10 +1,8 @@
 const win = typeof window !== 'undefined' ? window : null;
 
 /**
- * Модуль, в котором описана функция <b>delay(fn)</b>.
- *
  * Метод Вызывает функцию асинхронно, через requestAnimationFrame, или на крайний случай setTimeout
- *
+ * @remark
  * <h2>Параметры функции</h2>
  * <ul>
  *     <li><b>fn</b> {Function} - исходная функция, вызов которой нужно асинхронно.</li>
