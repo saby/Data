@@ -20,7 +20,7 @@ function onSourceChange(event: EventObject, index: number): void {
 }
 
 /**
- * Проекция типа "Перечисляемое".
+ * Проекция для типа "Перечисляемое".
  * @class Types/_display/Enum
  * @extends Types/_display/Collection
  * @public

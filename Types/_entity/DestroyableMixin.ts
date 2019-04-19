@@ -8,6 +8,7 @@ function dontTouchDeads(): void {
 
 /**
  * Миксин, добавляющий аспект состояния "экземпляр разрушен".
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @mixin Types/_entity/DestroyableMixin
  * @public

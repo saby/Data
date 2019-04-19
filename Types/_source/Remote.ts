@@ -156,6 +156,7 @@ function passMove(from: any[], to: string, meta?: object): any[] {
 
 /**
  * Источник данных, работающий удаленно.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Remote
  * @extends Types/_source/Base

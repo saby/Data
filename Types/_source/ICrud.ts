@@ -6,7 +6,7 @@ import {RecordSet} from '../collection';
 /**
  * Интерфейс источника данных, поддерживающиего контракт
  * {link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
- *
+ * @remark
  * Создадим новую статью:
  * <pre>
  *    var dataSource = new CrudSource();

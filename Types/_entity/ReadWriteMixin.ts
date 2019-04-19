@@ -12,6 +12,7 @@ const $writable = protect('writable');
 
 /**
  * Миксин, позволяющий ограничивать запись и чтение.
+ * @remark
  * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов
  * @mixin Types/_entity/ReadWriteMixin
  * @public
