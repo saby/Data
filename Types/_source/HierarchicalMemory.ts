@@ -27,6 +27,7 @@ interface ISerializableState extends IDefaultSerializableState {
 
 /**
  * Source which returns "breadcrumbs" to the root of hierarchy in the result of query() method.
+ * @remark
  * "Breadcrumbs" stores as Array in property "path" of RecordSet's meta data.
  *
  * Let's create hierarchical source and select data with breadcrumbs:

@@ -54,6 +54,7 @@ export interface IOptions extends IBaseOptions {
 
 /**
  * Источник данных, работающий локально.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Local
  * @extends Types/_source/Base

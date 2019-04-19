@@ -16,7 +16,7 @@ interface IProduceOptions {
 }
 
 /**
- * Enumerable type. It's an enumerable collection of keys and values one of which can be selected or not.
+ * Enumerable type. It's an enumerable collection of keys and values and one of them can be selected or not.
  * @class Types/_collection/Enum
  * @extends Types/_collection/Dictionary
  * @implements Types/_collection/IEnum

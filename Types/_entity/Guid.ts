@@ -1,5 +1,5 @@
 /**
- * Guid
+ * Guid type
  * @class Types/_entity/Guid
  * @public
  * @author Мальцев А.А.

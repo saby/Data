@@ -9,6 +9,7 @@ const arraySlice = Array.prototype.slice;
 
 /**
  * Список, в котором можно отслеживать изменения.
+ * @remark
  * <pre>
  *    define(['Types/collection'], function(collection) {
  *       var list = new collection.ObservableList({

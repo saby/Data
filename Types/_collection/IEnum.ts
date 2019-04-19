@@ -1,7 +1,7 @@
 export type IIndex = number | string | null;
 
 /**
- * Enum type interface. It's an enumerable collection of keys and values one of which can be selected or not.
+ * Enum type interface. It's an enumerable collection of keys and values and one of them can be selected or not.
  * @interface Types/_collection/IEnum
  * @public
  * @author Мальцев А.А.

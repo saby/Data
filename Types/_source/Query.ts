@@ -260,7 +260,7 @@ export class Order extends OptionsToPropertyMixin {
 
 /**
  * Query to build a selection from multiple sets within data source.
- *
+ * @remark
  * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
  * <pre>
  *    import {Query} from 'Types/source';

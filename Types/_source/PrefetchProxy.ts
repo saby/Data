@@ -74,7 +74,7 @@ const defaultValidators = {
 /**
  * Data source which contains prefetched data and returns them on the first call of any method for data reading.
  * Second and further calls will be proxied to the target data source.
- *
+ * @remark
  * Let's create data source witch two lists of spots: first one is prefetched data and the second one is the target
  * Memory source:
  * <pre>
