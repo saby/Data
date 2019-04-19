@@ -222,7 +222,7 @@ export class Order extends OptionsToPropertyMixin {
 
 /**
  * Запрос на выборку.
- *
+ * @remark
  * Выберем 100 заказов за последние сутки и отсортируем их по возрастанию номера:
  * <pre>
  *    require(['Types/source'], function (source) {

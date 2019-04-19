@@ -271,7 +271,7 @@ addToken('QQQQr', getQuarterRomanLong);
 
 /**
  * Преобразует дату в строку указанного формата.
- *
+ * @remark
  * <h2>Параметры функции</h2>
  * <ul>
  *     <li><b>date</b> {Date} Дата.</li>
@@ -280,7 +280,6 @@ addToken('QQQQr', getQuarterRomanLong);
  * <h2>Возвращает</h2>
  * {String} Дата в указанном формате.
  *
- * @remark
  * <h2>Доступные константы (следует использовать для вывода дат
  * {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
  * <ul>

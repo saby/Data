@@ -3,6 +3,7 @@ import Serializer = require('Core/Serializer');
 
 /**
  * Миксин, позволяющий клонировать объекты.
+ * @remark
  * Для корректной работы требуется подмешать {@link Types/_entity/SerializableMixin}.
  * @mixin Types/_entity/CloneableMixin
  * @public

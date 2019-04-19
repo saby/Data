@@ -19,7 +19,7 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
 }
 
 /**
- * Элемент дерева
+ * Элемент древовидной коллеции
  * @class Types/_display/TreeItem
  * @extends Types/_display/CollectionItem
  * @public

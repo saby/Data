@@ -4,6 +4,7 @@ import IRpc from './IRpc';
 
 /**
  * Источник данных, работающий по технологии RPC.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Rpc
  * @extends Types/_source/Remote

@@ -1,5 +1,5 @@
 /**
- * Интерфейс коллекции c последовательным доступом
+ * Interface of object which supports simple iteration one by one.
  * @interface Types/_collection/IEnumerator
  * @public
  * @author Мальцев А.А.

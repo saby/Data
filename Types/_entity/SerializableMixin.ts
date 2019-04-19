@@ -88,6 +88,7 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
 
 /**
  * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
+ * @remark
  * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
  * имя модуля для requirejs.
  * @example

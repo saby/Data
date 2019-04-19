@@ -61,7 +61,7 @@ export interface IOptionsOption extends IRpcOptionsOption {
  * Constructor options
  */
 interface IOptions extends IRemoteOptions {
-   endpoint?: IEndpoint;
+   endpoint?: IEndpoint | string;
    binding?: IBinding;
    options?: IOptionsOption;
 }
@@ -551,7 +551,7 @@ function oldMove(
 
 /**
  * Класс источника данных на сервисах бизнес-логики СБИС.
- * <br/>
+ * @remark
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
  * <pre>
  *    import {SbisService} from 'Types/source';

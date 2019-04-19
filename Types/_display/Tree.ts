@@ -109,6 +109,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
 /**
  * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную
  * коллекцию.
+ * @remark
  * Дерево может строиться по алгоритму
  * {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или
  * {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}.

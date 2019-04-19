@@ -5,6 +5,7 @@ import 'i18n!Types/_formatter/number';
 /**
  *
  * The method returns a string with a language-sensitive representation of this number.
+ * @remark
  * Params:
  * <ul>
  *   <li>source - number</li>

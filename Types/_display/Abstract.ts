@@ -29,6 +29,7 @@ export interface IOptions {
 
 /**
  * Абстрактная проекция данных.
+ * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_display/Abstract
  * @mixes Types/_entity/DestroyableMixin
