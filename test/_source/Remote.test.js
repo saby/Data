@@ -69,6 +69,23 @@ define([
          dataSource = undefined;
       });
 
+      describe('.constructor()', function() {
+         it('should merge property _$passing value from prototype with option', function() {
+            var passing = {
+               create: 'c',
+               read: 'r'
+            };
+            var source = new RemoteSource({
+               passing: passing
+            });
+
+            assert.strictEqual(source._$passing.create, passing.create);
+            assert.strictEqual(source._$passing.read, passing.read);
+            assert.strictEqual(source._$passing.update, RemoteSource.prototype._$passing.update);
+            assert.strictEqual(source._$passing.destroy, RemoteSource.prototype._$passing.destroy);
+         });
+      });
+
       describe('.getEndpoint()', function() {
          it('should return normalized endpoint from String', function() {
             var source = new RemoteSource({

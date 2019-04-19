@@ -10,7 +10,7 @@ import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixi
 import Query from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
-import {Record, ObservableMixin} from '../entity';
+import {Record, ObservableMixin, getMergeableProperty} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
@@ -47,6 +47,7 @@ export interface IOptionsOption extends IOptionsMixinOption {
 }
 
 export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
+   passing?: IPassing;
 }
 
 function isNull(value: any): boolean {
@@ -153,7 +154,7 @@ function passMerge(from: string, to: string): string[] {
  * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
  * @param [meta] Дополнительные мета данные.
  */
-function passMove(from: any[], to: string, meta?: object): any[] {
+function passMove(from: string | number, to: string, meta?: object): any[] {
    return [from, to, meta];
 }
 
@@ -237,13 +238,8 @@ export default abstract class Remote extends mixin<
     */
    protected _provider: IAbstract;
 
-   // @ts-ignore
    protected constructor(options?: IOptions) {
-      // @ts-ignore
-      BindingMixin.call(this, options);
-      // @ts-ignore
-      EndpointMixin.call(this, options);
-      super(options);
+      super(EndpointMixin._validateOptions(options));
       ObservableMixin.call(this, options);
 
       this._publish('onBeforeProviderCall');
@@ -443,7 +439,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
    _provider: null,
    _$provider: null,
 
-   _$passing: {
+   _$passing: getMergeableProperty<IPassing>({
       /**
        * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
        * @name Types/_source/Remote#passing.create
@@ -491,9 +487,9 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        * @name Types/_source/Remote#passing.move
        */
       move: passMove
-   },
+   }),
 
-   _$options: OptionsMixin.addOptions<IOptionsOption>(Base, {
+   _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
       /**
        * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
        * измененые поля записи (если обновляется одна запись).
@@ -538,7 +534,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        * </pre>
        */
       navigationType: NavigationTypes.PAGE
-   })
+   }))
 });
 
 // FIXME: backward compatibility for SbisFile/Source/BL

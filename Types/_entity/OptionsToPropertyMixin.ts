@@ -1,19 +1,32 @@
 import {IHashMap} from '../_declarations';
+import {protect} from '../util';
 
 const optionPrefix = '_$';
 const optionPrefixLen = optionPrefix.length;
 
-function defineProperty(instance: Object, name: string, key: string, scope: object): void {
+const $mergeable = protect('mergeable');
+
+export function getMergeableProperty<T>(value: T): T {
+   value[$mergeable] = true;
+   return value;
+}
+
+function defineProperty(instance: object, name: string, key: string, scope: object): void {
+   const proto = Object.getPrototypeOf(instance);
+   const isMergeable = proto[name] && proto[name][$mergeable];
+
    Object.defineProperty(instance, name, {
       enumerable: true,
       configurable: true,
       get(): any {
          delete instance[name];
-         return (instance[name] = scope[key]);
+         const value = isMergeable ? {...proto[name], ...scope[key]} : scope[key];
+         return (instance[name] = value);
       },
       set(value: any): void {
          delete instance[name];
-         instance[name] = value;
+         const newValue = isMergeable ? {...proto[name], ...value} : value;
+         instance[name] = newValue;
       }
    });
 }

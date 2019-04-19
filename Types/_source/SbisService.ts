@@ -14,7 +14,7 @@ import Query, {ExpandMode} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
-import {adapter, Record} from '../entity';
+import {adapter, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {ExtendPromise} from '../_declarations';
@@ -1015,7 +1015,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
    '[Types/_source/SbisService]': true,
    _moduleName: 'Types/source:SbisService',
 
-   _$binding: {
+   _$binding: getMergeableProperty<IBinding>({
       /**
        * @cfg {String} Имя метода для создания записи через {@link create}.
        * @name Types/_source/SbisService#binding.create
@@ -1191,9 +1191,9 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @name Types/_source/SbisService#binding.format
        */
       format: ''
-   },
+   }),
 
-   _$passing: {
+   _$passing: getMergeableProperty<IRemotePassing>({
       /**
        * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
        * @name Types/_source/BindingMixin#passing.create
@@ -1241,7 +1241,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
        * @name Types/_source/BindingMixin#passing.move
        */
       move: passMove
-   },
+   }),
 
    /**
     * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда
@@ -1280,14 +1280,14 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
     */
    _$orderProperty: 'ПорНомер',
 
-   _$options: OptionsMixin.addOptions<IOptionsOption>(Rpc, {
+   _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Rpc, {
       /**
        * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится
        * значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
        * @name Types/_source/SbisService#options.hasMoreProperty
        */
       hasMoreProperty: 'hasMore'
-   })
+   }))
 });
 
 register('Types/source:SbisService', SbisService, {instantiate: false});
