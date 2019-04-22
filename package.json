@@ -1,6 +1,6 @@
 {
    "name": "saby-types",
-   "version": "19.310.0",
+   "version": "19.300.0",
    "repository": {
       "type": "git",
       "url": "git@github.com:saby/Types.git"
@@ -54,11 +54,11 @@
       "report-dir": "./artifacts/coverage"
    },
    "devDependencies": {
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.310",
-      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.310",
-      "saby-units": "git+https://github.com/saby/Units.git#rc-19.310",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.310",
-      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.310",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.310"
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
+      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.300",
+      "saby-units": "git+https://github.com/saby/Units.git#rc-19.300",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.300",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300",
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.300"
    }
 }
