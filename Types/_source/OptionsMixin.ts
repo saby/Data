@@ -1,3 +1,5 @@
+import {getMergeableProperty} from '../entity';
+
 export interface IOptionsOption {
    debug?: boolean;
 }
@@ -19,13 +21,6 @@ export default abstract class OptionsMixin {
     * Дополнительные настройки источника данных.
     */
    protected _$options: IOptionsOption;
-
-   constructor(options?: IOptions) {
-      if (options && options.options instanceof Object) {
-         this._$options = {...(this._$options || {}), ...options.options};
-         delete options.options;
-      }
-   }
 
    /**
     * Возвращает дополнительные настройки источника данных.
@@ -57,11 +52,11 @@ Object.assign(OptionsMixin.prototype, {
     * @cfg {Object} Дополнительные настройки источника данных.
     * @name Types/_source/OptionsMixin#options
     */
-   _$options: {
+   _$options: getMergeableProperty<IOptionsOption>({
       /**
        * @cfg {Boolean} Режим отладки.
        * @name Types/_source/OptionsMixin#options.debug
        */
       debug: false
-   }
+   })
 });

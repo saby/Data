@@ -1,3 +1,5 @@
+import {getMergeableProperty} from '../entity';
+
 export interface IBinding {
    create?: string;
    read?: string;
@@ -108,12 +110,6 @@ export default abstract class BindingMixin {
     * @name Types/_source/BindingMixin#binding.move
     */
 
-   constructor(options?: IOptions) {
-      if (options && options.binding instanceof Object) {
-         options.binding = {...this._$binding, ...options.binding};
-      }
-   }
-
    /**
     * Возвращает соответствие методов CRUD контракту источника.
     * @return {Object}
@@ -156,7 +152,7 @@ export default abstract class BindingMixin {
 
 Object.assign(BindingMixin.prototype, {
    '[Types/_source/BindingMixin]': true,
-   _$binding: {
+   _$binding: getMergeableProperty<IBinding>({
       create: 'create',
       read: 'read',
       update: 'update',
@@ -165,5 +161,5 @@ Object.assign(BindingMixin.prototype, {
       copy: 'copy',
       merge: 'merge',
       move: 'move'
-   }
+   })
 });

@@ -42,7 +42,6 @@ export default abstract class Base extends mixin<
       options = {...(options || {})};
 
       super(options);
-      OptionsMixin.call(this, options);
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
       DataMixin.call(this, options);

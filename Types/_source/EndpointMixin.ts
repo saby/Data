@@ -1,4 +1,5 @@
 import {IEndpoint} from './IProvider';
+import {getMergeableProperty} from '../entity';
 
 export interface IOptions {
    endpoint?: IEndpoint | string;
@@ -49,26 +50,21 @@ export default abstract class EndpointMixin {
     */
    protected _$endpoint: IEndpoint;
 
-   constructor(options?: IOptions) {
-      this._$endpoint = this._$endpoint || {};
-      if (options) {
-         // Shortcut support
-         if (typeof options.endpoint === 'string') {
-            options.endpoint = {contract: options.endpoint};
-         }
-
-         if (options.endpoint instanceof Object) {
-            options.endpoint = {...this._$endpoint, ...options.endpoint};
-         }
-      }
-   }
-
    getEndpoint(): IEndpoint {
       return {...this._$endpoint};
+   }
+
+   protected static _validateOptions(options: IOptions): IOptions {
+      // Shortcut support
+      if (options && typeof options.endpoint === 'string') {
+         options.endpoint = {contract: options.endpoint};
+      }
+
+      return options;
    }
 }
 
 Object.assign(EndpointMixin.prototype, {
    '[Types/_source/EndpointMixin]': true,
-   _$endpoint: null
+   _$endpoint: getMergeableProperty<IEndpoint>({})
 });
