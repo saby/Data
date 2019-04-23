@@ -4,17 +4,19 @@ import TreeItem from '../TreeItem';
 import BreadcrumbsItem from '../BreadcrumbsItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
 import {mixin} from '../../util';
+import {Map} from '../../shim';
 
 interface IOptions<S, T> {
    source: IItemsStrategy<S, T>;
 }
 
 interface ISortOptions<S, T> {
+   originalParents: Map<T, TreeItem<S>>;
    display: Tree<S, T>;
 }
 
 /**
- * Стратегия-декоратор для объединения развернутых узлов в "хлебную крошку"
+ * Strategy-decorator which supposed to join expanded nodes into one element.
  * @class Types/_display/ItemsStrategy/Search
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_display/IItemsStrategy
@@ -29,18 +31,23 @@ export default class Search<S, T> extends mixin<
    SerializableMixin
 ) implements IItemsStrategy<S, T> {
    /**
-    * @typedef {Object} Options
-    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-    */
-
-   /**
-    * Опции конструктора
+    * Constructor options
     */
    protected _options: IOptions<S, T>;
+
+   /**
+    * Original parents: item -> original parent
+    */
+   protected _originalParents: Map<T, TreeItem<S>> = new Map<T, TreeItem<S>>();
 
    constructor(options: IOptions<S, T>) {
       super();
       this._options = options;
+   }
+
+   destroy(): void {
+      super.destroy();
+      this._originalParents = null;
    }
 
    // region IItemsStrategy
@@ -120,11 +127,12 @@ export default class Search<S, T> extends mixin<
    // region Protected
 
    /**
-    * Возвращает элементы проекции
+    * Returns elements of display
     * @protected
     */
    protected _getItems(): T[] {
       return Search.sortItems<S, T>(this.source.items, {
+         originalParents: this._originalParents,
          display: this.options.display as Tree<S, T>
       });
    }
@@ -134,47 +142,68 @@ export default class Search<S, T> extends mixin<
    // region Statics
 
    /**
-    * Создает индекс сортировки, объединяющий хлебные крошки в один элемент
-    * @param items Элементы проекции.
-    * @param options Опции
-    * @static
+    * Returns items in sorted order and by the way joins nodes into breadcrumbs.
+    * @param items Display items
+    * @param options Options
     */
    static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): T[] {
       const display = options.display;
+      const originalParents = options.originalParents;
       const dump = {};
+
       let currentBreadcrumbs = null;
 
-      const isNode = (item: any): boolean => item && item.isNode ? item.isNode() : false;
-
-      return items.map((item, index) => {
-         const next = items[index + 1];
-         const itemIsNode = isNode(item);
-         const nextIsNode = isNode(next);
-
+      const sortedItems = items.map((item, index) => {
          if (item instanceof TreeItem) {
-            if (itemIsNode && next instanceof TreeItem) {
-               const isLastBreadcrumb = nextIsNode ? item.getLevel() >= next.getLevel() : true;
+            if (originalParents.has(item)) {
+               item.setParent(originalParents.get(item));
+               originalParents.delete(item);
+            }
+
+            if (item.isNode()) {
+               // Look at the next item
+               const next = items[index + 1];
+
+               if (originalParents.has(next) && next instanceof TreeItem) {
+                  next.setParent(originalParents.get(next));
+                  originalParents.delete(next);
+               }
+
+               // Check that the next item is the node with bigger level.
+               // If it's not true that means we reach the last item in current breadcrumbs.
+               const isLastBreadcrumb = next instanceof TreeItem && next.isNode() ?
+                  item.getLevel() >= next.getLevel() :
+                  true;
                if (isLastBreadcrumb) {
+                  // If there is no next breadcrumb item let's define current breadcrumbs
                   currentBreadcrumbs = new BreadcrumbsItem<S>({
                      contents: null,
                      owner: display as any,
                      last: item
                   });
 
+                  // Return completed breadcrumbs
                   return currentBreadcrumbs;
                }
 
+               // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last node
                currentBreadcrumbs = null;
                return dump;
             }
 
+            // This is an item outside breadcrumbs so set the current breadcrumbs as its parent.
+            // All items outside breadcrumbs should be at first level after breadcrumbs itself.
+            originalParents.set(item, item.getParent());
             item.setParent(currentBreadcrumbs);
          }
 
          return item;
       }).filter((item) => {
+         // Skip nodes included into breadcrumbs
          return item !== dump;
       });
+
+      return sortedItems;
    }
 
    // endregion
@@ -182,5 +211,6 @@ export default class Search<S, T> extends mixin<
 
 Object.assign(Search.prototype, {
    '[Types/_display/itemsStrategy/Search]': true,
-   _moduleName: 'Types/display:itemsStrategy.Search'
+   _moduleName: 'Types/display:itemsStrategy.Search',
+   _originalParents: null
 });
