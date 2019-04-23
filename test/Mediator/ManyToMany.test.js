@@ -3,11 +3,12 @@ define([
    'Types/_entity/relation/ManyToMany',
    'Types/_entity/Model'
 ], function(
-   ManyToMany
+   ManyToManyLib
 ) {
    'use strict';
 
-   ManyToMany = ManyToMany.default;
+   var ManyToMany = ManyToManyLib.default;
+   var ClearType = ManyToManyLib.ClearType;
 
    describe('Types/_entity/relation/ManyToMany', function() {
       var addRelationship = function(mediator, master, slaves) {
@@ -157,6 +158,28 @@ define([
             for (var i = 0; i < slaves.length; i++) {
                mediator.clear(slaves[i]);
                checkMasters(mediator, [], slaves.slice(0, i));
+               checkSlaves(mediator, master, slaves.slice(i + 1), i + 1);
+            }
+         });
+
+         it('shouldn\'t remove masters', function() {
+            var master = getMasterAsObject(),
+               slaves = getSlavesAsObjects();
+
+            addRelationship(mediator, master, slaves);
+            for (var i = 0; i < slaves.length; i++) {
+               mediator.clear(slaves[i], ClearType.Slaves);
+               checkMasters(mediator, [master], slaves);
+            }
+         });
+
+         it('shouldn\'t remove slaves', function() {
+            var master = getMasterAsObject(),
+               slaves = getSlavesAsObjects();
+
+            addRelationship(mediator, master, slaves);
+            for (var i = 0; i < slaves.length; i++) {
+               mediator.clear(slaves[i], ClearType.Masters);
                checkSlaves(mediator, master, slaves.slice(i + 1), i + 1);
             }
          });
