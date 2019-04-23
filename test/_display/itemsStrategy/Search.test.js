@@ -143,6 +143,36 @@ define([
             assert.strictEqual(strategy.items.length, expected.length);
          });
 
+         it('should group only breadcrumbs nodes', function() {
+            var items = [];
+            items[0] = new TreeItem({
+               contents: 'A',
+               node: true
+            });
+            items[1] = new TreeItem({
+               parent: items[0],
+               contents: 'AA',
+               node: true
+            });
+            items[2] = new TreeItem({
+               parent: items[1],
+               contents: 'AAA',
+               node: true
+            });
+
+            var source = getSource(items);
+            var strategy = new Search({
+               source: source
+            });
+
+            var result = strategy.items.map(function(item) {
+               var contents = item.getContents();
+               return item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents;
+            });
+
+            assert.deepEqual(result, ['#A,AA,AAA']);
+         });
+
          it('return breadcrumbs as 1st level parent for leaves', function() {
             strategy.items.forEach(function(item, index) {
                if (item instanceof TreeItem) {
