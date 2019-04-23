@@ -2,38 +2,47 @@ import DestroyableMixin from '../DestroyableMixin';
 import {Map, Set} from '../../shim';
 
 /**
- * Проверяет, что объект "живой" (не был уничтожен)
+ * The kind of clear
+ */
+export enum ClearType {
+   All,
+   Masters,
+   Slaves
+}
+
+/**
+ * Check instance doesn't destroyed.
  */
 function isAlive(entity: any): boolean {
    return entity instanceof Object && entity['[Types/_entity/DestroyableMixin]'] ? !entity.destroyed : true;
 }
 
 /**
- * Посредник, реализующий отношения "многие ко многим".
+ * Mediator which provides "many-to-many" relationship model.
  * @class Types/_entity/relation/ManyToMany
  * @mixes Types/_entity/DestroyableMixin
  * @author Мальцев А.А.
  */
 export default class ManyToMany extends DestroyableMixin {
    /**
-    * {Map<Object, Set<Object>>} master -> [slave, slave, ...]
+    * master -> [slave, slave, ...]
     */
-   _hasMany: any;
+   _hasMany: Map<object, Set<object>>;
 
    /**
-    * {Map<Object, Map<Object, String>>} master -> [name, name, ...]
+    * master -> [name, name, ...]
     */
-   _hasManyName: any;
+   _hasManyName: Map<object, Map<object, string>>;
 
    /**
-    * {Map<Object, Set<Object>>} slave -> [master, master, ...]
+    * slave -> [master, master, ...]
     */
-   _belongsTo: any;
+   _belongsTo: Map<object, Set<object>>;
 
    /**
-    * {Map<Object, Map<Object, String>>} slave -> [name, name, ...]
+    * slave -> [name, name, ...]
     */
-   _belongsToName: any;
+   _belongsToName: Map<object, Map<object, string>>;
 
    constructor() {
       super();
@@ -54,10 +63,10 @@ export default class ManyToMany extends DestroyableMixin {
    // region Public methods
 
    /**
-    * Добавляет отношение между двумя сущностями
-    * @param master Главная сущность
-    * @param slave Зависимая сущность
-    * @param [name] Название отношения
+    * Adds an relationship between two entities
+    * @param master Master entity
+    * @param slave Slave entity
+    * @param [name] Relationship name
     */
    addRelationship(master: object, slave: object, name?: string): void {
       this._addHasMany(master, slave, name);
@@ -65,9 +74,9 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Удаляет отношение между двумя сущностями
-    * @param master Главная сущность
-    * @param slave Зависимая сущность
+    * Removes an relationship between two entities
+    * @param master Master entity
+    * @param slave Slave entity
     */
    removeRelationship(master: object, slave: object): void {
       this._removeHasMany(master, slave);
@@ -75,11 +84,12 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Очищает все отношения указанной сущности
-    * @param entity Сущность
+    * Removes all relationships for given entity
+    * @param entity Entity
+    * @param which Kind of relationships
     */
-   clear(entity: object): void {
-      if (this._hasMany.has(entity)) {
+   clear(entity: object, which: ClearType = ClearType.All): void {
+      if ((which === ClearType.All || which === ClearType.Slaves) && this._hasMany.has(entity)) {
          this._hasMany.get(entity).forEach((slave) => {
             this._removeBelongsTo(slave, entity);
          });
@@ -87,7 +97,7 @@ export default class ManyToMany extends DestroyableMixin {
          this._hasManyName.delete(entity);
       }
 
-      if (this._belongsTo.has(entity)) {
+      if ((which === ClearType.All || which === ClearType.Masters) && this._belongsTo.has(entity)) {
          this._belongsTo.get(entity).forEach((master) => {
             this._removeHasMany(master, entity);
          });
@@ -97,9 +107,9 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Возвращает все зависимые сущности
-    * @param master Главная сущность
-    * @param callback Функция обратного вызова для каждой зависимой сущности
+    * Returns all slaves for master
+    * @param master Master entity
+    * @param callback Callback to pass each slave entity
     */
    hasMany(master: object, callback: Function): void {
       if (this._hasMany.has(master)) {
@@ -117,9 +127,9 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Возвращает все главные сущности
-    * @param slave Зависимая сущность
-    * @param callback Функция обратного вызова для каждой главной сущности
+    * Returns all masters for slave
+    * @param master Slave entity
+    * @param callback Callback to pass each master entity
     */
    belongsTo(slave: object, callback: Function): void {
       if (this._belongsTo.has(slave)) {
@@ -141,10 +151,10 @@ export default class ManyToMany extends DestroyableMixin {
    // region Protected methods
 
    /**
-    * Добавляет отношение вида hasMany
-    * @param master Главная сущность
-    * @param slave Зависимая сущность
-    * @param name Название отношения
+    * Adds relationship with kind "hasMany"
+    * @param master Master entity
+    * @param slave Slave entity
+    * @param name Relationship name
     * @protected
     */
    protected _addHasMany(master: object, slave: object, name: string): void {
@@ -164,9 +174,9 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Удаляет отношение вида hasMany
-    * @param master Главная сущность
-    * @param slave Зависимая сущность
+    * Removes relationship with kind "hasMany"
+    * @param master Master entity
+    * @param slave Slave entity
     * @protected
     */
    protected _removeHasMany(master: object, slave: object): void {
@@ -183,10 +193,10 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Добавляет отношение вида belongsTo
-    * @param slave Зависимая сущность
-    * @param master Главная сущность
-    * @param name Название отношения
+    * Adds relationship with kind "belongsTo"
+    * @param master Master entity
+    * @param slave Slave entity
+    * @param name Relationship name
     * @protected
     */
    protected _addBelongsTo(slave: object, master: object, name: string): void {
@@ -206,9 +216,9 @@ export default class ManyToMany extends DestroyableMixin {
    }
 
    /**
-    * Удаляет отношение вида belongsTo
-    * @param slave Зависимая сущность
-    * @param master Главная сущность
+    * Removes relationship with kind "belongsTo"
+    * @param master Master entity
+    * @param slave Slave entity
     * @protected
     */
    protected _removeBelongsTo(slave: object, master: object): void {
