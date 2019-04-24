@@ -5,17 +5,18 @@ import IIndexedCollection from './IIndexedCollection';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
+   CloneableMixin,
+   DestroyableMixin,
    ICloneable,
    IEquatable,
-   IVersionable,
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   ObservableMixin,
-   SerializableMixin,
    ISerializableState,
-   CloneableMixin,
+   IVersionable,
    ManyToManyMixin,
+   ObservableMixin,
+   OptionsToPropertyMixin,
    ReadWriteMixin,
+   relation,
+   SerializableMixin,
    VersionableMixin
 } from '../entity';
 import {register} from '../di';
@@ -203,7 +204,7 @@ export default class List<T> extends mixin<
    clear(): void {
       this._$items.length = 0;
       this._reindex();
-      this._getMediator().clear(this);
+      this._getMediator().clear(this, relation.ManyToManyClearType.Slaves);
       this._childChanged();
       this._nextVersion();
    }
