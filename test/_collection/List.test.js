@@ -514,6 +514,20 @@ define([
             list.clear();
             assert.strictEqual(list.getIndex(item), -1);
          });
+
+         it('should save relationships with parent', function() {
+            var listA = new List();
+            var listB = new List();
+            listA.add(listB);
+
+            var version = listA.getVersion();
+            listB.add('foo');
+            assert.notEqual(listA.getVersion(), version);
+
+            version = listA.getVersion();
+            listB.clear('foo');
+            assert.notEqual(listA.getVersion(), version);
+         });
       });
 
       describe('.clone()', function() {

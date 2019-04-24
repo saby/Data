@@ -8,3 +8,4 @@
 
 export {default as Hierarchy} from './relation/Hierarchy';
 export {default as IReceiver} from './relation/IReceiver';
+export {ClearType as ManyToManyClearType} from './relation/ManyToMany';
