@@ -1,5 +1,7 @@
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
+ * @class
+ * @name Types/di
  * @public
  * @author Мальцев А.А.
  *
@@ -10,7 +12,7 @@ const map = {};
 
 /**
  * Проверяет валидность названия зависимости
- * @param {String} alias Название зависимости
+ * @param alias Название зависимости
  */
 function checkAlias(alias: string): void {
    if (typeof alias !== 'string') {
@@ -31,9 +33,9 @@ function checkAlias(alias: string): void {
  * Регистрирует зависимость
  * @function
  * @name Types/di#register
- * @param {String} alias Название зависимости
- * @param {Function|Object} factory Фабрика объектов или готовый инстанс
- * @param {DependencyOptions} [options] Опции
+ * @param alias Название зависимости
+ * @param factory Фабрика объектов или готовый инстанс
+ * @param [options] Опции
  * @example
  * Зарегистрируем модель пользователя:
  * <pre>
@@ -76,7 +78,7 @@ export function register(alias: string, factory: Function | object, options?: ob
  * Удаляет регистрацию зависимости
  * @function
  * @name Types/di#unregister
- * @param {String} alias Название зависимости
+ * @param alias Название зависимости
  * @example
  * <pre>
  *    di.unregister('model.user');
@@ -91,8 +93,7 @@ export function unregister(alias: string): void {
  * Проверяет регистрацию зависимости
  * @function
  * @name Types/di#isRegistered
- * @param {String} alias Название зависимости
- * @return Boolean
+ * @param alias Название зависимости
  * @example
  * <pre>
  *    var userRegistered = di.isRegistered('model.user');
@@ -107,9 +108,8 @@ export function isRegistered(alias: string): boolean {
  * Создает экземпляр зарегистрированной зависимости.
  * @function
  * @name Types/di#create
- * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
- * @param {Object} [options] Опции конструктора
- * @return Object
+ * @param alias Название зависимости, или конструктор объекта или инстанс объекта
+ * @param [options] Опции конструктора
  * @example
  * <pre>
  *    var User = Model.extend();
@@ -132,9 +132,8 @@ export function create<T>(alias: string | Function | object, options?: object): 
  * Разрешает зависимость
  * @function
  * @name Types/di#resolve
- * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
- * @param {Object} [options] Опции конструктора
- * @return {Object|Function}
+ * @param alias Название зависимости, или конструктор объекта или инстанс объекта
+ * @param Опции конструктора
  * @example
  * <pre>
  *    var User = Model.extend();

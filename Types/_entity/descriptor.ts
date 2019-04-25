@@ -1,10 +1,3 @@
-/**
- * @typedef {Function} Chained
- * @property {Function} required Функция проверки обязательности
- * @property {Function} oneOf Функция проверки по списку разрешенных значений
- * @property {Function} arrayOf Функция проверки массива на тип значений
- */
-
 declare type Descriptor = string | Function;
 
 type ValidateFunc = (value: any) => any;
@@ -124,6 +117,16 @@ function validate(type: Descriptor): ValidateFunc {
 
 /**
  * Returns validator for required value.
+ * @function
+ * @name Types/_entity/descriptor#required
+ * @example
+ * Define necessity restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required()(1)); // 1
+ * console.log(descriptor(Number).required()()); // TypeError
+ * </pre>
  */
 function required(): IChained {
    const prev: IChained = this;
@@ -138,7 +141,17 @@ function required(): IChained {
 
 /**
  * Returns validator for "One of" restriction.
+ * @function
+ * @name Types/_entity/descriptor#oneOf
  * @param values Allowed values
+ * @example
+ * Define inclusion restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).oneOf('foo', 'bar')('foo')); // 'foo'
+ * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
+ * </pre>
  */
 function oneOf(values: any[]): IChained {
    if (!(values instanceof Array)) {
@@ -157,8 +170,17 @@ function oneOf(values: any[]): IChained {
 
 /**
  * Returns validator for "Not" restriction.
+ * @function
+ * @name Types/_entity/descriptor#not
  * @param values Allowed values
- * @returns Validator
+ * @example
+ * Define exclusion restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).not('foo', 'bar')('baz')); // 'baz'
+ * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
+ * </pre>
  */
 function not(values: any[]): IChained {
    if (!(values instanceof Array)) {
@@ -177,7 +199,17 @@ function not(values: any[]): IChained {
 
 /**
  * Returns validator for Array<T> restriction.
+ * @function
+ * @name Types/_entity/descriptor#arrayOf
  * @param type Type descriptor
+ * @example
+ * Define kind restriction for array:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Array).arrayOf(Boolean)([true])); // [true]
+ * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
+ * </pre>
  */
 function arrayOf(type: Descriptor): IChained {
    const prev: IChained = this;
@@ -251,7 +283,7 @@ function chain(parent: IChained): IChained {
  * console.log(descriptor(Number, String)(true)); // TypeError
  * </pre>
  *
- * necessity restriction:
+ * - necessity restriction:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
@@ -259,7 +291,7 @@ function chain(parent: IChained): IChained {
  * console.log(descriptor(Number).required()()); // TypeError
  * </pre>
  *
- * inclusion restriction:
+ * - inclusion restriction:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
@@ -267,7 +299,7 @@ function chain(parent: IChained): IChained {
  * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
  * </pre>
  *
- * exclusion restriction:
+ * - exclusion restriction:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
@@ -275,16 +307,23 @@ function chain(parent: IChained): IChained {
  * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
  * </pre>
  *
- * kind restriction for arrays:
+ * - kind restriction for array:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
- * console.log(descriptor(Array).arrayOf(Boolean)([true]); // [true]
- * console.log(descriptor(Array).arrayOf(Boolean)([0]); // TypeError
+ * console.log(descriptor(Array).arrayOf(Boolean)([true])); // [true]
+ * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
  * </pre>
- * @function Types/_entity/descriptor
+ *
+ * - chained restriction:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required().not(666)(0)); // 0
+ * console.log(descriptor(Number).required().not(666)(666)); // TypeError
+ * </pre>
+ * @class Types/_entity/descriptor
  * @param types Desirable value types
- * @returns Type descriptor
  * @public
  * @author Мальцев А.А.
  */

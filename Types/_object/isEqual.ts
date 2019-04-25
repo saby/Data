@@ -66,7 +66,8 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
  *    });
  * </pre>
  *
- * @function Types/_object/isEqual
+ * @function
+ * @name Types/_object/isEqual
  * @public
  * @author Мальцев А.А.
  */

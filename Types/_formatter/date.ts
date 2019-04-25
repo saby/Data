@@ -392,7 +392,8 @@ addToken('QQQQr', getQuarterRomanLong);
  *    });
  * </pre>
  *
- * @function Types/_formatter/date
+ * @function
+ * @name Types/_formatter/date
  * @param date Date to format
  * @param format Format string
  * @return Date as string

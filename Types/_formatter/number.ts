@@ -72,7 +72,8 @@ import 'i18n!Types/_formatter/number';
  *    });
  * </pre>
  * More info https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
- * @function Types/_formatter/number
+ * @function
+ * @name Types/_formatter/number
  * @public
  * @author Мальцев А.А.
  */

@@ -23,7 +23,8 @@ function isObject(obj: any): boolean {
  *    });
  * </pre>
  *
- * @function Types/_object/merge
+ * @function
+ * @name Types/_object/merge
  * @public
  * @author Мальцев А.А.
  */
