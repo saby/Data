@@ -35,7 +35,7 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
 
 /**
  * Создает последовательную цепочку вызовов, обрабатывающих коллекции различных типов.
- *
+ * @remark
  * Выберем из массива имена персонажей женского пола, отсортированные по имени:
  * <pre>
  * import {factory} from 'Types/chain';
@@ -70,9 +70,8 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * </pre>
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
- * @function Types/_chain/factory
- * @param source Коллекция, обрабатываемая
- * цепочкой
+ * @class Types/_chain/factory
+ * @param source Коллекция, обрабатываемая цепочкой
  * @public
  * @author Мальцев А.А.
  */

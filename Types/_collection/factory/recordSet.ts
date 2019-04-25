@@ -9,7 +9,7 @@ interface IOptions {
 
 /**
  * Фабрика для получения рекордсета из Types/_collection/IEnumerable.
- * @function Types/_collection/factory/recordSet
+ * @class Types/_collection/factory/recordSet
  * @param Коллекция записей
  * @param Опции конструктора рекордсета
  * @public

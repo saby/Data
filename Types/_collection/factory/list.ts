@@ -3,7 +3,7 @@ import List from '../List';
 
 /**
  * Фабрика для получения списка из Types/_collection/IEnumerable.
- * @function Types/_collection/factory/list
+ * @class Types/_collection/factory/list
  * @param items Коллекция
  * @public
  * @author Мальцев А.А.

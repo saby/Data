@@ -52,7 +52,8 @@ memoize.prototype = {_moduleName: 'Types/_function/memoize'};
  * <h2>Возвращает</h2>
  * {Function} Результирующая функция.
  *
- * @function Types/_function/memoize
+ * @function
+ * @name Types/_function/memoize
  * @public
  * @author Мальцев А.А.
  */
