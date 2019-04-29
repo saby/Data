@@ -3,14 +3,13 @@ import {
    IOptions as IRemoteOptions,
    IOptionsOption as IRemoteOptionsOption,
    IPassing as IRemotePassing,
-   NavigationTypes as RemoteNavigationTypes,
-   NavigationType as RemoteNavigationType
+   NavigationTypes as RemoteNavigationTypes
 } from './Remote';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
-import Query, {ExpandMode} from './Query';
+import Query, {NavigationType, ExpandMode} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
@@ -20,17 +19,6 @@ import {logger, object} from '../util';
 import {ExtendPromise} from '../_declarations';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
-
-/**
- * Extended navigation types
- */
-type NavigationType = RemoteNavigationType & 'Position';
-
-enum SbisNavigationTypes {
-   POSITION = 'Position'
-}
-
-type NavigationTypes = typeof RemoteNavigationTypes & typeof SbisNavigationTypes;
 
 enum PoitionNavigationOrder {
    before = 'before',
@@ -65,7 +53,6 @@ export interface IBinding extends IDefaultBinding {
  * Extended _$options
  */
 export interface IOptionsOption extends IRemoteOptionsOption {
-   navigationType?: NavigationType;
    hasMoreProperty?: string;
 }
 
@@ -254,7 +241,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
          }
          break;
 
-      case SbisNavigationTypes.POSITION:
+      case RemoteNavigationTypes.POSITION:
          if (!withoutLimit) {
             const where = query.getWhere();
             const pattern = /(.+)([<>]=?|~)$/;
@@ -997,14 +984,6 @@ export default class SbisService extends Rpc {
       }
 
       return this._provider;
-   }
-
-   // endregion
-
-   // region Statics
-
-   static get NAVIGATION_TYPE(): NavigationTypes {
-      return {...RemoteNavigationTypes, ...SbisNavigationTypes};
    }
 
    // endregion
