@@ -7,7 +7,7 @@ import DataCrudMixin from './DataCrudMixin';
 import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';
 import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
 import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixin';
-import Query from './Query';
+import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin, getMergeableProperty} from '../entity';
@@ -20,14 +20,10 @@ import {ExtendPromise} from '../_declarations';
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
-/**
- * Типы навигации для query()
- */
-export type NavigationType = 'Page' | 'Offset';
-
 export enum NavigationTypes {
-   PAGE = 'Page',
-   OFFSET = 'Offset'
+   PAGE = NavigationType.Page,
+   OFFSET = NavigationType.Offset,
+   POSITION = NavigationType.Position
 }
 
 export interface IPassing {
@@ -43,7 +39,7 @@ export interface IPassing {
 
 export interface IOptionsOption extends IOptionsMixinOption {
    updateOnlyChanged?: boolean;
-   navigationType?: NavigationType;
+   navigationType?: NavigationTypes;
 }
 
 export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
@@ -503,35 +499,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
       /**
        * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
        * @name Types/_source/Remote#options.navigationType
-       * @example
-       * Получим заказы магазина за сегодня с двадцать первого по тридцатый c использованием навигации через смещение:
-       * <pre>
-       *    var dataSource = new RemoteSource({
-       *          endpoint: 'Orders'
-       *          options: {
-       *             navigationType: RemoteSource.NAVIGATION_TYPE.OFFSET
-       *          }
-       *       }),
-       *       query = new Query();
-       *
-       *    query.select([
-       *          'id',
-       *          'date',
-       *          'amount'
-       *       ])
-       *       .where({
-       *          'date': new Date()
-       *       })
-       *       .orderBy('id')
-       *       .offset(20)
-       *       .limit(10);
-       *
-       *    dataSource.query(query).addCallbacks(function(dataSet) {
-       *       var orders = dataSet.getAll();
-       *    }, function(error) {
-       *       console.error(error);
-       *    });
-       * </pre>
+       * @deprecated Set the meta-data in {@link Types/_source/Query#meta query} instead
        */
       navigationType: NavigationTypes.PAGE
    }))

@@ -11,8 +11,15 @@ export enum ExpandMode {
    All
 }
 
+export enum NavigationType {
+   Page = 'Page',
+   Offset = 'Offset',
+   Position = 'Position'
+}
+
 export interface IMeta extends IHashMap<any> {
    expand?: ExpandMode;
+   navigationType?: NavigationType;
 }
 
 /**
@@ -859,13 +866,13 @@ export default class Query implements ICloneable {
     * Returns additional metadata
     * @example
     * <pre>
-    *    import {Query} from 'Types/source';
+    *    import {Query, QueryNavigationType} from 'Types/source';
     *    const query = new Query()
     *       .select('*')
     *       .from('Catalogue')
-    *       .meta({selectBreadCrumbs: true});
+    *       .meta({navigationType: QueryNavigationType.Offset});
     *
-    *    console.log(query.getMeta()); // {selectBreadCrumbs: true}
+    *    console.log(query.getMeta()); // {navigationType: 'Offset'}
     * </pre>
     */
    getMeta(): IMeta {
@@ -873,17 +880,20 @@ export default class Query implements ICloneable {
    }
 
    /**
-    * Sets additional metadata to send to the data source
+    * Sets additional metadata to send to the data source.
+    * Additional metadata provides information to the data source about desired behaviour in various aspects in the way
+    * of extracting data. Certain data source may not support those aspects so make sure it does if you want to use
+    * them.
     * @param data Metadata
     * @example
-    * Let's set metadata field which point to necessity to put the "breadcrumbs" in result data set:
+    * Let's set metadata field which point to desired navigation type in query:
     * <pre>
-    *    import {Query} from 'Types/source';
+    *    import {Query, QueryNavigationType} from 'Types/source';
     *    const query = new Query()
     *       .select('*')
     *       .from('Catalogue')
     *       .where({'parentId': 10})
-    *       .meta({selectBreadCrumbs: true});
+    *       .meta({navigationType: QueryNavigationType.Offset});
     * </pre>
     */
    meta(data: IMeta): this {

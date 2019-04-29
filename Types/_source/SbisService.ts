@@ -2,15 +2,13 @@ import Rpc from './Rpc';
 import {
    IOptions as IRemoteOptions,
    IOptionsOption as IRemoteOptionsOption,
-   IPassing as IRemotePassing,
-   NavigationTypes as RemoteNavigationTypes,
-   NavigationType as RemoteNavigationType
+   IPassing as IRemotePassing
 } from './Remote';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
-import Query, {ExpandMode} from './Query';
+import Query, {NavigationType, ExpandMode} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
@@ -20,17 +18,6 @@ import {logger, object} from '../util';
 import {ExtendPromise} from '../_declarations';
 // @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
-
-/**
- * Extended navigation types
- */
-type NavigationType = RemoteNavigationType & 'Position';
-
-enum SbisNavigationTypes {
-   POSITION = 'Position'
-}
-
-type NavigationTypes = typeof RemoteNavigationTypes & typeof SbisNavigationTypes;
 
 enum PoitionNavigationOrder {
    before = 'before',
@@ -65,7 +52,6 @@ export interface IBinding extends IDefaultBinding {
  * Extended _$options
  */
 export interface IOptionsOption extends IRemoteOptionsOption {
-   navigationType?: NavigationType;
    hasMoreProperty?: string;
 }
 
@@ -243,8 +229,8 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
    const withoutLimit = limit === undefined || limit === null;
 
    let params = null;
-   switch (options.navigationType) {
-      case RemoteNavigationTypes.PAGE:
+   switch (meta.navigationType || options.navigationType) {
+      case NavigationType.Page:
          if (!withoutOffset || !withoutLimit) {
             params = {
                Страница: limit > 0 ? Math.floor(offset / limit) : 0,
@@ -254,7 +240,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
          }
          break;
 
-      case SbisNavigationTypes.POSITION:
+      case NavigationType.Position:
          if (!withoutLimit) {
             const where = query.getWhere();
             const pattern = /(.+)([<>]=?|~)$/;
@@ -997,14 +983,6 @@ export default class SbisService extends Rpc {
       }
 
       return this._provider;
-   }
-
-   // endregion
-
-   // region Statics
-
-   static get NAVIGATION_TYPE(): NavigationTypes {
-      return {...RemoteNavigationTypes, ...SbisNavigationTypes};
    }
 
    // endregion

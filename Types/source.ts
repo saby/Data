@@ -40,6 +40,7 @@ export {
    default as Query,
    Join as QueryJoin,
    Order as QueryOrder,
+   NavigationType as QueryNavigationType,
    ExpandMode as QueryExpandMode,
    IMeta as IQueryMeta
 } from './_source/Query';
