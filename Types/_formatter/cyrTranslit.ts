@@ -69,6 +69,10 @@ const charMap = {
 };
 
 /**
+ * @function
+ * @name cyrTranslit
+ * @memberof Types/_formatter
+ * @description
  * Выполняет транслитерацию строки. Заменяет пробелы на _, вырезает мягкий и твердый знаки.
  * @param string Исходная строка для преобразования.
  */
