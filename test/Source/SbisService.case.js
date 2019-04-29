@@ -29,6 +29,7 @@ define([
    RecordSet = RecordSet.default;
    List = List.default;
    var Query = QueryModule.default;
+   var NavigationType = QueryModule.NavigationType;
 
    return function(SbisService, provider) {//Mock of Types/_source/provider/SbisBusinessLogic
       var meta = [
@@ -1298,7 +1299,7 @@ define([
                   limit = 50;
 
                query
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.OFFSET})
+                  .meta({navigationType: NavigationType.Offset})
                   .offset(offset)
                   .limit(limit);
                return service.query(query).then(function() {
@@ -1320,7 +1321,7 @@ define([
                   endpoint: 'Товар'
                });
                var query = new Query()
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION});
+                  .meta({navigationType: NavigationType.Position});
 
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
@@ -1336,7 +1337,7 @@ define([
                });
                var limit = 9;
                var query = new Query()
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where({'id>=': null})
                   .limit(limit);
 
@@ -1364,7 +1365,7 @@ define([
                });
                var limit = 9;
                var query = new Query()
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where({'id<=': null})
                   .limit(limit);
 
@@ -1392,7 +1393,7 @@ define([
                });
                var limit = 9;
                var query = new Query()
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where({'id>=': undefined})
                   .limit(limit);
 
@@ -1422,7 +1423,7 @@ define([
                   limit = 50;
 
                query
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .limit(limit);
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
@@ -1453,7 +1454,7 @@ define([
                   limit = 50;
 
                query
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where(where)
                   .limit(limit);
                return service.query(query).then(function() {
@@ -1488,7 +1489,7 @@ define([
                   limit = 50;
 
                query
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where(where)
                   .limit(limit);
                return service.query(query).then(function() {
@@ -1517,7 +1518,7 @@ define([
                   limit = 50;
 
                query
-                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .meta({navigationType: NavigationType.Position})
                   .where(where)
                   .limit(limit);
                return service.query(query).then(function() {
