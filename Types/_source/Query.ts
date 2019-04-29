@@ -11,8 +11,11 @@ export enum ExpandMode {
    All
 }
 
+export type NavigationType = 'Page' | 'Offset' | 'Position';
+
 export interface IMeta extends IHashMap<any> {
    expand?: ExpandMode;
+   navigationType?: NavigationType;
 }
 
 /**
