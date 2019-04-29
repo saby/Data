@@ -2,8 +2,7 @@ import Rpc from './Rpc';
 import {
    IOptions as IRemoteOptions,
    IOptionsOption as IRemoteOptionsOption,
-   IPassing as IRemotePassing,
-   NavigationTypes as RemoteNavigationTypes
+   IPassing as IRemotePassing
 } from './Remote';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
@@ -231,7 +230,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
 
    let params = null;
    switch (meta.navigationType || options.navigationType) {
-      case RemoteNavigationTypes.PAGE:
+      case NavigationType.Page:
          if (!withoutOffset || !withoutLimit) {
             params = {
                Страница: limit > 0 ? Math.floor(offset / limit) : 0,
@@ -241,7 +240,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
          }
          break;
 
-      case RemoteNavigationTypes.POSITION:
+      case NavigationType.Position:
          if (!withoutLimit) {
             const where = query.getWhere();
             const pattern = /(.+)([<>]=?|~)$/;
