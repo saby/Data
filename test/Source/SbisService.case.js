@@ -1243,39 +1243,25 @@ define([
                });
             });
 
-            it('should generate request with null navigation and undefined limit', function(done) {
+            it('should generate request with null navigation and undefined limit', function() {
                var query = new Query();
                query.limit(undefined);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
-                     assert.isNull(args['Навигация']);
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.isNull(args['Навигация']);
                });
             });
 
-            it('should generate request with null navigation and null limit', function(done) {
+            it('should generate request with null navigation and null limit', function() {
                var query = new Query();
                query.limit(null);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
-                     assert.isNull(args['Навигация']);
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+                  assert.isNull(args['Навигация']);
                });
             });
 
-            it('should generate request with offset type navigation', function(done) {
+            it('should generate request with offset type navigation by option', function() {
                var service = new SbisService({
                      endpoint: 'Товар',
                      options: {
@@ -1289,317 +1275,262 @@ define([
                query
                   .offset(offset)
                   .limit(limit);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Offset');
-                     assert.strictEqual(args['Навигация'].d[2], offset);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Offset');
+                  assert.strictEqual(args['Навигация'].d[2], offset);
                });
             });
 
-            it('should generate request with null navigation if there is no limit', function(done) {
+            it('should generate request with offset type navigation by meta data', function() {
                var service = new SbisService({
-                  endpoint: 'Товар',
-                  options: {
-                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                  }
-               });
-               var query = new Query();
+                     endpoint: 'Товар'
+                  }),
+                  query = new Query(),
+                  offset = 15,
+                  limit = 50;
 
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               query
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.OFFSET})
+                  .offset(offset)
+                  .limit(limit);
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.isNull(args['Навигация']);
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
+
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Offset');
+                  assert.strictEqual(args['Навигация'].d[2], offset);
                });
             });
 
-            it('should generate request with position navigation and null position and "after" order', function(done) {
+            it('should generate request with null navigation if there is no limit', function() {
                var service = new SbisService({
-                  endpoint: 'Товар',
-                  options: {
-                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                  }
+                  endpoint: 'Товар'
+               });
+               var query = new Query()
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION});
+
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
+
+                  assert.isNull(args['Навигация']);
+                  assert.strictEqual(args['Фильтр'].d.length, 0);
+               });
+            });
+
+            it('should generate request with position navigation and null position and "after" order', function() {
+               var service = new SbisService({
+                  endpoint: 'Товар'
                });
                var limit = 9;
                var query = new Query()
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where({'id>=': null})
                   .limit(limit);
 
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'after');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'after');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
-                     assert.strictEqual(args['Навигация'].d[3], null);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, done);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                  assert.strictEqual(args['Навигация'].d[3], null);
+               });
             });
 
-            it('should generate request with position navigation and null position and "before" order', function(done) {
+            it('should generate request with position navigation and null position and "before" order', function() {
                var service = new SbisService({
-                  endpoint: 'Товар',
-                  options: {
-                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                  }
+                  endpoint: 'Товар'
                });
                var limit = 9;
                var query = new Query()
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where({'id<=': null})
                   .limit(limit);
 
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'before');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'before');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
-                     assert.strictEqual(args['Навигация'].d[3], null);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, done);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                  assert.strictEqual(args['Навигация'].d[3], null);
+               });
             });
 
-            it('should generate request with position navigation and null position if there is undefined value in conditions', function(done) {
+            it('should generate request with position navigation and null position if there is undefined value in conditions', function() {
                var service = new SbisService({
-                  endpoint: 'Товар',
-                  options: {
-                     navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                  }
+                  endpoint: 'Товар'
                });
                var limit = 9;
                var query = new Query()
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where({'id>=': undefined})
                   .limit(limit);
 
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'after');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'after');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
-                     assert.strictEqual(args['Навигация'].d[3], null);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, done);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                  assert.strictEqual(args['Навигация'].d[3], null);
+               });
             });
 
-            it('should generate request with position navigation and "after" order as default', function(done) {
+            it('should generate request with position navigation and "after" order as default', function() {
                var service = new SbisService({
-                     endpoint: 'Товар',
-                     options: {
-                        navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                     }
+                     endpoint: 'Товар'
                   }),
                   query = new Query(),
                   limit = 50;
 
-               query.limit(limit);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               query
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
+                  .limit(limit);
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'after');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'after');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
-                     assert.strictEqual(args['Навигация'].d[3], null);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Строка');
+                  assert.strictEqual(args['Навигация'].d[3], null);
 
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Фильтр'].d.length, 0);
                });
             });
 
-            it('should generate request with position navigation and "after" order', function(done) {
+            it('should generate request with position navigation and "after" order', function() {
                var service = new SbisService({
-                     endpoint: 'Товар',
-                     options: {
-                        navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                     }
+                     endpoint: 'Товар'
                   }),
                   query = new Query(),
                   where = {'id>=': 10},
                   limit = 50;
 
                query
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where(where)
                   .limit(limit);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
-                     assert.strictEqual(args['Навигация'].d[0], true);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].d[0], true);
 
-                     assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
-                     assert.strictEqual(args['Навигация'].d[1], limit);
+                  assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
+                  assert.strictEqual(args['Навигация'].d[1], limit);
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'after');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'after');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Запись');
-                     assert.strictEqual(args['Навигация'].d[3].s.length, 1);
-                     assert.strictEqual(args['Навигация'].d[3].s[0].n, 'id');
-                     assert.strictEqual(args['Навигация'].d[3].d.length, 1);
-                     assert.strictEqual(args['Навигация'].d[3].d[0], 10);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Запись');
+                  assert.strictEqual(args['Навигация'].d[3].s.length, 1);
+                  assert.strictEqual(args['Навигация'].d[3].s[0].n, 'id');
+                  assert.strictEqual(args['Навигация'].d[3].d.length, 1);
+                  assert.strictEqual(args['Навигация'].d[3].d[0], 10);
 
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Фильтр'].d.length, 0);
                });
             });
 
-            it('should generate request with position navigation and "before" order', function(done) {
+            it('should generate request with position navigation and "before" order', function() {
                var service = new SbisService({
-                     endpoint: 'Товар',
-                     options: {
-                        navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                     }
+                     endpoint: 'Товар'
                   }),
                   query = new Query(),
                   where = {'id<=': 10},
                   limit = 50;
 
                query
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where(where)
                   .limit(limit);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'before');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'before');
 
-                     assert.strictEqual(args['Навигация'].s[3].n, 'Position');
-                     assert.strictEqual(args['Навигация'].s[3].t, 'Запись');
-                     assert.strictEqual(args['Навигация'].d[3].s.length, 1);
-                     assert.strictEqual(args['Навигация'].d[3].s[0].n, 'id');
-                     assert.strictEqual(args['Навигация'].d[3].d.length, 1);
-                     assert.strictEqual(args['Навигация'].d[3].d[0], 10);
+                  assert.strictEqual(args['Навигация'].s[3].n, 'Position');
+                  assert.strictEqual(args['Навигация'].s[3].t, 'Запись');
+                  assert.strictEqual(args['Навигация'].d[3].s.length, 1);
+                  assert.strictEqual(args['Навигация'].d[3].s[0].n, 'id');
+                  assert.strictEqual(args['Навигация'].d[3].d.length, 1);
+                  assert.strictEqual(args['Навигация'].d[3].d[0], 10);
 
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Фильтр'].d.length, 0);
                });
             });
 
-            it('should generate request with position navigation and "both" order', function(done) {
+            it('should generate request with position navigation and "both" order', function() {
                var service = new SbisService({
-                     endpoint: 'Товар',
-                     options: {
-                        navigationType: SbisService.NAVIGATION_TYPE.POSITION
-                     }
+                     endpoint: 'Товар'
                   }),
                   query = new Query(),
                   where = {'id~': 10},
                   limit = 50;
 
                query
+                  .meta({navigationType: SbisService.NAVIGATION_TYPE.POSITION})
                   .where(where)
                   .limit(limit);
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].s[2].n, 'Order');
-                     assert.strictEqual(args['Навигация'].d[2], 'both');
+                  assert.strictEqual(args['Навигация'].s[2].n, 'Order');
+                  assert.strictEqual(args['Навигация'].d[2], 'both');
 
-                     assert.strictEqual(args['Фильтр'].d.length, 0);
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Фильтр'].d.length, 0);
                });
             });
 
-            it('should generate request with "hasMore" from given meta property', function(done) {
+            it('should generate request with "hasMore" from given meta property', function() {
                var hasMore = 'test',
                   query = new Query();
                query
@@ -1608,19 +1539,11 @@ define([
                   .meta({
                      hasMore: hasMore
                   });
-               service.query(query).addCallbacks(function() {
-                  try {
-                     var args = SbisBusinessLogic.lastRequest.args;
+               return service.query(query).then(function() {
+                  var args = SbisBusinessLogic.lastRequest.args;
 
-                     assert.strictEqual(args['Навигация'].d[0], hasMore);
-                     assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
-
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               }, function(err) {
-                  done(err);
+                  assert.strictEqual(args['Навигация'].d[0], hasMore);
+                  assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
                });
             });
 
@@ -1634,16 +1557,14 @@ define([
          });
 
          context('when the service isn\'t exists', function() {
-            it('should return an error', function(done) {
+            it('should return an error', function() {
                var service = new SbisService({
                   endpoint: 'Купец'
                });
-               service.query(new Query()).addBoth(function(err) {
-                  if (err instanceof Error) {
-                     done();
-                  } else {
-                     done(new Error('That\'s no Error'));
-                  }
+               return service.query(new Query()).then(function() {
+                  throw new Error('Shouldn\'t reach here');
+               }, function(err) {
+                  assert.instanceOf(err, Error);
                });
             });
          });

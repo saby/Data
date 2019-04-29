@@ -236,7 +236,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
    }
 
    let params = null;
-   switch (options.navigationType) {
+   switch (meta.navigationType || options.navigationType) {
       case NAVIGATION_TYPE.PAGE:
          if (!withoutOffset || !withoutLimit) {
             params = {
