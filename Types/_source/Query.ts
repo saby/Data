@@ -10,7 +10,11 @@ export enum ExpandMode {
    All
 }
 
-export type NavigationType = 'Page' | 'Offset' | 'Position';
+export enum NavigationType {
+   Page = 'Page',
+   Offset = 'Offset',
+   Position = 'Position'
+}
 
 export interface IMeta {
    expand?: ExpandMode;
