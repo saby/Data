@@ -32,7 +32,7 @@ const serialize = (() => {
          return (obj as ISerializableObject).getRawData(true);
       } else if (obj instanceof Date) {
          let mode = TO_SQL_MODE.DATETIME;
-         if ((obj as ExtendDate).getSQLSerializationMode) {
+         if (obj.getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
                case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                   mode = TO_SQL_MODE.DATE;
