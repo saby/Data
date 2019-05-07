@@ -19,19 +19,19 @@ export interface ISerializableState extends IDefaultSerializableState {
 }
 
 /**
- * Строит формат, объединяя частичный формат и формат, построенный по сырым данным
- * @param slicedFormat Частичное описание формата
- * @param rawDataFormat Формат из сырых данных
+ * Builds format by join partial format with format taken from raw data.
+ * @param partialFormat Partial format
+ * @param rawDataFormat Format taken from raw data
  */
-function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Format): format.Format {
+function buildFormatFromObject(partialFormat: object, rawDataFormat: format.Format): format.Format {
    let field;
    let fieldIndex;
-   for (const name in slicedFormat) {
-      if (!slicedFormat.hasOwnProperty(name)) {
+   for (const name in partialFormat) {
+      if (!partialFormat.hasOwnProperty(name)) {
          continue;
       }
 
-      field = slicedFormat[name];
+      field = partialFormat[name];
       if (typeof field !== 'object') {
          field = {type: field};
       }
@@ -52,7 +52,7 @@ function buildFormatFromObject(slicedFormat: object, rawDataFormat: format.Forma
 }
 
 /**
- * Строит формат полей сырым данным
+ * Builds format by raw data.
  */
 function buildFormatByRawData(): format.Format {
    const format = create<format.Format>('Types/collection:format.Format');
@@ -70,7 +70,7 @@ function buildFormatByRawData(): format.Format {
 }
 
 /**
- * Строит сырые данные по формату если он был явно задан
+ * Builds raw data by declared format
  */
 function buildRawData(): void {
    if (this.hasDecalredFormat()) {
@@ -98,7 +98,8 @@ function buildRawData(): void {
 }
 
 /**
- * Миксин, предоставляющий поведение владения форматом полей и доступа к их значениям в сырых данных через адаптер.
+ * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as
+ * adapter.
  * @mixin Types/_entity/FormattableMixin
  * @public
  * @author Мальцев А.А.
@@ -107,92 +108,87 @@ export default abstract class FormattableMixin {
    '[Types/_entity/FormattableMixin]': boolean;
 
    /**
-    * @cfg {Object} Данные в "сыром" виде.
+    * @cfg {Object} Data in raw format which can be recognized via certain adapter.
     * @name Types/_entity/FormattableMixin#rawData
     * @see getRawData
-    * @see setRawData
     * @remark
-    * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
-    * Данные должны содержать только примитивные значения или простые массивы (Array) или объекты (Object).
+    * Data should be in certain format which supported by associated {@link adapter}.
+    * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization
+    * objectives.
     * @example
-    * Создадим новую запись с данными сотрудника:
+    * Let's create an employee record:
     * <pre>
-    *    require(['Types/_entity/Record'], function (Record) {
-    *       var user = new Record({
-    *          rawData: {
-    *             id: 1,
-    *             firstName: 'John',
-    *           lastName: 'Smith'
-    *          }
-    *       });
-    *
-    *       console.log(user.get('id'));// 1
-    *       console.log(user.get('firstName'));// John
-    *       console.log(user.get('lastName'));// Smith
+    *    import {Record} from 'Types/entity';
+    *    const employee = new Record({
+    *       rawData: {
+    *          id: 1,
+    *          firstName: 'John',
+    *          lastName: 'Smith'
+    *       }
     *    });
+    *
+    *    console.log(employee.get('id')); // 1
+    *    console.log(employee.get('firstName')); // John
+    *    console.log(employee.get('lastName')); // Smith
     * </pre>
-    * Создадим рекордсет с персонажами фильма:
+    * Let's create recordset with movie characters:
     * <pre>
-    *    require(['Types/collection'], function (collection) {
-    *       var characters = new collection.RecordSet({
-    *          rawData: [{
-    *             id: 1,
-    *             firstName: 'John',
-    *             lastName: 'Connor',
-    *             role: 'Savior'
-    *          }, {
-    *             id: 2,
-    *             firstName: 'Sarah',
-    *             lastName: 'Connor',
-    *             role: 'Mother'
-    *          }, {
-    *             id: 3,
-    *             firstName: '-',
-    *             lastName: 'T-800',
-    *             role: 'Terminator'
-    *          }]
-    *       });
-    *
-    *
-    *       console.log(characters.at(0).get('firstName'));// John
-    *       console.log(characters.at(0).get('lastName'));// Connor
-    *       console.log(characters.at(1).get('firstName'));// Sarah
-    *       console.log(characters.at(1).get('lastName'));// Connor
+    *    import {RecordSet} from 'Types/collection';
+    *    const characters = new RecordSet({
+    *       rawData: [{
+    *          id: 1,
+    *          firstName: 'John',
+    *          lastName: 'Connor',
+    *          part: 'Savior'
+    *       }, {
+    *          id: 2,
+    *          firstName: 'Sarah',
+    *          lastName: 'Connor',
+    *          part: 'Mother'
+    *       }, {
+    *          id: 3,
+    *          firstName: '-',
+    *          lastName: 'T-800',
+    *          part: 'A human-like robot from the future'
+    *       }]
     *    });
+    *
+    *    console.log(characters.at(0).get('firstName'));// John
+    *    console.log(characters.at(0).get('lastName'));// Connor
+    *    console.log(characters.at(1).get('firstName'));// Sarah
+    *    console.log(characters.at(1).get('lastName'));// Connor
     * </pre>
     */
    _$rawData: any;
 
    /**
-    * При работе с сырыми данными использовать режим Copy-On-Write.
+    * Work with raw data in Copy-On-Write mode.
     */
    _$cow: boolean;
 
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с данными, по умолчанию
-    * {@link Types/_entity/adapter/Json}.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By
+    * default raw data in {@link Types/_entity/adapter/Json} format are supported.
     * @name Types/_entity/FormattableMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Json
     * @see Types/di
     * @remark
-    * Адаптер должен быть предназначен для формата, в котором получены сырые данные {@link rawData}.
-    * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
+    * Adapter should be defined to deal with certain  {@link rawData raw data} format.
     * @example
-    * Создадим запись с адаптером для данных в формате БЛ СБИС:
+    * Let's create record with adapter for data format of Saby application server:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var user = new entity.Record({
-    *          adapter: new entity.adapter.Sbis(),
-    *          format: [
-    *             {name: 'login', type: 'string'},
-    *             {name: 'email', type: 'string'}
-    *          ]
-    *       });
-    *       user.set({
-    *          login: 'root',
-    *          email: 'root@server.name'
-    *       });
+    *    import {Record, adapter} from 'Types/entity';
+    *    const user = new Record({
+    *       adapter: new adapter.Sbis(),
+    *       format: [
+    *          {name: 'login', type: 'string'},
+    *          {name: 'email', type: 'string'}
+    *       ]
+    *    });
+    *    user.set({
+    *       login: 'root',
+    *       email: 'root@server.name'
     *    });
     * </pre>
     */
@@ -200,126 +196,119 @@ export default abstract class FormattableMixin {
 
    /**
     * @cfg {Types/_collection/format/Format|
-    * Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|
+    * Array.<Types/_entity/format/fieldsFactory/FieldDeclaration.typedef>|
     * Object.<String,String>|
     * Object.<String,Function>|
-    * Object.<String,Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>|
+    * Object.<String,Types/_entity/format/fieldsFactory/FieldDeclaration.typedef>|
     * Object.<String,Types/_entity/format/Field>
-    * } Формат всех полей (если задан массивом или экземпляром {@link Types/_collection/format/Format Format}),
-    * либо формат отдельных полей (если задан объектом).
+    * } Fields format. It can be either full format (in this case it should be defined as an array or an instance
+    * of {@link Types/_collection/format/Format Format}) or partial format (in this case it should be defined as plain
+    * object).
     * @name Types/_entity/FormattableMixin#format
     * @see getFormat
-    * @remark Правила {@link getFormat формирования формата} в зависимости от типа значения опции:
+    * @remark
+    * Here are next rules of {@link getFormat building final format} depend on type of value passed to this option:
     * <ul>
-    * <li>если формат явно не задан, то он будет построен по сырым данным;</li>
-    * <li>если формат задан для части полей (Object), то он будет построен по сырым данным; для полей с совпадающими
-    *     именами формат будет заменен на явно указанный, формат полей с несовпадающими именами будет добавлен в конец;
-    * </li>
-    * <li>если формат задан для всех полей (Array или Types/_collection/format/Format), то будет использован именно он,
-    *     независимо от набора полей в сырых данных.
-    * </li>
+    *    <li>if option is omitted then format will be built by raw data;</li>
+    *    <li>if option defines full format then this format will be used;</li>
+    *    <li>if option defines partial format then final format will be built by raw data with addition of
+    *        partial format follow by these rules:
+    *       <ul>
+    *          <li>if field with given name exists in raw data's format then its declaration from partial format
+    *              replaces raw data's declaration;</li>
+    *          <li>otherwise field declaration be added to the end of raw data's format.</li>
+    *       </ul>
+    *    </li>
     * </ul>
+    * See examples for details.
     * @example
-    * Создадим запись с указанием формата полей, внедренным в декларативном виде:
+    * Let's create record with declarative format:
     * <pre>
-    *    require(['Types/entity'], function(entity) {
-    *       var user = new entity.Record({
-    *          format: [{
-    *             name: 'id',
-    *             type: 'integer'
-    *          }, {
-    *             name: 'login',
-    *             type: 'string'
-    *          }, {
-    *             name: 'amount',
-    *             type: 'money',
-    *             precision: 4
-    *          }]
-    *       });
+    *    import {Record} from 'Types/entity';
+    *    const user = new Record({
+    *       format: [{
+    *          name: 'id',
+    *          type: 'integer'
+    *       }, {
+    *          name: 'login',
+    *          type: 'string'
+    *       }, {
+    *          name: 'amount',
+    *          type: 'money',
+    *          precision: 4
+    *       }]
     *    });
     * </pre>
-    * Создадим рекордсет с указанием формата полей, внедренным в виде готового экземпляра:
+    * Let's create recordset with injected format instance:
     * <pre>
-    *    //My/Format/User.js
-    *    define('My/Format/User', [
-    *       'Types/collection',
-    *       'Types/entity'
-    *    ], function(collection, entity) {
-    *       var format = new collection.format.Format();
-    *       format.add(new entity.format.IntegerField({name: 'id'}));
-    *       format.add(new entity.format.StringField({name: 'login'}));
-    *       format.add(new entity.format.StringField({name: 'email'}));
+    *    // My/Format/user.ts
+    *    import {format as fields} from 'Types/entity';
+    *    import {format} from 'Types/collection';
+    *    const format = new format.Format();
+    *    format.add(new fields.IntegerField({name: 'id'}));
+    *    format.add(new fields.StringField({name: 'login'}));
+    *    format.add(new fields.StringField({name: 'email'}));
     *
-    *       return format;
-    *    });
+    *    export default format;
     *
-    *    ///My/Models/Users.js
-    *    require([
-    *       'Types/collection',
-    *       'My/Format/User'
-    *    ], function (collection, userFormat) {
-    *       var users = new collection.RecordSet({
-    *          format: userFormat
-    *       });
+    *    // My/Models/Users.ts
+    *    import userFormat from 'My/Format/user';
+    *    import {RecordSet} from 'Types/collection';
+    *    const users = new RecordSet({
+    *       format: userFormat
     *    });
     * </pre>
-    * Создадим запись, для которой зададим формат полей 'id' и 'amount', внедренный в декларативном виде:
+    * Let's create record with partial declarative format:
     * <pre>
-    *    require(['Types/entity'], function(entity) {
-    *       var user = new entity.Record({
-    *          rawData: {
-    *             id: 256,
-    *             login: 'dr.strange',
-    *             amount: 15739.45
-    *          },
-    *          format: {
-    *             id: 'integer',
-    *             amount: {type: 'money', precision: 4}
-    *          }]
-    *       });
+    *    import {Record} from 'Types/entity';
+    *    const user = new Record({
+    *       rawData: {
+    *          id: 256,
+    *          login: 'dr.strange',
+    *          amount: 15739.45
+    *       },
+    *       format: {
+    *          id: 'integer',
+    *          amount: {type: 'money', precision: 4}
+    *       }]
     *    });
     * </pre>
-    * Создадим запись, для которой зададим формат поля 'amount', внедренный в виде готового экземпляра:
+    * Let's create record with partial format that contains field instance:
     * <pre>
-    *    require([
-    *       'Types/entity'
-    *    ], function(entity) {
-    *       var amountField = new entity.format.MoneyField({precision: 4}),
-    *          user = new entity.Record({
-    *             format: {
-    *                amount: amountField
-    *             }]
-    *          });
+    *    import {Record} from 'Types/entity';
+    *    const amountField = new entity.format.MoneyField({precision: 4}),
+    *    const user = new Record({
+    *       format: {
+    *          amount: amountField
+    *       }]
     *    });
     * </pre>
-    * Укажем тип Number для поля "Идентификатор" и тип Date для поля "Время последнего входа" учетной записи
-    * пользователя:
+    * Let's create record with partial format that contains built-in types:
     * <pre>
-    *    require(['Types/entity'], function(entity) {
-    *       var user = new entity.Record({
-    *          format: {
-    *             id: Number,
-    *             lastLogin: Date
-    *          }
-    *       });
+    *    import {Record} from 'Types/entity';
+    *    const user = new entity.Record({
+    *       format: {
+    *          id: Number,
+    *          lastLogin: Date
+    *       }
     *    });
     * </pre>
-    * Внедрим рекордсет со своей моделью в одно из полей записи:
+    * Let's inject recordset with custom model into one of the record's fields:
     * <pre>
-    *    //MyApplication/Models/ActivityModel.js
+    *    //MyApplication/Models/ActivityModel.ts
     *    import {Model} from 'Types/entity';
     *    export default class ActivityModel extends Model{
     *       //...
     *    }
     *
-    *    //MyApplication/Models/ActivityRecordSet.js
+    *    //MyApplication/Models/ActivityRecordSet.ts
     *    import ActivityModel from './ActivityModel';
     *    import {RecordSet} from 'Types/collection';
     *    export default class ActivityRecordSet extends RecordSet {
     *       _$model: ActivityModel
     *    }
     *
-    *    //MyApplication/Controllers/ActivityController.js
+    *    //MyApplication/Controllers/ActivityController.ts
     *    import ActivityRecordSet from '../Models/ActivityRecordSet';
     *    import {Record} from 'Types/entity';
     *    const user = new Record({
@@ -328,70 +317,67 @@ export default abstract class FormattableMixin {
     *       }
     *    });
     * </pre>
-    * Создадим запись заказа в магазине с полем типа "рекордсет", содержащим список позиций. Сырые данные будут в
-    * формате БЛ СБИС:
+    * Let's create a shopping cart record which uses data format of Saby application server:
     * <pre>
-    *    require([
-    *       'Types/entity',
-    *       'Types/collection'
-    *    ], function (entity, collection) {
-    *       var order = new entity.Record({
-    *          adapter: new entity.adapter.Sbis(),
-    *          format:[{
-    *             name: 'id',
-    *             type: 'integer',
-    *             defaultValue: 0
-    *          }, {
-    *             name: 'items',
-    *             type: 'recordset'
-    *          }]
-    *       });
-    *       var orderItems = new RecordSet({
-    *          adapter: new entity.adapter.Sbis(),
-    *          format: [{
-    *             name: 'goods_id',
-    *             type: 'integer',
-    *             defaultValue: 0
-    *          }, {
-    *             name: 'price',
-    *             type: 'real',
-    *             defaultValue: 0
-    *          }, {
-    *            name: 'count',
-    *            type: 'integer',
-    *            defaultValue: 0
-    *          }]
-    *       });
+    *    import {Record, adapter} from 'Types/entity';
+    *    import {RecordSet} from 'Types/collection';
     *
-    *       order.set('items', orderItems);
+    *    const order = new Record({
+    *       adapter: new adapter.Sbis(),
+    *       format: [{
+    *          name: 'id',
+    *          type: 'integer',
+    *          defaultValue: 0
+    *       }, {
+    *          name: 'items',
+    *          type: 'recordset'
+    *       }]
     *    });
+    *
+    *    const orderItems = new RecordSet({
+    *       adapter: new adapter.Sbis(),
+    *       format: [{
+    *          name: 'goods_id',
+    *          type: 'integer',
+    *          defaultValue: 0
+    *       }, {
+    *          name: 'price',
+    *          type: 'real',
+    *          defaultValue: 0
+    *       }, {
+    *          name: 'count',
+    *          type: 'integer',
+    *          defaultValue: 0
+    *       }]
+    *    });
+    *
+    *    order.set('items', orderItems);
     * </pre>
-    * Формат поля для массива значений смотрите в описании {@link Types/_entity/format/ArrayField}.
     */
    _$format: format.Format | IFieldDeclaration[];
 
    /**
-    * Формат полей (собранный из опции format или в результате манипуляций)
+    * Finally built format
     */
    _format: format.Format;
 
    /**
-    * Клон формата полей (для кэшеирования результата getFormat())
+    * Clone of the _format, uses for caching in getFormat()
     */
    _formatClone: format.Format;
 
    /**
-    * Адаптер для данных в "сыром" виде
+    * Adapter instance to deal with raw data
     */
    _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
 
    /**
-    * Описание всех полей, полученных из данных в "сыром" виде
+    * List of field names taken from raw data adapter
     */
    _rawDataFields: string[];
 
    /**
-    * Old-fashioned options
+    * Old-fashioned options, bad stuff
     * @deprecated
     */
    _options: any;
@@ -422,23 +408,20 @@ export default abstract class FormattableMixin {
    // region Public methods
 
    /**
-    * Возвращает данные в "сыром" виде. Если данные являются объектом, то возвращается его дубликат.
-    * @return {Object}
-    * @see setRawData
+    * Returns raw data (clone if there are an object).
     * @see rawData
     * @example
-    * Получим сырые данные статьи:
+    * Let's read the raw data:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var data = {id: 1, title: 'Article 1'};
-    *       var article = new entity.Record({
-    *          rawData: data
-    *       });
-    *
-    *       console.log(article.getRawData());// {id: 1, title: 'Article 1'}
-    *       console.log(article.getRawData() === data);// false
-    *       console.log(JSON.stringify(article.getRawData()) === JSON.stringify(data));// true
+    *    import {Record} from 'Types/entity';
+    *    const data = {id: 1, title: 'Article 1'};
+    *    const article = new Record({
+    *       rawData: data
     *    });
+    *
+    *    console.log(article.getRawData()); // {id: 1, title: 'Article 1'}
+    *    console.log(article.getRawData() === data); // false
+    *    console.log(JSON.stringify(article.getRawData()) === JSON.stringify(data)); // true
     * </pre>
     */
    getRawData(shared?: boolean): any {
@@ -446,18 +429,17 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Устанавливает данные в "сыром" виде.
-    * @param data {Object} Данные в "сыром" виде.
+    * Sets raw data.
+    * @param data Raw data
     * @see getRawData
     * @see rawData
     * @example
-    * Установим сырые данные статьи:
+    * Let's set the raw data:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var article = new entity.Record();
-    *       article.setRawData({id: 1, title: 'Article 1'});
-    *       console.log(article.get('title'));// Article 1
-    *    });
+    *    import {Record} from 'Types/entity';
+    *    const article = new Record();
+    *    article.setRawData({id: 1, title: 'Article 1'});
+    *    console.log(article.get('title'));// Article 1
     * </pre>
     */
    setRawData(data: any): void {
@@ -468,16 +450,14 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает адаптер для работы с данными в "сыром" виде.
-    * @return {Types/_entity/adapter/IAdapter}
+    * Returns adapter to deal with raw data.
     * @see adapter
     * @example
-    * Проверим, что по умолчанию используется адаптер для формата JSON:
+    * Let's checkout the default adapter:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var article = new entity.Record();
-    *       console.log(article.getAdapter() instanceof entity.adapter.Json);// true
-    *    });
+    *    import {Record, adapter} from 'Types/entity';
+    *    const article = new Record();
+    *    console.log(article.getAdapter() instanceof adapter.Json); // true
     * </pre>
     */
    getAdapter(): IAdapter {
@@ -489,46 +469,43 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает признак, что формат полей был установлен явно
+    * Returns flag which indicates the fact that format was declared directly.
     */
    hasDecalredFormat(): boolean {
       return !!this._$format;
    }
 
    /**
-    * Возвращает формат полей (в режиме только для чтения)
-    * @return {Types/_collection/format/Format}
+    * Returns fields format in read only mode.
     * @see format
     * @example
-    * Получим формат, сконструированный из декларативного описания:
+    * Let's get the format built by declarative description:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var article = new entity.Record({
-    *          format: [
-    *             {name: 'id', type: 'integer'},
-    *             {name: 'title', type: 'string'}
-    *           ]
-    *       });
-    *       var format = article.getFormat();
-    *
-    *       console.log(format.at(0).getName());// 'id'
-    *       console.log(format.at(1).getName());// 'title'
+    *    import {Record} from 'Types/entity';
+    *    const article = new Record({
+    *       format: [
+    *          {name: 'id', type: 'integer'},
+    *          {name: 'title', type: 'string'}
+    *       ]
     *    });
+    *    const format = article.getFormat();
+    *
+    *    console.log(format.at(0).getName());// 'id'
+    *    console.log(format.at(1).getName());// 'title'
     * </pre>
-    * Получим формат, сконструированный из сырых данных:
+    * Let's get the format built by raw data:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var article = new entity.Record({
-    *          rawData: {
-    *             id: 1,
-    *             title: 'What About Livingstone'
-    *          }
-    *       });
-    *       var format = article.getFormat();
-    *
-    *       console.log(format.at(0).getName());// 'id'
-    *       console.log(format.at(1).getName());// 'title'
+    *    import {Record} from 'Types/entity';
+    *    const article = new Record({
+    *       rawData: {
+    *          id: 1,
+    *          title: 'What About Livingstone'
+    *       }
     *    });
+    *    const format = article.getFormat();
+    *
+    *    console.log(format.at(0).getName());// 'id'
+    *    console.log(format.at(1).getName());// 'title'
     * </pre>
     */
    getFormat(shared?: boolean): format.Format {
@@ -542,34 +519,29 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Добавляет поле в формат.
+    * Adds field to the format.
     * @remark
-    * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
-    * Если поле с таким форматом уже есть, генерирует исключение.
-    * @param {Types/_entity/format/Field|Types/_entity/format/FieldsFactory/FieldDeclaration.typedef} format Формат
-    * поля.
-    * @param {Number} [at] Позиция поля.
+    * If field with given name already exists it throws an exception.
+    * @param {Types/_entity/format/Field|Types/_entity/format/fieldsFactory/FieldDeclaration.typedef} format Field
+    * format.
+    * @param [at] Field position. If omitted or defined as -1 then would be added at the end.
     * @see format
     * @see removeField
     * @example
-    * Добавим поля в виде декларативного описания:
+    * Let's add fields as declaration:
     * <pre>
-    *    require(['Types/entity'], function (entity) {
-    *       var record = new entity.Record();
-    *       record.addField({name: 'login', type: 'string'});
-    *       record.addField({name: 'amount', type: 'money', precision: 3});
-    *    });
+    *    import {Record} from 'Types/entity';
+    *    const record = new Record();
+    *    record.addField({name: 'login', type: 'string'});
+    *    record.addField({name: 'amount', type: 'money', precision: 3});
     * </pre>
-    * Добавим поля в виде экземпляров:
+    * Let's add fields as instance:
     * <pre>
-    *    require([
-    *       'Types/collection',
-    *       'Types/entity'
-    *    ], function (collection, entity) {
-    *       var recordset = new collection.RecordSet();
-    *       recordset.addField(new entity.format.StringField({name: 'login'}));
-    *       recordset.addField(new entity.format.MoneyField({name: 'amount', precision: 3}));
-    *    });
+    *    import {RecordSet} from 'Types/collection';
+    *    import {format} from 'Types/entity';
+    *    const recordset = new RecordSet();
+    *    recordset.addField(new format.StringField({name: 'login'}));
+    *    recordset.addField(new format.MoneyField({name: 'amount', precision: 3}));
     * </pre>
     */
    addField(format: Field, at: number): void {
@@ -582,16 +554,17 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Удаляет поле из формата по имени.
+    * Removes field from the format by its name.
     * @remark
-    * Если поля с таким именем нет, генерирует исключение.
-    * @param {String} name Имя поля
+    * If field with given name doesn't exist it throws an exception.
+    * @param name Field name
     * @see format
     * @see addField
     * @see removeFieldAt
     * @example
-    * Удалим поле login:
     * <pre>
+    *    import {Record} from 'Types/entity';
+    *    // create record somehow
     *    record.removeField('login');
     * </pre>
     */
@@ -604,16 +577,17 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Удаляет поле из формата по позиции.
+    * Removes field from the format by its position.
     * @remark
-    * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
-    * @param {Number} at Позиция поля.
+    * If given position is out of capacity it throws an exception.
+    * @param at Field position
     * @see format
     * @see addField
     * @see removeField
     * @example
-    * Удалим первое поле:
     * <pre>
+    *    import {Record} from 'Types/entity';
+    *    // create record somehow
     *    record.removeFieldAt(0);
     * </pre>
     */
@@ -630,8 +604,8 @@ export default abstract class FormattableMixin {
    // region Protected methods
 
    /**
-    * Возвращает данные в "сыром" виде из _rawDataAdapter (если он был создан) или исходные
-    * @param [direct=false] Напрямую, не используя адаптер
+    * Return raw data from adapter if it was initialized or original data injected via option.
+    * @param [direct=false] Don't use adapter
     * @protected
     */
    protected _getRawData(direct?: boolean): any {
@@ -642,16 +616,16 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает адаптер по-умолчанию в случае, если опция 'adapter' не была переопределена в подмешивающем миксин коде.
+    * Returns default adapter as it was supposed to be.
     * @protected
-    * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию. Используйте опцию adapter.
+    * @deprecated Method _getDefaultAdapter() is deprecated. Use 'adapter' option instead.
     */
    protected _getDefaultAdapter(): string {
       return defaultAdapter;
    }
 
    /**
-    * Возвращает адаптерр для сырых данных
+    * Returns common adapter instance.
     * @protected
     */
    protected _getAdapter(): IAdapter | IDecorator {
@@ -674,7 +648,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает адаптер для сырых данных заданного вида
+    * Returns adapter instance for certain data kind.
     * @protected
     */
    protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
@@ -686,7 +660,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Создает адаптер для сырых данных
+    * Creates adapter instance for certain data kind (table, record, decorator or meta data).
     * @protected
     */
    protected _createRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
@@ -694,8 +668,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Сбрасывает адаптер для сырых данных
-    * @param [data] Сырые данные
+    * Resets adapter instance for certain data kind.
+    * @param [data] Raw data to deal with
     * @protected
     */
    protected _resetRawDataAdapter(data?: any): void {
@@ -712,8 +686,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Проверяет совместимость адаптеров
-    * @param foreign Адаптер внешнего объекта
+    * Check adapters compatibility.
+    * @param foreign Foreign adapter that should be checked
     * @protected
     */
    protected _checkAdapterCompatibility(foreign: IAdapter | IDecorator): void {
@@ -736,7 +710,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает список полей записи, полученный из "сырых" данных
+    * Returns list of field names taken from raw data adapter
     * @protected
     */
    protected _getRawDataFields(): string[] {
@@ -744,8 +718,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Добавляет поле в список полей
-    * @param name Название поля
+    * Adds field to the _rawDataFields
+    * @param name Field name
     * @protected
     */
    protected _addRawDataField(name: string): void {
@@ -753,7 +727,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Сбрасывает список полей записи, полученный из "сырых" данных
+    * Resets _rawDataFields
     * @protected
     */
    protected _resetRawDataFields(): void {
@@ -761,8 +735,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает формат полей
-    * @param [build=false] Принудительно создать, если не задан
+    * Returns fields format
+    * @param [build=false] Force format build if it was not created yet
     * @protected
     */
    protected _getFormat(build?: boolean): format.Format {
@@ -780,7 +754,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Очищает формат полей. Это можно сделать только если формат не был установлен явно.
+    * Clears fields format. It works only if format haven't been declared.
     * @protected
     */
    protected _clearFormat(): void {
@@ -792,7 +766,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Очищает клон формата полей.
+    * Clears _formatClone
     * @protected
     */
    protected _clearFormatClone(): void {
@@ -800,7 +774,7 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает признак, что формат полей был установлен явно
+    * Alias for hasDecalredFormat()
     * @deprecated
     * @protected
     */
@@ -809,9 +783,9 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает формат поля с указанным названием
-    * @param name Название поля
-    * @param adapter Адаптер
+    * Returns format of field with given name
+    * @param name Field name
+    * @param adapter Adapter instance
     * @protected
     */
    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
@@ -827,8 +801,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Возвращает тип значения поля по его формату
-    * @param format Формат поля
+    * Returns field type by its format.
+    * @param format Field format
     * @protected
     */
    protected _getFieldType(format: Field | UniversalField): string | Function {
@@ -842,8 +816,8 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Строит формат поля по описанию
-    * @param format Описание формата поля
+    * Builds field format by its declaration
+    * @param format Field declaration
     * @protected
     */
    protected _buildField(format: Field | IFieldDeclaration): Field {
@@ -860,9 +834,9 @@ export default abstract class FormattableMixin {
    }
 
    /**
-    * Строит формат полей по описанию
-    * @param format Описание формата (полное либо частичное)
-    * @param fullFormatCallback Метод, возвращающий полный формат
+    * Builds format by its declaration
+    * @param format Fromat declaration (full or partial)
+    * @param fullFormatCallback Callback which returns full format
     * @protected
     */
    protected _buildFormat(
