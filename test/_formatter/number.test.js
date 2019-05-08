@@ -16,17 +16,13 @@ define([
             var stubIntl,
                expect = {
                   'en-US': '1,234.5',
-                  'ru-RU': '1 234,5'
+                  'ru-RU': '1 234,5'
                };
 
             beforeEach(function() {
-               stubIntl = sinon.stub(Intl, 'NumberFormat');
+               stubIntl = sinon.stub(i18n, 'getLang');
                stubIntl.callsFake(function () {
-                  var NumberFormat = {};
-                  NumberFormat.format = function () {
-                     return expect[locale]
-                  }
-                  return NumberFormat;
+                  return locale;
                });
             });
 
