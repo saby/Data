@@ -25,37 +25,37 @@ import {logger} from '../../util';
 
 /**
  * @typedef {String} FieldType
- * @variant boolean Логическое
- * @variant integer Число целое
- * @variant real Число вещественное
- * @variant money Деньги
- * @variant string Строка
- * @variant xml Строка в формате XML
- * @variant datetime Дата и время
- * @variant date Дата
- * @variant time Время
- * @variant timeinterval Временной интервал
- * @variant identity Идентификатор
- * @variant enum Перечисляемое
- * @variant flags Флаги
- * @variant record Запись
- * @variant model Модель
- * @variant recordset Выборка
- * @variant binary Двоичное
+ * @variant boolean Logical
+ * @variant integer Integer number
+ * @variant real Real number
+ * @variant money Money
+ * @variant string String
+ * @variant xml String in XML format
+ * @variant datetime Date and time
+ * @variant date Date
+ * @variant time Time
+ * @variant timeinterval Time interval
+ * @variant identity Database identity
+ * @variant enum Enum
+ * @variant flags Flags
+ * @variant record Record
+ * @variant model Model
+ * @variant recordset RecordSet
+ * @variant binary Binary data
  * @variant uuid UUID
- * @variant rpcfile Файл-RPC
- * @variant object Объект
- * @variant array Массив
+ * @variant rpcfile RPC file
+ * @variant object JSON object
+ * @variant array Array
  */
 
 /**
  * @typedef {Object} FieldDeclaration
- * @property {String} name Имя поля
- * @property {FieldType|Function|String} type Тип поля (название или конструктор)
- * @property {*} defaultValue Значение поля по умолчанию
- * @property {Boolean} nullable Значение может быть null
- * @property {*} [*] Доступны любые опции, которые можно передавать в конструктор (Types/_entity/format/*Field) данного
- * типа поля. Например опция precision для типа @{link Types/_entity/format/MoneyField money}:
+ * @property {String} name Field name
+ * @property {FieldType|Function|String} type Field type (type name or type constructor)
+ * @property {*} defaultValue Default value
+ * @property {Boolean} nullable Value can be null
+ * @property {*} [*] Any constructor options of desired type (Types/_entity/format/*Field) are available. For instance,
+ * option "precision" for type @{link Types/_entity/format/MoneyField money}:
  * {name: 'amount', type: 'money', precision: 4}
  */
 
@@ -66,13 +66,13 @@ export interface IDeclaration {
 }
 
 /**
- * Конструирует формат поля по декларативному описанию
- * @param declaration Декларативное описание
+ * Creates field format by its declarative definition.
+ * @param declaration Declarative definition
  * @author Мальцев А.А.
  */
 export default function(declaration: IDeclaration): Field {
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {
-      throw new TypeError('Types/_entity/format/FieldsFactory::create(): declaration should be an instance of Object');
+      throw new TypeError('Types/_entity/format/fieldsFactory: declaration should be an instance of Object');
    }
 
    let type = declaration.type;
@@ -90,7 +90,7 @@ export default function(declaration: IDeclaration): Field {
             return new StringField(declaration);
          case 'text':
             logger.error(
-               'Types/_entity/format/FieldsFactory::create()',
+               'Types/_entity/format/fieldsFactory',
                'Type "text" has been removed in 3.18.10. Use "string" instead.'
             );
             declaration.type = 'string';
@@ -126,7 +126,7 @@ export default function(declaration: IDeclaration): Field {
             return new RpcFileField(declaration);
          case 'hierarchy':
             logger.error(
-               'Types/_entity/format/FieldsFactory::create()',
+               'Types/_entity/format/fieldsFactory',
                'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.'
             );
             declaration.type = 'identity';
@@ -168,7 +168,7 @@ export default function(declaration: IDeclaration): Field {
    }
 
    throw new TypeError(
-      'Types/_entity/format/fieldsFactory(): ' +
+      'Types/_entity/format/fieldsFactory: ' +
       `unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`
    );
 }

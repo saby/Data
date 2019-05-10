@@ -235,7 +235,7 @@ export default class RecordSet<T = Record> extends mixin<
    protected _$metaData: any;
 
    /**
-    * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/FieldsFactory/FieldDeclaration.typedef>} Формат всех
+    * @cfg {Types/_entity/format/Format|Array.<Types/_entity/format/fieldsFactory/FieldDeclaration.typedef>} Формат всех
     * полей метаданных.
     * @name Types/_collection/RecordSet#metaFormat
     * @example
