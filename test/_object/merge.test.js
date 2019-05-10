@@ -31,16 +31,17 @@ define([
       it('should merge two objects recursive', function () {
          let origin = {
             a: {
-               b: 1
+               b: 1,
+               c: 2
             }
          };
          let ext = {
             a: {
-               c: 2
+               c: 3
             }
          };
          object.merge(origin, ext);
-         assert.deepEqual(origin, {a: {b: 1, c: 2}});
+         assert.deepEqual(origin, {a: {b: 1, c: 3}});
       });
 
       it('should merge arrays', function () {
@@ -58,14 +59,16 @@ define([
       });
 
       it('should merge Dates', function () {
-         var soThen = new Date(0);
-         var soNow = new Date();
-         let origin = {
+         const soThen = new Date(0);
+         const soNow = new Date(1);
+
+         const origin = {
             then: soThen,
-            now: new Date()
+            now: new Date(2)
          };
-         let ext = {now: soNow};
-         let result = object.merge({}, origin, ext);
+         const ext = {now: soNow};
+
+         const result = object.merge({}, origin, ext);
          assert.deepEqual(result, {
             then: soThen,
             now: soNow

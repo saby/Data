@@ -1,5 +1,9 @@
 function isObject(obj: any): boolean {
-   return obj !== null && typeof obj === 'object';
+   if (obj === null || typeof obj !== 'object') {
+      return false;
+   }
+   const proto = Object.getPrototypeOf(obj);
+   return proto === Object.prototype || proto === Array.prototype;
 }
 
 /**
