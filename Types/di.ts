@@ -166,7 +166,7 @@ export function resolve<T>(alias: string | Function | object, options?: object):
          break;
       default:
          if (!isRegistered(alias as string)) {
-            throw new ReferenceError(`Alias "${alias}" does not registered`);
+            throw new ReferenceError(`Alias "${alias}" is not registered`);
          }
          [Factory, config, singleInst] = map[alias as string];
    }
