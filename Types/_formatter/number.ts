@@ -1,7 +1,6 @@
 // @ts-ignore
 import i18n = require('Core/i18n');
 import 'i18n!Types/_formatter/number';
-import {getDefaultOptions} from "../../View/Executor/_Utils/OptionsResolver";
 
 /**
  *
