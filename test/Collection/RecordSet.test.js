@@ -1428,6 +1428,28 @@ define([
             assert.equal(rs1.getFormat().getCount(), 3);
          });
 
+         it('should apply its own format to the external item', function() {
+            var data1 = [{id: 1, count: 3, name: 'John'}];
+            var data2 = [{id: 2, name: 'Jim'}];
+            var rs1 = new RecordSet({
+               rawData: data1,
+               format: {
+                  id: Number,
+                  count: Number,
+                  name: String
+               }
+            });
+            var rs2 = new RecordSet({
+               rawData: data2
+            });
+
+            rs1.assign(rs2);
+            assert.equal(rs1.getCount(), 1);
+            assert.equal(rs1.at(0).get('id'), 2);
+            assert.isUndefined(rs1.at(0).get('count'));
+            assert.equal(rs1.at(0).get('name'), 'Jim');
+         });
+
          it('should don\'t change source record raw data if result record changed', function() {
             var source = new RecordSet({
                   rawData: [{foo: 'bar'}]
