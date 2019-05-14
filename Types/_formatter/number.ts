@@ -12,21 +12,8 @@ import 'i18n!Types/_formatter/number';
  *   <li>options - An object with some or all of the following properties:
  *      <ul>
  *         <li>
- *            localeMatcher - The locale matching algorithm to use. Possible values are "lookup" and "best fit";
- *            the default is "best fit". For information about this option, see the Intl page.
- *            style The formatting style to use. Possible values are "decimal" for plain number formatting, "currency"
- *            for currency formatting, and "percent" for percent formatting; the default is "decimal".
- *         <li>
- *            currency - The currency to use in currency formatting. Possible values are the ISO 4217 currency codes,
- *            such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the Current
- *            currency & funds code list. There is no default value; if the style is "currency", the currency property
- *            must be provided.
- *         </li>
- *         <li>
- *            currencyDisplay - How to display the currency in currency formatting. Possible values are "symbol" to use
- *            a localized currency symbol such as €, "code" to use the ISO currency code, "name" to use a localized
- *            currency name such as "dollar"; the default is "symbol".
- *         </li>
+ *            style - The formatting style to use. Possible values are 'decimal' for plain number formatting
+ *            and 'percent' for percent formatting; the default is 'decimal'.
  *         <li>
  *            useGrouping - Whether to use grouping separators, such as thousands separators or thousand/lakh/crore
  *            separators. Possible values are true and false; the default is true.
@@ -66,9 +53,7 @@ import 'i18n!Types/_formatter/number';
  * <h2>example</h2>
  * <pre>
  *    require(['Types/_formatter/number'], function(format) {
- *       format(12325.13) // return "12,325.13" for en-US locale and "12 325,13" for ru-RU
- *       format(12325.13, { style: 'currency', currency: 'EUR' }); // return "12,325.13 €"
- *        // expected output: "123.456,79 €"
+ *       format(12325.13) // return '12,325.13' for en-US locale and '12 325.13' for ru-RU
  *    });
  * </pre>
  * More info https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
@@ -77,6 +62,310 @@ import 'i18n!Types/_formatter/number';
  * @public
  * @author Мальцев А.А.
  */
-export default function number(source: number, options?: Intl.NumberFormatOptions): string {
-   return (new Intl.NumberFormat(i18n.getLang(), options)).format(source);
+
+const NumberFormat = {
+   'ru-RU': {
+      patterns: {
+         decimal: {
+            positivePattern: '{number}',
+            negativePattern: '{minusSign}{number}'
+         },
+         percent: {
+            positivePattern: '{number} {percentSign}',
+            negativePattern: '{minusSign}{number} {percentSign}'
+         }
+      },
+      symbols: {
+         latn: {
+            decimal: ',',
+            group: ' ',
+            nan: 'не число',
+            plusSign: '+',
+            minusSign: '-',
+            percentSign: '%',
+            infinity: '∞'
+         }
+      }
+   },
+   'en-US': {
+      patterns: {
+         decimal: {
+            positivePattern: '{number}',
+            negativePattern: '{minusSign}{number}'
+         },
+         percent: {
+            positivePattern: '{number} {percentSign}',
+            negativePattern: '{minusSign}{number} {percentSign}'
+         }
+      },
+      symbols: {
+         latn: {
+            decimal: '.',
+            group: ',',
+            nan: 'NAN',
+            plusSign: '+',
+            minusSign: '-',
+            percentSign: '%',
+            infinity: '∞'
+         }
+      }
+   }
+};
+
+const groupSize = 3;
+
+const DEFAULT_MAXIMUM_FRACTION_DIGITS = 21;
+type FORMAT_STYLE = 'decimal' | 'percent';
+
+interface IFormat {
+   minimumIntegerDigits?: number;
+   minimumFractionDigits?: number;
+   maximumFractionDigits?: number;
+   minimumSignificantDigits?: number;
+   maximumSignificantDigits?: number;
+   useGrouping?: boolean;
+   style?: FORMAT_STYLE;
+}
+
+interface IPattern {
+   type: string;
+   value: number;
+}
+
+function formatNumberToString(numberFormat: IFormat, x: number): string {
+   if (numberFormat.hasOwnProperty('minimumSignificantDigits') &&
+      numberFormat.hasOwnProperty('maximumSignificantDigits')
+   ) {
+      return toRawPrecision(
+         x,
+         numberFormat.minimumSignificantDigits,
+         numberFormat.maximumSignificantDigits
+      );
+   }
+
+   return toRawFixed(
+      x,
+      numberFormat.minimumIntegerDigits || 1,
+      numberFormat.minimumFractionDigits || 0,
+      numberFormat.maximumFractionDigits || DEFAULT_MAXIMUM_FRACTION_DIGITS
+   );
+}
+
+function partitionNumberPattern(numberFormat: IFormat, x: number): IPattern[] {
+   const locale = i18n.getLang();
+   const localeFormat = NumberFormat[locale];
+   const ild = localeFormat.symbols.latn;
+   const style = numberFormat.style || 'decimal';
+
+   let pattern;
+   if (!isNaN(x) && x < 0) {
+      x = -x;
+      pattern = localeFormat.patterns[style].negativePattern;
+   } else {
+      pattern = localeFormat.patterns[style].positivePattern;
+   }
+
+   const result = [];
+   let beginIndex = pattern.indexOf('{', 0);
+   let endIndex = 0;
+   let nextIndex = 0;
+   const length = pattern.length;
+   while (beginIndex > -1 && beginIndex < length) {
+      endIndex = pattern.indexOf('}', beginIndex);
+      if (endIndex === -1) {
+         throw new Error();
+      }
+
+      if (beginIndex > nextIndex) {
+         const literal = pattern.substring(nextIndex, beginIndex);
+         result.push({type: 'literal', value: literal});
+      }
+
+      let p = pattern.substring(beginIndex + 1, endIndex);
+      if (p === 'number') {
+         if (isNaN(x)) {
+            const n = ild.nan;
+            result.push({type: 'nan', value: n});
+         } else if (!isFinite(x)) {
+            const n = ild.infinity;
+            result.push({type: 'infinity', value: n});
+         } else {
+            if (numberFormat.style === 'percent') {
+               x *= 100;
+            }
+
+            const n = formatNumberToString(numberFormat, x);
+
+            let integer;
+            let fraction;
+            const decimalSepIndex = n.indexOf('.', 0);
+            if (decimalSepIndex > 0) {
+               integer = n.substring(0, decimalSepIndex);
+               fraction = n.substring(decimalSepIndex + 1);
+            } else {
+               integer = n;
+               fraction = undefined;
+            }
+            if (numberFormat.useGrouping === true) {
+               const groupSepSymbol = ild.group;
+               const groups = [];
+               if (integer.length > groupSize) {
+                  const end = integer.length - groupSize;
+                  let idx = end % groupSize;
+                  const start = integer.slice(0, idx);
+                  if (start.length) {
+                     groups.push(start);
+                  }
+                  while (idx < end) {
+                     groups.push(integer.slice(idx, idx + groupSize));
+                     idx += groupSize;
+                  }
+                  groups.push(integer.slice(end));
+               } else {
+                  groups.push(integer);
+               }
+               if (groups.length === 0) {
+                  throw new Error('group is empty');
+               }
+               while (groups.length) {
+                  const integerGroup = groups.shift();
+                  result.push({type: 'integer', value: integerGroup});
+                  if (groups.length) {
+                     result.push({type: 'group', value: groupSepSymbol});
+                  }
+               }
+            } else {
+               result.push({type: 'integer', value: integer});
+            }
+            if (fraction !== undefined) {
+               const decimalSepSymbol = ild.decimal;
+               result.push({type: 'decimal', value: decimalSepSymbol});
+               result.push({type: 'fraction', value: fraction});
+            }
+         }
+      } else if (p === 'plusSign') {
+         const plusSignSymbol = ild.plusSign;
+         result.push({type: 'plusSign', value: plusSignSymbol});
+      } else if (p === 'minusSign') {
+         const minusSignSymbol = ild.minusSign;
+         result.push({type: 'minusSign', value: minusSignSymbol});
+      } else if (p === 'percentSign' && numberFormat.style === 'percent') {
+         const percentSignSymbol = ild.percentSign;
+         result.push({type: 'literal', value: percentSignSymbol});
+      } else {
+         const literal = pattern.substring(beginIndex, endIndex);
+         result.push({type: 'literal', value: literal});
+      }
+      nextIndex = endIndex + 1;
+      beginIndex = pattern.indexOf('{', nextIndex);
+   }
+   if (nextIndex < length) {
+      const literal = pattern.substring(nextIndex, length);
+      result.push({type: 'literal', value: literal});
+   }
+
+   return result;
+}
+
+/**
+ * When the toRawPrecision abstract operation is called with arguments x (which
+ * must be a finite non-negative number), minPrecision, and maxPrecision (both
+ * must be integers between 1 and 21) the following steps are taken:
+ */
+function toRawPrecision(x: number, minPrecision: number, maxPrecision: number): string {
+   let result = x.toString();
+
+   if (result === '0') {
+      result = Array (maxPrecision + 1).join('0');
+   }
+
+   if (result.indexOf('.') >= 0 && maxPrecision > minPrecision) {
+      let cut = maxPrecision - minPrecision;
+
+      while (cut > 0 && result.charAt(result.length-1) === '0') {
+         result = result.slice(0, -1);
+         cut--;
+      }
+
+      if (result.charAt(result.length - 1) === '.') {
+         result = result.slice(0, -1);
+      }
+   }
+
+   return result;
+}
+
+/**
+ * @spec[tc39/ecma402/master/spec/numberformat.html]
+ * When the toRawFixed abstract operation is called with arguments x (which must
+ * be a finite non-negative number), minInteger (which must be an integer between
+ * 1 and 21), minFraction, and maxFraction (which must be integers between 0 and
+ * 20) the following steps are taken:
+ */
+function toRawFixed(x: number, minInteger: number, minFraction: number, maxFraction: number): string {
+   // 1. Let f be maxFraction.
+   const n = Math.pow(10, maxFraction) * x; // diverging...
+   let result = (n === 0 ? '0' : n.toFixed(0)); // divering...
+
+   // this diversion is needed to take into consideration big numbers, e.g.:
+   // 1.2344501e+37 -> 12344501000000000000000000000000000000
+   let idx;
+   const exp = (idx = result.indexOf('e')) > -1 ? +result.slice(idx + 1) : 0;
+   if (exp) {
+      result = result.slice(0, idx).replace('.', '');
+      result += Array(exp - (result.length - 1) + 1).join('0');
+   }
+
+   let int;
+   if (maxFraction !== 0) {
+      let length = result.length;
+      if (length <= maxFraction) {
+         const zero = Array(maxFraction + 1 - length + 1).join('0');
+         result = zero + result;
+         length = maxFraction + 1;
+      }
+      const a = result.substring(0, length - maxFraction);
+      const b = result.substring(length - maxFraction, result.length);
+      result = a + '.' + b;
+      int = a.length;
+   } else {
+      int = result.length;
+   }
+   let cut = maxFraction - minFraction;
+   while (cut > 0 && result.slice(-1) === '0') {
+      result = result.slice(0, -1);
+      cut--;
+   }
+   if (result.slice(-1) === '.') {
+      result = result.slice(0, -1);
+   }
+   if (int < minInteger) {
+      const zero = Array(minInteger - int + 1).join('0');
+      result = zero + result;
+   }
+   return result;
+}
+
+function getNumberFormat(options: IFormat): IFormat {
+   return {...{
+      style: 'decimal',
+      useGrouping: true,
+      minimumIntegerDigits: 0,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+   }, ...options || {}};
+}
+
+/*
+ * @spec[tc39/ecma402/master/spec/numberformat.html]
+ * @clause[sec-formatnumber]
+ */
+export default function number(x: number, options?: IFormat): string  {
+   const parts = partitionNumberPattern(getNumberFormat(options), x);
+   let result = '';
+   for (let i = 0; parts.length > i; i++) {
+      const part = parts[i];
+      result += part.value;
+   }
+   return result;
 }
