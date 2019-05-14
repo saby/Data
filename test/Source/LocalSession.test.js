@@ -485,7 +485,7 @@ define([
             });
          });
 
-         it('should keep functions in data', function(done) {
+         it.skip('should keep functions in data', function(done) {
             var data = dataSample.arrayWithFunctions;
             var source1 = new LocalSession({
                idProperty: 'id',
