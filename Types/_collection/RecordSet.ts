@@ -582,28 +582,30 @@ export default class RecordSet<T = Record> extends mixin<
       }
 
       const oldItems = this._$items.slice();
+      const hasDeclaredFormat = this.hasDecalredFormat();
       let result;
 
-      if (items instanceof RecordSet) {
+      if (items instanceof RecordSet && !hasDeclaredFormat) {
+         // We can trust foreign data only if recordset doesn't have its own format
          this._$adapter = items.getAdapter();
-         this._assignRawData(items.getRawData(), this.hasDecalredFormat());
+         this._assignRawData(items.getRawData(), hasDeclaredFormat);
          result = new Array(items.getCount());
          super.assign(result);
       } else {
+         // Otherwise we have to check and normalize foreign data if needed
          items = this._itemsToArray(items);
          if (items.length && items[0] && items[0]['[Types/_entity/Record]']) {
             this._$adapter = items[0].getAdapter();
          }
          items = this._normalizeItems(items, RECORD_STATE.ADDED);
-         this._assignRawData(null, this.hasDecalredFormat());
+         this._assignRawData(null, hasDeclaredFormat);
          items = this._addItemsToRawData(items);
          super.assign(items);
          result = items;
       }
 
-      let item;
       for (let i = 0, count = oldItems.length; i < count; i++) {
-         item = oldItems[i];
+         const item = oldItems[i];
          if (item) {
             item.detach();
          }
@@ -1365,10 +1367,10 @@ export default class RecordSet<T = Record> extends mixin<
     */
    protected _normalizeItems(items: T[], state?: string): T[] {
       const formatDefined = this.hasDecalredFormat();
-      let format;
       const result = [];
       let resultItem;
       let item;
+      let format;
       for (let i = 0; i < items.length; i++) {
          item = items[i];
          this._checkItem(item);
@@ -1380,7 +1382,7 @@ export default class RecordSet<T = Record> extends mixin<
          } else if (!format) {
             format = this._getFormat(true);
          }
-         resultItem = this._normalizeItemData(item, format);
+         resultItem = this._normalizeItem(item, format);
 
          if (state) {
             resultItem.setState(state);
@@ -1398,7 +1400,7 @@ export default class RecordSet<T = Record> extends mixin<
     * @param format Формат, к которому следует привести данные
     * @protected
     */
-   protected _normalizeItemData(item: any, format: Format): T[] {
+   protected _normalizeItem(item: Record, format: Format): T[] {
       const itemFormat = item.getFormat(true);
       let result;
 
