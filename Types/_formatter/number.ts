@@ -181,7 +181,7 @@ function partitionNumberPattern(numberFormat: IFormat, x: number): IPattern[] {
          result.push({type: 'literal', value: literal});
       }
 
-      let p = pattern.substring(beginIndex + 1, endIndex);
+      const p = pattern.substring(beginIndex + 1, endIndex);
       if (p === 'number') {
          if (isNaN(x)) {
             const n = ild.nan;
@@ -282,7 +282,7 @@ function toRawPrecision(x: number, minPrecision: number, maxPrecision: number): 
    if (result.indexOf('.') >= 0 && maxPrecision > minPrecision) {
       let cut = maxPrecision - minPrecision;
 
-      while (cut > 0 && result.charAt(result.length-1) === '0') {
+      while (cut > 0 && result.charAt(result.length - 1) === '0') {
          result = result.slice(0, -1);
          cut--;
       }
