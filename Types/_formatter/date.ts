@@ -222,7 +222,7 @@ function formatByToken(date: Date, handler: string|Function, options: IDateForma
       result = withLeadZeroes(result, options.lead);
    }
 
-   if (options.lower) {
+   if (options.lower && typeof result === 'string') {
       result = result.toLowerCase();
    }
 

@@ -189,6 +189,15 @@ define([
          assert.equal(format(date, 'Yh'), '2');
       });
 
+      it('should format "ddl" with not a date', function() {
+         var dt = {
+            getDay: function() {
+               return -1;
+            }
+         };
+         assert.equal(format(dt, 'ddl'), 'undefined');
+      });
+
       it('should escape square brackets', function() {
          var date = new Date(2018, 4, 7);
          assert.equal(format(date, '[Today is ]D.MM, YY. [How long ago it was?]'), 'Today is 7.05, 18. How long ago it was?');
