@@ -111,7 +111,7 @@ export default class TreeItem<T> extends CollectionItem<T> {
       let shift = 0;
       if (parent) {
          shift++;
-         if (parent && parent instanceof TreeItem) {
+         if (parent instanceof TreeItem) {
             return parent.getLevel() + 1;
          }
       }
