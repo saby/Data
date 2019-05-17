@@ -174,10 +174,6 @@ define([
          });
 
          it('should return valid items level for first item after breadcrumbs', function() {
-            var root = new TreeItem({
-               contents: '[]',
-               node: true
-            });
             var items = [];
             items[0] = new TreeItem({
                contents: 'A',
