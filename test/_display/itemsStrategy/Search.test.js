@@ -173,17 +173,92 @@ define([
             assert.deepEqual(result, ['#A,AA,AAA']);
          });
 
+         it('should return valid items level for first item after breadcrumbs', function() {
+            var root = new TreeItem({
+               contents: '[]',
+               node: true
+            });
+            var items = [];
+            items[0] = new TreeItem({
+               contents: 'A',
+               node: true
+            });
+            items[1] = new TreeItem({
+               parent: items[0],
+               contents: 'AA',
+               node: true
+            });
+            items[2] = new TreeItem({
+               parent: items[1],
+               contents: 'AAa',
+               node: false
+            });
+            items[3] = new TreeItem({
+               contents: 'b',
+               node: false
+            });
+
+            var source = getSource(items);
+            var strategy = new Search({
+               source: source
+            });
+
+            var result = strategy.items.map(function(item) {
+               var contents = item.getContents();
+               return item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents + ':' + item.getLevel();
+            });
+
+            assert.deepEqual(result, ['#A,AA', 'AAa:1', 'b:0']);
+         });
+
          it('return breadcrumbs as 1st level parent for leaves', function() {
+            var parents = [];
+            parents[1] = BreadcrumbsItem;
+            parents[2] = BreadcrumbsItem;
+            parents[3] = BreadcrumbsItem;
+            parents[4] = BreadcrumbsItem;
+            parents[5] = BreadcrumbsItem;
+            parents[6] = BreadcrumbsItem;
+            parents[7] = BreadcrumbsItem;
+            parents[8] = BreadcrumbsItem;
+            parents[9] = null;
+            parents[10] = null;
+            parents[11] = null;
+            parents[12] = null;
+
+            var levels = [];
+            levels[1] = 1;
+            levels[2] = 1;
+            levels[3] = 1;
+            levels[4] = 1;
+            levels[5] = 1;
+            levels[6] = 1;
+            levels[7] = 1;
+            levels[8] = 1;
+            levels[9] = 0;
+            levels[10] = 0;
+            levels[11] = 0;
+            levels[12] = 0;
+
             strategy.items.forEach(function(item, index) {
                if (item instanceof TreeItem) {
-                  assert.instanceOf(
-                     item.getParent(),
-                     BreadcrumbsItem,
-                     'at ' + index
-                  );
+                  if (typeof parents[index] === 'function') {
+                     assert.instanceOf(
+                        item.getParent(),
+                        parents[index],
+                        'at ' + index
+                     );
+                  } else {
+                     assert.strictEqual(
+                        item.getParent(),
+                        parents[index],
+                        'at ' + index
+                     );
+                  }
+
                   assert.equal(
                      item.getLevel(),
-                     1,
+                     levels[index],
                      'at ' + index
                   );
                }
