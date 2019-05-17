@@ -30,7 +30,7 @@ export default abstract class ManyToManyMixin {
       let slave;
       for (let i = 0, count = slaves.length; i < count; i++) {
          slave = slaves[i];
-         if (slave.destroy && !slave.destroyed) {
+         if (slave['[Types/_entity/DestroyableMixin]'] && !slave.destroyed) {
             slave.destroy();
          }
       }

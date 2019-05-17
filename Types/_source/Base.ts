@@ -31,7 +31,6 @@ export default abstract class Base extends mixin<
    LazyMixin,
    DataMixin
 >(
-   DestroyableMixin,
    OptionsToPropertyMixin,
    SerializableMixin,
    OptionsMixin,

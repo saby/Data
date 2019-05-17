@@ -163,6 +163,23 @@ define([
       });
 
       describe('.destroy()', function() {
+         it('should destroy only instances of Types/_entity/DestroyableMixin', function() {
+            var root = new Record();
+            var foo = {
+               destroy: function() {
+                  this.destroyed = true;
+               }
+            };
+            var bar = new Record();
+            root.set('foo', foo);
+            root.set('bar', bar);
+
+            root.destroy();
+            assert.isTrue(root.destroyed);
+            assert.isUndefined(foo.destroyed);
+            assert.isTrue(bar.destroyed);
+         });
+
          it('shouldn\'t destroy same child twice', function() {
             var root = new Record();
             var foo = new Record();
