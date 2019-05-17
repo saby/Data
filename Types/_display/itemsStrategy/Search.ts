@@ -202,8 +202,10 @@ export default class Search<S, T> extends mixin<
 
             // This is an item outside breadcrumbs so set the current breadcrumbs as its parent.
             // All items outside breadcrumbs should be at first level after breadcrumbs itself.
-            originalParents.set(item, item.getParent());
-            item.setParent(currentBreadcrumbs);
+            if (currentBreadcrumbs) {
+                originalParents.set(item, item.getParent());
+                item.setParent(currentBreadcrumbs);
+            }
          }
 
          return item;

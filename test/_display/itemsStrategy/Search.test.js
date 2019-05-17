@@ -217,10 +217,10 @@ define([
             parents[6] = BreadcrumbsItem;
             parents[7] = BreadcrumbsItem;
             parents[8] = BreadcrumbsItem;
-            parents[9] = null;
-            parents[10] = null;
-            parents[11] = null;
-            parents[12] = null;
+            parents[9] = undefined;
+            parents[10] = undefined;
+            parents[11] = undefined;
+            parents[12] = undefined;
 
             var levels = [];
             levels[1] = 1;
