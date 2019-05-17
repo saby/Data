@@ -152,6 +152,7 @@ export default class Search<S, T> extends mixin<
       const dump = {};
 
       let currentBreadcrumbs = null;
+      let breadcrumbsLevel = null;
 
       const sortedItems = items.map((item, index) => {
          if (item instanceof TreeItem) {
@@ -169,7 +170,12 @@ export default class Search<S, T> extends mixin<
                   originalParents.delete(next);
                }
 
-               // Check that the next item is the node with bigger level.
+               // Remember the level of the first breadcrumb item
+               if (currentBreadcrumbs === null && breadcrumbsLevel === null) {
+                   breadcrumbsLevel = item.getLevel();
+               }
+
+                // Check that the next item is the node with bigger level.
                // If it's not true that means we reach the last item in current breadcrumbs.
                const isLastBreadcrumb = next instanceof TreeItem && next.isNode() ?
                   item.getLevel() >= next.getLevel() :
@@ -189,6 +195,9 @@ export default class Search<S, T> extends mixin<
                // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last node
                currentBreadcrumbs = null;
                return dump;
+            } else if (item.getLevel() <= breadcrumbsLevel) {
+                currentBreadcrumbs = null;
+                breadcrumbsLevel = 0;
             }
 
             // This is an item outside breadcrumbs so set the current breadcrumbs as its parent.

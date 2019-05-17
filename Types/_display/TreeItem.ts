@@ -108,12 +108,16 @@ export default class TreeItem<T> extends CollectionItem<T> {
     */
    getLevel(): number {
       const parent = this.getParent();
+      let shift = 0;
       if (parent) {
-         return (parent instanceof TreeItem ? parent.getLevel() : 0) + 1;
+         shift++;
+         if (parent && parent instanceof TreeItem) {
+            return parent.getLevel() + 1;
+         }
       }
 
       const owner = this.getOwner();
-      return owner && owner.isRootEnumerable() ? 1 : 0;
+      return shift + (owner && owner.isRootEnumerable() ? 1 : 0);
    }
 
    /**
