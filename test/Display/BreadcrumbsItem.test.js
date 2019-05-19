@@ -76,5 +76,24 @@ define([
             assert.deepEqual(bcItem.getContents(), ['a']);
          });
       });
+
+      describe('.getLevel()', function() {
+         it('should return 0 by default', function() {
+            var item = new BreadcrumbsItem();
+            assert.strictEqual(item.getLevel(), 0);
+         });
+
+         it('should return 1 if owner contains enumerable root', function() {
+            var owner = {
+               isRootEnumerable: function() {
+                  return true;
+               }
+            };
+            var item = new BreadcrumbsItem({
+               owner: owner
+            });
+            assert.strictEqual(item.getLevel(), 1);
+         });
+      });
    });
 });
