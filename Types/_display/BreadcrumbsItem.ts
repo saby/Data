@@ -51,6 +51,14 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
       throw new ReferenceError('BreadcrumbsItem contents is read only.');
    }
 
+    /**
+     * Returns branch level in tree
+     */
+    getLevel(): number {
+        const owner = this.getOwner() as Tree<T>;
+        return owner && owner.isRootEnumerable() ? 1 : 0;
+    }
+
    // endregion
 }
 
