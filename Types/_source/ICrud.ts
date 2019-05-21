@@ -60,9 +60,9 @@ export default interface ICrud {
 
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-    * @param {Object} [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
-    * {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
+    * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись,
+    * в случае ошибки - Error.
     * @see Types/_entity/Record
     * @example
     * Создадим новую статью:
@@ -95,10 +95,10 @@ export default interface ICrud {
 
    /**
     * Читает запись из источника данных
-    * @param {String} key Первичный ключ записи
-    * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
-    * {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
+    * @param key Первичный ключ записи
+    * @param [meta] Дополнительные мета данные
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную
+    * запись, в случае ошибки - Error.
     * @example
     * Прочитаем статью с ключом 'how-to-read-an-item':
     * <pre>
@@ -126,13 +126,13 @@ export default interface ICrud {
     *    });
     * </pre>
     */
-   read(key: any, meta?: object): ExtendPromise<Record>;
+   read(key: number | string, meta?: object): ExtendPromise<Record>;
 
    /**
     * Обновляет запись в источнике данных
-    * @param {Types/_entity/Record|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
-    * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<*>} Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
+    * @param data Обновляемая запись или рекордсет
+    * @param [meta] Дополнительные мета данные
+    * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
     * @example
     * Обновим статью с ключом 'how-to-update-an-item':
     * <pre>
@@ -180,13 +180,13 @@ export default interface ICrud {
     *    });
     * </pre>
     */
-   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null>;
+   update(data: Record | RecordSet, meta?: object): ExtendPromise<null>;
 
    /**
     * Удаляет запись из источника данных
-    * @param {String|Array.<String>} keys Первичный ключ, или массив первичных ключей записи
-    * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<*>} Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
+    * @param keys Первичный ключ, или массив первичных ключей записи
+    * @param [meta] Дополнительные мета данные
+    * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
     * @example
     * Удалим статью с ключом 'article-id-to-destroy':
     * <pre>
@@ -213,13 +213,13 @@ export default interface ICrud {
     *     });
     * </pre>
     */
-   destroy(keys: any | any[], meta?: object): ExtendPromise<null>;
+   destroy(keys: number | string | number[] | string[], meta?: object): ExtendPromise<null>;
 
    /**
     * Выполняет запрос на выборку
-    * @param {Types/_source/Query} [query] Запрос
-    * @return {Promise.<Types/_source/DataSet>} Асинхронный результат выполнения: в случае успеха вернет
-    * {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
+    * @param [query] Запрос
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные
+    * данные, в случае ошибки - Error.
     * @see Types/_source/Query
     * @see Types/_source/DataSet
     * @example
