@@ -56,7 +56,7 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
      */
     getLevel(): number {
         const owner = this.getOwner() as Tree<T>;
-        return owner && owner.isRootEnumerable() ? 1 : 0;
+        return owner && owner.isRootEnumerable() ? 2 : 1;
     }
 
    // endregion
