@@ -80,19 +80,30 @@ define([
       describe('.getLevel()', function() {
          it('should return 0 by default', function() {
             var item = new BreadcrumbsItem();
-            assert.strictEqual(item.getLevel(), 1);
+            assert.strictEqual(item.getLevel(), 0);
          });
 
          it('should return 1 if owner contains enumerable root', function() {
+            var root = new TreeItem({
+               contents: 'root'
+            });
             var owner = {
+               getRoot: function() {
+                  return root;
+               },
                isRootEnumerable: function() {
                   return true;
                }
             };
-            var item = new BreadcrumbsItem({
-               owner: owner
+            var last = new TreeItem({
+               owner: owner,
+               contents: 'last'
             });
-            assert.strictEqual(item.getLevel(), 2);
+            var item = new BreadcrumbsItem({
+               owner: owner,
+               last: last
+            });
+            assert.strictEqual(item.getLevel(), 1);
          });
       });
    });

@@ -24,6 +24,21 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
     */
    protected _$last: TreeItem<T>;
 
+   protected get _first(): TreeItem<T> {
+       const root = this._$owner ? this._$owner.getRoot() : {};
+       let current = this._$last;
+
+       while (current) {
+           const parent = current.getParent();
+           if (!parent || parent === root) {
+               break;
+           }
+           current = parent;
+       }
+
+       return current;
+   }
+
    constructor(options: IOptions<T>) {
       super(options);
    }
@@ -55,8 +70,8 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
      * Returns branch level in tree
      */
     getLevel(): number {
-        const owner = this.getOwner() as Tree<T>;
-        return owner && owner.isRootEnumerable() ? 2 : 1;
+       const first = this._first;
+       return first ? first.getLevel() : 0;
     }
 
    // endregion

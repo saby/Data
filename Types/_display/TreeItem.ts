@@ -2,6 +2,7 @@ import CollectionItem, {
    IOptions as ICollectionItemOptions,
    ISerializableState as ICollectionItemSerializableState
 } from './CollectionItem';
+import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {register} from '../di';
 
@@ -31,7 +32,7 @@ export default class TreeItem<T> extends CollectionItem<T> {
    /**
     * Родительский узел
     */
-   protected _$parent: TreeItem<T>;
+   protected _$parent: TreeItem<T> | BreadcrumbsItem<T>;
 
    /**
     * Является узлом
@@ -74,7 +75,7 @@ export default class TreeItem<T> extends CollectionItem<T> {
     * Возвращает родительский узел
     */
    getParent(): TreeItem<T> {
-      return this._$parent;
+      return this._$parent as TreeItem<T>;
    }
 
    /**
@@ -107,17 +108,15 @@ export default class TreeItem<T> extends CollectionItem<T> {
     * Возвращает уровень вложенности относительно корня
     */
    getLevel(): number {
-      const parent = this.getParent();
-      let shift = 0;
+      const parent = this._$parent;
       if (parent) {
-         shift++;
-         if (parent instanceof TreeItem) {
-            return parent.getLevel() + 1;
-         }
+         // FIXME: Here is an error: if parent is a root, it causes root items to have 1 level value nevertheless of
+         // isRootEnumerable() result. Root items should have 0 level if root is not enumerable.
+         return (parent instanceof TreeItem || parent instanceof BreadcrumbsItem ? parent.getLevel() : 0) + 1;
       }
 
       const owner = this.getOwner();
-      return shift + (owner && owner.isRootEnumerable() ? 1 : 0);
+      return owner && owner.isRootEnumerable() ? 1 : 0;
    }
 
    /**
