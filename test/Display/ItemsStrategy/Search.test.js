@@ -201,10 +201,10 @@ define([
 
             var result = strategy.items.map(function(item) {
                var contents = item.getContents();
-               return item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents + ':' + item.getLevel();
+               return (item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents) + ':' + item.getLevel();
             });
 
-            assert.deepEqual(result, ['#A,AA', 'AAa:1', 'b:0']);
+            assert.deepEqual(result, ['#A,AA:0', 'AAa:1', 'b:0']);
          });
 
          it('return breadcrumbs as 1st level parent for leaves', function() {
