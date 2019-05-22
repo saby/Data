@@ -53,7 +53,7 @@ function validateComposite(...types: Descriptor[]): ValidateFunc {
 
       if (!hasSuitable) {
          return new TypeError(
-            'There are next restrictions for composite type: ' +
+            'There are following restrictions for composite type: ' +
             errors.map((err) => `"${err.message}"`).join(' or ')
          );
       }
