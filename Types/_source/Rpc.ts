@@ -1,6 +1,8 @@
 import Remote from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
+// @ts-ignore
+import Deferred = require('Core/Deferred');
 
 /**
  * Источник данных, работающий по технологии RPC.
@@ -19,11 +21,11 @@ export default abstract class Rpc extends Remote implements IRpc {
    readonly '[Types/_source/IRpc]': boolean = true;
 
    call(command: string, data?: object): ExtendPromise<DataSet> {
-      return this._callProvider(command, data).addCallback(
-         (data) => this._loadAdditionalDependencies().addCallback(
+      return this._callProvider(command, data).addCallback(Deferred.skipLogExecutionTime(
+         (data) => this._loadAdditionalDependencies().addCallback(Deferred.skipLogExecutionTime(
             () => this._wrapToDataSet(data)
-         )
-      );
+         ))
+      ));
    }
 
    // endregion
