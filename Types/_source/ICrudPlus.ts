@@ -23,9 +23,9 @@ export default interface ICrudPlus {
 
    /**
     * Объединяет одну запись с другой
-    * @param {String} from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
-    * @param {String} to Первичный ключ записи-приёмника
-    * @return {Promise.<*>} Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
+    * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
+    * @param to Первичный ключ записи-приёмника
+    * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
     * @example
     * Объединим статью с ключом 'article-from' со статьей с ключом 'article-to':
     * <pre>
@@ -40,14 +40,14 @@ export default interface ICrudPlus {
     *    });
     * </pre>
     */
-   merge(from: string | number, to: string | number): ExtendPromise<any>;
+   merge(from: string | number, to: string | number): ExtendPromise<null>;
 
    /**
     * Создает копию записи
-    * @param {String} key Первичный ключ записи
-    * @param {Object} [meta] Дополнительные мета данные
-    * @return {Promise.<Types/_entity/Record>} Асинхронный результат выполнения: в случае успеха вернет
-    * {@link Types/_entity/Record} - скопированную запись, в случае ошибки - Error.
+    * @param key Первичный ключ записи
+    * @param [meta] Дополнительные мета данные
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - скопированную
+    * запись, в случае ошибки - Error.
     * @example
     * Скопируем статью с ключом 'what-about-to-copy-me':
     * <pre>
@@ -62,14 +62,14 @@ export default interface ICrudPlus {
     *    });
     * </pre>
     */
-   copy(key: string | number, meta?: Object): ExtendPromise<Record>;
+   copy(key: string | number, meta?: object): ExtendPromise<Record>;
 
    /**
     * Производит перемещение записи.
-    * @param {Array.<String|Number>} items Перемещаемая запись.
-    * @param {String} target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+    * @param items Перемещаемая запись.
+    * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
     * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
-    * @return {Promise.<*>} Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
+    * @return Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
     */
-   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any>;
+   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<null>;
 }
