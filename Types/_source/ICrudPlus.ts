@@ -69,7 +69,7 @@ export default interface ICrudPlus {
     * @param items Перемещаемая запись.
     * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
     * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
-    * @return Асинхронный результат выполнения: в случае ничего не вернет, в случае ошибки вернет Error.
+    * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
     */
    move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<null>;
 }
