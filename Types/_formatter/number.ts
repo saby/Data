@@ -76,5 +76,5 @@ import 'i18n!Types/_formatter/number';
  * @author Мальцев А.А.
  */
 export default function number(source: number, options?: Intl.NumberFormatOptions): string {
-   return (new Intl.NumberFormat(i18n.getLang(), options)).format(source);
+   return (new Intl.NumberFormat111(i18n.getLang(), options)).format(source);
 }
