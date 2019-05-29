@@ -128,6 +128,24 @@ define([
             assert.equal(descriptor[1].getType(), 'object');
          });
 
+         it('should return total field for RecordSet', function() {
+            var data = {
+               n: {
+                  _type: 'recordset',
+                  d: [],
+                  s: []
+               }
+            };
+            var adapter = new SbisTable(data);
+            var descriptor = adapter.getMetaDataDescriptor();
+
+            assert.equal(descriptor[0].getName(), 'total');
+            assert.equal(descriptor[0].getType(), 'recordset');
+
+            assert.equal(descriptor[1].getName(), 'more');
+            assert.equal(descriptor[1].getType(), 'recordset');
+         });
+
          it('should return meta fields', function() {
             var format = getFormat(),
                data = {

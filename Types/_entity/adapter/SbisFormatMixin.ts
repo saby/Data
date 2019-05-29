@@ -21,6 +21,8 @@ import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
 
+type ComplexTypeMarker = 'record' | 'recordset';
+
 export interface IFieldType {
    n: string;
 }
@@ -52,13 +54,13 @@ export interface IFieldFormat {
 }
 
 export interface IRecordFormat {
-   _type?: string;
+   _type?: ComplexTypeMarker;
    d: any[];
    s: IFieldFormat[];
 }
 
 export interface ITableFormat {
-   _type?: string;
+   _type?: ComplexTypeMarker;
    d: any[][];
    s: IFieldFormat[];
    n?: boolean | number | object;

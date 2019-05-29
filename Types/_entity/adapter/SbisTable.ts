@@ -175,9 +175,16 @@ export default class SbisTable extends mixin<
             case 'boolean':
                type = 'boolean';
                break;
-            case 'object':
+             case 'object':
+               // data.n can be null so leave it as integer in that case
                if (data.n) {
                   type = 'object';
+
+                  // Support for complex BL types such as RecordSet
+                  const subType = (data.n as ITableFormat)._type;
+                  if (subType) {
+                      type = subType;
+                  }
                }
                break;
          }
