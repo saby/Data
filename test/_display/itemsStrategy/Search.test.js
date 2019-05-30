@@ -260,6 +260,16 @@ define([
                }
             });
          });
+
+         it('should return the same instances for second call', function() {
+            var items = strategy.items.slice();
+
+            strategy.items.forEach(function(item, index) {
+               assert.strictEqual(items[index], item);
+            });
+
+            assert.equal(items.length, strategy.items.length);
+         });
       });
 
       describe('.count', function() {
