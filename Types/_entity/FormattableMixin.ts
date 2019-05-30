@@ -4,13 +4,16 @@ import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
+import {IHashMap} from '../_declarations';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
+
+type FormatDescriptor = format.Format | IFieldDeclaration[] | IHashMap<IFieldDeclaration>;
 
 export interface IOptions {
    adapter?: IAdapter | string;
    rawData?: any;
-   format?: format.Format | IFieldDeclaration[];
+   format?: FormatDescriptor;
    cow?: boolean;
 }
 
@@ -354,7 +357,7 @@ export default abstract class FormattableMixin {
     *    order.set('items', orderItems);
     * </pre>
     */
-   _$format: format.Format | IFieldDeclaration[];
+   _$format: FormatDescriptor;
 
    /**
     * Finally built format
@@ -840,7 +843,7 @@ export default abstract class FormattableMixin {
     * @protected
     */
    protected _buildFormat(
-      format: format.Format | IFieldDeclaration[],
+      format: FormatDescriptor,
       fullFormatCallback?: Function
    ): format.Format {
       const Format = resolve<any>('Types/collection:format.Format');
