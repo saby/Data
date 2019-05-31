@@ -2159,11 +2159,25 @@ define([
             assert.equal(field.getType(), 'datetime');
          });
 
-         it('should create Array field with kind of Integer', function() {
+         it('should create Array field with kind of String', function() {
             var record = Record.fromObject({foo: [1, '2']}),
                field = record.getFormat().at(0);
             assert.equal(field.getType(), 'array');
+            assert.equal(field.getKind(), 'string');
+         });
+
+         it('should create Array field with kind of Integer', function() {
+            var record = Record.fromObject({foo: [1, 2]}),
+               field = record.getFormat().at(0);
+            assert.equal(field.getType(), 'array');
             assert.equal(field.getKind(), 'integer');
+         });
+
+         it('should create Array field with kind of Real', function() {
+            var record = Record.fromObject({foo: [1, 2.5]});
+            var field = record.getFormat().at(0);
+            assert.equal(field.getType(), 'array');
+            assert.equal(field.getKind(), 'real');
          });
 
          it('should create Array field with kind of Boolean', function() {
