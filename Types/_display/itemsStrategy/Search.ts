@@ -11,6 +11,7 @@ interface IOptions<S, T> {
 }
 
 interface ISortOptions<S, T> {
+   originalBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
    originalParents: Map<T, TreeItem<S>>;
    display: Tree<S, T>;
 }
@@ -36,9 +37,14 @@ export default class Search<S, T> extends mixin<
    protected _options: IOptions<S, T>;
 
    /**
-    * Original parents: item -> original parent
+    * Original parents: item -> its breadcrumbs
     */
-   protected _originalParents: Map<T, TreeItem<S>> = new Map<T, TreeItem<S>>();
+   protected _originalBreadcrumbs: Map<T, BreadcrumbsItem<S>> = new Map<T, BreadcrumbsItem<S>>();
+
+    /**
+     * Original parents: item -> original parent
+     */
+    protected _originalParents: Map<T, TreeItem<S>> = new Map<T, TreeItem<S>>();
 
    constructor(options: IOptions<S, T>) {
       super();
@@ -47,6 +53,7 @@ export default class Search<S, T> extends mixin<
 
    destroy(): void {
       super.destroy();
+      this._originalBreadcrumbs = null;
       this._originalParents = null;
    }
 
@@ -132,6 +139,7 @@ export default class Search<S, T> extends mixin<
     */
    protected _getItems(): T[] {
       return Search.sortItems<S, T>(this.source.items, {
+         originalBreadcrumbs: this._originalBreadcrumbs,
          originalParents: this._originalParents,
          display: this.options.display as Tree<S, T>
       });
@@ -148,6 +156,7 @@ export default class Search<S, T> extends mixin<
     */
    static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): T[] {
       const display = options.display;
+      const originalBreadcrumbs = options.originalBreadcrumbs;
       const originalParents = options.originalParents;
       const dump = {};
 
@@ -181,15 +190,27 @@ export default class Search<S, T> extends mixin<
                   item.getLevel() >= next.getLevel() :
                   true;
                if (isLastBreadcrumb) {
-                  // If there is no next breadcrumb item let's define current breadcrumbs
-                  currentBreadcrumbs = new BreadcrumbsItem<S>({
-                     contents: null,
-                     owner: display as any,
-                     last: item
-                  });
+                   // If there is no next breadcrumb item let's define current breadcrumbs
+
+                  // Try to use previously created instance if possible
+                  if (originalBreadcrumbs.has(item)) {
+                      currentBreadcrumbs = originalBreadcrumbs.get(item);
+                  } else {
+                      currentBreadcrumbs = new BreadcrumbsItem<S>({
+                          contents: null,
+                          owner: display as any,
+                          last: item
+                      });
+                      originalBreadcrumbs.set(item, currentBreadcrumbs);
+                  }
 
                   // Return completed breadcrumbs
                   return currentBreadcrumbs;
+               }
+
+               // If there is previously created instance for this node - forget it
+               if (originalBreadcrumbs.has(item)) {
+                  currentBreadcrumbs = originalBreadcrumbs.delete(item);
                }
 
                // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last node
@@ -223,5 +244,6 @@ export default class Search<S, T> extends mixin<
 Object.assign(Search.prototype, {
    '[Types/_display/itemsStrategy/Search]': true,
    _moduleName: 'Types/display:itemsStrategy.Search',
+   _originalBreadcrumbs: null,
    _originalParents: null
 });
