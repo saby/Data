@@ -142,12 +142,23 @@ function getValueType(value: any): string | IFieldDeclaration {
             }
             return 'datetime';
          } else if (value instanceof Array) {
+            const maxIndex = value.length - 1;
             return {
                type: 'array',
                kind: getValueType(
-                  value.find(
-                     (item) => item !== null && item !== undefined
-                  )
+                  value.find((item, index) => {
+                     if (item === null || item === undefined) {
+                        return false;
+                     } else if (typeof item === 'number') {
+                         // For numbers should seek for any element with type 'real' until the end because it's
+                         // impossible to find out exact type by first element only
+                         const itemType = getValueType(item);
+                         if (itemType === 'integer' && index < maxIndex) {
+                             return false;
+                         }
+                     }
+                     return true;
+                  })
                )
             } as IFieldDeclaration;
          }
