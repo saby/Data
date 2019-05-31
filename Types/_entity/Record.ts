@@ -742,7 +742,7 @@ export default class Record extends mixin<
    // region FormattableMixin
 
    setRawData(rawData: any): void {
-      FormattableMixin.prototype.setRawData.call(this, rawData);
+      super.setRawData(rawData);
       this._nextVersion();
       this._clearFieldsCache();
       this._notifyChange();
@@ -760,9 +760,16 @@ export default class Record extends mixin<
    addField(format: Field | IFieldDeclaration, at?: number, value?: any): void {
       this._checkFormatIsWritable();
       format = this._buildField(format);
-      FormattableMixin.prototype.addField.call(this, format, at);
+
+      super.addField(format, at);
+
+      const name = format.getName();
       if (value !== undefined) {
-         this.set(format.getName(), value);
+         this.set(name, value);
+      } else {
+          this._notifyChange({
+              [name]: format.getDefaultValue()
+          }, false);
       }
       this._childChanged(Record.prototype.addField);
       this._nextVersion();
@@ -770,27 +777,39 @@ export default class Record extends mixin<
 
    removeField(name: string): void {
       this._checkFormatIsWritable();
-      this._nextVersion();
 
       this._fieldsCache.delete(name);
       this._fieldsClone.delete(name);
 
-      FormattableMixin.prototype.removeField.call(this, name);
+      super.removeField(name);
+
+      this._notifyChange({
+          [name]: undefined
+      }, false);
       this._childChanged(Record.prototype.removeField);
+      this._nextVersion();
    }
 
    removeFieldAt(at: number): void {
       this._checkFormatIsWritable();
-      this._nextVersion();
 
       const field = this._getFormat(true).at(at);
+      let name;
       if (field) {
-         this._fieldsCache.delete(field.getName());
-         this._fieldsClone.delete(field.getName());
+         name = field.getName();
+         this._fieldsCache.delete(name);
+         this._fieldsClone.delete(name);
       }
 
-      FormattableMixin.prototype.removeFieldAt.call(this, at);
+      super.removeFieldAt(at);
+
+      if (field) {
+         this._notifyChange({
+            [name]: undefined
+         }, false);
+      }
       this._childChanged(Record.prototype.removeFieldAt);
+      this._nextVersion();
    }
 
    protected _getFormat(build: boolean): format.Format {
