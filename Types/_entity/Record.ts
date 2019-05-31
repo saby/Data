@@ -758,7 +758,7 @@ export default class Record extends mixin<
       } else {
           this._notifyChange({
               [name]: format.getDefaultValue()
-          });
+          }, false);
       }
       this._childChanged(Record.prototype.addField);
       this._nextVersion();
@@ -774,7 +774,7 @@ export default class Record extends mixin<
 
       this._notifyChange({
           [name]: undefined
-      });
+      }, false);
       this._childChanged(Record.prototype.removeField);
       this._nextVersion();
    }
@@ -795,7 +795,7 @@ export default class Record extends mixin<
       if (field) {
          this._notifyChange({
             [name]: undefined
-         });
+         }, false);
       }
       this._childChanged(Record.prototype.removeFieldAt);
       this._nextVersion();
