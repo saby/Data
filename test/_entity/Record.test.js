@@ -1495,6 +1495,32 @@ define([
             assert.deepEqual(record.getRawData(), record2.getRawData());
          });
 
+         it('should trigger onPropertyChange event with default value', function() {
+            var result;
+            var handler = function(event, map) {
+               result = map;
+            };
+
+            record.subscribe('onPropertyChange', handler);
+            record.addField({name: 'foo', type: 'string', defaultValue: 'bar'}, 0);
+            record.unsubscribe('onPropertyChange', handler);
+
+            assert.equal(result.foo, 'bar');
+         });
+
+         it('should trigger onPropertyChange event with argument value', function() {
+            var result;
+            var handler = function(event, map) {
+               result = map;
+            };
+
+            record.subscribe('onPropertyChange', handler);
+            record.addField({name: 'foo', type: 'string', defaultValue: 'bar'}, 0, 'baz');
+            record.unsubscribe('onPropertyChange', handler);
+
+            assert.equal(result.foo, 'baz');
+         });
+
          it('should change owner\'s raw data', function() {
             var parent = new Record();
             var child = new Record();
@@ -1562,6 +1588,23 @@ define([
             assert.strictEqual(record.get('foo'), value);
             record.removeField('foo');
             assert.isUndefined(record.get('foo'));
+         });
+
+         it('should trigger onPropertyChange event', function() {
+            var record = new Record({
+               rawData: {foo: 'bar'}
+            });
+            var result;
+            var handler = function(event, map) {
+               result = map;
+            };
+
+            record.subscribe('onPropertyChange', handler);
+            record.removeField('foo');
+            record.unsubscribe('onPropertyChange', handler);
+
+            assert.isTrue(result.hasOwnProperty('foo'));
+            assert.isUndefined(result.foo);
          });
 
          it('should change owner\'s raw data', function() {
@@ -1644,6 +1687,27 @@ define([
             assert.strictEqual(record.get('foo'), value);
             record.removeFieldAt(0);
             assert.isUndefined(record.get('foo'));
+         });
+
+         it('should trigger onPropertyChange event', function() {
+            var record = new Record({
+               format: {
+                  foo: 'string'
+               },
+               adapter: 'Types/entity:adapter.Sbis'
+            });
+            record.set('foo', 'bar');
+            var result;
+            var handler = function(event, map) {
+               result = map;
+            };
+
+            record.subscribe('onPropertyChange', handler);
+            record.removeFieldAt(0);
+            record.unsubscribe('onPropertyChange', handler);
+
+            assert.isTrue(result.hasOwnProperty('foo'));
+            assert.isUndefined(result.foo);
          });
 
          it('should change owner\'s raw data', function() {
