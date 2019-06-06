@@ -13,7 +13,7 @@ import {
 import {mixin} from '../util';
 import {IHashMap} from '../_declarations';
 
-declare type DictionaryValues<T> = T[] | IHashMap<T>;
+type DictionaryValues<T> = T[] | IHashMap<T>;
 
 /**
  * An abstract enity which have the dictionary as collection of keys and values.
