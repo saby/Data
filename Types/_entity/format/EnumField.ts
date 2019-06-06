@@ -2,7 +2,7 @@ import DictionaryField from './DictionaryField';
 
 /**
  * Формат перечисляемого поля.
- *
+ * @remark
  * Создадим поле c типом "Перечисляемое":
  * <pre>
  *    var field = {

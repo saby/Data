@@ -2,7 +2,6 @@ import Field from './Field';
 
 /**
  * Формат поля иерархии
- *
  * @class Types/_entity/format/HierarchyField
  * @extends Types/_entity/format/Field
  * @author Мальцев А.А.

@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля файл-RPC.
- *
+ * @remark
  * Создадим поле c типом "Файл-RPC":
  * <pre>
  *    var field = {
