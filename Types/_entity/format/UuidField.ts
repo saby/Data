@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля UUID.
- *
+ * @remark
  * Создадим поле c типом "UUID":
  * <pre>
  *    var field = {

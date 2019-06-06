@@ -3,7 +3,7 @@ import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 /**
  * Формат поля для времени.
- *
+ * @remark
  * Создадим поле c типом "Время":
  * <pre>
  *    var field = {

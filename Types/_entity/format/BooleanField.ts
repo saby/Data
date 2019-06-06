@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат логического поля.
- *
+ * @remark
  * Создадим поле логического типа:
  * <pre>
  *    var field = {

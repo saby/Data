@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля для JSON-объекта.
- *
+ * @remark
  * Создадим поле c типом "JSON-объект":
  * <pre>
  *    var field = {
