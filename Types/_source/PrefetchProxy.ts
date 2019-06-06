@@ -33,7 +33,7 @@ interface IPrefetchProxySerializableState extends ISerializableState {
    _done: IDone;
 }
 
-declare type ITarget = ICrud | ICrudPlus;
+type ITarget = ICrud | ICrudPlus;
 
 interface IValidators {
    read?: (data: Record, done?: IDone) => boolean;

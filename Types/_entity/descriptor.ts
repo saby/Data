@@ -1,4 +1,4 @@
-declare type Descriptor = string | Function;
+type Descriptor = string | Function;
 
 type ValidateFunc = (value: any) => any;
 

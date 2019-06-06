@@ -23,7 +23,7 @@ import {IExtendDateConstructor} from '../_declarations';
 // @ts-ignore
 import renders = require('Core/defaultRenders');
 
-declare type ValueType = string | Function | IProducible;
+type ValueType = string | Function | IProducible;
 
 /**
  * Выделяет временную зону в строковом представлении Date
