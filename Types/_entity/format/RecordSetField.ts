@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля для рекордсета.
- *
+ * @remark
  * Создадим поле c типом "Рекордсет":
  * <pre>
  *    var field = {

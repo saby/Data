@@ -2,7 +2,7 @@ import DictionaryField from './DictionaryField';
 
 /**
  * Формат поля флагов.
- *
+ * @remark
  * Создадим поле c типом "Флаги":
  * <pre>
  *    var field = {

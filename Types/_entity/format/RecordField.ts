@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля для записи.
- *
+ * @remark
  * Создадим поле c типом "Запись":
  * <pre>
  *    var field = {

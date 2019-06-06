@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат двоичного поля.
- *
+ * @remark
  * Создадим поле двоичного типа:
  * <pre>
  *    var field = {

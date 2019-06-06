@@ -23,42 +23,6 @@ import Field from './Field';
 import {isRegistered, resolve} from '../../di';
 import {logger} from '../../util';
 
-/**
- * @typedef {String} FieldType
- * @variant boolean Logical
- * @variant integer Integer number
- * @variant real Real number
- * @variant money Money
- * @variant string String
- * @variant xml String in XML format
- * @variant datetime Date and time
- * @variant date Date
- * @variant time Time
- * @variant timeinterval Time interval
- * @variant identity Database identity
- * @variant enum Enum
- * @variant flags Flags
- * @variant record Record
- * @variant model Model
- * @variant recordset RecordSet
- * @variant binary Binary data
- * @variant uuid UUID
- * @variant rpcfile RPC file
- * @variant object JSON object
- * @variant array Array
- */
-
-/**
- * @typedef {Object} FieldDeclaration
- * @property {String} name Field name
- * @property {FieldType|Function|String} type Field type (type name or type constructor)
- * @property {*} defaultValue Default value
- * @property {Boolean} nullable Value can be null
- * @property {*} [*] Any constructor options of desired type (Types/_entity/format/*Field) are available. For instance,
- * option "precision" for type @{link Types/_entity/format/MoneyField money}:
- * {name: 'amount', type: 'money', precision: 4}
- */
-
 export interface IDeclaration {
    name: string;
    type: string | Function;
@@ -67,10 +31,55 @@ export interface IDeclaration {
 
 /**
  * Creates field format by its declarative definition.
+ * @remark
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *     <li><b>declaration</b> Declarative definition</li>
+ * </ul>
+ * <h2>Возвращает</h2>
+ * {@link Types/_entity/format/Field} Field format.
+ * @class Types/_entity/format/fieldsFactory
  * @param declaration Declarative definition
+ * @public
  * @author Мальцев А.А.
  */
 export default function(declaration: IDeclaration): Field {
+    /**
+     * @typedef {String} FieldType
+     * @variant boolean Logical
+     * @variant integer Integer number
+     * @variant real Real number
+     * @variant money Money
+     * @variant string String
+     * @variant xml String in XML format
+     * @variant datetime Date and time
+     * @variant date Date
+     * @variant time Time
+     * @variant timeinterval Time interval
+     * @variant identity Database identity
+     * @variant enum Enum
+     * @variant flags Flags
+     * @variant record Record
+     * @variant model Model
+     * @variant recordset RecordSet
+     * @variant binary Binary data
+     * @variant uuid UUID
+     * @variant rpcfile RPC file
+     * @variant object JSON object
+     * @variant array Array
+     */
+
+    /**
+     * @typedef {Object} FieldDeclaration
+     * @property {String} name Field name
+     * @property {FieldType|Function|String} type Field type (type name or type constructor)
+     * @property {*} defaultValue Default value
+     * @property {Boolean} nullable Value can be null
+     * @property {*} [*] Any constructor options of desired type (Types/_entity/format/*Field) are available.
+     * For instance, option "precision" for type @{link Types/_entity/format/MoneyField money}:
+     * {name: 'amount', type: 'money', precision: 4}
+     */
+
    if (Object.getPrototypeOf(declaration) !== Object.prototype) {
       throw new TypeError('Types/_entity/format/fieldsFactory: declaration should be an instance of Object');
    }

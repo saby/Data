@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля для строки в формате XML.
- *
+ * @remark
  * Создадим поле c типом "XML":
  * <pre>
  *    var field = {

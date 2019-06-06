@@ -2,7 +2,7 @@ import RealField from './RealField';
 
 /**
  * Формат денежного поля.
- *
+ * @remark
  * Создадим поле c типом "Деньги":
  * <pre>
  *    var field = {

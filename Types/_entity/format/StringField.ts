@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля для строк.
- *
+ * @remark
  * Создадим поле c типом "Строка":
  * <pre>
  *    var field = {

@@ -3,7 +3,7 @@ import {dateToSql, TO_SQL_MODE} from '../../formatter';
 
 /**
  * Формат поля для даты.
- *
+ * @remark
  * Создадим поле c типом "Дата":
  * <pre>
  *    var field = {

@@ -2,7 +2,7 @@ import Field from './Field';
 
 /**
  * Формат поля "Связь".
- *
+ * @remark
  * Создадим поле c типом "Связь":
  * <pre>
  *    var field = {
