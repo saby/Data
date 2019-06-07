@@ -3,7 +3,7 @@ import {create, register} from '../di';
 import {mixin} from '../util';
 import {RecordSet} from '../collection';
 
-declare type TypeDeclaration = Function | string;
+type TypeDeclaration = Function | string;
 
 export interface IOptions {
    rawData: any;

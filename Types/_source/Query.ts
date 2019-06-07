@@ -1,8 +1,8 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {IHashMap} from '../_declarations';
 
-declare type Where = IHashMap<string> | ((item: any, index: number) => boolean);
-declare type Expression = IHashMap<string> | string[] | string;
+type Where = IHashMap<string> | ((item: any, index: number) => boolean);
+type Expression = IHashMap<string> | string[] | string;
 
 export enum ExpandMode {
    None,

@@ -6,11 +6,14 @@
  */
 
 import dateFormatter from './date';
+import {IHashMap} from '../_declarations';
 
-const MODE = {
-   TIME: 'time',
-   DATE: 'date',
-   DATETIME: 'datetime'
+type SerializationMode = 'time' | 'date' | 'datetime';
+
+const MODE: IHashMap<SerializationMode> = {
+    TIME: 'time',
+    DATE: 'date',
+    DATETIME: 'datetime'
 };
 
 const FORMAT = {
@@ -69,7 +72,7 @@ function getTimeZone(date: Date): string {
  * @public
  * @author Мальцев А.А.
  */
-export default function toSQL(date: Date, mode: string = MODE.DATETIME): string {
+export default function toSQL(date: Date, mode: SerializationMode = MODE.DATETIME): string {
    let result = dateFormatter(date, FORMAT[mode]);
 
    if (mode !== MODE.DATE && date > UNIX_EPOCH_START) {

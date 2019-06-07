@@ -1,4 +1,4 @@
-import { constants } from 'Env/Env';
+import {constants} from 'Env/Env';
 
 /**
  * Формат даты, используемый в SQL
@@ -8,7 +8,7 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
 /**
  * Создает дату из строки даты в формате SQL. Если строка содержит информацию о времени, то оно будет приведено к
  * местному.
- * @class
+ * @function
  * @name Types/_formatter/dateFromSql
  * @param dateTime Дата и/или время в формате SQL
  * @param defaultTimeZone Использовать указанная временную зону (смещение относительно часового пояса UTC в
