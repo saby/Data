@@ -24,7 +24,7 @@ import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
 import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
 import {register, create} from '../di';
-import {protect, mixin, logger, deprecateExtend} from '../util';
+import {protect, mixin, deprecateExtend} from '../util';
 import {Map} from '../shim';
 import {ExtendDate, IExtendDateConstructor} from '../_declarations';
 
