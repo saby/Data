@@ -1,6 +1,6 @@
 /**
  * Returns wrapper for protected property
- * @param {String} property Property name
+ * @param property Property name
  * @public
  * @author Мальцев А.А.
  */

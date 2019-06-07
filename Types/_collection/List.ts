@@ -20,7 +20,7 @@ import {
    VersionableMixin
 } from '../entity';
 import {register} from '../di';
-import {logger, mixin, object} from '../util';
+import {deprecateExtend, mixin, object} from '../util';
 
 export interface IOptions<T> {
    items?: T[];
@@ -480,16 +480,12 @@ export default class List<T> extends mixin<
     * @deprecated
     */
    static extend(mixinsList: any, classExtender: any): Function {
-      logger.info('Types/_collection/List', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-
-      if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError(
-            'You should require module "Core/core-extend" to use old-fashioned "Types/_collection/List::extend()" ' +
-            'method.'
-         );
-      }
-      const coreExtend = require('Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
+      return deprecateExtend(
+          this,
+          classExtender,
+          mixinsList,
+          'Types/_collection/List'
+      );
    }
 
    // endregion
