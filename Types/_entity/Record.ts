@@ -24,7 +24,7 @@ import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
 import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
 import {register, create} from '../di';
-import {protect, mixin, logger} from '../util';
+import {protect, mixin, logger, deprecateExtend} from '../util';
 import {Map} from '../shim';
 import {ExtendDate, IExtendDateConstructor} from '../_declarations';
 
@@ -1391,15 +1391,12 @@ export default class Record extends mixin<
     * @deprecated
     */
    static extend(mixinsList: any, classExtender: any): Function {
-      logger.info('Types/_entity/Record', 'Method extend is deprecated, use ES6 extends or Core/core-extend');
-
-      if (!require.defined('Core/core-extend')) {
-         throw new ReferenceError(
-            'You should require module "Core/core-extend" to use old-fashioned "Types/_entity/Record::extend()" method.'
-         );
-      }
-      const coreExtend = require('Core/core-extend');
-      return coreExtend(this, mixinsList, classExtender);
+       return deprecateExtend(
+           this,
+           classExtender,
+           mixinsList,
+           'Types/_entity/Record'
+       );
    }
 
    // endregion
