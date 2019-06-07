@@ -13,7 +13,7 @@ export default function deprecateExtend(
     skipFor?: string[]
 ): Function {
     let isTrusted = false;
-    if (skipFor && subClass._moduleName) {
+    if (skipFor && subClass && subClass._moduleName) {
         isTrusted = skipFor.indexOf(subClass._moduleName) > -1;
     }
     if (!isTrusted) {
