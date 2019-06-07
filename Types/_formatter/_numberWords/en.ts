@@ -56,7 +56,7 @@ const THOUSANDS = {
 
 const negword = 'minus';
 
-declare interface IWordConcatnumberUS {
+interface IWordConcatnumberUS {
    value: number;
    title: string;
 }

@@ -69,14 +69,20 @@ const charMap = {
 };
 
 /**
- * @function
- * @name cyrTranslit
- * @memberof Types/_formatter
- * @description
  * Выполняет транслитерацию строки. Заменяет пробелы на _, вырезает мягкий и твердый знаки.
- * @param string Исходная строка для преобразования.
+ * @remark
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *     <li><b>str</b> {String} Исходная строка для преобразования.</li>
+ * </ul>
+ * <h2>Возвращает</h2>
+ * {String} Транслитерированная строка.
+ * @class
+ * @name Types/_formatter/cyrTranslit
+ * @public
+ * @author Мальцев А.А.
  */
-export default function cyrTranslit(str: String): String {
+export default function cyrTranslit(str: string): string {
    const result = [];
    for (let i = 0, l = str.length; i < l; i++) {
       const char = str[i];

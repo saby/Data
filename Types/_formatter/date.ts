@@ -2,7 +2,7 @@ import toRoman from './numberRoman';
 // @ts-ignore
 import locales = require('Core/helpers/i18n/locales');
 
-declare interface IDateFormatOptions {
+interface IDateFormatOptions {
    lead: number;
    lower: boolean;
 }
@@ -392,11 +392,8 @@ addToken('QQQQr', getQuarterRomanLong);
  *    });
  * </pre>
  *
- * @function
+ * @class
  * @name Types/_formatter/date
- * @param date Date to format
- * @param format Format string
- * @return Date as string
  * @public
  * @author Мальцев А.А.
  */
