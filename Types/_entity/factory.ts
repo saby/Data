@@ -323,10 +323,13 @@ const factory = {
                if (!(value instanceof Array)) {
                   value = [value];
                }
+               //array of strings should consist in string elements only
+               const arrayCastOptions = Object.assign({stickString: true}, options);
                return value.map((val) => {
-                  return this.cast(val, kind, options);
+                  return this.cast(val, kind, arrayCastOptions);
                }, this);
-
+            case 'string':
+               return options.stickString && value !== null ? value.toString() : value;
             default:
                return value;
          }
@@ -450,9 +453,11 @@ const factory = {
                value = [value];
             }
             return value.map((val) => {
-               return this.serialize(val, {format: kind});
+               //array of strings should consist in string elements only
+               return this.serialize(val, {format: kind, stickString: true});
             }, this);
-
+         case 'string':
+            return options.stickString && value !== null ? value.toString() : value;
          default:
             return value;
       }

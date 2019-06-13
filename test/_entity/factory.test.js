@@ -257,6 +257,19 @@ define([
                   [1, 2, 3]
                );
             });
+            it('should return an Array of string from UniversalField with mixed elements', function() {
+               var format = getUniversalFormatMock('array'),
+                  array = [null, '1', 2, 3];
+
+               format.meta = {
+                  kind: 'string'
+               };
+
+               assert.deepEqual(
+                  Factory.cast(array, format.type, {format: format}),
+                  [null, '1', '2', '3']
+               );
+            });
 
             it('should return an Array from scalar', function() {
                var format = getFormatMock('array');
@@ -914,6 +927,17 @@ define([
                var format = getFormatMock('array');
                assert.isNull(Factory.serialize(null, {format: format}));
                assert.isUndefined(Factory.serialize(undefined, {format: format}));
+            });
+
+            it('should return an array of strings from array of mixed elemets ', function() {
+               var format = new type.format.ArrayField({
+                  kind: 'string'
+               });
+
+               assert.deepEqual(
+                  Factory.serialize([null, '1', 2, 3], {format: format}),
+                  [null, '1', '2', '3']
+               );
             });
          });
 
