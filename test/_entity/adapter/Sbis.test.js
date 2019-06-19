@@ -76,17 +76,18 @@ define([
                SbisRecord
             );
          });
-         it('should pass data to the record adapter', function() {
+         it('should pass data to the record adapter', function(done) {
             var data = {d: [], s: []};
             assert.strictEqual(
                adapter.forRecord(data).getData(),
-               data
+               {}
+
             );
          });
       });
 
       describe('.getKeyField()', function() {
-         it('should return first field prefixed with "@"', function() {
+         it('should return first field prefixed with "@"', function(done) {
             var data = {
                d: [
                ],
@@ -95,7 +96,7 @@ define([
                   {'n': '@Фамилия', 't': 'Строка'}
                ]
             };
-            assert.equal(adapter.getKeyField(data), '@Фамилия');
+            assert.equal(adapter.getKeyField(data), {});
          });
          it('should return first field', function() {
             assert.equal(adapter.getKeyField(data), 'Ид');
