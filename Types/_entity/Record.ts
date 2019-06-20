@@ -142,12 +142,13 @@ function getValueType(value: any): string | IFieldDeclaration {
             }
             return 'datetime';
          } else if (value instanceof Array) {
-            const maxIndex = value.length - 1;
+            const filteredValue = value.filter((item) => item === null ? false : true);
+            const maxIndex = filteredValue.length - 1;
             return {
                type: 'array',
                kind: getValueType(
-                  value.find((item, index) => {
-                     if (item === null || item === undefined) {
+                  filteredValue.find((item, index) => {
+                     if (item === undefined) {
                         return false;
                      } else if (typeof item === 'number') {
                          // For numbers should seek for any element with type 'real' until the end because it's
@@ -1223,7 +1224,7 @@ export default class Record extends mixin<
     * @param [value] Значение поля
     * @protected
     */
-   protected _getHashMap(name: string | object, value?: any): object {
+   protected _getHashMap(name: string | object, value?: any): string | object {
       let map = name;
       if (!(map instanceof Object)) {
          map = {};
