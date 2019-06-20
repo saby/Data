@@ -2230,8 +2230,22 @@ define([
             assert.equal(field.getKind(), 'string');
          });
 
+         it('should create Array field with kind of String when it consist from null only', function() {
+            var record = Record.fromObject({foo: [null]}),
+               field = record.getFormat().at(0);
+            assert.equal(field.getType(), 'array');
+            assert.equal(field.getKind(), 'string');
+         });
+
          it('should create Array field with kind of Integer', function() {
             var record = Record.fromObject({foo: [1, 2]}),
+               field = record.getFormat().at(0);
+            assert.equal(field.getType(), 'array');
+            assert.equal(field.getKind(), 'integer');
+         });
+
+         it('should create Array field with kind of Integer when one item is null', function() {
+            var record = Record.fromObject({foo: [1, null]}),
                field = record.getFormat().at(0);
             assert.equal(field.getType(), 'array');
             assert.equal(field.getKind(), 'integer');
@@ -2243,6 +2257,8 @@ define([
             assert.equal(field.getType(), 'array');
             assert.equal(field.getKind(), 'real');
          });
+
+
 
          it('should create Array field with kind of Boolean', function() {
             var record = Record.fromObject({foo: [true, 'false']}),
