@@ -1,0 +1,69 @@
+{
+   "cache": "./builder-ui/builder-json-cache",
+   "output": "./application",
+   "logs": "./builder-ui/logs",
+   "typescript": true,
+   "contents": true,
+   "joinedMeta": true,
+   "less": true,
+   "modules": [
+      {
+         "name": "WS.Core",
+         "path": "./node_modules/sbis3-ws/WS.Core",
+         "required": true
+      },
+      {
+         "name": "Types",
+         "path": "./Types",
+         "required": true
+      },
+      {
+         "name": "I18n",
+         "path": "./node_modules/saby-i18n/I18n",
+         "required": true
+      },
+      {
+         "name": "File",
+         "path": "./node_modules/rmi/src/client/File"
+      },
+      {
+         "name": "Env",
+         "path": "./node_modules/rmi/src/client/Env",
+         "required": true
+      },
+      {
+         "name": "Browser",
+         "path": "./node_modules/rmi/src/client/Browser",
+         "required": true
+      },
+      {
+         "name": "SbisEnv",
+         "path": "./node_modules/rmi/src/client/SbisEnv",
+         "required": true
+      },
+      {
+         "name": "Vdom",
+         "path": "./node_modules/sbis3-ws/Vdom",
+         "required": true
+      },
+      {
+         "name": "View",
+         "path": "./node_modules/sbis3-ws/View",
+         "required": true
+      },
+      {
+         "name": "Application",
+         "path": "./node_modules/wasaby-app/src/Application",
+         "required": true
+      },
+      {
+         "name": "Inferno",
+         "path": "./node_modules/sbis3-ws/Inferno",
+         "required": true
+      },
+      {
+         "name": "test",
+         "path": "./test"
+      }
+   ]
+}

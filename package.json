@@ -14,28 +14,20 @@
       "build": "npm run build:typescript && npm run build:units && npm run build:compile",
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json  --tslint=Types/tslint.json",
       "build:units": "saby-units --install",
-      "build:compile": "tsc -b --verbose",
+      "build:compile": "npm run builder",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:node": "saby-units --isolated --report",
       "test:node-coverage": "saby-units --isolated --report --coverage",
       "test:browser": "saby-units --browser --report",
       "test:browser-coverage": "saby-units --browser --report --coverage",
-      "tslint": "tslint -q -p Types/tslint.json"
+      "tslint": "tslint -q -p Types/tslint.json",
+      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../builderConfig.json --log-level=warning -LLLL"
    },
    "saby-units": {
       "moduleType": "amd",
       "tests": "test",
-      "links": {
-         "node_modules/wasaby-app/src/Application": "Application",
-         "node_modules/rmi/src/client/Browser": "Browser",
-         "node_modules/rmi/src/client/Env": "Env",
-         "node_modules/rmi/src/client/SbisEnv": "SbisEnv",
-         "node_modules/sbis3-ws/WS.Core": "WS.Core",
-         "node_modules/sbis3-ws/Inferno": "Inferno",
-         "node_modules/sbis3-ws/View": "View",
-         "node_modules/saby-i18n/I18n": "I18n"
-      },
+      "root": "application",
       "initializer": "init-testing.js",
       "url": {
          "port": 1025
@@ -59,6 +51,7 @@
       "saby-units": "git+https://github.com/saby/Units.git#rc-19.410",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.410",
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.410",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.410"
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.410",
+      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.410"
    }
 }
