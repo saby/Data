@@ -34,7 +34,7 @@ export interface IDeclaration {
  * @remark
  * <h2>Параметры функции</h2>
  * <ul>
- *     <li><b>declaration</b> Declarative definition</li>
+ *     <li><b>declaration</b> {@link FieldDeclaration Declarative definition}</li>
  * </ul>
  * <h2>Возвращает</h2>
  * {@link Types/_entity/format/Field} Field format.
