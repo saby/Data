@@ -5,7 +5,7 @@ import {register} from '../../di';
 
 /**
  * Формат полей: список полей записи.
- * @class Types/_entity/format/Format
+ * @class Types/_collection/format/Format
  * @extends Types/_collection/List
  * @public
  * @author Мальцев А.А.
