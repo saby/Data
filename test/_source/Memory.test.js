@@ -101,7 +101,7 @@ define([
 
          source = new MemorySource({
             data: data,
-            idProperty: 'Id'
+            keyProperty: 'Id'
          });
       });
 
@@ -336,7 +336,7 @@ define([
                var
                   source = new MemorySource({
                      data: data,
-                     idProperty: 'Id'
+                     keyProperty: 'Id'
                   }),
                   rs = new RecordSet({
                      rawData: [{
@@ -1381,7 +1381,7 @@ define([
             source = new MemorySource({
                data: recordset,
                adapter: 'Types/entity:adapter.RecordSet',
-               idProperty: 'Id'
+               keyProperty: 'Id'
             });
          });
 
@@ -1452,7 +1452,7 @@ define([
          describe('.update()', function() {
             it('should update data if it\'s null by default', function(done) {
                var source = new MemorySource({
-                     idProperty: 'foo'
+                     keyProperty: 'foo'
                   }),
                   model = new Model({
                      rawData: {foo: 'bar'}
@@ -1545,7 +1545,7 @@ define([
                it('should nod clone row when it have key 0', function() {
                   var source = new MemorySource({
                         data: [{'id': 0, 'name': 'name'}],
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      }),
                      model = new Model({
                         rawData: {id: 0, 'name': '11'},
@@ -1691,7 +1691,7 @@ define([
                   source = new MemorySource({
                      data: recordset,
                      adapter: 'Types/entity:adapter.RecordSet',
-                     idProperty: 'Id'
+                     keyProperty: 'Id'
                   }),
                   record;
 

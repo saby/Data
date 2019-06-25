@@ -121,25 +121,25 @@ define([
          });
       });
 
-      describe('.getIdProperty()', function() {
-         it('should return the idProperty', function() {
+      describe('.getKeyProperty()', function() {
+         it('should return the key property', function() {
             var ds = new DataSet({
-               idProperty: '123'
+               keyProperty: '123'
             });
-            assert.strictEqual(ds.getIdProperty(), '123');
+            assert.strictEqual(ds.getKeyProperty(), '123');
          });
 
          it('should return an empty string', function() {
             var ds = new DataSet();
-            assert.strictEqual(ds.getIdProperty(), '');
+            assert.strictEqual(ds.getKeyProperty(), '');
          });
       });
 
-      describe('.setIdProperty()', function() {
-         it('should set the idProperty', function() {
+      describe('.setKeyProperty()', function() {
+         it('should set the key property', function() {
             var ds = new DataSet();
-            ds.setIdProperty('987');
-            assert.strictEqual(ds.getIdProperty(), '987');
+            ds.setKeyProperty('987');
+            assert.strictEqual(ds.getKeyProperty(), '987');
          });
       });
 
@@ -152,7 +152,7 @@ define([
          it('should return pass idProperty to the model', function() {
             var ds = new DataSet({
                rawData: [{}],
-               idProperty: 'myprop'
+               keyProperty: 'myprop'
             });
             assert.strictEqual(ds.getAll().at(0).getIdProperty(), 'myprop');
          });
@@ -277,7 +277,7 @@ define([
          it('should set id property to model', function() {
             var ds = new DataSet({
                rawData: list,
-               idProperty: 'Фамилия'
+               keyProperty: 'Фамилия'
             });
             assert.equal(ds.getRow()._$idProperty, 'Фамилия');
          });

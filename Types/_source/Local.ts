@@ -99,7 +99,7 @@ export default abstract class Local extends mixin<
     *          filter: function(item) {
     *             return item.get('name') !== 'Earth';
     *          },
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
     *
     *       solarSystem.query().addCallback(function(result) {
@@ -133,7 +133,7 @@ export default abstract class Local extends mixin<
     *                return String(value).indexOf(needed) === 0;
     *             });
     *          },
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
     *
     *       var query = new source.Query();
@@ -188,11 +188,11 @@ export default abstract class Local extends mixin<
 
    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
       const updateRecord = (record) => {
-         const idProperty = this.getIdProperty();
-         let key = idProperty ? record.get(idProperty) : undefined;
+         const keyProperty = this.getKeyProperty();
+         let key = keyProperty ? record.get(keyProperty) : undefined;
          if (key === undefined) {
             key = randomId('k');
-            record.set(idProperty, key);
+            record.set(keyProperty, key);
          }
 
          const adapter = this._getTableAdapter();
@@ -290,7 +290,7 @@ export default abstract class Local extends mixin<
          this._getTableAdapter().merge(
             indexOne,
             indexTwo,
-            this.getIdProperty()
+            this.getKeyProperty()
          );
          this._reIndex();
          return Deferred.success(true);
@@ -413,7 +413,7 @@ export default abstract class Local extends mixin<
       this._index = {};
       const adapter = this.getAdapter();
       this._each(this.data, (item, index) => {
-         const key = adapter.forRecord(item).get(this._$idProperty);
+         const key = adapter.forRecord(item).get(this._$keyProperty);
          this._index[key] = index;
       });
    }
@@ -612,12 +612,12 @@ export default abstract class Local extends mixin<
       }
 
       const tableAdapter = this._getTableAdapter();
-      const targetsId = target.get(this._$idProperty);
+      const targetsId = target.get(this._$keyProperty);
       items.forEach((item) => {
          if (meta.parentProperty) {
             item.set(meta.parentProperty, parentValue);
          }
-         const index = this._getIndexByKey(item.get(this._$idProperty));
+         const index = this._getIndexByKey(item.get(this._$keyProperty));
          let targetIndex = this._getIndexByKey(targetsId);
          if (meta.position === MOVE_POSITION.before && targetIndex > index) {
             targetIndex--;
@@ -635,7 +635,7 @@ export default abstract class Local extends mixin<
       if (!meta.parentProperty) {
          return Deferred.fail('Parent property is not defined');
       }
-      const parentValue = target ? target.get(this._$idProperty) : null;
+      const parentValue = target ? target.get(this._$keyProperty) : null;
       items.forEach((item) => {
          item.set(meta.parentProperty, parentValue);
       });

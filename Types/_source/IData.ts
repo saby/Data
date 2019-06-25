@@ -65,20 +65,20 @@ export default interface IData {
    /**
     * Возвращает название свойства записи, содержащего первичный ключ
     * @return {String}
-    * @see idProperty
+    * @see keyProperty
     * @see Types/_entity/Model#idProperty
     * @example
     * Получим название свойства записи, содержащего первичный ключ:
     * <pre>
     *    require(['Types/source'], function(source) {
     *       var dataSource = new source.Memory({
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
-    *       console.log(dataSource.getIdProperty());//'id'
+    *       console.log(dataSource.getKeyProperty());//'id'
     *    });
     * </pre>
     */
-   getIdProperty(): string;
+   getKeyProperty(): string;
 
-   setIdProperty(name: string): void;
+   setKeyProperty(name: string): void;
 }

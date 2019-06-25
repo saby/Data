@@ -55,7 +55,7 @@ define([
       beforeEach(function() {
          source = new LocalSession({
             prefix: 'mdl_solarsystem',
-            idProperty: 'id',
+            keyProperty: 'id',
             data: mock
          });
       });
@@ -488,7 +488,7 @@ define([
          it.skip('should keep functions in data', function(done) {
             var data = dataSample.arrayWithFunctions;
             var source1 = new LocalSession({
-               idProperty: 'id',
+               keyProperty: 'id',
                prefix: 'mdl_solarsystem_1_1',
                data: data
             });
@@ -511,7 +511,7 @@ define([
                   a: new Model()
                }],
                source2 = new LocalSession({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   prefix: 'mdl_solarsystem_2',
                   data: data
                });
@@ -576,7 +576,7 @@ define([
             beforeEach(function() {
 
                source5 = new LocalSession({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   prefix: 'mdl_solarsystem_5',
                   data: [
                      {first: 'a', second: 'a', third: 'a'},
@@ -1096,7 +1096,7 @@ define([
             source6 = new LocalSession({
                prefix: 'mdl_solarsystem_6',
                adapter: 'Types/entity:adapter.RecordSet',
-               idProperty: 'id',
+               keyProperty: 'id',
                data: recordset
             });
          });
@@ -1244,7 +1244,7 @@ define([
                   var source7 = new LocalSession({
                         prefix: 'mdl_solarsystem_7',
                         data: [{'id': 0, 'name': 'name'}],
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      }),
                      model = new Model({
                         rawData: {id: 0, 'name': '11'},

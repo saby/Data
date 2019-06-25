@@ -162,9 +162,9 @@ function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
  * Builds RecordSet from array of plain objects
  * @param data RecordSet data as JSON
  * @param adapter
- * @param idProperty
+ * @param keyProperty
  */
-function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string): RecordSet | null {
+function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: string): RecordSet | null {
    if (data === null) {
       return data;
    }
@@ -175,7 +175,7 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, idProperty: string
    const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
    const records = new RecordSetType({
       adapter,
-      idProperty
+      idProperty: keyProperty
    });
    const count = data.length || 0;
 
@@ -465,7 +465,7 @@ function passQuery(query: Query): object {
 
    return {
       Фильтр: buildRecord(filter, this._$adapter),
-      Сортировка: buildRecordSet(sort, this._$adapter, this.getIdProperty()),
+      Сортировка: buildRecordSet(sort, this._$adapter, this.getKeyProperty()),
       Навигация: buildRecord(nav, this._$adapter),
       ДопПоля: add
    };
@@ -575,7 +575,7 @@ function oldMove(
  *          query: 'GetList',
  *          format: 'getListFormat'
  *       },
- *       idProperty: '@Employee'
+ *       keyProperty: '@Employee'
  *    });
  * </pre>
  * <b>Пример 4</b>. Создадим новую статью:
@@ -583,7 +583,7 @@ function oldMove(
  *    import {SbisService} from 'Types/source';
  *    const dataSource = new SbisService({
  *       endpoint: 'Article',
- *       idProperty: 'Id'
+ *       keyProperty: 'Id'
  *    });
  *
  *    dataSource.create().addCallbacks((article) => {
@@ -597,7 +597,7 @@ function oldMove(
  *    import {SbisService} from 'Types/source';
  *    const dataSource = new SbisService({
  *       endpoint: 'Article',
- *       idProperty: 'Id'
+ *       keyProperty: 'Id'
  *    });
  *
  *    dataSource.read('article-1').addCallbacks((article) => {
@@ -612,7 +612,7 @@ function oldMove(
  *    import {Model, adapter} from 'Types/entity';
  *    const dataSource = new SbisService({
  *       endpoint: 'Article',
- *       idProperty: 'Id'
+ *       keyProperty: 'Id'
  *    });
  *    const article = new Model({
  *       adapter: new adapter.Sbis(),
@@ -620,7 +620,7 @@ function oldMove(
  *          {name: 'id', type: 'integer'},
  *          {name: 'title', type: 'string'}
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  *
  *    article.set({
@@ -639,7 +639,7 @@ function oldMove(
  *    import {SbisService} from 'Types/source';
  *    const dataSource = new SbisService({
  *       endpoint: 'Article',
- *       idProperty: 'Id'
+ *       keyProperty: 'Id'
  *    });
  *
  *    dataSource.destroy('article-1').addCallbacks(() => {
@@ -836,7 +836,7 @@ export default class SbisService extends Rpc {
     *    import {SbisService} from 'Types/source';
     *    const dataSource = new SbisService({
     *       endpoint: 'Employee',
-    *       idProperty: '@Employee'
+    *       keyProperty: '@Employee'
     *    });
     *    dataSource.create().addCallbacks((employee) => {
     *       console.log(employee.get('FirstName'));
@@ -849,7 +849,7 @@ export default class SbisService extends Rpc {
     *    import {SbisService} from 'Types/source';
     *    const dataSource = new SbisService({
     *       endpoint: 'Employee',
-    *       idProperty: '@Employee',
+    *       keyProperty: '@Employee',
     *       binding: {
     *          format: 'getListFormat'
     *       }

@@ -42,7 +42,7 @@ interface ISerializableState extends IDefaultSerializableState {
  *             {id: 20, parent: 2, name: 'Apple iPhone'},
  *             {id: 21, parent: 2, name: 'Samsung Galaxy'}
  *          ],
- *          idProperty: 'id',
+ *          keyProperty: 'id',
  *          parentProperty: 'parent'
  *       });
  *
@@ -103,8 +103,8 @@ export default class HierarchicalMemory extends mixin<
     */
 
    /**
-    * @cfg {String} See {@link Types/_source/Memory#idProperty}.
-    * @name Types/_source/HierarchicalMemory#idProperty
+    * @cfg {String} See {@link Types/_source/Memory#keyProperty}.
+    * @name Types/_source/HierarchicalMemory#keyProperty
     */
 
    /**
@@ -115,8 +115,8 @@ export default class HierarchicalMemory extends mixin<
 
    protected _source: Memory;
 
-   protected get _idProperty(): string {
-      return this._source.getIdProperty();
+   protected get _keyProperty(): string {
+      return this._source.getKeyProperty();
    }
 
    constructor(options?: IOptions) {
@@ -163,19 +163,19 @@ export default class HierarchicalMemory extends mixin<
          this._source.query(query).addCallbacks((response) => {
             if (this._$parentProperty) {
                const hierarchy = new relation.Hierarchy({
-                  idProperty: this._idProperty,
+                  idProperty: this._keyProperty,
                   parentProperty: this._$parentProperty
                });
 
                const sourceRecords = new collection.RecordSet({
                   rawData: this._source.data,
                   adapter: this._source.getAdapter(),
-                  idProperty: this._idProperty
+                  idProperty: this._keyProperty
                });
 
                const breadcrumbs = new collection.RecordSet({
                   adapter: this._source.getAdapter(),
-                  idProperty: this._idProperty
+                  idProperty: this._keyProperty
                });
 
                // Extract breadcrumbs as path from filtered node to the root
@@ -186,7 +186,7 @@ export default class HierarchicalMemory extends mixin<
                   let node;
                   while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
                      breadcrumbs.add(node, 0);
-                     startFromNode = node.get(this._idProperty);
+                     startFromNode = node.get(this._keyProperty);
                   }
                }
 

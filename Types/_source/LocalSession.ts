@@ -32,7 +32,7 @@ function initJsonData(source: LocalSession, data: any): void {
    let key;
    for (let i = 0; i < data.length; i++) {
       item = data[i];
-      itemId = item[source.getIdProperty()];
+      itemId = item[source.getKeyProperty()];
       key = itemId === undefined ? source.rawManager.reserveId() : itemId;
       source.rawManager.set(key, item);
    }
@@ -77,7 +77,7 @@ function itemToObject(item: any, adapter: string | adapters.IAdapter): object {
 
 interface IOptions {
    prefix: string;
-   idProperty: string;
+   keyProperty: string;
    data?: object;
 }
 
@@ -429,11 +429,11 @@ class RawManager {
 
 class ModelManager {
    adapter: adapters.IAdapter | string;
-   idProperty: string;
+   keyProperty: string;
 
-   constructor(adapter: adapters.IAdapter | string, idProperty: string) {
+   constructor(adapter: adapters.IAdapter | string, keyProperty: string) {
       this.adapter = adapter;
-      this.idProperty = idProperty;
+      this.keyProperty = keyProperty;
    }
 
    get(data: object): Model {
@@ -444,7 +444,7 @@ class ModelManager {
             return new Model({
                rawData: new Record({rawData: data}),
                adapter: create(this.adapter),
-               idProperty: this.idProperty
+               idProperty: this.keyProperty
             });
 
          case 'Types/entity:adapter.Sbis':
@@ -455,7 +455,7 @@ class ModelManager {
             return new Model({
                rawData: data,
                adapter: create(this.adapter),
-               idProperty: this.idProperty
+               idProperty: this.keyProperty
             });
       }
    }
@@ -468,7 +468,7 @@ class ModelManager {
       const model = new Model({
          format,
          adapter: create(this.adapter),
-         idProperty: this.idProperty
+         idProperty: this.keyProperty
       });
 
       while (enumerator.moveNext()) {
@@ -481,12 +481,12 @@ class ModelManager {
 
 class Converter {
    adapter: adapters.IAdapter | string;
-   idProperty: string;
+   keyProperty: string;
    modelManager: ModelManager;
 
-   constructor(adapter: adapters.IAdapter | string, idProperty: string, modelManager: ModelManager) {
+   constructor(adapter: adapters.IAdapter | string, keyProperty: string, modelManager: ModelManager) {
       this.adapter = adapter;
-      this.idProperty = idProperty;
+      this.keyProperty = keyProperty;
       this.modelManager = modelManager;
    }
 
@@ -509,7 +509,7 @@ class Converter {
       if (data.length === 0) {
          return new RecordSet({
             rawData: _data,
-            idProperty: this.idProperty
+            idProperty: this.keyProperty
          });
       }
 
@@ -520,7 +520,7 @@ class Converter {
       }
       return new RecordSet({
          rawData: _data,
-         idProperty: this.idProperty
+         idProperty: this.keyProperty
       });
    }
 
@@ -581,7 +581,7 @@ class Converter {
  *          {id: '9', name: 'Neptune', kind: 'Planet'},
  *          {id: '10', name: 'Pluto', kind: 'Dwarf planet'}
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -651,17 +651,17 @@ export default class LocalSession extends mixin<
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/_source/LocalSession#idProperty
-    * @see getIdProperty
+    * @name Types/_source/LocalSession#keyProperty
+    * @see getKeyProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
     *    var dataSource = new LocalSession({
-    *       idProperty: 'primaryId'
+    *       keyProperty: 'primaryId'
     *    });
     * </pre>
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * Свойство данных, в котором лежит основная выборка
@@ -685,15 +685,15 @@ export default class LocalSession extends mixin<
       if (!('prefix' in options)) {
          throw new Error('"prefix" not found in options.');
       }
-      if (!('idProperty' in options)) {
-         throw new Error('"idProperty" not found in options.');
+      if (!('keyProperty' in options)) {
+         throw new Error('"keyProperty" not found in options.');
       }
 
       OptionsToPropertyMixin.call(this, options);
 
       this.rawManager = new RawManager(new LocalStorage(options.prefix));
-      this.modelManager = new ModelManager(this._$adapter, this._$idProperty);
-      this.converter = new Converter(this._$adapter, this._$idProperty, this.modelManager);
+      this.modelManager = new ModelManager(this._$adapter, this._$keyProperty);
+      this.converter = new Converter(this._$adapter, this._$keyProperty, this.modelManager);
 
       this._initData(options.data);
    }
@@ -720,7 +720,7 @@ export default class LocalSession extends mixin<
     */
    create(meta?: object): ExtendPromise<Record> {
       const item = itemToObject(meta, this._$adapter);
-      if (item[this.getIdProperty()] === undefined) {
+      if (item[this.getKeyProperty()] === undefined) {
          this.rawManager.reserveId();
       }
       return Deferred.success(this.modelManager.get(item));
@@ -755,8 +755,8 @@ export default class LocalSession extends mixin<
     * Вернем Плутону статус планеты:
     * <pre>
     *    var pluto = new Model({
-    *          idProperty: 'id'
-    *       });
+    *       keyProperty: 'id'
+    *    });
     *    pluto.set({
     *       id: '10',
     *       name: 'Pluto',
@@ -771,19 +771,19 @@ export default class LocalSession extends mixin<
    update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       const updateRecord = (record) => {
          let key;
-         const idProperty = record.getIdProperty ? record.getIdProperty() : this.getIdProperty();
+         const keyProperty = record.getIdProperty ? record.getIdProperty() : this.getKeyProperty();
 
          try {
-            key = record.get(idProperty);
+            key = record.get(keyProperty);
          } catch (e) {
-            return Deferred.fail('Record idProperty doesn\'t exist');
+            return Deferred.fail('Record keyProperty doesn\'t exist');
          }
 
          if (key === undefined) {
             key = this.rawManager.reserveId();
          }
 
-         record.set(idProperty, key);
+         record.set(keyProperty, key);
          const item = itemToObject(record, this._$adapter);
          this.rawManager.set(key, item);
          record.acceptChanges();
@@ -957,11 +957,11 @@ export default class LocalSession extends mixin<
 
    readonly '[Types/_source/IData]': boolean = true;
 
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
-   setIdProperty(name: string): void {
+   setKeyProperty(name: string): void {
       throw new Error('Method is not supported');
    }
 
@@ -1026,7 +1026,7 @@ export default class LocalSession extends mixin<
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty()
+            keyProperty: this.getKeyProperty()
          }, ...{
             rawData,
             itemsProperty: this._dataSetItemsProperty,
@@ -1088,7 +1088,7 @@ Object.assign(LocalSession.prototype, {
    _$adapter: 'Types/entity:adapter.Json',
    _$listModule: 'Types/collection:RecordSet',
    _$model: 'Types/entity:Model',
-   _$idProperty: '',
+   _$keyProperty: '',
    _dataSetItemsProperty: 'items',
    _dataSetMetaProperty: 'meta',
    _options: {

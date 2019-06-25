@@ -22,13 +22,13 @@ export default abstract class DataCrudMixin extends mixin<DataMixin>(Object) {
    }
 
    protected _prepareUpdateResult(data: any, keys: string[]): string[] {
-      const idProperty = (this as DataMixin).getIdProperty();
+      const keyProperty = (this as DataMixin).getKeyProperty();
       const callback = (record, key) => {
          if (key &&
-            idProperty &&
-            !record.get(idProperty)
+             keyProperty &&
+            !record.get(keyProperty)
          ) {
-            record.set(idProperty, key);
+            record.set(keyProperty, key);
          }
          record.acceptChanges();
       };

@@ -133,7 +133,7 @@ export default abstract class BindingMixin {
     *          update: '/api/article/save/',
     *          destroy: '/api/article/remove/'
     *       },
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     *    console.log('Calling read() method via ' + dataSource.getBinding().read);
     *    //'Calling read() method via /api/article/read/'

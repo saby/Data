@@ -31,7 +31,7 @@ export default interface ICrudPlus {
     * <pre>
     *    var dataSource = new CrudPlusSource({
     *       endpoint: '/articles/',
-    *       idProperty: 'code'
+    *       keyProperty: 'code'
     *    });
     *    dataSource.merge('article-from', 'article-to').addCallbacks(function() {
     *       console.log('The articles has been merged successfully');
@@ -53,7 +53,7 @@ export default interface ICrudPlus {
     * <pre>
     *    var dataSource = new CrudPlusSource({
     *       endpoint: '/articles/',
-    *       idProperty: 'code'
+    *       keyProperty: 'code'
     *    });
     *    dataSource.copy('what-about-to-copy-me').addCallbacks(function(copy) {
     *       console.log('The article has been copied successfully. The new id is: ' + copy.getId());
