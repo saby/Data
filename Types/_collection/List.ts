@@ -209,7 +209,7 @@ export default class List<T> extends mixin<
       this._nextVersion();
    }
 
-   add(item: T, at: number): void {
+   add(item: T, at?: number): void {
       if (at === undefined) {
          at = this._$items.length;
          this._$items.push(item);

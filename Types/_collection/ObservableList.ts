@@ -134,7 +134,7 @@ export default class ObservableList<T> extends mixin<
       );
    }
 
-   add(item: T, at: number): void {
+   add(item: T, at?: number): void {
       super.add(item, at);
       at = this._isValidIndex(at) ? at : this.getCount() - 1;
       this._notifyCollectionChange(
