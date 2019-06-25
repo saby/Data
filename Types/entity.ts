@@ -50,7 +50,7 @@ export {default as IVersionable} from './_entity/IVersionable';
 export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
 export {default as Model} from './_entity/Model';
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
-export {default as ObservableMixin} from './_entity/ObservableMixin';
+export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReadWriteMixin} from './_entity/ReadWriteMixin';
 export {default as Record} from './_entity/Record';
 import * as relation from './_entity/relation';

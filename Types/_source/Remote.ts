@@ -10,7 +10,7 @@ import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixi
 import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
-import {Record, ObservableMixin, getMergeableProperty} from '../entity';
+import {Record, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
@@ -42,7 +42,7 @@ export interface IOptionsOption extends IOptionsMixinOption {
    navigationType?: NavigationTypes;
 }
 
-export interface IOptions extends IBaseOptions, IBindingOptions, IEndpointOptions {
+export interface IOptions extends IBaseOptions, IObservableMixinOptions, IBindingOptions, IEndpointOptions {
    passing?: IPassing;
 }
 

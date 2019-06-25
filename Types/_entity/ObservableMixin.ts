@@ -1,7 +1,8 @@
 import {Bus as EventBus, Channel as EventCannel} from 'Env/Event';
+import {IHashMap} from '../_declarations';
 
-interface IOptions {
-   handlers?: object;
+export interface IOptions {
+   handlers?: IHashMap<Function>;
 }
 
 /**
