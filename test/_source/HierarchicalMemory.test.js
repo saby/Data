@@ -20,7 +20,7 @@ define([
          ];
          source = new HierarchicalMemory({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       });
 
@@ -89,7 +89,7 @@ define([
                   {id: 11, parent: 1, name: 'Smartphones'},
                   {id: 110, parent: 11, name: 'Apple iPhone'}
                ],
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent'
             });
 

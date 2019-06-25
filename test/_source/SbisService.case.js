@@ -574,7 +574,7 @@ define([
                it('should create the model by 1st way', function(done) {
                   var service = new SbisService({
                      endpoint: 'Товар',
-                     idProperty: '@Ид'
+                     keyProperty: '@Ид'
                   });
                   service.create().addCallbacks(function(model) {
                      service.update(model).addCallbacks(function(success) {
@@ -590,7 +590,7 @@ define([
                it('should create the model by 2nd way', function(done) {
                   var service = new SbisService({
                         endpoint: 'Товар',
-                        idProperty: '@Ид'
+                        keyProperty: '@Ид'
                      }),
                      model = getSampleModel();
 
@@ -953,10 +953,10 @@ define([
                });
             });
 
-            it('should take idProperty for dataset from raw data', function(done) {
+            it('should take key property for dataset from raw data', function(done) {
                service.query(new Query()).addCallbacks(function(ds) {
                   try {
-                     assert.strictEqual(ds.getIdProperty(), '@Ид');
+                     assert.strictEqual(ds.getKeyProperty(), '@Ид');
                      done();
                   } catch (err) {
                      done(err);

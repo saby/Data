@@ -240,10 +240,10 @@ define([
             }, done);
          });
 
-         it('should send only changed record fields and idProperty', function(done) {
+         it('should send only changed record fields and key property', function(done) {
             var dataSource = new RemoteSource({
                   provider: provider,
-                  idProperty: 'a',
+                  keyProperty: 'a',
                   options: {
                      updateOnlyChanged: true
                   }
@@ -264,16 +264,16 @@ define([
             }, done);
          });
 
-         it('should send only changed model fields and idProperty (source priority)', function(done) {
+         it('should send only changed model fields and key property (source priority)', function(done) {
             var dataSource = new RemoteSource({
                   provider: provider,
-                  idProperty: 'a',
+                  keyProperty: 'a',
                   options: {
                      updateOnlyChanged: true
                   }
                }),
                model = new Model({
-                  idProperty: 'c',
+                  keyProperty: 'c',
                   rawData: {a: 1, b: 2, c: 3}
                }),
                sent;
@@ -342,7 +342,7 @@ define([
          it('should send only changed records', function(done) {
             var dataSource = new RemoteSource({
                   provider: provider,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   options: {
                      updateOnlyChanged: true
                   }

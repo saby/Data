@@ -69,7 +69,7 @@ export default interface ICrud {
     * <pre>
     *    var dataSource = new CrudSource({
     *       endpoint: '/articles/',
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     *    dataSource.create().addCallbacks(function(article) {
     *       console.log(article.get('id')),//01c5151e-21fe-5316-d118-cb13216c9412
@@ -82,7 +82,7 @@ export default interface ICrud {
     * <pre>
     *     var dataSource = new SbisService({
     *        endpoint: 'Employee',
-    *        idProperty: '@Employee'
+    *        keyProperty: '@Employee'
     *     });
     *     dataSource.create().addCallbacks(function(employee) {
     *        console.log(employee.get('Name'));
@@ -104,7 +104,7 @@ export default interface ICrud {
     * <pre>
     *    var dataSource = new CrudSource({
     *       endpoint: '/articles/',
-    *       idProperty: 'code'
+    *       keyProperty: 'code'
     *    });
     *    dataSource.read('how-to-read-an-item').addCallbacks(function(article) {
     *       console.log(article.get('code')),//how-to-read-an-item
@@ -117,7 +117,7 @@ export default interface ICrud {
     * <pre>
     *     var dataSource = new SbisService({
     *        endpoint: 'Employee',
-    *        idProperty: '@Employee'
+    *        keyProperty: '@Employee'
     *     });
     *     dataSource.read(123321).addCallbacks(function(employee) {
     *         console.log(employee.get('Name'));
@@ -138,7 +138,7 @@ export default interface ICrud {
     * <pre>
     *    var dataSource = new CrudSource({
     *          endpoint: '/articles/',
-    *          idProperty: 'code'
+    *          keyProperty: 'code'
     *       }),
     *       article = new Record({
     *          rawData: {
@@ -157,7 +157,7 @@ export default interface ICrud {
     *    require(['Types/source', Types/entity], function(source, entity) {
     *       var dataSource = new source.SbisService({
     *             endpoint: 'Employee'
-    *             idProperty: '@Employee'
+    *             keyProperty: '@Employee'
     *          }),
     *          employee = new entity.Record({
     *             format: [
@@ -192,7 +192,7 @@ export default interface ICrud {
     * <pre>
     *    var dataSource = new CrudSource({
     *       endpoint: '/articles/',
-    *       idProperty: 'code'
+    *       keyProperty: 'code'
     *    });
     *    dataSource.destroy('article-id-to-destroy').addCallbacks(function() {
     *       console.log('The article has been deleted successfully');
@@ -204,7 +204,7 @@ export default interface ICrud {
     * <pre>
     *     var dataSource = new SbisService({
     *        endpoint: 'Employee',
-    *        idProperty: '@Employee'
+    *        keyProperty: '@Employee'
     *     });
     *     dataSource.destroy(123321).addCallbacks(function() {
     *       console.log('The employee has been deleted successfully');

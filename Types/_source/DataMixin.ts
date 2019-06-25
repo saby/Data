@@ -7,7 +7,7 @@ export interface IOptions {
    adapter?: string | adapter.IAdapter;
    model?: string | Function;
    listModule?: string | Function;
-   idProperty?: string;
+   keyProperty?: string;
    dataSetMetaProperty?: string;
 }
 
@@ -121,18 +121,18 @@ export default abstract class DataMixin implements IData {
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/_source/DataMixin#idProperty
-    * @see getIdProperty
+    * @name Types/_source/DataMixin#keyProperty
+    * @see getKeyProperty
     * @see Types/_entity/Model#idProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
     *    var dataSource = new MemorySource({
-    *       idProperty: 'primaryId'
+    *       keyProperty: 'primaryId'
     *    });
     * </pre>
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * Конструктор модуля, реализующего DataSet
@@ -154,6 +154,9 @@ export default abstract class DataMixin implements IData {
    constructor(options?: IOptions) {
       options = options || {};
 
+      if (!this._$keyProperty && (options as any).idProperty) {
+          this._$keyProperty = (options as any).idProperty;
+      }
       if (options.dataSetMetaProperty) {
          this._dataSetMetaProperty = options.dataSetMetaProperty;
       }
@@ -186,12 +189,12 @@ export default abstract class DataMixin implements IData {
       this._$listModule = listModule;
    }
 
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
-   setIdProperty(name: string): void {
-      this._$idProperty = name;
+   setKeyProperty(name: string): void {
+      this._$keyProperty = name;
    }
 
    // endregion
@@ -203,7 +206,7 @@ export default abstract class DataMixin implements IData {
     * @param data Сырые данные
     * @protected
     */
-   protected _getIdPropertyByData(data: any): string {
+   protected _getKeyPropertyByData(data: any): string {
       return this.getAdapter().getKeyField(data) || '';
    }
 
@@ -217,7 +220,7 @@ export default abstract class DataMixin implements IData {
          writable: this._writable,
          rawData: data,
          adapter: this.getAdapter(),
-         idProperty: this.getIdProperty()
+         idProperty: this.getKeyProperty()
       });
    }
 
@@ -234,7 +237,7 @@ export default abstract class DataMixin implements IData {
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null),
+            keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
             ...cfg
          }
       );
@@ -313,9 +316,11 @@ Object.assign(DataMixin.prototype, {
    _$adapter: 'Types/entity:adapter.Json',
    _$model: 'Types/entity:Model',
    _$listModule: 'Types/collection:RecordSet',
-   _$idProperty: '',
+   _$keyProperty: '',
    _dataSetModule: 'Types/source:DataSet',
    _dataSetItemsProperty: '',
    _dataSetMetaProperty: '',
-   _writable: ReadWriteMixin.prototype.writable
-});
+   _writable: ReadWriteMixin.prototype.writable,
+    getIdProperty: DataMixin.prototype.getKeyProperty,
+    setIdProperty: DataMixin.prototype.setKeyProperty
+ });

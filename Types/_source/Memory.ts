@@ -45,7 +45,7 @@ export interface IOptions extends ILocalOptions {
  *             {id: 9, name: 'Neptune', kind: 'Planet'},
  *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
  *          ],
- *          idProperty: 'id'
+ *          keyProperty: 'id'
  *       });
  *
  *       //Создадим новый объект:
@@ -116,7 +116,7 @@ export default class Memory extends Local {
     *             {id: 9, name: 'Neptune', kind: 'Planet'},
     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
     *          ],
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
     *    });
     * </pre>
@@ -149,7 +149,7 @@ export default class Memory extends Local {
     *       var solarSystem = new source.Memory({
     *          data: solarData,
     *          adapter: new entity.adapter.RecordSet(),
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
     *    });
     * </pre>

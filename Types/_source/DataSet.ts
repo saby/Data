@@ -52,7 +52,7 @@ export interface IOptions {
  *             executeDate: '2016-06-27 11:34:57'
  *          },
  *          itemsProperty: 'orders',
- *          idProperty: 'id'
+ *          keyProperty: 'id'
  *       });
  *
  *       var orders = data.getAll();//Here use itemsProperty option value
@@ -109,7 +109,7 @@ export interface IOptions {
  *             '   <executeDate>2016-06-27 11:34:57</executeDate>' +
  *             '</response>',
  *          itemsProperty: 'orders/order',//XPath syntax
- *          idProperty: 'id'
+ *          keyProperty: 'id'
  *       });
  *
  *       var orders = data.getAll();
@@ -231,20 +231,20 @@ export default class DataSet extends mixin<
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-    * @name Types/_source/DataSet#idProperty
-    * @see getIdProperty
+    * @name Types/_source/DataSet#keyProperty
+    * @see getKeyProperty
     * @see Types/_entity/Model#idProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
     *    require(['Types/source'], function (source) {
     *       var data = new source.DataSet({
-    *          idProperty: 'primaryId'
+    *          keyProperty: 'primaryId'
     *       });
     *    });
     * </pre>
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * @cfg {String} Название свойства сырых данных, в котором находится основная выборка
@@ -310,6 +310,10 @@ export default class DataSet extends mixin<
       super();
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
+
+      if (!this._$keyProperty && options && (options as any).idProperty) {
+          this._$keyProperty = (options as any).idProperty;
+      }
    }
 
    // region Public methods
@@ -414,40 +418,40 @@ export default class DataSet extends mixin<
    /**
     * Возвращает название свойства модели, содержащего первичный ключ
     * @return {String}
-    * @see idProperty
-    * @see Types/_entity/Model#idProperty
+    * @see keyProperty
+    * @see Types/_entity/Model#keyProperty
     * @example
     * Получим название свойства модели, содержащего первичный ключ:
     * <pre>
     *    require(['Types/source'], function (source) {
     *       var data = new source.DataSet({
-    *          idProperty: 'id'
+    *          keyProperty: 'id'
     *       });
-    *       console.log(data.getIdProperty());//'id'
+    *       console.log(data.getKeyProperty());//'id'
     *    });
     * </pre>
     */
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
    /**
     * Устанавливает название свойства модели, содержащего первичный ключ
     * @param {String} name
-    * @see getIdProperty
-    * @see idProperty
+    * @see getKeyProperty
+    * @see keyProperty
     * @see Types/_entity/Model#idProperty
     * @example
     * Установим название свойства модели, содержащего первичный ключ:
     * <pre>
     *    require(['Types/source'], function (source) {
     *       var data = new source.DataSet();
-    *       data.setIdProperty('id');
+    *       data.setKeyProperty('id');
     *    });
     * </pre>
     */
-   setIdProperty(name: string): void {
-      this._$idProperty = name;
+   setKeyProperty(name: string): void {
+      this._$keyProperty = name;
    }
 
    /**
@@ -837,7 +841,7 @@ export default class DataSet extends mixin<
          writable: this._$writable,
          rawData,
          adapter: this._$adapter,
-         idProperty: this._$idProperty
+         idProperty: this._$keyProperty
       });
    }
 
@@ -852,7 +856,7 @@ export default class DataSet extends mixin<
          rawData,
          adapter: this._$adapter,
          model: this._$model,
-         idProperty: this._$idProperty
+         idProperty: this._$keyProperty
       });
    }
 
@@ -876,10 +880,12 @@ Object.assign(DataSet.prototype, {
    _$rawData: null,
    _$model: 'Types/entity:Model',
    _$listModule: 'Types/collection:RecordSet',
-   _$idProperty: '',
+   _$keyProperty: '',
    _$itemsProperty: '',
    _$metaProperty: '',
-   _$writable: true
+   _$writable: true,
+    getIdProperty: DataSet.prototype.getKeyProperty,
+    setIdProperty: DataSet.prototype.setKeyProperty
 });
 
 register('Types/source:DataSet', DataSet, {instantiate: false});

@@ -79,23 +79,23 @@ define([
          });
       });
 
-      describe('.getIdProperty()', function() {
+      describe('.getKeyProperty()', function() {
          it('should return an empty string by default', function() {
-            assert.strictEqual(source.getIdProperty(), '');
+            assert.strictEqual(source.getKeyProperty(), '');
          });
          it('should return value passed to the constructor', function() {
             var source = new BaseSource({
-               idProperty: 'test'
+               keyProperty: 'test'
             });
 
-            assert.equal(source.getIdProperty(), 'test');
+            assert.equal(source.getKeyProperty(), 'test');
          });
       });
 
-      describe('.setIdProperty()', function() {
+      describe('.setKeyProperty()', function() {
          it('should set the new value', function() {
-            source.setIdProperty('test');
-            assert.equal(source.getIdProperty(), 'test');
+            source.setKeyProperty('test');
+            assert.equal(source.getKeyProperty(), 'test');
          });
       });
 

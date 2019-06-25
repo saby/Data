@@ -78,13 +78,13 @@ function passRead(key: string, meta?: object): any[] {
  */
 function passUpdate(data: Record | RecordSet, meta?: object): any[] {
    if (this._$options.updateOnlyChanged) {
-      const idProperty = this._getValidIdProperty(data);
-      if (!isEmpty(idProperty)) {
-         if (DataMixin.isModelInstance(data) && !isNull((data as Record).get(idProperty))) {
+      const keyProperty = this._getValidKeyProperty(data);
+      if (!isEmpty(keyProperty)) {
+         if (DataMixin.isModelInstance(data) && !isNull((data as Record).get(keyProperty))) {
             // Filter record fields
             const Record = require('Types/entity').Record;
             const changed = (data as Record).getChanged();
-            changed.unshift(idProperty);
+            changed.unshift(keyProperty);
             data = Record.filterFields(data, changed);
          } else if (DataMixin.isRecordSetInstance(data)) {
             // Filter recordset fields
@@ -96,7 +96,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
                });
 
                source.each((record) => {
-                  if (isNull(record.get(idProperty)) || record.isChanged()) {
+                  if (isNull(record.get(keyProperty)) || record.isChanged()) {
                      result.add(record);
                   }
                });
@@ -405,17 +405,20 @@ export default abstract class Remote extends mixin<
       return this.getAdapter().serialize(args);
    }
 
-   protected _getValidIdProperty(data: any): string {
-      const idProperty = this.getIdProperty();
-      if (!isEmpty(idProperty)) {
-         return idProperty;
+   protected _getValidKeyProperty(data: any): string {
+      const keyProperty = this.getKeyProperty();
+      if (!isEmpty(keyProperty)) {
+         return keyProperty;
+      }
+      if (typeof data.getKeyProperty === 'function') {
+         return data.getKeyProperty();
       }
       if (typeof data.getIdProperty === 'function') {
          return data.getIdProperty();
       }
 
-      // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой idProperty
-      return idProperty;
+      // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой keyProperty
+      return keyProperty;
    }
 
    // endregion
@@ -491,7 +494,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
        * измененые поля записи (если обновляется одна запись).
        * @name Types/_source/Remote#options.updateOnlyChanged
        * @remark
-       * Задавать опцию имеет смысл только если указано значение опции {@link idProperty}, позволяющая отличить новые
+       * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые
        * записи от уже существующих.
        */
       updateOnlyChanged: false,
