@@ -64,13 +64,15 @@ define([
       describe('.delete()', function() {
          it('should delete the entry', function() {
             set.add('foo');
-            set.delete('foo');
+            var result = set.delete('foo');
             assert.isFalse(set.has('foo'));
+            assert.isTrue(result);
          });
 
          it('should do nothing for not exists entry', function() {
-            set.delete('foo');
+            var result = set.delete('foo');
             assert.isFalse(set.has('foo'));
+            assert.isFalse(result);
          });
 
          it('should delete the Object', function() {

@@ -946,8 +946,13 @@ export default class Model extends mixin<
       if (propertiesDependency && propertiesDependency.has(name)) {
          propertiesDependency.get(name).forEach((related) => {
             this._removeChild(this._fieldsCache.get(related));
-            this._fieldsCache.delete(related);
+            const wasCached = this._fieldsCache.delete(related);
             this._fieldsClone.delete(related);
+            // If cached property cleared that means it's not changed.
+            if (wasCached) {
+                this._unsetChangedField(related);
+            }
+
             this._deleteDependencyCache(related);
          });
       }

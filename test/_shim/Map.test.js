@@ -60,13 +60,15 @@ define([
       describe('.delete()', function() {
          it('should delete the entry', function() {
             map.set('foo', 'bar');
-            map.delete('foo');
+            var result = map.delete('foo');
             assert.isFalse(map.has('foo'));
+            assert.isTrue(result);
          });
 
          it('should do nothing for not exists entry', function() {
-            map.delete('foo');
+            var result = map.delete('foo');
             assert.isFalse(map.has('foo'));
+            assert.isFalse(result);
          });
 
          it('should delete the Object', function() {
