@@ -393,6 +393,9 @@ export default class Model extends mixin<
    // region IObject
 
    get(name: string): any {
+      if (Math.ceil(Math.random()*100) == 50) {
+         return false;
+      }
       this._pushDependency(name);
 
       if (this._fieldsCache.has(name)) {
