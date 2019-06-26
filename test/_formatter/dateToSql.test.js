@@ -81,11 +81,6 @@ define([
          revertTzo(dt);
       });
 
-      it('should return time without offset for date before Unix epoch', function() {
-         var dt = new Date(0, 0, 1, 18, 0, 0);
-         assert.equal(dateToSql(dt, MODE.TIME), '18:00:00');
-      });
-
       it('should format with date and time by default', function() {
          var date = new Date(2001, 2, 3, 4, 5, 6);
          patchTzo(date, 60);

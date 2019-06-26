@@ -199,6 +199,29 @@ define([
          assert.equal(format(dt, 'ddl'), 'undefined');
       });
 
+      context('timezones', function () {
+         var timezoneOffsetStub, date;
+         beforeEach(function () {
+            date = new Date(2018, 11, 1);
+            timezoneOffsetStub = sinon.stub(date, 'getTimezoneOffset');
+         });
+         it('should format "Z" as timezone east', function() {
+            timezoneOffsetStub.callsFake(() => -180);
+            assert.equal(format(date, 'Z'), '+03');
+         });
+         it('should format "Z" as timezone west', function() {
+            timezoneOffsetStub.callsFake(() => 180);
+            assert.equal(format(date, 'Z'), '-03');
+         });
+         it('should format "Z" as timezone with minutes', function() {
+            timezoneOffsetStub.callsFake(() => 210);
+            assert.equal(format(date, 'Z'), '-03:30');
+         });
+         afterEach(function () {
+            timezoneOffsetStub.restore();
+         });
+      });
+
       it('should escape square brackets', function() {
          var date = new Date(2018, 4, 7);
          assert.equal(format(date, '[Today is ]D.MM, YY. [How long ago it was?]'), 'Today is 7.05, 18. How long ago it was?');
