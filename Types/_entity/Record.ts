@@ -781,6 +781,7 @@ export default class Record extends mixin<
 
       this._fieldsCache.delete(name);
       this._fieldsClone.delete(name);
+      this._unsetChangedField(name);
 
       super.removeField(name);
 
@@ -800,6 +801,7 @@ export default class Record extends mixin<
          name = field.getName();
          this._fieldsCache.delete(name);
          this._fieldsClone.delete(name);
+         this._unsetChangedField(name);
       }
 
       super.removeFieldAt(at);

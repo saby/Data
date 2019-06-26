@@ -622,6 +622,31 @@ define([
             assert.strictEqual(model.get('bar'), 2);
          });
 
+         it('should reset changed flag for modified by link property on related property change', function() {
+            var model = new Model({
+               rawData: {
+                  foo: '1'
+               },
+               properties: {
+                  bar: {
+                     get: function() {
+                        return new Model({
+                           rawData: {
+                              foo: this.get('foo')
+                           }
+                        });
+                     }
+                  }
+               }
+            });
+
+            var bar = model.get('bar');
+            bar.set('foo', 2);
+            assert.isTrue(model.isChanged('bar'));
+            model.set('foo', 3);
+            assert.isFalse(model.isChanged('bar'));
+         });
+
          context('if has properties defined dependency', function() {
             it('should reset related property', function() {
                var model = new Model({
