@@ -29,18 +29,23 @@ export class SetPolyfill <T> {
       this._objects = [];
    }
 
-   delete(value: T): void {
+   delete(value: T): boolean {
       let key;
       if (this._isObject(value)) {
          key = this._deleteObject(value);
          if (!key) {
-            return;
+            return false;
          }
       } else {
          key = value;
 
       }
-      delete this._hash[SetPolyfill._getHashedKey(key)];
+
+      const hashedKey = SetPolyfill._getHashedKey(key);
+      const result = hashedKey in this._hash;
+      delete this._hash[hashedKey];
+
+      return result;
    }
 
    entries(): any[] {
