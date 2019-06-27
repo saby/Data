@@ -4,6 +4,8 @@
 .nyc_output
 .project
 .settings
+.builder-ui
+.application
 /index.js
 /package-lock.json
 /tsconfig.base.json

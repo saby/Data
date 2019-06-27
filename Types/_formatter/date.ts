@@ -5,6 +5,7 @@ import locales = require('Core/helpers/i18n/locales');
 interface IDateFormatOptions {
    lead: number;
    lower: boolean;
+   separator: string;
 }
 
 let tokensRegex;
@@ -175,20 +176,14 @@ function getHalfYearRomanLong(date: Date): string {
    );
 }
 
-function getTimeZone(date: Date): string {
+function getTimeZone(date: Date, options: IDateFormatOptions): string {
    let totalMinutes = date.getTimezoneOffset();
-   const isEast = totalMinutes <= 0;
+   const sign = totalMinutes <= 0 ? '+' : '-';
    totalMinutes = Math.abs(totalMinutes);
-   let hours: string | number = Math.floor(totalMinutes / MINUTES_IN_HOUR);
-   let minutes: string | number  = totalMinutes - MINUTES_IN_HOUR * hours;
-   hours = hours < 10 ? '0' + hours : hours;
-   if (minutes !== 0) {
-      minutes = ':' + (minutes < 10 ? '0' + minutes : minutes);
-   } else {
-      minutes = '';
-   }
+   let hours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+   let minutes = totalMinutes - MINUTES_IN_HOUR * hours;
 
-   return `${isEast ? '+' : '-'}${hours}${minutes}`;
+   return `${sign}${withLeadZeroes(hours, 2)}${options.separator}${withLeadZeroes(minutes, 2)}`;
 }
 
 /**
@@ -232,7 +227,7 @@ function formatByToken(date: Date, handler: string|Function, options: IDateForma
       )(handler);
    }
 
-   let result = handler(date);
+   let result = handler(date, options);
 
    if (options.lead) {
       result = withLeadZeroes(result, options.lead);
@@ -284,7 +279,10 @@ addToken('Q', getQuarter);
 addToken('QQr', getQuarterRomanMin);
 addToken('QQQr', getQuarterRomanShort);
 addToken('QQQQr', getQuarterRomanLong);
-addToken('Z', getTimeZone);
+
+// Time zone tokens
+addToken('Z', getTimeZone, {separator: ':'} as IDateFormatOptions);
+addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
 
 /**
  * Преобразует дату в строку указанного формата.
