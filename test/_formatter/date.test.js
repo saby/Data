@@ -207,19 +207,19 @@ define([
          });
          it('should format "Z" as timezone east', function() {
             timezoneOffsetStub.callsFake(() => -180);
-            assert.equal(format(date, 'Z'), '+03:00');
+            assert.equal(format(date, 'Z'), '+03');
          });
          it('should format "Z" as timezone west', function() {
             timezoneOffsetStub.callsFake(() => 180);
-            assert.equal(format(date, 'Z'), '-03:00');
+            assert.equal(format(date, 'Z'), '-03');
          });
          it('should format "Z" as timezone with minutes', function() {
             timezoneOffsetStub.callsFake(() => 210);
             assert.equal(format(date, 'Z'), '-03:30');
          });
          it('should format "ZZ" as timezone without colon', function() {
-            timezoneOffsetStub.callsFake(() => 180);
-            assert.equal(format(date, 'ZZ'), '-0300');
+            timezoneOffsetStub.callsFake(() => 210);
+            assert.equal(format(date, 'ZZ'), '-0330');
          });
          afterEach(function () {
             timezoneOffsetStub.restore();

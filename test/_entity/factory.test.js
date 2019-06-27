@@ -761,7 +761,7 @@ define([
                var datetime = new Date(1443099268981);
                assert.strictEqual(
                   Factory.serialize(datetime, {format: getUniversalFormatMock('datetime')}),
-                  '2015-09-24 15:54:28.981+03:00'
+                  '2015-09-24 15:54:28.981+03'
                );
             });
 
@@ -818,7 +818,7 @@ define([
                var datetime = new Date(1443099268981);
                assert.strictEqual(
                   Factory.serialize(datetime, {format: getUniversalFormatMock('time')}),
-                  '15:54:28.981+03:00'
+                  '15:54:28.981+03'
                );
             });
 

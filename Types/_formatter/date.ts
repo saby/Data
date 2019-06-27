@@ -182,8 +182,9 @@ function getTimeZone(date: Date, options: IDateFormatOptions): string {
    totalMinutes = Math.abs(totalMinutes);
    let hours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
    let minutes = totalMinutes - MINUTES_IN_HOUR * hours;
+   let minutesStr = minutes ? options.separator + withLeadZeroes(minutes, 2) : '';
 
-   return `${sign}${withLeadZeroes(hours, 2)}${options.separator}${withLeadZeroes(minutes, 2)}`;
+   return `${sign}${withLeadZeroes(hours, 2)}${minutesStr}`;
 }
 
 /**
