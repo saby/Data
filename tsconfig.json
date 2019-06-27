@@ -1,8 +1,11 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
+    "baseUrl": "application",
     "types" : ["requirejs"],
-    "skipLibCheck": true
+    "paths": {
+      "tslib": ["../node_modules/saby-typescript/tslib"]
+    }
   },
   "include": [
     "Browser/**/*.ts",
@@ -11,9 +14,7 @@
     "Types/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
-    "WS.Core/core/**/*.ts",
-    "WS.Core/lib/Storage/**/*.ts",
-    "WS.Core/transport/**/*.ts",
+    "WS.Core/**/*.ts",
     "WS.Core/ws.d.ts"
   ]
 }

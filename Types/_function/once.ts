@@ -14,12 +14,12 @@ const storage = new WeakMap();
  *
  * <h2>Пример использования</h2>
  * <pre>
- * require(['Types/function'], function(util) {
- *    var foo = function(bar) {
- *          console.log(`foo: ${bar}`);
- *          return 'foo+' + bar;
- *       },
- *       fooDecorator = outil.once(foo);
+ *    import {once} from 'Types/function';
+ *    const foo = (bar) => {
+ *       console.log(`foo: ${bar}`);
+ *       return 'foo+' + bar;
+ *    };
+ *    const fooDecorator = once(foo);
  *
  *    console.log(fooDecorator('baz'));//foo: baz, foo+baz
  *    console.log(fooDecorator('baz'));//foo+baz
