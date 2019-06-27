@@ -1,11 +1,11 @@
 {
-   "cache": "./builder-ui/builder-json-cache",
+   "cache": "./.builder/builder-json-cache",
    "output": "./application",
-   "logs": "./builder-ui/logs",
+   "logs": "./.builder/logs",
    "typescript": true,
-   "contents": true,
-   "joinedMeta": true,
-   "less": true,
+   "contents": false,
+   "joinedMeta": false,
+   "less": false,
    "modules": [
       {
          "name": "WS.Core",
