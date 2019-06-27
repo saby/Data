@@ -25,17 +25,21 @@ export class MapPolyfill<K, V> {
       this._objects = [];
    }
 
-   delete(key: K): void {
+   delete(key: K): boolean {
       let surrogate;
       if (this._isObject(key)) {
          surrogate = this._addObject(key);
          if (!surrogate) {
-            return;
+            return false;
          }
       } else {
          surrogate = key;
       }
-      delete this._hash[SetPolyfill._getHashedKey(surrogate)];
+      const hashedKey = SetPolyfill._getHashedKey(surrogate);
+      const result = hashedKey in this._hash;
+      delete this._hash[hashedKey];
+
+      return result;
    }
 
    entries(): any[] {

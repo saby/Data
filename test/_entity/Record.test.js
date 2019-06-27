@@ -1590,6 +1590,15 @@ define([
             assert.isUndefined(record.get('foo'));
          });
 
+         it('should remove field from changed', function() {
+            record = new Record();
+            record.set('foo', 'bar');
+
+            assert.isTrue(record.isChanged('foo'));
+            record.removeField('foo');
+            assert.isFalse(record.isChanged('foo'));
+         });
+
          it('should trigger onPropertyChange event', function() {
             var record = new Record({
                rawData: {foo: 'bar'}
@@ -1687,6 +1696,18 @@ define([
             assert.strictEqual(record.get('foo'), value);
             record.removeFieldAt(0);
             assert.isUndefined(record.get('foo'));
+         });
+
+         it('should remove field from changed', function() {
+            record = new Record({
+               format: {foo: String},
+               adapter: 'Types/entity:adapter.Sbis'
+            });
+            record.set('foo', 'bar');
+
+            assert.isTrue(record.isChanged('foo'));
+            record.removeFieldAt(0);
+            assert.isFalse(record.isChanged('foo'));
          });
 
          it('should trigger onPropertyChange event', function() {
