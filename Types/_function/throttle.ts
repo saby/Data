@@ -21,7 +21,8 @@
  *     <li><b>original</b> {Function} - исходная функция, число вызовов которой нужно ограничить.</li>
  *     <li><b>delay</b> {Number} - период задержки в мс.</li>
  *     <li><b>[last=false]</b> {Boolean} - устанавливает необходимость выполнения последней функции из серии вызовов по
- *         окончании задержки.</li>
+ *         окончании задержки.
+ *     </li>
  * </ul>
  *
  * <h2>Возвращает</h2>
@@ -30,30 +31,29 @@
  * <h2>Пример использования</h2>
  * Будем рассчитывать итоги по корзине покупателя не при каждом добавлении товара, а раз в 200 миллисекунд:
  * <pre>
- * require(['Types/_function/throttle'], function(throttle) {
- *    var cart = {
- *          items: [
- *             {name: 'Milk', price: 1.99, qty: 2},
- *             {name: 'Butter', price: 2.99, qty: 1},
- *             {name: 'Ice Cream', price: 0.49, qty: 2}
- *          ],
- *          totals: {},
- *          calc: function() {
- *             var totals = this.totals = {
- *                amount: 0,
- *                qty: 0
- *             };
- *             this.items.forEach(function(item) {
- *                totals.amount += item.price * item.qty;
- *                totals.qty += item.qty;
- *             });
- *             console.log('Cart totals:', totals);
- *          },
+ *    import {throttle} from 'Types/function';
+ *    const cart = {
+ *       items: [
+ *          {name: 'Milk', price: 1.99, qty: 2},
+ *          {name: 'Butter', price: 2.99, qty: 1},
+ *          {name: 'Ice Cream', price: 0.49, qty: 2}
+ *       ],
+ *       totals: {},
+ *       calc: () => {
+ *          this.totals = {
+ *             amount: 0,
+ *             qty: 0
+ *          };
+ *          this.items.forEach((item) => {
+ *             this.totals.amount += item.price * item.qty;
+ *             this.totals.qty += item.qty;
+ *          });
+ *          console.log('Cart totals:', this.totals);
  *       },
- *       calcCartThrottled = throttle(cart.calc, 200),
- *       interval;
+ *    };
+ *    const calcCartThrottled = throttle(cart.calc, 200);
  *
- *    interval = setInterval(function() {
+ *    const interval = setInterval(() => {
  *       cart.items.push({name: 'Something else', price: 1.05, qty: 1});
  *       console.log('Cart items count: ' + cart.items.length);
  *       calcCartThrottled.call(cart);
