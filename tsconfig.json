@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "types" : ["requirejs"],
-    "skipLibCheck": true
+    "baseUrl": "application",
+    "types" : ["requirejs"]
   },
   "include": [
     "Browser/**/*.ts",
@@ -11,9 +11,7 @@
     "Types/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
-    "WS.Core/core/**/*.ts",
-    "WS.Core/lib/Storage/**/*.ts",
-    "WS.Core/transport/**/*.ts",
+    "WS.Core/**/*.ts",
     "WS.Core/ws.d.ts"
   ]
 }
