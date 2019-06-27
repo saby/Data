@@ -8,8 +8,7 @@ const win = typeof window !== 'undefined' ? window : null;
  *     <li><b>fn</b> {Function} - исходная функция, вызов которой нужно асинхронно.</li>
  * </ul>
  *
- * @function
- * @name Types/_function/delay
+ * @class Types/_function/delay
  * @public
  * @author Мальцев А.А.
  */
