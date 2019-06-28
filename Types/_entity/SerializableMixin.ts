@@ -140,7 +140,8 @@ export default class SerializableMixin {
     *    var instance = new Entity(),
     *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
     * </pre>
-    * @remark toJSON сериализует только указанный объект, без учета его инфраструктуры. Не рекомендуется использовать toJSON в прикладном коде.
+    * @remark Сериализует только указанный объект, без учета его инфраструктуры. Не рекомендуется использовать toJSON в
+    * прикладном коде.
     */
    toJSON(): ISignature {
       this._checkModuleName(true);
