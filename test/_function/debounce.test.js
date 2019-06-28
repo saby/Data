@@ -21,7 +21,7 @@ define([
 
       it('should call method once', (done) => {
          let value = 0;
-         const decorator = functionLib.debounce(() => value++, 0);
+         const decorator = functionLib.debounce(() => value++, 10);
 
          runIt(decorator, 5, 50, () => {
             assert.equal(value, 1);
@@ -31,7 +31,7 @@ define([
 
       it('should call method twice if argument "first" is true', (done) => {
          let value = 0;
-         const decorator = functionLib.debounce(() => value++, 0, true);
+         const decorator = functionLib.debounce(() => value++, 10, true);
 
          runIt(decorator, 5, 50, () => {
             assert.equal(value, 2);

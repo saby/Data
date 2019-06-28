@@ -1,4 +1,4 @@
-const MIN_TIMEOUT = 10;
+const MIN_DELAY = 5;
 
 /**
  * Откладывает выполнение функции на период задержки.
@@ -64,7 +64,7 @@ export default function debounce(original: Function, delay: number, first?: bool
    let timer;
 
    return function(...args: any[]): void {
-      if (first && !timer) {
+      if (first && !timer && delay > MIN_DELAY) {
          original.apply(this, args);
       }
 
@@ -73,6 +73,6 @@ export default function debounce(original: Function, delay: number, first?: bool
       }
 
       // original.bind(this, arg1, arg2, arg3, ...);
-      timer = setTimeout(original.bind(this, ...args), Math.max(delay, MIN_TIMEOUT));
+      timer = setTimeout(original.bind(this, ...args), delay);
    };
 }
