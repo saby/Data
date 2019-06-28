@@ -5,12 +5,13 @@ import locales = require('Core/helpers/i18n/locales');
 interface IDateFormatOptions {
    lead: number;
    lower: boolean;
+   separator: string;
 }
 
 let tokensRegex;
 const tokens = {};
 const locale = locales.current;
-
+const MINUTES_IN_HOUR = 60;
 /**
  * Adds lead zeroes to the Number
  * @param value Number
@@ -175,6 +176,17 @@ function getHalfYearRomanLong(date: Date): string {
    );
 }
 
+function getTimeZone(date: Date, options: IDateFormatOptions): string {
+   let totalMinutes = date.getTimezoneOffset();
+   const sign = totalMinutes <= 0 ? '+' : '-';
+   totalMinutes = Math.abs(totalMinutes);
+   let hours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+   let minutes = totalMinutes - MINUTES_IN_HOUR * hours;
+   let minutesStr = minutes ? options.separator + withLeadZeroes(minutes, 2) : '';
+
+   return `${sign}${withLeadZeroes(hours, 2)}${minutesStr}`;
+}
+
 /**
  * Returns regular expression to match date tokens in a string
  */
@@ -216,7 +228,7 @@ function formatByToken(date: Date, handler: string|Function, options: IDateForma
       )(handler);
    }
 
-   let result = handler(date);
+   let result = handler(date, options);
 
    if (options.lead) {
       result = withLeadZeroes(result, options.lead);
@@ -230,7 +242,7 @@ function formatByToken(date: Date, handler: string|Function, options: IDateForma
 }
 
 // Time tokens
-addToken('SSS', 'getMilliseconds');
+addToken('SSS', 'getMilliseconds', {lead: 3} as IDateFormatOptions);
 addToken('s', 'getSeconds');
 addToken('ss', 'getSeconds', {lead: 2} as IDateFormatOptions);
 addToken('m', 'getMinutes');
@@ -268,6 +280,10 @@ addToken('Q', getQuarter);
 addToken('QQr', getQuarterRomanMin);
 addToken('QQQr', getQuarterRomanShort);
 addToken('QQQQr', getQuarterRomanLong);
+
+// Time zone tokens
+addToken('Z', getTimeZone, {separator: ':'} as IDateFormatOptions);
+addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
 
 /**
  * Преобразует дату в строку указанного формата.
@@ -374,7 +390,11 @@ addToken('QQQQr', getQuarterRomanLong);
  *    <li>QQQQr: номер квартала в римской нотации и квартал в текущей локали в полной форме (например, 'I квартал' или
  *        'I quarter').</li>
  * </ul>
- *
+ * Отображение метки часового пояса:
+ * <ul>
+ *    <li>Z: Смещение от стандартного времени в виде +-HH:mm например +03 или +03:30</li>
+ *    <li>ZZ: Смещение от стандартного времени в виде +-HHmm например +03 или +0330</li>
+ * </ul>
  * <h2>Примеры использования масок.</h2>
  * Выведем дату:
  * <pre>
