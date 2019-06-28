@@ -1,13 +1,18 @@
+import {IHashMap} from '../_declarations';
+
 type Descriptor = string | Function;
 
-type ValidateFunc = (value: any) => any;
+type ValidationResult<T> = T | TypeError;
+type ValidateFunc<T> = (value: T) => ValidationResult<T>;
 
-interface IChained extends ValidateFunc {
-   required?: IChained;
-   oneOf?: IChained;
-   not?: IChained;
-   arrayOf?: IChained;
+interface IChained<T> {
+   required?: RequiredValidator<T>;
+   oneOf?: oneOfValidator<T>;
+   not?: notValidator<T>;
+   arrayOf?: arrayOfValidator<T>;
 }
+
+type ChainedValidator<T> = ValidateFunc<T> & IChained<T>;
 
 /**
  * Normalizes type name.
@@ -33,10 +38,10 @@ function normalizeType(type: Descriptor): Descriptor {
  * Returns validator for composite type which must be suitable for one of given simple types
  * @param types Composite type descriptor
  */
-function validateComposite(...types: Descriptor[]): ValidateFunc {
+function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
    const validators = types.map((type) => validate(type));
 
-   return function validateCompoisiteFor(value: any): any {
+   return function validateCompoisiteFor(value: T): ValidationResult<T> {
       let hasSuitable = false;
       const errors = [];
 
@@ -66,13 +71,13 @@ function validateComposite(...types: Descriptor[]): ValidateFunc {
  * Returns validator for certain type.
  * @param type Type descriptor
  */
-function validate(type: Descriptor): ValidateFunc {
+function validate<T>(type: Descriptor): ValidateFunc<T> {
    type = normalizeType(type);
    const typeName = typeof type;
 
    switch (type) {
       case null:
-         return function validateNull(value: any): null | TypeError {
+         return function validateNull(value: T): ValidationResult<T> {
             if (value === null) {
                return value;
             }
@@ -82,7 +87,7 @@ function validate(type: Descriptor): ValidateFunc {
 
    switch (typeName) {
       case 'string':
-         return function validateTypeName(value: any): any {
+         return function validateTypeName(value: T): ValidationResult<T> {
             if (value === undefined || typeof value === type || value instanceof String) {
                return value;
             }
@@ -90,7 +95,7 @@ function validate(type: Descriptor): ValidateFunc {
          };
 
       case 'function':
-         return function validateTypeInstance(value: any): any {
+         return function validateTypeInstance(value: T): ValidationResult<T> {
             if (value === undefined || value instanceof (type as Function)) {
                return value;
             }
@@ -98,12 +103,12 @@ function validate(type: Descriptor): ValidateFunc {
          };
 
       case 'object':
-         return function validateTypeInterface(value: any): any {
+         return function validateTypeInterface(value: T): ValidationResult<T> {
             if (value === undefined) {
                return value;
             }
 
-            const mixins = value && value._mixins;
+            const mixins = value && (value as IHashMap<any>)._mixins;
             if (mixins instanceof Array && mixins.indexOf(type) !== -1) {
                return value;
             }
@@ -128,16 +133,18 @@ function validate(type: Descriptor): ValidateFunc {
  * console.log(descriptor(Number).required()()); // TypeError
  * </pre>
  */
-function required(): IChained {
-   const prev: IChained = this;
+function required<T>(): ChainedValidator<T> {
+   const prev: ValidateFunc<T> = this;
 
-   return chain(function isRequired(value: any): IChained | TypeError {
+   return chain(function isRequired(value: T): ValidationResult<T> {
       if (value === undefined) {
          return new TypeError('Value is required');
       }
       return prev(value);
    });
 }
+
+type RequiredValidator<T> = () => ChainedValidator<T>;
 
 /**
  * Returns validator for "One of" restriction.
@@ -153,20 +160,22 @@ function required(): IChained {
  * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
  * </pre>
  */
-function oneOf(values: any[]): IChained {
+function oneOf<T>(values: T[]): ChainedValidator<T> {
    if (!(values instanceof Array)) {
       throw new TypeError('Argument values should be an instance of Array');
    }
 
-   const prev: IChained = this;
+   const prev: ValidateFunc<T> = this;
 
-   return chain(function isOneOf(value: any): IChained | TypeError {
+   return chain(function isOneOf(value: T): ValidationResult<T> {
       if (value !== undefined && values.indexOf(value) === -1) {
          return new TypeError(`Invalid value ${value}`);
       }
       return prev(value);
    });
 }
+
+type oneOfValidator<T> = (values: T[]) => ChainedValidator<T>;
 
 /**
  * Returns validator for "Not" restriction.
@@ -182,20 +191,22 @@ function oneOf(values: any[]): IChained {
  * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
  * </pre>
  */
-function not(values: any[]): IChained {
+function not<T>(values: T[]): ChainedValidator<T> {
    if (!(values instanceof Array)) {
       throw new TypeError('Argument values should be an instance of Array');
    }
 
-   const prev: IChained = this;
+   const prev: ValidateFunc<T> = this;
 
-   return chain(function isNot(value: any): IChained | TypeError {
+   return chain(function isNot(value: T): ValidationResult<T> {
       if (value !== undefined && values.indexOf(value) !== -1) {
          return new TypeError(`Invalid value ${value}`);
       }
       return prev(value);
    });
 }
+
+type notValidator<T> = (values: T[]) => ChainedValidator<T>;
 
 /**
  * Returns validator for Array<T> restriction.
@@ -211,11 +222,11 @@ function not(values: any[]): IChained {
  * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
  * </pre>
  */
-function arrayOf(type: Descriptor): IChained {
-   const prev: IChained = this;
+function arrayOf<T>(type: Descriptor): ChainedValidator<T> {
+   const prev: ValidateFunc<T> = this;
    const validator = validate(type);
 
-   return chain(function isArrayOf(value: any): IChained | TypeError {
+   return chain(function isArrayOf(value: T): ValidationResult<T> {
       if (value !== undefined) {
          if (!(value instanceof Array)) {
             return new TypeError(`'Value "${value}" is not an Array`);
@@ -233,14 +244,14 @@ function arrayOf(type: Descriptor): IChained {
    });
 }
 
+type arrayOfValidator<T> = (type: Descriptor) => ChainedValidator<T>;
+
 /**
  * Creates chain element with all available validators.
  * @param parent Previous chain element
  */
-function chain(parent: IChained): IChained {
-   const wrapper = (...args) => {
-      return parent.apply(this, args);
-   };
+function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
+   const wrapper = (...args) => parent.apply(this, args);
 
    Object.defineProperties(wrapper, {
       required: {
@@ -261,7 +272,7 @@ function chain(parent: IChained): IChained {
       }
    });
 
-   return wrapper as IChained;
+   return wrapper as ChainedValidator<T>;
 }
 
 /**
@@ -327,12 +338,12 @@ function chain(parent: IChained): IChained {
  * @public
  * @author Мальцев А.А.
  */
-export default function descriptor(...types: Descriptor[]): IChained {
+export default function descriptor<T = any>(...types: Descriptor[]): ChainedValidator<T> {
    if (types.length === 0) {
       throw new TypeError('You should specify one type descriptor at least');
    }
 
    return chain(
-      types.length > 1 ? validateComposite(...types) : validate(types[0])
+      types.length > 1 ? validateComposite<T>(...types) : validate<T>(types[0])
    );
 }
