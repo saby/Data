@@ -11,6 +11,6 @@
 /artifacts
 /node_modules
 /application
-/Types/tslib.js
+/tslib.js
 /Types/tslint.json
 /Types/**/*.js
