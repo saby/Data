@@ -55,13 +55,13 @@ interface ISerializableState extends IRecordSerializableState {
  * В основе абстрактной модели лежит {@link Types/_entity/Record запись}.
  * Основные аспекты модели (дополнительно к аспектам записи):
  * <ul>
- *    <li>определение {@link properties собственных свойств} сущности;</li>
- *    <li>{@link getId уникальный идентификатор сущности} среди ей подобных.</li>
+ *    <li>определение {@link Types/_entity/Model#properties собственных свойств} сущности;</li>
+ *    <li>{@link Types/_entity/Model#idProperty уникальный идентификатор сущности} среди ей подобных.</li>
  * </ul>
  *
  * Поведенческие аспекты каждой сущности реализуются ее прикладным модулем в виде публичных методов.
  * Прикладные модели могут внедряться в порождающие их объекты, такие как
- * {@link Types/_source/ISource#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
+ * {@link Types/_source/Base#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
  *
  * Для реализации конкретной модели используется наследование от абстрактной либо промежуточной.
  *
