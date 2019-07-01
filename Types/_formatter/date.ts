@@ -417,7 +417,7 @@ addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
  * @public
  * @author Мальцев А.А.
  */
-export default function format(date: Date, format: string): string {
+function format(date: Date, format: string): string {
    return String(format).replace(getTokensRegex(), (token) => {
       // Check if to be escaped
       if (token[0] === '[' && token[token.length - 1] === ']') {
@@ -428,113 +428,86 @@ export default function format(date: Date, format: string): string {
    });
 }
 
+type Format = (date: Date, format: string) => string;
+
 /**
  * Constants with predefined formats
  */
-Object.defineProperties(format, {
-   FULL_DATE_DOW: {
-      get: (): string => {
-         return locale.config.fullDateDayOfWeekFormat;
-      }
-   },
-   FULL_DATE: {
-      get: (): string => {
-         return locale.config.fullDateFormat;
-      }
-   },
-   FULL_DATE_FULL_MONTH: {
-      get: (): string => {
-         return locale.config.fullDateFullMonthFormat;
-      }
-   },
-   FULL_DATE_FULL_MONTH_FULL_YEAR: {
-      get: (): string => {
-         return locale.config.fullDateFullMonthFullYearFormat;
-      }
-   },
-   FULL_DATE_FULL_YEAR: {
-      get: (): string => {
-         return locale.config.fullDateFullYearFormat;
-      }
-   },
-   FULL_DATE_SHORT_MONTH: {
-      get: (): string => {
-         return locale.config.fullDateShortMonthFormat;
-      }
-   },
-   FULL_DATE_SHORT_MONTH_FULL_YEAR: {
-      get: (): string => {
-         return locale.config.fullDateShortMonthFullYearFormat;
-      }
-   },
-   FULL_DATETIME: {
-      get: (): string => {
-         return locale.config.fullDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
-      }
-   },
-   FULL_HALF_YEAR: {
-      get: (): string => {
-         return locale.config.fullHalfYearFormat;
-      }
-   },
-   FULL_MONTH: {
-      get: (): string => {
-         return locale.config.fullMonthFormat;
-      }
-   },
-   FULL_QUATER: {
-      get: (): string => {
-         return locale.config.fullQuarterFormat;
-      }
-   },
-   FULL_TIME: {
-      get: (): string => {
-         return locale.config.fullTimeFormat;
-      }
-   },
-   SHORT_DATE_DOW: {
-      get: (): string => {
-         return locale.config.shortDateDayOfWeekFormat;
-      }
-   },
-   SHORT_DATE: {
-      get: (): string => {
-         return locale.config.shortDateFormat;
-      }
-   },
-   SHORT_DATE_FULL_MONTH: {
-      get: (): string => {
-         return locale.config.shortDateFullMonthFormat;
-      }
-   },
-   SHORT_DATE_SHORT_MONTH: {
-      get: (): string => {
-         return locale.config.shortDateShortMonthFormat;
-      }
-   },
-   SHORT_DATETIME: {
-      get: (): string => {
-         return locale.config.shortDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
-      }
-   },
-   SHORT_HALF_YEAR: {
-      get: (): string => {
-         return locale.config.shortHalfYearFormat;
-      }
-   },
-   SHORT_MONTH: {
-      get: (): string => {
-         return locale.config.shortMonthFormat;
-      }
-   },
-   SHORT_QUATER: {
-      get: (): string => {
-         return locale.config.shortQuarterFormat;
-      }
-   },
-   SHORT_TIME: {
-      get: (): string => {
-         return locale.config.shortTimeFormat;
-      }
+class Constants {
+   get FULL_DATE_DOW(): string {
+      return locale.config.fullDateDayOfWeekFormat;
    }
+   get FULL_DATE(): string {
+      return locale.config.fullDateFormat;
+   }
+   get FULL_DATE_FULL_MONTH(): string {
+      return locale.config.fullDateFullMonthFormat;
+   }
+   get FULL_DATE_FULL_MONTH_FULL_YEAR(): string {
+      return locale.config.fullDateFullMonthFullYearFormat;
+   }
+   get FULL_DATE_FULL_YEAR(): string {
+       return locale.config.fullDateFullYearFormat;
+   }
+   get FULL_DATE_SHORT_MONTH(): string {
+       return locale.config.fullDateShortMonthFormat;
+   }
+   get FULL_DATE_SHORT_MONTH_FULL_YEAR(): string {
+       return locale.config.fullDateShortMonthFullYearFormat;
+   }
+   get FULL_DATETIME(): string {
+       return locale.config.fullDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
+   }
+   get FULL_HALF_YEAR(): string {
+       return locale.config.fullHalfYearFormat;
+   }
+   get FULL_MONTH(): string {
+       return locale.config.fullMonthFormat;
+   }
+   get FULL_QUATER(): string {
+       return locale.config.fullQuarterFormat;
+   }
+   get FULL_TIME(): string {
+       return locale.config.fullTimeFormat;
+   }
+   get SHORT_DATE_DOW(): string {
+       return locale.config.shortDateDayOfWeekFormat;
+   }
+   get SHORT_DATE(): string {
+       return locale.config.shortDateFormat;
+   }
+   get SHORT_DATE_FULL_MONTH(): string {
+       return locale.config.shortDateFullMonthFormat;
+   }
+   get SHORT_DATE_SHORT_MONTH(): string {
+       return locale.config.shortDateShortMonthFormat;
+   }
+   get SHORT_DATETIME(): string {
+       return locale.config.shortDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
+   }
+   get SHORT_HALF_YEAR(): string {
+       return locale.config.shortHalfYearFormat;
+   }
+   get SHORT_MONTH(): string {
+       return locale.config.shortMonthFormat;
+   }
+   get SHORT_QUATER(): string {
+       return locale.config.shortQuarterFormat;
+   }
+   get SHORT_TIME(): string {
+       return locale.config.shortTimeFormat;
+   }
+}
+
+export default format as Format & Constants;
+
+// Process properties from Constants to format
+Object.getOwnPropertyNames(Constants.prototype)
+   .filter((name) => name !== 'constructor')
+   .forEach((name) => {
+      Object.defineProperty(
+         format,
+         name,
+          Object.getOwnPropertyDescriptor(Constants.prototype, name)
+      );
 });
