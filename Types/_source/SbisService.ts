@@ -586,7 +586,7 @@ function oldMove(
  *       keyProperty: 'Id'
  *    });
  *
- *    dataSource.create().addCallbacks((article) => {
+ *    dataSource.create().then((article) => {
  *       const id = article.getId();
  *    }, (error) => {
  *       console.error(error);
@@ -600,9 +600,9 @@ function oldMove(
  *       keyProperty: 'Id'
  *    });
  *
- *    dataSource.read('article-1').addCallbacks((article) => {
+ *    dataSource.read('article-1').then((article) => {
  *       const title = article.get('title');
- *    }, function(error) => {
+ *    }, (error) => {
  *       console.error(error);
  *    });
  * </pre>
@@ -628,7 +628,7 @@ function oldMove(
  *       title: 'Article 1'
  *    });
  *
- *    dataSource.update(article).addCallbacks(() => {
+ *    dataSource.update(article).then(() => {
  *       console.log('Article updated!');
  *    }, (error) => {
  *       console.error(error);
@@ -642,7 +642,7 @@ function oldMove(
  *       keyProperty: 'Id'
  *    });
  *
- *    dataSource.destroy('article-1').addCallbacks(() => {
+ *    dataSource.destroy('article-1').then(() => {
  *       console.log('Article deleted!');
  *    }, (error) => {
  *       console.error(error);
@@ -658,7 +658,7 @@ function oldMove(
  *    const query = new Query();
  *    query.limit(100);
  *
- *    dataSource.query(query).addCallbacks((response) => {
+ *    dataSource.query(query).then((response) => {
  *       const articles = response.getAll();
  *       console.log(`Articles count: ${articles.getCount()}`);
  *    }, (error) => {
@@ -838,7 +838,7 @@ export default class SbisService extends Rpc {
     *       endpoint: 'Employee',
     *       keyProperty: '@Employee'
     *    });
-    *    dataSource.create().addCallbacks((employee) => {
+    *    dataSource.create().then((employee) => {
     *       console.log(employee.get('FirstName'));
     *    }, (error) => {
     *       console.error(error);
@@ -854,9 +854,9 @@ export default class SbisService extends Rpc {
     *          format: 'getListFormat'
     *       }
     *    });
-    *    dataSource.create().addCallbacks(function(employee) {
+    *    dataSource.create().then((employee) => {
     *       console.log(employee.get('FirstName'));
-    *    }, function(error) {
+    *    }, (error) => {
     *       console.error(error);
     *    });
     * </pre>
