@@ -24,7 +24,7 @@ export default abstract class ReadWriteMixin {
    /**
     * @deprecated Old-fashioned options
     */
-   _options: any;
+   protected _options: any;
 
    get writable(): boolean {
       return this[$writable];
