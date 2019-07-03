@@ -91,7 +91,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
             data = ((source) => {
                const RecordSet = require('Types/collection').RecordSet;
                const result = new RecordSet({
-                  adapter: source._$adapter,
+                  adapter: source.getAdapter(),
                   idProperty: (source as RecordSet).getIdProperty()
                });
 

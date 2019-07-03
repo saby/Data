@@ -1531,6 +1531,16 @@ define([
             child.addField({name: 'bar', type: 'string'});
             assert.deepEqual(parent.getRawData().foo, {bar: null});
          });
+
+         it('should break link with "format" option source', function() {
+            var format = new Format();
+            var record = new Record({
+               format: format
+            });
+
+            record.addField({name: 'bar', type: 'string'});
+            assert.notEqual(record.getFormat(true), format);
+         });
       });
 
       describe('.removeField()', function() {
