@@ -1,5 +1,8 @@
 // @ts-ignore
 import Serializer = require('Core/Serializer');
+import {protect} from '../util';
+
+const $clone = protect('clone');
 
 /**
  * Миксин, позволяющий клонировать объекты.
@@ -35,6 +38,7 @@ export default class CloneableMixin {
             serializer.deserialize
          );
       }
+      clone[$clone] = true;
 
       // TODO: this should be do instances mixes InstantiableMixin
       delete clone._instanceId;

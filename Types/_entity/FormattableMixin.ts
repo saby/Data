@@ -162,12 +162,12 @@ export default abstract class FormattableMixin {
     *    console.log(characters.at(1).get('lastName'));// Connor
     * </pre>
     */
-   _$rawData: any;
+   protected _$rawData: any;
 
    /**
     * Work with raw data in Copy-On-Write mode.
     */
-   _$cow: boolean;
+   protected _$cow: boolean;
 
    /**
     * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By
@@ -195,7 +195,7 @@ export default abstract class FormattableMixin {
     *    });
     * </pre>
     */
-   _$adapter: IAdapter | IDecorator | string;
+   protected _$adapter: IAdapter | IDecorator | string;
 
    /**
     * @cfg {Types/_collection/format/Format|
@@ -357,33 +357,38 @@ export default abstract class FormattableMixin {
     *    order.set('items', orderItems);
     * </pre>
     */
-   _$format: FormatDescriptor;
+   protected _$format: FormatDescriptor;
 
    /**
     * Finally built format
     */
-   _format: format.Format;
+   protected _format: format.Format;
 
    /**
     * Clone of the _format, uses for caching in getFormat()
     */
-   _formatClone: format.Format;
+   protected _formatClone: format.Format;
+
+    /**
+     * Value of _$format is unlinked from original value
+     */
+   protected _formatUnlinked: boolean;
 
    /**
     * Adapter instance to deal with raw data
     */
-   _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
+   protected _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
 
    /**
     * List of field names taken from raw data adapter
     */
-   _rawDataFields: string[];
+   protected _rawDataFields: string[];
 
    /**
     * Old-fashioned options, bad stuff
     * @deprecated
     */
-   _options: any;
+   protected _options: any;
 
    constructor() {
       // FIXME: get rid of _options
@@ -550,6 +555,7 @@ export default abstract class FormattableMixin {
    addField(format: Field, at: number): void {
       format = this._buildField(format);
       this._$format = this._getFormat(true);
+      this._unlinkFormatOption();
       this._$format.add(format, at);
       (this._getRawDataAdapter() as ITable).addField(format, at);
       this._resetRawDataFields();
@@ -573,6 +579,7 @@ export default abstract class FormattableMixin {
     */
    removeField(name: string): void {
       this._$format = this._getFormat(true);
+      this._unlinkFormatOption();
       this._$format.removeField(name);
       (this._getRawDataAdapter() as ITable).removeField(name);
       this._resetRawDataFields();
@@ -596,6 +603,7 @@ export default abstract class FormattableMixin {
     */
    removeFieldAt(at: number): void {
       this._$format = this._getFormat(true);
+      this._unlinkFormatOption();
       this._$format.removeAt(at);
       (this._getRawDataAdapter() as ITable).removeFieldAt(at);
       this._resetRawDataFields();
@@ -745,9 +753,10 @@ export default abstract class FormattableMixin {
    protected _getFormat(build?: boolean): format.Format {
       if (!this._format) {
          if (this.hasDecalredFormat()) {
-            this._format = this._$format = FormattableMixin.prototype._buildFormat(this._$format, () => {
-               return buildFormatByRawData.call(this);
-            });
+            this._format = this._$format = FormattableMixin.prototype._buildFormat(
+               this._$format,
+               () => buildFormatByRawData.call(this)
+            );
          } else if (build) {
             this._format = buildFormatByRawData.call(this);
          }
@@ -775,6 +784,18 @@ export default abstract class FormattableMixin {
    protected _clearFormatClone(): void {
       this._formatClone = null;
    }
+
+    /**
+     * Unlinks _$format with original value
+     * @protected
+     */
+    protected _unlinkFormatOption(): void {
+       if (!this._formatUnlinked && this._$format && this._$format['[Types/_collection/format/Format]']) {
+          this._format = (this._$format as format.Format) = (this._$format as format.Format).clone(true);
+          this._clearFormatClone();
+          this._formatUnlinked = true;
+       }
+    }
 
    /**
     * Alias for hasDecalredFormat()
