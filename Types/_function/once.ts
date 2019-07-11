@@ -1,3 +1,6 @@
+//@ts-ignore
+import 'Core/polyfill';
+
 const storage = new WeakMap();
 
 /**
