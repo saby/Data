@@ -3,18 +3,19 @@ define([
    'Types/entity',
    'Types/collection',
    'Types/_entity/Model',
-   'Core/helpers/Date/toSql',
-   'Core/TimeInterval',
-   'Core/Date',
-   'Env/Env'
+   'Types/_formatter/dateToSql'
 ], function(
    type,
    collection,
    TypesModel,
-   toSql
+   dateToSql
 ) {
    'use strict';
+
+   var MODE = dateToSql.MODE;
    TypesModel = TypesModel.default;
+   dateToSql = dateToSql.default;
+
    describe('Types/_entity/factory', function() {
       var Factory = type.factory;
       var JsonAdapter = type.adapter.Json;
@@ -24,6 +25,7 @@ define([
       var List = collection.List;
       var RecordSet = collection.RecordSet;
       var TimeInterval = type.TimeInterval;
+
       var getFormatMock = function(type) {
          var format = {};
          format.getType = function() {
@@ -839,7 +841,7 @@ define([
             it('should return a String with current date for empty string', function() {
                assert.strictEqual(
                   Factory.serialize('', {format: getUniversalFormatMock('date')}),
-                  toSql(new Date(), toSql.MODE_DATE)
+                  dateToSql(new Date(), MODE.DATE)
                );
             });
 
