@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "baseUrl": "application",
-    "types" : ["requirejs"]
+    "types" : ["chai", "mocha", "requirejs"]
   },
   "include": [
     "Browser/**/*.ts",
