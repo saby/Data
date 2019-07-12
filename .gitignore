@@ -12,5 +12,9 @@
 /node_modules
 /application
 /tslib.js
-/Types/tslint.json
+/tslint.json
 /Types/**/*.js
+
+/test/_entity/Date.test.js
+/test/_entity/DateTime.test.js
+/test/_entity/Time.test.js

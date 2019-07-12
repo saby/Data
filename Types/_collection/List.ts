@@ -347,11 +347,11 @@ export default class List<T> extends mixin<
 
    // region SerializableMixin
 
-   _getSerializableState(state: ISerializableState): ISerializableState {
+   _getSerializableState(state: ISerializableState<IOptions<T>>): ISerializableState<IOptions<T>> {
       return SerializableMixin.prototype._getSerializableState.call(this, state);
    }
 
-   _setSerializableState(state: ISerializableState): Function {
+   _setSerializableState(state: ISerializableState<IOptions<T>>): Function {
       const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
       return function(): void {
          fromSerializableMixin.call(this);

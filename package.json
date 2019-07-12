@@ -1,56 +1,59 @@
 {
-   "name": "saby-types",
-   "version": "19.510.0",
-   "repository": {
-      "type": "git",
-      "url": "git@github.com:saby/Types.git"
-   },
-   "license": "MIT",
-   "files": [
-      "index.ts",
-      "Types/*"
-   ],
-   "scripts": {
-      "build": "npm run build:typescript && npm run build:units && npm run build:application",
-      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=Types/tslint.json",
-      "build:units": "saby-units --install",
-      "build:application": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../builder.json --log-level=warning -LLLL",
-      "start": "node node_modules/saby-units/cli/server",
-      "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-      "test:node": "saby-units --isolated --report",
-      "test:node-coverage": "saby-units --isolated --report --coverage",
-      "test:browser": "saby-units --browser --report",
-      "test:browser-coverage": "saby-units --browser --report --coverage",
-      "tslint": "tslint -q Types/**/*.ts"
-   },
-   "saby-units": {
-      "moduleType": "amd",
-      "tests": "test",
-      "root": "application",
-      "initializer": "init-testing.js",
-      "url": {
-         "port": 1025
-      }
-   },
-   "nyc": {
-      "include": [
-         "Types/**/*.js"
-      ],
-      "reporter": [
-         "text",
-         "html"
-      ],
-      "cache": false,
-      "eager": true,
-      "report-dir": "./artifacts/coverage"
-   },
-   "devDependencies": {
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.510",
-      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.510",
-      "saby-units": "git+https://github.com/saby/Units.git#rc-19.510",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.510",
-      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.510",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.510",
-      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.510"
-   }
+  "name": "saby-types",
+  "version": "19.510.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:saby/Types.git"
+  },
+  "license": "MIT",
+  "files": [
+    "index.ts",
+    "Types/*"
+  ],
+  "scripts": {
+    "build": "npm run build:typescript && npm run build:units && npm run build:application",
+    "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=tslint.json",
+    "build:units": "saby-units --install",
+    "build:application": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../builder.json --log-level=warning -LLLL",
+    "start": "node node_modules/saby-units/cli/server",
+    "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
+    "test:node": "saby-units --isolated --report",
+    "test:node-coverage": "saby-units --isolated --report --coverage",
+    "test:browser": "saby-units --browser --report",
+    "test:browser-coverage": "saby-units --browser --report --coverage",
+    "tslint": "tslint -q Types/**/*.ts"
+  },
+  "saby-units": {
+    "moduleType": "amd",
+    "tests": "test",
+    "root": "application",
+    "initializer": "init-testing.js",
+    "url": {
+      "port": 1025
+    }
+  },
+  "nyc": {
+    "include": [
+      "Types/**/*.js"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "cache": false,
+    "eager": true,
+    "report-dir": "./artifacts/coverage"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/requirejs": "^2.1.31",
+    "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.510",
+    "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.510",
+    "saby-units": "git+https://github.com/saby/Units.git#rc-19.510",
+    "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.510",
+    "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.510",
+    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.510",
+    "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.510"
+  }
 }

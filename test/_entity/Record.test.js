@@ -7,6 +7,9 @@ define([
    'Types/_entity/adapter/Sbis',
    'Types/_entity/format/IntegerField',
    'Types/_entity/format/fieldsFactory',
+   'Types/_entity/DateTime',
+   'Types/_entity/Date',
+   'Types/_entity/Time',
    'Core/core-extend',
    'Types/_collection/Enum',
    'Types/_collection/Flags',
@@ -19,6 +22,9 @@ define([
    SbisAdapter,
    IntegerField,
    fieldsFactory,
+   DateTime,
+   TheDate,
+   Time,
    extend
 ) {
    'use strict';
@@ -30,6 +36,9 @@ define([
    Format = Format.default;
    IntegerField = IntegerField.default;
    fieldsFactory = fieldsFactory.default;
+   DateTime = DateTime.default;
+   TheDate = TheDate.default;
+   Time = Time.default;
 
    describe('Types/_entity/Record', function() {
       var getRecordData = function() {
@@ -2204,6 +2213,27 @@ define([
                field = record.getFormat().at(0);
 
             assert.equal(field.getType(), 'datetime');
+         });
+
+         it('should create DateTime from special DateTime type', function() {
+            var record = Record.fromObject({date: new DateTime()}),
+               field = record.getFormat().at(0);
+
+            assert.equal(field.getType(), 'datetime');
+         });
+
+         it('should create DateTime from special Date type', function() {
+            var record = Record.fromObject({date: new TheDate()}),
+               field = record.getFormat().at(0);
+
+            assert.equal(field.getType(), 'date');
+         });
+
+         it('should create DateTime from special Time type', function() {
+            var record = Record.fromObject({date: new Time()}),
+               field = record.getFormat().at(0);
+
+            assert.equal(field.getType(), 'time');
          });
 
          it('should create Date field if SQL_SERIALIZE_MODE_DATETIME', function() {

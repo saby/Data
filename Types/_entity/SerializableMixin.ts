@@ -22,15 +22,19 @@ const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 
  */
 let instanceCounter = 0;
 
-export interface IState {
-   $options?: IHashMap<any>;
+export interface IState<T = any> {
+   $options?: T;
 }
 
-interface ISignature {
+export interface ISignature<T = any> {
    '$serialized$': string;
    module: string;
    id: number;
-   state: IState;
+   state: IState<T>;
+}
+
+export interface IOptions<T> {
+    [key: string]: T;
 }
 
 /**
@@ -107,7 +111,7 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
  * @public
  * @author Мальцев А.А.
  */
-export default class SerializableMixin {
+export default class SerializableMixin<T = any> {
    /**
     * Уникальный номер инстанса
     */
@@ -126,9 +130,9 @@ export default class SerializableMixin {
    /**
     * Method implemented in OptionsToPropertyMixin
     */
-   protected _getOptions: () => object;
+   protected _getOptions: () => T;
 
-   constructor(options?: IHashMap<any>) {
+   constructor(options?: IOptions<T>) {
       // Just for signature
    }
 
@@ -143,7 +147,7 @@ export default class SerializableMixin {
     * @remark Сериализует только указанный объект, без учета его инфраструктуры. Не рекомендуется использовать toJSON в
     * прикладном коде.
     */
-   toJSON(): ISignature {
+   toJSON(): ISignature<T> {
       this._checkModuleName(true);
 
       return {
@@ -160,8 +164,8 @@ export default class SerializableMixin {
     * @param state Cостояние
     * @protected
     */
-   _getSerializableState(state: IState): IState {
-      state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {};
+   _getSerializableState(state: IState<T>): IState<T> {
+      state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {} as T;
       return state;
    }
 
@@ -171,7 +175,7 @@ export default class SerializableMixin {
     * @param state Cостояние
     * @protected
     */
-   _setSerializableState(state?: IState): Function {
+   _setSerializableState(state?: IState<T>): Function {
       return function(): void {
          this[$unserialized] = true;
       };
@@ -212,13 +216,13 @@ export default class SerializableMixin {
     *    instance instanceof Entity;//true
     * </pre>
     */
-   static fromJSON(data: ISignature): SerializableMixin {
+   static fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T {
       const initializer = this.prototype._setSerializableState(data.state);
       const instance = new this(data.state.$options);
       if (initializer) {
          initializer.call(instance);
       }
-      return instance;
+      return instance as any as T;
    }
 }
 
