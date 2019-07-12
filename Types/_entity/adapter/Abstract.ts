@@ -1,8 +1,11 @@
+import DateTime from '../DateTime';
 import DestroyableMixin from '../DestroyableMixin';
 import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
+import TheDate from '../Date';
+import Time from '../Time';
 import {mixin} from '../../util';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
 import {ExtendDate, IExtendDateConstructor} from '../../_declarations';
@@ -32,7 +35,13 @@ const serialize = (() => {
          return (obj as ISerializableObject).getRawData(true);
       } else if (obj instanceof Date) {
          let mode = TO_SQL_MODE.DATETIME;
-         if (obj.getSQLSerializationMode) {
+         if (obj instanceof TheDate) {
+             mode = TO_SQL_MODE.DATE;
+         } else if (obj instanceof Time) {
+             mode = TO_SQL_MODE.TIME;
+         } else if (obj instanceof DateTime) {
+             mode = TO_SQL_MODE.DATETIME;
+         } else if (obj.getSQLSerializationMode) {
             switch (obj.getSQLSerializationMode()) {
                case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
                   mode = TO_SQL_MODE.DATE;

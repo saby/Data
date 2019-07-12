@@ -2,10 +2,13 @@
  * Library that provides various kinds of entities.
  * @library Types/entity
  * @includes adapter Types/_entity/adapter
+ * @includes Date Types/_entity/Date
+ * @includes DateTime Types/_entity/DateTime
  * @includes descriptor Types/_entity/descriptor
  * @includes factory Types/_entity/factory
  * @includes format Types/_entity/format
  * @includes functor Types/_entity/functor
+ * @includes Guid Types/_entity/Guid
  * @includes Identity Types/_entity/Identity
  * @includes ICloneable Types/_entity/ICloneable
  * @includes IEquatable Types/_entity/IEquatable
@@ -17,8 +20,8 @@
  * @includes Model Types/_entity/Model
  * @includes Record Types/_entity/Record
  * @includes relation Types/_entity/relation
+ * @includes Time Types/_entity/Time
  * @includes TimeInterval Types/_entity/TimeInterval
- * @includes Guid Types/_entity/Guid
  * @public
  * @author Мальцев А.А.
  */
@@ -26,6 +29,8 @@
 import * as adapter from './_entity/adapter';
 export {adapter};
 export {default as CloneableMixin} from './_entity/CloneableMixin';
+export {default as Date} from './_entity/Date';
+export {default as DateTime} from './_entity/DateTime';
 export {default as descriptor} from './_entity/descriptor';
 export {default as DestroyableMixin} from './_entity/DestroyableMixin';
 export {default as factory} from './_entity/factory';
@@ -38,6 +43,7 @@ export {
 } from './_entity/FormattableMixin';
 import * as functor from './_entity/functor';
 export {functor};
+export {default as Guid} from './_entity/Guid';
 export {default as Identity} from './_entity/Identity';
 export {default as ICloneable} from './_entity/ICloneable';
 export {default as IEquatable} from './_entity/IEquatable';
@@ -56,6 +62,6 @@ export {default as Record} from './_entity/Record';
 import * as relation from './_entity/relation';
 export {relation};
 export {default as SerializableMixin, IState as ISerializableState} from './_entity/SerializableMixin';
-export {default as VersionableMixin} from './_entity/VersionableMixin';
+export {default as Time} from './_entity/Time';
 export {default as TimeInterval} from './_entity/TimeInterval';
-export {default as Guid} from './_entity/Guid';
+export {default as VersionableMixin} from './_entity/VersionableMixin';
