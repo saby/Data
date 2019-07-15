@@ -2,12 +2,18 @@
 define([
    'Types/_entity/adapter/Abstract',
    'Types/_entity/Record',
+   'Types/_entity/DateTime',
+   'Types/_entity/Date',
+   'Types/_entity/Time',
    'Types/_collection/RecordSet',
    'Types/_source/DataSet',
    'Core/Date'
 ], function(
    AbstractAdapter,
    Record,
+   DateTime,
+   TheDate,
+   Time,
    RecordSet,
    DataSet
 ) {
@@ -15,8 +21,12 @@ define([
 
    AbstractAdapter = AbstractAdapter.default;
    Record = Record.default;
+   DateTime = DateTime.default;
+   TheDate = TheDate.default;
+   Time = Time.default;
    RecordSet = RecordSet.default;
    DataSet = DataSet.default;
+
    describe('Types/_entity/adapter/Abstract', function() {
       var adapter;
 
@@ -99,6 +109,33 @@ define([
             assert.throws(function() {
                adapter.serialize(foo);
             }, TypeError);
+         });
+
+         it('should serialize special DateTime type', function() {
+            var dateTime = new DateTime(2019, 6, 12);
+
+            assert.equal(
+               adapter.serialize(dateTime).substr(0, 22),
+               '2019-07-12 00:00:00+03'
+            );
+         });
+
+         it('should serialize special Date type', function() {
+            var date = new TheDate(2019, 6, 12);
+
+            assert.equal(
+               adapter.serialize(date),
+               '2019-07-12'
+            );
+         });
+
+         it('should serialize special Time type', function() {
+            var time = new Time(2019, 6, 12, 16, 7, 14);
+
+            assert.equal(
+               adapter.serialize(time).substr(0, 8),
+               '16:07:14'
+            );
          });
 
          it('should return Date as string use default serialization mode', function() {
