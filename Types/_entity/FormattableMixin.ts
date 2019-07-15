@@ -17,8 +17,8 @@ export interface IOptions {
    cow?: boolean;
 }
 
-export interface ISerializableState extends IDefaultSerializableState {
-   $options: IOptions;
+export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
+   $options: T;
 }
 
 /**

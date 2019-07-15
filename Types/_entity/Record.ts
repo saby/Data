@@ -6,7 +6,9 @@ import ICloneable from './ICloneable';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import IVersionable from './IVersionable';
+import DateTime from './DateTime';
 import DestroyableMixin from './DestroyableMixin';
+import Factory from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin from './ObservableMixin';
 import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
@@ -18,7 +20,8 @@ import FormattableMixin, {
    IOptions as IFormattableOptions
 } from './FormattableMixin';
 import VersionableMixin from './VersionableMixin';
-import Factory from './factory';
+import TheDate from './Date';
+import Time from './Time';
 import {IReceiver} from './relation';
 import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
@@ -132,6 +135,15 @@ function getValueType(value: any): string | IFieldDeclaration {
          } else if (value && value['[Types/_collection/RecordSet]']) {
             return 'recordset';
          } else if (value instanceof Date) {
+            if (value instanceof TheDate) {
+                return 'date';
+            }
+            if (value instanceof Time) {
+                return 'time';
+            }
+            if (value instanceof DateTime) {
+                return 'datetime';
+            }
             if (value.hasOwnProperty('_serializeMode')) {
                switch ((value as ExtendDate).getSQLSerializationMode()) {
                   case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
