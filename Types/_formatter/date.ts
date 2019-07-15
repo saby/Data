@@ -12,6 +12,8 @@ let tokensRegex;
 const tokens = {};
 const locale = locales.current;
 const MINUTES_IN_HOUR = 60;
+const DECIMAL_BASE = 10;
+
 /**
  * Adds lead zeroes to the Number
  * @param value Number
@@ -23,7 +25,7 @@ function withLeadZeroes(value: number, count: number): string {
    const restCount = count - absValue.length;
    const sign = value >= 0 ? '' : '-';
    return sign + (String(Math.pow(
-      10,
+       DECIMAL_BASE,
       Math.max(0, restCount)
    )).substr(1) + absValue);
 }
@@ -180,9 +182,9 @@ function getTimeZone(date: Date, options: IDateFormatOptions): string {
    let totalMinutes = date.getTimezoneOffset();
    const sign = totalMinutes <= 0 ? '+' : '-';
    totalMinutes = Math.abs(totalMinutes);
-   let hours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
-   let minutes = totalMinutes - MINUTES_IN_HOUR * hours;
-   let minutesStr = minutes ? options.separator + withLeadZeroes(minutes, 2) : '';
+   const hours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+   const minutes = totalMinutes - MINUTES_IN_HOUR * hours;
+   const minutesStr = minutes ? options.separator + withLeadZeroes(minutes, 2) : '';
 
    return `${sign}${withLeadZeroes(hours, 2)}${minutesStr}`;
 }
@@ -328,17 +330,15 @@ addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
  *
  * Выведем полную дату:
  * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, format.FULL_DATE));//07.05.18
- *    });
+ *    import {date as format} from 'Types/formatter';
+ *    const date = new Date(2018, 4, 7);
+ *    console.log(format(date, format.FULL_DATE)); // 07.05.18
  * </pre>
  * Выведем полную дату с днем недели:
  * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, format.FULL_DATE_DOW));//07 мая'18, понедельник
- *    });
+ *    import {date as format} from 'Types/formatter';
+ *    const date = new Date(2018, 4, 7);
+ *    console.log(format(date, format.FULL_DATE_DOW)); // 07 мая'18, понедельник
  * </pre>
  *
  * <h2>Доступные маски.</h2>
@@ -398,18 +398,16 @@ addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
  * <h2>Примеры использования масок.</h2>
  * Выведем дату:
  * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, 'Сегодня ddddl, D MMMMlo YYYY года.'));//Сегодня понедельник, 7 мая 2018 года.
- *    });
+ *    import {date as format} from 'Types/formatter';
+ *    const date = new Date(2018, 4, 7);
+ *    console.log(format(date, 'Сегодня ddddl, D MMMMlo YYYY года.')); // Сегодня понедельник, 7 мая 2018 года.
  * </pre>
  *
  * Для экранирования вывода следует использовать квадратные скобки:
  * <pre>
- *    require(['Core/helpers/Date/format'], function(format) {
- *       var date = new Date(2018, 4, 7);
- *       console.log(format(date, '[Today is] YYYY/DD/MM'));//Today is 2018/07/05
- *    });
+ *    import {date as format} from 'Types/formatter';
+ *    const date = new Date(2018, 4, 7);
+ *    console.log(format(date, '[Today is] YYYY/DD/MM')); // Today is 2018/07/05
  * </pre>
  *
  * @class
@@ -501,7 +499,7 @@ class Constants {
 
 export default format as Format & Constants;
 
-// Process properties from Constants to format
+// Process properties from Constants to the format
 Object.getOwnPropertyNames(Constants.prototype)
    .filter((name) => name !== 'constructor')
    .forEach((name) => {
