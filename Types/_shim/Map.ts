@@ -1,6 +1,4 @@
 import {SetPolyfill} from './Set';
-//@ts-ignore
-import 'Core/polyfill';
 
 /**
  * Limited emulation of standard built-in object "Map" if it's not supported.
