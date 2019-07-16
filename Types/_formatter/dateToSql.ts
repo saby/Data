@@ -47,7 +47,7 @@ export default function toSQL(date: Date, mode: SerializationMode = MODE.DATETIM
       format = format.replace('Z', '');
    }
 
-   let ms = date.getMilliseconds() > 0 ? '.SSS' : '';
+   const ms = date.getMilliseconds() > 0 ? '.SSS' : '';
    format = format.replace('${ms}', ms);
 
    return dateFormatter(date, format);
