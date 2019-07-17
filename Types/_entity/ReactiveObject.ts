@@ -22,8 +22,12 @@ export default class ReactiveObject<T> extends VersionableMixin {
             if (descriptor.set) {
                 // Wrap write operation in access descriptor
                 descriptor.set = ((original) => (value) => {
+                    const oldValue = this[key];
                     original.call(this, value);
-                    this._nextVersion();
+
+                    if (value !== oldValue) {
+                        this._nextVersion();
+                    }
                 })(descriptor.set);
             } else if (!descriptor.get) {
                 if (!storage) {
@@ -35,8 +39,12 @@ export default class ReactiveObject<T> extends VersionableMixin {
                 descriptor = {
                     get: () => storage.get(key),
                     set: descriptor.writable ? (value) => {
+                        const oldValue = storage.get(key);
                         storage.set(key, value);
-                        this._nextVersion();
+
+                        if (value !== oldValue) {
+                            this._nextVersion();
+                        }
                     } : undefined,
                     configurable: descriptor.configurable,
                     enumerable: descriptor.enumerable

@@ -82,6 +82,16 @@ describe('Types/_entity/ReactiveObject', () => {
             assert.notEqual(instance.getVersion(), initialVersion);
         });
 
+        it('shouldn\'t update version after set the same property value', () => {
+            const instance = ReactiveObject.create({
+                foo: 'bar'
+            });
+            const initialVersion = instance.getVersion();
+
+            instance.foo = 'bar';
+            assert.equal(instance.getVersion(), initialVersion);
+        });
+
         it('should update version after update calculated property value', () => {
             const instance = ReactiveObject.create({
                 get foo(): string {
@@ -94,6 +104,21 @@ describe('Types/_entity/ReactiveObject', () => {
             const initialVersion = instance.getVersion();
             instance.foo = 'baz';
             assert.notEqual(instance.getVersion(), initialVersion);
+        });
+
+        it('shouldn\'t update version after set the same calculated property value', () => {
+            const instance = ReactiveObject.create({
+                get foo(): string {
+                    return 'bar';
+                },
+                set foo(value: string) {
+                    // do nothing
+                }
+            });
+            const initialVersion = instance.getVersion();
+
+            instance.foo = 'bar';
+            assert.equal(instance.getVersion(), initialVersion);
         });
 
         it('shouldn\'t update version after update not-reactive property', () => {
