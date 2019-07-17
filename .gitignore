@@ -18,4 +18,5 @@
 /test/_entity/Date.test.js
 /test/_entity/DateTime.test.js
 /test/_entity/Time.test.js
+/test/_object/merge.test.js
 /test/_object/isEqual.test.js
