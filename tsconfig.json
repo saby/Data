@@ -1,17 +1,17 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "baseUrl": "application",
+    "skipLibCheck": true,
     "types" : ["chai", "mocha", "requirejs"]
   },
   "include": [
+    "Application/**/*.ts",
     "Browser/**/*.ts",
     "Env/**/*.ts",
     "test/**/*.ts",
     "Types/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
-    "WS.Core/**/*.ts",
-    "WS.Core/ws.d.ts"
+    "WS.Core/**/*.ts"
   ]
 }

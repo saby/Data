@@ -11,22 +11,29 @@
     "Types/*"
   ],
   "scripts": {
-    "build": "npm run build:typescript && npm run build:units && npm run build:application",
+    "build": "npm run build:typescript && npm run build:units && npm run build:compile",
     "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=tslint.json",
     "build:units": "saby-units --install",
-    "build:application": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../builder.json --log-level=warning -LLLL",
+    "build:compile": "tsc -b --verbose",
     "start": "node node_modules/saby-units/cli/server",
     "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-    "test:node": "saby-units --isolated --report",
-    "test:node-coverage": "saby-units --isolated --report --coverage",
-    "test:browser": "saby-units --browser --report",
-    "test:browser-coverage": "saby-units --browser --report --coverage",
+    "test:coverage": "saby-units --isolated --coverage",
+    "test:browser": "saby-units --browser",
+    "test:browser-coverage": "saby-units --browser --coverage",
     "tslint": "tslint -q Types/**/*.ts"
   },
   "saby-units": {
     "moduleType": "amd",
     "tests": "test",
-    "root": "application",
+    "links": {
+      "node_modules/wasaby-app/src/Application": "Application",
+      "node_modules/rmi/src/client/Browser": "Browser",
+      "node_modules/rmi/src/client/Env": "Env",
+      "node_modules/sbis3-ws/WS.Core": "WS.Core",
+      "node_modules/sbis3-ws/Inferno": "Inferno",
+      "node_modules/sbis3-ws/View": "View",
+      "node_modules/saby-i18n/I18n": "I18n"
+    },
     "initializer": "init-testing.js",
     "url": {
       "port": 1025
@@ -49,11 +56,10 @@
     "@types/mocha": "^5.2.7",
     "@types/requirejs": "^2.1.31",
     "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.600",
+    "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.600",
     "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.600",
     "saby-units": "git+https://github.com/saby/Units.git#rc-19.600",
     "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.600",
-    "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.600",
-    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600",
-    "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.600"
+    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600"
   }
 }
