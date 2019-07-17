@@ -1297,7 +1297,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1323,7 +1323,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1362,7 +1362,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1390,7 +1390,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1418,7 +1418,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1446,7 +1446,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');
@@ -1478,7 +1478,7 @@ define([
                return service.query(query).then(function() {
                   var args = SbisBusinessLogic.lastRequest.args;
 
-                  assert.strictEqual(args['Навигация'].s[0].n, 'HaveMore');
+                  assert.strictEqual(args['Навигация'].s[0].n, 'HasMore');
                   assert.strictEqual(args['Навигация'].d[0], true);
 
                   assert.strictEqual(args['Навигация'].s[1].n, 'Limit');

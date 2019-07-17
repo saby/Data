@@ -290,7 +290,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
             });
 
             params = {
-               HaveMore: more,
+               HasMore: more,
                Limit: limit,
                Order: order || PoitionNavigationOrder.after,
                Position: buildRecord(position, adapter)
@@ -303,7 +303,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
             params = {
                Offset: offset || 0,
                Limit: limit,
-               HaveMore: more
+               HasMore: more
             };
          }
    }
