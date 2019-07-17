@@ -1,3 +1,4 @@
+import IVersionable from './IVersionable';
 import ManyToMany from './relation/ManyToMany';
 
 /**
@@ -6,7 +7,7 @@ import ManyToMany from './relation/ManyToMany';
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class VersionableMixin {
+export default abstract class VersionableMixin implements IVersionable {
    readonly '[Types/_entity/VersionableMixin]': boolean;
    protected _version: number;
 

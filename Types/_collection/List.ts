@@ -10,7 +10,6 @@ import {
    ICloneable,
    IEquatable,
    ISerializableState,
-   IVersionable,
    ManyToManyMixin,
    ObservableMixin,
    OptionsToPropertyMixin,
@@ -98,8 +97,7 @@ export default class List<T> extends mixin<
    IList<T>,
    IIndexedCollection,
    ICloneable,
-   IEquatable,
-   IVersionable {
+   IEquatable {
 
    /**
     * @cfg {Array.<*>} Элементы списка
@@ -497,7 +495,6 @@ Object.assign(List.prototype, {
    '[Types/_collection/IIndexedCollection]': true,
    '[Types/_collection/IList]': true,
    '[Types/_entity/IEquatable]': true,
-   '[Types/_entity/IVersionable]': true,
    _moduleName: 'Types/collection:List',
    _$items: null,
    _indexer: null
