@@ -18,6 +18,7 @@
  * @includes IProducible Types/_entity/IProducible
  * @includes IVersionable Types/_entity/IVersionable
  * @includes Model Types/_entity/Model
+ * @includes ReactiveObject Types/_entity/ReactiveObject
  * @includes Record Types/_entity/Record
  * @includes relation Types/_entity/relation
  * @includes Time Types/_entity/Time
@@ -57,6 +58,7 @@ export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
 export {default as Model} from './_entity/Model';
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
+export {default as ReactiveObject} from './_entity/ReactiveObject';
 export {default as ReadWriteMixin} from './_entity/ReadWriteMixin';
 export {default as Record} from './_entity/Record';
 import * as relation from './_entity/relation';
