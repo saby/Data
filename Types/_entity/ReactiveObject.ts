@@ -16,7 +16,7 @@ import {Map} from '../shim';
  * Let's track the 'foo' property:
  * <pre>
  * import {ReactiveObject} from 'Types/entity';
- * const instance = ReactiveObject.create({
+ * const instance = new ReactiveObject({
  *     foo: 'bar'
  * });
  * console.log(instance.foo, instance.getVersion()); // 'bar', 0
@@ -28,7 +28,7 @@ import {Map} from '../shim';
  * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
  * <pre>
  * import {ReactiveObject} from 'Types/entity';
- * const instance = ReactiveObject.create({
+ * const instance = new ReactiveObject({
  *     get foo() {
  *         return 'bar';
  *     }
@@ -40,7 +40,7 @@ import {Map} from '../shim';
  * You can also define your own logic to read and write property value:
  * <pre>
  * import {ReactiveObject} from 'Types/entity';
- * const instance = ReactiveObject.create({
+ * const instance = new ReactiveObject({
  *     email: 'foo@bar.com',
  *     get domain(): string {
  *         return this.email.split('@')[1];
@@ -57,13 +57,43 @@ import {Map} from '../shim';
  * console.log(instance.email); // 'foo@bar.org'
  * console.log(instance.domain); // 'bar.org'
  * </pre>
+ * @public
  * @author Мальцев А.А.
  */
-export default class ReactiveObject<T> extends VersionableMixin {
-    protected constructor(data: T) {
+class ReactiveObject<T> extends VersionableMixin {
+    private _nestedVersions: Map<string, number>;
+
+    constructor(data: T) {
         super();
         this._proxyProperties(data);
     }
+
+    // region VersionableMixin
+
+    getVersion(): number {
+        // Check for changes in nested instances of VersionableMixin
+        Object.keys(this).forEach((key) => {
+            const value = this[key];
+            if (value instanceof VersionableMixin) {
+                if (!this._nestedVersions) {
+                    this._nestedVersions = new Map<string, number>();
+                }
+
+                const nestedVersions = this._nestedVersions;
+                const lastVersion = nestedVersions.get(key) || 0;
+                const actualVersion = value.getVersion();
+                // Move self version only if nested object has been modified since last check
+                if (lastVersion !== actualVersion) {
+                    nestedVersions.set(key, actualVersion);
+                    this._nextVersion();
+                }
+            }
+        });
+
+        return super.getVersion();
+    }
+
+    // endregion
 
     // region Protected
 
@@ -78,7 +108,7 @@ export default class ReactiveObject<T> extends VersionableMixin {
             let descriptor = Object.getOwnPropertyDescriptor(donor, key);
 
             if (descriptor.set) {
-                // Wrap write operation in access descriptor
+                // Access descriptor: decorate write operation
                 descriptor.set = ((original) => (value) => {
                     const oldValue = this[key];
                     original.call(this, value);
@@ -88,11 +118,11 @@ export default class ReactiveObject<T> extends VersionableMixin {
                     }
                 })(descriptor.set);
             } else if (!descriptor.get) {
+                // Data descriptor: translate to the access descriptor
                 if (!storage) {
                     storage = new Map<string, T[keyof T]>();
                 }
 
-                // Translate data descriptor to the access descriptor
                 storage.set(key, descriptor.value);
                 descriptor = {
                     get: () => storage.get(key),
@@ -115,13 +145,11 @@ export default class ReactiveObject<T> extends VersionableMixin {
     }
 
     // endregion
-
-    // region Statics
-
-    // Static construction method only allows TypeScript interpreter to see T within ReactiveObject instance
-    static create<T>(data: T): ReactiveObject<T> & T {
-        return new ReactiveObject<T>(data) as ReactiveObject<T> & T;
-    }
-
-    // endregion
 }
+
+interface IReactiveObjectConstructor {
+    readonly prototype: ReactiveObject<object>;
+    new<T>(data: T): T & ReactiveObject<T>;
+}
+
+export default ReactiveObject as IReactiveObjectConstructor;
