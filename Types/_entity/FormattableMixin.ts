@@ -900,5 +900,6 @@ Object.assign(FormattableMixin.prototype, {
    _format: null,
    _formatClone: null,
    _rawDataAdapter: null,
-   _rawDataFields: null
+   _rawDataFields: null,
+   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat
 });
