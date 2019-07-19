@@ -17,9 +17,10 @@
     "build:compile": "tsc 2>&1 || echo Done",
     "start": "node node_modules/saby-units/cli/server",
     "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-    "test:coverage": "saby-units --isolated --coverage",
-    "test:browser": "saby-units --browser",
-    "test:browser-coverage": "saby-units --browser --coverage",
+    "test:node": "saby-units --isolated --report",
+    "test:node-coverage": "saby-units --isolated --report --coverage",
+    "test:browser": "saby-units --browser --report",
+    "test:browser-coverage": "saby-units --browser --report --coverage",
     "tslint": "tslint -q Types/**/*.ts"
   },
   "saby-units": {
