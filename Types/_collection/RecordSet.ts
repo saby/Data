@@ -442,7 +442,7 @@ export default class RecordSet<T = Model> extends mixin<
             }
         }
 
-        if (!this.hasDecalredFormat()) {
+        if (!this.hasDeclaredFormat()) {
             this._clearFormat();
         }
         (this._getRawDataAdapter() as adapter.ITable).clear();
@@ -583,7 +583,7 @@ export default class RecordSet<T = Model> extends mixin<
         }
 
         const oldItems = this._$items.slice();
-        const hasDeclaredFormat = this.hasDecalredFormat();
+        const hasDeclaredFormat = this.hasDeclaredFormat();
         let result;
 
         if (items instanceof RecordSet && !hasDeclaredFormat) {
@@ -1367,7 +1367,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @protected
      */
     protected _normalizeItems(items: T[], state?: string): T[] {
-        const formatDefined = this.hasDecalredFormat();
+        const formatDefined = this.hasDeclaredFormat();
         const result = [];
         let resultItem;
         let item;
