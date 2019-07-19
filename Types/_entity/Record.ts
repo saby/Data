@@ -724,7 +724,7 @@ export default class Record extends mixin<
       resultState._changedFields = this[$changedFields as string];
 
       // Keep format if record has owner with format
-      if (resultState.$options.owner && resultState.$options.owner.hasDecalredFormat()) {
+      if (resultState.$options.owner && resultState.$options.owner.hasDeclaredFormat()) {
          resultState._format = resultState.$options.owner.getFormat();
       }
 
@@ -759,12 +759,12 @@ export default class Record extends mixin<
       this._notifyChange();
    }
 
-   hasDecalredFormat(): boolean {
+    hasDeclaredFormat(): boolean {
       const owner = this.getOwner();
       if (owner) {
-         return owner.hasDecalredFormat();
+         return owner.hasDeclaredFormat();
       } else {
-         return super.hasDecalredFormat.call(this);
+         return super.hasDeclaredFormat.call(this);
       }
    }
 

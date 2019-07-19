@@ -76,7 +76,7 @@ function buildFormatByRawData(): format.Format {
  * Builds raw data by declared format
  */
 function buildRawData(): void {
-   if (this.hasDecalredFormat()) {
+   if (this.hasDeclaredFormat()) {
       let adapter = this._getRawDataAdapter();
       const fields = adapter.getFields();
 
@@ -479,7 +479,7 @@ export default abstract class FormattableMixin {
    /**
     * Returns flag which indicates the fact that format was declared directly.
     */
-   hasDecalredFormat(): boolean {
+   hasDeclaredFormat(): boolean {
       return !!this._$format;
    }
 
@@ -752,7 +752,7 @@ export default abstract class FormattableMixin {
     */
    protected _getFormat(build?: boolean): format.Format {
       if (!this._format) {
-         if (this.hasDecalredFormat()) {
+         if (this.hasDeclaredFormat()) {
             this._format = this._$format = FormattableMixin.prototype._buildFormat(
                this._$format,
                () => buildFormatByRawData.call(this)
@@ -770,7 +770,7 @@ export default abstract class FormattableMixin {
     * @protected
     */
    protected _clearFormat(): void {
-      if (this.hasDecalredFormat()) {
+      if (this.hasDeclaredFormat()) {
          throw new Error(`${(this as any)._moduleName}: format can't be cleared because it's defined directly`);
       }
       this._format = null;
@@ -798,12 +798,12 @@ export default abstract class FormattableMixin {
     }
 
    /**
-    * Alias for hasDecalredFormat()
+    * Alias for hasDeclaredFormat()
     * @deprecated
     * @protected
     */
    protected _hasFormat(): boolean {
-      return this.hasDecalredFormat();
+      return this.hasDeclaredFormat();
    }
 
    /**
@@ -813,7 +813,7 @@ export default abstract class FormattableMixin {
     * @protected
     */
    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
-      if (this.hasDecalredFormat()) {
+      if (this.hasDeclaredFormat()) {
          const fields = this._getFormat();
          const index = fields.getFieldIndex(name);
          if (index > -1) {
@@ -900,5 +900,6 @@ Object.assign(FormattableMixin.prototype, {
    _format: null,
    _formatClone: null,
    _rawDataAdapter: null,
-   _rawDataFields: null
+   _rawDataFields: null,
+   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });
