@@ -55,21 +55,10 @@ All you need is just saby-types package on npm.
 
         npm start
 
-- Run unit tests in Node.js and save report in XUnit format to /artifacts/ folder:
 
-        npm test:node
+- Run unit tests in Node.js and display coverage report:
 
-- Run unit tests in Node.js and save coverage report to /artifacts/ folder:
-
-        npm test:node-coverage
-
-- Run unit tests in Chrome and save report in XUnit format to /artifacts/ folder:
-
-        npm test:browser
-
-- Run unit tests in Chrome and save coverage report to /artifacts/ folder:
-
-        npm test:browser-coverage
+        npm test:coverage
 
 ## Integration with Jenkins
 

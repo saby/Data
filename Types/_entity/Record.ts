@@ -5,7 +5,6 @@ import IObservableObject from './IObservableObject';
 import ICloneable from './ICloneable';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
-import IVersionable from './IVersionable';
 import DateTime from './DateTime';
 import DestroyableMixin from './DestroyableMixin';
 import factory from './factory';
@@ -284,8 +283,7 @@ export default class Record extends mixin<
    IProducible,
    IEquatable,
    IEnumerable<any>,
-   IReceiver,
-   IVersionable {
+   IReceiver {
 
    /**
     * Объект содержащий закэшированные значения полей
@@ -1558,7 +1556,6 @@ Object.assign(Record.prototype, {
    '[Types/_entity/IObject]': true,
    '[Types/_entity/IObservableObject]': true,
    '[Types/_entity/IProducible]': true,
-   '[Types/_entity/IVersionable]': true,
    '[Types/_entity/relation/IReceiver]': true,
    _moduleName: 'Types/entity:Record',
    _$state: STATES.DETACHED,
