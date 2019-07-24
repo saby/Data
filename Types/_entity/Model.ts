@@ -71,7 +71,7 @@ interface ISerializableState extends IRecordSerializableState {
  *    //My/Awesome/Model.ts
  *    import {Model} from 'Types/entity';
  *    export default class AwesomeModel extends Model {
- *       _moduleName: string = 'My/Awesome/Model';
+ *       protected _moduleName: string = 'My/Awesome/Model';
  *       //...
  *    });
  *
@@ -83,13 +83,13 @@ interface ISerializableState extends IRecordSerializableState {
  *    //My/Awesome/Model.ts
  *    import {Salt} from 'Application/Lib';
  *    import {Model} from 'Types/entity';
+ *
  *    export default class User extends Model{
- *       _moduleName: string = 'Application/Model/User';
- *       _$format: Array = [
+ *       protected _$format: object[] = [
  *          {name: 'login', type: 'string'},
  *          {name: 'salt', type: 'string'}
  *       ];
- *       _$idProperty: string = 'login';
+ *       protected _$idProperty: string = 'login';
  *       authenticate(password: string): boolean {
  *          return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
  *       }
@@ -99,6 +99,7 @@ interface ISerializableState extends IRecordSerializableState {
  * <pre>
  *    //Application/Controller/Test/Auth.ts
  *    import User from 'Application/Model/User';
+ *
  *    const user = new User();
  *    user.set({
  *       login: 'i.c.wiener',
@@ -110,29 +111,29 @@ interface ISerializableState extends IRecordSerializableState {
  * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для
  * организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
  * <pre>
- *    var MyEngine, MyTransmission, myCar;
+ *    import {Model, adapter} from 'Types/entity';
  *
- *    MyEngine = Model.extend({
- *       _$properties: {
+ *    class MyEngine extends Model {
+ *       protected _$properties: {
  *          fuelType: {
- *             get: function() {
+ *             get() {
  *                return 'Diesel';
  *             }
  *          }
  *       }
- *    });
+ *    }
  *
- *    MyTransmission = Model.extend({
- *       _$properties: {
+ *    class MyTransmission extends Model {
+ *       protected _$properties: {
  *          transmissionType: {
- *             get: function() {
+ *             get() {
  *                return 'Manual';
  *             }
  *          }
  *       }
- *    });
+ *    }
  *
- *    myCar = new MyEngine({
+ *    const myCar = new MyEngine({
  *       rawData: new MyTransmission({
  *          rawData: {
  *             color: 'Red',
@@ -140,12 +141,12 @@ interface ISerializableState extends IRecordSerializableState {
  *             transmissionType: ''
  *          }
  *       }),
- *       adapter: new RecordSetAdapter()
- *   });
+ *       adapter: new adapter.RecordSet()
+ *    });
  *
- *   myCar.get('fuelType');//'Diesel'
- *   myCar.get('transmissionType');//'Manual'
- *   myCar.get('color');//'Red'
+ *    console.log(myCar.get('fuelType')); // 'Diesel'
+ *    console.log(myCar.get('transmissionType')); // 'Manual'
+ *    console.log(myCar.get('color')); // 'Red'
  * </pre>
  * @class Types/_entity/Model
  * @extends Types/_entity/Record
@@ -191,7 +192,7 @@ export default class Model extends mixin<
     *    }
     *
     *    export default class User extends Model {
-    *       _$properties: Object = {
+    *       protected _$properties: object = {
     *          id: {
     *             get(value) {
     *                return '№' + value;
@@ -217,7 +218,7 @@ export default class Model extends mixin<
     *             }
     *          }
     *       },
-    *       _group: IGroup = null
+    *       protected _group: IGroup = null
     *    }
     *
     *    const user = new User({
@@ -250,7 +251,7 @@ export default class Model extends mixin<
     *    import {Model} from 'Types/entity';
     *
     *    export default class User extends {
-    *       _$properties: Object = {
+    *       protected _$properties: Object = {
     *          displayName: {
     *             get() {
     *               return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
@@ -274,7 +275,7 @@ export default class Model extends mixin<
     *    import {Model, functor} from 'Types/entity';
     *
     *    export default class User extends {
-    *       _$properties: any = {
+    *       protected _$properties: object = {
     *          birthDay: {
     *             get: new functor.Compute(function() {
     *                return this.get('facebookBirthDay') || this.get('linkedInBirthDay');
@@ -630,28 +631,31 @@ export default class Model extends mixin<
     * @example
     * Получим описание свойств модели:
     * <pre>
-    *    var User = Model.extend({
-    *          _$properties: {
-    *             id: {
-    *                get: function() {
-    *                   this._id;
-    *                },
-    *                set: function(value) {
-    *                   this._id = value;
-    *                }
+    *    import {Model} from 'Types/entity';
+    *
+    *    class User extends Model {
+    *       protected _$properties: {
+    *          id: {
+    *             get() {
+    *                return this._id;
     *             },
-    *             group: {
-    *                get: function() {
-    *                   this._group;
-    *                }
+    *             set(value) {
+    *                this._id = value;
     *             }
     *          },
-    *          _id: 0
-    *          _group: null
-    *       }),
-    *       user = new User();
+    *          group: {
+    *             get() {
+    *                return this._group;
+    *             }
+    *          }
+    *       },
+    *       protected _id: 0
+    *       protected _group: null
+    *    }
     *
-    *    user.getProperties();//{id: {get: Function, set: Function}, group: {get: Function}}
+    *    const user = new User();
+    *
+    *    console.log(user.getProperties()); // {id: {get: Function, set: Function}, group: {get: Function}}
     * </pre>
     */
    getProperties(): IProperties<IProperty> {
@@ -665,25 +669,27 @@ export default class Model extends mixin<
     * @example
     * Получим дефолтное значение свойства id:
     * <pre>
-    *    var User = Model.extend({
-    *          _$properties: {
-    *             id: {
-    *                get: function() {
-    *                   this._id;
-    *                },
-    *                def: function(value) {
-    *                   return Date.now();
-    *                }
-    *             }
-    *          },
-    *          _id: 0
-    *       }),
-    *       user = new User();
+    *    import {Model} from 'Types/entity';
     *
-    *    user.getDefault('id');//1466419984715
+    *    class User extends Model {
+    *       protected _$properties: {
+    *          id: {
+    *             get() {
+    *                this._id;
+    *             },
+    *             def(value) {
+    *                return Date.now();
+    *             }
+    *          }
+    *       },
+    *       protected _id: 0
+    *    }
+    *
+    *    const user = new User();
+    *    console.log(user.getDefault('id')); // 1466419984715
     *    setTimeout(function(){
-    *       user.getDefault('id');//1466419984715
-    *    }, 100);
+    *       console.log(user.getDefault('id')); // still 1466419984715
+    *    }, 1000);
     * </pre>
     */
    getDefault(name: string): any {
