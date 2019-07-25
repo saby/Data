@@ -83,6 +83,8 @@ export default class DateTime extends mixin(SerializableMixin) {
 // Deal with not natural prototype of Date by including its prototype into the chain of prototypes like this:
 // DateTime -> Interlayer[SerializableMixin -> Date]
 function Interlayer(): void {/*Just carrier*/}
-Interlayer.prototype = Object.getPrototypeOf(DateTime.prototype);
+// Use spread operator to break off shared link because polyfill of setPrototypeOf() for IE spoils the prototype of
+// SerializableMixin
+Interlayer.prototype = {...Object.getPrototypeOf(DateTime.prototype)};
 Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
