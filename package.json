@@ -56,11 +56,11 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "@types/requirejs": "^2.1.31",
-    "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.600",
+    "rmi": "git+https://git.sbis.ru/sbis/rmi.git#19.600/feature/parse_query",
     "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.600",
     "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.600",
     "saby-units": "git+https://github.com/saby/Units.git#rc-19.600",
     "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.600",
-    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600"
+    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#19.600/feature/parse_query"
   }
 }
