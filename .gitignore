@@ -32,3 +32,4 @@
 /test/_entity/Time.test.js
 /test/_object/merge.test.js
 /test/_object/isEqual.test.js
+/test/_source/DataSet.test.js
