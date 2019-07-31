@@ -621,16 +621,16 @@ export default class RecordSet<T = Model> extends mixin<
      * поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
      * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с
      * записями для добавления
-     * @return {Array.<Types/_entity/Record>} Добавленные записи
+     * @return Добавленные записи
      * @see Types/_collection/ObservableList#append
      */
     append(items: any): T[] {
-        items = this._itemsToArray(items);
-        items = this._normalizeItems(items, RECORD_STATE.ADDED);
-        items = this._addItemsToRawData(items);
-        super.append(items);
+        let itemsArray = this._itemsToArray(items);
+        itemsArray = this._normalizeItems(itemsArray, RECORD_STATE.ADDED, items instanceof RecordSet);
+        itemsArray = this._addItemsToRawData(itemsArray);
+        super.append(itemsArray);
 
-        return items;
+        return itemsArray;
     }
 
     /**
@@ -643,12 +643,12 @@ export default class RecordSet<T = Model> extends mixin<
      * @see Types/_collection/ObservableList#prepend
      */
     prepend(items: any): T[] {
-        items = this._itemsToArray(items);
-        items = this._normalizeItems(items, RECORD_STATE.ADDED);
-        items = this._addItemsToRawData(items, 0);
-        super.prepend(items);
+        let itemsArray = this._itemsToArray(items);
+        itemsArray = this._normalizeItems(itemsArray, RECORD_STATE.ADDED, items instanceof RecordSet);
+        itemsArray = this._addItemsToRawData(itemsArray, 0);
+        super.prepend(itemsArray);
 
-        return items;
+        return itemsArray;
     }
 
     /**
@@ -1361,20 +1361,25 @@ export default class RecordSet<T = Model> extends mixin<
     }
 
     /**
-     * Нормализует записи при добавлении в рекордсет: клонирует и приводит к формату рекордсета
-     * @param items Записи
-     * @param {RecordState} [state] С каким состояним создать
+     * Normalizes given records by producing their copies with itsown format
+     * @param items Records to normalize
+     * @param {RecordState} [state] State of produced records
+     * @param [itsRecordSet] Items are produced from recordset
      * @protected
      */
-    protected _normalizeItems(items: T[], state?: string): T[] {
+    protected _normalizeItems(items: T[], state?: string, itsRecordSet?: boolean): T[] {
         const formatDefined = this.hasDeclaredFormat();
         const result = [];
+        let isEqualFormat;
         let resultItem;
         let item;
         let format;
         for (let i = 0; i < items.length; i++) {
             item = items[i];
-            this._checkItem(item);
+
+            if (!itsRecordSet || i === 0) {
+                this._checkItem(item);
+            }
 
             if (!formatDefined && this.getCount() === 0) {
                 format = item.getFormat(true);
@@ -1383,7 +1388,12 @@ export default class RecordSet<T = Model> extends mixin<
             } else if (!format) {
                 format = this._getFormat(true);
             }
-            resultItem = this._normalizeItem(item, format);
+
+            if (itsRecordSet && isEqualFormat === undefined) {
+                isEqualFormat = format.isEqual(item.getFormat(true));
+            }
+
+            resultItem = this._normalizeItem(item, format, isEqualFormat);
 
             if (state) {
                 resultItem.setState(state);
@@ -1396,34 +1406,32 @@ export default class RecordSet<T = Model> extends mixin<
     }
 
     /**
-     * Возращает копию записи с сырыми данными, приведенными к нужному формату
-     * @param item Запись
-     * @param format Формат, к которому следует привести данные
+     * Returns record copy with target format
+     * @param item Data carrier
+     * @param format Target format
+     * @param isEqualFormat Data carrier has equal format
      * @protected
      */
-    protected _normalizeItem(item: Record, format: Format): T[] {
-        const itemFormat = item.getFormat(true);
-        let result;
+    protected _normalizeItem(item: Record, format: Format, isEqualFormat: boolean): T {
+        let normalizedRawData;
 
-        if (format.isEqual(itemFormat)) {
-            result = this._buildRecord(
-                item.getRawData()
-            );
+        if (isEqualFormat || format.isEqual(item.getFormat(true))) {
+            normalizedRawData = item.getRawData();
         } else {
-            const adapter = this.getAdapter().forRecord(null, this._getRawData());
+            const normalizedAdapter = this.getAdapter().forRecord(null, this._getRawData());
             const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
-
             format.each((field, index) => {
+                normalizedAdapter.addField(field, index);
                 const name = field.getName();
-                adapter.addField(field, index);
-                adapter.set(name, itemAdapter.get(name));
+                normalizedAdapter.set(name, itemAdapter.get(name));
             });
-            result = this._buildRecord(
-                adapter.getData()
-            );
+
+            normalizedRawData = normalizedAdapter.getData();
         }
 
-        return result;
+        return this._buildRecord(
+            normalizedRawData
+        );
     }
 
     /**
