@@ -1,0 +1,15 @@
+{
+  "include": [
+    "Types/chain",
+    "Types/collection",
+    "Types/di",
+    "Types/entity",
+    "Types/formatter",
+    "Types/function",
+    "Types/object",
+    "Types/shim",
+    "Types/source",
+    "Types/util"
+  ],
+  "extendsTo": "vdom-superbundle.package.js"
+}
