@@ -12,22 +12,20 @@ export default interface IRecord {
 
    /**
     * Возвращает признак наличия поля в данных
-    * @param {String} name Поле записи
-    * @return {Boolean}
+    * @param name Поле записи
     */
    has(name: string): boolean;
 
    /**
     * Возвращает значение поля записи
-    * @param {String} name Поле записи
-    * @return {*}
+    * @param name Поле записи
     */
    get(name: string): any;
 
    /**
     * Сохраняет значение поля записи
-    * @param {String} name Поле записи
-    * @param {*} value Значение
+    * @param name Поле записи
+    * @param value Значение
     */
    set(name: string, value: any): void;
 
@@ -38,20 +36,17 @@ export default interface IRecord {
 
    /**
     * Возвращает данные записи в формате адаптера
-    * @return {*}
     */
    getData(): any;
 
    /**
     * Возвращает массив названий полей
-    * @return {Array.<String>} Названия полей
     */
    getFields(): string[];
 
    /**
     * Возвращает формат поля (в режиме только для чтения)
-    * @param {String} name Поле записи
-    * @return {Types/_entity/format/Field}
+    * @param name Поле записи
     */
    getFormat(name: string): Field;
 
@@ -59,8 +54,7 @@ export default interface IRecord {
     * Возвращает общий универсальный формат поля - его нельзя использовать в замыканиях и сохранять куда-либо.
     * Метод каждый раз возвращает один и тот же объект, заменяя только его данные - подобный подход обеспечивает
     * ускорение и уменьшение расхода памяти.
-    * @param {String} name Поле записи
-    * @return {Types/_entity/format/UniversalField}
+    * @param name Поле записи
     */
    getSharedFormat(name: string): UniversalField;
 
@@ -68,21 +62,21 @@ export default interface IRecord {
     * Добавляет поле в запись.
     * Если позиция не указана (или указана как -1), поле добавляется в конец.
     * Если поле с таким форматом уже есть, генерирует исключение.
-    * @param {Types/_entity/format/Field} format Формат поля
-    * @param {Number} [at] Позиция поля
+    * @param format Формат поля
+    * @param [at] Позиция поля
     */
    addField(format: Field, at?: number): void;
 
    /**
     * Удаляет поле из записи по имени.
-    * @param {String} name Имя поля
+    * @param name Имя поля
     */
    removeField(name: string): void;
 
    /**
     * Удаляет поле из записи по позиции.
     * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
-    * @param {Number} index Позиция поля
+    * @param index Позиция поля
     */
    removeFieldAt(index: number): void;
 }
