@@ -1494,9 +1494,8 @@ export default class Record extends mixin<
       const result = new Record({
          adapter: record.getAdapter()
       });
-      const format = record.getFormat();
 
-      format.each((field) => {
+      record.getFormat().each((field) => {
          const name = field.getName();
          const value = record.get(name);
          if (!callback || callback(name, value)) {

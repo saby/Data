@@ -805,7 +805,19 @@ define([
          it('should add a Real field', function() {
             var fieldName = 'New',
                fieldIndex = 0,
-               precision = 3,
+               field = fieldsFactory({
+                  type: 'real',
+                  name: fieldName
+               });
+            adapter.addField(field, fieldIndex);
+            assert.strictEqual(adapter.get(fieldName), 0);
+            assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Число вещественное');
+         });
+
+         it('should add a Real field with custom precision', function() {
+            var fieldName = 'New',
+               fieldIndex = 0,
+               precision = 4,
                field = fieldsFactory({
                   type: 'real',
                   name: fieldName,
@@ -813,10 +825,23 @@ define([
                });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), 0);
-            assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Число вещественное');
+            assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Число вещественное');
+            assert.strictEqual(adapter.getData().s[fieldIndex].t.p, 4);
          });
 
          it('should add a Money field', function() {
+            var fieldName = 'New',
+               fieldIndex = 0,
+               field = fieldsFactory({
+                  type: 'money',
+                  name: fieldName
+               });
+            adapter.addField(field, fieldIndex);
+            assert.strictEqual(adapter.get(fieldName), 0);
+            assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Деньги');
+         });
+
+         it('should add a Money field with custom precision', function() {
             var fieldName = 'New',
                fieldIndex = 0,
                precision = 3,
@@ -827,7 +852,8 @@ define([
                });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), 0);
-            assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Деньги');
+            assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Деньги');
+            assert.strictEqual(adapter.getData().s[fieldIndex].t.p, 3);
          });
 
          it('should add a Money field with large flag', function() {
