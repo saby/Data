@@ -1,66 +1,66 @@
 {
-  "name": "saby-types",
-  "version": "19.600.0",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:saby/Types.git"
-  },
-  "license": "MIT",
-  "files": [
-    "index.ts",
-    "Types/*"
-  ],
-  "scripts": {
-    "build": "npm run build:typescript && npm run build:units && npm run build:compile",
-    "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=tslint.json",
-    "build:units": "saby-units --install",
-    "build:compile": "tsc 2>&1 || echo Done",
-    "start": "node node_modules/saby-units/cli/server",
-    "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-    "test:node": "saby-units --isolated --report",
-    "test:node-coverage": "saby-units --isolated --report --coverage",
-    "test:browser": "saby-units --browser --report",
-    "test:browser-coverage": "saby-units --browser --report --coverage",
-    "tslint": "tslint -q Types/**/*.ts"
-  },
-  "saby-units": {
-    "moduleType": "amd",
-    "tests": "TypesUnit",
-    "links": {
-      "node_modules/wasaby-app/src/Application": "Application",
-      "node_modules/rmi/src/client/Browser": "Browser",
-      "node_modules/rmi/src/client/Env": "Env",
-      "node_modules/sbis3-ws/WS.Core": "WS.Core",
-      "node_modules/sbis3-ws/Inferno": "Inferno",
-      "node_modules/sbis3-ws/View": "View",
-      "node_modules/saby-i18n/I18n": "I18n"
-    },
-    "initializer": "init-testing.js",
-    "url": {
-      "port": 1025
-    }
-  },
-  "nyc": {
-    "include": [
-      "Types/**/*.js"
-    ],
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "cache": false,
-    "eager": true,
-    "report-dir": "./artifacts/coverage"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.7",
-    "@types/requirejs": "^2.1.31",
-    "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.600",
-    "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.600",
-    "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.600",
-    "saby-units": "git+https://github.com/saby/Units.git#rc-19.600",
-    "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.600",
-    "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600"
-  }
+   "name": "saby-types",
+   "version": "19.700.0",
+   "repository": {
+      "type": "git",
+      "url": "git@github.com:saby/Types.git"
+   },
+   "license": "MIT",
+   "files": [
+      "index.ts",
+      "Types/*"
+   ],
+   "scripts": {
+      "build": "npm run build:typescript && npm run build:units && npm run build:compile",
+      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=tslint.json",
+      "build:units": "saby-units --install",
+      "build:compile": "tsc 2>&1 || echo Done",
+      "start": "node node_modules/saby-units/cli/server",
+      "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
+      "test:node": "saby-units --isolated --report",
+      "test:node-coverage": "saby-units --isolated --report --coverage",
+      "test:browser": "saby-units --browser --report",
+      "test:browser-coverage": "saby-units --browser --report --coverage",
+      "tslint": "tslint -q Types/**/*.ts"
+   },
+   "saby-units": {
+      "moduleType": "amd",
+      "tests": "TypesUnit",
+      "links": {
+         "node_modules/wasaby-app/src/Application": "Application",
+         "node_modules/rmi/src/client/Browser": "Browser",
+         "node_modules/rmi/src/client/Env": "Env",
+         "node_modules/sbis3-ws/WS.Core": "WS.Core",
+         "node_modules/sbis3-ws/Inferno": "Inferno",
+         "node_modules/sbis3-ws/View": "View",
+         "node_modules/saby-i18n/I18n": "I18n"
+      },
+      "initializer": "init-testing.js",
+      "url": {
+         "port": 1025
+      }
+   },
+   "nyc": {
+      "include": [
+         "Types/**/*.js"
+      ],
+      "reporter": [
+         "text",
+         "html"
+      ],
+      "cache": false,
+      "eager": true,
+      "report-dir": "./artifacts/coverage"
+   },
+   "devDependencies": {
+      "@types/chai": "^4.1.7",
+      "@types/mocha": "^5.2.7",
+      "@types/requirejs": "^2.1.31",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.700",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.700",
+      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-19.700",
+      "saby-units": "git+https://github.com/saby/Units.git#rc-19.700",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.700",
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.700"
+   }
 }
