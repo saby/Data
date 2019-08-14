@@ -61,6 +61,7 @@ export interface IOptionsOption extends IRemoteOptionsOption {
 interface IOptions extends IRemoteOptions {
    endpoint?: IEndpoint | string;
    binding?: IBinding;
+   orderProperty?: string;
    options?: IOptionsOption;
 }
 
