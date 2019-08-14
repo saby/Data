@@ -52,10 +52,12 @@ export default class RealField extends Field {
    // endregion Public methods
 }
 
+export const DEFAULT_PRECISION = 16;
+
 Object.assign(RealField.prototype, {
    '[Types/_entity/format/RealField]': true,
    _moduleName: 'Types/entity:format.RealField',
    _typeName: 'Real',
    _$defaultValue: 0,
-   _$precision: 16
+   _$precision: DEFAULT_PRECISION
 });
