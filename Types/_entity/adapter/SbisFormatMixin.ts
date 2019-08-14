@@ -5,6 +5,7 @@ import {
    IFieldDeclaration,
    Field,
    UniversalField,
+   RealField,
    MoneyField,
    DictionaryField,
    DateTimeField,
@@ -17,6 +18,8 @@ import {
    IUniversalFieldIdentityMeta,
    IUniversalFieldArrayMeta
 } from '../format';
+import {DEFAULT_PRECISION as REAL_FIELD_DEFAULT_PRECISION} from '../format/RealField';
+import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
@@ -469,12 +472,34 @@ export default abstract class SbisFormatMixin {
    protected _buildSType(data: IFieldFormat, format: Field): void {
       const type = (format.getTypeName() + '').toLowerCase();
       switch (type) {
+         case 'real':
          case 'money':
-            if ((format as MoneyField).isLarge()) {
-               (data.t as IMoneyFieldType) = {
-                  n: FIELD_TYPE[type],
-                  l: true
+            let precision;
+            let isLarge;
+
+            if (format instanceof RealField) {
+               precision = format.getPrecision();
+               if (precision === REAL_FIELD_DEFAULT_PRECISION) {
+                  precision = undefined;
+               }
+            }
+            if (format instanceof MoneyField) {
+               if (precision === MONEY_FIELD_DEFAULT_PRECISION) {
+                   precision = undefined;
+               }
+               isLarge = format.isLarge();
+            }
+
+            if (precision || isLarge) {
+               data.t = {
+                   n: FIELD_TYPE[type]
                };
+               if (precision) {
+                  (data.t as IRealFieldType).p = precision;
+               }
+               if (isLarge) {
+                  (data.t as IMoneyFieldType).l = isLarge;
+               }
             } else {
                data.t = FIELD_TYPE[type];
             }
