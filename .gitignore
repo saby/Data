@@ -26,10 +26,11 @@
 /I18n
 
 # Temporarily: for complied tests
-/test/_entity/Date.test.js
-/test/_entity/DateTime.test.js
-/test/_entity/ReactiveObject.test.js
-/test/_entity/Time.test.js
-/test/_object/merge.test.js
-/test/_object/isEqual.test.js
-/test/_source/DataSet.test.js
+/TypesUnit/_entity/Date.test.js
+/TypesUnit/_entity/DateTime.test.js
+/TypesUnit/_entity/ReactiveObject.test.js
+/TypesUnit/_entity/Time.test.js
+/TypesUnit/_object/merge.test.js
+/TypesUnit/_object/isEqual.test.js
+/TypesUnit/_source/DataSet.test.js
+/TypesUnit/_source/SbisService.test.js

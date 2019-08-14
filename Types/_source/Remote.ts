@@ -44,6 +44,7 @@ export interface IOptionsOption extends IOptionsMixinOption {
 
 export interface IOptions extends IBaseOptions, IObservableMixinOptions, IBindingOptions, IEndpointOptions {
    passing?: IPassing;
+   provider?: IAbstract | string;
 }
 
 function isNull(value: any): boolean {
