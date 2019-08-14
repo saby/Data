@@ -27,14 +27,14 @@ export enum NavigationTypes {
 }
 
 export interface IPassing {
-   create: (meta?: object) => object;
-   read: (key: string | number, meta?: object) => object;
-   update: (data: Record | RecordSet, meta?: object) => object;
-   destroy: (keys: string | string[], meta?: object) => object;
-   query: (query: Query) => object;
-   copy: (key: string | number, meta?: object) => object;
-   merge: (from: string | number, to: string | number) => object;
-   move: (from: string | number, to: string | number, meta?: object) => object;
+   create?: (meta?: object) => object;
+   read?: (key: string | number, meta?: object) => object;
+   update?: (data: Record | RecordSet, meta?: object) => object;
+   destroy?: (keys: string | string[], meta?: object) => object;
+   query?: (query: Query) => object;
+   copy?: (key: string | number, meta?: object) => object;
+   merge?: (from: string | number, to: string | number) => object;
+   move?: (from: string | number, to: string | number, meta?: object) => object;
 }
 
 export interface IOptionsOption extends IOptionsMixinOption {
