@@ -377,8 +377,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'Unknown'
                 });
-                return service.create().then((err) => {
-                    assert.instanceOf(err, Error);
+                return service.create().then(() => {
+                    throw new Error('Method should return an error');
                 }, (err) => {
                     assert.instanceOf(err, Error);
                 });
@@ -434,8 +434,8 @@ describe('Types/_source/SbisService', () => {
 
             context('and the model isn\'t exists', () => {
                 it('should return an error', () => {
-                    return service.read(SbisBusinessLogic.notExistsId).then((err) => {
-                        assert.instanceOf(err, Error);
+                    return service.read(SbisBusinessLogic.notExistsId).then(() => {
+                        throw new Error('Method should return an error');
                     }, (err) => {
                         assert.instanceOf(err, Error);
                     });
@@ -448,8 +448,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'Unknown'
                 });
-                return service.read(SbisBusinessLogic.existsId).then((err) => {
-                    assert.instanceOf(err, Error);
+                return service.read(SbisBusinessLogic.existsId).then(() => {
+                    throw new Error('Method should return an error');
                 }, (err) => {
                     assert.instanceOf(err, Error);
                 });
@@ -559,8 +559,8 @@ describe('Types/_source/SbisService', () => {
                     const service = new SbisService({
                         endpoint: 'Unknown'
                     });
-                    return service.update(model).then((err) => {
-                        assert.instanceOf(err, Error);
+                    return service.update(model).then(() => {
+                        throw new Error('Method should return an error');
                     }, (err) => {
                         assert.instanceOf(err, Error);
                     });
@@ -659,8 +659,8 @@ describe('Types/_source/SbisService', () => {
 
             context('and the model isn\'t exists', () => {
                 it('should return an error', () => {
-                    return service.destroy(SbisBusinessLogic.notExistsId).then((err) => {
-                        assert.instanceOf(err, Error);
+                    return service.destroy(SbisBusinessLogic.notExistsId).then(() => {
+                        throw new Error('Method should return an error');
                     }, (err) => {
                         assert.instanceOf(err, Error);
                     });
@@ -739,8 +739,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'Unknown'
                 });
-                return service.destroy(SbisBusinessLogic.existsId).then((err) => {
-                    assert.instanceOf(err, Error);
+                return service.destroy(SbisBusinessLogic.existsId).then(() => {
+                    throw new Error('Method should return an error');
                 }, (err) => {
                     assert.instanceOf(err, Error);
                 });
@@ -1329,7 +1329,7 @@ describe('Types/_source/SbisService', () => {
                     endpoint: 'Unknown'
                 });
                 return service.query(new Query()).then(() => {
-                    throw new Error('Shouldn\'t reach here');
+                    throw new Error('Method should return an error');
                 }, (err) => {
                     assert.instanceOf(err, Error);
                 });
@@ -1409,8 +1409,8 @@ describe('Types/_source/SbisService', () => {
 
         context('when the method isn\'t exists', () => {
             it('should return an error', () => {
-                return service.call('МойМетод').then((err) => {
-                    assert.instanceOf(err, Error);
+                return service.call('МойМетод').then(() => {
+                    throw new Error('Method should return an error');
                 }, (err) => {
                     assert.instanceOf(err, Error);
                 });
