@@ -1,4 +1,5 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
+
 define([
    'Types/_entity/Record',
    'Types/_collection/ObservableList',
@@ -2519,7 +2520,7 @@ define([
             assert.strictEqual(index, expect.length);
          });
 
-         it('should all fields values', function() {
+         it('should return all fields values', function() {
             var data = {
                   a: 1,
                   b: 2,

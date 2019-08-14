@@ -16,8 +16,6 @@ import RealField from './RealField';
  * @author Мальцев А.А.
  */
 export default class MoneyField extends RealField {
-   _$precision: number;
-
    /**
     * @cfg {Boolean} Большие деньги (значение передается строкой, чтобы избежать погрешностей выполнения операций с
     * плавающей запятой)
@@ -40,10 +38,12 @@ export default class MoneyField extends RealField {
    // endregion Public methods
 }
 
+export const DEFAULT_PRECISION = 2;
+
 Object.assign(MoneyField.prototype, {
    '[Types/_entity/format/MoneyField]': true,
    _moduleName: 'Types/entity:format.MoneyField',
    _typeName: 'Money',
-   _$precision: 2,
+   _$precision: DEFAULT_PRECISION,
    _$large: false
 });
