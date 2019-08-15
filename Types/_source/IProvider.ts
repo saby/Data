@@ -16,8 +16,7 @@ export default interface IProvider {
 
    /**
     * @typedef {Object} Endpoint
-    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено
-    * подключение
+    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
     * @property {String} contract Контракт - определяет доступные операции
     */
 
@@ -26,8 +25,7 @@ export default interface IProvider {
     * @name Types/_source/IProvider#onBeforeProviderCall
     * @param {Env/Event.Object} eventObject Дескриптор события.
     * @param {String} name Имя метода
-    * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует
-    * учитывать, что изменяется оригинальный объект)
+    * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует учитывать, что изменяется оригинальный объект)
     * @example
     * Добавляем в фильтр выборки поле enabled со значением true:
     * <pre>
@@ -58,8 +56,7 @@ export default interface IProvider {
    getProvider(): IAbstract;
 
    /**
-    * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям провайдера удаленного
-    * доступа.
+    * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям провайдера удаленного доступа.
     * @return {Endpoint}
     * @see endpoint
     * @example

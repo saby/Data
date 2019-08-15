@@ -116,8 +116,9 @@ function validate<T>(type: Descriptor): ValidateFunc<T> {
          };
    }
 
-   // tslint:disable-next-line:max-line-length
-   throw new TypeError(`Argument "type" should be one of following types: string, function or object but "${typeName}" received.`);
+   throw new TypeError(
+       `Argument "type" should be one of following types: string, function or object but "${typeName}" received.`
+   );
 }
 
 /**
