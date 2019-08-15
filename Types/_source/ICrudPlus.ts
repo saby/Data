@@ -46,8 +46,7 @@ export default interface ICrudPlus {
     * Создает копию записи
     * @param key Первичный ключ записи
     * @param [meta] Дополнительные мета данные
-    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - скопированную
-    * запись, в случае ошибки - Error.
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - скопированную запись, в случае ошибки - Error.
     * @example
     * Скопируем статью с ключом 'what-about-to-copy-me':
     * <pre>
