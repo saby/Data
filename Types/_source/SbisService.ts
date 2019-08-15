@@ -565,8 +565,7 @@ function oldMove(
  *       }
  *    });
  * </pre>
- * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка
- * записей, а также свой формат записи:
+ * <b>Пример 3</b>. Создадим источник данных для объекта БЛ с указанием своих методов для чтения записи и списка записей, а также свой формат записи:
  * <pre>
  *    import {SbisService} from 'Types/source';
  *    const dataSource = new SbisService({
@@ -675,8 +674,7 @@ export default class SbisService extends Rpc {
    /**
     * @typedef {Object} Endpoint
     * @property {String} contract Контракт - определяет доступные операции
-    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено
-    * подключение
+    * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
     * @property {String} [moveContract=ПорядковыйНомер] Название объекта бл в которому принадлежат методы перемещения
     */
 
@@ -693,12 +691,10 @@ export default class SbisService extends Rpc {
     */
 
    /**
-    * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника
-    * данных.
+    * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
     * @name Types/_source/SbisService#endpoint
     * @remark
-    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
-    * интерпретироваться как контракт (endpoint.contract).
+    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет интерпретироваться как контракт (endpoint.contract).
     * @see getEndPoint
     * @example
     * Подключаем объект БЛ 'Сотрудник', используя сокращенную запись:
@@ -722,8 +718,7 @@ export default class SbisService extends Rpc {
    protected _$endpoint: IEndpoint;
 
    /**
-    * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому
-    * методу CRUD.
+    * @cfg {Object} Соответствие методов CRUD методам БЛ. Определяет, какой метод объекта БЛ соответствует каждому методу CRUD.
     * @name Types/_source/SbisService#binding
     * @remark
     * По умолчанию используются стандартные методы.
@@ -764,8 +759,7 @@ export default class SbisService extends Rpc {
    protected _$passing: IRemotePassing;
 
    /**
-    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда
-    * используется адаптер {@link Types/_entity/adapter/Sbis}.
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
     * @name Types/_source/SbisService#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Sbis
@@ -774,8 +768,7 @@ export default class SbisService extends Rpc {
    protected _$adapter: string;
 
    /**
-    * @cfg {String|Function|Types/_source/provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме
-    * клиент-сервер, по умолчанию {@link Types/_source/provider/SbisBusinessLogic}.
+    * @cfg {String|Function|Types/_source/provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/provider/SbisBusinessLogic}.
     * @name Types/_source/SbisService#provider
     * @see Types/_source/Rpc#provider
     * @see getProvider
@@ -826,10 +819,8 @@ export default class SbisService extends Rpc {
 
    /**
     * Создает пустую модель через источник данных
-    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания
-    * модели.
-    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в
-    * случае ошибки - Error.
+    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
+    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
     * @see Types/_source/ICrud#create
     * @example
     * Создадим нового сотрудника:
@@ -1077,8 +1068,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
       update: 'Записать',
 
       /**
-       * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных
-       * записей.
+       * @cfg {String} Имя метода для обновления рекордсета через метод {@link update} с передачей только измененных записей.
        * @remark
        * Метод должен принимать следующий набор аргументов:
        * RecordSet changed,
@@ -1157,9 +1147,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
 
       /**
        * @cfg {String} Имя метода перемещения записи перед указанной через метод {@link move}.
-       * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы
-       * Прочитать(read) и Записать(Update)
-       * они обязательно должны быть у объекта БЛ.
+       * @remark Метод перемещения, используемый по умолчанию - IndexNumber.Move, при изменении родителя вызовет методы Прочитать(read) и Записать(Update), они обязательно должны быть у объекта БЛ.
        * @name Types/_source/SbisService#binding.move
        */
       move: 'Move',
@@ -1223,8 +1211,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
    }),
 
    /**
-    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда
-    * используется адаптер {@link Types/_entity/adapter/Sbis}.
+    * @cfg {String|Function|Types/_entity/adapter/IAdapter} Адаптер для работы с данными. Для работы с БЛ всегда используется адаптер {@link Types/_entity/adapter/Sbis}.
     * @name Types/_source/SbisService#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Sbis
@@ -1233,8 +1220,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
    _$adapter: 'Types/entity:adapter.Sbis',
 
    /**
-    * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме
-    * клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
+    * @cfg {String|Function|Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link Types/_source/Provider/SbisBusinessLogic}.
     * @name Types/_source/SbisService#provider
     * @see Types/_source/Rpc#provider
     * @see getProvider

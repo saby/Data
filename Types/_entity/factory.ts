@@ -206,8 +206,7 @@ function convertListToRecordSet(list: List<Record>): RecordSet {
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
  * @faq Почему я вижу ошибки от Types/di:resolve?
- * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и
- * {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
+ * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  * @class Types/_entity/factory
  * @public
  * @author Мальцев А.А.

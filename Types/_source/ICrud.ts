@@ -5,8 +5,7 @@ import {RecordSet} from '../collection';
 import {ExtendPromise} from '../_declarations';
 
 /**
- * Интерфейс источника данных, поддерживающиего контракт
- * {@link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
+ * Интерфейс источника данных, поддерживающиего контракт {@link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
  * @remark
  * Создадим новую статью:
  * <pre>
@@ -61,8 +60,7 @@ export default interface ICrud {
    /**
     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
-    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись,
-    * в случае ошибки - Error.
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
     * @see Types/_entity/Record
     * @example
     * Создадим новую статью:
@@ -97,8 +95,7 @@ export default interface ICrud {
     * Читает запись из источника данных
     * @param key Первичный ключ записи
     * @param [meta] Дополнительные мета данные
-    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную
-    * запись, в случае ошибки - Error.
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
     * @example
     * Прочитаем статью с ключом 'how-to-read-an-item':
     * <pre>
@@ -218,8 +215,7 @@ export default interface ICrud {
    /**
     * Выполняет запрос на выборку
     * @param [query] Запрос
-    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные
-    * данные, в случае ошибки - Error.
+    * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
     * @see Types/_source/Query
     * @see Types/_source/DataSet
     * @example
