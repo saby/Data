@@ -43,6 +43,7 @@ export interface IOptionsOption extends IOptionsMixinOption {
 }
 
 export interface IOptions extends IBaseOptions, IObservableMixinOptions, IBindingOptions, IEndpointOptions {
+   options?: IOptionsOption;
    passing?: IPassing;
    provider?: IAbstract | string;
 }
@@ -123,8 +124,15 @@ function passDestroy(keys: string | string[], meta?: object|Record): any[] {
  * Формирует данные, передваемые в провайдер при вызове query().
  * @param [query] Запрос
  */
-function passQuery(query: Query): Query[] {
-   return [query];
+function passQuery(query: Query): any[] {
+   return query instanceof Query ? [
+       query.getSelect(),
+       query.getFrom(),
+       query.getWhere(),
+       query.getOrderBy(),
+       query.getOffset(),
+       query.getLimit()
+   ] : query;
 }
 
 /**
@@ -200,7 +208,7 @@ export default abstract class Remote extends mixin<
     * @see Types/di
     * @example
     * <pre>
-    *    var dataSource = new RemoteSource({
+    *    var dataSource = new Remote({
     *       endpoint: '/users/'
     *       provider: new AjaxProvider()
     *    });
@@ -285,7 +293,7 @@ export default abstract class Remote extends mixin<
       );
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       return this._callProvider(
          this._$binding.query,
          this._$passing.query.call(this, query)
@@ -318,7 +326,7 @@ export default abstract class Remote extends mixin<
       );
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
+   move(items: string | number | Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
       return this._callProvider(
          this._$binding.move,
          this._$passing.move.call(this, items, target, meta)
