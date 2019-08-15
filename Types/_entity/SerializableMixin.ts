@@ -165,7 +165,7 @@ export default class SerializableMixin<T = any> {
     * @protected
     */
    _getSerializableState(state: IState<T>): IState<T> {
-      state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {} as T;
+      state.$options = this['[Types/_entity/OptionsToPropertyMixin]'] ? this._getOptions() : {} as T;
       return state;
    }
 
