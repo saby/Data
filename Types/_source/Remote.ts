@@ -491,12 +491,10 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
 
    _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
       /**
-       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только
-       * измененые поля записи (если обновляется одна запись).
+       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
        * @name Types/_source/Remote#options.updateOnlyChanged
        * @remark
-       * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые
-       * записи от уже существующих.
+       * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые записи от уже существующих.
        */
       updateOnlyChanged: false,
 

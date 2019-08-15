@@ -72,12 +72,10 @@ export default abstract class Local extends mixin<
    DataCrudMixin
 ) implements ICrud, ICrudPlus {
    /**
-    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода
-    * {@link query}.
+    * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
     * @name Types/_source/Local#filter
     * @remark
-    * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода
-    * query().
+    * Первым аргументом передается адаптер сырых данных для каждой записи, вторым - фильтр, переданный в вызов метода query().
     * Функция должна вернуть Boolean: true - запись прошла фильтр и попадет в итоговую выборку, false - не  прошла.
     * @example
     * Спрячем Землю из результатов выборки:
