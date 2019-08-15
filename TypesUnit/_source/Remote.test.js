@@ -539,7 +539,7 @@ define([
       });
 
       describe('.toJSON()', function() {
-         it('should serialize provider option', function() {
+         it('should serialize "provider" option', function() {
             var Foo = function() {};
             Di.register('Foo', Foo);
 
@@ -553,6 +553,20 @@ define([
 
             assert.instanceOf(provider, Foo);
             assert.equal(json.state.$options.provider, 'Foo');
+         });
+
+         it('should serialize "passing" option exactly as it was passed to the constructor', function() {
+            var read = function() {};
+            var source = new RemoteSource({
+               passing: {
+                  read: read
+               }
+            });
+            var json = source.toJSON();
+
+            assert.deepEqual(json.state.$options.passing, {
+               read: read
+            });
          });
       });
    });
