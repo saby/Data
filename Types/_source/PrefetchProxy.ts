@@ -165,8 +165,7 @@ export default class PrefetchProxy extends mixin<
    };
 
    /**
-    * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it
-    * return prefetched data or invoke target source.
+    * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it return prefetched data or invoke target source.
     * @name Types/_source/PrefetchProxy#validators
     * @example
     * Let's cache data for one minute

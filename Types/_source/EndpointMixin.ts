@@ -15,12 +15,10 @@ export default abstract class EndpointMixin {
    readonly '[Types/_source/EndpointMixin]': boolean;
 
    /**
-    * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к
-    * функциональным возможностям источника данных.
+    * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
     * @name Types/_source/EndpointMixin#endpoint
     * @remark
-    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
-    * интерпретироваться как контракт (endpoint.contract).
+    * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет интерпретироваться как контракт (endpoint.contract).
     * @see getEndPoint
     * @example
     * Подключаем пользователей через HTTP API:
