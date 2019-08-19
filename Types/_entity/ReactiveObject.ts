@@ -4,14 +4,11 @@ import {Map} from '../shim';
 /**
  * Reactive object provides ability to track its changes.
  * @remark
- * It's just a plain JavaScript object with certain set of properties. When any of them being updated, you can track
- * state change using {@link getVersion} method.
+ * It's just a plain JavaScript object with certain set of properties. When any of them being updated, you can track state change using {@link getVersion} method.
  *
  * All instances of ReactiveObject should be created using factory method {@link create}.
  *
- * N.B. According to limitation of JavaScript in work with object properties please mind this restriction to avoid
- * misunderstanding: ReactiveObject tracks only properties that passed to the constructor. That also means you shouldn't
- * add or delete properties on instance of ReactiveObject (it implies that those properties just won't be reactive).
+ * N.B. According to limitation of JavaScript in work with object properties please mind this restriction to avoid misunderstanding: ReactiveObject tracks only properties that passed to the constructor. That also means you shouldn't add or delete properties on instance of ReactiveObject (it implies that those properties just won't be reactive).
  *
  * Let's track the 'foo' property:
  * <pre>
@@ -24,8 +21,7 @@ import {Map} from '../shim';
  * console.log(instance.foo, instance.getVersion()); // 'baz', 1
  * </pre>
  *
- * You can define read-only property just use
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
+ * You can define read-only property just use {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
  * <pre>
  * import {ReactiveObject} from 'Types/entity';
  * const instance = new ReactiveObject({

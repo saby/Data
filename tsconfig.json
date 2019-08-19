@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base",
   "compilerOptions": {
     "skipLibCheck": true,
-    "types" : ["chai", "mocha", "requirejs"]
+    "types" : ["chai", "mocha", "requirejs", "sinon"]
   },
   "include": [
     "Application/**/*.ts",

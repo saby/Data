@@ -172,8 +172,7 @@ export class Order extends OptionsToPropertyMixin {
    protected _$order: boolean | string = false;
 
    /**
-    * @cfg {Boolean} NULL-like values positioning policy (undefined - depending on 'order' option, false - in the
-    * beginning, true - in the end)
+    * @cfg {Boolean} NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning, true - in the end)
     * @name Types/_source/Query/Order#nullPolicy
     */
    protected _$nullPolicy: boolean = undefined;
@@ -211,8 +210,7 @@ export class Order extends OptionsToPropertyMixin {
    }
 
    /**
-    * Returns NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning,
-    * true - in the end)
+    * Returns NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning, true - in the end)
     */
    getNullPolicy(): boolean {
       return this._$nullPolicy === undefined ? !this.getOrder() : this._$nullPolicy;
@@ -578,8 +576,7 @@ export default class Query implements ICloneable {
    /**
     * Sets rules for filtering data
     * @remark
-    * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its
-    * ordering number.
+    * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its ordering number.
     * @param expression Rules for filtering data
     * @example
     * Let's select landed flights to Moscow "Sheremetyevo" airport from New York or Los Angeles:
@@ -645,8 +642,7 @@ export default class Query implements ICloneable {
     * @param selector Field name of field names and sorting directions for each of them (false - ascending,
     * true - descending)
     * @param [desc=false] Sort by descending (of selector is a string)
-    * @param [nullPolicy] NULL-like values positioning policy (undefined - depending on 'order' option, false - in the
-    * beginning, true - in the end)
+    * @param [nullPolicy] NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning, true - in the end)
     * @example
     * Let's sort orders by ascending values of field 'id':
     * <pre>
@@ -881,9 +877,7 @@ export default class Query implements ICloneable {
 
    /**
     * Sets additional metadata to send to the data source.
-    * Additional metadata provides information to the data source about desired behaviour in various aspects in the way
-    * of extracting data. Certain data source may not support those aspects so make sure it does if you want to use
-    * them.
+    * Additional metadata provides information to the data source about desired behaviour in various aspects in the way of extracting data. Certain data source may not support those aspects so make sure it does if you want to use them.
     * @param data Metadata
     * @example
     * Let's set metadata field which point to desired navigation type in query:
