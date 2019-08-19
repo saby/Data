@@ -39,7 +39,9 @@ export {provider};
 export {
    default as Query,
    Join as QueryJoin,
+   Where as QueryWhere,
    Order as QueryOrder,
+   Expression as QueryExpression,
    NavigationType as QueryNavigationType,
    ExpandMode as QueryExpandMode,
    IMeta as IQueryMeta
