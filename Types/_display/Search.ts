@@ -12,17 +12,17 @@ import {register} from '../di';
  * @author Мальцев А.А.
  */
 export default class Search<S, T = CollectionItem<S>> extends Tree<S, T> {
-   protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
-      const composer = super._createComposer();
-      composer.append(SearchStrategy);
+    protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
+        const composer = super._createComposer();
+        composer.append(SearchStrategy);
 
-      return composer;
-   }
+        return composer;
+    }
 }
 
 Object.assign(Search.prototype, {
-   _moduleName: 'Types/display:Search',
-   '[Types/_display/Search]': true
+    _moduleName: 'Types/display:Search',
+    '[Types/_display/Search]': true
 });
 
 register('Types/display:Search', Search);
