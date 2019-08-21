@@ -14,7 +14,7 @@
       "build": "npm run build:typescript && npm run build:units && npm run build:compile",
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json --tslint=tslint.json",
       "build:units": "saby-units --install",
-      "build:compile": "tsc 2>&1 || echo Done",
+      "build:compile": "tsc 2>&1 || echo done",
       "start": "node node_modules/saby-units/cli/server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:node": "saby-units --isolated --report",
