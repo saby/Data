@@ -1,7 +1,6 @@
 import IFlags, {IValue} from './IFlags';
 import Dictionary from './Dictionary';
 import {
-   ICloneable,
    IProducible,
    ManyToManyMixin,
    SerializableMixin,
@@ -24,7 +23,6 @@ function prepareValue(value: any): IValue {
  * @class Types/_collection/Flags
  * @extends Types/_collection/Dictionary
  * @implements Types/_collection/IFlags
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/ManyToManyMixin
  * @mixes Types/_entity/SerializableMixin
@@ -42,7 +40,7 @@ export default class Flags<T> extends mixin<
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin
-) implements IFlags<T>, ICloneable, IProducible {
+) implements IFlags<T>, IProducible {
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
@@ -270,7 +268,6 @@ export default class Flags<T> extends mixin<
 Object.assign(Flags.prototype, {
    '[Types/_collection/Flags]': true,
    '[Types/_collection/IFlags]': true,
-   '[Types/_entity/ICloneable]': true,
    '[Types/_entity/IProducible]': true,
    _moduleName: 'Types/collection:Flags',
    _$values: undefined,

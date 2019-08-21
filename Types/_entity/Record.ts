@@ -2,7 +2,6 @@
 
 import IObject from './IObject';
 import IObservableObject from './IObservableObject';
-import ICloneable from './ICloneable';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import DateTime from './DateTime';
@@ -18,7 +17,7 @@ import FormattableMixin, {
    ISerializableState as IFormattableSerializableState,
    IOptions as IFormattableOptions
 } from './FormattableMixin';
-import VersionableMixin from './VersionableMixin';
+import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
 import Time from './Time';
 import {IReceiver} from './relation';
@@ -77,7 +76,7 @@ const CACHE_MODE_ALL = protect('all');
 
 type pairsTuple = [string, any, any];
 
-export interface IOptions extends IFormattableOptions {
+export interface IOptions extends IFormattableOptions, IVersionableMixinOptions {
    owner?: RecordSet;
 }
 
@@ -226,12 +225,10 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/IObject
  * @implements Types/_entity/IObservableObject
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @implements Types/_entity/IEquatable
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/relation/IReceiver
- * @implements Types/_entity/IVersionable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_entity/SerializableMixin
@@ -268,7 +265,6 @@ export default class Record extends mixin<
 ) implements
    IObject,
    IObservableObject,
-   ICloneable,
    IProducible,
    IEquatable,
    IEnumerable<any>,
@@ -358,7 +354,7 @@ export default class Record extends mixin<
     * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
     * @name Types/_entity/Record#owner
     */
-   protected _$owner: any;
+   protected _$owner: RecordSet;
 
    constructor(options?: IOptions) {
       if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
@@ -1529,7 +1525,6 @@ export default class Record extends mixin<
 Object.assign(Record.prototype, {
    '[Types/_entity/Record]': true,
    '[Types/_collection/IEnumerable]': true,
-   '[Types/_entity/ICloneable]': true,
    '[Types/_entity/IEquatable]': true,
    '[Types/_entity/IObject]': true,
    '[Types/_entity/IObservableObject]': true,
