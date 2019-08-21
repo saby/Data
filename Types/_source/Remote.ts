@@ -21,38 +21,39 @@ const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
 export enum NavigationTypes {
-   PAGE = NavigationType.Page,
-   OFFSET = NavigationType.Offset,
-   POSITION = NavigationType.Position
+    PAGE = NavigationType.Page,
+    OFFSET = NavigationType.Offset,
+    POSITION = NavigationType.Position
 }
 
 export interface IPassing {
-   create?: (meta?: object) => object;
-   read?: (key: string | number, meta?: object) => object;
-   update?: (data: Record | RecordSet, meta?: object) => object;
-   destroy?: (keys: string | string[], meta?: object) => object;
-   query?: (query: Query) => object;
-   copy?: (key: string | number, meta?: object) => object;
-   merge?: (from: string | number, to: string | number) => object;
-   move?: (from: string | number, to: string | number, meta?: object) => object;
+    create?: (meta?: object) => object;
+    read?: (key: string | number, meta?: object) => object;
+    update?: (data: Record | RecordSet, meta?: object) => object;
+    destroy?: (keys: string | string[], meta?: object) => object;
+    query?: (query: Query) => object;
+    copy?: (key: string | number, meta?: object) => object;
+    merge?: (from: string | number, to: string | number) => object;
+    move?: (from: string | number, to: string | number, meta?: object) => object;
 }
 
 export interface IOptionsOption extends IOptionsMixinOption {
-   updateOnlyChanged?: boolean;
-   navigationType?: NavigationTypes;
+    updateOnlyChanged?: boolean;
+    navigationType?: NavigationTypes;
 }
 
 export interface IOptions extends IBaseOptions, IObservableMixinOptions, IBindingOptions, IEndpointOptions {
-   passing?: IPassing;
-   provider?: IAbstract | string;
+    options?: IOptionsOption;
+    passing?: IPassing;
+    provider?: IAbstract | string;
 }
 
 function isNull(value: any): boolean {
-   return value === null || value === undefined;
+    return value === null || value === undefined;
 }
 
 function isEmpty(value: any): boolean {
-   return value === '' || isNull(value);
+    return value === '' || isNull(value);
 }
 
 /**
@@ -60,7 +61,7 @@ function isEmpty(value: any): boolean {
  * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
  */
 function passCreate(meta?: object): object[] {
-   return [meta];
+    return [meta];
 }
 
 /**
@@ -69,7 +70,7 @@ function passCreate(meta?: object): object[] {
  * @param [meta] Дополнительные мета данные
  */
 function passRead(key: string, meta?: object): any[] {
-   return [key, meta];
+    return [key, meta];
 }
 
 /**
@@ -78,36 +79,36 @@ function passRead(key: string, meta?: object): any[] {
  * @param [meta] Дополнительные мета данные
  */
 function passUpdate(data: Record | RecordSet, meta?: object): any[] {
-   if (this._$options.updateOnlyChanged) {
-      const keyProperty = this._getValidKeyProperty(data);
-      if (!isEmpty(keyProperty)) {
-         if (DataMixin.isModelInstance(data) && !isNull((data as Record).get(keyProperty))) {
-            // Filter record fields
-            const Record = require('Types/entity').Record;
-            const changed = (data as Record).getChanged();
-            changed.unshift(keyProperty);
-            data = Record.filterFields(data, changed);
-         } else if (DataMixin.isRecordSetInstance(data)) {
-            // Filter recordset fields
-            data = ((source) => {
-               const RecordSet = require('Types/collection').RecordSet;
-               const result = new RecordSet({
-                  adapter: source.getAdapter(),
-                  idProperty: (source as RecordSet).getIdProperty()
-               });
+    if (this._$options.updateOnlyChanged) {
+        const keyProperty = this._getValidKeyProperty(data);
+        if (!isEmpty(keyProperty)) {
+            if (DataMixin.isModelInstance(data) && !isNull((data as Record).get(keyProperty))) {
+                // Filter record fields
+                const Record = require('Types/entity').Record;
+                const changed = (data as Record).getChanged();
+                changed.unshift(keyProperty);
+                data = Record.filterFields(data, changed);
+            } else if (DataMixin.isRecordSetInstance(data)) {
+                // Filter recordset fields
+                data = ((source) => {
+                    const RecordSet = require('Types/collection').RecordSet;
+                    const result = new RecordSet({
+                        adapter: source.getAdapter(),
+                        idProperty: (source as RecordSet).getIdProperty()
+                    });
 
-               source.each((record) => {
-                  if (isNull(record.get(keyProperty)) || record.isChanged()) {
-                     result.add(record);
-                  }
-               });
+                    source.each((record) => {
+                        if (isNull(record.get(keyProperty)) || record.isChanged()) {
+                            result.add(record);
+                        }
+                    });
 
-               return result;
-            })(data);
-         }
-      }
-   }
-   return [data, meta];
+                    return result;
+                })(data);
+            }
+        }
+    }
+    return [data, meta];
 }
 
 /**
@@ -116,15 +117,22 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
  * @param [meta] Дополнительные мета данные
  */
 function passDestroy(keys: string | string[], meta?: object|Record): any[] {
-   return [keys, meta];
+    return [keys, meta];
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове query().
  * @param [query] Запрос
  */
-function passQuery(query: Query): Query[] {
-   return [query];
+function passQuery(query: Query): any[] {
+    return query instanceof Query ? [
+         query.getSelect(),
+         query.getFrom(),
+         query.getWhere(),
+         query.getOrderBy(),
+         query.getOffset(),
+         query.getLimit()
+    ] : query;
 }
 
 /**
@@ -133,7 +141,7 @@ function passQuery(query: Query): Query[] {
  * @param [meta] Дополнительные мета данные
  */
 function passCopy(key: string, meta?: object): any[] {
-   return [key, meta];
+    return [key, meta];
 }
 
 /**
@@ -142,7 +150,7 @@ function passCopy(key: string, meta?: object): any[] {
  * @param to Первичный ключ записи-приёмника
  */
 function passMerge(from: string, to: string): string[] {
-   return [from, to];
+    return [from, to];
 }
 
 /**
@@ -152,7 +160,7 @@ function passMerge(from: string, to: string): string[] {
  * @param [meta] Дополнительные мета данные.
  */
 function passMove(from: string | number, to: string, meta?: object): any[] {
-   return [from, to, meta];
+    return [from, to, meta];
 }
 
 /**
@@ -174,337 +182,337 @@ function passMove(from: string | number, to: string, meta?: object): any[] {
  * @author Мальцев А.А.
  */
 export default abstract class Remote extends mixin<
-   Base,
-   ObservableMixin,
-   DataCrudMixin,
-   BindingMixin,
-   EndpointMixin
+    Base,
+    ObservableMixin,
+    DataCrudMixin,
+    BindingMixin,
+    EndpointMixin
 >(
-   Base,
-   ObservableMixin,
-   DataCrudMixin,
-   BindingMixin,
-   EndpointMixin
+    Base,
+    ObservableMixin,
+    DataCrudMixin,
+    BindingMixin,
+    EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider {
 
-   /**
-    * @typedef {String} NavigationType
-    * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
-    * @variant Offset По смещению: передается смещение от начала выборки и количество записей на странице.
-    */
+    /**
+     * @typedef {String} NavigationType
+     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
+     * @variant Offset По смещению: передается смещение от начала выборки и количество записей на странице.
+     */
 
-   /**
-    * @cfg {Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-    * @name Types/_source/Remote#provider
-    * @see getProvider
-    * @see Types/di
-    * @example
-    * <pre>
-    *    var dataSource = new RemoteSource({
-    *       endpoint: '/users/'
-    *       provider: new AjaxProvider()
-    *    });
-    * </pre>
-    */
-   protected _$provider: IAbstract | string;
+    /**
+     * @cfg {Types/_source/Provider/IAbstract} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+     * @name Types/_source/Remote#provider
+     * @see getProvider
+     * @see Types/di
+     * @example
+     * <pre>
+     *     var dataSource = new Remote({
+     *         endpoint: '/users/'
+     *         provider: new AjaxProvider()
+     *     });
+     * </pre>
+     */
+    protected _$provider: IAbstract | string;
 
-   /**
-    * @cfg {Object} Методы подготовки аргументов по CRUD контракту.
-    * @name Types/_source/Remote#passing
-    * @example
-    * Подключаем пользователей через HTTP API, для метода create() передадим данные как объект с полем 'data':
-    * <pre>
-    *    var dataSource = new HttpSource({
-    *       endpoint: '//some.server/users/',
-    *       passing: {
-    *          create: function(meta) {
-    *             return {
-    *                data: meta
-    *             }
-    *          }
-    *       }
-    *    });
-    * </pre>
-    */
-   protected _$passing: IPassing;
+    /**
+     * @cfg {Object} Методы подготовки аргументов по CRUD контракту.
+     * @name Types/_source/Remote#passing
+     * @example
+     * Подключаем пользователей через HTTP API, для метода create() передадим данные как объект с полем 'data':
+     * <pre>
+     *     var dataSource = new HttpSource({
+     *         endpoint: '//some.server/users/',
+     *         passing: {
+     *             create: function(meta) {
+     *                 return {
+     *                     data: meta
+     *                 }
+     *             }
+     *         }
+     *     });
+     * </pre>
+     */
+    protected _$passing: IPassing;
 
-   protected _$options: IOptionsOption;
+    protected _$options: IOptionsOption;
 
-   /**
-    * Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-    */
-   protected _provider: IAbstract;
+    /**
+     * Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+     */
+    protected _provider: IAbstract;
 
-   protected constructor(options?: IOptions) {
-      super(EndpointMixin._validateOptions(options));
-      ObservableMixin.call(this, options);
+    protected constructor(options?: IOptions) {
+        super(EndpointMixin._validateOptions(options));
+        ObservableMixin.call(this, options);
 
-      this._publish('onBeforeProviderCall');
-   }
+        this._publish('onBeforeProviderCall');
+    }
 
-   // region ICrud
+    // region ICrud
 
-   readonly '[Types/_source/ICrud]': boolean = true;
+    readonly '[Types/_source/ICrud]': boolean = true;
 
-   create(meta?: object): ExtendPromise<Record> {
-      return this._callProvider(
-         this._$binding.create,
-         this._$passing.create.call(this, meta)
-      ).addCallback(
-         (data) => this._loadAdditionalDependencies().addCallback(
-            () => this._prepareCreateResult(data)
-         )
-      );
-   }
+    create(meta?: object): ExtendPromise<Record> {
+        return this._callProvider(
+            this._$binding.create,
+            this._$passing.create.call(this, meta)
+        ).addCallback(
+            (data) => this._loadAdditionalDependencies().addCallback(
+                () => this._prepareCreateResult(data)
+            )
+        );
+    }
 
-   read(key: any, meta?: object): ExtendPromise<Record> {
-      return this._callProvider(
-         this._$binding.read,
-         this._$passing.read.call(this, key, meta)
-      ).addCallback(
-         (data) => this._loadAdditionalDependencies().addCallback(
-            () => this._prepareReadResult(data)
-         )
-      );
-   }
+    read(key: any, meta?: object): ExtendPromise<Record> {
+        return this._callProvider(
+            this._$binding.read,
+            this._$passing.read.call(this, key, meta)
+        ).addCallback(
+            (data) => this._loadAdditionalDependencies().addCallback(
+                () => this._prepareReadResult(data)
+            )
+        );
+    }
 
-   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
-      return this._callProvider(
-         this._$binding.update,
-         this._$passing.update.call(this, data, meta)
-      ).addCallback(
-         (key) => this._prepareUpdateResult(data, key)
-      );
-   }
+    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+        return this._callProvider(
+            this._$binding.update,
+            this._$passing.update.call(this, data, meta)
+        ).addCallback(
+            (key) => this._prepareUpdateResult(data, key)
+        );
+    }
 
-   // @ts-ignore
-   destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
-      return this._callProvider(
-         this._$binding.destroy,
-         this._$passing.destroy.call(this, keys, meta)
-      );
-   }
+    // @ts-ignore
+    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+        return this._callProvider(
+            this._$binding.destroy,
+            this._$passing.destroy.call(this, keys, meta)
+        );
+    }
 
-   query(query: Query): ExtendPromise<DataSet> {
-      return this._callProvider(
-         this._$binding.query,
-         this._$passing.query.call(this, query)
-      ).addCallback(
-         (data) => this._loadAdditionalDependencies().addCallback(
-            () => this._prepareQueryResult(data)
-         )
-      );
-   }
+    query(query?: Query): ExtendPromise<DataSet> {
+        return this._callProvider(
+            this._$binding.query,
+            this._$passing.query.call(this, query)
+        ).addCallback(
+            (data) => this._loadAdditionalDependencies().addCallback(
+                () => this._prepareQueryResult(data)
+            )
+        );
+    }
 
-   // endregion
+    // endregion
 
-   // region ICrudPlus
+    // region ICrudPlus
 
-   readonly '[Types/_source/ICrudPlus]': boolean = true;
+    readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from: string | number, to: string | number): ExtendPromise<any> {
-      return this._callProvider(
-         this._$binding.merge,
-         this._$passing.merge.call(this, from, to)
-      );
-   }
+    merge(from: string | number, to: string | number): ExtendPromise<any> {
+        return this._callProvider(
+            this._$binding.merge,
+            this._$passing.merge.call(this, from, to)
+        );
+    }
 
-   copy(key: string | number, meta?: object): ExtendPromise<Record> {
-      return this._callProvider(
-         this._$binding.copy,
-         this._$passing.copy.call(this, key, meta)
-      ).addCallback(
-         (data) => this._prepareReadResult(data)
-      );
-   }
+    copy(key: string | number, meta?: object): ExtendPromise<Record> {
+        return this._callProvider(
+            this._$binding.copy,
+            this._$passing.copy.call(this, key, meta)
+        ).addCallback(
+            (data) => this._prepareReadResult(data)
+        );
+    }
 
-   move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
-      return this._callProvider(
-         this._$binding.move,
-         this._$passing.move.call(this, items, target, meta)
-      );
-   }
+    move(items: string | number | Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
+        return this._callProvider(
+            this._$binding.move,
+            this._$passing.move.call(this, items, target, meta)
+        );
+    }
 
-   // endregion
+    // endregion
 
-   // region IProvider
+    // region IProvider
 
-   readonly '[Types/_source/IProvider]': boolean = true;
+    readonly '[Types/_source/IProvider]': boolean = true;
 
-   getProvider(): IAbstract {
-      if (!this._provider) {
-         this._provider = this._createProvider(this._$provider, {
-            endpoint: this._$endpoint,
-            options: this._$options
-         });
-      }
+    getProvider(): IAbstract {
+        if (!this._provider) {
+            this._provider = this._createProvider(this._$provider, {
+                endpoint: this._$endpoint,
+                options: this._$options
+            });
+        }
 
-      return this._provider;
-   }
+        return this._provider;
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected methods
+    // region Protected methods
 
-   /**
-    * Инстанциирует провайдер удаленного доступа
-    * @param provider Алиас или инстанс
-    * @param options Аргументы конструктора
-    * @protected
-    */
-   protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
-      if (!provider) {
-         throw new Error('Remote access provider is not defined');
-      }
-      if (typeof provider === 'string') {
-         provider = create<IAbstract>(provider, options);
-      }
+    /**
+     * Инстанциирует провайдер удаленного доступа
+     * @param provider Алиас или инстанс
+     * @param options Аргументы конструктора
+     * @protected
+     */
+    protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
+        if (!provider) {
+            throw new Error('Remote access provider is not defined');
+        }
+        if (typeof provider === 'string') {
+            provider = create<IAbstract>(provider, options);
+        }
 
-      return provider;
-   }
+        return provider;
+    }
 
-   /**
-    * Вызывает удаленный сервис через провайдер
-    * @param name Имя сервиса
-    * @param [args] Аргументы вызова
-    * @return Асинхронный результат операции
-    * @protected
-    */
-   protected _callProvider(name: string, args: object): ExtendPromise<any> {
-      const provider = this.getProvider();
+    /**
+     * Вызывает удаленный сервис через провайдер
+     * @param name Имя сервиса
+     * @param [args] Аргументы вызова
+     * @return Асинхронный результат операции
+     * @protected
+     */
+    protected _callProvider(name: string, args: object): ExtendPromise<any> {
+        const provider = this.getProvider();
 
-      const eventResult = this._notify('onBeforeProviderCall', name, args);
-      if (eventResult !== undefined) {
-         args = eventResult;
-      }
+        const eventResult = this._notify('onBeforeProviderCall', name, args);
+        if (eventResult !== undefined) {
+            args = eventResult;
+        }
 
-      const result = provider.call(
-         name,
-         this._prepareProviderArguments(args)
-      );
+        const result = provider.call(
+            name,
+            this._prepareProviderArguments(args)
+        );
 
-      if (this._$options.debug) {
-         result.addErrback((error) => {
-            if (error instanceof DeferredCanceledError) {
-               logger.info(this._moduleName, `calling of remote service "${name}" has been cancelled.`);
-            } else {
-               logger.error(this._moduleName, `remote service "${name}" throws an error "${error.message}".`);
-            }
-            return error;
-         });
-      }
+        if (this._$options.debug) {
+            result.addErrback((error) => {
+                if (error instanceof DeferredCanceledError) {
+                    logger.info(this._moduleName, `calling of remote service "${name}" has been cancelled.`);
+                } else {
+                    logger.error(this._moduleName, `remote service "${name}" throws an error "${error.message}".`);
+                }
+                return error;
+            });
+        }
 
-      return result;
-   }
+        return result;
+    }
 
-   /**
-    * Подготавливает аргументы к передаче в удаленный сервис
-    * @param [args] Аргументы вызова
-    * @protected
-    */
-   protected _prepareProviderArguments(args: object): object {
-      return this.getAdapter().serialize(args);
-   }
+    /**
+     * Подготавливает аргументы к передаче в удаленный сервис
+     * @param [args] Аргументы вызова
+     * @protected
+     */
+    protected _prepareProviderArguments(args: object): object {
+        return this.getAdapter().serialize(args);
+    }
 
-   protected _getValidKeyProperty(data: any): string {
-      const keyProperty = this.getKeyProperty();
-      if (!isEmpty(keyProperty)) {
-         return keyProperty;
-      }
-      if (typeof data.getKeyProperty === 'function') {
-         return data.getKeyProperty();
-      }
-      if (typeof data.getIdProperty === 'function') {
-         return data.getIdProperty();
-      }
+    protected _getValidKeyProperty(data: any): string {
+        const keyProperty = this.getKeyProperty();
+        if (!isEmpty(keyProperty)) {
+            return keyProperty;
+        }
+        if (typeof data.getKeyProperty === 'function') {
+            return data.getKeyProperty();
+        }
+        if (typeof data.getIdProperty === 'function') {
+            return data.getIdProperty();
+        }
 
-      // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой keyProperty
-      return keyProperty;
-   }
+        // FIXME: тут стоит выбросить исключение, поскольку в итоге возвращаем пустой keyProperty
+        return keyProperty;
+    }
 
-   // endregion
+    // endregion
 
-   // region Statics
+    // region Statics
 
-   static get NAVIGATION_TYPE(): typeof NavigationTypes {
-      return NavigationTypes;
-   }
+    static get NAVIGATION_TYPE(): typeof NavigationTypes {
+        return NavigationTypes;
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
-   '[Types/_source/Remote]': true,
-   _moduleName: 'Types/source:Remote',
-   _provider: null,
-   _$provider: null,
+    '[Types/_source/Remote]': true,
+    _moduleName: 'Types/source:Remote',
+    _provider: null,
+    _$provider: null,
 
-   _$passing: getMergeableProperty<IPassing>({
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
-       * @name Types/_source/Remote#passing.create
-       */
-      create: passCreate,
+    _$passing: getMergeableProperty<IPassing>({
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
+         * @name Types/_source/Remote#passing.create
+         */
+        create: passCreate,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
-       * @name Types/_source/Remote#passing.read
-       */
-      read: passRead,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
+         * @name Types/_source/Remote#passing.read
+         */
+        read: passRead,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
-       * @name Types/_source/Remote#passing.update
-       */
-      update: passUpdate,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
+         * @name Types/_source/Remote#passing.update
+         */
+        update: passUpdate,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
-       * @name Types/_source/Remote#passing.destroy
-       */
-      destroy: passDestroy,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
+         * @name Types/_source/Remote#passing.destroy
+         */
+        destroy: passDestroy,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
-       * @name Types/_source/Remote#passing.query
-       */
-      query: passQuery,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
+         * @name Types/_source/Remote#passing.query
+         */
+        query: passQuery,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
-       * @name Types/_source/Remote#passing.copy
-       */
-      copy: passCopy,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
+         * @name Types/_source/Remote#passing.copy
+         */
+        copy: passCopy,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
-       * @name Types/_source/Remote#passing.merge
-       */
-      merge: passMerge,
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
+         * @name Types/_source/Remote#passing.merge
+         */
+        merge: passMerge,
 
-      /**
-       * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
-       * @name Types/_source/Remote#passing.move
-       */
-      move: passMove
-   }),
+        /**
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
+         * @name Types/_source/Remote#passing.move
+         */
+        move: passMove
+    }),
 
-   _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
-      /**
-       * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
-       * @name Types/_source/Remote#options.updateOnlyChanged
-       * @remark
-       * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые записи от уже существующих.
-       */
-      updateOnlyChanged: false,
+    _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
+        /**
+         * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
+         * @name Types/_source/Remote#options.updateOnlyChanged
+         * @remark
+         * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые записи от уже существующих.
+         */
+        updateOnlyChanged: false,
 
-      /**
-       * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
-       * @name Types/_source/Remote#options.navigationType
-       * @deprecated Set the meta-data in {@link Types/_source/Query#meta query} instead
-       */
-      navigationType: NavigationTypes.PAGE
-   }))
+        /**
+         * @cfg {NavigationType} Тип навигации, используемой в методе {@link query}.
+         * @name Types/_source/Remote#options.navigationType
+         * @deprecated Set the meta-data in {@link Types/_source/Query#meta query} instead
+         */
+        navigationType: NavigationTypes.PAGE
+    }))
 });
 
 // FIXME: backward compatibility for SbisFile/Source/BL
