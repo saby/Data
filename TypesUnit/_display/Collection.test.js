@@ -74,7 +74,7 @@ define([
 
          display = new CollectionDisplay({
             collection: list,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       });
 
@@ -230,7 +230,7 @@ define([
 
                display = new CollectionDisplay({
                   collection: items,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             });
 
@@ -361,7 +361,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   group: function(item) {
                      return item.group;
                   },
@@ -390,7 +390,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   group: function(item) {
                      return item.group;
                   },
@@ -421,7 +421,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   group: function(item) {
                      return item.group;
                   }
@@ -1944,9 +1944,9 @@ define([
          });
       });
 
-      describe('.getIdProperty()', function() {
+      describe('.getKeyProperty()', function() {
          it('should return given value', function() {
-            assert.equal(display.getIdProperty(), 'id');
+            assert.equal(display.getKeyProperty(), 'id');
          });
       });
 
@@ -2289,19 +2289,19 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.strictEqual(display.getItemUid(display.at(0)), 'bar');
          });
 
-         it('should return idProperty value as String', function() {
+         it('should return keyProperty value as String', function() {
             var list = new ObservableList({
                   items: [{id: 1}]
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.strictEqual(display.getItemUid(display.at(0)), '1');
@@ -2313,7 +2313,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                item = display.at(0);
 
@@ -2321,7 +2321,7 @@ define([
             assert.strictEqual(display.getItemUid(item), 'foo');
          });
 
-         it('should return variuos values for items with the same idProperty value', function() {
+         it('should return variuos values for items with the same keyProperty value', function() {
             var list = new ObservableList({
                   items: [
                      {id: 'foo'},
@@ -2332,7 +2332,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.strictEqual(display.getItemUid(display.at(0)), 'foo');
@@ -2341,7 +2341,7 @@ define([
             assert.strictEqual(display.getItemUid(display.at(3)), 'foo-2');
          });
 
-         it('should throw an error if idProperty is empty', function() {
+         it('should throw an error if keyProperty is empty', function() {
             var list = new ObservableList({
                   items: [{id: 1}]
                }),
@@ -3873,7 +3873,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   sort: function(a, b) {
                      return a.collectionItem.get('id') - b.collectionItem.get('id');
                   }
@@ -3918,7 +3918,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   sort: function(a, b) {
                      return a.collectionItem.get('id') - b.collectionItem.get('id');
                   }
@@ -3969,7 +3969,7 @@ define([
                }),
                display = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   sort: function(a, b) {
                      return a.collectionItem.get('id') - b.collectionItem.get('id');
                   }
@@ -4203,7 +4203,7 @@ define([
                }),
                strategy = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                serializer = new Serializer(),
                json = JSON.stringify(strategy, serializer.serialize),
@@ -4225,7 +4225,7 @@ define([
                }),
                strategy = new CollectionDisplay({
                   collection: list,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                serializer = new Serializer(),
                json = JSON.stringify(strategy, serializer.serialize),

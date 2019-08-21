@@ -140,7 +140,7 @@ define([
                display = new CollectionDisplay({collection: list}),
                strategy = new Direct({
                   display: display,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   unique: true
                }),
                expected = [0, 2, 1];
@@ -168,7 +168,7 @@ define([
                display = new CollectionDisplay({collection: list}),
                strategy = new Direct({
                   display: display,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   unique: true
                }),
                expected = [0, 2, -1];
@@ -198,7 +198,7 @@ define([
                ],
                options = {
                   unique: true,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                },
                expected = [0, 1, 3],
                given = Direct.sortItems(items, options);

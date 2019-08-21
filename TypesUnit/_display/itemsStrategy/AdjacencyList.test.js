@@ -114,7 +114,7 @@ define([
                source = getSource(items),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                });
 
@@ -137,7 +137,7 @@ define([
                source = getSource(items),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expectedInstances = [GroupItem, TreeItem, GroupItem, TreeItem, TreeItem],
@@ -162,7 +162,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = ['a', items[2], items[1], 'b', items[4]];
@@ -185,7 +185,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = ['a', items[1], 'b', items[4], 'a', items[2]];
@@ -209,7 +209,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = ['a', items[1], 'b', items[5], 'c', items[3]];
@@ -235,7 +235,7 @@ define([
                source = getSource(items),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                given;
@@ -268,7 +268,7 @@ define([
             source = getSource(items, 0);
             strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid'
             });
          });
@@ -294,7 +294,7 @@ define([
                source = getSource(items, root),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [1, 11, 111, 2, 21, 3, 31, 4, 41],
@@ -318,7 +318,7 @@ define([
                source = getSource(items, rootId),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [1, 11, 2, 21],
@@ -343,7 +343,7 @@ define([
                source = getSource(items, rootId),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [items[0], items[2], items[1], items[3]],
@@ -365,7 +365,7 @@ define([
                source = getSource(items, rootId),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [11, 111],
@@ -388,7 +388,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [1, 11, 12, 2],
@@ -412,7 +412,7 @@ define([
                source = getSource(items, root),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [1, 11, 2, 21],
@@ -425,7 +425,7 @@ define([
             assert.strictEqual(strategy.count, expected.length);
          });
 
-         it('should return only root items if idProperty is not injected', function() {
+         it('should return only root items if keyProperty is not injected', function() {
             var strategy = new AdjacencyList({
                   source: source,
                   parentProperty: 'pid'
@@ -452,7 +452,7 @@ define([
                source = getSource(items, rootId),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [1, 11, 111, 2, 11, 111],
@@ -474,7 +474,7 @@ define([
          it('should throw an Error if index is out of bounds', function() {
             var strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid'
             });
 
@@ -545,14 +545,14 @@ define([
          it('should return valid items count', function() {
             var strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid'
             });
 
             assert.strictEqual(strategy.count, 3);
          });
 
-         it('should return valid items count if idProperty is not injected', function() {
+         it('should return valid items count if keyProperty is not injected', function() {
             var strategy = new AdjacencyList({
                source: source,
                parentProperty: 'pid'
@@ -564,7 +564,7 @@ define([
          it('should return 0 if parentProperty is not injected', function() {
             var strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
 
             assert.strictEqual(strategy.count, 0);
@@ -590,7 +590,7 @@ define([
          it('should insert an item in valid order', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                newItem = {id: 11, pid: 1},
@@ -613,7 +613,7 @@ define([
          it('should add items in valid order', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                newItems = [
@@ -647,7 +647,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                newItem = {id: 4, pid: 0};
@@ -660,7 +660,7 @@ define([
          it('should add items duplicates in valid order', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                newItems = [{id: 2, pid: 0}],
@@ -698,7 +698,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                displayAt = 2,
@@ -732,7 +732,7 @@ define([
             var source = getSource(items, 0);
             var strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid'
             });
 
@@ -750,7 +750,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                result;
@@ -772,7 +772,7 @@ define([
                source = getSource(items, 0),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                removeAt = 1,
@@ -810,7 +810,7 @@ define([
          it('should call source method', function() {
             var strategy = new AdjacencyList({
                source: source,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid'
             });
 
@@ -829,7 +829,7 @@ define([
                source = getSource(items),
                strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                affectedItems,
@@ -890,7 +890,7 @@ define([
          it('should return valid item index', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [0, 2, 4, 1, 3],
@@ -904,7 +904,7 @@ define([
          it('should return index witch source index consideration', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [2, 4, 1, 3],
@@ -940,7 +940,7 @@ define([
          it('should return valid display index', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [0, 3, 1, 4, 2],
@@ -954,7 +954,7 @@ define([
          it('should return index witch source index consideration', function() {
             var strategy = new AdjacencyList({
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                }),
                expected = [3, 1, 4, 2],
@@ -975,7 +975,7 @@ define([
             var source = getSource([1, 2, 3]),
                options = {
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                },
                strategy = new AdjacencyList(options),
@@ -994,7 +994,7 @@ define([
             var source = getSource([1, 2, 3]),
                options = {
                   source: source,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid'
                },
                strategy = new AdjacencyList(options),

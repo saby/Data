@@ -110,7 +110,7 @@ define([
                   id: 0,
                   title: 'Root'
                },
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid',
                nodeProperty: 'node'
             });
@@ -122,7 +122,7 @@ define([
                   id: 0,
                   title: 'Root'
                },
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid',
                nodeProperty: 'node'
             });
@@ -231,7 +231,7 @@ define([
                      title: 'Root'
                   },
                   rootEnumerable: true,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   nodeProperty: 'node'
                }),
@@ -261,7 +261,7 @@ define([
                tree = new Tree({
                   collection: rs,
                   root: 1,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   group: function(item) {
                      return item.get('group');
@@ -338,7 +338,7 @@ define([
             var tree = new Tree({
                collection: items,
                root: 0,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents(), 0);
          });
@@ -347,7 +347,7 @@ define([
             var tree = new Tree({
                collection: items,
                root: '',
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents(), '');
          });
@@ -356,7 +356,7 @@ define([
             var tree = new Tree({
                collection: items,
                root: {id: 1, title: 'Root'},
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents().id, 1);
             assert.strictEqual(tree.getRoot().getContents().title, 'Root');
@@ -370,7 +370,7 @@ define([
                tree = new Tree({
                   collection: items,
                   root: root,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             assert.strictEqual(tree.getRoot(), root);
          });
@@ -380,7 +380,7 @@ define([
                   collection: items,
                   root: null,
                   rootEnumerable: true,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                root = tree.getRoot();
 
@@ -394,7 +394,7 @@ define([
                tree = new Tree({
                   collection: items,
                   root: 0,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                handler = function() {
                   triggered = true;
@@ -487,7 +487,7 @@ define([
                tree = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   group: function(item) {
                      return item.g;
@@ -648,7 +648,7 @@ define([
                collection: items,
                root: items[1],
                rootEnumerable: true,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
 
             assert.strictEqual(tree.getIndexBySourceItem(items[1]), 0);
@@ -714,7 +714,7 @@ define([
                display = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   group: function(item) {
                      return item.g;
@@ -750,7 +750,7 @@ define([
                display = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   group: function(item) {
                      return item.g;
@@ -939,7 +939,7 @@ define([
                display = new Tree({
                   collection: collection,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   nodeProperty: 'node'
                }),
@@ -984,7 +984,7 @@ define([
                }),
                display = new Tree({
                   collection: list,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   nodeProperty: 'node'
                }),
@@ -1024,7 +1024,7 @@ define([
                display = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   nodeProperty: 'node'
                }),
@@ -1081,7 +1081,7 @@ define([
                display = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   nodeProperty: 'node',
                   group: function(item) {
@@ -1196,7 +1196,7 @@ define([
                var tree = new Tree({
                   collection: list,
                   root: 0,
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'pid',
                   filter: function(item) {
                      return item.pid === 0;
@@ -1232,7 +1232,7 @@ define([
                   tree = new Tree({
                      collection: list,
                      root: 0,
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      parentProperty: 'pid'
                   }),
                   moveFrom = 1,
@@ -1268,7 +1268,7 @@ define([
                   tree = new Tree({
                      collection: list,
                      root: 0,
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      parentProperty: 'pid'
                   }),
                   moveFrom = 2,
@@ -1316,7 +1316,7 @@ define([
                   tree = new Tree({
                      collection: list,
                      root: 0,
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      parentProperty: 'pid',
                      nodeProperty: 'node',
                      sort: sort
@@ -1553,12 +1553,12 @@ define([
                   ],
                   items = new RecordSet({
                      rawData: data,
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   tree = new Tree({
                      collection: items,
                      root: 0,
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      parentProperty: 'pid'
                   }),
                   expected = [{
@@ -1760,7 +1760,7 @@ define([
                      items: items
                   }),
                   tree = new Tree({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      parentProperty: 'pid',
                      root: null,
                      collection: list,

@@ -75,7 +75,7 @@ export interface IOptions<S, T> extends IAbstractOptions {
    filter?: Array<FilterFunction<S>>;
    group?: GroupFunction<S, T>;
    sort?: Array<SortFunction<S>>;
-   idProperty?: string;
+   keyProperty?: string;
    unique?: boolean;
    importantItemProperties?: string[];
 }
@@ -457,13 +457,13 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * @cfg {String} Название свойства элемента коллекции, содержащего его уникальный идентификатор.
-    * @name Types/_display/Collection#idProperty
+    * @name Types/_display/Collection#keyProperty
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
-    * игнорироваться). Работает только если задано {@link idProperty}.
+    * игнорироваться). Работает только если задано {@link keyProperty}.
     * @name Types/_display/Collection#unique
     */
    protected _$unique: boolean;
@@ -560,6 +560,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._$sort = this._$sort || [];
       this._$importantItemProperties = this._$importantItemProperties || [];
 
+      // Support of deprecated 'idProperty' option
+      if (!this._$keyProperty && (options as any).idProperty) {
+          this._$keyProperty = (options as any).idProperty;
+      }
+
       if (!this._$collection) {
          throw new Error(`${this._moduleName}: source collection is empty`);
       }
@@ -573,8 +578,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._$sort = normalizeHandlers(this._$sort);
       this._$filter = normalizeHandlers(this._$filter);
 
-      if (this._$idProperty) {
-         this._setImportantProperty(this._$idProperty);
+      if (this._$keyProperty) {
+         this._setImportantProperty(this._$keyProperty);
       }
 
       this._publish('onCurrentChange', 'onCollectionChange', 'onBeforeCollectionChange', 'onAfterCollectionChange');
@@ -1718,8 +1723,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * Возвращает Название свойства элемента коллекции, содержащего его уникальный идентификатор.
     * @return {String}
     */
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
    /**
@@ -1933,10 +1938,10 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       let uid;
       if (contents['[Types/_entity/Model]']) {
          uid = (contents as any).getId();
-      } else if (this._$idProperty) {
-         uid = object.getPropertyValue(contents, this._$idProperty);
+      } else if (this._$keyProperty) {
+         uid = object.getPropertyValue(contents, this._$keyProperty);
       } else {
-         throw new Error('Option "idProperty" must be defined to extract item unique id.');
+         throw new Error('Option "keyProperty" must be defined to extract item unique id.');
       }
 
       return String(uid);
@@ -2181,7 +2186,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       composer.append(DirectItemsStrategy, {
          display: this,
          localize: this._localize,
-         idProperty: this._$idProperty,
+         keyProperty: this._$keyProperty,
          unique: this._$unique
       }).append(UserItemsStrategy, {
          handlers: this._$sort
@@ -2936,7 +2941,7 @@ Object.assign(Collection.prototype, {
    _$filter: null,
    _$group: null,
    _$sort: null,
-   _$idProperty: '',
+   _$keyProperty: '',
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,

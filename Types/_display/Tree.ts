@@ -39,7 +39,7 @@ interface IItemsFactoryOptions<S> {
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
-   idProperty: string;
+   keyProperty: string;
    parentProperty: string;
    nodeProperty?: string;
    childrenProperty?: string;
@@ -122,7 +122,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
 export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
-    * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link idProperty}
+    * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link keyProperty}
     * @name Types/_display/Tree#parentProperty
     */
    protected _$parentProperty: string;
@@ -469,7 +469,7 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
          });
       } else {
          composer.append(AdjacencyListStrategy, {
-            idProperty: this._$idProperty,
+            keyProperty: this._$keyProperty,
             parentProperty: this._$parentProperty,
             nodeProperty: this._$nodeProperty,
             hasChildrenProperty: this._$hasChildrenProperty

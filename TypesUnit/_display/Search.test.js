@@ -54,7 +54,7 @@ define([
             var search = new Search({
                collection: items,
                root: {id: '+'},
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid',
                nodeProperty: 'node'
             });
@@ -105,7 +105,7 @@ define([
                collection: items,
                root: {id: '+'},
                unique: true,
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'pid',
                nodeProperty: 'node'
             });

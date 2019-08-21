@@ -36,10 +36,10 @@ define([
          });
 
          it('should return the special display for Array', function() {
-            var options = {idProperty: 'foo'},
+            var options = {keyProperty: 'foo'},
                display = Display.getDefaultDisplay([], options);
             assert.instanceOf(display, Collection);
-            assert.equal(display.getIdProperty(), options.idProperty);
+            assert.equal(display.getKeyProperty(), options.keyProperty);
          });
 
          it('should return the special display for List', function() {
