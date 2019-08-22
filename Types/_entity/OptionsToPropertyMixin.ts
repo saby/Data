@@ -100,19 +100,35 @@ export default abstract class OptionsToPropertyMixin {
    protected _getOptions(): IHashMap<any> {
       const options = {};
       const keys = Object.keys(this);
-      let key;
+      const proto = Object.getPrototypeOf(this);
+      let name;
+      let value;
+      let optionName;
       for (let i = 0, count = keys.length; i < count; i++) {
-         key = keys[i];
-         if (key.substr(0, optionPrefixLen) === optionPrefix) {
-            options[key.substr(optionPrefixLen)] = this[key];
+         name = keys[i];
+         if (name.substr(0, optionPrefixLen) === optionPrefix) {
+            value = this[name];
+            optionName = name.substr(optionPrefixLen);
+
+            if (proto[name] && proto[name][$mergeable]) {
+                // For mergeable option keep only not original part of value
+                options[optionName] = Object.keys(value)
+                    .filter((propName) => value[propName] !== proto[name][propName])
+                    .reduce((memo, propName) => {
+                        memo[propName] = value[propName];
+                        return memo;
+                    }, {});
+            } else {
+                options[optionName] = value;
+            }
          }
       }
 
       // FIXME: get rid of _options
       if (this._options) {
-         for (key in this._options) {
-            if (this._options.hasOwnProperty(key) && !(key in options)) {
-               options[key] = this._options[key];
+         for (name in this._options) {
+            if (this._options.hasOwnProperty(name) && !(name in options)) {
+               options[name] = this._options[name];
             }
          }
       }

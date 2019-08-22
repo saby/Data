@@ -602,7 +602,7 @@ export default class Model extends mixin<
       }
    }
 
-   isChanged(name: string): boolean {
+   isChanged(name?: string): boolean {
       if (!name && this._isChanged) {
          return true;
       }
