@@ -2,8 +2,7 @@ import {
    DestroyableMixin,
    OptionsToPropertyMixin,
    InstantiableMixin,
-   SerializableMixin,
-   IInstantiable
+   SerializableMixin
 } from '../entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
@@ -27,7 +26,6 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * @class Types/_display/CollectionItem
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
@@ -43,14 +41,7 @@ export default class CollectionItem<T> extends mixin<
    OptionsToPropertyMixin,
    InstantiableMixin,
    SerializableMixin
-) implements IInstantiable {
-
-   // region IInstantiable
-
-   readonly '[Types/_entity/IInstantiable]': boolean;
-
-   getInstanceId: () => string;
-
+) {
    /**
     * Коллекция, которой принадлежит элемент
     */
@@ -78,8 +69,6 @@ export default class CollectionItem<T> extends mixin<
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
    }
-
-   // endregion
 
    // region Public
 

@@ -1,6 +1,5 @@
 import {mixin} from '../../util';
 import DestroyableMixin from '../DestroyableMixin';
-import ICloneable from '../ICloneable';
 import IEquatable from '../IEquatable';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import SerializableMixin from '../SerializableMixin';
@@ -12,7 +11,6 @@ import {isEqual} from '../../object';
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_entity/format/Field
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/SerializableMixin
@@ -24,7 +22,7 @@ export default abstract class Field extends mixin<
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 >(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
-) implements ICloneable, IEquatable {
+) implements IEquatable {
    /**
     * @cfg {String} Имя поля
     * @name Types/_entity/format/Field#name

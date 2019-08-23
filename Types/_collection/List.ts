@@ -7,7 +7,6 @@ import Indexer from './Indexer';
 import {
    CloneableMixin,
    DestroyableMixin,
-   ICloneable,
    IEquatable,
    ISerializableState,
    ManyToManyMixin,
@@ -61,7 +60,6 @@ export interface IOptions<T> {
  * @implements Types/_collection/IEnumerable
  * @implements Types/_collection/IList
  * @implements Types/_collection/IIndexedCollection
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
@@ -95,7 +93,6 @@ export default class List<T> extends mixin<
    IEnumerable<T>,
    IList<T>,
    IIndexedCollection,
-   ICloneable,
    IEquatable {
 
    /**

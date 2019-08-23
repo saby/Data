@@ -25,6 +25,17 @@ describe('Types/_entity/ReactiveObject', () => {
             assert.equal(instance.foo, 'baz');
         });
 
+        it('should invoke callback if property value being updated', () => {
+            let given;
+            const instance = new ReactiveObject({
+                foo: 'bar'
+            }, (version: number) => {
+                given = version;
+            });
+            instance.foo = 'baz';
+            assert.equal(given, 1);
+        });
+
         it('should return read-only property value', () => {
             const instance = new ReactiveObject({
                 get foo(): string {
