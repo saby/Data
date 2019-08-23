@@ -5,6 +5,8 @@ import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
 import {IHashMap} from '../_declarations';
+import IFormatController from './format/IFormatController';
+import FormatController from './format/FormatController';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
@@ -110,6 +112,8 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
    '[Types/_entity/FormattableMixin]': boolean;
 
+   protected _formatController: FormatController;
+
    /**
     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
     * @name Types/_entity/FormattableMixin#rawData
@@ -195,7 +199,7 @@ export default abstract class FormattableMixin {
     *    });
     * </pre>
     */
-   protected _$adapter: IAdapter | IDecorator | string;
+   protected _$adapter: IAdapter | IDecorator | IFormatController | string;
 
    /**
     * @cfg {Types/_collection/format/Format|
@@ -639,7 +643,7 @@ export default abstract class FormattableMixin {
     * Returns common adapter instance.
     * @protected
     */
-   protected _getAdapter(): IAdapter | IDecorator {
+   protected _getAdapter(): IAdapter | IDecorator | IFormatController {
       if (
          this._$adapter === defaultAdapter &&
          FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
@@ -655,7 +659,23 @@ export default abstract class FormattableMixin {
          this._$adapter = new CowAdapter(this._$adapter as IAdapter);
       }
 
+      if (this._$adapter['[Types/_entity/format/IFormatController]']) {
+         (this._$adapter as IFormatController).setFormatController(this._getFormatController());
+      }
+
       return this._$adapter as IAdapter;
+   }
+
+   /**
+    *
+    * @private
+    */
+   protected _getFormatController(): FormatController {
+      if (!this._formatController) {
+         this._formatController = new FormatController(this._getRawData(true));
+      }
+
+      return this._formatController;
    }
 
    /**

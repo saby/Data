@@ -1,9 +1,11 @@
 import Abstract from './Abstract';
 import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import FormatController from './../format/FormatController';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
+import IFormatController from '../format/IFormatController';
 
 /**
  * Адаптер для данных в формате СБиС.
@@ -15,14 +17,32 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sbis extends Abstract {
+export default class Sbis extends Abstract implements IFormatController {
+   protected _formatController: FormatController;
+
+   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+
    forTable(data: ITableFormat): SbisTable {
-      return new SbisTable(data);
+      const table =  new SbisTable(data);
+      table.setFormatController(this._formatController);
+
+      return table;
    }
 
    forRecord(data: IRecordFormat): SbisRecord {
-      return new SbisRecord(data);
+      const record = new SbisRecord(data);
+      record.setFormatController(this._formatController);
+
+      return record;
    }
+
+   // region IFormatController
+
+   setFormatController(controller: FormatController): void {
+      this._formatController = controller;
+   }
+
+   // endregion
 
    getKeyField(data: ITableFormat): string {
       // TODO: primary key field index can be defined in this._data.k. and can be -1

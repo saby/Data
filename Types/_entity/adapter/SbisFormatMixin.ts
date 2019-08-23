@@ -23,6 +23,8 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
+import FormatController from '../format/FormatController';
+import IFormatController from '../format/IFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -97,8 +99,12 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class SbisFormatMixin {
+export default abstract class SbisFormatMixin implements IFormatController {
    '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+
+   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+
+   protected _formatController: FormatController;
 
    protected _moduleName: string;
 
@@ -151,6 +157,14 @@ export default abstract class SbisFormatMixin {
       this._data = data;
       this._format = {};
    }
+
+   // region IFormatController
+
+   setFormatController(controller: FormatController): void {
+      this._formatController = controller;
+   }
+
+   // endregion
 
    // region Public methods
 
