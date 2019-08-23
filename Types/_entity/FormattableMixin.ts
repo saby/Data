@@ -103,8 +103,7 @@ function buildRawData(): void {
 }
 
 /**
- * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as
- * adapter.
+ * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as adapter.
  * @mixin Types/_entity/FormattableMixin
  * @public
  * @author Мальцев А.А.
@@ -120,8 +119,7 @@ export default abstract class FormattableMixin {
     * @see getRawData
     * @remark
     * Data should be in certain format which supported by associated {@link adapter}.
-    * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization
-    * objectives.
+    * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization objectives.
     * @example
     * Let's create an employee record:
     * <pre>
@@ -174,8 +172,7 @@ export default abstract class FormattableMixin {
    protected _$cow: boolean;
 
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By
-    * default raw data in {@link Types/_entity/adapter/Json} format are supported.
+    * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By default raw data in {@link Types/_entity/adapter/Json} format are supported.
     * @name Types/_entity/FormattableMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Json
@@ -208,9 +205,7 @@ export default abstract class FormattableMixin {
     * Object.<String,Function>|
     * Object.<String,Types/_entity/format/fieldsFactory/FieldDeclaration.typedef>|
     * Object.<String,Types/_entity/format/Field>
-    * } Fields format. It can be either full format (in this case it should be defined as an array or an instance
-    * of {@link Types/_collection/format/Format Format}) or partial format (in this case it should be defined as plain
-    * object).
+    * } Fields format. It can be either full format (in this case it should be defined as an array or an instance of {@link Types/_collection/format/Format Format}) or partial format (in this case it should be defined as plain object).
     * @name Types/_entity/FormattableMixin#format
     * @see getFormat
     * @remark
@@ -218,11 +213,9 @@ export default abstract class FormattableMixin {
     * <ul>
     *    <li>if option is omitted then format will be built by raw data;</li>
     *    <li>if option defines full format then this format will be used;</li>
-    *    <li>if option defines partial format then final format will be built by raw data with addition of
-    *        partial format follow by these rules:
+    *    <li>if option defines partial format then final format will be built by raw data with addition of partial format follow by these rules:
     *       <ul>
-    *          <li>if field with given name exists in raw data's format then its declaration from partial format
-    *              replaces raw data's declaration;</li>
+    *          <li>if field with given name exists in raw data's format then its declaration from partial format replaces raw data's declaration;</li>
     *          <li>otherwise field declaration be added to the end of raw data's format.</li>
     *       </ul>
     *    </li>
@@ -534,8 +527,7 @@ export default abstract class FormattableMixin {
     * Adds field to the format.
     * @remark
     * If field with given name already exists it throws an exception.
-    * @param {Types/_entity/format/Field|Types/_entity/format/fieldsFactory/FieldDeclaration.typedef} format Field
-    * format.
+    * @param {Types/_entity/format/Field|Types/_entity/format/fieldsFactory/FieldDeclaration.typedef} format Field format.
     * @param [at] Field position. If omitted or defined as -1 then would be added at the end.
     * @see format
     * @see removeField

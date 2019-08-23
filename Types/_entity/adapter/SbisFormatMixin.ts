@@ -5,7 +5,6 @@ import {
    IFieldDeclaration,
    Field,
    UniversalField,
-   RealField,
    MoneyField,
    DictionaryField,
    DateTimeField,
@@ -18,7 +17,6 @@ import {
    IUniversalFieldIdentityMeta,
    IUniversalFieldArrayMeta
 } from '../format';
-import {DEFAULT_PRECISION as REAL_FIELD_DEFAULT_PRECISION} from '../format/RealField';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
@@ -486,18 +484,12 @@ export default abstract class SbisFormatMixin implements IFormatController {
    protected _buildSType(data: IFieldFormat, format: Field): void {
       const type = (format.getTypeName() + '').toLowerCase();
       switch (type) {
-         case 'real':
          case 'money':
             let precision;
             let isLarge;
 
-            if (format instanceof RealField) {
-               precision = format.getPrecision();
-               if (precision === REAL_FIELD_DEFAULT_PRECISION) {
-                  precision = undefined;
-               }
-            }
             if (format instanceof MoneyField) {
+               precision = format.getPrecision();
                if (precision === MONEY_FIELD_DEFAULT_PRECISION) {
                    precision = undefined;
                }

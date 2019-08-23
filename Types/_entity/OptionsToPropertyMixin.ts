@@ -34,8 +34,7 @@ function defineProperty(instance: object, name: string, key: string, scope: obje
 /**
  * Примесь, позволяющая передавать в конструктор сущности набор опций (объект вида ключ-значение).
  * @remark
- * Для разделения защищенных свойств и опций последние должны именоваться определенным образом - имя должно
- * начинаться с префикса '_$':
+ * Для разделения защищенных свойств и опций последние должны именоваться определенным образом - имя должно начинаться с префикса '_$':
  * <pre>
  *    var Device = Core.extend([OptionsToPropertyMixin], {
  *       _$vendor: '',
@@ -44,8 +43,7 @@ function defineProperty(instance: object, name: string, key: string, scope: obje
  *       }
  *    });
  * </pre>
- * Если класс-наследник имеет свой конструктор, обязательно вызовите конструктор примеси (или конструктор
- * родительского класса, если примесь уже есть у родителя):
+ * Если класс-наследник имеет свой конструктор, обязательно вызовите конструктор примеси (или конструктор родительского класса, если примесь уже есть у родителя):
  * <pre>
  *    var Device = Core.extend([OptionsToPropertyMixin], {
  *       _$vendor: '',
@@ -57,8 +55,7 @@ function defineProperty(instance: object, name: string, key: string, scope: obje
  *       }
  *    });
  * </pre>
- * Потому что именно конструктор примеси OptionsToPropertyMixin раскладывает значения аргумента options по защищенным
- * свойствам:
+ * Потому что именно конструктор примеси OptionsToPropertyMixin раскладывает значения аргумента options по защищенным свойствам:
  * <pre>
  *    var hdd = new Device({
  *       vendor: 'Seagate'
@@ -103,19 +100,35 @@ export default abstract class OptionsToPropertyMixin {
    protected _getOptions(): IHashMap<any> {
       const options = {};
       const keys = Object.keys(this);
-      let key;
+      const proto = Object.getPrototypeOf(this);
+      let name;
+      let value;
+      let optionName;
       for (let i = 0, count = keys.length; i < count; i++) {
-         key = keys[i];
-         if (key.substr(0, optionPrefixLen) === optionPrefix) {
-            options[key.substr(optionPrefixLen)] = this[key];
+         name = keys[i];
+         if (name.substr(0, optionPrefixLen) === optionPrefix) {
+            value = this[name];
+            optionName = name.substr(optionPrefixLen);
+
+            if (proto[name] && proto[name][$mergeable]) {
+                // For mergeable option keep only not original part of value
+                options[optionName] = Object.keys(value)
+                    .filter((propName) => value[propName] !== proto[name][propName])
+                    .reduce((memo, propName) => {
+                        memo[propName] = value[propName];
+                        return memo;
+                    }, {});
+            } else {
+                options[optionName] = value;
+            }
          }
       }
 
       // FIXME: get rid of _options
       if (this._options) {
-         for (key in this._options) {
-            if (this._options.hasOwnProperty(key) && !(key in options)) {
-               options[key] = this._options[key];
+         for (name in this._options) {
+            if (this._options.hasOwnProperty(name) && !(name in options)) {
+               options[name] = this._options[name];
             }
          }
       }

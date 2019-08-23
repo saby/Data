@@ -93,8 +93,7 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
 /**
  * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
  * @remark
- * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
- * имя модуля для requirejs.
+ * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать имя модуля для RequireJS.
  * @example
  * <pre>
  * define('My.SubModule', ['My.SuperModule'], function (SuperModule) {
@@ -144,8 +143,7 @@ export default class SerializableMixin<T = any> {
     *    var instance = new Entity(),
     *       data = instance.toJSON();//{$serialized$: 'inst', module: ...}
     * </pre>
-    * @remark Сериализует только указанный объект, без учета его инфраструктуры. Не рекомендуется использовать toJSON в
-    * прикладном коде.
+    * @remark Сериализует только указанный объект, без учета его инфраструктуры. Не рекомендуется использовать toJSON в прикладном коде.
     */
    toJSON(): ISignature<T> {
       this._checkModuleName(true);
@@ -159,19 +157,17 @@ export default class SerializableMixin<T = any> {
    }
 
    /**
-    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в
-    * это же состояние
+    * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
     * @param state Cостояние
     * @protected
     */
    _getSerializableState(state: IState<T>): IState<T> {
-      state.$options = typeof this._getOptions === 'function' ? this._getOptions() : {} as T;
+      state.$options = this['[Types/_entity/OptionsToPropertyMixin]'] ? this._getOptions() : {} as T;
       return state;
    }
 
    /**
-    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта
-    * после создания инстанса.
+    * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
     * @param state Cостояние
     * @protected
     */

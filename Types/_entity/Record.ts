@@ -2,7 +2,6 @@
 
 import IObject from './IObject';
 import IObservableObject from './IObservableObject';
-import ICloneable from './ICloneable';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import DateTime from './DateTime';
@@ -18,7 +17,7 @@ import FormattableMixin, {
    ISerializableState as IFormattableSerializableState,
    IOptions as IFormattableOptions
 } from './FormattableMixin';
-import VersionableMixin from './VersionableMixin';
+import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
 import Time from './Time';
 import {IReceiver} from './relation';
@@ -77,7 +76,7 @@ const CACHE_MODE_ALL = protect('all');
 
 type pairsTuple = [string, any, any];
 
-export interface IOptions extends IFormattableOptions {
+export interface IOptions extends IFormattableOptions, IVersionableMixinOptions {
    owner?: RecordSet;
 }
 
@@ -105,8 +104,7 @@ function getValueOf(value: any): any {
 }
 
 /**
- * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим
- * примитивное значение
+ * Возвращает признак эквивалентности значений с учетом того, что каждоое из них может являться объектов, оборачивающим примитивное значение
  */
 function isEqualValues(first: any, second: any): boolean {
    return getValueOf(first) === getValueOf(second);
@@ -186,22 +184,13 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @remark
  * Основные аспекты записи:
  * <ul>
- *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}),
- *        например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс
- *        {@link Types/_entity/IObject};
- *    </li>
- *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс
- *        {@link Types/_collection/IEnumerable};
- *    </li>
- *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};
- *    </li>
- *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь
- *        {@link Types/_entity/FormattableMixin}.
- *    </li>
+ *    <li>одинаковый интерфейс доступа к данным в различных форматах (так называемые {@link rawData "сырые данные"}), например таких как JSON, СБИС-JSON или XML. За определение аспекта отвечает интерфейс {@link Types/_entity/IObject};</li>
+ *    <li>одинаковый интерфейс доступа к набору полей. За определение аспекта отвечает интерфейс {@link Types/_collection/IEnumerable};</li>
+ *    <li>манипуляции с форматом полей. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin};</li>
+ *    <li>манипуляции с сырыми данными посредством адаптера. За реализацию аспекта отвечает примесь {@link Types/_entity/FormattableMixin}.</li>
  * </ul>
  *
- * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате
- * используется по умолчанию):
+ * Создадим запись, в которой в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
  *    require(['Types/entity'], function (entity) {
  *       var employee = new entity.Record({
@@ -215,8 +204,7 @@ function getValueType(value: any): string | IFieldDeclaration {
  *       employee.get('firstName');//John
  *    });
  * </pre>
- * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате
- * укажем явно):
+ * Создадим запись, в которой в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
  *    require([
  *       'Types/entity',
@@ -237,12 +225,10 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/IObject
  * @implements Types/_entity/IObservableObject
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @implements Types/_entity/IEquatable
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/relation/IReceiver
- * @implements Types/_entity/IVersionable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_entity/SerializableMixin
@@ -279,7 +265,6 @@ export default class Record extends mixin<
 ) implements
    IObject,
    IObservableObject,
-   ICloneable,
    IProducible,
    IEquatable,
    IEnumerable<any>,
@@ -338,17 +323,14 @@ export default class Record extends mixin<
    /**
     * @typedef {String} RecordState
     * @variant Added Запись была добавлена в рекордсет, но метод {@link acceptChanges} не был вызыван.
-    * @variant Deleted Запись была отмечена удаленной с использованием метода {@link setState}, но метод
-    * {@link acceptChanges} не был вызван.
-    * @variant Changed Запись была изменена, но метод {@link acceptChanges} не был вызван. Автоматически переходит в
-    * это состояние при изменении любого поля, если до этого состояние было Unchanged.
+    * @variant Deleted Запись была отмечена удаленной с использованием метода {@link setState}, но метод {@link acceptChanges} не был вызван.
+    * @variant Changed Запись была изменена, но метод {@link acceptChanges} не был вызван. Автоматически переходит в это состояние при изменении любого поля, если до этого состояние было Unchanged.
     * @variant Unchanged С момента последнего вызова {@link acceptChanges} запись не была изменена.
     * @variant Detached Запись не была вставлена ни в один рекордсет, либо запись была удалена из рекордсета.
     */
 
    /**
-    * @cfg {RecordState} Текущее состояние записи по отношению к рекордсету: отражает факт принадлежности записи к
-    * рекордсету и сценарий, в результате которого эта принадлежность была сформирована.
+    * @cfg {RecordState} Текущее состояние записи по отношению к рекордсету: отражает факт принадлежности записи к рекордсету и сценарий, в результате которого эта принадлежность была сформирована.
     * @name Types/_entity/Record#state
     * @see getState
     * @see setState
@@ -362,8 +344,7 @@ export default class Record extends mixin<
    protected _$cacheMode: string | symbol;
 
    /**
-    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при
-    * вызове rejectChages восстанавливать клонированные значения.
+    * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при вызове rejectChages восстанавливать клонированные значения.
     * @name Types/_entity/Record#cloneChanged
     * @see rejectChanges
     */
@@ -373,7 +354,7 @@ export default class Record extends mixin<
     * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
     * @name Types/_entity/Record#owner
     */
-   protected _$owner: any;
+   protected _$owner: RecordSet;
 
    constructor(options?: IOptions) {
       if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
@@ -558,8 +539,7 @@ export default class Record extends mixin<
 
    /**
     * Перебирает все поля записи
-    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название
-    * поля, вторым - его значение.
+    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
     * @param {Object} [context] Контекст вызова callback.
     * @example
     * Переберем все поля записи:
@@ -1024,11 +1004,9 @@ export default class Record extends mixin<
     *       </ul>
     *    </li>
     * </ul>
-    * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в
-    * этом случае меняется только если fields включает в себя весь набор измененных полей.
+    * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
-    * acceptChanges всех владельцев.
+    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
     * @example
     * Подтвердим изменения в записи:
     * <pre>
@@ -1109,11 +1087,9 @@ export default class Record extends mixin<
     *    <li>Отменяются изменения всех полей;
     *    <li>{@link state State} возвращается к состоянию, в котором он был сразу после вызова acceptChanges.</li>
     * </ul>
-    * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в
-    * этом случае меняется только если fields включает в себя весь набор измененных полей.
+    * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны
-    * acceptChanges всех владельцев.
+    * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
     * @example
     * Отменим изменения в записи:
     * <pre>
@@ -1484,8 +1460,7 @@ export default class Record extends mixin<
    /**
     * Создает запись c набором полей, ограниченным фильтром.
     * @param record Исходная запись
-    * @param callback Функция фильтрации полей, аргументами приходят имя поля и его
-    * значение. Должна вернуть boolean - прошло ли поле фильтр.
+    * @param callback Функция фильтрации полей, аргументами приходят имя поля и его значение. Должна вернуть boolean - прошло ли поле фильтр.
     * @static
     */
    static filter(record: Record, callback: (name: string, value: any) => boolean): Record {
@@ -1550,7 +1525,6 @@ export default class Record extends mixin<
 Object.assign(Record.prototype, {
    '[Types/_entity/Record]': true,
    '[Types/_collection/IEnumerable]': true,
-   '[Types/_entity/ICloneable]': true,
    '[Types/_entity/IEquatable]': true,
    '[Types/_entity/IObject]': true,
    '[Types/_entity/IObservableObject]': true,

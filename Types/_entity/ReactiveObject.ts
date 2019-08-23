@@ -1,17 +1,12 @@
-import VersionableMixin from './VersionableMixin';
+import VersionableMixin, {VersionCallback} from './VersionableMixin';
 import {Map} from '../shim';
 
 /**
  * Reactive object provides ability to track its changes.
  * @remark
- * It's just a plain JavaScript object with certain set of properties. When any of them being updated, you can track
- * state change using {@link getVersion} method.
+ * It's just a plain JavaScript object with certain set of properties. When any of them being updated, you can track state change using {@link getVersion} method.
  *
- * All instances of ReactiveObject should be created using factory method {@link create}.
- *
- * N.B. According to limitation of JavaScript in work with object properties please mind this restriction to avoid
- * misunderstanding: ReactiveObject tracks only properties that passed to the constructor. That also means you shouldn't
- * add or delete properties on instance of ReactiveObject (it implies that those properties just won't be reactive).
+ * N.B. According to limitation of JavaScript in work with object properties please mind this restriction to avoid misunderstanding: ReactiveObject tracks only properties that passed to the constructor. That also means you shouldn't add or delete properties on instance of ReactiveObject (it implies that those properties just won't be reactive).
  *
  * Let's track the 'foo' property:
  * <pre>
@@ -24,8 +19,18 @@ import {Map} from '../shim';
  * console.log(instance.foo, instance.getVersion()); // 'baz', 1
  * </pre>
  *
- * You can define read-only property just use
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
+ * You can also track version change using callback:
+ * <pre>
+ * import {ReactiveObject} from 'Types/entity';
+ * const instance = new ReactiveObject({
+ *     foo: 'bar'
+ * }, (version) => {
+ *     console.log('version:', version);
+ * });
+ * instance.foo = 'baz'; // outputs 'version: 1' in console
+ * </pre>
+ *
+ * You can define read-only property just use {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
  * <pre>
  * import {ReactiveObject} from 'Types/entity';
  * const instance = new ReactiveObject({
@@ -57,14 +62,23 @@ import {Map} from '../shim';
  * console.log(instance.email); // 'foo@bar.org'
  * console.log(instance.domain); // 'bar.org'
  * </pre>
+ * @extends Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
  */
 class ReactiveObject<T> extends VersionableMixin {
     private _nestedVersions: Map<string, number>;
 
-    constructor(data: T) {
+    /**
+     * Reactive object constructor.
+     * @param data Reactive properties set.
+     * @param [callback] Callback invoked on version change.
+     */
+    constructor(data: T, callback?: VersionCallback) {
         super();
+        if (callback) {
+            this._$versionCallback = callback;
+        }
         this._proxyProperties(data);
     }
 
@@ -149,7 +163,7 @@ class ReactiveObject<T> extends VersionableMixin {
 
 interface IReactiveObjectConstructor {
     readonly prototype: ReactiveObject<object>;
-    new<T>(data: T): T & ReactiveObject<T>;
+    new<T>(data: T, callback?: VersionCallback): T & ReactiveObject<T>;
 }
 
 export default ReactiveObject as IReactiveObjectConstructor;

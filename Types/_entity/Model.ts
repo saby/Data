@@ -49,8 +49,7 @@ interface ISerializableState extends IRecordSerializableState {
 /**
  * Абстрактная модель.
  * Модели обеспечивают доступ к данным и поведению объектов предметной области (сущностям).
- * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира,
- * которые вы моделируете в своем приложении.
+ * Такими сущностями могут быть, например, товары, пользователи, документы - и другие предметы окружающего мира, которые вы моделируете в своем приложении.
  * @remark
  * В основе абстрактной модели лежит {@link Types/_entity/Record запись}.
  * Основные аспекты модели (дополнительно к аспектам записи):
@@ -60,13 +59,11 @@ interface ISerializableState extends IRecordSerializableState {
  * </ul>
  *
  * Поведенческие аспекты каждой сущности реализуются ее прикладным модулем в виде публичных методов.
- * Прикладные модели могут внедряться в порождающие их объекты, такие как
- * {@link Types/_source/Base#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
+ * Прикладные модели могут внедряться в порождающие их объекты, такие как {@link Types/_source/Base#model источники данных} или {@link Types/_collection/RecordSet#model рекордсеты}.
  *
  * Для реализации конкретной модели используется наследование от абстрактной либо промежуточной.
  *
- * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля
- * в свойстве _moduleName каждого наследника:
+ * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
  * <pre>
  *    //My/Awesome/Model.ts
  *    import {Model} from 'Types/entity';
@@ -108,8 +105,7 @@ interface ISerializableState extends IRecordSerializableState {
  *    const testOk = user.authenticate('its pizza time!');
  * </pre>
  *
- * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для
- * организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
+ * Модели могут объединяться по принципу "матрёшки" - сырыми данными одной модели является другая модель. Для организации такой структуры следует использовать {@link Types/_entity/adapter/RecordSet адаптер рекордсета}:
  * <pre>
  *    import {Model, adapter} from 'Types/entity';
  *
@@ -150,7 +146,6 @@ interface ISerializableState extends IRecordSerializableState {
  * </pre>
  * @class Types/_entity/Model
  * @extends Types/_entity/Record
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @public
  * @ignoreMethods getDefault
@@ -160,19 +155,16 @@ export default class Model extends mixin<
    Record, InstantiableMixin
 >(
    Record, InstantiableMixin
-) implements IInstantiable {
+) {
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
-    * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в
-    * сырых данных (если оно там есть).
-    * @property {Function} [set] Метод, устанавливающий значение свойства. Если метод вернет значение, отличное от
-    * undefined, то будет осуществлена попытка сохранить его в сырых данных.
+    * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных (если оно там есть).
+    * @property {Function} [set] Метод, устанавливающий значение свойства. Если метод вернет значение, отличное от undefined, то будет осуществлена попытка сохранить его в сырых данных.
     */
 
    /**
-    * @cfg {Object.<Property>} Описание собственных свойств модели. Дополняет/уточняет свойства, уже существующие в
-    * сырых данных.
+    * @cfg {Object.<Property>} Описание собственных свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
     * @name Types/_entity/Model#properties
     * @see Property
     * @see getProperties
@@ -245,8 +237,7 @@ export default class Model extends mixin<
     *
     *    user.set('guid', 'new-one');//ReferenceError 'Model::set(): property "guid" is read only'
     * </pre>
-    * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других
-    * свойств:
+    * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других свойств:
     * <pre>
     *    import {Model} from 'Types/entity';
     *
@@ -269,8 +260,7 @@ export default class Model extends mixin<
     *    });
     *    console.log(user.get('displayName'));//Johnny a.k.a "Keanu" Mnemonic
     * </pre>
-    * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет
-    * сбрасываться кэш, хранящий результат предыдущего вычисления:
+    * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет сбрасываться кэш, хранящий результат предыдущего вычисления:
     * <pre>
     *    import {Model, functor} from 'Types/entity';
     *
@@ -525,8 +515,7 @@ export default class Model extends mixin<
 
    /**
     * Перебирает все свойства модели (включая имеющиеся в "сырых" данных)
-    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет
-    * название свойства, вторым - его значение.
+    * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
     * @param {Object} [context] Контекст вызова callback.
     * @example
     * Смотри пример {@link Types/_entity/Record#each для записи}:
@@ -612,7 +601,7 @@ export default class Model extends mixin<
       }
    }
 
-   isChanged(name: string): boolean {
+   isChanged(name?: string): boolean {
       if (!name && this._isChanged) {
          return true;
       }
@@ -1002,7 +991,6 @@ export default class Model extends mixin<
 
 Object.assign(Model.prototype, {
    '[Types/_entity/Model]': true,
-   '[Types/_entity/IInstantiable]': true,
    _moduleName: 'Types/entity:Model',
    _instancePrefix: 'model-',
    _$properties: null,
