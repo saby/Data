@@ -60,6 +60,7 @@ export interface IRecordFormat {
    _type?: ComplexTypeMarker;
    d: any[];
    s: IFieldFormat[];
+   f: number;
 }
 
 export interface ITableFormat {
@@ -68,6 +69,7 @@ export interface ITableFormat {
    s: IFieldFormat[];
    n?: boolean | number | object;
    m?: IRecordFormat;
+   f: number;
 }
 
 /**
