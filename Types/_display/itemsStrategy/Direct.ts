@@ -6,14 +6,14 @@ import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
 import {Set} from '../../shim';
 
-interface IOptions<S, T> extends IAbstractOptions<S, T> {
-    unique: boolean;
-    keyProperty: string;
+interface IOptions<S, T extends CollectionItem<S>> extends IAbstractOptions<S, T> {
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISortOptions {
-    unique: boolean;
-    keyProperty: string;
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISerializableState<T> extends IDefaultSerializableState<T> {
@@ -26,7 +26,7 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct<S, T> extends AbstractStrategy<S, T> {
+export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> extends AbstractStrategy<S, T> {
     protected _options: IOptions<S, T>;
 
     /**

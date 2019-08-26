@@ -33,7 +33,7 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
  * @public
  * @author Мальцев А.А.
  */
-export default class Flags<S, T = FlagsItem<S>> extends Collection<S, T> {
+export default class Flags<S, T extends  FlagsItem<S> = FlagsItem<S>> extends Collection<S, T> {
     protected _$collection: IFlagsCollection<S>;
     protected _onSourceChange: (event: EventObject, name: string | IFlagsValue[]) => void;
 

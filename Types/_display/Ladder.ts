@@ -46,7 +46,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @public
  * @author Мальцев А.А.
  */
-export default class Ladder<S, T = CollectionItem<S>> extends mixin<
+export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(

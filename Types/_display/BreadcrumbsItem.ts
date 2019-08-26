@@ -4,7 +4,7 @@ import Tree from './Tree';
 import {register} from '../di';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
-    owner: Tree<T>;
+    owner?: Tree<T>;
     last: TreeItem<T>;
 }
 
@@ -39,7 +39,7 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
          return current;
     }
 
-    constructor(options: IOptions<T>) {
+    constructor(options?: IOptions<T>) {
         super(options);
     }
 

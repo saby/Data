@@ -12,8 +12,8 @@ import {register} from '../di';
 import {mixin} from '../util';
 
 export interface IOptions<T> {
-    contents: T;
-    owner: Collection<T>;
+    contents?: T;
+    owner?: Collection<T>;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -73,7 +73,7 @@ export default class CollectionItem<T> extends mixin<
      */
     protected _contentsIndex: number;
 
-    constructor(options: IOptions<T>) {
+    constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);

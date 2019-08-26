@@ -48,9 +48,9 @@ type FilterFunction<S> = (
 type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => string | null;
 
 interface ISortItem<S> {
-    item: S;
+    item: CollectionItem<S>;
     index: number;
-    collectionItem: CollectionItem<S>;
+    collectionItem: S;
     collectionIndex: number;
 }
 
@@ -71,7 +71,7 @@ export interface ISerializableState<S, T> extends IDefaultSerializableState {
     _composer: ItemsStrategyComposer<S, T>;
 }
 
-export interface IOptions<S, T> extends IAbstractOptions {
+export interface IOptions<S, T> extends IAbstractOptions<S> {
     filter?: Array<FilterFunction<S>>;
     group?: GroupFunction<S, T>;
     sort?: Array<SortFunction<S>>;
@@ -83,7 +83,7 @@ export interface IOptions<S, T> extends IAbstractOptions {
 /**
  * Преобразует проекцию в массив из ее элементов
  */
-function toArray<S, T>(display: Collection<S, T>): T[] {
+function toArray<S, T>(display: Collection<S>): T[] {
     const result = [];
     display.each((item) => {
         result.push(item);
@@ -273,7 +273,7 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection<S, T = CollectionItem<S>> extends mixin<
+export default class Collection<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     EventRaisingMixin
@@ -601,8 +601,12 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     destroy(): void {
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
-                (this._$collection as ObservableMixin).unsubscribe('onCollectionChange', this._onCollectionChange);
-                (this._$collection as ObservableMixin).unsubscribe('onCollectionItemChange', this._onCollectionItemChange);
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onCollectionChange', this._onCollectionChange
+                );
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onCollectionItemChange', this._onCollectionItemChange
+                );
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);

@@ -7,12 +7,12 @@ import Tree from './Tree';
 import {register} from '../di';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
-    owner: Tree<T>;
+    owner?: Tree<T>;
     node?: boolean;
     expanded?: boolean;
     hasChildren?: boolean;
     loaded?: boolean;
-    parent?: Function;
+    parent?: TreeItem<T> | BreadcrumbsItem<T>;
 }
 
 interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
@@ -54,7 +54,7 @@ export default class TreeItem<T> extends CollectionItem<T> {
      */
     protected _$childrenProperty: string;
 
-    constructor(options: IOptions<T>) {
+    constructor(options?: IOptions<T>) {
         super(options);
 
         if (options && !options.hasOwnProperty('hasChildren') && options.hasOwnProperty('loaded')) {

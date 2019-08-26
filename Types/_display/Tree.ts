@@ -39,8 +39,8 @@ interface IItemsFactoryOptions<S> {
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
-    keyProperty: string;
-    parentProperty: string;
+    keyProperty?: string;
+    parentProperty?: string;
     nodeProperty?: string;
     childrenProperty?: string;
     hasChildrenProperty?: string;
@@ -119,7 +119,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @public
  * @author Мальцев А.А.
  */
-export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
+export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
     /**
      * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
      * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link keyProperty}

@@ -1,7 +1,7 @@
 import Abstract from './Abstract';
 
 export interface IOptions<S, T> {
-    display: Abstract<S, T>;
+    display?: Abstract<S, T>;
 }
 
 /**

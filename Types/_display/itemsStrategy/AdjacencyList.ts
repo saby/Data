@@ -9,12 +9,12 @@ import {Map} from '../../shim';
 import {throttle} from '../../function';
 
 interface IOptions<S, T> {
-    keyProperty: string;
-    parentProperty: string;
+    keyProperty?: string;
+    parentProperty?: string;
     source: IItemsStrategy<S, T>;
 }
 
-interface ISourceOptions<S, T> extends IItemsStrategyOptions<S, T> {
+interface ISourceOptions<S, T extends TreeItem<S>> extends IItemsStrategyOptions<S, T> {
     display: Tree<S, T>;
 }
 
@@ -206,7 +206,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class AdjacencyList<S, T> extends mixin<
+export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(

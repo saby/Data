@@ -26,7 +26,7 @@ function onSourceChange(event: EventObject, index: number): void {
  * @public
  * @author Мальцев А.А.
  */
-export default class Enum<S, T = CollectionItem<S>> extends Collection<S, T> {
+export default class Enum<S, T extends CollectionItem<S> = CollectionItem<S>> extends Collection<S, T> {
     protected _$collection: IEnumCollection<S>;
 
     /**
