@@ -34,6 +34,8 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
 
+export type SourceCollection<T> = T[] | ISourceCollection<T>;
+
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
 }
@@ -42,10 +44,12 @@ type FilterFunction<S> = (
     item: S,
     index: number,
     collectionItem: CollectionItem<S>,
-    collectionIndex: number
+    collectionIndex: number,
+    hasMembers?: boolean
 ) => boolean;
 
-type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => string | null;
+type GroupId = number | string | null;
+type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => GroupId;
 
 interface ISortItem<S> {
     item: CollectionItem<S>;
@@ -72,9 +76,9 @@ export interface ISerializableState<S, T> extends IDefaultSerializableState {
 }
 
 export interface IOptions<S, T> extends IAbstractOptions<S> {
-    filter?: Array<FilterFunction<S>>;
+    filter?: FilterFunction<S> | Array<FilterFunction<S>>;
     group?: GroupFunction<S, T>;
-    sort?: Array<SortFunction<S>>;
+    sort?: SortFunction<S> | Array<SortFunction<S>>;
     keyProperty?: string;
     unique?: boolean;
     importantItemProperties?: string[];
@@ -1356,7 +1360,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @see group
      * @see getGroup
      */
-    setGroup(group: GroupFunction<S, T>): void {
+    setGroup(group?: GroupFunction<S, T>): void {
         if (this._$group === group) {
             return;
         }
@@ -1419,7 +1423,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     });
      * </pre>
      */
-    getGroupItems(groupId: string): T[] {
+    getGroupItems(groupId: GroupId): T[] {
         const items = [];
         let currentGroupId;
         this.each((item) => {
@@ -1577,7 +1581,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     });
      * </pre>
      */
-    setSort(...args: Array<SortFunction<T>>): void {
+    setSort(...args: Array<SortFunction<S>>): void {
         const session = this._startUpdateSession();
         const sorts = args[0] instanceof Array ? args[0] : args;
 

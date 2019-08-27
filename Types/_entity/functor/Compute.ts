@@ -25,7 +25,7 @@ export interface IFunctor {
  * @public
  * @author Мальцев А.А.
  */
-export default class Compute implements IFunctor {
+class Compute implements IFunctor {
    readonly functor: Function;
    readonly properties: string[];
 
@@ -62,3 +62,11 @@ export default class Compute implements IFunctor {
       return fn && fn.functor === Compute;
    }
 }
+
+interface ICompute<T extends Function = Function> {
+    readonly prototype: Compute;
+    isFunctor: (fn: any) => boolean;
+    new<T>(fn: T, properties?: string[]): T;
+}
+
+export default Compute as ICompute;
