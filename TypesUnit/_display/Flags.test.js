@@ -1,158 +1,128 @@
-/* global define, beforeEach, afterEach, describe, it, assert */
-define([
-   'Types/_display/Flags',
-   'Types/_collection/Flags',
-   'Core/core-instance'
-], function(
-   FlagsDisplay,
-   FlagsType,
-   coreInstance
-) {
-   'use strict';
-
-   FlagsDisplay = FlagsDisplay.default;
-   FlagsType = FlagsType.default;
-
-   describe('Types/_display/Flags', function() {
-      var dict, collection, display;
-
-      beforeEach(function() {
-         dict = ['one', 'two', 'three'];
-
-         collection = new FlagsType({
-            dictionary: dict
-         });
-
-         display = new FlagsDisplay({
-            collection: collection
-         });
-      });
-
-      afterEach(function() {
-         dict = undefined;
-
-         display.destroy();
-         display = undefined;
-
-         collection.destroy();
-         collection = undefined;
-      });
-
-      describe('.constructor()', function() {
-         it('should throw an error for not IFlags', function() {
-            assert.throws(function() {
-               new FlagsDisplay({
-                  collection: []
-               });
+define(["require", "exports", "chai", "Types/_display/Flags", "Types/_collection/Flags", "Core/core-instance"], function (require, exports, chai_1, Flags_1, Flags_2, coreInstance) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    describe('Types/_display/Flags', function () {
+        var dict;
+        var collection;
+        var display;
+        beforeEach(function () {
+            dict = ['one', 'two', 'three'];
+            collection = new Flags_2.default({
+                dictionary: dict
             });
-            assert.throws(function() {
-               new FlagsDisplay({
-                  collection: {}
-               });
+            display = new Flags_1.default({
+                collection: collection
             });
-            assert.throws(function() {
-               new FlagsDisplay({
-                  collection: null
-               });
+        });
+        afterEach(function () {
+            dict = undefined;
+            display.destroy();
+            display = undefined;
+            collection.destroy();
+            collection = undefined;
+        });
+        describe('.constructor()', function () {
+            it('should throw an error for not IFlags', function () {
+                var display;
+                chai_1.assert.throws(function () {
+                    display = new Flags_1.default({
+                        collection: []
+                    });
+                });
+                chai_1.assert.throws(function () {
+                    display = new Flags_1.default({
+                        collection: {}
+                    });
+                });
+                chai_1.assert.throws(function () {
+                    display = new Flags_1.default({
+                        collection: null
+                    });
+                });
+                chai_1.assert.throws(function () {
+                    display = new Flags_1.default();
+                });
+                chai_1.assert.isUndefined(display);
             });
-            assert.throws(function() {
-               new FlagsDisplay();
+            it('should take selection from the Flags', function () {
+                display.each(function (item) {
+                    chai_1.assert.strictEqual(item.isSelected(), collection.get(item.getContents()));
+                });
+                collection.set('one', true);
+                var displayToo = new Flags_1.default({
+                    collection: collection
+                });
+                displayToo.each(function (item) {
+                    chai_1.assert.strictEqual(item.isSelected(), collection.get(item.getContents()));
+                });
             });
-         });
-
-         it('should take selection from the Flags', function() {
-            display.each(function(item) {
-               assert.strictEqual(item.isSelected(), collection.get(item.getContents()));
+        });
+        describe('.each()', function () {
+            it('should return FlagsItem', function () {
+                display.each(function (item) {
+                    chai_1.assert.isTrue(coreInstance.instanceOfModule(item, 'Types/_display/FlagsItem'));
+                });
             });
-
-            collection.set('one', true);
-            var displayToo = new FlagsDisplay({
-               collection: collection
+        });
+        describe('.subscribe()', function () {
+            it('should trigger "onCollectionChange" if flag changed', function () {
+                var given = {};
+                var handler = function (event, action, newItems, newItemsIndex) {
+                    given.item = newItems[0];
+                    given.index = newItemsIndex;
+                };
+                display.subscribe('onCollectionChange', handler);
+                collection.set('one', true);
+                display.unsubscribe('onCollectionChange', handler);
+                chai_1.assert.strictEqual(given.item.getContents(), 'one');
+                chai_1.assert.strictEqual(given.index, 0);
             });
-            displayToo.each(function(item) {
-               assert.strictEqual(item.isSelected(), collection.get(item.getContents()));
+            it('should trigger "onCollectionChange" if all flags changed', function () {
+                var given = [];
+                var handler = function (event, action, items, index) {
+                    given.push({
+                        action: action,
+                        items: items,
+                        index: index
+                    });
+                };
+                display.subscribe('onCollectionChange', handler);
+                collection.fromArray([true, true, true]);
+                display.unsubscribe('onCollectionChange', handler);
+                var expected = [{
+                        action: 'ch',
+                        items: [display.at(0)],
+                        index: 0
+                    }, {
+                        action: 'ch',
+                        items: [display.at(1)],
+                        index: 1
+                    }, {
+                        action: 'ch',
+                        items: [display.at(2)],
+                        index: 2
+                    }];
+                chai_1.assert.deepEqual(given, expected);
             });
-         });
-      });
-
-      describe('.each()', function() {
-         it('should return FlagsItem', function() {
-            display.each(function(item) {
-               assert.isTrue(coreInstance.instanceOfModule(item, 'Types/_display/FlagsItem'));
+        });
+        it('should trigger "onCollectionChange" if flag with string index changed', function () {
+            var dict = { 1: 'one', 2: 'two', 3: 'three' };
+            var collection = new Flags_2.default({
+                dictionary: dict
             });
-         });
-      });
-
-      describe('.subscribe()', function() {
-         it('should trigger "onCollectionChange" if flag changed', function() {
+            var display = new Flags_1.default({
+                collection: collection
+            });
             var given = {};
-            var handler = function(event, action, newItems, newItemsIndex) {
-               given.item = newItems[0];
-               given.index = newItemsIndex;
+            var handler = function (event, action, newItems, newItemsIndex) {
+                given.item = newItems[0];
+                given.index = newItemsIndex;
             };
-
             display.subscribe('onCollectionChange', handler);
-            collection.set('one', true);
+            collection.set('two', true);
             display.unsubscribe('onCollectionChange', handler);
-
-            assert.strictEqual(given.item.getContents(), 'one');
-            assert.strictEqual(given.index, 0);
-         });
-
-         it('should trigger "onCollectionChange" if all flags changed', function() {
-            var given = [];
-            var handler = function(event, action, items, index) {
-               given.push({
-                  action: action,
-                  items: items,
-                  index: index
-               });
-            };
-
-            display.subscribe('onCollectionChange', handler);
-            collection.fromArray([true, true, true]);
-            display.unsubscribe('onCollectionChange', handler);
-
-            var expected = [{
-               action: 'ch',
-               items: [display.at(0)],
-               index: 0
-            }, {
-               action: 'ch',
-               items: [display.at(1)],
-               index: 1
-            }, {
-               action: 'ch',
-               items: [display.at(2)],
-               index: 2
-            }];
-            assert.deepEqual(given, expected);
-         });
-      });
-
-      it('should trigger "onCollectionChange" if flag with string index changed', function() {
-         var dict = {'1': 'one', '2': 'two', '3': 'three'};
-
-         var collection = new FlagsType({
-            dictionary: dict
-         });
-
-         var display = new FlagsDisplay({
-            collection: collection
-         });
-
-         var given = {};
-         var handler = function(event, action, newItems, newItemsIndex) {
-            given.item = newItems[0];
-            given.index = newItemsIndex;
-         };
-
-         display.subscribe('onCollectionChange', handler);
-         collection.set('two', true);
-         display.unsubscribe('onCollectionChange', handler);
-
-         assert.strictEqual(given.item.getContents(), 'two');
-         assert.strictEqual(given.index, 1);
-      });
-   });
+            chai_1.assert.strictEqual(given.item.getContents(), 'two');
+            chai_1.assert.strictEqual(given.index, 1);
+        });
+    });
 });

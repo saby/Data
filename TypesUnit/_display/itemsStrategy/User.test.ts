@@ -50,7 +50,7 @@ describe('Types/_display/itemsStrategy/User', () => {
 
     function getStrategy<S, T extends CollectionItem<S> = CollectionItem<S>>(
         source: IItemsStrategy<S, T>,
-        handlers: Array<SortFunction<S>>
+        handlers: Array<SortFunction<S, T>>
     ): User<S, T> {
         return new User({
             source,

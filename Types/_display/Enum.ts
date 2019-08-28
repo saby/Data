@@ -68,8 +68,8 @@ export default class Enum<S, T extends CollectionItem<S> = CollectionItem<S>> ex
     }
 
     protected _notifyCurrentChange(
-        newCurrent: CollectionItem<S>,
-        oldCurrent: CollectionItem<S>,
+        newCurrent: T,
+        oldCurrent: T,
         newPosition: number,
         oldPosition: number
     ): void {

@@ -10,6 +10,7 @@ export interface IOptions<T> extends ICollectionItemOptions<T> {
     owner?: Tree<T>;
     node?: boolean;
     expanded?: boolean;
+    childrenProperty?: string;
     hasChildren?: boolean;
     loaded?: boolean;
     parent?: TreeItem<T> | BreadcrumbsItem<T>;

@@ -13,6 +13,7 @@ import {mixin} from '../util';
 
 export interface IOptions<T> {
     contents?: T;
+    selected?: boolean;
     owner?: Collection<T>;
 }
 

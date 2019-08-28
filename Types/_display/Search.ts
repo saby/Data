@@ -1,5 +1,4 @@
 import Tree from './Tree';
-import CollectionItem from './CollectionItem';
 import TreeItem from './TreeItem';
 import SearchStrategy from './itemsStrategy/Search';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -13,7 +12,7 @@ import {register} from '../di';
  * @author Мальцев А.А.
  */
 export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends Tree<S, T> {
-    protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
+    protected _createComposer(): ItemsStrategyComposer<S, T> {
         const composer = super._createComposer();
         composer.append(SearchStrategy);
 

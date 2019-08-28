@@ -10,7 +10,7 @@ import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 import {Object as EventObject} from 'Env/Event';
 
-type Converter = (item: any) => string;
+type Converter = (val: any, item?: any) => string;
 
 /**
  * Возвращает уникальный идентификатор объекта
@@ -61,7 +61,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
     /**
      * Элементы проекции
      */
-    protected _collectionItems: Array<CollectionItem<S>> = null;
+    protected _collectionItems: T[] = null;
 
     /**
      * Позиция в коллекции, с которой начинает строиться лесенка
@@ -102,7 +102,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
      * Конструктор лесенки.
      * @param collection Коллекция, по которой строится лесенка.
      */
-    constructor(collection: Collection<S, T>) {
+    constructor(collection?: Collection<S, T>) {
         super();
         SerializableMixin.call(this);
 
@@ -304,8 +304,8 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
     protected _spliceCollection(
         at: number,
         deleteCount: number,
-        added: Array<CollectionItem<S>>
-    ): Array<CollectionItem<S>> {
+        added: T[]
+    ): T[] {
         if (!this._collectionItems) {
             return;
         }
@@ -334,9 +334,9 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
     protected _onCollectionChange(
         event: EventObject,
         action: string,
-        newItems: Array<CollectionItem<S>>,
+        newItems: T[],
         newItemsIndex: number,
-        oldItems: Array<CollectionItem<S>>,
+        oldItems: T[],
         oldItemsIndex: number
     ): void {
         const push = Array.prototype.push;
@@ -493,7 +493,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
 
     protected _adjustPrimary(
         idx: number,
-        item: CollectionItem<S>,
+        item: T,
         columnName: string,
         byOriginal?: boolean
     ): any[] {

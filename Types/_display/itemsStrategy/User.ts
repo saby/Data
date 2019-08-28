@@ -7,7 +7,7 @@ import {CompareFunction} from '../../_declarations';
 import {mixin} from '../../util';
 
 interface IOptions<S, T extends CollectionItem<S>> {
-    handlers: Array<SortFunction<S>>;
+    handlers: Array<SortFunction<S, T>>;
     source: IItemsStrategy<S, T>;
 }
 
@@ -66,7 +66,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
     /**
      * Пользовательские методы сортировки
      */
-    set handlers(value: Array<SortFunction<S>>) {
+    set handlers(value: Array<SortFunction<S, T>>) {
         if (!(value instanceof Array)) {
             throw new TypeError('Option "handlers" should be an instance of Array');
         }
