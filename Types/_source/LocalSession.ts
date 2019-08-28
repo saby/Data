@@ -444,7 +444,7 @@ class ModelManager {
             return new Model({
                rawData: new Record({rawData: data}),
                adapter: create(this.adapter),
-               idProperty: this.keyProperty
+               keyProperty: this.keyProperty
             });
 
          case 'Types/entity:adapter.Sbis':
@@ -455,7 +455,7 @@ class ModelManager {
             return new Model({
                rawData: data,
                adapter: create(this.adapter),
-               idProperty: this.keyProperty
+                keyProperty: this.keyProperty
             });
       }
    }
@@ -468,7 +468,7 @@ class ModelManager {
       const model = new Model({
          format,
          adapter: create(this.adapter),
-         idProperty: this.keyProperty
+          keyProperty: this.keyProperty
       });
 
       while (enumerator.moveNext()) {
@@ -509,7 +509,7 @@ class Converter {
       if (data.length === 0) {
          return new RecordSet({
             rawData: _data,
-            idProperty: this.keyProperty
+             keyProperty: this.keyProperty
          });
       }
 
@@ -520,7 +520,7 @@ class Converter {
       }
       return new RecordSet({
          rawData: _data,
-         idProperty: this.keyProperty
+          keyProperty: this.keyProperty
       });
    }
 
@@ -771,7 +771,7 @@ export default class LocalSession extends mixin<
    update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
       const updateRecord = (record) => {
          let key;
-         const keyProperty = record.getIdProperty ? record.getIdProperty() : this.getKeyProperty();
+         const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
 
          try {
             key = record.get(keyProperty);

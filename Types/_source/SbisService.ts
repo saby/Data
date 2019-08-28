@@ -176,7 +176,7 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: strin
    const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
    const records = new RecordSetType({
       adapter,
-      idProperty: keyProperty
+      keyProperty
    });
    const count = data.length || 0;
 

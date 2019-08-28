@@ -66,7 +66,7 @@ export default interface IData {
     * Возвращает название свойства записи, содержащего первичный ключ
     * @return {String}
     * @see keyProperty
-    * @see Types/_entity/Model#idProperty
+    * @see Types/_entity/Model#keyProperty
     * @example
     * Получим название свойства записи, содержащего первичный ключ:
     * <pre>
