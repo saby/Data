@@ -2962,7 +2962,8 @@ Object.assign(Collection.prototype, {
     _utilityEnumerator: null,
     _onCollectionChange: null,
     _onCollectionItemChange: null,
-    _oEventRaisingChange: null
+    _oEventRaisingChange: null,
+    getIdProperty: Collection.prototype.getKeyProperty
 });
 
 register('Types/display:Collection', Collection);
