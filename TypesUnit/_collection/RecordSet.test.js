@@ -2321,7 +2321,7 @@ define([
             rs.setIdProperty('name');
             rs.unsubscribe('onPropertyChange', handler);
 
-            assert.strictEqual(given.idProperty, 'name');
+            assert.strictEqual(given.keyProperty, 'name');
          });
 
          it('should don\'t trigger "onPropertyChange" if name don\'t changed', function() {
