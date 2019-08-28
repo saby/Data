@@ -28,11 +28,11 @@ define([
 
          rs = new RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
          hierarchy = new Hierarchy({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'node',
             declaredChildrenProperty: 'hasChildren'
@@ -49,25 +49,25 @@ define([
          data = undefined;
       });
 
-      describe('.getIdProperty()', function() {
+      describe('.getKeyProperty()', function() {
          it('should return an empty string by default', function() {
             var hierarchy = new Hierarchy();
-            assert.strictEqual(hierarchy.getIdProperty(), '');
+            assert.strictEqual(hierarchy.getKeyProperty(), '');
          });
 
          it('should return the value passed to the constructor', function() {
             var hierarchy = new Hierarchy({
-               idProperty: 'test'
+               keyProperty: 'test'
             });
-            assert.strictEqual(hierarchy.getIdProperty(), 'test');
+            assert.strictEqual(hierarchy.getKeyProperty(), 'test');
          });
       });
 
-      describe('.setIdProperty()', function() {
+      describe('.setKeyProperty()', function() {
          it('should set the new value', function() {
             var hierarchy = new Hierarchy();
-            hierarchy.setIdProperty('test');
-            assert.strictEqual(hierarchy.getIdProperty(), 'test');
+            hierarchy.setKeyProperty('test');
+            assert.strictEqual(hierarchy.getKeyProperty(), 'test');
          });
       });
 
@@ -196,7 +196,7 @@ define([
 
          it('should return all records in root if parent property is not defined', function() {
             var hierarchy = new Hierarchy({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                check = function(children) {
                   assert.strictEqual(children.length, rs.getCount());
@@ -218,10 +218,10 @@ define([
                ],
                rs = new RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                hierarchy = new Hierarchy({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   parentProperty: 'parent'
                }),
                expect = [1, 3],
@@ -290,7 +290,7 @@ define([
                ],
                rs = new RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.strictEqual(hierarchy.getParent(1, rs), rs.at(0));
@@ -302,7 +302,7 @@ define([
                ],
                rs = new RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.isNull(hierarchy.getParent(0, rs));
@@ -314,7 +314,7 @@ define([
                ],
                rs = new RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             assert.isNull(hierarchy.getParent(0, rs));

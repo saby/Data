@@ -59,10 +59,10 @@ define([
          });
 
          it('should return RecordSet with given options', function() {
-            var options = {idProperty: 'foo'},
+            var options = {keyProperty: 'foo'},
                rs = recordSetFactory(itemsList, options);
 
-            assert.equal(rs.getIdProperty(), options.idProperty);
+            assert.equal(rs.getKeyProperty(), options.keyProperty);
          });
       });
    });

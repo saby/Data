@@ -366,7 +366,7 @@ export default class Model extends mixin<
             this._$properties = properties;
          }
 
-         // for _$keyProperty
+         // for _$keyProperty get from deprecated option 'idProperty'
          if (this._options.idProperty) {
             this._$keyProperty = this._options.idProperty;
          }

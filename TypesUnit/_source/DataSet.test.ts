@@ -136,12 +136,12 @@ describe('Types/_source/DataSet', () => {
             assert.instanceOf(ds.getAll(), RecordSet);
         });
 
-        it('should return pass idProperty to the model', () => {
+        it('should return pass keyProperty to the model', () => {
             const ds = new DataSet({
                 rawData: [{}],
                 keyProperty: 'myprop'
             });
-            assert.strictEqual(ds.getAll().at(0).getIdProperty(), 'myprop');
+            assert.strictEqual(ds.getAll().at(0).getKeyProperty(), 'myprop');
         });
 
         it('should return a recordset of 2 by default', () => {
@@ -271,7 +271,7 @@ describe('Types/_source/DataSet', () => {
                 rawData: list,
                 keyProperty: 'lastname'
             });
-            assert.equal(ds.getRow().getIdProperty(), 'lastname');
+            assert.equal(ds.getRow().getKeyProperty(), 'lastname');
         });
     });
 

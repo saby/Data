@@ -88,7 +88,7 @@ define([
          },
          getModel = function(modelData, modelProperties) {
             return new Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: modelData || getModelData(),
                properties: modelProperties || getModelProperties()
             });
@@ -985,7 +985,7 @@ define([
             assert.strictEqual(model.getId(), modelData.id);
          });
 
-         it('should detect idProperty automatically', function() {
+         it('should detect keyProperty automatically', function() {
             var data = {
                   d: [
                      1,
@@ -1001,7 +1001,7 @@ define([
                   rawData: data,
                   adapter: new SbisAdapter()
                });
-            assert.strictEqual(model.getIdProperty(), '@Key');
+            assert.strictEqual(model.getKeyProperty(), '@Key');
             assert.strictEqual(model.getId(), data.d[1]);
          });
 
@@ -1013,18 +1013,18 @@ define([
          });
       });
 
-      describe('.getIdProperty()', function() {
+      describe('.getKeyProperty()', function() {
          it('should return id property', function() {
-            assert.strictEqual(model.getIdProperty(), 'id');
+            assert.strictEqual(model.getKeyProperty(), 'id');
          });
       });
 
-      describe('.setIdProperty()', function() {
+      describe('.setKeyProperty()', function() {
          it('should set id property', function() {
             var newModel = new Model({
                rawData: modelData
             });
-            newModel.setIdProperty('id');
+            newModel.setKeyProperty('id');
             assert.strictEqual(newModel.getId(), modelData.id);
          });
       });
@@ -1045,7 +1045,7 @@ define([
          it('should clone id property', function() {
             var clone = model.clone();
             assert.strictEqual(model.getId(), clone.getId());
-            assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
+            assert.strictEqual(model.getKeyProperty(), clone.getKeyProperty());
          });
 
          it('should give equal fields for not an Object', function() {
@@ -1066,7 +1066,7 @@ define([
       describe('.merge()', function() {
          it('should merge models', function() {
             var newModel = new Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   title: 'new',
                   link: '123'
@@ -1078,7 +1078,7 @@ define([
 
          it('should do nothing with itself', function() {
             var model = new Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   foo: 'bar',
                }

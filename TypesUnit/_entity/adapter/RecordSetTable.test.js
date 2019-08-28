@@ -176,15 +176,15 @@ define([
             assert.strictEqual(adapter.getData().getAdapter(), rec.getAdapter());
          });
 
-         it('should take idProperty from record if empty data', function() {
+         it('should take keyProperty from record if empty data', function() {
             var adapter = new RecordSetTableAdapter(),
                rec = new Model({
                   format: [],
                   adapter: 'Types/entity:adapter.Sbis',
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             adapter.add(rec);
-            assert.strictEqual(adapter.getData().getIdProperty(), rec.getIdProperty());
+            assert.strictEqual(adapter.getData().getKeyProperty(), rec.getKeyProperty());
          });
 
          it('should throw an error on invalid position', function() {
