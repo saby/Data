@@ -1,5 +1,4 @@
 import {protect, logger} from '../util';
-import {IHashMap} from '../_declarations';
 
 /**
  * Свойство, хранящее признак десериализованного экземпляра

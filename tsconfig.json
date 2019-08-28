@@ -1,7 +1,12 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
+    "noUnusedLocals": true,
     "skipLibCheck": true,
+    "paths": {
+      "Core/Serializer": ["WS.Core/core/Serializer"],
+      "Core/core-instance": ["WS.Core/core/core-instance"]
+    },
     "types" : ["chai", "mocha", "requirejs", "sinon"]
   },
   "include": [
@@ -10,6 +15,7 @@
     "Env/**/*.ts",
     "test/**/*.ts",
     "Types/**/*.ts",
+    "TypesUnit/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
     "WS.Core/**/*.ts"
