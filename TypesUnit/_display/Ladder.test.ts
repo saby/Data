@@ -713,15 +713,15 @@ describe('Types/_display/Ladder', () => {
             const items = [
                 new Model({
                     rawData: {uid: 1, name: 'one'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 }),
                 new Model({
                     rawData: {uid: 2, name: 'one'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 }),
                 new Model({
                     rawData: {uid: 3, name: 'two'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 })
             ];
             const list = new ObservableList({
@@ -743,19 +743,19 @@ describe('Types/_display/Ladder', () => {
             const items = [
                 new Model({
                     rawData: {uid: 2, name: 'two'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 }),
                 new Model({
                     rawData: {uid: 1, name: 'one'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 }),
                 new Model({
                     rawData: {uid: 3, name: 'two'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 }),
                 new Model({
                     rawData: {uid: 4, name: 'two'},
-                    idProperty: 'uid'
+                    keyProperty: 'uid'
                 })
             ];
             const list = new ObservableList({
