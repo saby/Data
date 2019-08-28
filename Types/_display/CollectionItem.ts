@@ -1,8 +1,9 @@
 import {
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin,
+    IInstantiable
 } from '../entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
@@ -11,14 +12,15 @@ import {register} from '../di';
 import {mixin} from '../util';
 
 export interface IOptions<T> {
-   contents: T;
-   owner: Collection<T>;
+    contents?: T;
+    selected?: boolean;
+    owner?: Collection<T>;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
-   $options: IOptions<T>;
-   ci: number;
-   iid: string;
+    $options: IOptions<T>;
+    ci: number;
+    iid: string;
 }
 
 /**
@@ -32,199 +34,208 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * @author Мальцев А.А.
  */
 export default class CollectionItem<T> extends mixin<
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin
 >(
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin
-) {
-   /**
-    * Коллекция, которой принадлежит элемент
-    */
-   protected _$owner: Collection<T>;
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin
+) implements IInstantiable {
 
-   /**
-    * Содержимое элемента коллекции
-    */
-   protected _$contents: T;
+    // region IInstantiable
 
-   /**
-    * Элемент выбран
-    */
-   protected _$selected: boolean;
+    readonly '[Types/_entity/IInstantiable]': boolean;
 
-   protected _instancePrefix: string;
+    getInstanceId: () => string;
 
-   /**
-    * Индекс содержимого элемента в коллекции (используется для сериализации)
-    */
-   protected _contentsIndex: number;
+    /**
+     * Коллекция, которой принадлежит элемент
+     */
+    protected _$owner: Collection<T>;
 
-   constructor(options: IOptions<T>) {
-      super();
-      OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.call(this);
-   }
+    /**
+     * Содержимое элемента коллекции
+     */
+    protected _$contents: T;
 
-   // region Public
+    /**
+     * Элемент выбран
+     */
+    protected _$selected: boolean;
 
-   /**
-    * Возвращает коллекцию, которой принадлежит элемент
-    */
-   getOwner(): Collection<T> {
-      return this._$owner;
-   }
+    protected _instancePrefix: string;
 
-   /**
-    * Устанавливает коллекцию, которой принадлежит элемент
-    * @param owner Коллекция, которой принадлежит элемент
-    */
-   setOwner(owner: Collection<T>): void {
-      this._$owner = owner;
-   }
+    /**
+     * Индекс содержимого элемента в коллекции (используется для сериализации)
+     */
+    protected _contentsIndex: number;
 
-   /**
-    * Возвращает содержимое элемента коллекции
-    */
-   getContents(): T {
-      if (this._contentsIndex !== undefined) {
-         // Ленивое восстановление _$contents по _contentsIndex после десериализации
-         const collection = this.getOwner().getCollection();
-         if (collection['[Types/_collection/IList]']) {
-            this._$contents = (collection as any as IList<T>).at(this._contentsIndex);
-            this._contentsIndex = undefined;
-         }
-      }
-      return this._$contents;
-   }
+    constructor(options?: IOptions<T>) {
+        super();
+        OptionsToPropertyMixin.call(this, options);
+        SerializableMixin.call(this);
+    }
 
-   /**
-    * Устанавливает содержимое элемента коллекции
-    * @param contents Новое содержимое
-    * @param [silent=false] Не уведомлять владельца об изменении содержимого
-    */
-   setContents(contents: T, silent?: boolean): void {
-      if (this._$contents === contents) {
-         return;
-      }
-      this._$contents = contents;
-      if (!silent) {
-         this._notifyItemChangeToOwner('contents');
-      }
-   }
+    // endregion
 
-   /**
-    * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link contents}.
-    */
-   getUid(): string {
-      if (!this._$owner) {
-         return;
-      }
-      return this._$owner.getItemUid(this);
-   }
+    // region Public
 
-   /**
-    * Возвращает признак, что элемент выбран
-    */
-   isSelected(): boolean {
-      return this._$selected;
-   }
+    /**
+     * Возвращает коллекцию, которой принадлежит элемент
+     */
+    getOwner(): Collection<T> {
+        return this._$owner;
+    }
 
-   /**
-    * Устанавливает признак, что элемент выбран
-    * @param selected Элемент выбран
-    * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
-    */
-   setSelected(selected: boolean, silent?: boolean): void {
-      if (this._$selected === selected) {
-         return;
-      }
-      this._$selected = selected;
-      if (!silent) {
-         this._notifyItemChangeToOwner('selected');
-      }
-   }
+    /**
+     * Устанавливает коллекцию, которой принадлежит элемент
+     * @param owner Коллекция, которой принадлежит элемент
+     */
+    setOwner(owner: Collection<T>): void {
+        this._$owner = owner;
+    }
 
-   // endregion
+    /**
+     * Возвращает содержимое элемента коллекции
+     */
+    getContents(): T {
+        if (this._contentsIndex !== undefined) {
+            // Ленивое восстановление _$contents по _contentsIndex после десериализации
+            const collection = this.getOwner().getCollection();
+            if (collection['[Types/_collection/IList]']) {
+                this._$contents = (collection as any as IList<T>).at(this._contentsIndex);
+                this._contentsIndex = undefined;
+            }
+        }
+        return this._$contents;
+    }
 
-   // region SerializableMixin
+    /**
+     * Устанавливает содержимое элемента коллекции
+     * @param contents Новое содержимое
+     * @param [silent=false] Не уведомлять владельца об изменении содержимого
+     */
+    setContents(contents: T, silent?: boolean): void {
+        if (this._$contents === contents) {
+            return;
+        }
+        this._$contents = contents;
+        if (!silent) {
+            this._notifyItemChangeToOwner('contents');
+        }
+    }
 
-   _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
-      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
+    /**
+     * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link contents}.
+     */
+    getUid(): string {
+        if (!this._$owner) {
+            return;
+        }
+        return this._$owner.getItemUid(this);
+    }
 
-      if (resultState.$options.owner) {
-         // save element index if collections implements Types/_collection/IList
-         const collection = resultState.$options.owner.getCollection();
-         const index = collection['[Types/_collection/IList]']
-            ? (collection as any as IList<T>).getIndex(resultState.$options.contents)
-            : -1;
-         if (index > -1) {
-            resultState.ci = index;
-            delete resultState.$options.contents;
-         }
-      }
+    /**
+     * Возвращает признак, что элемент выбран
+     */
+    isSelected(): boolean {
+        return this._$selected;
+    }
 
-      // By performance reason. It will be restored at Collection::_setSerializableState
-      // delete resultState.$options.owner;
+    /**
+     * Устанавливает признак, что элемент выбран
+     * @param selected Элемент выбран
+     * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
+     */
+    setSelected(selected: boolean, silent?: boolean): void {
+        if (this._$selected === selected) {
+            return;
+        }
+        this._$selected = selected;
+        if (!silent) {
+            this._notifyItemChangeToOwner('selected');
+        }
+    }
 
-      resultState.iid = this.getInstanceId();
+    // endregion
 
-      return resultState;
-   }
+    // region SerializableMixin
 
-   _setSerializableState(state: ISerializableState<T>): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function(): void {
-         fromSerializableMixin.call(this);
-         if (state.hasOwnProperty('ci')) {
-            this._contentsIndex = state.ci;
-         }
-         this._instanceId = state.iid;
-      };
-   }
+    _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
+        const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
 
-   // endregion
+        if (resultState.$options.owner) {
+            // save element index if collections implements Types/_collection/IList
+            const collection = resultState.$options.owner.getCollection();
+            const index = collection['[Types/_collection/IList]']
+                ? (collection as any as IList<T>).getIndex(resultState.$options.contents)
+                : -1;
+            if (index > -1) {
+                resultState.ci = index;
+                delete resultState.$options.contents;
+            }
+        }
 
-   // region Protected
+        // By performance reason. It will be restored at Collection::_setSerializableState
+        // delete resultState.$options.owner;
 
-   /**
-    * Возвращает коллекцию проекции
-    * @protected
-    */
-   protected _getSourceCollection(): ISourceCollection<T> {
-      return this.getOwner().getCollection();
-   }
+        resultState.iid = this.getInstanceId();
 
-   /**
-    * Генерирует событие у владельца об изменении свойства элемента
-    * @param property Измененное свойство
-    * @protected
-    */
-   protected _notifyItemChangeToOwner(property: string): void {
-      if (this._$owner) {
-         this._$owner.notifyItemChange(
-            this,
-            // @ts-ignore fix argument type
-            property
-         );
-      }
-   }
+        return resultState;
+    }
 
-   // endregion
+    _setSerializableState(state: ISerializableState<T>): Function {
+        const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+        return function(): void {
+            fromSerializableMixin.call(this);
+            if (state.hasOwnProperty('ci')) {
+                this._contentsIndex = state.ci;
+            }
+            this._instanceId = state.iid;
+        };
+    }
+
+    // endregion
+
+    // region Protected
+
+    /**
+     * Возвращает коллекцию проекции
+     * @protected
+     */
+    protected _getSourceCollection(): ISourceCollection<T> {
+        return this.getOwner().getCollection();
+    }
+
+    /**
+     * Генерирует событие у владельца об изменении свойства элемента
+     * @param property Измененное свойство
+     * @protected
+     */
+    protected _notifyItemChangeToOwner(property: string): void {
+        if (this._$owner) {
+            this._$owner.notifyItemChange(
+                this,
+                // @ts-ignore fix argument type
+                property
+            );
+        }
+    }
+
+    // endregion
 }
 
 Object.assign(CollectionItem.prototype, {
-   '[Types/_display/CollectionItem]': true,
-   _moduleName: 'Types/display:CollectionItem',
-   _$owner: null,
-   _$contents: null,
-   _$selected: false,
-   _instancePrefix: 'collection-item-',
-   _contentsIndex: undefined
+    '[Types/_display/CollectionItem]': true,
+    _moduleName: 'Types/display:CollectionItem',
+    _$owner: null,
+    _$contents: null,
+    _$selected: false,
+    _instancePrefix: 'collection-item-',
+    _contentsIndex: undefined
 });
 
 register('Types/display:CollectionItem', CollectionItem);
