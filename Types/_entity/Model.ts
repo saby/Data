@@ -1,5 +1,4 @@
 import Record, {IOptions as IRecordOptions, ISerializableState as IRecordSerializableState} from './Record';
-import IInstantiable from './IInstantiable';
 import InstantiableMixin from './InstantiableMixin';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {IAdapter} from './adapter';
