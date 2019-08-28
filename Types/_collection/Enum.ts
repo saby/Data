@@ -1,7 +1,6 @@
 import IEnum, {IIndex} from './IEnum';
 import Dictionary from './Dictionary';
 import {
-   ICloneable,
    IProducible,
    ManyToManyMixin,
    SerializableMixin,
@@ -20,7 +19,6 @@ interface IProduceOptions {
  * @class Types/_collection/Enum
  * @extends Types/_collection/Dictionary
  * @implements Types/_collection/IEnum
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/ManyToManyMixin
  * @mixes Types/_entity/SerializableMixin
@@ -38,7 +36,7 @@ export default class Enum<T> extends mixin<
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin
-) implements IEnum<T>, ICloneable, IProducible {
+) implements IEnum<T>, IProducible {
    /**
     * @cfg {Number|sting|null} Key of the selected item
     * @name Types/_collection/Enum#index
@@ -191,7 +189,6 @@ export default class Enum<T> extends mixin<
 Object.assign(Enum.prototype, {
    '[Types/_collection/Enum]': true,
    '[Types/_collection/IEnum]': true,
-   '[Types/_entity/ICloneable]': true,
    '[Types/_entity/IProducible]': true,
    _moduleName: 'Types/collection:Enum',
    _$index: null,

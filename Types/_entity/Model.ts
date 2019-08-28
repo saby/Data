@@ -146,7 +146,6 @@ interface ISerializableState extends IRecordSerializableState {
  * </pre>
  * @class Types/_entity/Model
  * @extends Types/_entity/Record
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @public
  * @ignoreMethods getDefault
@@ -156,7 +155,7 @@ export default class Model extends mixin<
    Record, InstantiableMixin
 >(
    Record, InstantiableMixin
-) implements IInstantiable {
+) {
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
@@ -602,7 +601,7 @@ export default class Model extends mixin<
       }
    }
 
-   isChanged(name: string): boolean {
+   isChanged(name?: string): boolean {
       if (!name && this._isChanged) {
          return true;
       }
@@ -992,7 +991,6 @@ export default class Model extends mixin<
 
 Object.assign(Model.prototype, {
    '[Types/_entity/Model]': true,
-   '[Types/_entity/IInstantiable]': true,
    _moduleName: 'Types/entity:Model',
    _instancePrefix: 'model-',
    _$properties: null,

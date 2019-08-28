@@ -11,7 +11,6 @@ import {
     FormattableMixin,
     IFormattableOptions,
     IObservableObject,
-    IInstantiable,
     IProducible,
     InstantiableMixin,
     ISerializableState as IDefaultSerializableState,
@@ -106,7 +105,6 @@ function checkNullId(value: any, idProperty: string): void {
  * @class Types/_collection/RecordSet
  * @extends Types/_collection/ObservableList
  * @implements Types/_entity/IObservableObject
- * @implements Types/_entity/IInstantiable
  * @implements Types/_entity/IProducible
  * @mixes Types/_entity/FormattableMixin
  * @mixes Types/_entity/InstantiableMixin
@@ -122,7 +120,7 @@ export default class RecordSet<T = Model> extends mixin<
     ObservableList,
     FormattableMixin,
     InstantiableMixin
-) implements IObservableObject, IInstantiable, IProducible {
+) implements IObservableObject, IProducible {
     /**
      * @typedef {Object} MergeOptions
      * @property {Boolean} [add=true] Добавлять новые записи.
@@ -1537,7 +1535,6 @@ export default class RecordSet<T = Model> extends mixin<
 
 Object.assign(RecordSet.prototype, {
     '[Types/_collection/RecordSet]': true,
-    '[Types/_entity/IInstantiable]': true,
     '[Types/_entity/IObservableObject]': true,
     '[Types/_entity/IProducible]': true,
     _moduleName: 'Types/collection:RecordSet',

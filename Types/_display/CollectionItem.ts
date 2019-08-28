@@ -28,7 +28,6 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * @class Types/_display/CollectionItem
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public

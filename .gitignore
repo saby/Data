@@ -35,4 +35,5 @@
 /TypesUnit/_object/merge.test.js
 /TypesUnit/_object/isEqual.test.js
 /TypesUnit/_source/DataSet.test.js
+/TypesUnit/_source/Remote.test.js
 /TypesUnit/_source/SbisService.test.js
