@@ -92,7 +92,7 @@ export default abstract class Abstract<S, T> extends mixin<
                 instance = create('Types/display:Flags', options);
             } else if (collection && collection['[Types/_collection/IEnumerable]']) {
                 // Fix test ControlsUnit\SBIS3.CONTROLS\Selection\MassSelectionsController.test.js:62:20
-                if (options && options.keyProperty === 'id') {
+                if (options && options.keyProperty === 'id' && Object.keys(options).length === 1) {
                     delete options.keyProperty;
                 }
                 instance = create('Types/display:Collection', options);
