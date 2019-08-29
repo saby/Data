@@ -201,7 +201,7 @@ describe('Types/_source/SbisService', () => {
     const getSampleModel = () => {
         const model = new Model({
             adapter: 'Types/entity:adapter.Sbis',
-            idProperty: '@ID'
+            keyProperty: '@ID'
         });
         model.addField({name: '@ID', type: 'integer'}, undefined, 1);
         model.addField({name: 'LastName', type: 'string'}, undefined, 'tst');

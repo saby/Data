@@ -220,7 +220,7 @@ define([
             it('should create the model by 2nd way', function(done) {
                var oldLength = mock.length,
                   model = new Model({
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   });
 
                model.set('title', 'Овечкин');
@@ -232,7 +232,7 @@ define([
             });
             it('should generate id and set it in raw data', function(done) {
                var model = new Model({
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                source.update(model).addCallback(function(id) {
                   assert.equal(model.get('id'), id);
@@ -249,7 +249,7 @@ define([
                      {id: null, title: 'Neptune', kind: 'Planet'},
                      {id: 90, title: 'Pluto', kind: 'Dwarf planet'}
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                source.update(data).addCallback(function(ids) {
                   data.each(function(model, i) {
@@ -269,7 +269,7 @@ define([
                      {id: 90, title: 'Pluto', kind: 'Dwarf planet'},
                      {id: null, title: 'Neptune', kind: 'COCO-COLA Planet'}
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                source.update(rs).addCallbacks(function() {
                   source.read(90).addCallbacks(function(record) {
@@ -1089,7 +1089,7 @@ define([
          beforeEach(function() {
 
             recordset = new RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: mock
             });
 
@@ -1229,7 +1229,7 @@ define([
                   var oldLength = recordset.getCount(),
                      model = new Model({
                         rawData: new Model(),
-                        idProperty: 'Ид',
+                        keyProperty: 'Ид',
                         adapter: 'Types/entity:adapter.RecordSet'
                      });
                   model.set('Фамилия', 'Овечкин');
@@ -1248,7 +1248,7 @@ define([
                      }),
                      model = new Model({
                         rawData: {id: 0, 'name': '11'},
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   source7.update(model);
                   assert.equal(ls7.getItem('i').length, 1);

@@ -31,7 +31,7 @@ const developerMode = false;
 
 interface IOptions extends IListOptions<Model>, IFormattableOptions {
     model?: Function | string;
-    idProperty?: string;
+    keyProperty?: string;
     meta?: any;
 }
 
@@ -46,13 +46,13 @@ interface ISerializableState extends IDefaultSerializableState, IFormattableSeri
 /**
  *
  */
-function checkNullId(value: any, idProperty: string): void {
-    if (developerMode && idProperty) {
-        if (value && value['[Types/_entity/Record]'] && value.get(idProperty) === null) {
+function checkNullId(value: any, keyProperty: string): void {
+    if (developerMode && keyProperty) {
+        if (value && value['[Types/_entity/Record]'] && value.get(keyProperty) === null) {
             logger.info('Types/_collection/RecordSet: Id propery must not be null');
         } else if (value instanceof RecordSet) {
             value.each((item) => {
-                checkNullId(item, idProperty);
+                checkNullId(item, keyProperty);
             });
         }
     }
@@ -166,14 +166,14 @@ export default class RecordSet<T = Model> extends mixin<
 
     /**
      * @cfg {String} Название свойства записи, содержащего первичный ключ.
-     * @name Types/_collection/RecordSet#idProperty
-     * @see getIdProperty
+     * @name Types/_collection/RecordSet#keyProperty
+     * @see getKeyProperty
      * @example
      * Создадим рекордсет, получим запись по первичному ключу:
      * <pre>
      *     require(['Types/collection'], function (collection) {
      *         var users = new collection.RecordSet({
-     *             idProperty: 'id'
+     *             keyProperty: 'id'
      *             rawData: [{
      *                 id: 134,
      *                 login: 'editor'
@@ -186,7 +186,7 @@ export default class RecordSet<T = Model> extends mixin<
      *     });
      * </pre>
      */
-    protected _$idProperty: string;
+    protected _$keyProperty: string;
 
     /**
      * @cfg {Object} Метаданные
@@ -268,6 +268,11 @@ export default class RecordSet<T = Model> extends mixin<
         super(options);
 
         if (options) {
+            // Support deprecated  option 'idProperty'
+            if (!this._$keyProperty && (options as any).idProperty) {
+                this._$keyProperty = (options as any).idProperty;
+            }
+            // Support deprecated  option 'meta'
             if ('meta' in options) {
                 this._$metaData = options.meta;
             }
@@ -281,8 +286,8 @@ export default class RecordSet<T = Model> extends mixin<
 
         FormattableMixin.call(this, options);
 
-        if (!this._$idProperty) {
-            this._$idProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
+        if (!this._$keyProperty) {
+            this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
         }
 
         if (this._$rawData) {
@@ -810,8 +815,11 @@ export default class RecordSet<T = Model> extends mixin<
             if (options.model) {
                 instanceOptions.model = options.model;
             }
-            if (options.idProperty) {
-                instanceOptions.idProperty = options.idProperty;
+            if (options.keyProperty) {
+                instanceOptions.keyProperty = options.keyProperty;
+            } else if ((options as any).idProperty) {
+                // Support deprecated  option 'idProperty'
+                instanceOptions.keyProperty = (options as any).idProperty;
             }
         }
         return new this(instanceOptions);
@@ -1018,26 +1026,26 @@ export default class RecordSet<T = Model> extends mixin<
     /**
      * Возвращает название свойства записи, содержащего первичный ключ
      * @return {String}
-     * @see setIdProperty
-     * @see idProperty
+     * @see setKeyProperty
+     * @see keyProperty
      * @example
      * Получим название свойства, содержащего первичный ключ:
      * <pre>
      *     var users = new RecordSet({
-     *         idProperty: 'id'
+     *         keyProperty: 'id'
      *     });
-     *     users.getIdProperty();//'id'
+     *     users.getKeyProperty();//'id'
      * </pre>
      */
-    getIdProperty(): string {
-        return this._$idProperty;
+    getKeyProperty(): string {
+        return this._$keyProperty;
     }
 
     /**
      * Устанавливает название свойства записи, содержащего первичный ключ
      * @param {String} name
-     * @see getIdProperty
-     * @see idProperty
+     * @see getKeyProperty
+     * @see keyProperty
      * @example
      * Установим название свойства, содержащего первичный ключ:
      * <pre>
@@ -1050,22 +1058,22 @@ export default class RecordSet<T = Model> extends mixin<
      *             login: 'shell',
      *         }]
      *     });
-     *     users.setIdProperty('id');
+     *     users.setKeyProperty('id');
      *     users.getRecordById(257).get('login');//'shell'
      * </pre>
      */
-    setIdProperty(name: string): void {
-        if (this._$idProperty === name) {
+    setKeyProperty(name: string): void {
+        if (this._$keyProperty === name) {
             return;
         }
 
-        this._$idProperty = name;
+        this._$keyProperty = name;
         this.each((record: any) => {
-            if (record.setIdProperty) {
-                record.setIdProperty(name);
+            if (record.setKeyProperty) {
+                record.setKeyProperty(name);
             }
         });
-        this._notify('onPropertyChange', {idProperty: this._$idProperty});
+        this._notify('onPropertyChange', {keyProperty: this._$keyProperty});
     }
 
     /**
@@ -1077,7 +1085,7 @@ export default class RecordSet<T = Model> extends mixin<
      * Создадим рекордсет, получим запись по первичному ключу:
      * <pre>
      *     var users = new RecordSet({
-     *         idProperty: 'id'
+     *         keyProperty: 'id'
      *         rawData: [{
      *             id: 134,
      *             login: 'editor',
@@ -1091,7 +1099,7 @@ export default class RecordSet<T = Model> extends mixin<
      */
     getRecordById(id: string | number): T {
         return this.at(
-            this.getIndexByValue(this._$idProperty, id)
+            this.getIndexByValue(this._$keyProperty, id)
         );
     }
 
@@ -1114,7 +1122,7 @@ export default class RecordSet<T = Model> extends mixin<
                 {
                     format,
                     adapter: this._getAdapter(),
-                    idProperty: this._$idProperty
+                    keyProperty: this._$keyProperty
                 }
             );
         };
@@ -1235,7 +1243,7 @@ export default class RecordSet<T = Model> extends mixin<
             inject: false, ...(options || {})};
 
         const count = recordSet.getCount();
-        const idProperty = this._$idProperty;
+        const keyProperty = this._$keyProperty;
         const existsIdMap = {};
         const newIdMap = {};
         const toAdd = [];
@@ -1247,13 +1255,13 @@ export default class RecordSet<T = Model> extends mixin<
 
         this.each((record, index) => {
             if (record instanceof Record) {
-                existsIdMap[record.get(idProperty)] = index;
+                existsIdMap[record.get(keyProperty)] = index;
             }
         });
 
         for (let i = 0; i < count; i++) {
             record = recordSet.at(i);
-            id = record.get(idProperty);
+            id = record.get(keyProperty);
 
             if (i === 0) {
                 this._checkItem(record);
@@ -1302,7 +1310,7 @@ export default class RecordSet<T = Model> extends mixin<
         if (options.remove) {
             const toRemove = [];
             this.each((record, index) => {
-                if (record instanceof Record && !newIdMap.hasOwnProperty(record.get(idProperty))) {
+                if (record instanceof Record && !newIdMap.hasOwnProperty(record.get(keyProperty))) {
                     toRemove.push(index);
                 }
             });
@@ -1422,7 +1430,7 @@ export default class RecordSet<T = Model> extends mixin<
         if (!item || !item['[Types/_entity/Record]']) {
             throw new TypeError('Item should be an instance of Types/entity:Record');
         }
-        checkNullId(item, this.getIdProperty());
+        checkNullId(item, this.getKeyProperty());
         this._checkAdapterCompatibility(item.getAdapter());
     }
 
@@ -1438,7 +1446,7 @@ export default class RecordSet<T = Model> extends mixin<
             state: RECORD_STATE.UNCHANGED,
             adapter: this.getAdapter(),
             rawData: data,
-            idProperty: this._$idProperty
+            keyProperty: this._$keyProperty
         });
 
         return record;
@@ -1461,7 +1469,7 @@ export default class RecordSet<T = Model> extends mixin<
                 return adapter.at(record ? this.getIndex(record) : at);
             });
             this._addChild(record);
-            checkNullId(record, this.getIdProperty());
+            checkNullId(record, this.getKeyProperty());
         }
 
         return record;
@@ -1492,7 +1500,7 @@ export default class RecordSet<T = Model> extends mixin<
         const filter = (state) => {
             const result = new RecordSet({
                 adapter: items.getAdapter(),
-                idProperty: items.getIdProperty()
+                keyProperty: items.getKeyProperty()
             });
 
             items.each((item) => {
@@ -1504,10 +1512,10 @@ export default class RecordSet<T = Model> extends mixin<
 
         const getIds = (items) => {
             const result = [];
-            const idProperty = items.getIdProperty();
+            const keyProperty = items.getKeyProperty();
 
             items.each((item) => {
-                result.push(item.get(idProperty));
+                result.push(item.get(keyProperty));
             });
 
             return result;
@@ -1541,10 +1549,12 @@ Object.assign(RecordSet.prototype, {
     _instancePrefix: 'recordset-',
     _defaultModel: DEFAULT_MODEL,
     _$model: DEFAULT_MODEL,
-    _$idProperty: '',
+    _$keyProperty: '',
     _$metaData: null,
     _$metaFormat: null,
-    _metaData: null
+    _metaData: null,
+    getIdProperty: RecordSet.prototype.getKeyProperty,
+    setIdProperty: RecordSet.prototype.setKeyProperty
 });
 
 // Aliases

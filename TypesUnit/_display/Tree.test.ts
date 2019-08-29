@@ -125,7 +125,7 @@ describe('Types/_display/Tree', () => {
     function getRecordSetTree(): Tree<Model> {
         const rs = new RecordSet({
             rawData: getData(),
-            idProperty: 'id'
+            keyProperty: 'id'
         });
         return getObservableTree<Model>(rs);
     }

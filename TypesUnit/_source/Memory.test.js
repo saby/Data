@@ -277,7 +277,7 @@ define([
             it('should create the model by 2nd way', function(done) {
                var oldLength = data.length,
                   model = new Model({
-                     idProperty: 'Id'
+                     keyProperty: 'Id'
                   });
 
                model.set('LastName', 'Овечкин');
@@ -289,7 +289,7 @@ define([
             });
             it('should generate id and set it in raw data', function(done) {
                var model = new Model({
-                  idProperty: 'Id'
+                  keyProperty: 'Id'
                });
                source.update(model).addCallback(function(id) {
                   assert.equal(model.get('Id'), id);
@@ -318,7 +318,7 @@ define([
                      'MiddleName': 'Иванович',
                      'Position': 'Директор'
                   }],
-                  idProperty: 'Id'
+                  keyProperty: 'Id'
                });
                source.update(data).addCallback(function(ids) {
                   data.each(function(model, i) {
@@ -1531,7 +1531,7 @@ define([
                   var oldLength = recordset.getCount(),
                      model = new Model({
                         rawData: new Model(),
-                        idProperty: 'Id',
+                        keyProperty: 'Id',
                         adapter: 'Types/entity:adapter.RecordSet'
                      });
                   model.set('LastName', 'Овечкин');
@@ -1549,7 +1549,7 @@ define([
                      }),
                      model = new Model({
                         rawData: {id: 0, 'name': '11'},
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   source.update(model);
                   assert.equal(source._$data.length, 1);

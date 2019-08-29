@@ -295,7 +295,7 @@ describe('Types/_display/Collection', () => {
                     {id: 3, title: 3},
                     {id: 4, title: 4}
                 ],
-                idProperty: 'id'
+                keyProperty: 'id'
             });
             const display = new CollectionDisplay({
                 collection: list,
@@ -2184,7 +2184,7 @@ describe('Types/_display/Collection', () => {
                 items: [
                     new Model({
                         rawData: {id: 1, foo: 'bar'},
-                        idProperty: 'foo'
+                        keyProperty: 'foo'
                     })
                 ]
             });

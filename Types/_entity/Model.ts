@@ -35,7 +35,7 @@ interface IProperties<T> {
 
 interface IOptions extends IRecordOptions {
    properties?: IProperties<IProperty>;
-   idProperty?: string;
+   keyProperty?: string;
 }
 
 interface ISerializableState extends IRecordSerializableState {
@@ -54,7 +54,7 @@ interface ISerializableState extends IRecordSerializableState {
  * Основные аспекты модели (дополнительно к аспектам записи):
  * <ul>
  *    <li>определение {@link Types/_entity/Model#properties собственных свойств} сущности;</li>
- *    <li>{@link Types/_entity/Model#idProperty уникальный идентификатор сущности} среди ей подобных.</li>
+ *    <li>{@link Types/_entity/Model#keyProperty уникальный идентификатор сущности} среди ей подобных.</li>
  * </ul>
  *
  * Поведенческие аспекты каждой сущности реализуются ее прикладным модулем в виде публичных методов.
@@ -85,7 +85,7 @@ interface ISerializableState extends IRecordSerializableState {
  *          {name: 'login', type: 'string'},
  *          {name: 'salt', type: 'string'}
  *       ];
- *       protected _$idProperty: string = 'login';
+ *       protected _$keyProperty: string = 'login';
  *       authenticate(password: string): boolean {
  *          return Salt.encode(this.get('login') + ':' + password) === this.get('salt');
  *       }
@@ -285,15 +285,15 @@ export default class Model extends mixin<
 
    /**
     * @cfg {String} Название свойства, содержащего первичный ключ
-    * @name Types/_entity/Model#idProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @name Types/_entity/Model#keyProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     * @see getId
     * @example
     * Зададим первичным ключом модели свойство с названием id:
     * <pre>
     *    var article = new Model({
-    *       idProperty: 'id',
+    *       keyProperty: 'id',
     *       rawData: {
     *          id: 1,
     *          title: 'How to make a Model'
@@ -302,7 +302,7 @@ export default class Model extends mixin<
     *    article.getId();//1
     * </pre>
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * The model is deleted in data source which it's taken from
@@ -350,6 +350,11 @@ export default class Model extends mixin<
       // TODO: don't allow to inject properties through constructor
       this._propertiesInjected = options && 'properties' in options;
 
+      // Support deprecated  option 'idProperty'
+      if (!this._$keyProperty && options && (options as any).idProperty) {
+         this._$keyProperty = (options as any).idProperty;
+      }
+
       // FIXME: backward compatibility for _options
       if (this._options) {
          // for _$properties
@@ -360,14 +365,14 @@ export default class Model extends mixin<
             this._$properties = properties;
          }
 
-         // for _$idProperty
+         // for _$keyProperty get from deprecated option 'idProperty'
          if (this._options.idProperty) {
-            this._$idProperty = this._options.idProperty;
+            this._$keyProperty = this._options.idProperty;
          }
       }
 
-      if (!this._$idProperty) {
-         this._$idProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
+      if (!this._$keyProperty) {
+         this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
       }
    }
 
@@ -746,14 +751,14 @@ export default class Model extends mixin<
    /**
     * Возвращает значение первичного ключа модели
     * @return {*}
-    * @see idProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @see keyProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     * @example
     * Получим значение первичного ключа статьи:
     * <pre>
     *    var article = new Model({
-    *       idProperty: 'id',
+    *       keyProperty: 'id',
     *       rawData: {
     *          id: 1,
     *          title: 'How to make a Model'
@@ -763,42 +768,42 @@ export default class Model extends mixin<
     * </pre>
     */
    getId(): any {
-      const idProperty = this.getIdProperty();
-      if (!idProperty) {
-         logger.info(this._moduleName + '::getId(): idProperty is not defined');
+      const keyProperty = this.getKeyProperty();
+      if (!keyProperty) {
+         logger.info(this._moduleName + '::getId(): keyProperty is not defined');
          return undefined;
       }
-      return this.get(idProperty);
+      return this.get(keyProperty);
    }
 
    /**
     * Возвращает название свойства, в котором хранится первичный ключ модели
     * @return {String}
-    * @see idProperty
-    * @see setIdProperty
+    * @see keyProperty
+    * @see setKeyProperty
     * @see getId
     * @example
     * Получим название свойства первичного ключа:
     * <pre>
     *    var article = new Model({
-    *       idProperty: 'id',
+    *       keyProperty: 'id',
     *       rawData: {
     *          id: 1,
     *          title: 'How to make a Model'
     *       }
     *    });
-    *    article.getIdProperty();//'id'
+    *    article.getKeyProperty();//'id'
     * </pre>
     */
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
    /**
     * Устанавливает название свойства, в котором хранится первичный ключ модели
-    * @param {String} idProperty Название свойства для первичного ключа модели.
-    * @see idProperty
-    * @see getIdProperty
+    * @param {String} keyProperty Название свойства для первичного ключа модели.
+    * @see keyProperty
+    * @see getKeyProperty
     * @see getId
     * @example
     * Зададим название свойства первичного ключа:
@@ -809,16 +814,16 @@ export default class Model extends mixin<
     *          title: 'How to make a Model'
     *       }
     *    });
-    *    article.setIdProperty('id');
+    *    article.setKeyProperty('id');
     *    article.getId();//1
     * </pre>
     */
-   setIdProperty(idProperty: string): void {
-      if (idProperty && !this.has(idProperty)) {
-         logger.info(this._moduleName + '::setIdProperty(): property "' + idProperty + '" is not defined');
+   setKeyProperty(keyProperty: string): void {
+      if (keyProperty && !this.has(keyProperty)) {
+         logger.info(this._moduleName + '::setKeyProperty(): property "' + keyProperty + '" is not defined');
          return;
       }
-      this._$idProperty = idProperty;
+      this._$keyProperty = keyProperty;
    }
 
    // endregion
@@ -993,13 +998,15 @@ Object.assign(Model.prototype, {
    _moduleName: 'Types/entity:Model',
    _instancePrefix: 'model-',
    _$properties: null,
-   _$idProperty: '',
+   _$keyProperty: '',
    _isDeleted: false,
    _defaultPropertiesValues: null,
    _propertiesDependency: null,
    _propertiesDependencyGathering: '',
    _calculatingProperties: null,
-   _deepChangedProperties: null
+   _deepChangedProperties: null,
+   getIdProperty: Model.prototype.getKeyProperty,
+   setIdProperty: Model.prototype.setKeyProperty
 });
 
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'

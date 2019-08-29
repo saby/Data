@@ -260,7 +260,7 @@ describe('Types/_source/Remote', () => {
                 }
             });
             const model = new Model({
-                idProperty: 'c',
+                keyProperty: 'c',
                 rawData: {a: 1, b: 2, c: 3}
             });
 
@@ -282,7 +282,7 @@ describe('Types/_source/Remote', () => {
                 }
             });
             const model = new Model({
-                idProperty: 'a',
+                keyProperty: 'a',
                 rawData: {a: 1, b: 2, c: 3}
             });
 
