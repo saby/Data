@@ -20,9 +20,9 @@ export default class Counted<T> extends Abstract<T> {
    /**
     * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
     * @param source Предыдущее звено.
-    * @param key Поле агрегации или функция агрегации для каждого элемента.
+    * @param [key] Поле агрегации или функция агрегации для каждого элемента.
     */
-   constructor(source: Abstract<T>, key: string|KeyFunc) {
+   constructor(source: Abstract<T>, key?: string|KeyFunc) {
       super(source);
       this._key = key;
    }

@@ -21,7 +21,7 @@ export default class Uniquely<T> extends Abstract<T> {
     * @param source Предыдущее звено.
     * @param [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
     */
-   constructor(source: Abstract<T>, idExtractor: ExtractFunc) {
+   constructor(source: Abstract<T>, idExtractor?: ExtractFunc) {
       super(source);
       this._idExtractor = idExtractor;
    }

@@ -508,7 +508,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
     * </pre>
     */
-   count(by?: string|((item: any) => string)): Counted<T>|number {
+   count(by?: string |((item: any) => string | number | boolean)): Counted<T> | number {
       if (by === undefined) {
          return this.reduce((memo) => memo + 1, 0);
       }
@@ -743,7 +743,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
-   sort(compareFunction: CompareFunction): Sorted<T> {
+   sort(compareFunction?: CompareFunction): Sorted<T> {
       const Next = resolve<any>('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }
