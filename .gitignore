@@ -26,7 +26,8 @@
 /I18n
 
 # Temporarily: for complied tests
-/TypesUnit/_display/**/*.test.js
+/TypesUnit/_chain/**/*.js
+/TypesUnit/_display/**/*.js
 /TypesUnit/_entity/Date.test.js
 /TypesUnit/_entity/DateTime.test.js
 /TypesUnit/_entity/ReactiveObject.test.js

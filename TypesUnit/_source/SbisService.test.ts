@@ -29,7 +29,7 @@ describe('Types/_source/SbisService', () => {
         {n: 'Hired', t: 'Логическое'}
     ];
 
-    // Mock of Types/_source/provider/SbisBusinessLogic
+    // ArrayMock of Types/_source/provider/SbisBusinessLogic
     const SbisBusinessLogic = (() => {
         let lastId = 0;
         const existsId = 7;
