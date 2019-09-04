@@ -33,6 +33,7 @@
 /TypesUnit/_entity/ReactiveObject.test.js
 /TypesUnit/_entity/Time.test.js
 /TypesUnit/_formatter/number.test.js
+/TypesUnit/_function/**/*.js
 /TypesUnit/_object/merge.test.js
 /TypesUnit/_object/isEqual.test.js
 /TypesUnit/_source/DataSet.test.js
