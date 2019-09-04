@@ -3,7 +3,6 @@ import DataSet from 'Types/_source/DataSet';
 import Model from 'Types/_entity/Model';
 import JsonAdapter from 'Types/_entity/adapter/Json';
 import RecordSet from 'Types/_collection/RecordSet';
-// @ts-ignore
 import * as coreExtend from 'Core/core-extend';
 
 describe('Types/_source/DataSet', () => {

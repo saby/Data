@@ -18,7 +18,7 @@ import {ExtendPromise} from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
-   parentProperty: string;
+   parentProperty?: string;
 }
 
 interface ISerializableState extends IDefaultSerializableState {

@@ -79,6 +79,7 @@ interface IOptions {
    prefix: string;
    keyProperty: string;
    data?: object;
+   adapter?: String | Function;
 }
 
 class WhereTokenizer {
@@ -838,7 +839,7 @@ export default class LocalSession extends mixin<
     *   });
     * </pre>
     */
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       if (query === void 0) {
          query = new Query();
       }
@@ -932,7 +933,7 @@ export default class LocalSession extends mixin<
     *    })
     * </pre>
     */
-   move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
       const keys = this.rawManager.getKeys();
       const sourceItems = [];
       if (!(items instanceof Array)) {

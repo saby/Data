@@ -5,6 +5,8 @@
     "skipLibCheck": true,
     "paths": {
       "Core/core-instance": ["WS.Core/core/core-instance"],
+      "Core/core-extend": ["WS.Core/core/core-extend"],
+      "Core/core-simpleExtend": ["WS.Core/core/core-simpleExtend"],
       "Core/helpers/i18n/locales": ["WS.Core/core/helpers/i18n/locales"],
       "Core/i18n": ["WS.Core/core/i18n"],
       "Core/Serializer": ["WS.Core/core/Serializer"]
