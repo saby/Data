@@ -4,130 +4,132 @@
  * @author Мальцев А.А.
  */
 export class SetPolyfill <T> {
-   protected _hash: object;
-   protected _objects: T[];
-   _objectPrefix: string;
+    protected _hash: object;
+    protected _objects: T[];
+    _objectPrefix: string;
 
-   constructor() {
-      this.clear();
-   }
+    size: number;
 
-   static _getHashedKey<T>(key: T): string {
-      return (typeof key) + '@' + key;
-   }
+    constructor() {
+        this.clear();
+    }
 
-   add(value: T): this {
-      const key = this._isObject(value) ? this._addObject(value) : value;
+    static _getHashedKey<T>(key: T): string {
+        return (typeof key) + '@' + key;
+    }
 
-      this._hash[SetPolyfill._getHashedKey(key)] = value;
+    add(value: T): this {
+        const key = this._isObject(value) ? this._addObject(value) : value;
 
-      return this;
-   }
+        this._hash[SetPolyfill._getHashedKey(key)] = value;
 
-   clear(): void {
-      this._hash = {};
-      this._objects = [];
-   }
+        return this;
+    }
 
-   delete(value: T): boolean {
-      let key;
-      if (this._isObject(value)) {
-         key = this._deleteObject(value);
-         if (!key) {
-            return false;
-         }
-      } else {
-         key = value;
+    clear(): void {
+        this._hash = {};
+        this._objects = [];
+    }
 
-      }
+    delete(value: T): boolean {
+        let key;
+        if (this._isObject(value)) {
+            key = this._deleteObject(value);
+            if (!key) {
+                return false;
+            }
+        } else {
+            key = value;
 
-      const hashedKey = SetPolyfill._getHashedKey(key);
-      const result = hashedKey in this._hash;
-      delete this._hash[hashedKey];
+        }
 
-      return result;
-   }
+        const hashedKey = SetPolyfill._getHashedKey(key);
+        const result = hashedKey in this._hash;
+        delete this._hash[hashedKey];
 
-   entries(): any[] {
-      throw new Error('Method is not supported');
-   }
+        return result;
+    }
 
-   forEach(callbackFn: Function, thisArg?: Object): void {
-      // FIXME: now not in insertion order
-      const hash = this._hash;
-      for (const key in hash) {
-         if (hash.hasOwnProperty(key)) {
-            callbackFn.call(thisArg, hash[key], hash[key], this);
-         }
-      }
-   }
+    entries(): any[] {
+        throw new Error('Method is not supported');
+    }
 
-   has(value: T): boolean {
-      let key;
-      if (this._isObject(value)) {
-         key = this._getObjectKey(value);
-         if (!key) {
-            return false;
-         }
-      } else {
-         key = value;
-      }
-      key = SetPolyfill._getHashedKey(key);
+    forEach(callbackFn: Function, thisArg?: Object): void {
+        // FIXME: now not in insertion order
+        const hash = this._hash;
+        for (const key in hash) {
+            if (hash.hasOwnProperty(key)) {
+                callbackFn.call(thisArg, hash[key], hash[key], this);
+            }
+        }
+    }
 
-      return this._hash.hasOwnProperty(key);
-   }
+    has(value: T): boolean {
+        let key;
+        if (this._isObject(value)) {
+            key = this._getObjectKey(value);
+            if (!key) {
+                return false;
+            }
+        } else {
+            key = value;
+        }
+        key = SetPolyfill._getHashedKey(key);
 
-   keys(): any[] {
-      throw new Error('Method is not supported');
-   }
+        return this._hash.hasOwnProperty(key);
+    }
 
-   values(): any[] {
-      throw new Error('Method is not supported');
-   }
+    keys(): any[] {
+        throw new Error('Method is not supported');
+    }
 
-   _isObject(value: any): boolean {
-      return value && typeof value === 'object';
-   }
+    values(): any[] {
+        throw new Error('Method is not supported');
+    }
 
-   _addObject(value: T): string {
-      let index = this._objects.indexOf(value);
-      if (index === -1) {
-         index = this._objects.length;
-         this._objects.push(value);
-      }
-      return this._objectPrefix + index;
-   }
+    _isObject(value: any): boolean {
+        return value && typeof value === 'object';
+    }
 
-   _deleteObject(value: T): string|undefined {
-      const index = this._objects.indexOf(value);
-      if (index > -1) {
-         this._objects[index] = null;
-         return this._objectPrefix + index;
-      }
-      return undefined;
-   }
+    _addObject(value: T): string {
+        let index = this._objects.indexOf(value);
+        if (index === -1) {
+            index = this._objects.length;
+            this._objects.push(value);
+        }
+        return this._objectPrefix + index;
+    }
 
-   _getObjectKey(value: T): string|undefined {
-      const index = this._objects.indexOf(value);
-      if (index === -1) {
-         return undefined;
-      }
-      return this._objectPrefix + index;
-   }
+    _deleteObject(value: T): string|undefined {
+        const index = this._objects.indexOf(value);
+        if (index > -1) {
+            this._objects[index] = null;
+            return this._objectPrefix + index;
+        }
+        return undefined;
+    }
+
+    _getObjectKey(value: T): string|undefined {
+        const index = this._objects.indexOf(value);
+        if (index === -1) {
+            return undefined;
+        }
+        return this._objectPrefix + index;
+    }
 }
 
 Object.assign(SetPolyfill.prototype, {
-   _hash: null,
-   _objectPrefix: '{[object]}:',
-   _objects: null
+    _hash: null,
+    _objectPrefix: '{[object]}:',
+    _objects: null
 });
 
 Object.defineProperty(SetPolyfill.prototype, 'size', {
-   get(): number {
-      return Object.keys(this._hash).length;
-   },
-   enumerable: true,
-   configurable: false
+    get(): number {
+        return Object.keys(this._hash).length;
+    },
+    enumerable: true,
+    configurable: false
 });
 
 // Use native implementation if supported

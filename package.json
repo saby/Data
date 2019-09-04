@@ -35,7 +35,6 @@
          "node_modules/sbis3-ws/View": "View",
          "node_modules/saby-i18n/I18n": "I18n"
       },
-      "initializer": "init-testing.js",
       "url": {
          "port": 1025
       }
