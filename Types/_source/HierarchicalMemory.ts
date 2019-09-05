@@ -14,7 +14,6 @@ import {
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
@@ -208,7 +207,7 @@ export default class HierarchicalMemory extends mixin<
          result.errback(err);
       });
 
-      return result;
+      return result as ExtendPromise<DataSet>;
    }
 
    // endregion

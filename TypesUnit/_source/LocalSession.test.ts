@@ -159,9 +159,9 @@ describe('Types/_source/LocalSession', () => {
                     keyProperty: 'id'
                 });
 
-                return source.update(model).addCallback((id) => {
+                return source.update(model).then((id) => {
                     assert.equal(model.get('id'), id);
-                    return source.read(id).addCallback((readModel) => {
+                    return source.read(id).then((readModel) => {
                         assert.equal(readModel.get('id'), id);
                     });
                 });
@@ -176,11 +176,12 @@ describe('Types/_source/LocalSession', () => {
                     keyProperty: 'id'
                 });
 
-                source.update(data).addCallback((ids) => {
+                source.update(data).then((ids) => {
                     data.each((model, i) => {
-                        assert.equal(model.get('id'), ids[i]);
-                        source.read(ids[i]).addCallback((readModel) => {
-                            assert.equal(readModel.get('id'), ids[i]);
+                        const id = (ids as any)[i];
+                        assert.equal(model.get('id'), id);
+                        source.read(id).then((readModel) => {
+                            assert.equal(readModel.get('id'), id);
                         });
                     });
                 });

@@ -9,9 +9,7 @@ import {adapter, Model, Record} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 import {IHashMap, ExtendPromise} from '../_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
 import randomId = require('Core/helpers/Number/randomId');
 
 const MOVE_POSITION = {
@@ -180,7 +178,7 @@ export default abstract class Local extends mixin<
       if (data) {
          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
       } else {
-         return Deferred.fail(`Record with key "${key}" does not exist`);
+         return Deferred.fail(`Record with key "${key}" does not exist`) as ExtendPromise<any>;
       }
    }
 
@@ -241,11 +239,11 @@ export default abstract class Local extends mixin<
 
       for (let i = 0, len = keys.length; i < len; i++) {
          if (!destroyByKey(keys[i])) {
-            return Deferred.fail(`Record with key "${keys[i]}" does not exist`);
+            return Deferred.fail(`Record with key "${keys[i]}" does not exist`) as ExtendPromise<any>;
          }
       }
 
-      return Deferred.success(true);
+      return Deferred.success(true) as ExtendPromise<any>;
    }
 
    query(query?: Query): ExtendPromise<DataSet> {
@@ -283,7 +281,7 @@ export default abstract class Local extends mixin<
       const indexOne = this._getIndexByKey(from);
       const indexTwo = this._getIndexByKey(to);
       if (indexOne === -1 || indexTwo === -1) {
-         return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`);
+         return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`) as ExtendPromise<any>;
       } else {
          this._getTableAdapter().merge(
             indexOne,
@@ -291,14 +289,14 @@ export default abstract class Local extends mixin<
             this.getKeyProperty()
          );
          this._reIndex();
-         return Deferred.success(true);
+         return Deferred.success(true) as ExtendPromise<any>;
       }
    }
 
    copy(key: string | number, meta?: object): ExtendPromise<Record> {
       const index = this._getIndexByKey(key);
       if (index === -1) {
-         return Deferred.fail(`Record with key "${key}" does not exist`);
+         return Deferred.fail(`Record with key "${key}" does not exist`) as ExtendPromise<any>;
       } else {
          const copy = this._getTableAdapter().copy(index);
          this._reIndex();
@@ -332,7 +330,7 @@ export default abstract class Local extends mixin<
          targetPosition = this._getIndexByKey(target);
          targetItem = adapter.forRecord(tableAdapter.at(targetPosition));
          if (targetPosition === -1) {
-            return Deferred.fail('Can\'t find target position');
+            return Deferred.fail('Can\'t find target position') as ExtendPromise<any>;
          }
       }
 
@@ -626,19 +624,19 @@ export default abstract class Local extends mixin<
          this._reIndex();
       });
 
-      return new Deferred().callback();
+      return new Deferred().callback() as ExtendPromise<any>;
    }
 
    protected _hierarchyMove(items: adapter.IRecord[], target: adapter.IRecord, meta: any): ExtendPromise<null> {
       if (!meta.parentProperty) {
-         return Deferred.fail('Parent property is not defined');
+         return Deferred.fail('Parent property is not defined') as ExtendPromise<any>;
       }
       const parentValue = target ? target.get(this._$keyProperty) : null;
       items.forEach((item) => {
          item.set(meta.parentProperty, parentValue);
       });
 
-      return new Deferred().callback();
+      return new Deferred().callback() as ExtendPromise<any>;
    }
 
    // endregion

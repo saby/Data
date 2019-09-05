@@ -35,51 +35,37 @@ describe('Types/_source/Local', () => {
     });
 
     describe('.create()', () => {
-        it('should generate a request with Date field', (done) => {
+        it('should generate a request with Date field', () => {
             const date = new Date() as ExtendDate;
             if (!date.setSQLSerializationMode) {
-                done();
+                return;
             }
 
             date.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE);
             const meta = {foo: date};
-            source.create(meta).addCallbacks((data) => {
-                try {
-                    assert.instanceOf(data.get('foo'), Date);
-                    assert.strictEqual(
-                       data.get('foo').getSQLSerializationMode(),
-                       (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE
-                    );
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            }, (err) => {
-                done(err);
+            return source.create(meta).then((data) => {
+                assert.instanceOf(data.get('foo'), Date);
+                assert.strictEqual(
+                   data.get('foo').getSQLSerializationMode(),
+                   (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE
+                );
             });
         });
 
-        it('should generate a request with Time field', (done) => {
+        it('should generate a request with Time field', () => {
             const date = new Date() as ExtendDate;
             if (!date.setSQLSerializationMode) {
-                done();
+                return;
             }
 
             date.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME);
             const meta = {foo: date};
-            source.create(meta).addCallbacks((data) => {
-                try {
-                    assert.instanceOf(data.get('foo'), Date);
-                    assert.strictEqual(
-                       data.get('foo').getSQLSerializationMode(),
-                       (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME
-                    );
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            }, (err) => {
-                done(err);
+            return source.create(meta).then((data) => {
+                assert.instanceOf(data.get('foo'), Date);
+                assert.strictEqual(
+                    data.get('foo').getSQLSerializationMode(),
+                    (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME
+                );
             });
         });
     });

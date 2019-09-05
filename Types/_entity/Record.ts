@@ -808,8 +808,7 @@ export default class Record extends mixin<
    protected _getFormat(build: boolean): format.Format {
       const owner = this.getOwner();
       if (owner) {
-         // @ts-ignore
-         return owner._getFormat(build);
+         return (owner as any)._getFormat(build);
       } else {
          return super._getFormat.call(this, build);
       }
@@ -818,8 +817,7 @@ export default class Record extends mixin<
    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
       const owner = this.getOwner();
       if (owner) {
-         // @ts-ignore
-         return owner._getFieldFormat(name, adapter);
+         return (owner as any)._getFieldFormat(name, adapter);
       } else {
          return super._getFieldFormat.call(this, name, adapter);
       }

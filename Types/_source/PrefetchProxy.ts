@@ -14,7 +14,6 @@ import {
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IData {
@@ -261,7 +260,7 @@ export default class PrefetchProxy extends mixin<
 
    read(key: any, meta?: object): ExtendPromise<Record> {
       if (this._validators.read(this._$data.read, this._done)) {
-         return Deferred.success(this._$data.read);
+         return Deferred.success(this._$data.read) as ExtendPromise<Record>;
       }
       return (this._$target as ICrud).read(key, meta);
    }
@@ -276,7 +275,7 @@ export default class PrefetchProxy extends mixin<
 
    query(query?: Query): ExtendPromise<DataSet> {
       if (this._validators.query(this._$data.query, this._done)) {
-         return Deferred.success(this._$data.query);
+         return Deferred.success(this._$data.query) as ExtendPromise<DataSet>;
       }
       return (this._$target as ICrud).query(query);
    }
@@ -293,7 +292,7 @@ export default class PrefetchProxy extends mixin<
 
    copy(key: string | number, meta?: object): ExtendPromise<Record> {
       if (this._validators.copy(this._$data.copy, this._done)) {
-         return Deferred.success(this._$data.copy);
+         return Deferred.success(this._$data.copy) as ExtendPromise<Record>;
       }
       return (this._$target as ICrudPlus).copy(key, meta);
    }
