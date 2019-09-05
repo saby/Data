@@ -4,8 +4,7 @@ export function iterateNumber(numAsStr: string, callBack: Function): void {
    while (numAsStr.length > 0) {
       const three = numAsStr.substr(Math.max(numAsStr.length - 3, 0), 3);
       if (three.length !== 0) {
-         // @ts-ignore
-         threes.unshift([three.padStart(3, '0'), counter++]);
+         threes.unshift([(three as any).padStart(3, '0'), counter++]);
       }
       numAsStr = numAsStr.slice(0, -3);
    }

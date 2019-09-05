@@ -1,4 +1,3 @@
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 // tslint:disable-next-line:ban-comma-operator
@@ -25,7 +24,7 @@ export default abstract class LazyMixin {
     * @protected
     */
    // tslint:disable-next-line:ban-types
-   protected _loadAdditionalDependencies(callback?: (ready: Deferred) => void): Deferred {
+   protected _loadAdditionalDependencies(callback?: (ready: Deferred<any>) => void): Deferred<any> {
       const deps = this._additionalDependencies;
       const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
       const result = new Deferred();
@@ -61,7 +60,7 @@ export default abstract class LazyMixin {
     * @protected
     */
    // tslint:disable-next-line:ban-types
-   protected _connectAdditionalDependencies(master: Deferred, slave: Deferred): void {
+   protected _connectAdditionalDependencies(master: Deferred<any>, slave: Deferred<any>): void {
       // Cancel master on slave cancelling
       if (!slave.isCallbacksLocked()) {
          slave.addErrback((err) => {

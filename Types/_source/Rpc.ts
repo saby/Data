@@ -2,7 +2,6 @@ import Remote from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 /**

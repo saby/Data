@@ -67,15 +67,13 @@ export default abstract class ReadWriteMixin {
 
    protected _publish(): void {
       if (this[$writable]) {
-         // @ts-ignore
-         return ObservableMixin.prototype._publish.apply(this, arguments);
+         return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
       }
    }
 
    protected _notify(): void {
       if (this[$writable]) {
-         // @ts-ignore
-         return ObservableMixin.prototype._notify.apply(this, arguments);
+         return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
       }
    }
 
@@ -84,8 +82,7 @@ export default abstract class ReadWriteMixin {
    // region OptionsToPropertyMixin
 
    protected _getOptions(): object {
-      // @ts-ignore
-      const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
+      const options = (OptionsToPropertyMixin.prototype as any)._getOptions.call(this);
 
       // Delete "writable" property received from _options
       delete options.writable;
@@ -99,9 +96,7 @@ Object.assign(ReadWriteMixin.prototype, {
    '[Types/_entity/ReadWriteMixin]': true
 });
 
-// @ts-ignore
 const IS_BROWSER = typeof window !== 'undefined';
-// @ts-ignore
 const IS_TESTING = !!(typeof global !== 'undefined' && global.assert && global.assert.strictEqual);
 
 /**

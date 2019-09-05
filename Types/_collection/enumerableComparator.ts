@@ -187,8 +187,8 @@ function getGroupChanges(
                beforeContents[index] !== afterContents[index]
             ) {
                // FIXME: convertToItem
-               // @ts-ignore
-               oldItems.push(collection._getItemsStrategy().convertToItem(beforeContents[index]));
+               oldItems.push((collection as any)._getItemsStrategy().convertToItem(beforeContents[index]));
+
                newItems.push(afterItem);
                oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
             } else if (oldItems.length) {

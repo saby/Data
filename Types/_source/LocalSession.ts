@@ -19,7 +19,6 @@ import {mixin, object} from '../util';
 import {merge} from '../object';
 import {ExtendPromise} from '../_declarations';
 import {LocalStorage} from 'Browser/Storage';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 const DATA_FIELD_PREFIX = 'd';
@@ -79,6 +78,7 @@ interface IOptions {
    prefix: string;
    keyProperty: string;
    data?: object;
+   adapter?: String | Function;
 }
 
 class WhereTokenizer {
@@ -322,7 +322,7 @@ class RawManager {
       if (to !== null) {
          toIndex = keys.indexOf(to);
          if (toIndex === -1) {
-            return Deferred.fail('Record "to" with key ' + to + ' is not found.');
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
          }
       }
       const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
@@ -723,7 +723,7 @@ export default class LocalSession extends mixin<
       if (item[this.getKeyProperty()] === undefined) {
          this.rawManager.reserveId();
       }
-      return Deferred.success(this.modelManager.get(item));
+      return Deferred.success(this.modelManager.get(item)) as ExtendPromise<any>;
    }
 
    /**
@@ -741,9 +741,9 @@ export default class LocalSession extends mixin<
    read(key: any, meta?: object): ExtendPromise<Record> {
       const data = this.rawManager.get(key);
       if (data) {
-         return Deferred.success(this.modelManager.get(data));
+         return Deferred.success(this.modelManager.get(data)) as ExtendPromise<any>;
       }
-      return Deferred.fail('Record with key "' + key + '" does not exist');
+      return Deferred.fail('Record with key "' + key + '" does not exist') as ExtendPromise<any>;
    }
 
    /**
@@ -800,7 +800,7 @@ export default class LocalSession extends mixin<
          keys.push(updateRecord(data));
       }
 
-      return Deferred.success(keys);
+      return Deferred.success(keys) as ExtendPromise<any>;
    }
 
    /**
@@ -819,10 +819,10 @@ export default class LocalSession extends mixin<
    destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
       const isExistKeys = this.rawManager.existKeys(keys);
       if (!isExistKeys) {
-         return Deferred.fail('Not all keys exist');
+         return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
       }
       this.rawManager.remove(keys);
-      return Deferred.success(true);
+      return Deferred.success(true) as ExtendPromise<any>;
    }
 
    /**
@@ -838,7 +838,7 @@ export default class LocalSession extends mixin<
     *   });
     * </pre>
     */
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       if (query === void 0) {
          query = new Query();
       }
@@ -860,7 +860,7 @@ export default class LocalSession extends mixin<
          meta: {
             total: data.length
          }
-      }));
+      })) as ExtendPromise<any>;
    }
 
    // endregion
@@ -886,12 +886,12 @@ export default class LocalSession extends mixin<
       const fromData = this.rawManager.get(from as string);
       const toData = this.rawManager.get(to as string);
       if (fromData === null || toData === null) {
-         return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
+         return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists') as ExtendPromise<any>;
       }
       const data = merge(fromData, toData);
       this.rawManager.set(from as string, data);
       this.rawManager.remove(to as string);
-      return Deferred.success(true);
+      return Deferred.success(true) as ExtendPromise<any>;
    }
 
    /**
@@ -910,11 +910,11 @@ export default class LocalSession extends mixin<
       const myId = this.rawManager.reserveId();
       const from = this.rawManager.get(key as string);
       if (from === null) {
-         return Deferred.fail('Record with key ' + from + ' isn\'t exists');
+         return Deferred.fail('Record with key ' + from + ' isn\'t exists') as ExtendPromise<any>;
       }
       const to = merge({}, from);
       this.rawManager.set(myId, to);
-      return Deferred.success(this.modelManager.get(to));
+      return Deferred.success(this.modelManager.get(to)) as ExtendPromise<any>;
    }
 
    /**
@@ -932,7 +932,7 @@ export default class LocalSession extends mixin<
     *    })
     * </pre>
     */
-   move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
       const keys = this.rawManager.getKeys();
       const sourceItems = [];
       if (!(items instanceof Array)) {
@@ -946,9 +946,9 @@ export default class LocalSession extends mixin<
          sourceItems.push(id);
       });
       if (meta.position === 'on') {
-         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys));
+         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys)) as ExtendPromise<any>;
       }
-      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta));
+      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta)) as ExtendPromise<any>;
    }
 
    // endregion
@@ -1039,12 +1039,12 @@ export default class LocalSession extends mixin<
       let toIndex;
       let parentValue;
       if (!meta.parentProperty) {
-         return Deferred.fail('Parent property is not defined');
+         return Deferred.fail('Parent property is not defined') as any;
       }
       if (to) {
          toIndex = keys.indexOf(to as string);
          if (toIndex === -1) {
-            return Deferred.fail('Record "to" with key ' + to + ' is not found.');
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
          }
          const item = this.rawManager.get(keys[toIndex]);
          parentValue = item[meta.parentProperty];
@@ -1067,7 +1067,7 @@ export default class LocalSession extends mixin<
       if (to !== null) {
          toIndex = keys.indexOf(to);
          if (toIndex === -1) {
-            return Deferred.fail('Record "to" with key ' + to + ' is not found.');
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
          }
       }
       const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;

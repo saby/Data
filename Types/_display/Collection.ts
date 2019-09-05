@@ -737,7 +737,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         throw new Error(MESSAGE_READ_ONLY);
     }
 
-    // @ts-ignore
     at(index: number): T {
         return this._getUtilityEnumerator().at(index) as any;
     }

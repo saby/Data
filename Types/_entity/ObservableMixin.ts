@@ -5,6 +5,10 @@ export interface IOptions {
    handlers?: IHashMap<Function>;
 }
 
+interface IEventsQueue<T> extends Array<T> {
+    running?: boolean;
+}
+
 /**
  * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
  * @class Types/_entity/ObservableMixin
@@ -198,12 +202,10 @@ export default abstract class ObservableMixin {
     * @return Результаты обработки событиий
     * @protected
     */
-   protected _notifyQueue(eventsQueue: Function[][]): any[] {
+   protected _notifyQueue(eventsQueue: IEventsQueue<Function[]>): any[] {
       const results = [];
 
-      // @ts-ignore
       if (!eventsQueue.running) {
-         // @ts-ignore
          eventsQueue.running = true;
          let item;
          while ((item = eventsQueue[0])) {
@@ -214,7 +216,6 @@ export default abstract class ObservableMixin {
             ));
             eventsQueue.shift();
          }
-         // @ts-ignore
          eventsQueue.running = false;
       }
 

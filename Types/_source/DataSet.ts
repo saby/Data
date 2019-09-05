@@ -708,7 +708,7 @@ export default class DataSet extends mixin<
      * @return {Object}
      * @see metaProperty
      */
-    getMetaData(): Object {
+    getMetaData<T = object>(): T {
         return this._$metaProperty && this._getDataProperty(this._$metaProperty) || {};
     }
 

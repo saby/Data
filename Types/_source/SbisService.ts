@@ -16,7 +16,6 @@ import {adapter, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 enum PoitionNavigationOrder {
@@ -415,8 +414,7 @@ function passRead(key: string | number, meta?: object): object {
  * Returns data to send in update()
  */
 function passUpdate(data: Record | RecordSet, meta?: object): object {
-   // @ts-ignore
-   const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
+   const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
    const args: any = {};
    const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
@@ -857,7 +855,7 @@ export default class SbisService extends Rpc {
       meta = object.clonePlain(meta, true);
       return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
-            super.create(meta),
+            super.create(meta) as any,
             ready
          );
       });
@@ -872,7 +870,7 @@ export default class SbisService extends Rpc {
                   passUpdateBatch(data as RecordSet, meta)
                ).addCallback(
                   (key) => this._prepareUpdateResult(data, key)
-               ),
+               ) as any,
                ready
             );
          });
@@ -911,7 +909,7 @@ export default class SbisService extends Rpc {
       query = object.clonePlain(query, true);
       return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
-            super.query(query),
+            super.query(query) as any,
             ready
          );
       });

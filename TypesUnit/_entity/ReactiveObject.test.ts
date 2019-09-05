@@ -46,13 +46,12 @@ describe('Types/_entity/ReactiveObject', () => {
         });
 
         it('should throw an Error on write into read-only property value', () => {
-            const instance = new ReactiveObject({
+            const instance: any = new ReactiveObject({
                 get foo(): string {
                     return 'bar';
                 }
             });
             assert.throws(() => {
-                // @ts-ignore TS knows it's read only
                 instance.foo = 'baz';
             });
         });
