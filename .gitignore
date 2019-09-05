@@ -36,6 +36,4 @@
 /TypesUnit/_function/**/*.js
 /TypesUnit/_object/**/*.js
 /TypesUnit/_shim/**/*.js
-/TypesUnit/_source/DataSet.test.js
-/TypesUnit/_source/Remote.test.js
-/TypesUnit/_source/SbisService.test.js
+/TypesUnit/_source/**/*.js
