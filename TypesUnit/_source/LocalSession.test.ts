@@ -161,8 +161,8 @@ describe('Types/_source/LocalSession', () => {
 
                 return source.update(model).addCallback((id) => {
                     assert.equal(model.get('id'), id);
-                    return source.read(id).addCallback((readedModel) => {
-                        assert.equal(readedModel.get('id'), id);
+                    return source.read(id).addCallback((readModel) => {
+                        assert.equal(readModel.get('id'), id);
                     });
                 });
             });
@@ -179,8 +179,8 @@ describe('Types/_source/LocalSession', () => {
                 source.update(data).addCallback((ids) => {
                     data.each((model, i) => {
                         assert.equal(model.get('id'), ids[i]);
-                        source.read(ids[i]).addCallback((readedModel) => {
-                            assert.equal(readedModel.get('id'), ids[i]);
+                        source.read(ids[i]).addCallback((readModel) => {
+                            assert.equal(readModel.get('id'), ids[i]);
                         });
                     });
                 });

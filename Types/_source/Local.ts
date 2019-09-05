@@ -248,7 +248,7 @@ export default abstract class Local extends mixin<
       return Deferred.success(true);
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       let items = this._applyFrom(query ? query.getFrom() : undefined);
       const adapter = this.getAdapter();
       let total;
@@ -308,7 +308,7 @@ export default abstract class Local extends mixin<
       }
    }
 
-   move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
       meta = meta || {};
       const sourceItems = [];
       if (!(items instanceof Array)) {

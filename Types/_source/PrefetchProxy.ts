@@ -274,7 +274,7 @@ export default class PrefetchProxy extends mixin<
       return (this._$target as ICrud).destroy(keys, meta);
    }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       if (this._validators.query(this._$data.query, this._done)) {
          return Deferred.success(this._$data.query);
       }

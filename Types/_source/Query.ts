@@ -148,7 +148,7 @@ export class Join extends OptionsToPropertyMixin {
 
 interface IOrderOptions {
    selector: string;
-   order: boolean | string;
+   order?: boolean | string;
    nullPolicy?: boolean;
 }
 
