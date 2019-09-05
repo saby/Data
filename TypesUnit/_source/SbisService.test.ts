@@ -186,7 +186,7 @@ describe('Types/_source/SbisService', () => {
 
                 Mock.lastDeferred = def;
 
-                return def;
+                return def as any;
             }
         });
 
