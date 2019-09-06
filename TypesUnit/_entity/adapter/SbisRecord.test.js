@@ -559,6 +559,15 @@ define([
             var adapterB = new SbisRecord(data);
             assert.strictEqual(adapterB.getFormat('bar').getType(), 'string');
          });
+
+         it('should return the format after adding it', function() {
+            var format = [{'n': 'bar', 't': 'Строка'}];
+
+            var adapter = new SbisRecord({});
+            adapter._data.s = format;
+
+            assert.deepEqual(adapter._data.s, format);
+         });
       });
 
       describe('.getSharedFormat()', function() {
