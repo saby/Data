@@ -5,8 +5,8 @@ import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
 import {IHashMap} from '../_declarations';
-import IFormatController from './format/IFormatController';
-import FormatController from './format/FormatController';
+import IFormatController from './adapter/IFormatController';
+import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 

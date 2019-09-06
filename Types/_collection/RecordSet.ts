@@ -1438,7 +1438,8 @@ export default class RecordSet<T = Model> extends mixin<
             state: RECORD_STATE.UNCHANGED,
             adapter: this.getAdapter(),
             rawData: data,
-            idProperty: this._$idProperty
+            idProperty: this._$idProperty,
+            formatController: this._formatController
         });
 
         return record;

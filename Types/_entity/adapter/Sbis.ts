@@ -1,11 +1,11 @@
 import Abstract from './Abstract';
 import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
-import FormatController from './../format/FormatController';
+import FormatController from './../adapter/SbisFormatFinder';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
-import IFormatController from '../format/IFormatController';
+import IFormatController from '../adapter/IFormatController';
 
 /**
  * Адаптер для данных в формате СБиС.

@@ -1,4 +1,4 @@
-import FormatController from './FormatController';
+import SbisFormatFinder from './SbisFormatFinder';
 
 export default interface IFormatController {
    readonly '[Types/_entity/format/IFormatController]': boolean;
@@ -7,5 +7,5 @@ export default interface IFormatController {
     *
     * @param controller
     */
-   setFormatController(controller: FormatController): void;
+   setFormatController(controller: SbisFormatFinder): void;
 }

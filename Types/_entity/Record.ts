@@ -1272,7 +1272,8 @@ export default class Record extends mixin<
          this._getFieldType(format),
          {
             format,
-            adapter: this._getAdapter()
+            adapter: this._getAdapter(),
+            formatController: this._formatController
          }
       );
    }

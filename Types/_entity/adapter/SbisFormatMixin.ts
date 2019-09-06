@@ -21,8 +21,8 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController from '../format/FormatController';
-import IFormatController from '../format/IFormatController';
+import FormatController from '../adapter/SbisFormatFinder';
+import IFormatController from '../adapter/IFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -59,17 +59,17 @@ export interface IFieldFormat {
 export interface IRecordFormat {
    _type?: ComplexTypeMarker;
    d: any[];
-   s: IFieldFormat[];
-   f: number;
+   s?: IFieldFormat[];
+   f?: number;
 }
 
 export interface ITableFormat {
    _type?: ComplexTypeMarker;
    d: any[][];
-   s: IFieldFormat[];
+   s?: IFieldFormat[];
    n?: boolean | number | object;
    m?: IRecordFormat;
-   f: number;
+   f?: number;
 }
 
 /**
@@ -150,12 +150,21 @@ export default abstract class SbisFormatMixin implements IFormatController {
          }
       }
 
-      if (fieldIndicesSymbol && data && data.s) {
-         data.s[fieldIndicesSymbol] = null;
-      }
-
       this._data = data;
       this._format = {};
+
+      if (this._data.s === undefined) {
+         const self = this;
+
+         Object.defineProperty(this._data, 's', {
+            get() {
+               return self._formatController.getFormat(data.f);
+            },
+            set(s) {
+
+            }
+         });
+      }
    }
 
    // region IFormatController
@@ -175,8 +184,9 @@ export default abstract class SbisFormatMixin implements IFormatController {
    getFields(): string[] {
       const fields = [];
       if (this._isValidData()) {
-         for (let i = 0, count = this._data.s.length; i < count; i++) {
-            fields.push(this._data.s[i].n);
+         const s = this._data.s;
+         for (let i = 0, count = s.length; i < count; i++) {
+            fields.push(s[i].n);
          }
       }
       return fields;
@@ -209,6 +219,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
       return format;
    }
+
 
    addField(format: Field, at: number): void {
       if (!format || !(format instanceof Field)) {
@@ -277,7 +288,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
       if (!(data.d instanceof Array)) {
          data.d = [];
       }
-      if (!(data.s instanceof Array)) {
+      if (!(data.s instanceof Array) && data.f === undefined) {
          data.s = [];
       }
       data._type = dataType;
@@ -287,8 +298,14 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
    protected _cloneData(shareFormat?: boolean): IRecordFormat | ITableFormat {
       const data = object.clone(this._data);
-      if (shareFormat && data && data.s) {
-         data.s = this._data.s; // Keep sharing fields format
+      if (shareFormat && data) {
+         if (data.s) {
+            data.s = this._data.s;
+         }
+         if (data.f) {
+            data.f = this._data.f;
+         }
+         // Keep sharing fields format
       }
       return data;
    }
