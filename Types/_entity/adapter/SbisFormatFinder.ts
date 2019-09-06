@@ -1,5 +1,5 @@
-import {IRecordFormat, ITableFormat} from 'SbisFormatMixin';
-import {logger} from '../../util';
+import {IFieldFormat, IRecordFormat, ITableFormat} from 'SbisFormatMixin';
+import {Map} from '../../shim';
 
 //TODO Использовать только после полного перехода на стандарт es6.
 /**
@@ -34,7 +34,7 @@ function* getFormatFromRawData(id: number, data: IRecordFormat | ITableFormat, s
 
 class RecursiveStack {
 
-   protected _stack: Map<number, any>;
+   protected _stack: Map<number, IFieldFormat[]>;
 
    public processableId: number;
 
@@ -45,7 +45,7 @@ class RecursiveStack {
       this.processableId = -1;
    }
 
-   get currentNode() {
+   get currentNode(): any {
       return this._current || undefined;
    }
 
@@ -72,7 +72,7 @@ class RecursiveIterator {
       });
    }
 
-   public next(id: number, storage: Map<number, any>) {
+   public next(id: number, storage: Map<number, IFieldFormat[]>) {
       while (true) {
          if (this.stackNodes.processableId < 0) {
             return {value: undefined, done: true};
@@ -86,7 +86,7 @@ class RecursiveIterator {
       }
    }
 
-   protected _process(id: number, storage: Map<number, any>) {
+   protected _process(id: number, storage: Map<number, IFieldFormat[]>) {
       const node = this.stackNodes.currentNode;
 
       if (node.data instanceof Array) {
@@ -157,7 +157,7 @@ class SbisFormatFinder {
    /**
     * Кеш, хранит ранее найденные форматы.
     */
-   protected _cache: Map<number, any>;
+   protected _cache: Map<number, IFieldFormat[]>;
 
    /**
     * Сырые данные.

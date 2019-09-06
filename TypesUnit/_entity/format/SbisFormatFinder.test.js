@@ -76,7 +76,9 @@ define(['Types/_entity/adapter/SbisFormatFinder'], function(SbisFormatFinder) {
          });
 
          it('has all id', function() {
-            sbisFormatFinder.getFormat();
+            assert.throws(() => {
+               sbisFormatFinder.getFormat()
+            }, ReferenceError);
             assert.deepEqual(format0, sbisFormatFinder._cache.get(0));
             assert.deepEqual(format1, sbisFormatFinder._cache.get(1));
          });
@@ -86,7 +88,9 @@ define(['Types/_entity/adapter/SbisFormatFinder'], function(SbisFormatFinder) {
          assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
          assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
          assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
-         assert.deepEqual(undefined, sbisFormatFinder.getFormat(2));
+         assert.throws(() => {
+            sbisFormatFinder.getFormat(2)
+         }, ReferenceError);
       });
    });
 });

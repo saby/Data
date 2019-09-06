@@ -913,5 +913,6 @@ Object.assign(FormattableMixin.prototype, {
    _formatClone: null,
    _rawDataAdapter: null,
    _rawDataFields: null,
+   _formatController: null,
    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

@@ -70,6 +70,8 @@ export default class Sbis extends Abstract implements IFormatController {
 
 Object.assign(Sbis.prototype, {
    '[Types/_entity/adapter/Sbis]': true,
+   '[Types/_entity/format/IFormatController]': true,
+   _formatController: null,
    _moduleName: 'Types/entity:adapter.Sbis'
 });
 

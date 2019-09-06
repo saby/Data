@@ -106,6 +106,8 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
    protected _formatController: FormatController;
 
+   protected _cachedFormat: IFieldFormat[];
+
    protected _moduleName: string;
 
    /**
@@ -153,15 +155,25 @@ export default abstract class SbisFormatMixin implements IFormatController {
       this._data = data;
       this._format = {};
 
-      if (this._data.s === undefined) {
+      if (fieldIndicesSymbol && data && data.s) {
+         data.s[fieldIndicesSymbol] = null;
+      }
+
+      if (this._data && this._data.s === undefined) {
          const self = this;
 
          Object.defineProperty(this._data, 's', {
             get() {
-               return self._formatController.getFormat(data.f);
-            },
-            set(s) {
+               if (self._cachedFormat) {
+                  return self._cachedFormat;
+               }
 
+               if (data.f) {
+                  return self._formatController.getFormat(data.f);
+               }
+            },
+            set(value) {
+               self._cachedFormat = value;
             }
          });
       }
@@ -579,9 +591,12 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
 Object.assign(SbisFormatMixin.prototype, {
    '[Types/_entity/adapter/SbisFormatMixin]': true,
+   '[Types/_entity/format/IFormatController]': true,
    _data: null,
    _fieldIndices: null,
    _format: null,
    _sharedFieldFormat: null,
-   _sharedFieldMeta: null
+   _sharedFieldMeta: null,
+   _cachedFormat: null,
+   _formatController: null
 });
