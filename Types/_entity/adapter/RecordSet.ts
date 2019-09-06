@@ -45,8 +45,8 @@ export default class RecordSet extends Abstract {
    }
 
    getKeyField(data: any): string {
-      if (data && typeof data.getIdProperty === 'function') {
-         return data.getIdProperty();
+      if (data && typeof data.getKeyProperty === 'function') {
+         return data.getKeyProperty();
       }
       return undefined;
    }

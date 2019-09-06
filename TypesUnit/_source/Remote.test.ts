@@ -5,9 +5,7 @@ import Record from 'Types/_entity/Record';
 import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
 import * as di from 'Types/di';
-// @ts-ignore
 import coreExtend = require('Core/core-extend');
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 class RemoteTesting extends Remote {
@@ -260,7 +258,7 @@ describe('Types/_source/Remote', () => {
                 }
             });
             const model = new Model({
-                idProperty: 'c',
+                keyProperty: 'c',
                 rawData: {a: 1, b: 2, c: 3}
             });
 
@@ -282,7 +280,7 @@ describe('Types/_source/Remote', () => {
                 }
             });
             const model = new Model({
-                idProperty: 'a',
+                keyProperty: 'a',
                 rawData: {a: 1, b: 2, c: 3}
             });
 

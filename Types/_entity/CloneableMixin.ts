@@ -1,6 +1,5 @@
 import ICloneable from './ICloneable';
 import {protect} from '../util';
-// @ts-ignore
 import Serializer = require('Core/Serializer');
 
 const $clone = protect('clone');

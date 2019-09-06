@@ -166,12 +166,12 @@ define([
       });
 
       describe('.getKeyField()', function() {
-         it('should return option idProperty for recordset', function() {
-            assert.strictEqual(adapter.getKeyField(data), data.getIdProperty());
+         it('should return option keyProperty for recordset', function() {
+            assert.strictEqual(adapter.getKeyField(data), data.getKeyProperty());
          });
-         it('should return option idProperty for model', function() {
+         it('should return option keyProperty for model', function() {
             var data = new Model({
-               idProperty: 'test'
+               keyProperty: 'test'
             });
             assert.strictEqual(adapter.getKeyField(data), 'test');
          });
@@ -209,10 +209,10 @@ define([
 
       describe('.setProperty()', function() {
          it('should set the property value', function() {
-            adapter.setProperty(data, 'idProperty', 'name');
+            adapter.setProperty(data, 'keyProperty', 'name');
             assert.strictEqual(
                'name',
-               data.getIdProperty()
+               data.getKeyProperty()
             );
          });
          it('should throw an error if property does not exist', function() {

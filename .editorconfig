@@ -1,0 +1,22 @@
+# EditorConfig: https://EditorConfig.org
+
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[*.{js,json,ts}]
+charset = utf-8
+
+[*.ts]
+indent_style = space
+indent_size = 4
+
+[*.js]
+indent_style = space
+indent_size = 3
+
+[*.json]
+indent_style = space
+indent_size = 2

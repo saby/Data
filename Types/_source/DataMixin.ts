@@ -123,7 +123,7 @@ export default abstract class DataMixin implements IData {
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
     * @name Types/_source/DataMixin#keyProperty
     * @see getKeyProperty
-    * @see Types/_entity/Model#idProperty
+    * @see Types/_entity/Model#keyProperty
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
@@ -154,6 +154,7 @@ export default abstract class DataMixin implements IData {
    constructor(options?: IOptions) {
       options = options || {};
 
+      // Support deprecated option 'idProperty'
       if (!this._$keyProperty && (options as any).idProperty) {
           this._$keyProperty = (options as any).idProperty;
       }
@@ -220,7 +221,7 @@ export default abstract class DataMixin implements IData {
          writable: this._writable,
          rawData: data,
          adapter: this.getAdapter(),
-         idProperty: this.getKeyProperty()
+         keyProperty: this.getKeyProperty()
       });
    }
 

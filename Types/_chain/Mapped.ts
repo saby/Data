@@ -28,7 +28,7 @@ export default class Mapped<T> extends Abstract<T> {
     * @param callback Функция, возвращающая новый элемент.
     * @param [callbackContext] Контекст вызова callback
     */
-   constructor(source: Abstract<T>, callback: MapFunc, callbackContext: object) {
+   constructor(source: Abstract<T>, callback: MapFunc, callbackContext?: object) {
       super(source);
       this._callback = callback;
       this._callbackContext = callbackContext;

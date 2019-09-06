@@ -30,7 +30,7 @@ export default class Grouped<T> extends Abstract<T> {
     * @param Поле группировки или функция группировки для каждого элемента.
     * @param [value] Поле значения или функция, возвращающая значение для каждого элемента.
     */
-   constructor(source: Abstract<T>, key: string|GroupFunc, value: string|ValueFunc) {
+   constructor(source: Abstract<T>, key?: string|GroupFunc, value?: string|ValueFunc) {
       super(source);
       this._key = key;
       this._value = value;

@@ -18,11 +18,9 @@ import Record from './Record';
 import TimeInterval from './TimeInterval';
 import TheDate from './Date';
 import Time from './Time';
-import {create, resolve, isRegistered} from '../di';
+import {create, resolve} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
 import {List, RecordSet} from '../collection';
-
-// @ts-ignore
 import renders = require('Core/defaultRenders');
 
 type ValueType = string | Function | IProducible;

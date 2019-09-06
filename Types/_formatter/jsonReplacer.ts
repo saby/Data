@@ -1,4 +1,4 @@
-export default function jsonReplacer(name: string, value: any): any {
+export default function jsonReplacer(name: string | number, value: any): any {
    if (value === Infinity) {
       return {
          $serialized$: '+inf'

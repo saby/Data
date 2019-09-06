@@ -49,7 +49,7 @@ export default class JsonTable extends mixin<
     * Конструктор
     * @param data Сырые данные
     */
-   constructor(data: object[]) {
+   constructor(data?: object[]) {
       super(data);
       GenericFormatMixin.call(this, data);
       JsonFormatMixin.call(this, data);
@@ -149,15 +149,15 @@ export default class JsonTable extends mixin<
       }
    }
 
-   merge(acceptor: number, donor: number, idProperty: string): void {
+   merge(acceptor: number, donor: number, keyProperty: string): void {
       this._touchData();
 
       const first = this.at(acceptor);
       const extention = this.at(donor);
       const adapter = new JsonRecord(first);
-      const id = adapter.get(idProperty);
+      const id = adapter.get(keyProperty);
       merge(first, extention);
-      adapter.set(idProperty, id);
+      adapter.set(keyProperty, id);
       this.remove(donor);
    }
 

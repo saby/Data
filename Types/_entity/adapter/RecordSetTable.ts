@@ -10,7 +10,7 @@ import {RecordSet, format} from '../../collection';
 
 interface IRecordSetOptions {
    adapter?: string | IAdapter;
-   idProperty?: string;
+   keyProperty?: string;
 }
 
 /**
@@ -115,14 +115,14 @@ export default class RecordSetTable extends mixin<
       this._data.add(rec, target);
    }
 
-   merge(acceptor: number, donor: number, idProperty: string): any {
+   merge(acceptor: number, donor: number, keyProperty: string): any {
       if (!this._isValidData()) {
          throw new TypeError('Passed data has invalid format');
       }
 
       const acceptorRecord = this._data.at(acceptor);
       this._data.at(donor).each((name, value) => {
-         if (name !== idProperty) {
+         if (name !== keyProperty) {
             acceptorRecord.set(name, value);
          }
       }, this);
@@ -185,8 +185,8 @@ export default class RecordSetTable extends mixin<
             if (sample.getAdapter) {
                config.adapter = sample.getAdapter();
             }
-            if ((sample as any).getIdProperty) {
-               config.idProperty = (sample as any).getIdProperty();
+            if ((sample as any).getKeyProperty) {
+               config.keyProperty = (sample as any).getKeyProperty();
             }
          }
          this._data = create('Types/collection:RecordSet', config);

@@ -1,6 +1,5 @@
 import numberWordsRu from './_numberWords/ru';
 import numberWordsEN from './_numberWords/en';
-// @ts-ignore
 import i18n = require('Core/i18n');
 import 'i18n!Types/_formatter/numberWords';
 

@@ -11,7 +11,7 @@ import {mixin} from '../../util';
  * <pre>
  *    //Создадим экземпляр иерархических отношений и рекордсет
  *    var hierarchy = new Hierarchy({
- *          idProperty: 'id',
+ *          keyProperty: 'id',
  *          parentProperty: 'parent',
  *          nodeProperty: 'parent@',
  *          declaredChildrenProperty: 'parent$'
@@ -67,39 +67,44 @@ export default class Hierarchy extends mixin<
 
    /**
     * @cfg {String} Название свойства, содержащего идентификатор узла.
-    * @name Types/_entity/relation/Hierarchy#idProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @name Types/_entity/relation/Hierarchy#keyProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     */
-   protected _$idProperty: string;
+   protected _$keyProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
     * @name Types/_entity/relation/Hierarchy#parentProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     */
    protected _$parentProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак узла.
     * @name Types/_entity/relation/Hierarchy#nodeProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     */
    protected _$nodeProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего декларируемый признак наличия детей.
     * @name Types/_entity/relation/Hierarchy#declaredChildrenProperty
-    * @see getIdProperty
-    * @see setIdProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
     */
    protected _$declaredChildrenProperty: string;
 
    constructor(options?: object) {
       super(options);
       OptionsToPropertyMixin.call(this, options);
+
+      // Support deprecated  option 'idProperty'
+      if (!this._$keyProperty && options && (options as any).idProperty) {
+         this._$keyProperty = (options as any).idProperty;
+      }
    }
 
    // region Public methods
@@ -107,21 +112,21 @@ export default class Hierarchy extends mixin<
    /**
     * Возвращает название свойства, содержащего идентификатор узла.
     * @return {String}
-    * @see idProperty
-    * @see setIdProperty
+    * @see keyProperty
+    * @see setKeyProperty
     */
-   getIdProperty(): string {
-      return this._$idProperty;
+   getKeyProperty(): string {
+      return this._$keyProperty;
    }
 
    /**
     * Устанавливает название свойства, содержащего идентификатор узла.
-    * @param {String} idProperty
-    * @see idProperty
-    * @see getIdProperty
+    * @param {String} keyProperty
+    * @see keyProperty
+    * @see getKeyProperty
     */
-   setIdProperty(idProperty: string): void {
-      this._$idProperty = idProperty;
+   setKeyProperty(keyProperty: string): void {
+      this._$keyProperty = keyProperty;
    }
 
    /**
@@ -218,7 +223,7 @@ export default class Hierarchy extends mixin<
          })() : [];
       }
 
-      const parentId = this._asField(parent, this._$idProperty);
+      const parentId = this._asField(parent, this._$keyProperty);
       let indices = rs.getIndicesByValue(this._$parentProperty, parentId);
       const children = [];
 
@@ -255,8 +260,8 @@ export default class Hierarchy extends mixin<
    hasParent(child: IObject, rs: RecordSet): boolean {
       child = this._asRecord(child, rs);
       const parentId = child.get(this._$parentProperty);
-      const idProperty = this._$idProperty || rs.getIdProperty();
-      const index = rs.getIndexByValue(idProperty, parentId);
+      const keyProperty = this._$keyProperty || rs.getKeyProperty();
+      const index = rs.getIndexByValue(keyProperty, parentId);
 
       return index > -1;
    }
@@ -292,8 +297,8 @@ export default class Hierarchy extends mixin<
          return value;
       }
 
-      const idProperty = this._$idProperty || rs.getIdProperty();
-      const index = rs.getIndexByValue(idProperty, value);
+      const keyProperty = this._$keyProperty || rs.getKeyProperty();
+      const index = rs.getIndexByValue(keyProperty, value);
 
       if (index === -1) {
          throw new ReferenceError(`${this._moduleName}: record with id "${value}" does not found in the recordset`);
@@ -321,8 +326,10 @@ export default class Hierarchy extends mixin<
 
 Object.assign(Hierarchy.prototype, {
    '[Types/_entity/relation/Hierarchy]': true,
-   _$idProperty: '',
+   _$keyProperty: '',
    _$parentProperty: '',
    _$nodeProperty: '',
-   _$declaredChildrenProperty: ''
+   _$declaredChildrenProperty: '',
+   getIdProperty: Hierarchy.prototype.getKeyProperty,
+   setIdProperty: Hierarchy.prototype.setKeyProperty
 });

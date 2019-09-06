@@ -232,7 +232,7 @@ export default class DataSet extends mixin<
      * @cfg {String} Название свойства записи, содержащего первичный ключ.
      * @name Types/_source/DataSet#keyProperty
      * @see getKeyProperty
-     * @see Types/_entity/Model#idProperty
+     * @see Types/_entity/Model#keyProperty
      * @example
      * Установим свойство 'primaryId' в качестве первичного ключа:
      * <pre>
@@ -310,6 +310,7 @@ export default class DataSet extends mixin<
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
 
+        // Support deprecated option 'idProperty'
         if (!this._$keyProperty && options && (options as any).idProperty) {
              this._$keyProperty = (options as any).idProperty;
         }
@@ -439,7 +440,7 @@ export default class DataSet extends mixin<
      * @param {String} name
      * @see getKeyProperty
      * @see keyProperty
-     * @see Types/_entity/Model#idProperty
+     * @see Types/_entity/Model#keyProperty
      * @example
      * Установим название свойства модели, содержащего первичный ключ:
      * <pre>
@@ -707,7 +708,7 @@ export default class DataSet extends mixin<
      * @return {Object}
      * @see metaProperty
      */
-    getMetaData(): Object {
+    getMetaData<T = object>(): T {
         return this._$metaProperty && this._getDataProperty(this._$metaProperty) || {};
     }
 
@@ -840,7 +841,7 @@ export default class DataSet extends mixin<
             writable: this._$writable,
             rawData,
             adapter: this._$adapter,
-            idProperty: this._$keyProperty
+            keyProperty: this._$keyProperty
         });
     }
 
@@ -855,7 +856,7 @@ export default class DataSet extends mixin<
             rawData,
             adapter: this._$adapter,
             model: this._$model,
-            idProperty: this._$keyProperty
+            keyProperty: this._$keyProperty
         });
     }
 
