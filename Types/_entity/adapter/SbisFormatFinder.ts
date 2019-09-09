@@ -32,12 +32,24 @@ function* getFormatFromRawData(id: number, data: IRecordFormat | ITableFormat, s
 }
 */
 
+/**
+ * Класс рекусвиного стека. Хранит стек обрабатываемых узлов дерева.
+ */
 class RecursiveStack {
 
+    /**
+     * Стек узлов
+     */
    protected _stack: Map<number, IFieldFormat[]>;
 
+    /**
+     * Индефикатор обрабатываемага узла.
+     */
    public processableId: number;
 
+    /**
+     * Последний узел стека.
+     */
    protected _current: any;
 
    constructor() {
@@ -45,36 +57,61 @@ class RecursiveStack {
       this.processableId = -1;
    }
 
+    /**
+     * Возврашет последний узел из стека.
+     */
    get currentNode(): any {
       return this._current || undefined;
    }
 
-   public push(node) {
+    /**
+     * Добавляет узел в стек.
+     * @param {any} node - Добавляемый узел.
+     */
+   public push(node: any): void {
       this._current = node;
       this.processableId++;
       this._stack.set(this.processableId, this._current);
    }
 
-   public pop() {
+    /**
+     * Удаляет последний узел из стека.
+     */
+   public pop(): void{
       this.processableId--;
       this._current = this._stack.get(this.processableId);
       this._stack.delete(this.processableId + 1);
    }
 }
 
+/**
+ * Класс рекурсивного итератора по форматам.
+ */
 class RecursiveIterator {
+
+    /**
+     * Инстансе рекусривного стека.
+     */
    protected stackNodes: RecursiveStack;
 
    constructor(data: IRecordFormat | ITableFormat) {
       this.stackNodes = new RecursiveStack();
+
+      //Сразу же добавляем в стек корень дерева.
       this.stackNodes.push({
          data: data
       });
    }
 
+    /**
+     * Делает итерацию до искомого формата.
+     * @param {Number} id - индефикатор искомого формата.
+     * @param {Map} storage - кеш форматов.
+     */
    public next(id: number, storage: Map<number, IFieldFormat[]>) {
       while (true) {
          if (this.stackNodes.processableId < 0) {
+             // id обрабтываемого узла меньше 0, значит дерево обработано.
             return {value: undefined, done: true};
          }
 
@@ -86,7 +123,14 @@ class RecursiveIterator {
       }
    }
 
+    /**
+     * Обработчик узла.
+     * @param {Number} id - индефикатор искомого формата.
+     * @param {Map} storage - кеш форматов.
+     * @private
+     */
    protected _process(id: number, storage: Map<number, IFieldFormat[]>) {
+       //Получаем из стека послдений узел, чтобы обработь его.
       const node = this.stackNodes.currentNode;
 
       if (node.data instanceof Array) {
@@ -101,6 +145,7 @@ class RecursiveIterator {
                break;
             }
 
+            //Оптимизация, в массивах нас интересуют только объекты.
             if (item.value instanceof Object) {
                this.stackNodes.push({
                   data: item.value
@@ -129,6 +174,7 @@ class RecursiveIterator {
 
          let result;
 
+         //Если в record есть данные их надо обработать.
          if (node.data.d) {
             this.stackNodes.push( {
                data: node.data.d
@@ -153,6 +199,9 @@ class RecursiveIterator {
    }
 }
 
+/**
+ * Класс поиска форматов в сырых данных. С хранением в кеше раннее найденных форматов.
+ */
 class SbisFormatFinder {
    /**
     * Кеш, хранит ранее найденные форматы.

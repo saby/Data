@@ -17,6 +17,7 @@ export interface IOptions {
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;
+   formatController?: FormatController
 }
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
@@ -111,7 +112,7 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
    '[Types/_entity/FormattableMixin]': boolean;
 
-   protected _formatController: FormatController;
+   protected _$formatController: FormatController;
 
    /**
     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
@@ -663,11 +664,11 @@ export default abstract class FormattableMixin {
     * @private
     */
    protected _getFormatController(): FormatController {
-      if (!this._formatController) {
-         this._formatController = new FormatController(this._getRawData(true));
+      if (!this._$formatController) {
+         this._$formatController = new FormatController(this._getRawData(true));
       }
 
-      return this._formatController;
+      return this._$formatController;
    }
 
    /**
@@ -913,6 +914,6 @@ Object.assign(FormattableMixin.prototype, {
    _formatClone: null,
    _rawDataAdapter: null,
    _rawDataFields: null,
-   _formatController: null,
+   _$formatController: null,
    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

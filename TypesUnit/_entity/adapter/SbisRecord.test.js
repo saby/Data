@@ -568,6 +568,15 @@ define([
 
             assert.deepEqual(adapter._data.s, format);
          });
+
+         it('should return the format after adding it', function() {
+            var format = [{'n': 'bar', 't': 'Строка'}];
+
+            var adapter = new SbisRecord({});
+            adapter._data.s = format;
+
+            assert.deepEqual(adapter._data.s, format);
+         });
       });
 
       describe('.getSharedFormat()', function() {

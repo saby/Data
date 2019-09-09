@@ -1447,7 +1447,7 @@ export default class RecordSet<T = Model> extends mixin<
             adapter: this.getAdapter(),
             rawData: data,
             keyProperty: this._$keyProperty,
-            formatController: this._formatController
+            formatController: this._$formatController
         });
 
         return record;

@@ -543,6 +543,33 @@ define([
       });
 
       describe('.getFormat()', function() {
+         it('should pass the formatController to the record', function() {
+            const rs = new RecordSet({
+               rawData:  {
+                  s: [{
+                     n: 'foo', t: 'Запись'
+                  }],
+                  d: [[{
+                     f: 1,
+                     s: [{
+                        n: 'First name',
+                        t: 'Строка'
+                     }],
+                     d: ['Jon'],
+                     t: 'Запись'
+                  }], [{
+                     f: 1,
+                     d: ['Mike'],
+                     t: 'Запись'
+                  }]],
+                  t: 'recordset'
+               },
+               adapter: 'Types/entity:adapter.Sbis'
+            });
+
+            assert.strictEqual(rs.at(1).get('foo').get('First name'), 'Mike');
+         });
+
          it('should build the format from json raw data', function() {
             var format = rs.getFormat();
             assert.strictEqual(format.getCount(), 2);
