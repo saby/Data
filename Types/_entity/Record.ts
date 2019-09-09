@@ -691,6 +691,9 @@ export default class Record extends mixin<
       if (options && options.adapter) {
          instanceOptions.adapter = options.adapter;
       }
+      if (options && options.formatController) {
+         instanceOptions.formatController = options.formatController;
+      }
       return new this(instanceOptions);
    }
 
@@ -1270,7 +1273,8 @@ export default class Record extends mixin<
          this._getFieldType(format),
          {
             format,
-            adapter: this._getAdapter()
+            adapter: this._getAdapter(),
+            formatController: this._$formatController
          }
       );
    }

@@ -5,6 +5,8 @@ import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
 import {IHashMap} from '../_declarations';
+import IFormatController from './adapter/IFormatController';
+import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
@@ -15,6 +17,7 @@ export interface IOptions {
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;
+   formatController?: FormatController
 }
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
@@ -109,6 +112,8 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
    '[Types/_entity/FormattableMixin]': boolean;
 
+   protected _$formatController: FormatController;
+
    /**
     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
     * @name Types/_entity/FormattableMixin#rawData
@@ -192,7 +197,7 @@ export default abstract class FormattableMixin {
     *    });
     * </pre>
     */
-   protected _$adapter: IAdapter | IDecorator | string;
+   protected _$adapter: IAdapter | IDecorator | IFormatController | string;
 
    /**
     * @cfg {Types/_collection/format/Format|
@@ -631,7 +636,7 @@ export default abstract class FormattableMixin {
     * Returns common adapter instance.
     * @protected
     */
-   protected _getAdapter(): IAdapter | IDecorator {
+   protected _getAdapter(): IAdapter | IDecorator | IFormatController {
       if (
          this._$adapter === defaultAdapter &&
          FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
@@ -647,7 +652,23 @@ export default abstract class FormattableMixin {
          this._$adapter = new CowAdapter(this._$adapter as IAdapter);
       }
 
+      if (this._$adapter['[Types/_entity/format/IFormatController]']) {
+         (this._$adapter as IFormatController).setFormatController(this._getFormatController());
+      }
+
       return this._$adapter as IAdapter;
+   }
+
+   /**
+    *
+    * @private
+    */
+   protected _getFormatController(): FormatController {
+      if (!this._$formatController) {
+         this._$formatController = new FormatController(this._getRawData(true));
+      }
+
+      return this._$formatController;
    }
 
    /**
@@ -893,5 +914,6 @@ Object.assign(FormattableMixin.prototype, {
    _formatClone: null,
    _rawDataAdapter: null,
    _rawDataFields: null,
+   _$formatController: null,
    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

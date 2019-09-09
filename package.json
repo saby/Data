@@ -25,7 +25,9 @@
    },
    "saby-units": {
       "moduleType": "amd",
-      "tests": "TypesUnit",
+      "tests": [
+         "TypesUnit"
+      ],
       "links": {
          "node_modules/wasaby-app/src/Application": "Application",
          "node_modules/rmi/src/client/Browser": "Browser",
