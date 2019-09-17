@@ -69,8 +69,7 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
  *     console.log(isEqual([0], ['0']));
  * </pre>
  *
- * @function
- * @name Types/_object/isEqual
+ * @class Types/_object/isEqual
  * @public
  * @author Мальцев А.А.
  */

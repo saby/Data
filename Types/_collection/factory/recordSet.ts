@@ -4,7 +4,7 @@ import {Record} from '../../entity';
 import {create} from '../../di';
 
 interface IOptions {
-   rawData?: any;
+    rawData?: any;
 }
 
 /**
@@ -16,17 +16,17 @@ interface IOptions {
  * @author Мальцев А.А.
  */
 export default function recordSet(items: IEnumerable<Record>, options?: IOptions): RecordSet {
-   if (!items || !(items['[Types/_collection/IEnumerable]'])) {
-      throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
-   }
+    if (!items || !(items['[Types/_collection/IEnumerable]'])) {
+        throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
+    }
 
-   options = options || {};
-   delete options.rawData;
+    options = options || {};
+    delete options.rawData;
 
-   const result = create<RecordSet>('Types/collection:RecordSet', options);
-   items.each((item) => {
-      result.add(item);
-   });
+    const result = create<RecordSet>('Types/collection:RecordSet', options);
+    items.each((item) => {
+        result.add(item);
+    });
 
-   return result;
+    return result;
 }

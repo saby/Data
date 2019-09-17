@@ -9,85 +9,85 @@ import {Map} from '../../shim';
  * @author Мальцев А.А.
  */
 export default class Mapwise<T> implements IEnumerator<T> {
-   /**
-    * Объект
-    */
-   protected _items: Map<any, T>;
-   /**
-    * Текущий индекс
-    */
-   protected _index: number;
+    /**
+     * Объект
+     */
+    protected _items: Map<any, T>;
+    /**
+     * Текущий индекс
+     */
+    protected _index: number;
 
-   /**
-    * Кэш ключей
-    */
-   protected _cachedKeys: string[];
+    /**
+     * Кэш ключей
+     */
+    protected _cachedKeys: string[];
 
-   /**
-    * Ключи
-    */
-   get _keys(): any[] {
-      if (!this._cachedKeys) {
-         const keys = [];
-         this._items.forEach((value, key) => {
-            keys.push(key);
-         });
-         this._cachedKeys = keys;
-      }
-      return this._cachedKeys;
-   }
+    /**
+     * Ключи
+     */
+    get _keys(): any[] {
+        if (!this._cachedKeys) {
+            const keys = [];
+            this._items.forEach((value, key) => {
+                keys.push(key);
+            });
+            this._cachedKeys = keys;
+        }
+        return this._cachedKeys;
+    }
 
-   /**
-    * Конструктор
-    * @param items Массив
-    */
-   constructor(items: Map<any, any>) {
-      if (items === undefined) {
-         items = new Map();
-      }
-      if (!(items instanceof Map)) {
-         throw new Error('Argument items should be an instance of Map');
-      }
-      this._items = items;
-   }
+    /**
+     * Конструктор
+     * @param items Массив
+     */
+    constructor(items: Map<any, any>) {
+        if (items === undefined) {
+            items = new Map();
+        }
+        if (!(items instanceof Map)) {
+            throw new Error('Argument items should be an instance of Map');
+        }
+        this._items = items;
+    }
 
-   // region IEnumerator
+    // region IEnumerator
 
-   readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': boolean = true;
 
-   getCurrent(): any {
-      return this._index === -1 ? undefined : this._items.get(this._keys[this._index]);
-   }
+    getCurrent(): any {
+        return this._index === -1 ? undefined : this._items.get(this._keys[this._index]);
+    }
 
-   moveNext(): boolean {
-      const keys = this._keys;
-      if (this._index >= keys.length - 1) {
-         return false;
-      }
+    moveNext(): boolean {
+        const keys = this._keys;
+        if (this._index >= keys.length - 1) {
+            return false;
+        }
 
-      this._index++;
-      return true;
-   }
+        this._index++;
+        return true;
+    }
 
-   reset(): void {
-      this._cachedKeys = undefined;
-      this._index = -1;
-   }
+    reset(): void {
+        this._cachedKeys = undefined;
+        this._index = -1;
+    }
 
-   // endregion
+    // endregion
 
-   // region Public methods
+    // region Public methods
 
-   getCurrentIndex(): any {
-      return this._keys[this._index];
-   }
+    getCurrentIndex(): any {
+        return this._keys[this._index];
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Mapwise.prototype, {
-   '[Types/_collection/enumerator/Mapwise]': true,
-   _items: null,
-   _index: -1,
-   _cachedKeys: undefined
+    '[Types/_collection/enumerator/Mapwise]': true,
+    _items: null,
+    _index: -1,
+    _cachedKeys: undefined
 });

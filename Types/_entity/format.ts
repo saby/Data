@@ -23,7 +23,6 @@
  * @includes TimeField Types/_entity/format/TimeField
  * @includes TimeIntervalField Types/_entity/format/TimeIntervalField
  * @includes UuidField Types/_entity/format/UuidField
- * @includes UuidField Types/_entity/format/UuidField
  * @includes XmlField Types/_entity/format/XmlField
  * @author Мальцев А.А.
  */
@@ -37,8 +36,8 @@ export {default as DateTimeField} from './format/DateTimeField';
 export {default as DictionaryField} from './format/DictionaryField';
 export {default as EnumField} from './format/EnumField';
 export {
-   default as fieldsFactory,
-   IDeclaration as IFieldDeclaration
+    default as fieldsFactory,
+    IDeclaration as IFieldDeclaration
 } from './format/fieldsFactory';
 export {default as FlagsField} from './format/FlagsField';
 export {default as HierarchyField} from './format/HierarchyField';
@@ -55,14 +54,14 @@ export {default as StringField} from './format/StringField';
 export {default as TimeField} from './format/TimeField';
 export {default as TimeIntervalField} from './format/TimeIntervalField';
 export {
-   default as UniversalField,
-   IMeta as IUniversalFieldMeta,
-   IDateTimeMeta as IUniversalFieldDateTimeMeta,
-   IDictionaryMeta as IUniversalFieldDictionaryMeta,
-   IRealMeta as IUniversalFieldRealMeta,
-   IMoneyMeta as IUniversalFieldMoneyMeta,
-   IIdentityMeta as IUniversalFieldIdentityMeta,
-   IArrayMeta as IUniversalFieldArrayMeta
+    default as UniversalField,
+    IMeta as IUniversalFieldMeta,
+    IDateTimeMeta as IUniversalFieldDateTimeMeta,
+    IDictionaryMeta as IUniversalFieldDictionaryMeta,
+    IRealMeta as IUniversalFieldRealMeta,
+    IMoneyMeta as IUniversalFieldMoneyMeta,
+    IIdentityMeta as IUniversalFieldIdentityMeta,
+    IArrayMeta as IUniversalFieldArrayMeta
 } from './format/UniversalField';
 export {default as UuidField} from './format/UuidField';
 export {default as XmlField} from './format/XmlField';

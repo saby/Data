@@ -17,12 +17,12 @@ const $cachedAdapter = protect('cachedAdapter');
 const contracts = {};
 
 interface IEndpoint {
-   contract?: string;
+    contract?: string;
 }
 
 export interface IOptions extends ILocalOptions {
-   data?: any;
-   endpoint?: IEndpoint;
+    data?: any;
+    endpoint?: IEndpoint;
 }
 
 /**
@@ -31,62 +31,62 @@ export interface IOptions extends ILocalOptions {
  * @remark
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *    require(['Types/source'], function (source) {
- *       var solarSystem = new source.Memory({
- *          data: [
- *             {id: 1, name: 'Sun', kind: 'Star'},
- *             {id: 2, name: 'Mercury', kind: 'Planet'},
- *             {id: 3, name: 'Venus', kind: 'Planet'},
- *             {id: 4, name: 'Earth', kind: 'Planet'},
- *             {id: 5, name: 'Mars', kind: 'Planet'},
- *             {id: 6, name: 'Jupiter', kind: 'Planet'},
- *             {id: 7, name: 'Saturn', kind: 'Planet'},
- *             {id: 8, name: 'Uranus', kind: 'Planet'},
- *             {id: 9, name: 'Neptune', kind: 'Planet'},
- *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
- *          ],
- *          keyProperty: 'id'
- *       });
+ *     require(['Types/source'], function (source) {
+ *         var solarSystem = new source.Memory({
+ *             data: [
+ *                 {id: 1, name: 'Sun', kind: 'Star'},
+ *                 {id: 2, name: 'Mercury', kind: 'Planet'},
+ *                 {id: 3, name: 'Venus', kind: 'Planet'},
+ *                 {id: 4, name: 'Earth', kind: 'Planet'},
+ *                 {id: 5, name: 'Mars', kind: 'Planet'},
+ *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
+ *                 {id: 7, name: 'Saturn', kind: 'Planet'},
+ *                 {id: 8, name: 'Uranus', kind: 'Planet'},
+ *                 {id: 9, name: 'Neptune', kind: 'Planet'},
+ *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+ *             ],
+ *             keyProperty: 'id'
+ *         });
  *
- *       //Создадим новый объект:
- *       solarSystem.create(
- *          {id: 11, name: 'Moon', 'kind': 'Satellite'}
- *       ).addCallback(function(satellite) {
- *          console.log('Object created:', satellite.get('name'));//'Object created: Moon'
- *       });
+ *         //Создадим новый объект:
+ *         solarSystem.create(
+ *             {id: 11, name: 'Moon', 'kind': 'Satellite'}
+ *         ).addCallback(function(satellite) {
+ *             console.log('Object created:', satellite.get('name'));//'Object created: Moon'
+ *         });
  *
- *       //Прочитаем данные о Солнце:
- *       solarSystem.read(1).addCallback(function(star) {
- *          console.log('Object readed:', star.get('name'));//'Object readed: Sun'
- *       });
+ *         //Прочитаем данные о Солнце:
+ *         solarSystem.read(1).addCallback(function(star) {
+ *             console.log('Object readed:', star.get('name'));//'Object readed: Sun'
+ *         });
  *
- *       //Вернем Плутону статус планеты:
- *       solarSystem.read(10).addCallback(function(pluto) {
- *          pluto.set('kind', 'Planet');
- *          solarSystem.update(pluto).addCallback(function() {
- *             console.log('Pluto is the planet again!');
- *          });
- *       });
+ *         //Вернем Плутону статус планеты:
+ *         solarSystem.read(10).addCallback(function(pluto) {
+ *             pluto.set('kind', 'Planet');
+ *             solarSystem.update(pluto).addCallback(function() {
+ *                 console.log('Pluto is the planet again!');
+ *             });
+ *         });
  *
- *       //Удалим Марс:
- *       solarSystem.destroy(5).addCallback(function() {
- *          console.log('Bye Mars!');
- *       });
+ *         //Удалим Марс:
+ *         solarSystem.destroy(5).addCallback(function() {
+ *             console.log('Bye Mars!');
+ *         });
  *
- *       //Получим список планет:
- *       var query = new Query();
- *       query.where({
- *          kind: 'Planet'
- *       });
- *       solarSystem.query(query).addCallback(function(dataSet) {
- *          var planets = dataSet.getAll();
- *          planets.getCount();//8
- *          planets.each(function(planet) {
- *             console.log(planet.get('name'));
- *          });
- *          //Mercury, Venus, Earth, Jupiter, Saturn, Uranus, Neptune, Pluto
- *       });
- *    });
+ *         //Получим список планет:
+ *         var query = new Query();
+ *         query.where({
+ *             kind: 'Planet'
+ *         });
+ *         solarSystem.query(query).addCallback(function(dataSet) {
+ *             var planets = dataSet.getAll();
+ *             planets.getCount();//8
+ *             planets.each(function(planet) {
+ *                 console.log(planet.get('name'));
+ *             });
+ *             //Mercury, Venus, Earth, Jupiter, Saturn, Uranus, Neptune, Pluto
+ *         });
+ *     });
  * </pre>
  * @class Types/_source/Memory
  * @extends Types/_source/Local
@@ -94,167 +94,167 @@ export interface IOptions extends ILocalOptions {
  * @author Мальцев А.А.
  */
 export default class Memory extends Local {
-   /**
-    * @cfg {Object} Данные, с которыми работает источник.
-    * @name Types/_source/Memory#data
-    * @remark
-    * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
-    * @example
-    * Создадим источник с данными объектов солнечной системы, данные представлены в виде массива:
-    * <pre>
-    *    require(['Types/source'], function (source) {
-    *       var solarSystem = new source.Memory({
-    *          data: [
-    *             {id: 1, name: 'Sun', kind: 'Star'},
-    *             {id: 2, name: 'Mercury', kind: 'Planet'},
-    *             {id: 3, name: 'Venus', kind: 'Planet'},
-    *             {id: 4, name: 'Earth', kind: 'Planet'},
-    *             {id: 5, name: 'Mars', kind: 'Planet'},
-    *             {id: 6, name: 'Jupiter', kind: 'Planet'},
-    *             {id: 7, name: 'Saturn', kind: 'Planet'},
-    *             {id: 8, name: 'Uranus', kind: 'Planet'},
-    *             {id: 9, name: 'Neptune', kind: 'Planet'},
-    *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-    *          ],
-    *          keyProperty: 'id'
-    *       });
-    *    });
-    * </pre>
-    * Создадим источник с данными объектов солнечной системы, данные представлены в виде
-    * {@link Types/_collection/RecordSet рекордсета}:
-    * <pre>
-    *    require([
-    *       'Types/source',
-    *       'Types/collection',
-    *       'Types/entity'
-    *    ], function (
-    *       source,
-    *       collection,
-    *       entity
-    *    ) {
-    *       var solarData = new collection.RecordSet({
-    *          rawData: [
-    *             {id: 1, name: 'Sun', kind: 'Star'},
-    *             {id: 2, name: 'Mercury', kind: 'Planet'},
-    *             {id: 3, name: 'Venus', kind: 'Planet'},
-    *             {id: 4, name: 'Earth', kind: 'Planet'},
-    *             {id: 5, name: 'Mars', kind: 'Planet'},
-    *             {id: 6, name: 'Jupiter', kind: 'Planet'},
-    *             {id: 7, name: 'Saturn', kind: 'Planet'},
-    *             {id: 8, name: 'Uranus', kind: 'Planet'},
-    *             {id: 9, name: 'Neptune', kind: 'Planet'},
-    *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-    *          ]
-    *       });
-    *       var solarSystem = new source.Memory({
-    *          data: solarData,
-    *          adapter: new entity.adapter.RecordSet(),
-    *          keyProperty: 'id'
-    *       });
-    *    });
-    * </pre>
-    */
-   protected _$data: any;
+    /**
+     * @cfg {Object} Данные, с которыми работает источник.
+     * @name Types/_source/Memory#data
+     * @remark
+     * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
+     * @example
+     * Создадим источник с данными объектов солнечной системы, данные представлены в виде массива:
+     * <pre>
+     *     require(['Types/source'], function (source) {
+     *         var solarSystem = new source.Memory({
+     *             data: [
+     *                 {id: 1, name: 'Sun', kind: 'Star'},
+     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
+     *                 {id: 3, name: 'Venus', kind: 'Planet'},
+     *                 {id: 4, name: 'Earth', kind: 'Planet'},
+     *                 {id: 5, name: 'Mars', kind: 'Planet'},
+     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
+     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
+     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
+     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *             ],
+     *             keyProperty: 'id'
+     *         });
+     *     });
+     * </pre>
+     * Создадим источник с данными объектов солнечной системы, данные представлены в виде
+     * {@link Types/_collection/RecordSet рекордсета}:
+     * <pre>
+     *     require([
+     *         'Types/source',
+     *         'Types/collection',
+     *         'Types/entity'
+     *     ], function (
+     *         source,
+     *         collection,
+     *         entity
+     *     ) {
+     *         var solarData = new collection.RecordSet({
+     *             rawData: [
+     *                 {id: 1, name: 'Sun', kind: 'Star'},
+     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
+     *                 {id: 3, name: 'Venus', kind: 'Planet'},
+     *                 {id: 4, name: 'Earth', kind: 'Planet'},
+     *                 {id: 5, name: 'Mars', kind: 'Planet'},
+     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
+     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
+     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
+     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *             ]
+     *         });
+     *         var solarSystem = new source.Memory({
+     *             data: solarData,
+     *             adapter: new entity.adapter.RecordSet(),
+     *             keyProperty: 'id'
+     *         });
+     *     });
+     * </pre>
+     */
+    protected _$data: any;
 
-   protected _dataSetItemsProperty: string;
+    protected _dataSetItemsProperty: string;
 
-   protected _dataSetMetaProperty: string;
+    protected _dataSetMetaProperty: string;
 
-   /**
-    * Пустые данные по таблицам
-    */
-   protected _emptyData: Map<string, any>;
+    /**
+     * Пустые данные по таблицам
+     */
+    protected _emptyData: Map<string, any>;
 
-   constructor(options?: IOptions) {
-      super(options);
+    constructor(options?: IOptions) {
+        super(options);
 
-      // FIXME: YAGNI
-      if (options &&
-         options.endpoint &&
-         options.endpoint.contract &&
-         !contracts.hasOwnProperty(options.endpoint.contract)
-      ) {
-         contracts[options.endpoint.contract] = this._$data;
-      }
-   }
+        // FIXME: YAGNI
+        if (options &&
+            options.endpoint &&
+            options.endpoint.contract &&
+            !contracts.hasOwnProperty(options.endpoint.contract)
+        ) {
+            contracts[options.endpoint.contract] = this._$data;
+        }
+    }
 
-   // region Base
+    // region Base
 
-   protected _prepareQueryResult(data: any, query: Query): DataSet {
-      // Selection has no items - return an empty table
-      if (data && data.items === undefined) {
-         data.items = this._getEmptyData(query);
-      }
-      return super._prepareQueryResult(data);
-   }
+    protected _prepareQueryResult(data: any, query: Query): DataSet {
+        // Selection has no items - return an empty table
+        if (data && data.items === undefined) {
+            data.items = this._getEmptyData(query);
+        }
+        return super._prepareQueryResult(data);
+    }
 
-   // endregion
+    // endregion
 
-   // region Local
+    // region Local
 
-   protected _getTableAdapter(): adapter.ITable {
-      return this[$cachedAdapter as string] ||
-         (this[$cachedAdapter as string] = this.getAdapter().forTable(this._$data));
-   }
+    protected _getTableAdapter(): adapter.ITable {
+        return this[$cachedAdapter as string] ||
+            (this[$cachedAdapter as string] = this.getAdapter().forTable(this._$data));
+    }
 
-   protected _applyFrom(from?: string): any {
-      return from ? contracts[from] : this.data;
-   }
+    protected _applyFrom(from?: string): any {
+        return from ? contracts[from] : this.data;
+    }
 
-   protected _applyJoin(data: any, join: Join[]): any {
-      if (join.length) {
-         throw new Error('Joins are not supported');
-      }
-      return data;
-   }
+    protected _applyJoin(data: any, join: Join[]): any {
+        if (join.length) {
+            throw new Error('Joins are not supported');
+        }
+        return data;
+    }
 
-   protected _applyWhere(data: any, where?: any | Function, meta?: IMeta): any {
-      // FIXME: get rid of this SBIS-specified
-      if (where && typeof where === 'object') {
-         where = {...where};
-         delete where.Разворот;
-         delete where.ВидДерева;
-         delete where.usePages;
-      }
+    protected _applyWhere(data: any, where?: any | Function, meta?: IMeta): any {
+        // FIXME: get rid of this SBIS-specified
+        if (where && typeof where === 'object') {
+            where = {...where};
+            delete where.Разворот;
+            delete where.ВидДерева;
+            delete where.usePages;
+        }
 
-      return super._applyWhere(data, where, meta);
-   }
+        return super._applyWhere(data, where, meta);
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected members
+    // region Protected members
 
-   /**
-    * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
-    * используемого адаптера)
-    * @param [query] Запрос
-    * @protected
-    */
-   protected _getEmptyData(query?: Query): any {
-      this._emptyData = this._emptyData || new Map();
+    /**
+     * Возвращает данные пустой выборки с учетом того, что в ней может содержаться описание полей (зависит от
+     * используемого адаптера)
+     * @param [query] Запрос
+     * @protected
+     */
+    protected _getEmptyData(query?: Query): any {
+        this._emptyData = this._emptyData || new Map();
 
-      const table = query ? query.getFrom() : undefined;
-      if (!this._emptyData.has(table)) {
-         const items = object.clonePlain(this._applyFrom(table), true);
-         const adapter = this.getAdapter().forTable(items);
+        const table = query ? query.getFrom() : undefined;
+        if (!this._emptyData.has(table)) {
+            const items = object.clonePlain(this._applyFrom(table), true);
+            const adapter = this.getAdapter().forTable(items);
 
-         adapter.clear();
-         this._emptyData.set(table, adapter.getData());
-      }
+            adapter.clear();
+            this._emptyData.set(table, adapter.getData());
+        }
 
-      return this._emptyData.get(table);
-   }
+        return this._emptyData.get(table);
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Memory.prototype, {
-   '[Types/_source/Memory]': true,
-   _moduleName: 'Types/source:Memory',
-   _$data: null,
-   _dataSetItemsProperty: 'items',
-   _dataSetMetaProperty: 'meta',
-   _emptyData: null
+    '[Types/_source/Memory]': true,
+    _moduleName: 'Types/source:Memory',
+    _$data: null,
+    _dataSetItemsProperty: 'items',
+    _dataSetMetaProperty: 'meta',
+    _emptyData: null
 });
 
 register('Types/source:Memory', Memory, {instantiate: false});

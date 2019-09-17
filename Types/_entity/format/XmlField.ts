@@ -5,10 +5,10 @@ import Field from './Field';
  * @remark
  * Создадим поле c типом "XML":
  * <pre>
- *    var field = {
- *       name: 'foo',
- *       type: 'xml'
- *    };
+ *     var field = {
+ *         name: 'foo',
+ *         type: 'xml'
+ *     };
  * </pre>
  * @class Types/_entity/format/XmlField
  * @extends Types/_entity/format/Field
@@ -16,12 +16,12 @@ import Field from './Field';
  * @author Мальцев А.А.
  */
 export default class XmlField extends Field {
-   _$defaultValue: string;
+    _$defaultValue: string;
 }
 
 Object.assign(XmlField.prototype, {
-   '[Types/_entity/format/XmlField]': true,
-   _moduleName: 'Types/entity:format.XmlField',
-   _typeName: 'Xml',
-   _$defaultValue: ''
+    '[Types/_entity/format/XmlField]': true,
+    _moduleName: 'Types/entity:format.XmlField',
+    _typeName: 'Xml',
+    _$defaultValue: ''
 });

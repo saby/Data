@@ -8,41 +8,41 @@ import ManyToMany from './relation/ManyToMany';
  * @author Мальцев А.А.
  */
 export default abstract class VersionableMixin implements IVersionable {
-   readonly '[Types/_entity/VersionableMixin]': boolean;
-   protected _version: number;
+    readonly '[Types/_entity/VersionableMixin]': boolean;
+    protected _version: number;
 
-   // region IVersionable
+    // region IVersionable
 
-   readonly '[Types/_entity/IVersionable]': boolean;
+    readonly '[Types/_entity/IVersionable]': boolean;
 
-   getVersion(): number {
-      return this._version;
-   }
+    getVersion(): number {
+        return this._version;
+    }
 
-   protected _nextVersion(): void {
-      this._version++;
-      if (this['[Types/_entity/ManyToManyMixin]']) {
-         this._getMediator().belongsTo(this, (parent) => {
-            if (parent && parent['[Types/_entity/IVersionable]']) {
-               parent._nextVersion();
-            }
-         });
-      }
-   }
+    protected _nextVersion(): void {
+        this._version++;
+        if (this['[Types/_entity/ManyToManyMixin]']) {
+            this._getMediator().belongsTo(this, (parent) => {
+                if (parent && parent['[Types/_entity/IVersionable]']) {
+                    parent._nextVersion();
+                }
+            });
+        }
+    }
 
-   // endregion
+    // endregion
 
-   // region ManyToManyMixin
+    // region ManyToManyMixin
 
-   protected _getMediator: () => ManyToMany;
+    protected _getMediator: () => ManyToMany;
 
-   // endregion
+    // endregion
 }
 
 Object.assign(VersionableMixin.prototype, {
-   '[Types/_entity/VersionableMixin]': true,
-   '[Types/_entity/IVersionable]': true,
-   _version: 0
+    '[Types/_entity/VersionableMixin]': true,
+    '[Types/_entity/IVersionable]': true,
+    _version: 0
 });
 
 // Deprecated implementation

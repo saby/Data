@@ -19,84 +19,84 @@ const $writable = protect('writable');
  * @author Мальцев А.А.
  */
 export default abstract class ReadWriteMixin {
-   '[Types/_entity/ReadWriteMixin]': boolean;
+    '[Types/_entity/ReadWriteMixin]': boolean;
 
-   /**
-    * @deprecated Old-fashioned options
-    */
-   protected _options: any;
+    /**
+     * @deprecated Old-fashioned options
+     */
+    protected _options: any;
 
-   get writable(): boolean {
-      return this[$writable];
-   }
+    get writable(): boolean {
+        return this[$writable];
+    }
 
-   constructor(options?: any) {
-      if (this._options && hasOwnProperty.call(this._options, 'writable')) {
-         this[$writable] = this._options.writable;
-      }
-      if (options && hasOwnProperty.call(options, 'writable')) {
-         this[$writable] = options.writable;
-      }
-      if (this[$writable]) {
-         ObservableMixin.apply(this, arguments);
-      }
-   }
+    constructor(options?: any) {
+        if (this._options && hasOwnProperty.call(this._options, 'writable')) {
+            this[$writable] = this._options.writable;
+        }
+        if (options && hasOwnProperty.call(options, 'writable')) {
+            this[$writable] = options.writable;
+        }
+        if (this[$writable]) {
+            ObservableMixin.apply(this, arguments);
+        }
+    }
 
-   destroy(): void {
-      if (this[$writable]) {
-         ObservableMixin.prototype.destroy.call(this);
-         ManyToManyMixin.prototype.destroy.call(this);
-      }
-   }
+    destroy(): void {
+        if (this[$writable]) {
+            ObservableMixin.prototype.destroy.call(this);
+            ManyToManyMixin.prototype.destroy.call(this);
+        }
+    }
 
-   // endregion
+    // endregion
 
-   // region ObservableMixin
+    // region ObservableMixin
 
-   subscribe(event: string, handler: Function, ctx?: object): void {
-      if (this[$writable]) {
-         return ObservableMixin.prototype.subscribe.call(this, event, handler, ctx);
-      }
-   }
+    subscribe(event: string, handler: Function, ctx?: object): void {
+        if (this[$writable]) {
+            return ObservableMixin.prototype.subscribe.call(this, event, handler, ctx);
+        }
+    }
 
-   unsubscribe(event: string, handler: Function, ctx?: object): void {
-      if (this[$writable]) {
-         return ObservableMixin.prototype.unsubscribe.call(this, event, handler, ctx);
-      }
-   }
+    unsubscribe(event: string, handler: Function, ctx?: object): void {
+        if (this[$writable]) {
+            return ObservableMixin.prototype.unsubscribe.call(this, event, handler, ctx);
+        }
+    }
 
-   protected _publish(): void {
-      if (this[$writable]) {
-         // @ts-ignore
-         return ObservableMixin.prototype._publish.apply(this, arguments);
-      }
-   }
+    protected _publish(): void {
+        if (this[$writable]) {
+            // @ts-ignore
+            return ObservableMixin.prototype._publish.apply(this, arguments);
+        }
+    }
 
-   protected _notify(): void {
-      if (this[$writable]) {
-         // @ts-ignore
-         return ObservableMixin.prototype._notify.apply(this, arguments);
-      }
-   }
+    protected _notify(): void {
+        if (this[$writable]) {
+            // @ts-ignore
+            return ObservableMixin.prototype._notify.apply(this, arguments);
+        }
+    }
 
-   // endregion
+    // endregion
 
-   // region OptionsToPropertyMixin
+    // region OptionsToPropertyMixin
 
-   protected _getOptions(): object {
-      // @ts-ignore
-      const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
+    protected _getOptions(): object {
+        // @ts-ignore
+        const options = OptionsToPropertyMixin.prototype._getOptions.call(this);
 
-      // Delete "writable" property received from _options
-      delete options.writable;
-      return options;
-   }
+        // Delete "writable" property received from _options
+        delete options.writable;
+        return options;
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(ReadWriteMixin.prototype, {
-   '[Types/_entity/ReadWriteMixin]': true
+    '[Types/_entity/ReadWriteMixin]': true
 });
 
 // @ts-ignore
@@ -109,6 +109,6 @@ const IS_TESTING = !!(typeof global !== 'undefined' && global.assert && global.a
  * Запрет модификации выключит механизмы генерации событий (ObservableMixin).
  */
 Object.defineProperty(ReadWriteMixin.prototype, $writable, {
-   writable: true,
-   value: IS_BROWSER || IS_TESTING
+    writable: true,
+    value: IS_BROWSER || IS_TESTING
 });

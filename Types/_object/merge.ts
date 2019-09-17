@@ -1,6 +1,6 @@
 import {Set} from '../shim';
 
-function isObject(obj: any): boolean {
+function isTraversable(obj: any): boolean {
    if (obj === null || typeof obj !== 'object') {
       return false;
    }
@@ -9,13 +9,13 @@ function isObject(obj: any): boolean {
 }
 
 function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
-    if (isObject(target)) {
+    if (isTraversable(target)) {
         sources.forEach((source) => {
-            if (isObject(source)) {
+            if (isTraversable(source)) {
                 const overrides = {};
                 Object.keys(source).forEach((key) => {
                     const sourceItem = source[key];
-                    if (isObject(sourceItem)) {
+                    if (isTraversable(sourceItem)) {
                         if (target.hasOwnProperty(key) && !path.has(sourceItem)) {
                             path.add(sourceItem);
                             overrides[key] = mergeInner(path, target[key], sourceItem);
@@ -44,17 +44,16 @@ function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
  *
  * <h2>Пример использования</h2>
  * <pre>
- *    require(['Types/object'], function(util) {
- *       // true
- *       console.log(object.merge({foo: {data:'bar'}}, {foo: {myData:'bar'}})); //{foo: {data:'bar', myData:'bar'}}
+ *     import {merge} from 'Types/object';
  *
- *       // false
- *       console.log(util.isEqual([0], ['0']));
- *    });
+ *     // {foo: {data: 'bar', myData: 'baz'}}
+ *     console.log(merge(
+ *         {foo: {data: 'bar'}},
+ *         {foo: {myData: 'baz'}}
+ *     ));
  * </pre>
  *
- * @function
- * @name Types/_object/merge
+ * @class Types/_object/merge
  * @public
  * @author Мальцев А.А.
  */

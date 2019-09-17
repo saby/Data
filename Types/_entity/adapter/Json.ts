@@ -14,22 +14,22 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class Json extends Abstract {
-   forTable(data: object[]): JsonTable {
-      return new JsonTable(data);
-   }
+    forTable(data: object[]): JsonTable {
+        return new JsonTable(data);
+    }
 
-   forRecord(data: object): JsonRecord {
-      return new JsonRecord(data);
-   }
+    forRecord(data: object): JsonRecord {
+        return new JsonRecord(data);
+    }
 
-   getKeyField(): string {
-      return undefined;
-   }
+    getKeyField(): string {
+        return undefined;
+    }
 }
 
 Object.assign(Json.prototype, {
-   '[Types/_entity/adapter/Json]': true,
-   _moduleName: 'Types/entity:adapter.Json'
+    '[Types/_entity/adapter/Json]': true,
+    _moduleName: 'Types/entity:adapter.Json'
 });
 
 register('Types/entity:adapter.Json', Json, {instantiate: false});

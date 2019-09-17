@@ -12,46 +12,46 @@ type KeyFunc = (key: any) => string;
  * @author Мальцев А.А.
  */
 export default class Counted<T> extends Abstract<T> {
-   /**
-    * Функция, возвращающая ключ группировки для каждого элемента
-    */
-   protected _key: string|KeyFunc;
+    /**
+     * Функция, возвращающая ключ группировки для каждого элемента
+     */
+    protected _key: string|KeyFunc;
 
-   /**
-    * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
-    * @param source Предыдущее звено.
-    * @param key Поле агрегации или функция агрегации для каждого элемента.
-    */
-   constructor(source: Abstract<T>, key: string|KeyFunc) {
-      super(source);
-      this._key = key;
-   }
+    /**
+     * Конструктор агрегирующего звена цепочки, подсчитывающего количество элементов, объединенных по какому-то принципу.
+     * @param source Предыдущее звено.
+     * @param key Поле агрегации или функция агрегации для каждого элемента.
+     */
+    constructor(source: Abstract<T>, key: string|KeyFunc) {
+        super(source);
+        this._key = key;
+    }
 
-   destroy(): void {
-      this._key = null;
-      super.destroy();
-   }
+    destroy(): void {
+        this._key = null;
+        super.destroy();
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): enumerator.Mapwise<T> {
-      const toKey = Abstract.propertyMapper(this._key);
+    getEnumerator(): enumerator.Mapwise<T> {
+        const toKey = Abstract.propertyMapper(this._key);
 
-      return new enumerator.Mapwise(
-         this._previous.reduce((memo, item, index) => {
-            const key = toKey(item, index);
-            const count = memo.has(key) ? memo.get(key) : 0;
-            memo.set(key, count + 1);
-            return memo;
-         },
-         new Map())
-      );
-   }
+        return new enumerator.Mapwise(
+            this._previous.reduce((memo, item, index) => {
+                const key = toKey(item, index);
+                const count = memo.has(key) ? memo.get(key) : 0;
+                memo.set(key, count + 1);
+                return memo;
+            },
+            new Map())
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Counted.prototype, {
-   '[Types/_chain/Counted]': true,
-   _key: null
+    '[Types/_chain/Counted]': true,
+    _key: null
 });
