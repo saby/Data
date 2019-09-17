@@ -17,20 +17,20 @@ import {dateToSql, TO_SQL_MODE} from '../../formatter';
  * @author Мальцев А.А.
  */
 export default class DateField extends Field {
-      // region Public methods
+    // region Public methods
 
-      getDefaultValue(): string {
-         if (this._$defaultValue instanceof Date) {
-            return dateToSql(this._$defaultValue, TO_SQL_MODE.DATE);
-         }
-         return this._$defaultValue;
-      }
+    getDefaultValue(): string {
+        if (this._$defaultValue instanceof Date) {
+           return dateToSql(this._$defaultValue, TO_SQL_MODE.DATE);
+        }
+        return this._$defaultValue;
+    }
 
-      // endregion Public methods
+    // endregion Public methods
 }
 
 Object.assign(DateField.prototype, {
-   '[Types/_entity/format/DateField]': true,
-   _moduleName: 'Types/entity:format.DateField',
-   _typeName: 'Date'
+    '[Types/_entity/format/DateField]': true,
+    _moduleName: 'Types/entity:format.DateField',
+    _typeName: 'Date'
 });

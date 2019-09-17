@@ -17,22 +17,22 @@ import Deferred = require('Core/Deferred');
  */
 export default abstract class Rpc extends Remote implements IRpc {
 
-   // region IRpc
+    // region IRpc
 
-   readonly '[Types/_source/IRpc]': boolean = true;
+    readonly '[Types/_source/IRpc]': boolean = true;
 
-   call(command: string, data?: object): ExtendPromise<DataSet> {
-      return this._callProvider(command, data).addCallback(Deferred.skipLogExecutionTime(
-         (data) => this._loadAdditionalDependencies().addCallback(Deferred.skipLogExecutionTime(
-            () => this._wrapToDataSet(data)
-         ))
-      ));
-   }
+    call(command: string, data?: object): ExtendPromise<DataSet> {
+        return this._callProvider(command, data).addCallback(Deferred.skipLogExecutionTime(
+            (data) => this._loadAdditionalDependencies().addCallback(Deferred.skipLogExecutionTime(
+                () => this._wrapToDataSet(data)
+            ))
+        ));
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Rpc.prototype, {
-   '[Types/_source/Rpc]': true,
-   _moduleName: 'Types/source:Rpc'
+    '[Types/_source/Rpc]': true,
+    _moduleName: 'Types/source:Rpc'
 });

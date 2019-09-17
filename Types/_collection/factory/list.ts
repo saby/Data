@@ -9,14 +9,14 @@ import List from '../List';
  * @author Мальцев А.А.
  */
 export default function list<T>(items: IEnumerable<T>): List<T> {
-   if (!items || !(items['[Types/_collection/IEnumerable]'])) {
-      throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
-   }
+    if (!items || !(items['[Types/_collection/IEnumerable]'])) {
+        throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
+    }
 
-   const itemsArray = [];
-   items.each((item) => {
-      itemsArray.push(item);
-   });
+    const itemsArray = [];
+    items.each((item) => {
+        itemsArray.push(item);
+    });
 
-   return new List({items: itemsArray});
+    return new List({items: itemsArray});
 }

@@ -9,39 +9,39 @@ import {IEnumerator} from '../collection';
  * @author Мальцев А.А.
  */
 export default class Enumerable<T> extends Abstract<T> {
-   constructor(source: any) {
-      if (!source || !source['[Types/_collection/IEnumerable]']) {
-         throw new TypeError('Source must implement Types/collection:IEnumerable');
-      }
-      super(source);
-   }
+    constructor(source: any) {
+        if (!source || !source['[Types/_collection/IEnumerable]']) {
+            throw new TypeError('Source must implement Types/collection:IEnumerable');
+        }
+        super(source);
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): IEnumerator<T> {
-      return this._source.getEnumerator();
-   }
+    getEnumerator(): IEnumerator<T> {
+        return this._source.getEnumerator();
+    }
 
-   each(callback: (item: any, index: number) => void, context?: object): void {
-      return this._source.each(callback, context);
-   }
+    each(callback: (item: any, index: number) => void, context?: object): void {
+        return this._source.each(callback, context);
+    }
 
-   // endregion
+    // endregion
 
-   // region IObject
+    // region IObject
 
-   toObject(): object {
-      if (this._source['[Types/_entity/IObject]']) {
-         const result = {};
-         this.each((key, value) => {
-            result[key] = value;
-         });
-         return result;
-      }
-      return super.toObject();
-   }
+    toObject(): object {
+        if (this._source['[Types/_entity/IObject]']) {
+            const result = {};
+            this.each((key, value) => {
+                result[key] = value;
+            });
+            return result;
+        }
+        return super.toObject();
+    }
 
-   // endregion
+    // endregion
 }
 
 Enumerable.prototype['[Types/_chain/Enumerable]'] = true;

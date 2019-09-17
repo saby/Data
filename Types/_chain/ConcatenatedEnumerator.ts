@@ -7,86 +7,86 @@ import Abstract from './Abstract';
  * @author Мальцев А.А.
  */
 export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
-   readonly '[Types/_collection/IEnumerator]': boolean = true;
-   private previous: Abstract<T>;
-   private items: Array<any | IEnumerable<T>>;
-   private enumerator: IEnumerator<T>;
-   private current: any;
-   private index: any;
-   private currentItem: any;
-   private currentItemIndex: number;
+    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    private previous: Abstract<T>;
+    private items: Array<any | IEnumerable<T>>;
+    private enumerator: IEnumerator<T>;
+    private current: any;
+    private index: any;
+    private currentItem: any;
+    private currentItemIndex: number;
 
-   /**
-    * Конструктор объединяющего энумератора.
-    * @param previous Предыдущее звено.
-    * @param items Коллекции для объединения.
-    */
-   constructor(previous: Abstract<T>, items: Array<any | IEnumerable<T>>) {
-      this.previous = previous;
-      this.items = items;
-      this.reset();
-   }
+    /**
+     * Конструктор объединяющего энумератора.
+     * @param previous Предыдущее звено.
+     * @param items Коллекции для объединения.
+     */
+    constructor(previous: Abstract<T>, items: Array<any | IEnumerable<T>>) {
+        this.previous = previous;
+        this.items = items;
+        this.reset();
+    }
 
-   getCurrent(): any {
-      return this.current;
-   }
+    getCurrent(): any {
+        return this.current;
+    }
 
-   getCurrentIndex(): any {
-      return this.index;
-   }
+    getCurrentIndex(): any {
+        return this.index;
+    }
 
-   moveNext(): boolean {
-      this.enumerator = this.enumerator || (this.enumerator = this.previous.getEnumerator());
+    moveNext(): boolean {
+        this.enumerator = this.enumerator || (this.enumerator = this.previous.getEnumerator());
 
-      let hasNext = this.enumerator.moveNext();
-      if (hasNext) {
-         this.current = this.enumerator.getCurrent();
-         this.index++;
-         return hasNext;
-      }
-
-      if (this.currentItem) {
-         hasNext = this.currentItem.moveNext();
-         if (hasNext) {
-            this.current = this.currentItem.getCurrent();
+        let hasNext = this.enumerator.moveNext();
+        if (hasNext) {
+            this.current = this.enumerator.getCurrent();
             this.index++;
             return hasNext;
-         }
-      }
+        }
 
-      if (this.currentItemIndex < this.items.length - 1) {
-         this.currentItemIndex++;
-         this.currentItem = this.items[this.currentItemIndex];
-         if (this.currentItem instanceof Array) {
-            this.currentItem = new enumerator.Arraywise(this.currentItem);
-         } else if (this.currentItem && this.currentItem['[Types/_collection/IEnumerable]']) {
-            this.currentItem = this.currentItem.getEnumerator();
-         } else {
-            throw new TypeError(
-               `Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`
-            );
-         }
-         return this.moveNext();
-      }
+        if (this.currentItem) {
+            hasNext = this.currentItem.moveNext();
+            if (hasNext) {
+                this.current = this.currentItem.getCurrent();
+                this.index++;
+                return hasNext;
+            }
+        }
 
-      return false;
-   }
+        if (this.currentItemIndex < this.items.length - 1) {
+            this.currentItemIndex++;
+            this.currentItem = this.items[this.currentItemIndex];
+            if (this.currentItem instanceof Array) {
+                this.currentItem = new enumerator.Arraywise(this.currentItem);
+            } else if (this.currentItem && this.currentItem['[Types/_collection/IEnumerable]']) {
+                this.currentItem = this.currentItem.getEnumerator();
+            } else {
+                throw new TypeError(
+                    `Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`
+                );
+            }
+            return this.moveNext();
+        }
 
-   reset(): void {
-      this.enumerator = null;
-      this.index = -1;
-      this.current = undefined;
-      this.currentItem = null;
-      this.currentItemIndex = -1;
-   }
+        return false;
+    }
+
+    reset(): void {
+        this.enumerator = null;
+        this.index = -1;
+        this.current = undefined;
+        this.currentItem = null;
+        this.currentItemIndex = -1;
+    }
 }
 
 Object.assign(ConcatenatedEnumerator.prototype, {
-   previous: null,
-   items: null,
-   enumerator: null,
-   index: null,
-   current: undefined,
-   currentItem: null,
-   currentItemIndex: null
+    previous: null,
+    items: null,
+    enumerator: null,
+    index: null,
+    current: undefined,
+    currentItem: null,
+    currentItemIndex: null
 });

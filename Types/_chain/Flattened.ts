@@ -9,15 +9,15 @@ import FlattenedEnumerator from './FlattenedEnumerator';
  * @author Мальцев А.А.
  */
 export default class Flattened<T> extends Abstract<T> {
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): FlattenedEnumerator<T> {
-      return new FlattenedEnumerator(
-         this._previous
-      );
-   }
+    getEnumerator(): FlattenedEnumerator<T> {
+        return new FlattenedEnumerator(
+            this._previous
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Flattened.prototype['[Types/_chain/Flattened]'] = true;
