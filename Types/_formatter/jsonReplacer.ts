@@ -17,5 +17,5 @@ export default function jsonReplacer(name: string | number, value: any): any {
       };
    }
 
-   return value;
+    return value;
 }

@@ -1,17 +1,17 @@
 const boundaries = {
-   M: 1000,
-   CM: 900,
-   D: 500,
-   CD: 400,
-   C: 100,
-   XC: 90,
-   L: 50,
-   XL: 40,
-   X: 10,
-   IX: 9,
-   V: 5,
-   IV: 4,
-   I: 1
+    M: 1000,
+    CM: 900,
+    D: 500,
+    CD: 400,
+    C: 100,
+    XC: 90,
+    L: 50,
+    XL: 40,
+    X: 10,
+    IX: 9,
+    V: 5,
+    IV: 4,
+    I: 1
 };
 
 /**
@@ -19,7 +19,7 @@ const boundaries = {
  * @remark
  * Параметры:
  * <ul>
- *     <li>{Number} num Арабское число.</li>
+ *      <li>{Number} num Арабское число.</li>
  * </ul>
  * <h2>Возвращает</h2>
  * {String} Римское число.
@@ -30,16 +30,16 @@ const boundaries = {
  * @author Мальцев А.А.
  */
 export default function numberRoman(num: number): string {
-   let result = '';
+    let result = '';
 
-   for (const key in boundaries) {
-      if (boundaries.hasOwnProperty(key)) {
-         while (num >= boundaries[key]) {
-            result += key;
-            num -= boundaries[key];
-         }
-      }
-   }
+    for (const key in boundaries) {
+        if (boundaries.hasOwnProperty(key)) {
+            while (num >= boundaries[key]) {
+                result += key;
+                num -= boundaries[key];
+            }
+        }
+    }
 
-   return result;
+    return result;
 }

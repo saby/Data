@@ -7,7 +7,7 @@ import DateTime from './DateTime';
  * @author Мальцев А.А.
  */
 export default class Date extends DateTime {
-    protected get _proto(): object {
-        return Date.prototype;
-    }
+     protected get _proto(): object {
+          return Date.prototype;
+     }
 }

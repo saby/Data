@@ -9,40 +9,40 @@ import {enumerator} from '../collection';
  * @author Мальцев А.А.
  */
 export default class Arraywise<T> extends Abstract<T> {
-   protected _source: any[];
+    protected _source: any[];
 
-   constructor(source: any[]) {
-      if (!(source instanceof Array)) {
-         throw new TypeError('Source should be an instance of Array');
-      }
-      super(source);
-   }
+    constructor(source: any[]) {
+        if (!(source instanceof Array)) {
+            throw new TypeError('Source should be an instance of Array');
+        }
+        super(source);
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): enumerator.Arraywise<T> {
-      return new enumerator.Arraywise(this._source);
-   }
+    getEnumerator(): enumerator.Arraywise<T> {
+        return new enumerator.Arraywise(this._source);
+    }
 
-   each(callback: (item: any, index: number) => void, context?: object): void {
-      for (let i = 0, count = this._source.length; i < count; i++) {
-         callback.call(
-            context || this,
-            this._source[i],
-            i
-         );
-      }
-   }
+    each(callback: (item: any, index: number) => void, context?: object): void {
+        for (let i = 0, count = this._source.length; i < count; i++) {
+            callback.call(
+                context || this,
+                this._source[i],
+                i
+            );
+        }
+    }
 
-   // endregion
+    // endregion
 
-   // region Public
+    // region Public
 
-   toArray(): any[] {
-      return this._source.slice();
-   }
+    toArray(): any[] {
+        return this._source.slice();
+    }
 
-   // endregion
+    // endregion
 }
 
 Arraywise.prototype['[Types/_chain/Arraywise]'] = true;

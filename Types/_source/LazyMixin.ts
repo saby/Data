@@ -11,12 +11,12 @@ const DeferredCanceledError = global.DeferredCanceledError;
  * @author Мальцев А.А.
  */
 export default abstract class LazyMixin {
-   readonly '[Types/_source/LazyMixin]': boolean;
+    readonly '[Types/_source/LazyMixin]': boolean;
 
-   /**
-    * Список зависимостей, которые нужно загружать лениво
-    */
-   protected _additionalDependencies: string[];
+    /**
+     * Список зависимостей, которые нужно загружать лениво
+     */
+    protected _additionalDependencies: string[];
 
    /**
     * Загружает дополнительные зависимости
@@ -29,29 +29,29 @@ export default abstract class LazyMixin {
       const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
       const result = new Deferred();
 
-      if (depsLoaded) {
-         if (callback) {
-            callback.call(this, result);
-         } else {
-            result.callback();
-         }
-      } else {
-         // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
-         require(deps, () => {
-            // Don't call callback() if deferred has been cancelled during require
-            if (
-               callback &&
-               (!result.isReady() || !(result.getResult() instanceof DeferredCanceledError))
-            ) {
-               callback.call(this, result);
+        if (depsLoaded) {
+            if (callback) {
+                callback.call(this, result);
             } else {
-               result.callback();
+                result.callback();
             }
-         }, (error: Error) => result.errback(error));
-      }
+        } else {
+            // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
+            require(deps, () => {
+                // Don't call callback() if deferred has been cancelled during require
+                if (
+                    callback &&
+                    (!result.isReady() || !(result.getResult() instanceof DeferredCanceledError))
+                ) {
+                    callback.call(this, result);
+                } else {
+                    result.callback();
+                }
+            }, (error: Error) => result.errback(error));
+        }
 
-      return result;
-   }
+        return result;
+    }
 
    /**
     * Связывает два деферреда, назначая результат работы ведущего результом ведомого.
@@ -71,22 +71,22 @@ export default abstract class LazyMixin {
          });
       }
 
-      // Connect master's result with slave's result
-      master.addCallbacks((result) => {
-         slave.callback(result);
-         return result;
-      }, (err) => {
-         slave.errback(err);
-         return err;
-      });
-   }
+        // Connect master's result with slave's result
+        master.addCallbacks((result) => {
+            slave.callback(result);
+            return result;
+        }, (err) => {
+            slave.errback(err);
+            return err;
+        });
+    }
 }
 
 Object.assign(LazyMixin.prototype, {
-   '[Types/_source/LazyMixin]': true,
-   _additionalDependencies: [
-      'Types/source',
-      'Types/entity',
-      'Types/collection'
-   ]
+    '[Types/_source/LazyMixin]': true,
+    _additionalDependencies: [
+        'Types/source',
+        'Types/entity',
+        'Types/collection'
+    ]
 });

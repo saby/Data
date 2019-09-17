@@ -6,5 +6,5 @@
  * @author Мальцев А.А.
  */
 
-export {default as list}  from './factory/list';
+export {default as list} from './factory/list';
 export {default as recordSet} from './factory/recordSet';

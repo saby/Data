@@ -6,5 +6,5 @@
  * @author Мальцев А.А.
  */
 
-export {default as factory}  from './format/factory';
+export {default as factory} from './format/factory';
 export {default as Format} from './format/Format';

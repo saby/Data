@@ -7,37 +7,37 @@ import Field from './Field';
  * @author Мальцев А.А.
  */
 export default class HierarchyField extends Field {
-   /**
-    * @cfg {String} Тип элементов
-    * @name Types/_entity/format/HierarchyField#kind
-    * @see getKind
-    */
-   _$kind: string;
+    /**
+     * @cfg {String} Тип элементов
+     * @name Types/_entity/format/HierarchyField#kind
+     * @see getKind
+     */
+    _$kind: string;
 
-   // region Public methods
+    // region Public methods
 
-   /**
-    * Возвращает тип элементов
-    * @return {String}
-    * @see dictionary
-    */
-   getKind(): string {
-      return this._$kind;
-   }
+    /**
+     * Возвращает тип элементов
+     * @return {String}
+     * @see dictionary
+     */
+    getKind(): string {
+        return this._$kind;
+    }
 
-   getDefaultValue(): any {
-      if (this._$kind && this._$kind === 'Identity') {
-         return [null];
-      }
-      return null;
-   }
+    getDefaultValue(): any {
+        if (this._$kind && this._$kind === 'Identity') {
+            return [null];
+        }
+        return null;
+    }
 
-   // endregion Public methods
+    // endregion Public methods
 }
 
 Object.assign(HierarchyField.prototype, {
-   '[Types/_entity/format/HierarchyField]': true,
-   _moduleName: 'Types/entity:format.HierarchyField',
-   _typeName: 'Hierarchy',
-   _$kind: ''
+    '[Types/_entity/format/HierarchyField]': true,
+    _moduleName: 'Types/entity:format.HierarchyField',
+    _typeName: 'Hierarchy',
+    _$kind: ''
 });

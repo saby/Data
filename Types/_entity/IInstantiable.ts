@@ -5,10 +5,10 @@
  * @author Мальцев А.А.
  */
 export default interface IInstantiable {
-   readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly '[Types/_entity/IInstantiable]': boolean;
 
-   /**
-    * Возвращает уникальный идентификатор экземпляра класса.
-    */
-   getInstanceId(): string;
+    /**
+     * Возвращает уникальный идентификатор экземпляра класса.
+     */
+    getInstanceId(): string;
 }

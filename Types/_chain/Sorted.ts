@@ -10,39 +10,39 @@ import SortedEnumerator from './SortedEnumerator';
  * @author Мальцев А.А.
  */
 export default class Sorted<T> extends Abstract<T> {
-   /**
-    * Функция сравнения
-    */
-   protected _compareFunction: CompareFunction;
+    /**
+     * Функция сравнения
+     */
+    protected _compareFunction: CompareFunction;
 
-   /**
-    * Конструктор сортирующего звена цепочки.
-    * @param source Предыдущее звено.
-    * @param [compareFunction] Функция сравнения
-    */
-   constructor(source: Abstract<T>, compareFunction?: CompareFunction) {
-      super(source);
-      this._compareFunction = compareFunction;
-   }
+    /**
+     * Конструктор сортирующего звена цепочки.
+     * @param source Предыдущее звено.
+     * @param [compareFunction] Функция сравнения
+     */
+    constructor(source: Abstract<T>, compareFunction?: CompareFunction) {
+        super(source);
+        this._compareFunction = compareFunction;
+    }
 
-   destroy(): void {
-      this._compareFunction = null;
-      super.destroy();
-   }
+    destroy(): void {
+        this._compareFunction = null;
+        super.destroy();
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): SortedEnumerator<T> {
-      return new SortedEnumerator(
-         this._previous,
-         this._compareFunction
-      );
-   }
+    getEnumerator(): SortedEnumerator<T> {
+        return new SortedEnumerator(
+            this._previous,
+            this._compareFunction
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Sorted.prototype, {
-   '[Types/_chain/Sorted]': true,
-   _compareFunction: null
+    '[Types/_chain/Sorted]': true,
+    _compareFunction: null
 });
