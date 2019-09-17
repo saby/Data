@@ -65,31 +65,31 @@ export default abstract class ReadWriteMixin {
         }
     }
 
-   protected _publish(): void {
-      if (this[$writable]) {
-         return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
-      }
-   }
+    protected _publish(): void {
+        if (this[$writable]) {
+            return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
+        }
+    }
 
-   protected _notify(): void {
-      if (this[$writable]) {
-         return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
-      }
-   }
+    protected _notify(): void {
+        if (this[$writable]) {
+            return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
+        }
+    }
 
     // endregion
 
     // region OptionsToPropertyMixin
 
-   protected _getOptions(): object {
-      const options = (OptionsToPropertyMixin.prototype as any)._getOptions.call(this);
+    protected _getOptions(): object {
+         const options = (OptionsToPropertyMixin.prototype as any)._getOptions.call(this);
 
-        // Delete "writable" property received from _options
-        delete options.writable;
-        return options;
+         // Delete "writable" property received from _options
+         delete options.writable;
+         return options;
     }
 
-    // endregion
+     // endregion
 }
 
 Object.assign(ReadWriteMixin.prototype, {

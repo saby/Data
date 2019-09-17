@@ -713,7 +713,16 @@ export default class Query implements ICloneable {
                 for (let i = 0; i < selector.length; i++) {
                     const selectorItem = selector[i];
                     if (selectorItem instanceof Array) {
-                        const [selectorField, selectorOrder, selectorNullPolicy]: [string, boolean, boolean] = selectorItem;
+                        const [
+                            selectorField,
+                            selectorOrder,
+                            selectorNullPolicy
+                        ]: [
+                            string,
+                            boolean,
+                            boolean
+                        ] = selectorItem;
+
                         this._orderBy.push(new Order({
                             selector: selectorField,
                             order: selectorOrder,

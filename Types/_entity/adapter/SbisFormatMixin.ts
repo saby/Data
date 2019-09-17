@@ -148,34 +148,36 @@ export default abstract class SbisFormatMixin implements IFormatController {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
             }
             if (data._type && data._type !== this.type) {
-                throw new TypeError(`Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`);
+                throw new TypeError(
+                    `Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`
+                );
             }
         }
 
-      this._data = data;
-      this._format = {};
+        this._data = data;
+        this._format = {};
 
-      if (fieldIndicesSymbol && data && data.s) {
-         data.s[fieldIndicesSymbol] = null;
-      }
+        if (fieldIndicesSymbol && data && data.s) {
+            data.s[fieldIndicesSymbol] = null;
+        }
 
-      if (this._data && this._data.s === undefined) {
-         const self = this;
+        if (this._data && this._data.s === undefined) {
+            const self = this;
 
-         Object.defineProperty(this._data, 's', {
-            get() {
-               if (self._cachedFormat) {
-                  return self._cachedFormat;
-               }
+            Object.defineProperty(this._data, 's', {
+                get() {
+                    if (self._cachedFormat) {
+                       return self._cachedFormat;
+                    }
 
-               if (data.f) {
-                  return self._formatController.getFormat(data.f);
-               }
-            },
-            set(value) {
-               self._cachedFormat = value;
-            }
-         });
+                    if (data.f) {
+                       return self._formatController.getFormat(data.f);
+                    }
+                },
+                set(value) {
+                    self._cachedFormat = value;
+                }
+           });
       }
    }
 
@@ -232,13 +234,12 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return format;
     }
 
-
-   addField(format: Field, at: number): void {
-      if (!format || !(format instanceof Field)) {
-         throw new TypeError(
-            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
-         );
-      }
+    addField(format: Field, at: number): void {
+        if (!format || !(format instanceof Field)) {
+            throw new TypeError(
+               `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+            );
+        }
 
         const name = format.getName();
         if (this._has(name)) {
@@ -293,34 +294,34 @@ export default abstract class SbisFormatMixin implements IFormatController {
         this._data = this._normalizeData(this._data, this.type);
     }
 
-   protected _normalizeData(data: any, dataType: string): IRecordFormat | ITableFormat {
-      if (!(data instanceof Object)) {
-         data = {};
-      }
-      if (!(data.d instanceof Array)) {
-         data.d = [];
-      }
-      if (!(data.s instanceof Array) && data.f === undefined) {
-         data.s = [];
-      }
-      data._type = dataType;
+    protected _normalizeData(data: any, dataType: string): IRecordFormat | ITableFormat {
+        if (!(data instanceof Object)) {
+           data = {};
+        }
+        if (!(data.d instanceof Array)) {
+           data.d = [];
+        }
+        if (!(data.s instanceof Array) && data.f === undefined) {
+           data.s = [];
+        }
+        data._type = dataType;
 
         return data;
     }
 
-   protected _cloneData(shareFormat?: boolean): IRecordFormat | ITableFormat {
-      const data = object.clone(this._data);
-      if (shareFormat && data) {
-         if (data.s) {
-            data.s = this._data.s;
-         }
-         if (data.f) {
-            data.f = this._data.f;
-         }
-         // Keep sharing fields format
-      }
-      return data;
-   }
+    protected _cloneData(shareFormat?: boolean): IRecordFormat | ITableFormat {
+        const data = object.clone(this._data);
+        if (shareFormat && data) {
+            if (data.s) {
+                data.s = this._data.s;
+            }
+            if (data.f) {
+                data.f = this._data.f;
+            }
+            // Keep sharing fields format
+        }
+        return data;
+    }
 
     protected _isValidData(): boolean {
         return this._data && (this._data.s instanceof Array);

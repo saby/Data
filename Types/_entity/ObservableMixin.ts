@@ -196,28 +196,28 @@ export default abstract class ObservableMixin {
         this._eventsQueue.push([event, ...args]);
     }
 
-   /**
-    * Инициирует выполнение обработчиков из очереди событий
-    * @param eventsQueue Очередь событий
-    * @return Результаты обработки событиий
-    * @protected
-    */
-   protected _notifyQueue(eventsQueue: IEventsQueue<Function[]>): any[] {
-      const results = [];
+    /**
+     * Инициирует выполнение обработчиков из очереди событий
+     * @param eventsQueue Очередь событий
+     * @return Результаты обработки событиий
+     * @protected
+     */
+    protected _notifyQueue(eventsQueue: IEventsQueue<Function[]>): any[] {
+        const results = [];
 
-      if (!eventsQueue.running) {
-         eventsQueue.running = true;
-         let item;
-         while ((item = eventsQueue[0])) {
-            results.push(this._eventBusChannel._notifyWithTarget(
-               item[0],
-               this,
-               item.slice(1)
-            ));
-            eventsQueue.shift();
-         }
-         eventsQueue.running = false;
-      }
+        if (!eventsQueue.running) {
+            eventsQueue.running = true;
+            let item;
+            while ((item = eventsQueue[0])) {
+                results.push(this._eventBusChannel._notifyWithTarget(
+                    item[0],
+                    this,
+                    item.slice(1)
+                ));
+                eventsQueue.shift();
+            }
+            eventsQueue.running = false;
+        }
 
         return results;
     }

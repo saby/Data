@@ -263,12 +263,12 @@ export default class Record extends mixin<
     FormattableMixin,
     VersionableMixin
 ) implements
-   IObject,
-   IObservableObject,
-   IProducible,
-   IEquatable,
-   IEnumerable<any>,
-   IReceiver {
+    IObject,
+    IObservableObject,
+    IProducible,
+    IEquatable,
+    IEnumerable<any>,
+    IReceiver {
 
     /**
      * Объект содержащий закэшированные значения полей
@@ -1268,16 +1268,16 @@ export default class Record extends mixin<
         const value = adapter.get(name);
         const format = this._getFieldFormat(name, adapter);
 
-      return factory.cast(
-         value,
-         this._getFieldType(format),
-         {
-            format,
-            adapter: this._getAdapter(),
-            formatController: this._$formatController
-         }
-      );
-   }
+        return factory.cast(
+            value,
+            this._getFieldType(format),
+            {
+                format,
+                adapter: this._getAdapter(),
+                formatController: this._$formatController
+            }
+        );
+    }
 
     /**
      * Конвертирует значение поля через фабрику и сохраняет его в "сырых" данных

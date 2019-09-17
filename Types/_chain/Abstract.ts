@@ -508,10 +508,10 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
     * </pre>
     */
-   count(by?: string |((item: any) => string | number | boolean)): Counted<T> | number {
-      if (by === undefined) {
-         return this.reduce((memo) => memo + 1, 0);
-      }
+    count(by?: string |((item: any) => string | number | boolean)): Counted<T> | number {
+        if (by === undefined) {
+            return this.reduce((memo) => memo + 1, 0);
+        }
 
         const Next = resolve<any>('Types/chain:Counted');
         return new Next(this, by);

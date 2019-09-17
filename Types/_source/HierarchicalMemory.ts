@@ -158,24 +158,24 @@ export default class HierarchicalMemory extends mixin<
     query(query: Query): ExtendPromise<DataSet> {
         const result = new Deferred();
 
-      require(['Types/collection'], (collection) => {
-         this._source.query(query).addCallbacks((response) => {
-            if (this._$parentProperty) {
-               const hierarchy = new relation.Hierarchy({
-                  keyProperty: this._keyProperty,
-                  parentProperty: this._$parentProperty
-               });
+        require(['Types/collection'], (collection) => {
+            this._source.query(query).addCallbacks((response) => {
+                if (this._$parentProperty) {
+                    const hierarchy = new relation.Hierarchy({
+                        keyProperty: this._keyProperty,
+                        parentProperty: this._$parentProperty
+                    });
 
-               const sourceRecords = new collection.RecordSet({
-                  rawData: this._source.data,
-                  adapter: this._source.getAdapter(),
-                  keyProperty: this._keyProperty
-               });
+                    const sourceRecords = new collection.RecordSet({
+                        rawData: this._source.data,
+                        adapter: this._source.getAdapter(),
+                        keyProperty: this._keyProperty
+                    });
 
-               const breadcrumbs = new collection.RecordSet({
-                  adapter: this._source.getAdapter(),
-                  keyProperty: this._keyProperty
-               });
+                    const breadcrumbs = new collection.RecordSet({
+                        adapter: this._source.getAdapter(),
+                        keyProperty: this._keyProperty
+                    });
 
                     // Extract breadcrumbs as path from filtered node to the root
                     const startFromId = query.getWhere()[this._$parentProperty];
@@ -207,8 +207,8 @@ export default class HierarchicalMemory extends mixin<
             result.errback(err);
         });
 
-      return result as ExtendPromise<DataSet>;
-   }
+        return result as ExtendPromise<DataSet>;
+    }
 
     // endregion
 

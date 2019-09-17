@@ -465,11 +465,11 @@ class ModelManager {
         const format = rec.getFormat();
         const enumerator = rec.getEnumerator();
 
-      const model = new Model({
-         format,
-         adapter: create(this.adapter),
-          keyProperty: this.keyProperty
-      });
+        const model = new Model({
+            format,
+            adapter: create(this.adapter),
+            keyProperty: this.keyProperty
+        });
 
         while (enumerator.moveNext()) {
             const key = enumerator.getCurrent();
@@ -702,76 +702,76 @@ export default class LocalSession extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-   /**
-    * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
-    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для
-    * создания модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
-    * @see Types/_entity/Model
-    * @example
-    * Создадим новый объект:
-    * <pre>
-    *    solarSystem.create(
-    *       {id: '11', name: 'Moon', 'kind': 'Satellite'}
-    *    ).addCallback(function(satellite) {
-    *       satellite.get('name');//'Moon'
-    *    });
-    * </pre>
-    */
-   create(meta?: object): ExtendPromise<Record> {
-      const item = itemToObject(meta, this._$adapter);
-      if (item[this.getKeyProperty()] === undefined) {
-         this.rawManager.reserveId();
-      }
-      return Deferred.success(this.modelManager.get(item)) as ExtendPromise<any>;
-   }
+    /**
+     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
+     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для
+     * создания модели
+     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_entity/Model}.
+     * @see Types/_entity/Model
+     * @example
+     * Создадим новый объект:
+     * <pre>
+     *    solarSystem.create(
+     *       {id: '11', name: 'Moon', 'kind': 'Satellite'}
+     *    ).addCallback(function(satellite) {
+     *       satellite.get('name');//'Moon'
+     *    });
+     * </pre>
+     */
+    create(meta?: object): ExtendPromise<Record> {
+       const item = itemToObject(meta, this._$adapter);
+       if (item[this.getKeyProperty()] === undefined) {
+           this.rawManager.reserveId();
+       }
+       return Deferred.success(this.modelManager.get(item)) as ExtendPromise<any>;
+    }
 
-   /**
-    * Читает модель из источника данных
-    * @param {String|Number} key Первичный ключ модели
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-    * @see Types/_entity/Model
-    * Прочитаем данные о Солнце:
-    * <pre>
-    *    solarSystem.read(1).addCallback(function(star) {
-    *        star.get('name');//'Sun'
-    *     });
-    * </pre>
-    */
-   read(key: any, meta?: object): ExtendPromise<Record> {
-      const data = this.rawManager.get(key);
-      if (data) {
-         return Deferred.success(this.modelManager.get(data)) as ExtendPromise<any>;
-      }
-      return Deferred.fail('Record with key "' + key + '" does not exist') as ExtendPromise<any>;
-   }
+    /**
+     * Читает модель из источника данных
+     * @param {String|Number} key Первичный ключ модели
+     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
+     * @see Types/_entity/Model
+     * Прочитаем данные о Солнце:
+     * <pre>
+     *    solarSystem.read(1).addCallback(function(star) {
+     *        star.get('name');//'Sun'
+     *     });
+     * </pre>
+     */
+    read(key: any, meta?: object): ExtendPromise<Record> {
+        const data = this.rawManager.get(key);
+        if (data) {
+            return Deferred.success(this.modelManager.get(data)) as ExtendPromise<any>;
+        }
+        return Deferred.fail('Record with key "' + key + '" does not exist') as ExtendPromise<any>;
+    }
 
-   /**
-    *
-    * Обновляет модель в источнике данных
-    * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
-    * @return {Core/Deferred} Асинхронный результат выполнения
-    * @example
-    * Вернем Плутону статус планеты:
-    * <pre>
-    *    var pluto = new Model({
-    *       keyProperty: 'id'
-    *    });
-    *    pluto.set({
-    *       id: '10',
-    *       name: 'Pluto',
-    *       kind: 'Planet'
-    *    });
-    *
-    *    solarSystem.update(pluto).addCallback(function() {
-    *       alert('Pluto is a planet again!');
-    *    });
-    * </pre>
-    */
-   update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
-      const updateRecord = (record) => {
-         let key;
-         const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
+    /**
+     *
+     * Обновляет модель в источнике данных
+     * @param {Types/_entity/Model|Types/_collection/RecordSet} data Обновляемая запись или рекордсет
+     * @return {Core/Deferred} Асинхронный результат выполнения
+     * @example
+     * Вернем Плутону статус планеты:
+     * <pre>
+     *    var pluto = new Model({
+     *       keyProperty: 'id'
+     *    });
+     *    pluto.set({
+     *       id: '10',
+     *       name: 'Pluto',
+     *       kind: 'Planet'
+     *    });
+     *
+     *    solarSystem.update(pluto).addCallback(function() {
+     *       alert('Pluto is a planet again!');
+     *    });
+     * </pre>
+     */
+    update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+        const updateRecord = (record) => {
+            let key;
+            const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
 
             try {
                 key = record.get(keyProperty);
@@ -800,53 +800,53 @@ export default class LocalSession extends mixin<
             keys.push(updateRecord(data));
         }
 
-      return Deferred.success(keys) as ExtendPromise<any>;
-   }
+        return Deferred.success(keys) as ExtendPromise<any>;
+    }
 
-   /**
-    *
-    * Удаляет модель из источника данных
-    * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
-    * @return {Core/Deferred} Асинхронный результат выполнения
-    * @example
-    * Удалим Марс:
-    * <pre>
-    *    solarSystem.destroy('5').addCallback(function() {
-    *       alert('Mars deleted!');
-    *    });
-    * </pre>
-    */
-   destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
-      const isExistKeys = this.rawManager.existKeys(keys);
-      if (!isExistKeys) {
-         return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
-      }
-      this.rawManager.remove(keys);
-      return Deferred.success(true) as ExtendPromise<any>;
-   }
+    /**
+     *
+     * Удаляет модель из источника данных
+     * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
+     * @return {Core/Deferred} Асинхронный результат выполнения
+     * @example
+     * Удалим Марс:
+     * <pre>
+     *    solarSystem.destroy('5').addCallback(function() {
+     *       alert('Mars deleted!');
+     *    });
+     * </pre>
+     */
+    destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+       const isExistKeys = this.rawManager.existKeys(keys);
+       if (!isExistKeys) {
+           return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
+       }
+       this.rawManager.remove(keys);
+       return Deferred.success(true) as ExtendPromise<any>;
+    }
 
-   /**
-    * Выполняет запрос на выборку
-    * @param {Types/_source/Query} [query] Запрос
-    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
-    * @see Types/_source/Query
-    * @see Types/_source/DataSet
-    * @example
-    * <pre>
-    *   solarSystem.query().addCallbacks(function (ds) {
-    *      console.log(ds.getAll().at(0));
-    *   });
-    * </pre>
-    */
-   query(query?: Query): ExtendPromise<DataSet> {
-      if (query === void 0) {
-         query = new Query();
-      }
-      let data = [];
-      const keys = this.rawManager.getKeys();
-      for (let i = 0; i < keys.length; i++) {
-         data.push(this.rawManager.get(keys[i]));
-      }
+    /**
+     * Выполняет запрос на выборку
+     * @param {Types/_source/Query} [query] Запрос
+     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link Types/_source/DataSet}.
+     * @see Types/_source/Query
+     * @see Types/_source/DataSet
+     * @example
+     * <pre>
+     *   solarSystem.query().addCallbacks(function (ds) {
+     *      console.log(ds.getAll().at(0));
+     *   });
+     * </pre>
+     */
+    query(query?: Query): ExtendPromise<DataSet> {
+        if (query === void 0) {
+            query = new Query();
+        }
+        let data = [];
+        const keys = this.rawManager.getKeys();
+        for (let i = 0; i < keys.length; i++) {
+            data.push(this.rawManager.get(keys[i]));
+        }
 
         const lq = new LocalQuery(query);
         data = lq.order(data);
@@ -855,13 +855,13 @@ export default class LocalSession extends mixin<
         data = lq.limit(data);
         data = lq.select(data);
 
-      return Deferred.success(this._getDataSet({
-         items: this.converter.get(data),
-         meta: {
-            total: data.length
-         }
-      })) as ExtendPromise<any>;
-   }
+        return Deferred.success(this._getDataSet({
+            items: this.converter.get(data),
+            meta: {
+                total: data.length
+            }
+        })) as ExtendPromise<any>;
+    }
 
     // endregion
 

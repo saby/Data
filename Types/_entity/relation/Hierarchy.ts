@@ -223,9 +223,9 @@ export default class Hierarchy extends mixin<
             })() : [];
         }
 
-      const parentId = this._asField(parent, this._$keyProperty);
-      let indices = rs.getIndicesByValue(this._$parentProperty, parentId);
-      const children = [];
+        const parentId = this._asField(parent, this._$keyProperty);
+        let indices = rs.getIndicesByValue(this._$parentProperty, parentId);
+        const children = [];
 
         // If nothing found by that property value, return all if null(root) requested
         if (indices.length === 0 && parentId === null) {
@@ -250,18 +250,18 @@ export default class Hierarchy extends mixin<
         return record.get(this._$declaredChildrenProperty);
     }
 
-   /**
-    * Возвращает признак наличия родителя для указанного дочернего узла.
-    * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
-    * @param {Types/_collection/RecordSet} rs Рекордсет
-    * @return {Boolean}
-    * @see nodeProperty
-    */
-   hasParent(child: IObject, rs: RecordSet): boolean {
-      child = this._asRecord(child, rs);
-      const parentId = child.get(this._$parentProperty);
-      const keyProperty = this._$keyProperty || rs.getKeyProperty();
-      const index = rs.getIndexByValue(keyProperty, parentId);
+    /**
+     * Возвращает признак наличия родителя для указанного дочернего узла.
+     * @param {Types/_entity/Record|Sting|Number} child Дочерний узел или его идентификатор
+     * @param {Types/_collection/RecordSet} rs Рекордсет
+     * @return {Boolean}
+     * @see nodeProperty
+     */
+    hasParent(child: IObject, rs: RecordSet): boolean {
+        child = this._asRecord(child, rs);
+        const parentId = child.get(this._$parentProperty);
+        const keyProperty = this._$keyProperty || rs.getKeyProperty();
+        const index = rs.getIndexByValue(keyProperty, parentId);
 
         return index > -1;
     }
@@ -297,8 +297,8 @@ export default class Hierarchy extends mixin<
             return value;
         }
 
-      const keyProperty = this._$keyProperty || rs.getKeyProperty();
-      const index = rs.getIndexByValue(keyProperty, value);
+        const keyProperty = this._$keyProperty || rs.getKeyProperty();
+        const index = rs.getIndexByValue(keyProperty, value);
 
         if (index === -1) {
             throw new ReferenceError(`${this._moduleName}: record with id "${value}" does not found in the recordset`);

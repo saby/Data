@@ -172,12 +172,12 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: strin
         return data;
     }
 
-   const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
-   const records = new RecordSetType({
-      adapter,
-      keyProperty
-   });
-   const count = data.length || 0;
+    const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
+    const records = new RecordSetType({
+        adapter,
+        keyProperty
+    });
+    const count = data.length || 0;
 
     for (let i = 0; i < count; i++) {
         records.add(buildRecord(data[i], adapter));
@@ -414,9 +414,9 @@ function passRead(key: string | number, meta?: object): object {
  * Returns data to send in update()
  */
 function passUpdate(data: Record | RecordSet, meta?: object): object {
-   const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
-   const args: any = {};
-   const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
+    const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
+    const args: any = {};
+    const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
     args[recordArg] = superArgs[0];
 
@@ -815,66 +815,66 @@ export default class SbisService extends Rpc {
 
     // region ICrud
 
-   /**
-    * Создает пустую модель через источник данных
-    * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
-    * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
-    * @see Types/_source/ICrud#create
-    * @example
-    * Создадим нового сотрудника:
-    * <pre>
-    *    import {SbisService} from 'Types/source';
-    *    const dataSource = new SbisService({
-    *       endpoint: 'Employee',
-    *       keyProperty: '@Employee'
-    *    });
-    *    dataSource.create().then((employee) => {
-    *       console.log(employee.get('FirstName'));
-    *    }, (error) => {
-    *       console.error(error);
-    *    });
-    * </pre>
-    * Создадим нового сотрудника по формату:
-    * <pre>
-    *    import {SbisService} from 'Types/source';
-    *    const dataSource = new SbisService({
-    *       endpoint: 'Employee',
-    *       keyProperty: '@Employee',
-    *       binding: {
-    *          format: 'getListFormat'
-    *       }
-    *    });
-    *    dataSource.create().then((employee) => {
-    *       console.log(employee.get('FirstName'));
-    *    }, (error) => {
-    *       console.error(error);
-    *    });
-    * </pre>
-    */
-   create(meta?: object): ExtendPromise<Record> {
-      meta = object.clonePlain(meta, true);
-      return this._loadAdditionalDependencies((ready) => {
-         this._connectAdditionalDependencies(
-            super.create(meta) as any,
-            ready
-         );
-      });
-   }
-
-   update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
-      if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
-         return this._loadAdditionalDependencies((ready) => {
+    /**
+     * Создает пустую модель через источник данных
+     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
+     * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+     * @see Types/_source/ICrud#create
+     * @example
+     * Создадим нового сотрудника:
+     * <pre>
+     *    import {SbisService} from 'Types/source';
+     *    const dataSource = new SbisService({
+     *       endpoint: 'Employee',
+     *       keyProperty: '@Employee'
+     *    });
+     *    dataSource.create().then((employee) => {
+     *       console.log(employee.get('FirstName'));
+     *    }, (error) => {
+     *       console.error(error);
+     *    });
+     * </pre>
+     * Создадим нового сотрудника по формату:
+     * <pre>
+     *    import {SbisService} from 'Types/source';
+     *    const dataSource = new SbisService({
+     *       endpoint: 'Employee',
+     *       keyProperty: '@Employee',
+     *       binding: {
+     *          format: 'getListFormat'
+     *       }
+     *    });
+     *    dataSource.create().then((employee) => {
+     *       console.log(employee.get('FirstName'));
+     *    }, (error) => {
+     *       console.error(error);
+     *    });
+     * </pre>
+     */
+    create(meta?: object): ExtendPromise<Record> {
+        meta = object.clonePlain(meta, true);
+        return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
-               this._callProvider(
-                  this._$binding.updateBatch,
-                  passUpdateBatch(data as RecordSet, meta)
-               ).addCallback(
-                  (key) => this._prepareUpdateResult(data, key)
-               ) as any,
-               ready
+                super.create(meta) as any,
+                ready
             );
-         });
-      }
+        });
+    }
+
+    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+        if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
+            return this._loadAdditionalDependencies((ready) => {
+                this._connectAdditionalDependencies(
+                    this._callProvider(
+                        this._$binding.updateBatch,
+                        passUpdateBatch(data as RecordSet, meta)
+                    ).addCallback(
+                        (key) => this._prepareUpdateResult(data, key)
+                    ) as any,
+                    ready
+                );
+            });
+        }
 
         return super.update(data, meta);
     }

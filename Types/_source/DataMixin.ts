@@ -154,13 +154,13 @@ export default abstract class DataMixin implements IData {
     constructor(options?: IOptions) {
         options = options || {};
 
-      // Support deprecated option 'idProperty'
-      if (!this._$keyProperty && (options as any).idProperty) {
-          this._$keyProperty = (options as any).idProperty;
-      }
-      if (options.dataSetMetaProperty) {
-         this._dataSetMetaProperty = options.dataSetMetaProperty;
-      }
+        // Support deprecated option 'idProperty'
+        if (!this._$keyProperty && (options as any).idProperty) {
+            this._$keyProperty = (options as any).idProperty;
+        }
+        if (options.dataSetMetaProperty) {
+            this._dataSetMetaProperty = options.dataSetMetaProperty;
+        }
    }
 
     // region IData

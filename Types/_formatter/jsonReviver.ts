@@ -40,7 +40,7 @@ function resolveInstances(): void {
 }
 
 export default function jsonReviver(name: string | number, value: any): any {
-   let result = value;
+    let result = value;
 
     if ((value instanceof Object) &&
         value.hasOwnProperty('$serialized$')

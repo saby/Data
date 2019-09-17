@@ -632,17 +632,17 @@ export default abstract class FormattableMixin {
         return defaultAdapter;
     }
 
-   /**
-    * Returns common adapter instance.
-    * @protected
-    */
-   protected _getAdapter(): IAdapter | IDecorator | IFormatController {
-      if (
-         this._$adapter === defaultAdapter &&
-         FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
-      ) {
-         this._$adapter = this._getDefaultAdapter();
-      }
+    /**
+     * Returns common adapter instance.
+     * @protected
+     */
+    protected _getAdapter(): IAdapter | IDecorator | IFormatController {
+        if (
+           this._$adapter === defaultAdapter &&
+           FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
+        ) {
+            this._$adapter = this._getDefaultAdapter();
+        }
 
         if (this._$adapter && !(this._$adapter instanceof Object)) {
             this._$adapter = create<IAdapter>(this._$adapter);
@@ -652,33 +652,33 @@ export default abstract class FormattableMixin {
             this._$adapter = new CowAdapter(this._$adapter as IAdapter);
         }
 
-      if (this._$adapter['[Types/_entity/format/IFormatController]']) {
-         (this._$adapter as IFormatController).setFormatController(this._getFormatController());
-      }
+        if (this._$adapter['[Types/_entity/format/IFormatController]']) {
+            (this._$adapter as IFormatController).setFormatController(this._getFormatController());
+        }
 
-      return this._$adapter as IAdapter;
-   }
+        return this._$adapter as IAdapter;
+    }
 
-   /**
-    *
-    * @private
-    */
-   protected _getFormatController(): FormatController {
-      if (!this._$formatController) {
-         this._$formatController = new FormatController(this._getRawData(true));
-      }
+    /**
+     *
+     * @private
+     */
+    protected _getFormatController(): FormatController {
+        if (!this._$formatController) {
+            this._$formatController = new FormatController(this._getRawData(true));
+        }
 
-      return this._$formatController;
-   }
+        return this._$formatController;
+    }
 
-   /**
-    * Returns adapter instance for certain data kind.
-    * @protected
-    */
-   protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
-      if (!this._rawDataAdapter) {
-         this._rawDataAdapter = this._createRawDataAdapter();
-      }
+    /**
+     * Returns adapter instance for certain data kind.
+     * @protected
+     */
+    protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
+        if (!this._rawDataAdapter) {
+            this._rawDataAdapter = this._createRawDataAdapter();
+        }
 
         return this._rawDataAdapter;
     }

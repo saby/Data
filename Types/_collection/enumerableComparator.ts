@@ -179,22 +179,21 @@ function getGroupChanges(
                 afterIndex = index;
                 beforeIndex = before.indexOf(afterItem);
 
-            // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого
-            // генерим новую обертку, которую добавим в список старых
-            // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
-            if (
-               beforeIndex === afterIndex &&
-               beforeContents[index] !== afterContents[index]
-            ) {
-               // FIXME: convertToItem
-               oldItems.push((collection as any)._getItemsStrategy().convertToItem(beforeContents[index]));
-
-               newItems.push(afterItem);
-               oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
-            } else if (oldItems.length) {
-               exit = true;
-            }
-            break;
+                // если элемент на месте, но изменилось его содержимое - добавим новый в список новых, а для старого
+                // генерим новую обертку, которую добавим в список старых
+                // если остался - отдаем накопленные списки старых и новых, если в них что-то есть
+                if (
+                   beforeIndex === afterIndex &&
+                   beforeContents[index] !== afterContents[index]
+                ) {
+                   // FIXME: convertToItem
+                   oldItems.push((collection as any)._getItemsStrategy().convertToItem(beforeContents[index]));
+                   newItems.push(afterItem);
+                   oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                } else if (oldItems.length) {
+                   exit = true;
+                }
+                break;
 
             case 'moved':
                 // собираем перемещенные элементы
@@ -276,7 +275,10 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
             }
 
             if (beforeContents !== null) {
-                const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+                const added = afterContents.slice(
+                    changes.newItemsIndex,
+                    changes.newItemsIndex + changes.newItems.length
+                );
                 beforeContents.splice(changes.newItemsIndex, 0, ...added);
             }
             break;
@@ -295,7 +297,10 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
         case 'replaced':
             before.splice(changes.oldItemsIndex, changes.oldItems.length, ...changes.newItems);
             if (beforeContents !== null) {
-                const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+                const added = afterContents.slice(
+                    changes.newItemsIndex,
+                    changes.newItemsIndex + changes.newItems.length
+                );
                 beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length, ...added);
             }
             break;
@@ -310,7 +315,10 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
 
             if (beforeContents !== null) {
                 beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
-                const added = afterContents.slice(changes.newItemsIndex, changes.newItemsIndex + changes.newItems.length);
+                const added = afterContents.slice(
+                    changes.newItemsIndex,
+                    changes.newItemsIndex + changes.newItems.length
+                );
                 beforeContents.splice(afterSpliceIndex, 0, ...added);
             }
 

@@ -237,19 +237,19 @@ export default abstract class Local extends mixin<
             keys = [keys];
         }
 
-      for (let i = 0, len = keys.length; i < len; i++) {
-         if (!destroyByKey(keys[i])) {
-            return Deferred.fail(`Record with key "${keys[i]}" does not exist`) as ExtendPromise<any>;
-         }
-      }
+        for (let i = 0, len = keys.length; i < len; i++) {
+            if (!destroyByKey(keys[i])) {
+                return Deferred.fail(`Record with key "${keys[i]}" does not exist`) as ExtendPromise<any>;
+            }
+        }
 
-      return Deferred.success(true) as ExtendPromise<any>;
-   }
+        return Deferred.success(true) as ExtendPromise<any>;
+    }
 
-   query(query?: Query): ExtendPromise<DataSet> {
-      let items = this._applyFrom(query ? query.getFrom() : undefined);
-      const adapter = this.getAdapter();
-      let total;
+    query(query?: Query): ExtendPromise<DataSet> {
+        let items = this._applyFrom(query ? query.getFrom() : undefined);
+        const adapter = this.getAdapter();
+        let total;
 
         if (query) {
             items = this._applyJoin(items, query.getJoin());
@@ -277,43 +277,43 @@ export default abstract class Local extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-   merge(from: string | number, to: string | number): ExtendPromise<any> {
-      const indexOne = this._getIndexByKey(from);
-      const indexTwo = this._getIndexByKey(to);
-      if (indexOne === -1 || indexTwo === -1) {
-         return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`) as ExtendPromise<any>;
-      } else {
-         this._getTableAdapter().merge(
-            indexOne,
-            indexTwo,
-            this.getKeyProperty()
-         );
-         this._reIndex();
-         return Deferred.success(true) as ExtendPromise<any>;
-      }
-   }
+    merge(from: string | number, to: string | number): ExtendPromise<any> {
+       const indexOne = this._getIndexByKey(from);
+       const indexTwo = this._getIndexByKey(to);
+       if (indexOne === -1 || indexTwo === -1) {
+          return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`) as ExtendPromise<any>;
+       } else {
+          this._getTableAdapter().merge(
+             indexOne,
+             indexTwo,
+             this.getKeyProperty()
+          );
+          this._reIndex();
+          return Deferred.success(true) as ExtendPromise<any>;
+       }
+    }
 
-   copy(key: string | number, meta?: object): ExtendPromise<Record> {
-      const index = this._getIndexByKey(key);
-      if (index === -1) {
-         return Deferred.fail(`Record with key "${key}" does not exist`) as ExtendPromise<any>;
-      } else {
-         const copy = this._getTableAdapter().copy(index);
-         this._reIndex();
-         return this._loadAdditionalDependencies().addCallback(
-            () => this._prepareReadResult(copy)
-         );
-      }
-   }
+    copy(key: string | number, meta?: object): ExtendPromise<Record> {
+       const index = this._getIndexByKey(key);
+       if (index === -1) {
+          return Deferred.fail(`Record with key "${key}" does not exist`) as ExtendPromise<any>;
+       } else {
+          const copy = this._getTableAdapter().copy(index);
+          this._reIndex();
+          return this._loadAdditionalDependencies().addCallback(
+             () => this._prepareReadResult(copy)
+          );
+       }
+    }
 
-   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
-      meta = meta || {};
-      const sourceItems = [];
-      if (!(items instanceof Array)) {
-         items = [items];
-      }
-      const tableAdapter = this._getTableAdapter();
-      const adapter = this.getAdapter();
+    move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+        meta = meta || {};
+        const sourceItems = [];
+        if (!(items instanceof Array)) {
+            items = [items];
+        }
+        const tableAdapter = this._getTableAdapter();
+        const adapter = this.getAdapter();
 
         items.sort( (a, b) => {
             const indexa = this._getIndexByKey(a);
@@ -324,15 +324,15 @@ export default abstract class Local extends mixin<
             sourceItems.push(adapter.forRecord(tableAdapter.at(index)));
         });
 
-      let targetPosition = -1;
-      let targetItem = null;
-      if (target !== null) {
-         targetPosition = this._getIndexByKey(target);
-         targetItem = adapter.forRecord(tableAdapter.at(targetPosition));
-         if (targetPosition === -1) {
-            return Deferred.fail('Can\'t find target position') as ExtendPromise<any>;
-         }
-      }
+        let targetPosition = -1;
+        let targetItem = null;
+        if (target !== null) {
+            targetPosition = this._getIndexByKey(target);
+            targetItem = adapter.forRecord(tableAdapter.at(targetPosition));
+            if (targetPosition === -1) {
+                return Deferred.fail('Can\'t find target position') as ExtendPromise<any>;
+            }
+        }
 
         if (meta.position === MOVE_POSITION.on) {
             return this._hierarchyMove(sourceItems, targetItem, meta);
@@ -624,20 +624,20 @@ export default abstract class Local extends mixin<
             this._reIndex();
         });
 
-      return new Deferred().callback() as ExtendPromise<any>;
-   }
+        return new Deferred().callback() as ExtendPromise<any>;
+    }
 
-   protected _hierarchyMove(items: adapter.IRecord[], target: adapter.IRecord, meta: any): ExtendPromise<null> {
-      if (!meta.parentProperty) {
-         return Deferred.fail('Parent property is not defined') as ExtendPromise<any>;
-      }
-      const parentValue = target ? target.get(this._$keyProperty) : null;
-      items.forEach((item) => {
-         item.set(meta.parentProperty, parentValue);
-      });
+    protected _hierarchyMove(items: adapter.IRecord[], target: adapter.IRecord, meta: any): ExtendPromise<null> {
+       if (!meta.parentProperty) {
+           return Deferred.fail('Parent property is not defined') as ExtendPromise<any>;
+       }
+       const parentValue = target ? target.get(this._$keyProperty) : null;
+       items.forEach((item) => {
+           item.set(meta.parentProperty, parentValue);
+       });
 
-      return new Deferred().callback() as ExtendPromise<any>;
-   }
+       return new Deferred().callback() as ExtendPromise<any>;
+    }
 
     // endregion
 }

@@ -54,8 +54,8 @@ class Compute implements IFunctor {
             }
         });
 
-      return fn as any;
-   }
+        return fn as any;
+    }
 
     static isFunctor(fn: any): boolean {
         return fn && fn.functor === Compute;

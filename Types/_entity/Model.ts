@@ -350,30 +350,30 @@ export default class Model extends mixin<
         // TODO: don't allow to inject properties through constructor
         this._propertiesInjected = options && 'properties' in options;
 
-      // Support deprecated  option 'idProperty'
-      if (!this._$keyProperty && options && (options as any).idProperty) {
-         this._$keyProperty = (options as any).idProperty;
-      }
+        // Support deprecated  option 'idProperty'
+        if (!this._$keyProperty && options && (options as any).idProperty) {
+            this._$keyProperty = (options as any).idProperty;
+        }
 
-      // FIXME: backward compatibility for _options
-      if (this._options) {
-         // for _$properties
-         if (this._options.properties) {
-            const properties = {};
-            Object.assign(properties, this._$properties);
-            Object.assign(properties, this._options.properties);
-            this._$properties = properties;
-         }
+        // FIXME: backward compatibility for _options
+        if (this._options) {
+            // for _$properties
+            if (this._options.properties) {
+                const properties = {};
+                Object.assign(properties, this._$properties);
+                Object.assign(properties, this._options.properties);
+                this._$properties = properties;
+            }
 
-         // for _$keyProperty get from deprecated option 'idProperty'
-         if (this._options.idProperty) {
-            this._$keyProperty = this._options.idProperty;
-         }
-      }
+            // for _$keyProperty get from deprecated option 'idProperty'
+            if (this._options.idProperty) {
+                this._$keyProperty = this._options.idProperty;
+            }
+        }
 
-      if (!this._$keyProperty) {
-         this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
-      }
+        if (!this._$keyProperty) {
+            this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
+        }
    }
 
     destroy(): void {
@@ -694,7 +694,9 @@ export default class Model extends mixin<
         if (!defaultPropertiesValues.hasOwnProperty(name)) {
             const property = this._$properties[name];
             if (property && 'def' in property) {
-                defaultPropertiesValues[name] = [property.def instanceof Function ? property.def.call(this) : property.def];
+                defaultPropertiesValues[name] = [
+                    property.def instanceof Function ? property.def.call(this) : property.def
+                ];
             } else {
                 defaultPropertiesValues[name] = [];
             }

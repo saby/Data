@@ -65,9 +65,9 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-   call(name: string, args?: any[] | object): ExtendPromise<any> {
-      name = name + '';
-      args = args || {};
+    call(name: string, args?: any[] | object): ExtendPromise<any> {
+        name = name + '';
+        args = args || {};
 
         const Transport = this._$transport;
         const endpoint = this.getEndpoint();
