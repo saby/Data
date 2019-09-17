@@ -17,75 +17,75 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
  * @author Мальцев А.А.
  */
 export default function fromSQL(dateTime: string, defaultTimeZone?: number): Date {
-   let dateSep = dateTime.indexOf('-');
-   const timeSep = dateTime.indexOf(':');
-   const millisecSep = dateTime.indexOf('.');
-   const tz = dateTime.match(SQL_FORMAT);
-   const tzSep = tz && tz.index + tz[1].length || -1;
-   const retval = new Date();
-   let ms = null;
-   let msStr;
-   let y;
-   let m;
-   let d;
+    let dateSep = dateTime.indexOf('-');
+    const timeSep = dateTime.indexOf(':');
+    const millisecSep = dateTime.indexOf('.');
+    const tz = dateTime.match(SQL_FORMAT);
+    const tzSep = tz && tz.index + tz[1].length || -1;
+    const retval = new Date();
+    let ms = null;
+    let msStr;
+    let y;
+    let m;
+    let d;
 
-   retval.setHours(0, 0, 0, 0);
+    retval.setHours(0, 0, 0, 0);
 
-   if (timeSep === -1 && dateSep === -1) {
-      return retval;
-   }
+    if (timeSep === -1 && dateSep === -1) {
+        return retval;
+    }
 
-   // It's only time with negative time zone
-   if (timeSep > -1 && dateSep > timeSep) {
-      dateSep = -1;
-   }
+    // It's only time with negative time zone
+    if (timeSep > -1 && dateSep > timeSep) {
+        dateSep = -1;
+    }
 
-   // Looking for milliseconds
-   if (millisecSep !== -1) {
-      msStr = dateTime.substr(millisecSep + 1, (tzSep === -1 ? dateTime.length : tzSep) - (millisecSep + 1));
-      if (msStr.length > 3) {
-         msStr = msStr.substr(0, 3);
-      }
-      ms = parseInt(msStr, 10);
-      if (msStr.length < 3) {
-         ms *= (msStr.length === 2 ? 10 : 100);
-      }
-   }
+    // Looking for milliseconds
+    if (millisecSep !== -1) {
+        msStr = dateTime.substr(millisecSep + 1, (tzSep === -1 ? dateTime.length : tzSep) - (millisecSep + 1));
+        if (msStr.length > 3) {
+            msStr = msStr.substr(0, 3);
+        }
+        ms = parseInt(msStr, 10);
+        if (msStr.length < 3) {
+            ms *= (msStr.length === 2 ? 10 : 100);
+        }
+    }
 
-   // Apply date if defined
-   if (dateSep !== -1) {
-      y = parseInt(dateTime.substr(dateSep - 4, 4), 10);
-      m = parseInt(dateTime.substr(dateSep + 1, 2), 10) - 1;
-      d = parseInt(dateTime.substr(dateSep + 4, 2), 10);
+    // Apply date if defined
+    if (dateSep !== -1) {
+        y = parseInt(dateTime.substr(dateSep - 4, 4), 10);
+        m = parseInt(dateTime.substr(dateSep + 1, 2), 10) - 1;
+        d = parseInt(dateTime.substr(dateSep + 4, 2), 10);
 
-      if (constants.compatibility.dateBug && m === 0 && d === 1) {
-         retval.setHours(1);
-      }
+        if (constants.compatibility.dateBug && m === 0 && d === 1) {
+            retval.setHours(1);
+        }
 
-      retval.setFullYear(y, m, d);
-   }
-   const timeZoneOffset = retval.getTimezoneOffset();
-   // Apply time if defined
-   if (timeSep !== -1) {
-      retval.setHours(
-         parseInt(dateTime.substr(timeSep - 2, 2), 10),
-         parseInt(dateTime.substr(timeSep + 1, 2), 10),
-         parseInt(dateTime.substr(timeSep + 4, 2), 10),
-         ms);
+        retval.setFullYear(y, m, d);
+    }
+    const timeZoneOffset = retval.getTimezoneOffset();
+    // Apply time if defined
+    if (timeSep !== -1) {
+        retval.setHours(
+            parseInt(dateTime.substr(timeSep - 2, 2), 10),
+            parseInt(dateTime.substr(timeSep + 1, 2), 10),
+            parseInt(dateTime.substr(timeSep + 4, 2), 10),
+            ms);
 
-      // First use default time zone
-      let timeOffset = defaultTimeZone;
+        // First use default time zone
+        let timeOffset = defaultTimeZone;
 
-      // Use time zone from dateTime if available
-      if (tz) {
-         timeOffset = (Number(tz[2] + '1') * (Number(tz[3]) * 60 + (Number(tz[4]) * 1 || 0)));
-      }
+        // Use time zone from dateTime if available
+        if (tz) {
+            timeOffset = (Number(tz[2] + '1') * (Number(tz[3]) * 60 + (Number(tz[4]) * 1 || 0)));
+        }
 
-      // Apply time zone by shifting minutes
-      if (timeOffset !== undefined) {
-         retval.setMinutes(retval.getMinutes() - timeOffset - timeZoneOffset);
-      }
-   }
+        // Apply time zone by shifting minutes
+        if (timeOffset !== undefined) {
+            retval.setMinutes(retval.getMinutes() - timeOffset - timeZoneOffset);
+        }
+    }
 
-   return retval;
+    return retval;
 }

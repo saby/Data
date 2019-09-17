@@ -5,10 +5,10 @@ import Field from './Field';
  * @remark
  * Создадим поле c типом "Запись":
  * <pre>
- *    var field = {
- *       name: 'foo',
- *       type: 'record'
- *    };
+ *     var field = {
+ *         name: 'foo',
+ *         type: 'record'
+ *     };
  * </pre>
  * @class Types/_entity/format/RecordField
  * @extends Types/_entity/format/Field
@@ -19,7 +19,7 @@ export default class RecordField extends Field {
 }
 
 Object.assign(RecordField.prototype, {
-   '[Types/_entity/format/RecordField]': true,
-   _moduleName: 'Types/entity:format.RecordField',
-   _typeName: 'Record'
+    '[Types/_entity/format/RecordField]': true,
+    _moduleName: 'Types/entity:format.RecordField',
+    _typeName: 'Record'
 });

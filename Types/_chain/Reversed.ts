@@ -9,15 +9,15 @@ import ReversedEnumerator from './ReversedEnumerator';
  * @author Мальцев А.А.
  */
 export default class Reversed<T> extends Abstract<T> {
-   // IEnumerable
+    // IEnumerable
 
-   getEnumerator(): ReversedEnumerator<T> {
-      return new ReversedEnumerator(
-         this._previous
-      );
-   }
+    getEnumerator(): ReversedEnumerator<T> {
+        return new ReversedEnumerator(
+            this._previous
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Reversed.prototype['[Types/_chain/Reversed]'] = true;

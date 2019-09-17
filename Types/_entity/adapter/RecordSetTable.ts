@@ -19,17 +19,17 @@ interface IRecordSetOptions {
  *
  * Создадим адаптер для таблицы:
  * <pre>
- *    requirejs(['Types/collection', 'Types/entity'], function(collection, entity) {
- *       var ibizasClubs = new collection.RecordSet({
- *          rawData: [
- *             {id: 1, title: 'Amnesia Ibiza'},
- *             {id: 2, title: 'DC-10'},
- *             {id: 3, title: 'Pacha Ibiza'}
- *          ]
- *       });
- *       var clubsAdapter = new entity.adapter.RecordSet(ibizasClubs);
- *       console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
- *    });
+ *     requirejs(['Types/collection', 'Types/entity'], function(collection, entity) {
+ *         var ibizasClubs = new collection.RecordSet({
+ *             rawData: [
+ *                 {id: 1, title: 'Amnesia Ibiza'},
+ *                 {id: 2, title: 'DC-10'},
+ *                 {id: 3, title: 'Pacha Ibiza'}
+ *             ]
+ *         });
+ *         var clubsAdapter = new entity.adapter.RecordSet(ibizasClubs);
+ *         console.log(clubsAdapter.at(0).get('title'));//'Amnesia Ibiza'
+ *     });
  * </pre>
  * @class Types/_entity/adapter/RecordSetTable
  * @mixes Types/_entity/DestroyableMixin
@@ -39,81 +39,81 @@ interface IRecordSetOptions {
  * @author Мальцев А.А.
  */
 export default class RecordSetTable extends mixin<
-   DestroyableMixin,
-   GenericFormatMixin
+    DestroyableMixin,
+    GenericFormatMixin
 >(
-   DestroyableMixin,
-   GenericFormatMixin
+    DestroyableMixin,
+    GenericFormatMixin
 ) implements ITable {
-   /**
-    * Список
-    */
-   protected _data: RecordSet;
+    /**
+     * Список
+     */
+    protected _data: RecordSet;
 
-   /**
-    * Конструктор
-    * @param data Таблица
-    */
-   constructor(data: RecordSet) {
-      if (data && !data['[Types/_collection/RecordSet]']) {
-         throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
-      }
-      super(data);
-      GenericFormatMixin.call(this, data);
-   }
+    /**
+     * Конструктор
+     * @param data Таблица
+     */
+    constructor(data: RecordSet) {
+        if (data && !data['[Types/_collection/RecordSet]']) {
+            throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
+        }
+        super(data);
+        GenericFormatMixin.call(this, data);
+    }
 
-   // region ITable
+    // region ITable
 
-   readonly '[Types/_entity/adapter/ITable]': boolean;
+    readonly '[Types/_entity/adapter/ITable]': boolean;
 
-   getFields(): string[] {
-      const fields = [];
-      if (this._isValidData()) {
-         this._data.getFormat().each((field) => {
-            fields.push(field.getName());
-         });
-      }
-      return fields;
-   }
+    getFields(): string[] {
+        const fields = [];
+        if (this._isValidData()) {
+            this._data.getFormat().each((field) => {
+                fields.push(field.getName());
+            });
+        }
+        return fields;
+    }
 
-   getCount(): number {
-      return this._isValidData() ? this._data.getCount() : 0;
-   }
+    getCount(): number {
+        return this._isValidData() ? this._data.getCount() : 0;
+    }
 
-   add(record: Record, at: number): void {
-      this._buildData(record);
-      this._data.add(record, at);
-   }
+    add(record: Record, at: number): void {
+        this._buildData(record);
+        this._data.add(record, at);
+    }
 
-   at(index: number): Record {
-      return this._isValidData() ? this._data.at(index) : undefined;
-   }
+    at(index: number): Record {
+        return this._isValidData() ? this._data.at(index) : undefined;
+    }
 
-   remove(at: number): Record {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    remove(at: number): Record {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      return this._data.removeAt(at);
-   }
+        return this._data.removeAt(at);
+    }
 
-   replace(record: Record, at: number): Record {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    replace(record: Record, at: number): Record {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      return this._data.replace(record, at);
-   }
+        return this._data.replace(record, at);
+    }
 
-   move(source: number, target: number): void {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    move(source: number, target: number): void {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      const rec = this._data.at(source);
-      this._data.removeAt(source);
-      this._data.add(rec, target);
-   }
+        const rec = this._data.at(source);
+        this._data.removeAt(source);
+        this._data.add(rec, target);
+    }
 
    merge(acceptor: number, donor: number, keyProperty: string): any {
       if (!this._isValidData()) {
@@ -129,54 +129,54 @@ export default class RecordSetTable extends mixin<
       this._data.removeAt(donor);
    }
 
-   copy(index: number): Record {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    copy(index: number): Record {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      const clone = this._data.at(index).clone<Record>();
-      this.add(clone, 1 + index);
-      return clone;
-   }
+        const clone = this._data.at(index).clone<Record>();
+        this.add(clone, 1 + index);
+        return clone;
+    }
 
-   clear(): void {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    clear(): void {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      const count = this._data.getCount();
-      for (let i = count - 1; i >= 0; i--) {
-         this._data.removeAt(i);
-      }
-   }
+        const count = this._data.getCount();
+        for (let i = count - 1; i >= 0; i--) {
+            this._data.removeAt(i);
+        }
+    }
 
-   addField(format: Field, at: number): void {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    addField(format: Field, at: number): void {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      this._data.addField(format, at);
-   }
+        this._data.addField(format, at);
+    }
 
-   removeField(name: string): void {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    removeField(name: string): void {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      this._data.removeField(name);
-   }
+        this._data.removeField(name);
+    }
 
-   removeFieldAt(index: number): void {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    removeFieldAt(index: number): void {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      this._data.removeFieldAt(index);
-   }
+        this._data.removeFieldAt(index);
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected methods
+    // region Protected methods
 
    protected _buildData(sample: Record): void {
       if (!this._data) {
@@ -193,19 +193,19 @@ export default class RecordSetTable extends mixin<
       }
    }
 
-   protected _isValidData(): boolean {
-      return this._data && this._data['[Types/_collection/RecordSet]'];
-   }
+    protected _isValidData(): boolean {
+        return this._data && this._data['[Types/_collection/RecordSet]'];
+    }
 
-   protected _getFieldsFormat(): format.Format {
-      return this._data.getFormat();
-   }
+    protected _getFieldsFormat(): format.Format {
+        return this._data.getFormat();
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(RecordSetTable.prototype, {
-   '[Types/_entity/adapter/RecordSetTable]': true,
-   '[Types/_entity/adapter/ITable]': true,
-   _data: null
+    '[Types/_entity/adapter/RecordSetTable]': true,
+    '[Types/_entity/adapter/ITable]': true,
+    _data: null
 });

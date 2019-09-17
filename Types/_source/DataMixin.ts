@@ -4,11 +4,11 @@ import {ReadWriteMixin, adapter, Model} from '../entity';
 import {create} from '../di';
 
 export interface IOptions {
-   adapter?: string | adapter.IAdapter;
-   model?: string | Function;
-   listModule?: string | Function;
-   keyProperty?: string;
-   dataSetMetaProperty?: string;
+    adapter?: string | adapter.IAdapter;
+    model?: string | Function;
+    listModule?: string | Function;
+    keyProperty?: string;
+    dataSetMetaProperty?: string;
 }
 
 /**
@@ -18,106 +18,106 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class DataMixin implements IData {
-   readonly '[Types/_source/DataMixin]': boolean;
+    readonly '[Types/_source/DataMixin]': boolean;
 
-   /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
-    * По умолчанию {@link Types/_entity/adapter/Json}.
-    * @name Types/_source/DataMixin#adapter
-    * @see getAdapter
-    * @see Types/_entity/adapter/IAdapter
-    * @see Types/di
-    * @example
-    * Адаптер для данных в формате БЛ СБИС:
-    * <pre>
-    *    require([
-    *       'Types/source',
-    *       'Types/entity'
-    *    ], function (source, entity) {
-    *       new source.SbisService({
-    *          endpoint: 'Employee'
-    *       })
-    *       .call('getList', {department: 'Management'})
-    *       .addCallbacks(function(data) {
-    *          var dataSource = new source.Memory({
-    *             adapter: new entity.adapter.Sbis(),
-    *             data: data
-    *          });
-    *       }, function(error) {
-    *          console.error('Can\'t call "Employee.getList()"', error);
-    *       });
-    *    });
-    * </pre>
-    */
-   protected _$adapter: adapter.IAdapter | string;
+    /**
+     * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
+     * По умолчанию {@link Types/_entity/adapter/Json}.
+     * @name Types/_source/DataMixin#adapter
+     * @see getAdapter
+     * @see Types/_entity/adapter/IAdapter
+     * @see Types/di
+     * @example
+     * Адаптер для данных в формате БЛ СБИС:
+     * <pre>
+     *     require([
+     *         'Types/source',
+     *         'Types/entity'
+     *     ], function (source, entity) {
+     *         new source.SbisService({
+     *             endpoint: 'Employee'
+     *         })
+     *         .call('getList', {department: 'Management'})
+     *         .addCallbacks(function(data) {
+     *             var dataSource = new source.Memory({
+     *                 adapter: new entity.adapter.Sbis(),
+     *                 data: data
+     *             });
+     *         }, function(error) {
+     *             console.error('Can\'t call "Employee.getList()"', error);
+     *         });
+     *     });
+     * </pre>
+     */
+    protected _$adapter: adapter.IAdapter | string;
 
-   /**
-    * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
-    * По умолчанию {@link Types/_entity/Model}.
-    * @name Types/_source/DataMixin#model
-    * @see getModel
-    * @see Types/_entity/Model
-    * @see Types/di
-    * @example
-    * Конструктор пользовательской модели, внедренный в виде класса:
-    * <pre>
-    *    var User = Model.extend({
-    *       identify: function(login, password) {
-    *       }
-    *    });
-    *    //...
-    *    var dataSource = new MemorySource({
-    *       model: User
-    *    });
-    * </pre>
-    * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
-    * <pre>
-    *    var User = Model.extend({
-    *       identify: function(login, password) {
-    *       }
-    *    });
-    *    Di.register('app.model.user', User);
-    *    //...
-    *    var dataSource = new MemorySource({
-    *       model: 'app.model.user'
-    *    });
-    * </pre>
-    */
-   protected _$model: Function | string;
+    /**
+     * @cfg {String|Function} Конструктор записей, порождаемых источником данных.
+     * По умолчанию {@link Types/_entity/Model}.
+     * @name Types/_source/DataMixin#model
+     * @see getModel
+     * @see Types/_entity/Model
+     * @see Types/di
+     * @example
+     * Конструктор пользовательской модели, внедренный в виде класса:
+     * <pre>
+     *     var User = Model.extend({
+     *         identify: function(login, password) {
+     *         }
+     *     });
+     *     //...
+     *     var dataSource = new MemorySource({
+     *         model: User
+     *     });
+     * </pre>
+     * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
+     * <pre>
+     *     var User = Model.extend({
+     *         identify: function(login, password) {
+     *         }
+     *     });
+     *     Di.register('app.model.user', User);
+     *     //...
+     *     var dataSource = new MemorySource({
+     *         model: 'app.model.user'
+     *     });
+     * </pre>
+     */
+    protected _$model: Function | string;
 
-   /**
-    * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
-    * По умолчанию {@link Types/_collection/RecordSet}.
-    * @name Types/_source/DataMixin#listModule
-    * @see getListModule
-    * @see Types/_collection/RecordSet
-    * @see Types/di
-    * @example
-    * Конструктор рекордсета, внедренный в виде класса:
-    * <pre>
-    *    var Users = RecordSet.extend({
-    *       getAdministrators: function() {
-    *       }
-    *    });
-    *    //...
-    *    var dataSource = new MemorySource({
-    *       listModule: Users
-    *    });
-    * </pre>
-    * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
-    * <pre>
-    *    var Users = RecordSet.extend({
-    *       getAdministrators: function() {
-    *       }
-    *    });
-    *    Di.register('app.collections.users', Users);
-    *    //...
-    *    var dataSource = new MemorySource({
-    *       listModule: 'app.collections.users'
-    *    });
-    * </pre>
-    */
-   protected _$listModule: Function | string;
+    /**
+     * @cfg {String|Function} Конструктор рекордсетов, порождаемых источником данных.
+     * По умолчанию {@link Types/_collection/RecordSet}.
+     * @name Types/_source/DataMixin#listModule
+     * @see getListModule
+     * @see Types/_collection/RecordSet
+     * @see Types/di
+     * @example
+     * Конструктор рекордсета, внедренный в виде класса:
+     * <pre>
+     *     var Users = RecordSet.extend({
+     *         getAdministrators: function() {
+     *         }
+     *     });
+     *     //...
+     *     var dataSource = new MemorySource({
+     *         listModule: Users
+     *     });
+     * </pre>
+     * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
+     * <pre>
+     *     var Users = RecordSet.extend({
+     *         getAdministrators: function() {
+     *         }
+     *     });
+     *     Di.register('app.collections.users', Users);
+     *     //...
+     *     var dataSource = new MemorySource({
+     *         listModule: 'app.collections.users'
+     *     });
+     * </pre>
+     */
+    protected _$listModule: Function | string;
 
    /**
     * @cfg {String} Название свойства записи, содержащего первичный ключ.
@@ -134,82 +134,82 @@ export default abstract class DataMixin implements IData {
     */
    protected _$keyProperty: string;
 
-   /**
-    * Конструктор модуля, реализующего DataSet
-    */
-   protected _dataSetModule: Function | string;
+    /**
+     * Конструктор модуля, реализующего DataSet
+     */
+    protected _dataSetModule: Function | string;
 
-   /**
-    * Свойство данных, в котором лежит основная выборка
-    */
-   protected _dataSetItemsProperty: string;
+    /**
+     * Свойство данных, в котором лежит основная выборка
+     */
+    protected _dataSetItemsProperty: string;
 
-   /**
-    * Свойство данных, в котором лежит общее кол-во строк, выбранных запросом
-    */
-   protected _dataSetMetaProperty: string;
+    /**
+     * Свойство данных, в котором лежит общее кол-во строк, выбранных запросом
+     */
+    protected _dataSetMetaProperty: string;
 
-   protected _writable: boolean;
+    protected _writable: boolean;
 
-   constructor(options?: IOptions) {
-      options = options || {};
+    constructor(options?: IOptions) {
+        options = options || {};
 
-      // Support deprecated option 'idProperty'
-      if (!this._$keyProperty && (options as any).idProperty) {
-          this._$keyProperty = (options as any).idProperty;
-      }
-      if (options.dataSetMetaProperty) {
-         this._dataSetMetaProperty = options.dataSetMetaProperty;
-      }
+        // Support deprecated option 'idProperty'
+        if (!this._$keyProperty && (options as any).idProperty) {
+            this._$keyProperty = (options as any).idProperty;
+        }
+        if (options.dataSetMetaProperty) {
+            this._dataSetMetaProperty = options.dataSetMetaProperty;
+        }
    }
 
-   // region IData
+    // region IData
 
-   readonly '[Types/_source/IData]': boolean;
+    readonly '[Types/_source/IData]': boolean;
 
-   getAdapter(): adapter.IAdapter {
-      if (typeof this._$adapter === 'string') {
-         this._$adapter = create<adapter.IAdapter>(this._$adapter);
-      }
-      return this._$adapter;
-   }
+    getAdapter(): adapter.IAdapter {
+        if (typeof this._$adapter === 'string') {
+            this._$adapter = create<adapter.IAdapter>(this._$adapter);
+        }
+        return this._$adapter;
+    }
 
-   getModel(): Function | string {
-      return this._$model;
-   }
+    getModel(): Function | string {
+        return this._$model;
+    }
 
-   setModel(model: Function | string): void {
-      this._$model = model;
-   }
+    setModel(model: Function | string): void {
+        this._$model = model;
+    }
 
-   getListModule(): Function | string {
-      return this._$listModule;
-   }
+    getListModule(): Function | string {
+        return this._$listModule;
+    }
 
-   setListModule(listModule: Function | string): void {
-      this._$listModule = listModule;
-   }
+    setListModule(listModule: Function | string): void {
+        this._$listModule = listModule;
+    }
 
-   getKeyProperty(): string {
-      return this._$keyProperty;
-   }
+    getKeyProperty(): string {
+        return this._$keyProperty;
+    }
 
-   setKeyProperty(name: string): void {
-      this._$keyProperty = name;
-   }
+    setKeyProperty(name: string): void {
+        this._$keyProperty = name;
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected methods
+    // region Protected methods
 
-   /**
-    * Определяет название свойства с первичным ключом по данным
-    * @param data Сырые данные
-    * @protected
-    */
-   protected _getKeyPropertyByData(data: any): string {
-      return this.getAdapter().getKeyField(data) || '';
-   }
+    /**
+     * Определяет название свойства с первичным ключом по данным
+     * @param data Сырые данные
+     * @protected
+     */
+    protected _getKeyPropertyByData(data: any): string {
+        return this.getAdapter().getKeyField(data) || '';
+    }
 
    /**
     * Создает новый экземпляр модели
@@ -225,103 +225,103 @@ export default abstract class DataMixin implements IData {
       });
    }
 
-   /**
-    * Создает новый экземпляр DataSet
-    * @param cfg Опции конструктора
-    * @protected
-    */
-   protected _getDataSetInstance(cfg: IDataSetOptions): DataSet {
-      return create(// eslint-disable-line new-cap
-         this._dataSetModule,
-         {
-            writable: this._writable,
-            adapter: this.getAdapter(),
-            model: this.getModel(),
-            listModule: this.getListModule(),
-            keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
-            ...cfg
-         }
-      );
-   }
+    /**
+     * Создает новый экземпляр DataSet
+     * @param cfg Опции конструктора
+     * @protected
+     */
+    protected _getDataSetInstance(cfg: IDataSetOptions): DataSet {
+        return create(// eslint-disable-line new-cap
+            this._dataSetModule,
+            {
+                writable: this._writable,
+                adapter: this.getAdapter(),
+                model: this.getModel(),
+                listModule: this.getListModule(),
+                keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
+                ...cfg
+            }
+        );
+    }
 
-   /**
-    * Оборачивает данные в DataSet
-    * @protected
-    */
-   protected _wrapToDataSet(data: any): DataSet {
-      return this._getDataSetInstance({
-         rawData: data,
-         itemsProperty: this._dataSetItemsProperty,
-         metaProperty: this._dataSetMetaProperty
-      });
-   }
+    /**
+     * Оборачивает данные в DataSet
+     * @protected
+     */
+    protected _wrapToDataSet(data: any): DataSet {
+        return this._getDataSetInstance({
+            rawData: data,
+            itemsProperty: this._dataSetItemsProperty,
+            metaProperty: this._dataSetMetaProperty
+        });
+    }
 
-   /**
-    * Перебирает все записи выборки
-    * @param data Выборка
-    * @param callback Ф-я обратного вызова для каждой записи
-    * @param [context] Конекст
-    * @protected
-    */
-   protected _each(data: any, callback: Function, context?: object): void {
-      const tableAdapter = this.getAdapter().forTable(data);
-      for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
-         callback.call(context || this, tableAdapter.at(index), index);
-      }
-   }
+    /**
+     * Перебирает все записи выборки
+     * @param data Выборка
+     * @param callback Ф-я обратного вызова для каждой записи
+     * @param [context] Конекст
+     * @protected
+     */
+    protected _each(data: any, callback: Function, context?: object): void {
+        const tableAdapter = this.getAdapter().forTable(data);
+        for (let index = 0, count = tableAdapter.getCount(); index < count; index++) {
+            callback.call(context || this, tableAdapter.at(index), index);
+        }
+    }
 
-   // endregion Protected methods
+    // endregion Protected methods
 
-   // region Statics
+    // region Statics
 
-   /**
-    * Проверяет, что это экземпляр модели
-    * @param instance Экземпляр модели
-    * @example
-    * <pre>
-    * import {Base} from 'Types/source';
-    * import {Model} from 'Types/entity';
-    * const instance = new Model();
-    * console.log(Base.isModelInstance(instance)); // true
-    * </pre>
-    */
-   static isModelInstance(instance: any): boolean {
-      return instance &&
-         instance['[Types/_entity/IObject]'] &&
-         instance['[Types/_entity/FormattableMixin]'];
-   }
+    /**
+     * Проверяет, что это экземпляр модели
+     * @param instance Экземпляр модели
+     * @example
+     * <pre>
+     * import {Base} from 'Types/source';
+     * import {Model} from 'Types/entity';
+     * const instance = new Model();
+     * console.log(Base.isModelInstance(instance)); // true
+     * </pre>
+     */
+    static isModelInstance(instance: any): boolean {
+        return instance &&
+            instance['[Types/_entity/IObject]'] &&
+            instance['[Types/_entity/FormattableMixin]'];
+    }
 
-   /**
-    * Проверяет, что это экземпляр рекордсета
-    * @param instance Экземпляр рекордсета
-    * @example
-    * <pre>
-    * import {Base} from 'Types/source';
-    * import {RecordSet} from 'Types/collection';
-    * const instance = new RecordSet();
-    * console.log(Base.isRecordSetInstance(instance)); // true
-    * </pre>
-    */
-   static isRecordSetInstance(instance: any): boolean {
-      return instance &&
-         instance['[Types/_collection/IList]'] &&
-         instance['[Types/_entity/FormattableMixin]'];
-   }
+    /**
+     * Проверяет, что это экземпляр рекордсета
+     * @param instance Экземпляр рекордсета
+     * @example
+     * <pre>
+     * import {Base} from 'Types/source';
+     * import {RecordSet} from 'Types/collection';
+     * const instance = new RecordSet();
+     * console.log(Base.isRecordSetInstance(instance)); // true
+     * </pre>
+     */
+    static isRecordSetInstance(instance: any): boolean {
+        return instance &&
+            instance['[Types/_collection/IList]'] &&
+            instance['[Types/_entity/FormattableMixin]'];
+    }
 
-   // endregion Statics
+    // endregion Statics
 }
 
 Object.assign(DataMixin.prototype, {
-   '[Types/_source/DataMixin]': true,
-   '[Types/_source/IData]': true,
-   _$adapter: 'Types/entity:adapter.Json',
-   _$model: 'Types/entity:Model',
-   _$listModule: 'Types/collection:RecordSet',
-   _$keyProperty: '',
-   _dataSetModule: 'Types/source:DataSet',
-   _dataSetItemsProperty: '',
-   _dataSetMetaProperty: '',
-   _writable: ReadWriteMixin.prototype.writable,
-    getIdProperty: DataMixin.prototype.getKeyProperty,
-    setIdProperty: DataMixin.prototype.setKeyProperty
+    '[Types/_source/DataMixin]': true,
+    '[Types/_source/IData]': true,
+    _$adapter: 'Types/entity:adapter.Json',
+    _$model: 'Types/entity:Model',
+    _$listModule: 'Types/collection:RecordSet',
+    _$keyProperty: '',
+    _dataSetModule: 'Types/source:DataSet',
+    _dataSetItemsProperty: '',
+    _dataSetMetaProperty: '',
+    _writable: ReadWriteMixin.prototype.writable,
+     getIdProperty: DataMixin.prototype.getKeyProperty,
+     setIdProperty: DataMixin.prototype.setKeyProperty
  });

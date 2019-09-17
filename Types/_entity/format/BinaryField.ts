@@ -5,10 +5,10 @@ import Field from './Field';
  * @remark
  * Создадим поле двоичного типа:
  * <pre>
- *    var field = {
- *       name: 'foo',
- *       type: 'binary'
- *    };
+ *     var field = {
+ *         name: 'foo',
+ *         type: 'binary'
+ *     };
  * </pre>
  * @class Types/_entity/format/BinaryField
  * @extends Types/_entity/format/Field
@@ -19,7 +19,7 @@ export default class BinaryField extends Field {
 }
 
 Object.assign(BinaryField.prototype, {
-   '[Types/_entity/format/BinaryField]': true,
-   _moduleName: 'Types/entity:format.BinaryField',
-   _typeName: 'Binary'
+    '[Types/_entity/format/BinaryField]': true,
+    _moduleName: 'Types/entity:format.BinaryField',
+    _typeName: 'Binary'
 });

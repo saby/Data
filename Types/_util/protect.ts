@@ -5,5 +5,5 @@
  * @author Мальцев А.А.
  */
 export default function protect(property: string): symbol | string {
-   return typeof Symbol === 'undefined' ? `$${property}` : Symbol(property);
+    return typeof Symbol === 'undefined' ? `$${property}` : Symbol(property);
 }

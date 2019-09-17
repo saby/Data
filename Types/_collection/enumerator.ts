@@ -7,6 +7,6 @@
  * @author Мальцев А.А.
  */
 
-export {default as Arraywise}  from './enumerator/Arraywise';
-export {default as Mapwise}  from './enumerator/Mapwise';
-export {default as Objectwise}  from './enumerator/Objectwise';
+export {default as Arraywise} from './enumerator/Arraywise';
+export {default as Mapwise} from './enumerator/Mapwise';
+export {default as Objectwise} from './enumerator/Objectwise';

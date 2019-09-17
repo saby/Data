@@ -40,16 +40,16 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * <pre>
  * import {factory} from 'Types/chain';
  * factory([
- *    {name: 'Philip J. Fry', gender: 'M'},
- *    {name: 'Turanga Leela', gender: 'F'},
- *    {name: 'Professor Farnsworth', gender: 'M'},
- *    {name: 'Amy Wong', gender: 'F'},
- *    {name: 'Bender Bending Rodriguez', gender: 'R'}
+ *     {name: 'Philip J. Fry', gender: 'M'},
+ *     {name: 'Turanga Leela', gender: 'F'},
+ *     {name: 'Professor Farnsworth', gender: 'M'},
+ *     {name: 'Amy Wong', gender: 'F'},
+ *     {name: 'Bender Bending Rodriguez', gender: 'R'}
  * ])
- *    .filter((item) => item.gender === 'F')
- *    .map((item) => item.name)
- *    .sort((a, b) => a - b)
- *    .value();
+ *     .filter((item) => item.gender === 'F')
+ *     .map((item) => item.name)
+ *     .sort((a, b) => a - b)
+ *     .value();
  * //['Amy Wong', 'Turanga Leela']
  * </pre>
  * Выберем из рекордсета персонажей женского пола, отсортированных по имени:
@@ -57,15 +57,15 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * import {factory} from 'Types/chain';
  * import {RecordSet} from 'Types/collection';
  * factory(new RecordSet({rawData: [
- *    {name: 'Philip J. Fry', gender: 'M'},
- *    {name: 'Turanga Leela', gender: 'F'},
- *    {name: 'Professor Farnsworth', gender: 'M'},
- *    {name: 'Amy Wong', gender: 'F'},
- *    {name: 'Bender Bending Rodriguez', gender: 'R'}
+ *     {name: 'Philip J. Fry', gender: 'M'},
+ *     {name: 'Turanga Leela', gender: 'F'},
+ *     {name: 'Professor Farnsworth', gender: 'M'},
+ *     {name: 'Amy Wong', gender: 'F'},
+ *     {name: 'Bender Bending Rodriguez', gender: 'R'}
  * ]}))
- *    .filter((item) => item.get('gender') === 'F')
- *    .sort((a, b) => a.get('name') - b.get('name'))
- *    .value();
+ *     .filter((item) => item.get('gender') === 'F')
+ *     .sort((a, b) => a.get('name') - b.get('name'))
+ *     .value();
  * //[Model(Amy Wong), Model(Turanga Leela)]
  * </pre>
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
@@ -76,14 +76,14 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * @author Мальцев А.А.
  */
 export default function factory<T>(source: Abstract<T> | IEnumerable<T> | T[] | IHashMap<T>): Abstract<T> {
-   if (source instanceof Abstract) {
-      return source;
-   } else if (source && source['[Types/_collection/IEnumerable]']) {
-      return new Enumerable(source);
-   } else if (source instanceof Array) {
-      return new Arraywise(source);
-   } else if (source instanceof Object) {
-      return new Objectwise(source);
-   }
-   throw new TypeError(`Unsupported source type "${source}": only Array or Object are supported.`);
+    if (source instanceof Abstract) {
+        return source;
+    } else if (source && source['[Types/_collection/IEnumerable]']) {
+        return new Enumerable(source);
+    } else if (source instanceof Array) {
+        return new Arraywise(source);
+    } else if (source instanceof Object) {
+        return new Objectwise(source);
+    }
+    throw new TypeError(`Unsupported source type "${source}": only Array or Object are supported.`);
 }
