@@ -10,39 +10,39 @@ import {IEnumerable} from '../collection';
  * @author Мальцев А.А.
  */
 export default class Zipped<T> extends Abstract<T> {
-   /**
-    * Коллекции для объединения
-    */
-   protected _items: Array<T[] | IEnumerable<T>>;
+    /**
+     * Коллекции для объединения
+     */
+    protected _items: Array<T[] | IEnumerable<T>>;
 
-   /**
-    * Конструктор объединяющего звена цепочки.
-    * @param source Предыдущее звено.
-    * @param items Коллекции для объединения.
-    */
-   constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
-      super(source);
-      this._items = items;
-   }
+    /**
+     * Конструктор объединяющего звена цепочки.
+     * @param source Предыдущее звено.
+     * @param items Коллекции для объединения.
+     */
+    constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
+        super(source);
+        this._items = items;
+    }
 
-   destroy(): void {
-      this._items = null;
-      super.destroy();
-   }
+    destroy(): void {
+        this._items = null;
+        super.destroy();
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): ZippedEnumerator<T> {
-      return new ZippedEnumerator(
-         this._previous,
-         this._items
-      );
-   }
+    getEnumerator(): ZippedEnumerator<T> {
+        return new ZippedEnumerator(
+            this._previous,
+            this._items
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Zipped.prototype, {
-   '[Types/_chain/Zipped]': true,
-   _items: null
+    '[Types/_chain/Zipped]': true,
+    _items: null
 });

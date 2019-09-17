@@ -11,7 +11,7 @@ import {register} from '../di';
 import {mixin} from '../util';
 
 interface IProduceOptions {
-   format?: format.Field | format.UniversalField;
+    format?: format.Field | format.UniversalField;
 }
 
 /**
@@ -27,10 +27,10 @@ interface IProduceOptions {
  * @author Мальцев А.А.
  */
 export default class Enum<T> extends mixin<
-   Dictionary<any>,
-   ManyToManyMixin,
-   SerializableMixin,
-   CloneableMixin
+    Dictionary<any>,
+    ManyToManyMixin,
+    SerializableMixin,
+    CloneableMixin
 >(
    Dictionary,
    ManyToManyMixin,
@@ -43,147 +43,147 @@ export default class Enum<T> extends mixin<
     */
    protected _$index: IIndex;
 
-   protected _childChanged: (data: any) => void;
+    protected _childChanged: (data: any) => void;
 
-   constructor(options?: Object) {
-      super(options);
-      SerializableMixin.call(this);
-      this._publish('onChange');
-      this._checkIndex();
-   }
+    constructor(options?: Object) {
+        super(options);
+        SerializableMixin.call(this);
+        this._publish('onChange');
+        this._checkIndex();
+    }
 
-   destroy(): void {
-      ManyToManyMixin.prototype.destroy.call(this);
-      super.destroy();
-   }
+    destroy(): void {
+        ManyToManyMixin.prototype.destroy.call(this);
+        super.destroy();
+    }
 
-   // region IEnum
+    // region IEnum
 
-   readonly '[Types/_collection/IEnum]': boolean;
+    readonly '[Types/_collection/IEnum]': boolean;
 
-   get(): IIndex {
-      return this._$index;
-   }
+    get(): IIndex {
+        return this._$index;
+    }
 
-   set(index: IIndex): void {
-      const value = this._$dictionary[index];
-      const defined = value !== undefined;
-      const changed = this._$index !== index;
+    set(index: IIndex): void {
+        const value = this._$dictionary[index];
+        const defined = value !== undefined;
+        const changed = this._$index !== index;
 
-      if (index === null || defined) {
-         this._$index = index;
-         this._checkIndex();
-      } else {
-         throw new ReferenceError(`${this._moduleName}::set(): the index "${index}" is out of range`);
-      }
+        if (index === null || defined) {
+            this._$index = index;
+            this._checkIndex();
+        } else {
+            throw new ReferenceError(`${this._moduleName}::set(): the index "${index}" is out of range`);
+        }
 
-      if (changed) {
-         this._notifyChange(this._$index, this.getAsValue());
-      }
-   }
+        if (changed) {
+            this._notifyChange(this._$index, this.getAsValue());
+        }
+    }
 
-   getAsValue(localize?: boolean): T {
-      return this._getValue(this._$index, localize);
-   }
+    getAsValue(localize?: boolean): T {
+        return this._getValue(this._$index, localize);
+    }
 
-   setByValue(value: T, localize?: boolean): void {
-      const index = this._getIndex(value, localize);
-      const changed = index !== this._$index;
+    setByValue(value: T, localize?: boolean): void {
+        const index = this._getIndex(value, localize);
+        const changed = index !== this._$index;
 
-      if (value === null) {
-         this._$index = value as null;
-      } else if (index === undefined) {
-         throw new ReferenceError(
-            `${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`
-         );
-      } else {
-         this._$index = index;
-      }
+        if (value === null) {
+            this._$index = value as null;
+        } else if (index === undefined) {
+            throw new ReferenceError(
+                `${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`
+            );
+        } else {
+            this._$index = index;
+        }
 
-      if (changed) {
-         this._notifyChange(index, value);
-      }
-   }
+        if (changed) {
+            this._notifyChange(index, value);
+        }
+    }
 
-   // endregion
+    // endregion
 
-   // region IProducible
+    // region IProducible
 
-   readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': boolean;
 
-   static produceInstance<T>(data?: any, options?: IProduceOptions): Enum<T> {
-      return new this({
-         dictionary: this.prototype._getDictionaryByFormat(options && options.format),
-         localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-         index: data
-      });
-   }
+    static produceInstance<T>(data?: any, options?: IProduceOptions): Enum<T> {
+        return new this({
+            dictionary: this.prototype._getDictionaryByFormat(options && options.format),
+            localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
+            index: data
+        });
+    }
 
-   // endregion
+    // endregion
 
-   // region IEquatable
+    // region IEquatable
 
-   isEqual(to: Object): boolean {
-      if (!(to instanceof Enum)) {
-         return false;
-      }
+    isEqual(to: Object): boolean {
+        if (!(to instanceof Enum)) {
+            return false;
+        }
 
-      if (!Dictionary.prototype.isEqual.call(this, to)) {
-         return false;
-      }
+        if (!Dictionary.prototype.isEqual.call(this, to)) {
+            return false;
+        }
 
-      return this.get() === to.get();
-   }
+        return this.get() === to.get();
+    }
 
-   // endregion
+    // endregion
 
-   // region ObservableMixin
+    // region ObservableMixin
 
-   protected _publish: (...events: string[]) => void;
-   protected _notify: (event: string, ...args: any[]) => void;
+    protected _publish: (...events: string[]) => void;
+    protected _notify: (event: string, ...args: any[]) => void;
 
-   // endregion
+    // endregion
 
-   // region Public methods
+    // region Public methods
 
-   valueOf(): IIndex {
-      return this.get();
-   }
+    valueOf(): IIndex {
+        return this.get();
+    }
 
-   toString(): string {
-      const value = this.getAsValue();
-      return value === undefined || value === null ? '' : String(value);
-   }
+    toString(): string {
+        const value = this.getAsValue();
+        return value === undefined || value === null ? '' : String(value);
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected methods
+    // region Protected methods
 
-   /**
-    * Converts key to the Number type
-    * @protected
-    */
-   protected _checkIndex(): void {
-      if (this._$index === null) {
-         return;
-      }
-      this._$index = parseInt(String(this._$index), 10);
-   }
+    /**
+     * Converts key to the Number type
+     * @protected
+     */
+    protected _checkIndex(): void {
+        if (this._$index === null) {
+            return;
+        }
+        this._$index = parseInt(String(this._$index), 10);
+    }
 
-   /**
-    * Triggers a change event
-    * @param {Number} index Key of selected item
-    * @param {String} value Value of selected item
-    * @protected
-    */
-   protected _notifyChange(index: IIndex, value: T): void {
-      const data = {};
-      data[index] = value;
-      this._childChanged(data);
-      this._notify('onChange', index, value);
-   }
+    /**
+     * Triggers a change event
+     * @param {Number} index Key of selected item
+     * @param {String} value Value of selected item
+     * @protected
+     */
+    protected _notifyChange(index: IIndex, value: T): void {
+        const data = {};
+        data[index] = value;
+        this._childChanged(data);
+        this._notify('onChange', index, value);
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Enum.prototype, {

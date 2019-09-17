@@ -165,7 +165,9 @@ export default class CollectionItem<T> extends mixin<
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
-        const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
+        const resultState = SerializableMixin.prototype._getSerializableState.call(
+            this, state
+        ) as ISerializableState<T>;
 
         if (resultState.$options.owner) {
             // save element index if collections implements Types/_collection/IList

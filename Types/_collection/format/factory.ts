@@ -8,14 +8,14 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default function factory(declaration: format.IFieldDeclaration[]): Format<format.Field> {
-   if (!declaration || !(declaration instanceof Array)) {
-      throw new TypeError('Types/_collection/format/factory: declaration should be an instance of Array');
-   }
-   const instance = new Format<format.Field>();
-   for (let i = 0; i < declaration.length; i++) {
-      instance.add(format.fieldsFactory(declaration[i]));
-   }
-   return instance;
+    if (!declaration || !(declaration instanceof Array)) {
+        throw new TypeError('Types/_collection/format/factory: declaration should be an instance of Array');
+    }
+    const instance = new Format<format.Field>();
+    for (let i = 0; i < declaration.length; i++) {
+        instance.add(format.fieldsFactory(declaration[i]));
+    }
+    return instance;
 }
 
 register('Types/collection:format.factory', factory, {instantiate: false});

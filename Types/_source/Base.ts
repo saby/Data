@@ -25,41 +25,41 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
  * @author Мальцев А.А.
  */
 export default abstract class Base extends mixin<
-   OptionsToPropertyMixin,
-   SerializableMixin,
-   OptionsMixin,
-   LazyMixin,
-   DataMixin
+    OptionsToPropertyMixin,
+    SerializableMixin,
+    OptionsMixin,
+    LazyMixin,
+    DataMixin
 >(
-   OptionsToPropertyMixin,
-   SerializableMixin,
-   OptionsMixin,
-   LazyMixin,
-   DataMixin
+    OptionsToPropertyMixin,
+    SerializableMixin,
+    OptionsMixin,
+    LazyMixin,
+    DataMixin
 ) implements IData {
-   protected constructor(options?: IOptions) {
-      options = {...(options || {})};
+    protected constructor(options?: IOptions) {
+        options = {...(options || {})};
 
-      super(options);
-      OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.call(this);
-      DataMixin.call(this, options);
-   }
+        super(options);
+        OptionsToPropertyMixin.call(this, options);
+        SerializableMixin.call(this);
+        DataMixin.call(this, options);
+    }
 
-   /**
-    * @deprecated
-    */
-   static extend(mixinsList: any, classExtender: any): Function {
-       return deprecateExtend(
-           this,
-           classExtender,
-           mixinsList,
-           'Types/_source/Base'
-       );
-   }
+    /**
+     * @deprecated
+     */
+    static extend(mixinsList: any, classExtender: any): Function {
+         return deprecateExtend(
+              this,
+              classExtender,
+              mixinsList,
+              'Types/_source/Base'
+         );
+    }
 }
 
 Object.assign(Base.prototype, {
-   '[Types/_source/Base]': true,
-   _moduleName: 'Types/source:Base'
+    '[Types/_source/Base]': true,
+    _moduleName: 'Types/source:Base'
 });

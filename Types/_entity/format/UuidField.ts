@@ -5,10 +5,10 @@ import Field from './Field';
  * @remark
  * Создадим поле c типом "UUID":
  * <pre>
- *    var field = {
- *       name: 'foo',
- *       type: 'uuid'
- *    };
+ *     var field = {
+ *         name: 'foo',
+ *         type: 'uuid'
+ *     };
  * </pre>
  * @class Types/_entity/format/UuidField
  * @extends Types/_entity/format/Field
@@ -19,7 +19,7 @@ export default class UuidField extends Field {
 }
 
 Object.assign(UuidField.prototype, {
-   '[Types/_entity/format/UuidField]': true,
-   _moduleName: 'Types/entity:format.UuidField',
-   _typeName: 'Uuid'
+    '[Types/_entity/format/UuidField]': true,
+    _moduleName: 'Types/entity:format.UuidField',
+    _typeName: 'Uuid'
 });

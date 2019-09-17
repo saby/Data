@@ -5,10 +5,10 @@ import Field from './Field';
  * @remark
  * Создадим поле c типом "Связь":
  * <pre>
- *    var field = {
- *       name: 'foo',
- *       type: 'link'
- *    };
+ *     var field = {
+ *         name: 'foo',
+ *         type: 'link'
+ *     };
  * </pre>
  * @class Types/_entity/format/LinkField
  * @extends Types/_entity/format/Field
@@ -16,12 +16,12 @@ import Field from './Field';
  * @author Мальцев А.А.
  */
 export default class LinkField extends Field {
-   _$defaultValue: number;
+    _$defaultValue: number;
 }
 
 Object.assign(LinkField.prototype, {
-   '[Types/_entity/format/LinkField]': true,
-   _moduleName: 'Types/entity:format.LinkField',
-   _typeName: 'Link',
-   _$defaultValue: 0
+    '[Types/_entity/format/LinkField]': true,
+    _moduleName: 'Types/entity:format.LinkField',
+    _typeName: 'Link',
+    _$defaultValue: 0
 });

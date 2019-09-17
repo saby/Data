@@ -11,11 +11,11 @@ import {mixin} from '../../util';
  *
  * Создадим адаптер для записи:
  * <pre>
- *    var adapter = new JsonRecord({
- *       id: 1,
- *       title: 'Test'
- *    });
- *    adapter.get('title');//'Test'
+ *     var adapter = new JsonRecord({
+ *         id: 1,
+ *         title: 'Test'
+ *     });
+ *     adapter.get('title');//'Test'
  * </pre>
  * @class Types/_entity/adapter/JsonRecord
  * @mixes Types/_entity/DestroyableMixin
@@ -26,103 +26,103 @@ import {mixin} from '../../util';
  * @author Мальцев А.А.
  */
 export default class JsonRecord extends mixin<
-   DestroyableMixin,
-   GenericFormatMixin,
-   JsonFormatMixin
+    DestroyableMixin,
+    GenericFormatMixin,
+    JsonFormatMixin
 >(
-   DestroyableMixin,
-   GenericFormatMixin,
-   JsonFormatMixin
+    DestroyableMixin,
+    GenericFormatMixin,
+    JsonFormatMixin
 ) implements IRecord {
-   /**
-    * Сырые данные
-    */
-   protected _data: object;
+    /**
+     * Сырые данные
+     */
+    protected _data: object;
 
-   /**
-    * Конструктор
-    * @param data Сырые данные
-    */
-   constructor(data: object) {
-      super(data);
-      GenericFormatMixin.call(this, data);
-      JsonFormatMixin.call(this, data);
-   }
+    /**
+     * Конструктор
+     * @param data Сырые данные
+     */
+    constructor(data: object) {
+        super(data);
+        GenericFormatMixin.call(this, data);
+        JsonFormatMixin.call(this, data);
+    }
 
-   // region JsonFormatMixin
+    // region JsonFormatMixin
 
-   addField(format: Field, at: number): void {
-      if (!format || !(format instanceof Field)) {
-         throw new TypeError(
-            `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`
-         );
-      }
-      const name = format.getName();
-      if (this.has(name)) {
-         throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
-      }
+    addField(format: Field, at: number): void {
+        if (!format || !(format instanceof Field)) {
+            throw new TypeError(
+                `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`
+            );
+        }
+        const name = format.getName();
+        if (this.has(name)) {
+            throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
+        }
 
-      super.addField(format, at);
-      this.set(name, format.getDefaultValue());
-   }
+        super.addField(format, at);
+        this.set(name, format.getDefaultValue());
+    }
 
-   removeField(name: string): void {
-      super.removeField(name);
-      delete this._data[name];
-   }
+    removeField(name: string): void {
+        super.removeField(name);
+        delete this._data[name];
+    }
 
-   // endregion
+    // endregion
 
-   // region IRecord
+    // region IRecord
 
-   readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': boolean;
 
-   has(name: string): boolean {
-      return this._isValidData() ? this._data.hasOwnProperty(name) : false;
-   }
+    has(name: string): boolean {
+        return this._isValidData() ? this._data.hasOwnProperty(name) : false;
+    }
 
-   get(name: string): any {
-      return this._isValidData() ? this._data[name] : undefined;
-   }
+    get(name: string): any {
+        return this._isValidData() ? this._data[name] : undefined;
+    }
 
-   set(name: string, value: any): void {
-      if (!name) {
-         throw new ReferenceError(`${this._moduleName}::set(): field name is not defined`);
-      }
-      this._touchData();
-      this._data[name] = value;
-   }
+    set(name: string, value: any): void {
+        if (!name) {
+            throw new ReferenceError(`${this._moduleName}::set(): field name is not defined`);
+        }
+        this._touchData();
+        this._data[name] = value;
+    }
 
-   clear(): void {
-      this._touchData();
-      const keys = Object.keys(this._data);
-      const count = keys.length;
-      for (let i = 0; i < count; i++) {
-         delete this._data[keys[i]];
-      }
-   }
+    clear(): void {
+        this._touchData();
+        const keys = Object.keys(this._data);
+        const count = keys.length;
+        for (let i = 0; i < count; i++) {
+            delete this._data[keys[i]];
+        }
+    }
 
-   getFields(): string[] {
-      return this._isValidData() ? Object.keys(this._data) : [];
-   }
+    getFields(): string[] {
+        return this._isValidData() ? Object.keys(this._data) : [];
+    }
 
-   getKeyField(): string {
-      return undefined;
-   }
+    getKeyField(): string {
+        return undefined;
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected methods
+    // region Protected methods
 
-   protected _has(name: string): boolean {
-      return this.has(name);
-   }
+    protected _has(name: string): boolean {
+        return this.has(name);
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(JsonRecord.prototype, {
-   '[Types/_entity/adapter/JsonRecord]': true,
-   '[Types/_entity/adapter/IRecord]': true,
-   _data: null
+    '[Types/_entity/adapter/JsonRecord]': true,
+    '[Types/_entity/adapter/IRecord]': true,
+    _data: null
 });

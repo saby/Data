@@ -19,7 +19,7 @@ import {isEqual} from '../../object';
  * @author Мальцев А.А.
  */
 export default abstract class Field extends mixin<
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
+    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 >(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements IEquatable {
@@ -31,160 +31,160 @@ export default abstract class Field extends mixin<
     */
    _$name: string;
 
-   /**
-    * @cfg {String|Function} Модуль, который является конструктором значения поля
-    * @name Types/_entity/format/Field#type
-    * @see getType
-    */
-   _$type: any;
+    /**
+     * @cfg {String|Function} Модуль, который является конструктором значения поля
+     * @name Types/_entity/format/Field#type
+     * @see getType
+     */
+    _$type: any;
 
-   /**
-    * @cfg {*} Значение поля по умолчанию
-    * @name Types/_entity/format/Field#defaultValue
-    * @see getDefaultValue
-    * @see setDefaultValue
-    */
-   _$defaultValue: any;
+    /**
+     * @cfg {*} Значение поля по умолчанию
+     * @name Types/_entity/format/Field#defaultValue
+     * @see getDefaultValue
+     * @see setDefaultValue
+     */
+    _$defaultValue: any;
 
-   /**
-    * @cfg {Boolean} Значение может быть null
-    * @name Types/_entity/format/Field#nullable
-    * @see isNullable
-    * @see setNullable
-    */
-   _$nullable: boolean;
+    /**
+     * @cfg {Boolean} Значение может быть null
+     * @name Types/_entity/format/Field#nullable
+     * @see isNullable
+     * @see setNullable
+     */
+    _$nullable: boolean;
 
-   /**
-    * Название типа поля
-    */
-   _typeName: string;
+    /**
+     * Название типа поля
+     */
+    _typeName: string;
 
-   constructor(options?: Object) {
-      super(options);
-      OptionsToPropertyMixin.call(this, options);
-   }
+    constructor(options?: Object) {
+        super(options);
+        OptionsToPropertyMixin.call(this, options);
+    }
 
-   // region Types/_entity/IEquatable
+    // region Types/_entity/IEquatable
 
-   readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': boolean;
 
-   /**
-    * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.
-    * Для полей со словарем - словарь.
-    * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
-    * @return {Boolean}
-    */
-   isEqual(to: Field): boolean {
-      if (to === this) {
-         return true;
-      }
-      const selfProto = Object.getPrototypeOf(this);
-      const toProto = Object.getPrototypeOf(to);
+    /**
+     * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.
+     * Для полей со словарем - словарь.
+     * @param {Types/_entity/format/Field} to Формат поля, с которым сравнить
+     * @return {Boolean}
+     */
+    isEqual(to: Field): boolean {
+        if (to === this) {
+            return true;
+        }
+        const selfProto = Object.getPrototypeOf(this);
+        const toProto = Object.getPrototypeOf(to);
 
-      return selfProto === toProto &&
-         this.getName() === to.getName() &&
-         isEqual(this.getDefaultValue(), to.getDefaultValue()) &&
-         this.isNullable() === to.isNullable();
-   }
+        return selfProto === toProto &&
+            this.getName() === to.getName() &&
+            isEqual(this.getDefaultValue(), to.getDefaultValue()) &&
+            this.isNullable() === to.isNullable();
+    }
 
-   // endregion
+    // endregion
 
-   // region Public methods
+    // region Public methods
 
-   /**
-    * Возвращает модуль, который является конструктором значения поля
-    * @return {String|Function}
-    */
-   getType(): string | Function {
-      return this._$type || this.getTypeName();
-   }
+    /**
+     * Возвращает модуль, который является конструктором значения поля
+     * @return {String|Function}
+     */
+    getType(): string | Function {
+        return this._$type || this.getTypeName();
+    }
 
-   /**
-    * Возвращает название типа поля
-    * @return {String}
-    */
-   getTypeName(): string {
-      return this._typeName;
-   }
+    /**
+     * Возвращает название типа поля
+     * @return {String}
+     */
+    getTypeName(): string {
+        return this._typeName;
+    }
 
-   /**
-    * Возвращает имя поля
-    * @return {String}
-    * @see name
-    * @see setName
-    */
-   getName(): string {
-      return this._$name;
-   }
+    /**
+     * Возвращает имя поля
+     * @return {String}
+     * @see name
+     * @see setName
+     */
+    getName(): string {
+        return this._$name;
+    }
 
-   /**
-    * Устанавливает имя поля
-    * @param {String} name Имя поля
-    * @see name
-    * @see getName
-    */
-   setName(name: string): void {
-      this._$name = name;
-   }
+    /**
+     * Устанавливает имя поля
+     * @param {String} name Имя поля
+     * @see name
+     * @see getName
+     */
+    setName(name: string): void {
+        this._$name = name;
+    }
 
-   /**
-    * Возвращает значение поля по умолчанию
-    * @return {*}
-    * @see defaultValue
-    * @see setDefaultValue
-    */
-   getDefaultValue(): any {
-      return this._$defaultValue;
-   }
+    /**
+     * Возвращает значение поля по умолчанию
+     * @return {*}
+     * @see defaultValue
+     * @see setDefaultValue
+     */
+    getDefaultValue(): any {
+        return this._$defaultValue;
+    }
 
-   /**
-    * Устанавливает значение поля по умолчанию
-    * @param {*} value Значение поля по умолчанию
-    * @see defaultValue
-    * @see getDefaultValue
-    */
-   setDefaultValue(value: any): void {
-      this._$defaultValue = value;
-   }
+    /**
+     * Устанавливает значение поля по умолчанию
+     * @param {*} value Значение поля по умолчанию
+     * @see defaultValue
+     * @see getDefaultValue
+     */
+    setDefaultValue(value: any): void {
+        this._$defaultValue = value;
+    }
 
-   /**
-    * Возвращает признак, что значение может быть null
-    * @return {Boolean}
-    * @see name
-    * @see setNullable
-    */
-   isNullable(): boolean {
-      return this._$nullable;
-   }
+    /**
+     * Возвращает признак, что значение может быть null
+     * @return {Boolean}
+     * @see name
+     * @see setNullable
+     */
+    isNullable(): boolean {
+        return this._$nullable;
+    }
 
-   /**
-    * Устанавливает признак, что значение может быть null
-    * @param {Boolean} nullable Значение может быть null
-    * @see name
-    * @see isNullable
-    */
-   setNullable(nullable: boolean): void {
-      this._$nullable = nullable;
-   }
+    /**
+     * Устанавливает признак, что значение может быть null
+     * @param {Boolean} nullable Значение может быть null
+     * @see name
+     * @see isNullable
+     */
+    setNullable(nullable: boolean): void {
+        this._$nullable = nullable;
+    }
 
-   /**
-    * Копирует формат поля из другого формата
-    * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
-    */
-   copyFrom(format: Field): void {
-      const formatOptions = format._getOptions();
-      let key;
-      for (const option in formatOptions) {
-         if (formatOptions.hasOwnProperty(option)) {
-            key = '_$' + option;
-            if (key in this) {
-               this[key] = formatOptions[option];
+    /**
+     * Копирует формат поля из другого формата
+     * @param {Types/_entity/format/Field} format Формат поля, который надо скопировать
+     */
+    copyFrom(format: Field): void {
+        const formatOptions = format._getOptions();
+        let key;
+        for (const option in formatOptions) {
+            if (formatOptions.hasOwnProperty(option)) {
+                key = '_$' + option;
+                if (key in this) {
+                    this[key] = formatOptions[option];
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   // endregion Public methods
+    // endregion Public methods
 }
 
 Field.prototype['[Types/_entity/format/DestroyableMixin]'] = true;

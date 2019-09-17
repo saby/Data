@@ -5,7 +5,7 @@ const win = typeof window !== 'undefined' ? window : null;
  * @remark
  * <h2>Параметры функции</h2>
  * <ul>
- *     <li><b>fn</b> {Function} - исходная функция, вызов которой нужно асинхронно.</li>
+ *      <li><b>fn</b> {Function} - исходная функция, вызов которой нужно асинхронно.</li>
  * </ul>
  *
  * @class Types/_function/delay
@@ -13,9 +13,9 @@ const win = typeof window !== 'undefined' ? window : null;
  * @author Мальцев А.А.
  */
 export default function delay(original: Function): void {
-   if (win && win.requestAnimationFrame) {
-      win.requestAnimationFrame(original as FrameRequestCallback);
-   } else {
-      setTimeout(original, 0);
-   }
+    if (win && win.requestAnimationFrame) {
+        win.requestAnimationFrame(original as FrameRequestCallback);
+    } else {
+        setTimeout(original, 0);
+    }
 }

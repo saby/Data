@@ -7,10 +7,10 @@ import ICrud from './ICrud';
  * @author Мальцев А.А.
  */
 export default interface IDecorator {
-   readonly '[Types/_source/IDecorator]': boolean;
+    readonly '[Types/_source/IDecorator]': boolean;
 
-   /**
-    * Возвращает оригинальный источник данных
-    */
-   getOriginal<T = ICrud>(): T;
+    /**
+     * Возвращает оригинальный источник данных
+     */
+    getOriginal<T = ICrud>(): T;
 }
