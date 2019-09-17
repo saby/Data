@@ -1,6 +1,11 @@
 import {IFieldFormat, IRecordFormat, ITableFormat} from 'SbisFormatMixin';
 import {Map} from '../../shim';
 
+interface IResultGenerator {
+    value: undefined | IFieldFormat[];
+    done: boolean;
+}
+
 //TODO Использовать только после полного перехода на стандарт es6.
 /**
  * Функция генератор. Ищит в данных формат по индефикатору.
@@ -45,7 +50,7 @@ class RecursiveStack {
     /**
      * Индефикатор обрабатываемага узла.
      */
-   public processableId: number;
+   processableId: number;
 
     /**
      * Последний узел стека.
@@ -68,7 +73,7 @@ class RecursiveStack {
      * Добавляет узел в стек.
      * @param {any} node - Добавляемый узел.
      */
-   public push(node: any): void {
+   push(node: any): void {
       this._current = node;
       this.processableId++;
       this._stack.set(this.processableId, this._current);
@@ -77,7 +82,7 @@ class RecursiveStack {
     /**
      * Удаляет последний узел из стека.
      */
-   public pop(): void{
+   pop(): void {
       this.processableId--;
       this._current = this._stack.get(this.processableId);
       this._stack.delete(this.processableId + 1);
@@ -99,7 +104,7 @@ class RecursiveIterator {
 
       //Сразу же добавляем в стек корень дерева.
       this.stackNodes.push({
-         data: data
+         data
       });
    }
 
@@ -108,14 +113,14 @@ class RecursiveIterator {
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
      */
-   public next(id: number, storage: Map<number, IFieldFormat[]>) {
+   next(id: number, storage: Map<number, IFieldFormat[]>): IResultGenerator {
       while (true) {
          if (this.stackNodes.processableId < 0) {
              // id обрабтываемого узла меньше 0, значит дерево обработано.
             return {value: undefined, done: true};
          }
 
-         let result = this._process(id, storage);
+         const result = this._process(id, storage);
 
          if (result) {
             return {value: result, done: false};
@@ -129,7 +134,7 @@ class RecursiveIterator {
      * @param {Map} storage - кеш форматов.
      * @private
      */
-   protected _process(id: number, storage: Map<number, IFieldFormat[]>) {
+   protected _process(id: number, storage: Map<number, IFieldFormat[]>): IFieldFormat[] {
        //Получаем из стека послдений узел, чтобы обработь его.
       const node = this.stackNodes.currentNode;
 
@@ -138,7 +143,7 @@ class RecursiveIterator {
             node.iterator = node.data[Symbol.iterator]();
          }
 
-         while(true) {
+         while (true) {
             const item = node.iterator.next();
 
             if (item.done) {
@@ -231,7 +236,7 @@ class SbisFormatFinder {
     * Возврашает формат по индефикатору.
     * @param {Number} id - индефикатор формата.
     */
-   public getFormat(id?: number) {
+   getFormat(id?: number): IFieldFormat[] {
       if (this._cache.has(id)) {
          return this._cache.get(id);
       }
@@ -243,7 +248,7 @@ class SbisFormatFinder {
       const result = this._generator.next(id, this._cache);
 
       if (result.done) {
-         throw new ReferenceError(`Couldn't find format by id`);
+         throw new ReferenceError("Couldn't find format by id");
       }
 
       return result.value;

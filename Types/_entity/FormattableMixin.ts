@@ -17,7 +17,7 @@ export interface IOptions {
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;
-   formatController?: FormatController
+   formatController?: FormatController;
 }
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
