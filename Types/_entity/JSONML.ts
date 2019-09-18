@@ -2,7 +2,7 @@ const CHILDREN_INDEX_WITH_ATTRIBUTES = 2;
 const CHILDREN_INDEX_WITHOUT_ATTRIBUTES = 1;
 const ATTRIBUTE_INDEX = 1;
 
-export type IJSONML = Array<string|object>;
+export type IJSONML = Array<string|object> | string;
 
 /**
  * Абстрактный класс для работы с JSONML
