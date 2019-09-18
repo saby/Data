@@ -165,7 +165,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             const self = this;
 
             Object.defineProperty(this._data, 's', {
-                get() {
+                get(): IFieldFormat[] {
                     if (self._cachedFormat) {
                        return self._cachedFormat;
                     }
@@ -174,7 +174,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
                        return self._formatController.getFormat(data.f);
                     }
                 },
-                set(value) {
+                set(value: IFieldFormat[]): void {
                     self._cachedFormat = value;
                 }
            });
@@ -234,12 +234,12 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return format;
     }
 
-    addField(format: Field, at: number): void {
-        if (!format || !(format instanceof Field)) {
-            throw new TypeError(
-               `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
-            );
-        }
+   addField(format: Field, at: number): void {
+      if (!format || !(format instanceof Field)) {
+         throw new TypeError(
+            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+         );
+      }
 
         const name = format.getName();
         if (this._has(name)) {
