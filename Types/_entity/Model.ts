@@ -110,7 +110,7 @@ interface ISerializableState extends IRecordSerializableState {
  *     import {Model, adapter} from 'Types/entity';
  *
  *     class MyEngine extends Model {
- *         protected _$properties: {
+ *         protected _$properties = {
  *             fuelType: {
  *                 get() {
  *                     return 'Diesel';
@@ -120,7 +120,7 @@ interface ISerializableState extends IRecordSerializableState {
  *     }
  *
  *     class MyTransmission extends Model {
- *         protected _$properties: {
+ *         protected _$properties = {
  *             transmissionType: {
  *                 get() {
  *                     return 'Manual';
@@ -624,7 +624,7 @@ export default class Model extends mixin<
      *     import {Model} from 'Types/entity';
      *
      *     class User extends Model {
-     *         protected _$properties: {
+     *         protected _$properties = {
      *             id: {
      *                 get() {
      *                     return this._id;
@@ -662,7 +662,7 @@ export default class Model extends mixin<
      *     import {Model} from 'Types/entity';
      *
      *     class User extends Model {
-     *         protected _$properties: {
+     *         protected _$properties = {
      *             id: {
      *                 get() {
      *                     this._id;
