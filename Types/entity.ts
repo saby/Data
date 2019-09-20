@@ -23,6 +23,7 @@
  * @includes relation Types/_entity/relation
  * @includes Time Types/_entity/Time
  * @includes TimeInterval Types/_entity/TimeInterval
+ * @includes JSONML Types/_entity/JSONML
  * @public
  * @author Мальцев А.А.
  */
@@ -71,3 +72,4 @@ export {
     IOptions as IVersionableMixinOptions,
     VersionCallback as VersionableMixinVersionCallback
 } from './_entity/VersionableMixin';
+export {default as JSONML, IJSONML} from './_entity/JSONML';
