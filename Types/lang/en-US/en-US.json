@@ -1,13 +1,13 @@
 {
-   "plural#decillion":"decillion|decillions",
-   "plural#nonillion":"nonillion|nonillions",
-   "plural#octillion":"octillion|octillions",
-   "plural#septillion":"septillion|septillions",
-   "plural#sextillion":"sextillion|sextillions",
-   "plural#quintillion":"quintillion|quintillions",
-   "plural#quadrillion":"quadrillion|quadrillions",
-   "plural#trillion":"trillion|trillions",
-   "plural#billion":"billion|billions",
-   "plural#million":"million|millions",
-   "plural#thousand":"thousand|thousands"
+  "plural#decillion":"decillion|decillions",
+  "plural#nonillion":"nonillion|nonillions",
+  "plural#octillion":"octillion|octillions",
+  "plural#septillion":"septillion|septillions",
+  "plural#sextillion":"sextillion|sextillions",
+  "plural#quintillion":"quintillion|quintillions",
+  "plural#quadrillion":"quadrillion|quadrillions",
+  "plural#trillion":"trillion|trillions",
+  "plural#billion":"billion|billions",
+  "plural#million":"million|millions",
+  "plural#thousand":"thousand|thousands"
 }

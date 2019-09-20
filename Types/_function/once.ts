@@ -6,7 +6,7 @@ const storage = new WeakMap();
  * @remark
  * <h2>Параметры функции</h2>
  * <ul>
- *     <li><b>original</b> {Function} - исходная функция, вызов которой нужно выполнить один раз.</li>
+ *      <li><b>original</b> {Function} - исходная функция, вызов которой нужно выполнить один раз.</li>
  * </ul>
  *
  * <h2>Возвращает</h2>
@@ -14,15 +14,15 @@ const storage = new WeakMap();
  *
  * <h2>Пример использования</h2>
  * <pre>
- *    import {once} from 'Types/function';
- *    const foo = (bar) => {
- *       console.log(`foo: ${bar}`);
- *       return 'foo+' + bar;
- *    };
- *    const fooDecorator = once(foo);
+ *     import {once} from 'Types/function';
+ *     const foo = (bar) => {
+ *         console.log(`foo: ${bar}`);
+ *         return 'foo+' + bar;
+ *     };
+ *     const fooDecorator = once(foo);
  *
- *    console.log(fooDecorator('baz'));//foo: baz, foo+baz
- *    console.log(fooDecorator('baz'));//foo+baz
+ *     console.log(fooDecorator('baz'));//foo: baz, foo+baz
+ *     console.log(fooDecorator('baz'));//foo+baz
  * });
  * </pre>
  *
@@ -31,11 +31,11 @@ const storage = new WeakMap();
  * @author Мальцев А.А.
  */
 export default function once(original: Function): Function {
-   return function(...args: any[]): any {
-      if (!storage.has(original)) {
-         const result = original.apply(this, args);
-         storage.set(original, result);
-      }
-      return storage.get(original);
-   };
+    return function(...args: any[]): any {
+        if (!storage.has(original)) {
+            const result = original.apply(this, args);
+            storage.set(original, result);
+        }
+        return storage.get(original);
+    };
 }

@@ -11,10 +11,10 @@ type ExtractFunc = (item: any, index: string|number) => string|number;
  * @author Мальцев А.А.
  */
 export default class Uniquely<T> extends Abstract<T> {
-   /**
-    * Возвращает уникальный идентификатор для каждого элемента.
-    */
-   protected _idExtractor: ExtractFunc;
+    /**
+     * Возвращает уникальный идентификатор для каждого элемента.
+     */
+    protected _idExtractor: ExtractFunc;
 
    /**
     * Конструктор звена цепочки, обеспечивающего уникальность.
@@ -26,24 +26,24 @@ export default class Uniquely<T> extends Abstract<T> {
       this._idExtractor = idExtractor;
    }
 
-   destroy(): void {
-      this._idExtractor = null;
-      super.destroy();
-   }
+    destroy(): void {
+        this._idExtractor = null;
+        super.destroy();
+    }
 
-   // region IEnumerable
+    // region IEnumerable
 
-   getEnumerator(): UniquelyEnumerator<T> {
-      return new UniquelyEnumerator(
-         this._previous,
-         this._idExtractor
-      );
-   }
+    getEnumerator(): UniquelyEnumerator<T> {
+        return new UniquelyEnumerator(
+            this._previous,
+            this._idExtractor
+        );
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Uniquely.prototype, {
-   '[Types/_chain/Uniquely]': true,
-   _idExtractor: null
+    '[Types/_chain/Uniquely]': true,
+    _idExtractor: null
 });
