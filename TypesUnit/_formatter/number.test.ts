@@ -1,7 +1,6 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import number from 'Types/_formatter/number';
-// @ts-ignore
 import i18n = require('Core/i18n');
 
 describe('Types/_formatter/number', () => {

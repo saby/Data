@@ -10,6 +10,8 @@ export class MapPolyfill<K, V> {
     protected _objects: V[];
     protected _objectPrefix: string;
 
+    size: number;
+
     constructor() {
         this.clear();
     }

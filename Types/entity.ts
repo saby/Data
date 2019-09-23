@@ -66,4 +66,8 @@ export {relation};
 export {default as SerializableMixin, IState as ISerializableState} from './_entity/SerializableMixin';
 export {default as Time} from './_entity/Time';
 export {default as TimeInterval} from './_entity/TimeInterval';
-export {default as VersionableMixin} from './_entity/VersionableMixin';
+export {
+    default as VersionableMixin,
+    IOptions as IVersionableMixinOptions,
+    VersionCallback as VersionableMixinVersionCallback
+} from './_entity/VersionableMixin';

@@ -73,7 +73,7 @@ export default class CollectionEnumerator<T> extends mixin<
      */
     protected _sourceToInternal: number[] = [];
 
-    constructor(options: object) {
+    constructor(options?: object) {
         super();
         OptionsToPropertyMixin.call(this, options);
         IndexedEnumeratorMixin.call(this);

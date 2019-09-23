@@ -13,13 +13,13 @@ type GroupContents = string | number;
 
 type GroupHandler<S, T> = (data: S, index: number, item: T) => string | number;
 
-interface IOptions<S, T> {
+interface IOptions<S, T extends CollectionItem<S>> {
     source: IItemsStrategy<S, T>;
-    display: Collection<S, T>;
-    handler: GroupHandler<S, T>;
+    display?: Collection<S, T>;
+    handler?: GroupHandler<S, T>;
 }
 
-interface ISortOptions<S, T> {
+interface ISortOptions<S, T extends CollectionItem<S>> {
     display: Collection<S, T>;
     handler: GroupHandler<S, T>;
     groups: Array<GroupItem<GroupContents>>;
@@ -38,7 +38,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Group<S, T> extends mixin<
+export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(
@@ -232,7 +232,10 @@ export default class Group<S, T> extends mixin<
      * @param items Элементы проекции.
      * @param options Опции
      */
-    static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): number[] {
+    static sortItems<S, T extends CollectionItem<S> = CollectionItem<S>>(
+        items: T[],
+        options: ISortOptions<S, T>
+    ): number[] {
         const groups = options.groups;
         const display = options.display;
         const handler = options.handler;

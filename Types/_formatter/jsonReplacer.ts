@@ -1,20 +1,20 @@
-export default function jsonReplacer(name: string, value: any): any {
+export default function jsonReplacer(name: string | number, value: any): any {
     if (value === Infinity) {
-        return {
-            $serialized$: '+inf'
-        };
+       return {
+          $serialized$: '+inf'
+       };
     } else if (value === -Infinity) {
-        return {
-            $serialized$: '-inf'
-        };
+       return {
+          $serialized$: '-inf'
+       };
     } else if (value === undefined) {
-        return {
-            $serialized$: 'undef'
-        };
+       return {
+          $serialized$: 'undef'
+       };
     } else if (Number.isNaN(value)) {
-        return {
-            $serialized$: 'NaN'
-        };
+       return {
+          $serialized$: 'NaN'
+       };
     }
 
     return value;

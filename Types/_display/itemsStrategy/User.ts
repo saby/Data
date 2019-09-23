@@ -1,14 +1,14 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import {SortFunction} from '../Collection';
-import AbstractStrategy from './AbstractStrategy';
+import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {CompareFunction} from '../../_declarations';
 import {mixin} from '../../util';
 
-interface IOptions<S, T> {
-    handlers: Array<SortFunction<S>>;
-    source: AbstractStrategy<S, T>;
+interface IOptions<S, T extends CollectionItem<S>> {
+    handlers: Array<SortFunction<S, T>>;
+    source: IItemsStrategy<S, T>;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
@@ -23,7 +23,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class User<S, T> extends mixin<
+export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(
@@ -66,7 +66,7 @@ export default class User<S, T> extends mixin<
     /**
      * Пользовательские методы сортировки
      */
-    set handlers(value: Array<SortFunction<S>>) {
+    set handlers(value: Array<SortFunction<S, T>>) {
         if (!(value instanceof Array)) {
             throw new TypeError('Option "handlers" should be an instance of Array');
         }

@@ -21,6 +21,8 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
+import FormatController from '../adapter/SbisFormatFinder';
+import IFormatController from '../adapter/IFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -55,17 +57,19 @@ export interface IFieldFormat {
 }
 
 export interface IRecordFormat {
-    _type?: ComplexTypeMarker;
-    d: any[];
-    s: IFieldFormat[];
+   _type?: ComplexTypeMarker;
+   d: any[];
+   s?: IFieldFormat[];
+   f?: number;
 }
 
 export interface ITableFormat {
-    _type?: ComplexTypeMarker;
-    d: any[][];
-    s: IFieldFormat[];
-    n?: boolean | number | object;
-    m?: IRecordFormat;
+   _type?: ComplexTypeMarker;
+   d: any[][];
+   s?: IFieldFormat[];
+   n?: boolean | number | object;
+   m?: IRecordFormat;
+   f?: number;
 }
 
 /**
@@ -95,10 +99,16 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class SbisFormatMixin {
-    '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+export default abstract class SbisFormatMixin implements IFormatController {
+   '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
-    protected _moduleName: string;
+   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+
+   protected _formatController: FormatController;
+
+   protected _cachedFormat: IFieldFormat[];
+
+   protected _moduleName: string;
 
     /**
      * Сырые данные
@@ -138,17 +148,46 @@ export default abstract class SbisFormatMixin {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
             }
             if (data._type && data._type !== this.type) {
-                throw new TypeError(`Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`);
+                throw new TypeError(
+                    `Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`
+                );
             }
         }
+
+        this._data = data;
+        this._format = {};
 
         if (fieldIndicesSymbol && data && data.s) {
             data.s[fieldIndicesSymbol] = null;
         }
 
-        this._data = data;
-        this._format = {};
-    }
+        if (this._data && this._data.s === undefined) {
+            const self = this;
+
+            Object.defineProperty(this._data, 's', {
+                get(): IFieldFormat[] {
+                    if (self._cachedFormat) {
+                       return self._cachedFormat;
+                    }
+
+                    if (data.f) {
+                       return self._formatController.getFormat(data.f);
+                    }
+                },
+                set(value: IFieldFormat[]): void {
+                    self._cachedFormat = value;
+                }
+           });
+      }
+   }
+
+   // region IFormatController
+
+   setFormatController(controller: FormatController): void {
+      this._formatController = controller;
+   }
+
+   // endregion
 
     // region Public methods
 
@@ -156,15 +195,16 @@ export default abstract class SbisFormatMixin {
         return this._data;
     }
 
-    getFields(): string[] {
-        const fields = [];
-        if (this._isValidData()) {
-            for (let i = 0, count = this._data.s.length; i < count; i++) {
-                fields.push(this._data.s[i].n);
-            }
-        }
-        return fields;
-    }
+   getFields(): string[] {
+      const fields = [];
+      if (this._isValidData()) {
+         const s = this._data.s;
+         for (let i = 0, count = s.length; i < count; i++) {
+            fields.push(s[i].n);
+         }
+      }
+      return fields;
+   }
 
     clear(): void {
         this._touchData();
@@ -194,12 +234,12 @@ export default abstract class SbisFormatMixin {
         return format;
     }
 
-    addField(format: Field, at: number): void {
-        if (!format || !(format instanceof Field)) {
-            throw new TypeError(
-                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
-            );
-        }
+   addField(format: Field, at: number): void {
+      if (!format || !(format instanceof Field)) {
+         throw new TypeError(
+            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+         );
+      }
 
         const name = format.getName();
         if (this._has(name)) {
@@ -256,13 +296,13 @@ export default abstract class SbisFormatMixin {
 
     protected _normalizeData(data: any, dataType: string): IRecordFormat | ITableFormat {
         if (!(data instanceof Object)) {
-            data = {};
+           data = {};
         }
         if (!(data.d instanceof Array)) {
-            data.d = [];
+           data.d = [];
         }
-        if (!(data.s instanceof Array)) {
-            data.s = [];
+        if (!(data.s instanceof Array) && data.f === undefined) {
+           data.s = [];
         }
         data._type = dataType;
 
@@ -271,8 +311,14 @@ export default abstract class SbisFormatMixin {
 
     protected _cloneData(shareFormat?: boolean): IRecordFormat | ITableFormat {
         const data = object.clone(this._data);
-        if (shareFormat && data && data.s) {
-            data.s = this._data.s; // Keep sharing fields format
+        if (shareFormat && data) {
+            if (data.s) {
+                data.s = this._data.s;
+            }
+            if (data.f) {
+                data.f = this._data.f;
+            }
+            // Keep sharing fields format
         }
         return data;
     }
@@ -545,10 +591,13 @@ export default abstract class SbisFormatMixin {
 }
 
 Object.assign(SbisFormatMixin.prototype, {
-    '[Types/_entity/adapter/SbisFormatMixin]': true,
-    _data: null,
-    _fieldIndices: null,
-    _format: null,
-    _sharedFieldFormat: null,
-    _sharedFieldMeta: null
+   '[Types/_entity/adapter/SbisFormatMixin]': true,
+   '[Types/_entity/format/IFormatController]': true,
+   _data: null,
+   _fieldIndices: null,
+   _format: null,
+   _sharedFieldFormat: null,
+   _sharedFieldMeta: null,
+   _cachedFormat: null,
+   _formatController: null
 });

@@ -1,9 +1,11 @@
 import Abstract from './Abstract';
 import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import FormatController from './../adapter/SbisFormatFinder';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
+import IFormatController from '../adapter/IFormatController';
 
 /**
  * Адаптер для данных в формате СБиС.
@@ -15,14 +17,32 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sbis extends Abstract {
-    forTable(data: ITableFormat): SbisTable {
-        return new SbisTable(data);
-    }
+export default class Sbis extends Abstract implements IFormatController {
+   protected _formatController: FormatController;
 
-    forRecord(data: IRecordFormat): SbisRecord {
-        return new SbisRecord(data);
-    }
+   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+
+   forTable(data: ITableFormat): SbisTable {
+      const table =  new SbisTable(data);
+      table.setFormatController(this._formatController);
+
+      return table;
+   }
+
+   forRecord(data: IRecordFormat): SbisRecord {
+      const record = new SbisRecord(data);
+      record.setFormatController(this._formatController);
+
+      return record;
+   }
+
+   // region IFormatController
+
+   setFormatController(controller: FormatController): void {
+      this._formatController = controller;
+   }
+
+   // endregion
 
     getKeyField(data: ITableFormat): string {
         // TODO: primary key field index can be defined in this._data.k. and can be -1
@@ -49,8 +69,10 @@ export default class Sbis extends Abstract {
 }
 
 Object.assign(Sbis.prototype, {
-    '[Types/_entity/adapter/Sbis]': true,
-    _moduleName: 'Types/entity:adapter.Sbis'
+   '[Types/_entity/adapter/Sbis]': true,
+   '[Types/_entity/format/IFormatController]': true,
+   _formatController: null,
+   _moduleName: 'Types/entity:adapter.Sbis'
 });
 
 register('Types/entity:adapter.Sbis', Sbis, {instantiate: false});

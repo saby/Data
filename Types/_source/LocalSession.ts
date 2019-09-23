@@ -19,7 +19,6 @@ import {mixin, object} from '../util';
 import {merge} from '../object';
 import {ExtendPromise} from '../_declarations';
 import {LocalStorage} from 'Browser/Storage';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 const DATA_FIELD_PREFIX = 'd';
@@ -76,9 +75,10 @@ function itemToObject(item: any, adapter: string | adapters.IAdapter): object {
 }
 
 interface IOptions {
-    prefix: string;
-    keyProperty: string;
-    data?: object;
+   prefix: string;
+   keyProperty: string;
+   data?: object;
+   adapter?: String | Function;
 }
 
 class WhereTokenizer {
@@ -312,25 +312,25 @@ class RawManager {
         return this.ls.setItem(DATA_FIELD_PREFIX + key, data);
     }
 
-    move(sourceItems: string[], to: string, meta?: any): void {
-        const keys = this.getKeys();
-        let toIndex;
-        sourceItems.forEach((id) => {
-            const index = keys.indexOf(id);
-            keys.splice(index, 1);
-        });
-        if (to !== null) {
-            toIndex = keys.indexOf(to);
-            if (toIndex === -1) {
-                return Deferred.fail('Record "to" with key ' + to + ' is not found.');
-            }
-        }
-        const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
-        sourceItems.forEach((id, index) => {
-            keys.splice(toIndex + shift + index, 0, id);
-        });
-        this.setKeys(keys);
-    }
+   move(sourceItems: string[], to: string, meta?: any): void {
+      const keys = this.getKeys();
+      let toIndex;
+      sourceItems.forEach((id) => {
+         const index = keys.indexOf(id);
+         keys.splice(index, 1);
+      });
+      if (to !== null) {
+         toIndex = keys.indexOf(to);
+         if (toIndex === -1) {
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
+         }
+      }
+      const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
+      sourceItems.forEach((id, index) => {
+         keys.splice(toIndex + shift + index, 0, id);
+      });
+      this.setKeys(keys);
+   }
 
     remove(keys: string | string[]): boolean {
         let count;
@@ -436,29 +436,29 @@ class ModelManager {
         this.keyProperty = keyProperty;
     }
 
-    get(data: object): Model {
-        data = object.clonePlain(data, true);
-        switch (this.adapter) {
-            case 'Types/entity:adapter.RecordSet':
-            case 'adapter.recordset':
-                return new Model({
-                    rawData: new Record({rawData: data}),
-                    adapter: create(this.adapter),
-                    idProperty: this.keyProperty
-                });
+   get(data: object): Model {
+      data = object.clonePlain(data, true);
+      switch (this.adapter) {
+         case 'Types/entity:adapter.RecordSet':
+         case 'adapter.recordset':
+            return new Model({
+               rawData: new Record({rawData: data}),
+               adapter: create(this.adapter),
+               keyProperty: this.keyProperty
+            });
 
             case 'Types/entity:adapter.Sbis':
             case 'adapter.sbis':
                 return this.sbis(data);
 
-            default:
-                return new Model({
-                    rawData: data,
-                    adapter: create(this.adapter),
-                    idProperty: this.keyProperty
-                });
-        }
-    }
+         default:
+            return new Model({
+               rawData: data,
+               adapter: create(this.adapter),
+                keyProperty: this.keyProperty
+            });
+      }
+   }
 
     sbis(data: object): Model {
         const rec = new Record({rawData: data});
@@ -468,7 +468,7 @@ class ModelManager {
         const model = new Model({
             format,
             adapter: create(this.adapter),
-            idProperty: this.keyProperty
+            keyProperty: this.keyProperty
         });
 
         while (enumerator.moveNext()) {
@@ -504,25 +504,25 @@ class Converter {
         }
     }
 
-    recordSet(data: object[]): RecordSet {
-        const _data = [];
-        if (data.length === 0) {
-            return new RecordSet({
-                rawData: _data,
-                idProperty: this.keyProperty
-            });
-        }
-
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            const model = this.modelManager.get(item);
-            _data.push(model);
-        }
-        return new RecordSet({
+   recordSet(data: object[]): RecordSet {
+      const _data = [];
+      if (data.length === 0) {
+         return new RecordSet({
             rawData: _data,
-            idProperty: this.keyProperty
-        });
-    }
+             keyProperty: this.keyProperty
+         });
+      }
+
+      for (let i = 0; i < data.length; i++) {
+         const item = data[i];
+         const model = this.modelManager.get(item);
+         _data.push(model);
+      }
+      return new RecordSet({
+         rawData: _data,
+          keyProperty: this.keyProperty
+      });
+   }
 
     sbis(data: object[]): object {
         if (data.length === 0) {
@@ -711,19 +711,19 @@ export default class LocalSession extends mixin<
      * @example
      * Создадим новый объект:
      * <pre>
-     *     solarSystem.create(
-     *         {id: '11', name: 'Moon', 'kind': 'Satellite'}
-     *     ).addCallback(function(satellite) {
-     *         satellite.get('name');//'Moon'
-     *     });
+     *    solarSystem.create(
+     *       {id: '11', name: 'Moon', 'kind': 'Satellite'}
+     *    ).addCallback(function(satellite) {
+     *       satellite.get('name');//'Moon'
+     *    });
      * </pre>
      */
     create(meta?: object): ExtendPromise<Record> {
-        const item = itemToObject(meta, this._$adapter);
-        if (item[this.getKeyProperty()] === undefined) {
-            this.rawManager.reserveId();
-        }
-        return Deferred.success(this.modelManager.get(item));
+       const item = itemToObject(meta, this._$adapter);
+       if (item[this.getKeyProperty()] === undefined) {
+           this.rawManager.reserveId();
+       }
+       return Deferred.success(this.modelManager.get(item)) as ExtendPromise<any>;
     }
 
     /**
@@ -733,17 +733,17 @@ export default class LocalSession extends mixin<
      * @see Types/_entity/Model
      * Прочитаем данные о Солнце:
      * <pre>
-     *     solarSystem.read(1).addCallback(function(star) {
-     *          star.get('name');//'Sun'
-     *      });
+     *    solarSystem.read(1).addCallback(function(star) {
+     *        star.get('name');//'Sun'
+     *     });
      * </pre>
      */
     read(key: any, meta?: object): ExtendPromise<Record> {
         const data = this.rawManager.get(key);
         if (data) {
-            return Deferred.success(this.modelManager.get(data));
+            return Deferred.success(this.modelManager.get(data)) as ExtendPromise<any>;
         }
-        return Deferred.fail('Record with key "' + key + '" does not exist');
+        return Deferred.fail('Record with key "' + key + '" does not exist') as ExtendPromise<any>;
     }
 
     /**
@@ -754,24 +754,24 @@ export default class LocalSession extends mixin<
      * @example
      * Вернем Плутону статус планеты:
      * <pre>
-     *     var pluto = new Model({
-     *         keyProperty: 'id'
-     *     });
-     *     pluto.set({
-     *         id: '10',
-     *         name: 'Pluto',
-     *         kind: 'Planet'
-     *     });
+     *    var pluto = new Model({
+     *       keyProperty: 'id'
+     *    });
+     *    pluto.set({
+     *       id: '10',
+     *       name: 'Pluto',
+     *       kind: 'Planet'
+     *    });
      *
-     *     solarSystem.update(pluto).addCallback(function() {
-     *         alert('Pluto is a planet again!');
-     *     });
+     *    solarSystem.update(pluto).addCallback(function() {
+     *       alert('Pluto is a planet again!');
+     *    });
      * </pre>
      */
     update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
         const updateRecord = (record) => {
             let key;
-            const keyProperty = record.getIdProperty ? record.getIdProperty() : this.getKeyProperty();
+            const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
 
             try {
                 key = record.get(keyProperty);
@@ -800,7 +800,7 @@ export default class LocalSession extends mixin<
             keys.push(updateRecord(data));
         }
 
-        return Deferred.success(keys);
+        return Deferred.success(keys) as ExtendPromise<any>;
     }
 
     /**
@@ -811,18 +811,18 @@ export default class LocalSession extends mixin<
      * @example
      * Удалим Марс:
      * <pre>
-     *     solarSystem.destroy('5').addCallback(function() {
-     *         alert('Mars deleted!');
-     *     });
+     *    solarSystem.destroy('5').addCallback(function() {
+     *       alert('Mars deleted!');
+     *    });
      * </pre>
      */
     destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
-        const isExistKeys = this.rawManager.existKeys(keys);
-        if (!isExistKeys) {
-            return Deferred.fail('Not all keys exist');
-        }
-        this.rawManager.remove(keys);
-        return Deferred.success(true);
+       const isExistKeys = this.rawManager.existKeys(keys);
+       if (!isExistKeys) {
+           return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
+       }
+       this.rawManager.remove(keys);
+       return Deferred.success(true) as ExtendPromise<any>;
     }
 
     /**
@@ -833,12 +833,12 @@ export default class LocalSession extends mixin<
      * @see Types/_source/DataSet
      * @example
      * <pre>
-     *    solarSystem.query().addCallbacks(function (ds) {
-     *        console.log(ds.getAll().at(0));
-     *    });
+     *   solarSystem.query().addCallbacks(function (ds) {
+     *      console.log(ds.getAll().at(0));
+     *   });
      * </pre>
      */
-    query(query: Query): ExtendPromise<DataSet> {
+    query(query?: Query): ExtendPromise<DataSet> {
         if (query === void 0) {
             query = new Query();
         }
@@ -860,7 +860,7 @@ export default class LocalSession extends mixin<
             meta: {
                 total: data.length
             }
-        }));
+        })) as ExtendPromise<any>;
     }
 
     // endregion
@@ -869,87 +869,87 @@ export default class LocalSession extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    /**
-     * Объединяет одну модель с другой
-     * @param {String} from Первичный ключ модели-источника (при успешном объедининии модель будет удалена)
-     * @param {String} to Первичный ключ модели-приёмника
-     * @return {Core/Deferred} Асинхронный результат выполнения
-     * @example
-     * <pre>
-     *  solarSystem.merge('5','6')
-     *      .addCallbacks(function () {
-     *            alert('Mars became Jupiter!');
-     *      })
-     * </pre>
-     */
-    merge(from: string | number, to: string | number): ExtendPromise<any> {
-        const fromData = this.rawManager.get(from as string);
-        const toData = this.rawManager.get(to as string);
-        if (fromData === null || toData === null) {
-            return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists');
-        }
-        const data = merge(fromData, toData);
-        this.rawManager.set(from as string, data);
-        this.rawManager.remove(to as string);
-        return Deferred.success(true);
-    }
+   /**
+    * Объединяет одну модель с другой
+    * @param {String} from Первичный ключ модели-источника (при успешном объедининии модель будет удалена)
+    * @param {String} to Первичный ключ модели-приёмника
+    * @return {Core/Deferred} Асинхронный результат выполнения
+    * @example
+    * <pre>
+    *  solarSystem.merge('5','6')
+    *     .addCallbacks(function () {
+    *         alert('Mars became Jupiter!');
+    *     })
+    * </pre>
+    */
+   merge(from: string | number, to: string | number): ExtendPromise<any> {
+      const fromData = this.rawManager.get(from as string);
+      const toData = this.rawManager.get(to as string);
+      if (fromData === null || toData === null) {
+         return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists') as ExtendPromise<any>;
+      }
+      const data = merge(fromData, toData);
+      this.rawManager.set(from as string, data);
+      this.rawManager.remove(to as string);
+      return Deferred.success(true) as ExtendPromise<any>;
+   }
 
-    /**
-     * Создает копию модели
-     * @param {String} key Первичный ключ модели
-     * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
-     * {@link Types/_entity/Model копия модели}.
-     * @example
-     * <pre>
-     *    solarSystem.copy('5').addCallbacks(function (copy) {
-     *        console.log('New id: ' + copy.getId());
-     *    });
-     * </pre>
-     */
-    copy(key: string | number, meta?: Object): ExtendPromise<Record> {
-        const myId = this.rawManager.reserveId();
-        const from = this.rawManager.get(key as string);
-        if (from === null) {
-            return Deferred.fail('Record with key ' + from + ' isn\'t exists');
-        }
-        const to = merge({}, from);
-        this.rawManager.set(myId, to);
-        return Deferred.success(this.modelManager.get(to));
-    }
+   /**
+    * Создает копию модели
+    * @param {String} key Первичный ключ модели
+    * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет
+    * {@link Types/_entity/Model копия модели}.
+    * @example
+    * <pre>
+    *   solarSystem.copy('5').addCallbacks(function (copy) {
+    *      console.log('New id: ' + copy.getId());
+    *   });
+    * </pre>
+    */
+   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+      const myId = this.rawManager.reserveId();
+      const from = this.rawManager.get(key as string);
+      if (from === null) {
+         return Deferred.fail('Record with key ' + from + ' isn\'t exists') as ExtendPromise<any>;
+      }
+      const to = merge({}, from);
+      this.rawManager.set(myId, to);
+      return Deferred.success(this.modelManager.get(to)) as ExtendPromise<any>;
+   }
 
-    /**
-     * Производит перемещение записи.
-     * @param {Array} from Перемещаемая модель.
-     * @param {String} to Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
-     * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
-     * @return {Core/Deferred} Асинхронный результат выполнения.
-     * @example
-     * <pre>
-     * var ls = new LocalStorage('mdl_solarsystem');
-     * solarSystem.move('6','3',{position: 'after'})
-     *     .addCallbacks(function () {
-     *         console.log(ls.getItem('i')[3] === '6');
-     *     })
-     * </pre>
-     */
-    move(items: Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
-        const keys = this.rawManager.getKeys();
-        const sourceItems = [];
-        if (!(items instanceof Array)) {
-            items = [items];
-        }
-        items.forEach((id) => {
-            const index = keys.indexOf(id as string);
-            if (index === -1) {
-                return Deferred.fail(`Record "items" with key "${items}" is not found.`);
-            }
-            sourceItems.push(id);
-        });
-        if (meta.position === 'on') {
-            return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys));
-        }
-        return Deferred.success(this.rawManager.move(sourceItems, target as string, meta));
-    }
+   /**
+    * Производит перемещение записи.
+    * @param {Array} from Перемещаемая модель.
+    * @param {String} to Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+    * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
+    * @return {Core/Deferred} Асинхронный результат выполнения.
+    * @example
+    * <pre>
+    * var ls = new LocalStorage('mdl_solarsystem');
+    * solarSystem.move('6','3',{position: 'after'})
+    *    .addCallbacks(function () {
+    *       console.log(ls.getItem('i')[3] === '6');
+    *    })
+    * </pre>
+    */
+   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+      const keys = this.rawManager.getKeys();
+      const sourceItems = [];
+      if (!(items instanceof Array)) {
+         items = [items];
+      }
+      items.forEach((id) => {
+         const index = keys.indexOf(id as string);
+         if (index === -1) {
+            return Deferred.fail(`Record "items" with key "${items}" is not found.`);
+         }
+         sourceItems.push(id);
+      });
+      if (meta.position === 'on') {
+         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys)) as ExtendPromise<any>;
+      }
+      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta)) as ExtendPromise<any>;
+   }
 
     // endregion
 
@@ -1035,47 +1035,47 @@ export default class LocalSession extends mixin<
         );
     }
 
-    protected _hierarchyMove(sourceItems: any[], to: string | number, meta: any, keys: string[]): void {
-        let toIndex;
-        let parentValue;
-        if (!meta.parentProperty) {
-            return Deferred.fail('Parent property is not defined');
-        }
-        if (to) {
-            toIndex = keys.indexOf(to as string);
-            if (toIndex === -1) {
-                return Deferred.fail('Record "to" with key ' + to + ' is not found.');
-            }
-            const item = this.rawManager.get(keys[toIndex]);
-            parentValue = item[meta.parentProperty];
-        } else {
-            parentValue = null;
-        }
-        sourceItems.forEach((id) => {
-            const item = this.rawManager.get(id);
-            item[meta.parentProperty] = parentValue;
-            this.rawManager.set(id, item);
-        });
-    }
+   protected _hierarchyMove(sourceItems: any[], to: string | number, meta: any, keys: string[]): void {
+      let toIndex;
+      let parentValue;
+      if (!meta.parentProperty) {
+         return Deferred.fail('Parent property is not defined') as any;
+      }
+      if (to) {
+         toIndex = keys.indexOf(to as string);
+         if (toIndex === -1) {
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
+         }
+         const item = this.rawManager.get(keys[toIndex]);
+         parentValue = item[meta.parentProperty];
+      } else {
+         parentValue = null;
+      }
+      sourceItems.forEach((id) => {
+         const item = this.rawManager.get(id);
+         item[meta.parentProperty] = parentValue;
+         this.rawManager.set(id, item);
+      });
+   }
 
-    protected _reorderMove(sourceItems: any[], to: string, meta: any, keys: string[]): void {
-        let toIndex;
-        sourceItems.forEach((id) => {
-            const index = keys.indexOf(id);
-            keys.splice(index, 1);
-        });
-        if (to !== null) {
-            toIndex = keys.indexOf(to);
-            if (toIndex === -1) {
-                return Deferred.fail('Record "to" with key ' + to + ' is not found.');
-            }
-        }
-        const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
-        sourceItems.forEach((id, index) => {
-            keys.splice(toIndex + shift + index, 0, id);
-        });
-        this.rawManager.setKeys(keys);
-    }
+   protected _reorderMove(sourceItems: any[], to: string, meta: any, keys: string[]): void {
+      let toIndex;
+      sourceItems.forEach((id) => {
+         const index = keys.indexOf(id);
+         keys.splice(index, 1);
+      });
+      if (to !== null) {
+         toIndex = keys.indexOf(to);
+         if (toIndex === -1) {
+            return Deferred.fail('Record "to" with key ' + to + ' is not found.') as any;
+         }
+      }
+      const shift = meta && (meta.before || meta.position === 'before') ? 0 : 1;
+      sourceItems.forEach((id, index) => {
+         keys.splice(toIndex + shift + index, 0, id);
+      });
+      this.rawManager.setKeys(keys);
+   }
 
     // endregion
 }

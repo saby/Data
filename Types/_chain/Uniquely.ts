@@ -16,15 +16,15 @@ export default class Uniquely<T> extends Abstract<T> {
      */
     protected _idExtractor: ExtractFunc;
 
-    /**
-     * Конструктор звена цепочки, обеспечивающего уникальность.
-     * @param source Предыдущее звено.
-     * @param [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
-     */
-    constructor(source: Abstract<T>, idExtractor: ExtractFunc) {
-        super(source);
-        this._idExtractor = idExtractor;
-    }
+   /**
+    * Конструктор звена цепочки, обеспечивающего уникальность.
+    * @param source Предыдущее звено.
+    * @param [idExtractor] Возвращает уникальный идентификатор для каждого элемента.
+    */
+   constructor(source: Abstract<T>, idExtractor?: ExtractFunc) {
+      super(source);
+      this._idExtractor = idExtractor;
+   }
 
     destroy(): void {
         this._idExtractor = null;

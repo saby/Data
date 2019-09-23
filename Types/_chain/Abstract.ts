@@ -479,36 +479,36 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         );
     }
 
-    /**
-     * Агрегирует коллекцию, подсчитывая число элементов, объединенных по заданному критерию.
-     * @param [by] Поле агрегации или функция агрегации для каждого элемента.
-     * Если не указан, возвращается общее количество элементов.
-     * @example
-     * Подсчитаем число элементов массива:
-     * <pre>
-     * import {factory} from 'Types/chain';
-     * factory([1, 2, 3, 4, 5]).count();//5
-     * </pre>
-     * Подсчитаем четные и нечентные значения массива:
-     * <pre>
-     * import {factory} from 'Types/chain';
-     * factory([1, 2, 3, 4, 5])
-     *     .count((item) => item % 2 === 0)
-     *     .value();//[3, 2]
-     * </pre>
-     * Подсчитаем фрукты и овощи:
-     * <pre>
-     * import {factory} from 'Types/chain';
-     * factory([
-     *     {title: 'Apple', kind: 'fruit'},
-     *     {title: 'Cherry', kind: 'fruit'},
-     *     {title: 'Cucumber', kind: 'vegetable'},
-     *     {title: 'Pear', kind: 'fruit'},
-     *     {title: 'Potato', kind: 'vegetable'}
-     * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
-     * </pre>
-     */
-    count(by?: string|((item: any) => string)): Counted<T>|number {
+   /**
+    * Агрегирует коллекцию, подсчитывая число элементов, объединенных по заданному критерию.
+    * @param [by] Поле агрегации или функция агрегации для каждого элемента.
+    * Если не указан, возвращается общее количество элементов.
+    * @example
+    * Подсчитаем число элементов массива:
+    * <pre>
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5]).count();//5
+    * </pre>
+    * Подсчитаем четные и нечентные значения массива:
+    * <pre>
+    * import {factory} from 'Types/chain';
+    * factory([1, 2, 3, 4, 5])
+    *    .count((item) => item % 2 === 0)
+    *    .value();//[3, 2]
+    * </pre>
+    * Подсчитаем фрукты и овощи:
+    * <pre>
+    * import {factory} from 'Types/chain';
+    * factory([
+    *    {title: 'Apple', kind: 'fruit'},
+    *    {title: 'Cherry', kind: 'fruit'},
+    *    {title: 'Cucumber', kind: 'vegetable'},
+    *    {title: 'Pear', kind: 'fruit'},
+    *    {title: 'Potato', kind: 'vegetable'}
+    * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
+    * </pre>
+    */
+    count(by?: string |((item: any) => string | number | boolean)): Counted<T> | number {
         if (by === undefined) {
             return this.reduce((memo) => memo + 1, 0);
         }
@@ -729,24 +729,24 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         return new Next(this);
     }
 
-    /**
-     * Сортирует коллекцию с использованием функции сортировки, алгоритм работы и сигнатура которой аналогичны методу
-     * {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort sort}.
-     * @param [compareFunction] Функция сортировки. Принимает аргументами два элемента
-     * коллекции, которые нужно сравнить.
-     * @example
-     * Отсортируем массив чисел по возрастанию:
-     * <pre>
-     * import {factory} from 'Types/chain';
-     * factory([2, 4, 3, 1, 5])
-     *     .sort((a, b) => a - b)
-     *     .value();//[1, 2, 3, 4, 5]
-     * </pre>
-     */
-    sort(compareFunction: CompareFunction): Sorted<T> {
-        const Next = resolve<any>('Types/chain:Sorted');
-        return new Next(this, compareFunction);
-    }
+   /**
+    * Сортирует коллекцию с использованием функции сортировки, алгоритм работы и сигнатура которой аналогичны методу
+    * {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/sort sort}.
+    * @param [compareFunction] Функция сортировки. Принимает аргументами два элемента
+    * коллекции, которые нужно сравнить.
+    * @example
+    * Отсортируем массив чисел по возрастанию:
+    * <pre>
+    * import {factory} from 'Types/chain';
+    * factory([2, 4, 3, 1, 5])
+    *    .sort((a, b) => a - b)
+    *    .value();//[1, 2, 3, 4, 5]
+    * </pre>
+    */
+   sort(compareFunction?: CompareFunction): Sorted<T> {
+      const Next = resolve<any>('Types/chain:Sorted');
+      return new Next(this, compareFunction);
+   }
 
     // endregion
 

@@ -90,10 +90,10 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
         return (this._originalTable as ITable).move(source, target);
     }
 
-    merge(acceptor: number, donor: number, idProperty: string): any {
-        this._copy();
-        return (this._originalTable as ITable).merge(acceptor, donor, idProperty);
-    }
+   merge(acceptor: number, donor: number, keyProperty: string): any {
+      this._copy();
+      return (this._originalTable as ITable).merge(acceptor, donor, keyProperty);
+   }
 
     copy(index: number): any {
         this._copy();

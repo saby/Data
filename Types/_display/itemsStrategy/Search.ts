@@ -10,7 +10,7 @@ interface IOptions<S, T> {
     source: IItemsStrategy<S, T>;
 }
 
-interface ISortOptions<S, T> {
+interface ISortOptions<S, T extends TreeItem<S>> {
     originalBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
     originalParents: Map<T, TreeItem<S>>;
     display: Tree<S, T>;
@@ -24,7 +24,7 @@ interface ISortOptions<S, T> {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class Search<S, T> extends mixin<
+export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(
@@ -154,7 +154,7 @@ export default class Search<S, T> extends mixin<
      * @param items Display items
      * @param options Options
      */
-    static sortItems<S, T>(items: T[], options: ISortOptions<S, T>): T[] {
+    static sortItems<S, T extends TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
         const display = options.display;
         const originalBreadcrumbs = options.originalBreadcrumbs;
         const originalParents = options.originalParents;
@@ -213,7 +213,8 @@ export default class Search<S, T> extends mixin<
                         currentBreadcrumbs = originalBreadcrumbs.delete(item);
                     }
 
-                    // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last node
+                    // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last
+                    // node
                     currentBreadcrumbs = null;
                     return dump;
                 } else if (item.getLevel() <= breadcrumbsLevel) {

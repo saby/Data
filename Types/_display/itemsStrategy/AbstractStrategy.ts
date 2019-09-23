@@ -1,10 +1,11 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Collection, {ISourceCollection} from '../Collection';
+import CollectionItem from '../CollectionItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
 import {IEnumerator} from '../../collection';
 import {mixin} from '../../util';
 
-export interface IOptions<S, T> extends IItemsStrategyOptions<S, T> {
+export interface IOptions<S, T extends CollectionItem<S>> extends IItemsStrategyOptions<S, T> {
     display: Collection<S, T>;
     localize?: boolean;
 }
@@ -21,7 +22,7 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default abstract class Abstract<S, T> extends mixin<
+export default abstract class Abstract<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(

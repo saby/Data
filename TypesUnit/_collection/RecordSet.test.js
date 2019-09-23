@@ -109,7 +109,7 @@ define([
          items = getItems();
          rs = new RecordSet({
             rawData: getItems(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       });
 
@@ -121,7 +121,7 @@ define([
       });
 
       describe('.constructor()', function() {
-         it('should pass idProperty to the record', function() {
+         it('should pass keyProperty to the record', function() {
             assert.equal(rs.at(1).get('id'), 2);
          });
       });
@@ -471,7 +471,7 @@ define([
          it('should return elem by index', function() {
             var rs = new RecordSet({
                rawData: getItems(),
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             rs.setRawData([{
                id: 1000,
@@ -543,6 +543,33 @@ define([
       });
 
       describe('.getFormat()', function() {
+         it('should pass the formatController to the record', function() {
+            const rs = new RecordSet({
+               rawData:  {
+                  s: [{
+                     n: 'foo', t: 'Запись'
+                  }],
+                  d: [[{
+                     f: 1,
+                     s: [{
+                        n: 'First name',
+                        t: 'Строка'
+                     }],
+                     d: ['Jon'],
+                     t: 'Запись'
+                  }], [{
+                     f: 1,
+                     d: ['Mike'],
+                     t: 'Запись'
+                  }]],
+                  t: 'recordset'
+               },
+               adapter: 'Types/entity:adapter.Sbis'
+            });
+
+            assert.strictEqual(rs.at(1).get('foo').get('First name'), 'Mike');
+         });
+
          it('should build the format from json raw data', function() {
             var format = rs.getFormat();
             assert.strictEqual(format.getCount(), 2);
@@ -612,19 +639,19 @@ define([
 
       describe('.addField()', function() {
          it('should add the field from the declaration for JSON adapter', function() {
-            var idProperty = 'id',
+            var keyProperty = 'id',
                fieldName = 'login',
                fieldDefault = 'user',
                index = 0;
 
             rs = new RecordSet({
                rawData: getItems(),
-               idProperty: idProperty
+               keyProperty: keyProperty
             });
 
             //Force create indices
             rs.each(function(record) {
-               record.get(idProperty);
+               record.get(keyProperty);
             });
 
             rs.addField({
@@ -647,7 +674,7 @@ define([
          });
 
          it('should add the field from the declaration for SBIS adapter', function() {
-            var idProperty = 'id',
+            var keyProperty = 'id',
                index = 0,
                fieldName = 'login',
                fieldDefault = 'user';
@@ -655,12 +682,12 @@ define([
             var rs = new RecordSet({
                rawData: getSbisItems(),
                adapter: 'Types/entity:adapter.Sbis',
-               idProperty: idProperty
+               keyProperty: keyProperty
             });
 
             //Force create indices
             rs.each(function(record) {
-               record.get(idProperty);
+               record.get(keyProperty);
             });
 
             rs.addField({
@@ -711,11 +738,11 @@ define([
          });
 
          it('should add the field and set it value for the added record use SBIS adapter', function() {
-            var idProperty = 'id',
+            var keyProperty = 'id',
                rs = new RecordSet({
                   rawData: getSbisItems(),
                   adapter: 'Types/entity:adapter.Sbis',
-                  idProperty: idProperty
+                  keyProperty: keyProperty
                }),
                record = new Record({
                   rawData: {
@@ -723,7 +750,7 @@ define([
                      s: rs.getRawData().s
                   },
                   adapter: 'Types/entity:adapter.Sbis',
-                  idProperty: idProperty
+                  keyProperty: keyProperty
                }),
                addedRecord,
                index = 0,
@@ -731,7 +758,7 @@ define([
                fieldDefault = 'user';
 
             //Force create indices
-            record.get(idProperty);
+            record.get(keyProperty);
 
             rs.addField({
                name: fieldName,
@@ -1610,7 +1637,7 @@ define([
          it('should reset the records owner', function() {
             var rs = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                records = [];
 
@@ -2098,7 +2125,7 @@ define([
          it('should merge two recordsets with default params', function() {
             var rs1 = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                rs2 = new RecordSet({
                   rawData: [{
@@ -2108,7 +2135,7 @@ define([
                      id: 2,
                      name: 'Foo'
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                record = rs1.getRecordById(2);
 
@@ -2123,14 +2150,14 @@ define([
          it('should merge two recordsets without remove', function() {
             var rs1 = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                rs2 =  new RecordSet({
                   rawData: [{
                      id: 2,
                      name: 'Foo'
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             rs1.merge(rs2, {remove: false});
@@ -2141,14 +2168,14 @@ define([
          it('should merge two recordsets without merge', function() {
             var rs1 = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                rs2 =  new RecordSet({
                   rawData: [{
                      id: 2,
                      name: 'Foo'
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             rs1.merge(rs2, {replace: false});
@@ -2158,14 +2185,14 @@ define([
          it('should merge two recordsets without add', function() {
             var rs1 = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                rs2 =  new RecordSet({
                   rawData: [{
                      id: 1000,
                      name: 'Foo'
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
             rs1.merge(rs2, {add: false});
@@ -2175,14 +2202,14 @@ define([
          it('should merge two recordsets with inject', function() {
             var rs1 = new RecordSet({
                   rawData: getItems(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                rs2 =  new RecordSet({
                   rawData: [{
                      id: 2,
                      name: 'Foo'
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                record = rs1.getRecordById(2);
 
@@ -2256,9 +2283,9 @@ define([
          });
       });
 
-      describe('.getIdProperty()', function() {
+      describe('.getKeyProperty()', function() {
          it('should return id property', function() {
-            assert.equal('id', rs.getIdProperty());
+            assert.equal('id', rs.getKeyProperty());
          });
 
          it('should return false', function() {
@@ -2268,10 +2295,10 @@ define([
                   name: 'Foo'
                }]
             });
-            assert.isTrue(!rs2.getIdProperty());
+            assert.isTrue(!rs2.getKeyProperty());
          });
 
-         it('should detect idProperty automatically', function() {
+         it('should detect keyProperty automatically', function() {
             var rs = new RecordSet({
                rawData: {
                   d: [],
@@ -2285,29 +2312,29 @@ define([
                },
                adapter: 'Types/entity:adapter.Sbis'
             });
-            assert.strictEqual(rs.getIdProperty(), '@name');
+            assert.strictEqual(rs.getKeyProperty(), '@name');
          });
 
       });
 
-      describe('.setIdProperty()', function() {
+      describe('.setKeyProperty()', function() {
          it('should set id property', function() {
-            rs.setIdProperty('name');
-            assert.equal('name', rs.getIdProperty());
+            rs.setKeyProperty('name');
+            assert.equal('name', rs.getKeyProperty());
          });
 
          it('shouldnt set id property', function() {
-            rs.setIdProperty('Лицо');
-            assert.equal('Лицо', rs.getIdProperty());
+            rs.setKeyProperty('Лицо');
+            assert.equal('Лицо', rs.getKeyProperty());
          });
 
          it('should set id property for all models if not defined yet', function() {
             var rs = new RecordSet({
                rawData: getItems()
             });
-            rs.setIdProperty('id');
+            rs.setKeyProperty('id');
             rs.each(function(record) {
-               assert.equal('id', record.getIdProperty());
+               assert.equal('id', record.getKeyProperty());
             });
          });
 
@@ -2318,10 +2345,10 @@ define([
                };
 
             rs.subscribe('onPropertyChange', handler);
-            rs.setIdProperty('name');
+            rs.setKeyProperty('name');
             rs.unsubscribe('onPropertyChange', handler);
 
-            assert.strictEqual(given.idProperty, 'name');
+            assert.strictEqual(given.keyProperty, 'name');
          });
 
          it('should don\'t trigger "onPropertyChange" if name don\'t changed', function() {
@@ -2330,9 +2357,9 @@ define([
                   called = true;
                };
 
-            rs.setIdProperty('name');
+            rs.setKeyProperty('name');
             rs.subscribe('onPropertyChange', handler);
-            rs.setIdProperty('name');
+            rs.setKeyProperty('name');
             rs.unsubscribe('onPropertyChange', handler);
 
             assert.isFalse(called);
@@ -2528,7 +2555,7 @@ define([
                assert.strictEqual(meta.path.at(2).get('id'), 5);
             });
 
-            it('should inherit idProperty in path', function() {
+            it('should inherit keyProperty in path', function() {
                var data = {
                   p: {
                      d: [],
@@ -2541,11 +2568,11 @@ define([
                var rs = new RecordSet({
                   rawData: data,
                   adapter: 'Types/entity:adapter.Sbis',
-                  idProperty: 'title'
+                  keyProperty: 'title'
                });
                var meta = rs.getMetaData();
 
-               assert.strictEqual(meta.path.getIdProperty(), 'title');
+               assert.strictEqual(meta.path.getKeyProperty(), 'title');
             });
 
             it('should return pure meta data', function() {
@@ -2637,9 +2664,9 @@ define([
             assert.equal(instance.getModel(), 'fooModel');
          });
 
-         it('should return an instance with the given idProperty', function() {
-            var instance = RecordSet.produceInstance(null, {idProperty: 'foo'});
-            assert.strictEqual(instance.getIdProperty(), 'foo');
+         it('should return an instance with the given keyProperty', function() {
+            var instance = RecordSet.produceInstance(null, {keyProperty: 'foo'});
+            assert.strictEqual(instance.getKeyProperty(), 'foo');
          });
       });
 
@@ -2721,7 +2748,7 @@ define([
          });
 
          it('should return removed records id', function() {
-            var rs = new RecordSet({format: format, idProperty: 'id'}),
+            var rs = new RecordSet({format: format, keyProperty: 'id'}),
                removed;
 
             addRecord(rs, {id: 1, name: 'foo'});

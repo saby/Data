@@ -6,7 +6,7 @@ import {mixin} from '../util';
 /**
  * Массив соответствия индексов проекций и коллекций
  */
-const displaysToCollections: Array<IEnumerable<any>> = [];
+const displaysToCollections: Array<IEnumerable<any> | any[]> = [];
 
 /**
  * Массив соответствия индексов проекций и их инстансов
@@ -23,8 +23,9 @@ export interface IEnumerable<T> extends IEnumerableCollection<T> {
     each(callback: EnumeratorCallback<T>, context?: object, localize?: boolean): void;
 }
 
-export interface IOptions {
-    collection?: IEnumerable<any>;
+export interface IOptions<S> {
+    collection?: IEnumerable<S> | S[];
+    keyProperty?: string;
 }
 
 /**
@@ -47,7 +48,7 @@ export default abstract class Abstract<S, T> extends mixin<
     OptionsToPropertyMixin,
     ObservableMixin
 ) {
-    constructor(options?: IOptions) {
+    constructor(options?: IOptions<S>) {
         super(options);
         OptionsToPropertyMixin.call(this, options);
         ObservableMixin.call(this, options);
@@ -69,7 +70,11 @@ export default abstract class Abstract<S, T> extends mixin<
      * @param [single=false] Возвращать singleton для каждой collection
      * @static
      */
-    static getDefaultDisplay<S, T>(collection: IEnumerable<S>, options?: IOptions, single?: boolean): Abstract<S, T> {
+    static getDefaultDisplay<S, T, U extends Abstract<S, T> = Abstract<S, T>>(
+        collection: IEnumerable<S> | S[],
+        options?: IOptions<S>,
+        single?: boolean
+    ): U {
         if (arguments.length === 2 && (typeof options !== 'object')) {
             single = options;
             options = {};
@@ -86,6 +91,10 @@ export default abstract class Abstract<S, T> extends mixin<
             } else if (collection && collection['[Types/_collection/IFlags]']) {
                 instance = create('Types/display:Flags', options);
             } else if (collection && collection['[Types/_collection/IEnumerable]']) {
+                // Fix test ControlsUnit\SBIS3.CONTROLS\Selection\MassSelectionsController.test.js:62:20
+                if (options && options.keyProperty === 'id' && Object.keys(options).length === 2) {
+                    delete options.keyProperty;
+                }
                 instance = create('Types/display:Collection', options);
             } else if (collection instanceof Array) {
                 instance = create('Types/display:Collection', options);
@@ -103,7 +112,7 @@ export default abstract class Abstract<S, T> extends mixin<
             return instance;
         } else {
             displaysCounter[index]++;
-            return displaysToInstances[index];
+            return displaysToInstances[index] as any;
         }
     }
 

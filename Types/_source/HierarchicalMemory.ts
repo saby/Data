@@ -14,11 +14,10 @@ import {
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
-    parentProperty: string;
+    parentProperty?: string;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
@@ -163,19 +162,19 @@ export default class HierarchicalMemory extends mixin<
             this._source.query(query).addCallbacks((response) => {
                 if (this._$parentProperty) {
                     const hierarchy = new relation.Hierarchy({
-                        idProperty: this._keyProperty,
+                        keyProperty: this._keyProperty,
                         parentProperty: this._$parentProperty
                     });
 
                     const sourceRecords = new collection.RecordSet({
                         rawData: this._source.data,
                         adapter: this._source.getAdapter(),
-                        idProperty: this._keyProperty
+                        keyProperty: this._keyProperty
                     });
 
                     const breadcrumbs = new collection.RecordSet({
                         adapter: this._source.getAdapter(),
-                        idProperty: this._keyProperty
+                        keyProperty: this._keyProperty
                     });
 
                     // Extract breadcrumbs as path from filtered node to the root

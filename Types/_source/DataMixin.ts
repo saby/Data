@@ -119,20 +119,20 @@ export default abstract class DataMixin implements IData {
      */
     protected _$listModule: Function | string;
 
-    /**
-     * @cfg {String} Название свойства записи, содержащего первичный ключ.
-     * @name Types/_source/DataMixin#keyProperty
-     * @see getKeyProperty
-     * @see Types/_entity/Model#idProperty
-     * @example
-     * Установим свойство 'primaryId' в качестве первичного ключа:
-     * <pre>
-     *     var dataSource = new MemorySource({
-     *         keyProperty: 'primaryId'
-     *     });
-     * </pre>
-     */
-    protected _$keyProperty: string;
+   /**
+    * @cfg {String} Название свойства записи, содержащего первичный ключ.
+    * @name Types/_source/DataMixin#keyProperty
+    * @see getKeyProperty
+    * @see Types/_entity/Model#keyProperty
+    * @example
+    * Установим свойство 'primaryId' в качестве первичного ключа:
+    * <pre>
+    *    var dataSource = new MemorySource({
+    *       keyProperty: 'primaryId'
+    *    });
+    * </pre>
+    */
+   protected _$keyProperty: string;
 
     /**
      * Конструктор модуля, реализующего DataSet
@@ -154,13 +154,14 @@ export default abstract class DataMixin implements IData {
     constructor(options?: IOptions) {
         options = options || {};
 
+        // Support deprecated option 'idProperty'
         if (!this._$keyProperty && (options as any).idProperty) {
-             this._$keyProperty = (options as any).idProperty;
+            this._$keyProperty = (options as any).idProperty;
         }
         if (options.dataSetMetaProperty) {
             this._dataSetMetaProperty = options.dataSetMetaProperty;
         }
-    }
+   }
 
     // region IData
 
@@ -210,19 +211,19 @@ export default abstract class DataMixin implements IData {
         return this.getAdapter().getKeyField(data) || '';
     }
 
-    /**
-     * Создает новый экземпляр модели
-     * @param data Данные модели
-     * @protected
-     */
-    protected _getModelInstance(data: any): Model {
-        return create(this._$model, {
-            writable: this._writable,
-            rawData: data,
-            adapter: this.getAdapter(),
-            idProperty: this.getKeyProperty()
-        });
-    }
+   /**
+    * Создает новый экземпляр модели
+    * @param data Данные модели
+    * @protected
+    */
+   protected _getModelInstance(data: any): Model {
+      return create(this._$model, {
+         writable: this._writable,
+         rawData: data,
+         adapter: this.getAdapter(),
+         keyProperty: this.getKeyProperty()
+      });
+   }
 
     /**
      * Создает новый экземпляр DataSet

@@ -230,7 +230,8 @@ export default class ObservableList<T> extends mixin<
     setEventRaising(enabled: boolean, analyze?: boolean): void {
         EventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
 
-        // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет не тот
+        // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет
+        // не тот
         if (enabled && analyze && this._silentChangedItems) {
             if (this._silentChangedItems.length >= Math.min(this._resetChangesCount, this._$items.length)) {
                 // Если изменилось критическое число элементов, то генерируем reset

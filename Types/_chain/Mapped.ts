@@ -22,17 +22,17 @@ export default class Mapped<T> extends Abstract<T> {
      */
     protected _callbackContext: object;
 
-    /**
-     * Конструктор преобразующего звена цепочки.
-     * @param source Предыдущее звено.
-     * @param callback Функция, возвращающая новый элемент.
-     * @param [callbackContext] Контекст вызова callback
-     */
-    constructor(source: Abstract<T>, callback: MapFunc, callbackContext: object) {
-        super(source);
-        this._callback = callback;
-        this._callbackContext = callbackContext;
-    }
+   /**
+    * Конструктор преобразующего звена цепочки.
+    * @param source Предыдущее звено.
+    * @param callback Функция, возвращающая новый элемент.
+    * @param [callbackContext] Контекст вызова callback
+    */
+   constructor(source: Abstract<T>, callback: MapFunc, callbackContext?: object) {
+      super(source);
+      this._callback = callback;
+      this._callbackContext = callbackContext;
+   }
 
     destroy(): void {
         this._callback = null;

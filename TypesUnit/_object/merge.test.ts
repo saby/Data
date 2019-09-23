@@ -39,6 +39,19 @@ describe('Types/_object/merge', () => {
         assert.deepEqual(origin, {a: {b: 1, c: 3}});
     });
 
+    it('should replace primitive with object', () => {
+        const origin: any = {
+            a: 1
+        };
+        const ext = {
+            a: {
+                b: 2
+            }
+        };
+        merge(origin, ext);
+        assert.deepEqual(origin, {a: {b: 2}});
+    });
+
     it('should merge arrays', () => {
         const origin = ['one', 'two'];
         const ext = ['uno'];

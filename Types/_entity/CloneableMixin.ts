@@ -1,6 +1,6 @@
-// @ts-ignore
-import Serializer = require('Core/Serializer');
+import ICloneable from './ICloneable';
 import {protect} from '../util';
+import Serializer = require('Core/Serializer');
 
 const $clone = protect('clone');
 
@@ -9,10 +9,11 @@ const $clone = protect('clone');
  * @remark
  * Для корректной работы требуется подмешать {@link Types/_entity/SerializableMixin}.
  * @mixin Types/_entity/CloneableMixin
+ * @implements Types/_entity/ICloneable
  * @public
  * @author Мальцев А.А.
  */
-export default class CloneableMixin {
+export default class CloneableMixin implements ICloneable {
     // region Types/_entity/ICloneable
 
     '[Types/_entity/ICloneable]': boolean;

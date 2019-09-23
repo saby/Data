@@ -5,16 +5,19 @@ import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
 import {IHashMap} from '../_declarations';
+import IFormatController from './adapter/IFormatController';
+import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
 type FormatDescriptor = format.Format | IFieldDeclaration[] | IHashMap<IFieldDeclaration>;
 
 export interface IOptions {
-    adapter?: IAdapter | string;
-    rawData?: any;
-    format?: FormatDescriptor;
-    cow?: boolean;
+   adapter?: IAdapter | string;
+   rawData?: any;
+   format?: FormatDescriptor;
+   cow?: boolean;
+   formatController?: FormatController;
 }
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
@@ -109,90 +112,92 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': boolean;
 
-    /**
-     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
-     * @name Types/_entity/FormattableMixin#rawData
-     * @see getRawData
-     * @remark
-     * Data should be in certain format which supported by associated {@link adapter}.
-     * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization objectives.
-     * @example
-     * Let's create an employee record:
-     * <pre>
-     *     import {Record} from 'Types/entity';
-     *     const employee = new Record({
-     *         rawData: {
-     *             id: 1,
-     *             firstName: 'John',
-     *             lastName: 'Smith'
-     *         }
-     *     });
-     *
-     *     console.log(employee.get('id')); // 1
-     *     console.log(employee.get('firstName')); // John
-     *     console.log(employee.get('lastName')); // Smith
-     * </pre>
-     * Let's create recordset with movie characters:
-     * <pre>
-     *     import {RecordSet} from 'Types/collection';
-     *     const characters = new RecordSet({
-     *         rawData: [{
-     *             id: 1,
-     *             firstName: 'John',
-     *             lastName: 'Connor',
-     *             part: 'Savior'
-     *         }, {
-     *             id: 2,
-     *             firstName: 'Sarah',
-     *             lastName: 'Connor',
-     *             part: 'Mother'
-     *         }, {
-     *             id: 3,
-     *             firstName: '-',
-     *             lastName: 'T-800',
-     *             part: 'A human-like robot from the future'
-     *         }]
-     *     });
-     *
-     *     console.log(characters.at(0).get('firstName'));// John
-     *     console.log(characters.at(0).get('lastName'));// Connor
-     *     console.log(characters.at(1).get('firstName'));// Sarah
-     *     console.log(characters.at(1).get('lastName'));// Connor
-     * </pre>
-     */
-    protected _$rawData: any;
+   protected _$formatController: FormatController;
+
+   /**
+    * @cfg {Object} Data in raw format which can be recognized via certain adapter.
+    * @name Types/_entity/FormattableMixin#rawData
+    * @see getRawData
+    * @remark
+    * Data should be in certain format which supported by associated {@link adapter}.
+    * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization objectives.
+    * @example
+    * Let's create an employee record:
+    * <pre>
+    *    import {Record} from 'Types/entity';
+    *    const employee = new Record({
+    *       rawData: {
+    *          id: 1,
+    *          firstName: 'John',
+    *          lastName: 'Smith'
+    *       }
+    *    });
+    *
+    *    console.log(employee.get('id')); // 1
+    *    console.log(employee.get('firstName')); // John
+    *    console.log(employee.get('lastName')); // Smith
+    * </pre>
+    * Let's create recordset with movie characters:
+    * <pre>
+    *    import {RecordSet} from 'Types/collection';
+    *    const characters = new RecordSet({
+    *       rawData: [{
+    *          id: 1,
+    *          firstName: 'John',
+    *          lastName: 'Connor',
+    *          part: 'Savior'
+    *       }, {
+    *          id: 2,
+    *          firstName: 'Sarah',
+    *          lastName: 'Connor',
+    *          part: 'Mother'
+    *       }, {
+    *          id: 3,
+    *          firstName: '-',
+    *          lastName: 'T-800',
+    *          part: 'A human-like robot from the future'
+    *       }]
+    *    });
+    *
+    *    console.log(characters.at(0).get('firstName'));// John
+    *    console.log(characters.at(0).get('lastName'));// Connor
+    *    console.log(characters.at(1).get('firstName'));// Sarah
+    *    console.log(characters.at(1).get('lastName'));// Connor
+    * </pre>
+    */
+   protected _$rawData: any;
 
     /**
      * Work with raw data in Copy-On-Write mode.
      */
     protected _$cow: boolean;
 
-    /**
-     * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By default raw data in {@link Types/_entity/adapter/Json} format are supported.
-     * @name Types/_entity/FormattableMixin#adapter
-     * @see getAdapter
-     * @see Types/_entity/adapter/Json
-     * @see Types/di
-     * @remark
-     * Adapter should be defined to deal with certain  {@link rawData raw data} format.
-     * @example
-     * Let's create record with adapter for data format of Saby application server:
-     * <pre>
-     *     import {Record, adapter} from 'Types/entity';
-     *     const user = new Record({
-     *         adapter: new adapter.Sbis(),
-     *         format: [
-     *             {name: 'login', type: 'string'},
-     *             {name: 'email', type: 'string'}
-     *         ]
-     *     });
-     *     user.set({
-     *         login: 'root',
-     *         email: 'root@server.name'
-     *     });
-     * </pre>
-     */
-    protected _$adapter: IAdapter | IDecorator | string;
+   /**
+    * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By default raw data in {@link Types/_entity/adapter/Json} format are supported.
+    * @name Types/_entity/FormattableMixin#adapter
+    * @see getAdapter
+    * @see Types/_entity/adapter/Json
+    * @see Types/di
+    * @remark
+    * Adapter should be defined to deal with certain  {@link rawData raw data} format.
+    * @example
+    * Let's create record with adapter for data format of Saby application server:
+    * <pre>
+    *    import {Record, adapter} from 'Types/entity';
+    *    const user = new Record({
+    *       adapter: new adapter.Sbis(),
+    *       format: [
+    *          {name: 'login', type: 'string'},
+    *          {name: 'email', type: 'string'}
+    *       ]
+    *    });
+    *    user.set({
+    *       login: 'root',
+    *       email: 'root@server.name'
+    *    });
+    * </pre>
+    */
+   protected _$adapter: IAdapter | IDecorator | IFormatController | string;
 
     /**
      * @cfg {Types/_collection/format/Format|
@@ -631,10 +636,10 @@ export default abstract class FormattableMixin {
      * Returns common adapter instance.
      * @protected
      */
-    protected _getAdapter(): IAdapter | IDecorator {
+    protected _getAdapter(): IAdapter | IDecorator | IFormatController {
         if (
-            this._$adapter === defaultAdapter &&
-            FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
+           this._$adapter === defaultAdapter &&
+           FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
         ) {
             this._$adapter = this._getDefaultAdapter();
         }
@@ -647,7 +652,23 @@ export default abstract class FormattableMixin {
             this._$adapter = new CowAdapter(this._$adapter as IAdapter);
         }
 
+        if (this._$adapter['[Types/_entity/format/IFormatController]']) {
+            (this._$adapter as IFormatController).setFormatController(this._getFormatController());
+        }
+
         return this._$adapter as IAdapter;
+    }
+
+    /**
+     *
+     * @private
+     */
+    protected _getFormatController(): FormatController {
+        if (!this._$formatController) {
+            this._$formatController = new FormatController(this._getRawData(true));
+        }
+
+        return this._$formatController;
     }
 
     /**
@@ -884,14 +905,15 @@ export default abstract class FormattableMixin {
 }
 
 Object.assign(FormattableMixin.prototype, {
-    '[Types/_entity/FormattableMixin]': true,
-    _$rawData: null,
-    _$cow: false,
-    _$adapter: defaultAdapter,
-    _$format: null,
-    _format: null,
-    _formatClone: null,
-    _rawDataAdapter: null,
-    _rawDataFields: null,
-    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
+   '[Types/_entity/FormattableMixin]': true,
+   _$rawData: null,
+   _$cow: false,
+   _$adapter: defaultAdapter,
+   _$format: null,
+   _format: null,
+   _formatClone: null,
+   _rawDataAdapter: null,
+   _rawDataFields: null,
+   _$formatController: null,
+   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

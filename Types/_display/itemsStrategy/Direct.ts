@@ -6,14 +6,14 @@ import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
 import {Set} from '../../shim';
 
-interface IOptions<S, T> extends IAbstractOptions<S, T> {
-    unique: boolean;
-    idProperty: string;
+interface IOptions<S, T extends CollectionItem<S>> extends IAbstractOptions<S, T> {
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISortOptions {
-    unique: boolean;
-    idProperty: string;
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISerializableState<T> extends IDefaultSerializableState<T> {
@@ -26,7 +26,7 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct<S, T> extends AbstractStrategy<S, T> {
+export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> extends AbstractStrategy<S, T> {
     protected _options: IOptions<S, T>;
 
     /**
@@ -38,7 +38,7 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
      * @typedef {Object} Options
      * @property {Types/_display/Collection} display Проекция
      * @property {Boolean} unique Признак обеспечения униconstьности элементов
-     * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
+     * @property constring} keyProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
      */
 
     constructor(options: IOptions<S, T>) {
@@ -161,7 +161,7 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
 
     protected _createItemsOrder(): number[] {
         return Direct.sortItems<T>(this._getItems(), {
-            idProperty: this._options.idProperty,
+            keyProperty: this._options.keyProperty,
             unique: this._options.unique
         });
     }
@@ -176,9 +176,9 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
      * @param options Опции
      */
     static sortItems<T>(items: T[], options: ISortOptions): number[] {
-        const idProperty = options.idProperty;
+        const keyProperty = options.keyProperty;
 
-        if (!options.unique || !idProperty) {
+        if (!options.unique || !keyProperty) {
             return items.map((item, index) => index);
         }
 
@@ -189,7 +189,7 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
         (items as any as Array<CollectionItem<any>>).forEach((item, index) => {
             itemId = object.getPropertyValue(
                 item.getContents(),
-                idProperty
+                keyProperty
             );
             if (processed.has(itemId)) {
                 return;

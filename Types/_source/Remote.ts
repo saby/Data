@@ -94,7 +94,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
                     const RecordSet = require('Types/collection').RecordSet;
                     const result = new RecordSet({
                         adapter: source.getAdapter(),
-                        idProperty: (source as RecordSet).getIdProperty()
+                        keyProperty: (source as RecordSet).getKeyProperty()
                     });
 
                     source.each((record) => {
@@ -422,6 +422,7 @@ export default abstract class Remote extends mixin<
         if (typeof data.getKeyProperty === 'function') {
             return data.getKeyProperty();
         }
+        // Support deprecated method 'getIdProperty()'
         if (typeof data.getIdProperty === 'function') {
             return data.getIdProperty();
         }

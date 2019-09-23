@@ -9,12 +9,12 @@ import {Map} from '../../shim';
 import {throttle} from '../../function';
 
 interface IOptions<S, T> {
-    idProperty: string;
-    parentProperty: string;
+    keyProperty?: string;
+    parentProperty?: string;
     source: IItemsStrategy<S, T>;
 }
 
-interface ISourceOptions<S, T> extends IItemsStrategyOptions<S, T> {
+interface ISourceOptions<S, T extends TreeItem<S>> extends IItemsStrategyOptions<S, T> {
     display: Tree<S, T>;
 }
 
@@ -116,7 +116,7 @@ function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
  * @param {Array.<Types/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
  * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
  * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
- * @param {String} options.idProperty Имя свойства, в котором хранится идентификатор элемента.
+ * @param {String} options.keyProperty Имя свойства, в котором хранится идентификатор элемента.
  * @param [parentIndex] Индекс текущего родителя
  * @return Индекс в дереве -> индекс в исходной коллекции
  */
@@ -128,7 +128,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
     const groupsMap = options.groupsMap;
     let lastGroup = options.lastGroup;
     const path = options.path;
-    const idProperty = options.idProperty;
+    const keyProperty = options.keyProperty;
     const parentId = path[path.length - 1];
 
     // Check if that parentId is already behind
@@ -175,8 +175,8 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
             groupReverted = false;
         }
 
-        if (childContents && idProperty) {
-            const childId = normalizeId(object.getPropertyValue(childContents, idProperty));
+        if (childContents && keyProperty) {
+            const childId = normalizeId(object.getPropertyValue(childContents, keyProperty));
             path.push(childId);
 
             // Lookup for children
@@ -206,7 +206,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
-export default class AdjacencyList<S, T> extends mixin<
+export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 >(
@@ -216,7 +216,7 @@ export default class AdjacencyList<S, T> extends mixin<
     /**
      * @typedef {Object} Options
      * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-     * @property {String} idProperty Имя свойства, хранящего первичный ключ
+     * @property {String} keyProperty Имя свойства, хранящего первичный ключ
      * @property {String} parentProperty Имя свойства, хранящего первичный ключ родителя
      */
 
@@ -249,8 +249,8 @@ export default class AdjacencyList<S, T> extends mixin<
         super();
         this._options = options;
 
-        if (!options.idProperty) {
-            warning(`${this._moduleName}::constructor(): option "idProperty" is not defined. ` +
+        if (!options.keyProperty) {
+            warning(`${this._moduleName}::constructor(): option "keyProperty" is not defined. ` +
             'Only root elements will be presented');
         }
     }
@@ -555,7 +555,7 @@ export default class AdjacencyList<S, T> extends mixin<
             root = root.valueOf();
         }
         root = normalizeId(root && typeof root === 'object'
-            ? object.getPropertyValue(root, options.idProperty)
+            ? object.getPropertyValue(root, options.keyProperty)
             : root
         );
 
@@ -568,7 +568,7 @@ export default class AdjacencyList<S, T> extends mixin<
         }
 
         return buildTreeIndex({
-            idProperty: options.idProperty,
+            keyProperty: options.keyProperty,
             sourceItems,
             childrenMap,
             groupsMap,

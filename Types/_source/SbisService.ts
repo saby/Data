@@ -16,7 +16,6 @@ import {adapter, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {ExtendPromise} from '../_declarations';
-// @ts-ignore
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 enum PoitionNavigationOrder {
@@ -176,7 +175,7 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: strin
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
     const records = new RecordSetType({
         adapter,
-        idProperty: keyProperty
+        keyProperty
     });
     const count = data.length || 0;
 
@@ -415,8 +414,7 @@ function passRead(key: string | number, meta?: object): object {
  * Returns data to send in update()
  */
 function passUpdate(data: Record | RecordSet, meta?: object): object {
-    // @ts-ignore
-    const superArgs = Rpc.prototype._$passing.update.call(this, data, meta);
+    const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
     const args: any = {};
     const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
@@ -825,39 +823,39 @@ export default class SbisService extends Rpc {
      * @example
      * Создадим нового сотрудника:
      * <pre>
-     *     import {SbisService} from 'Types/source';
-     *     const dataSource = new SbisService({
-     *         endpoint: 'Employee',
-     *         keyProperty: '@Employee'
-     *     });
-     *     dataSource.create().then((employee) => {
-     *         console.log(employee.get('FirstName'));
-     *     }, (error) => {
-     *         console.error(error);
-     *     });
+     *    import {SbisService} from 'Types/source';
+     *    const dataSource = new SbisService({
+     *       endpoint: 'Employee',
+     *       keyProperty: '@Employee'
+     *    });
+     *    dataSource.create().then((employee) => {
+     *       console.log(employee.get('FirstName'));
+     *    }, (error) => {
+     *       console.error(error);
+     *    });
      * </pre>
      * Создадим нового сотрудника по формату:
      * <pre>
-     *     import {SbisService} from 'Types/source';
-     *     const dataSource = new SbisService({
-     *         endpoint: 'Employee',
-     *         keyProperty: '@Employee',
-     *         binding: {
-     *             format: 'getListFormat'
-     *         }
-     *     });
-     *     dataSource.create().then((employee) => {
-     *         console.log(employee.get('FirstName'));
-     *     }, (error) => {
-     *         console.error(error);
-     *     });
+     *    import {SbisService} from 'Types/source';
+     *    const dataSource = new SbisService({
+     *       endpoint: 'Employee',
+     *       keyProperty: '@Employee',
+     *       binding: {
+     *          format: 'getListFormat'
+     *       }
+     *    });
+     *    dataSource.create().then((employee) => {
+     *       console.log(employee.get('FirstName'));
+     *    }, (error) => {
+     *       console.error(error);
+     *    });
      * </pre>
      */
     create(meta?: object): ExtendPromise<Record> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
-                super.create(meta),
+                super.create(meta) as any,
                 ready
             );
         });
@@ -872,7 +870,7 @@ export default class SbisService extends Rpc {
                         passUpdateBatch(data as RecordSet, meta)
                     ).addCallback(
                         (key) => this._prepareUpdateResult(data, key)
-                    ),
+                    ) as any,
                     ready
                 );
             });
@@ -907,15 +905,15 @@ export default class SbisService extends Rpc {
         return pd.done().getResult();
     }
 
-    query(query: Query): ExtendPromise<DataSet> {
-        query = object.clonePlain(query, true);
-        return this._loadAdditionalDependencies((ready) => {
-            this._connectAdditionalDependencies(
-                super.query(query),
-                ready
-            );
-        });
-    }
+   query(query: Query): ExtendPromise<DataSet> {
+      query = object.clonePlain(query, true);
+      return this._loadAdditionalDependencies((ready) => {
+         this._connectAdditionalDependencies(
+            super.query(query) as any,
+            ready
+         );
+      });
+   }
 
     // endregion
 

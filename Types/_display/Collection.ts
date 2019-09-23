@@ -34,6 +34,8 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
 
+export type SourceCollection<T> = T[] | ISourceCollection<T>;
+
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
 }
@@ -42,19 +44,21 @@ type FilterFunction<S> = (
     item: S,
     index: number,
     collectionItem: CollectionItem<S>,
-    collectionIndex: number
+    collectionIndex: number,
+    hasMembers?: boolean
 ) => boolean;
 
-type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => string | null;
+type GroupId = number | string | null;
+type GroupFunction<S, T> = (item: S, index: number, collectionItem: T) => GroupId;
 
-interface ISortItem<S> {
-    item: S;
+interface ISortItem<S, T> {
+    item: T;
     index: number;
-    collectionItem: CollectionItem<S>;
+    collectionItem: S;
     collectionIndex: number;
 }
 
-export type SortFunction<S> = (a: ISortItem<S>, b: ISortItem<S>) => number;
+export type SortFunction<S, T> = (a: ISortItem<S, T>, b: ISortItem<S, T>) => number;
 
 export type ItemsFactory<T> = (options: object) => T;
 
@@ -71,11 +75,11 @@ export interface ISerializableState<S, T> extends IDefaultSerializableState {
     _composer: ItemsStrategyComposer<S, T>;
 }
 
-export interface IOptions<S, T> extends IAbstractOptions {
-    filter?: Array<FilterFunction<S>>;
+export interface IOptions<S, T> extends IAbstractOptions<S> {
+    filter?: FilterFunction<S> | Array<FilterFunction<S>>;
     group?: GroupFunction<S, T>;
-    sort?: Array<SortFunction<S>>;
-    idProperty?: string;
+    sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
+    keyProperty?: string;
     unique?: boolean;
     importantItemProperties?: string[];
 }
@@ -83,7 +87,7 @@ export interface IOptions<S, T> extends IAbstractOptions {
 /**
  * Преобразует проекцию в массив из ее элементов
  */
-function toArray<S, T>(display: Collection<S, T>): T[] {
+function toArray<S, T>(display: Collection<S>): T[] {
     const result = [];
     display.each((item) => {
         result.push(item);
@@ -273,7 +277,7 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection<S, T = CollectionItem<S>> extends mixin<
+export default class Collection<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     EventRaisingMixin
@@ -453,17 +457,17 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @see addSort
      * @see removeSort
      */
-    protected _$sort: Array<SortFunction<S>>;
+    protected _$sort: Array<SortFunction<S, T>>;
 
     /**
      * @cfg {String} Название свойства элемента коллекции, содержащего его уникальный идентификатор.
-     * @name Types/_display/Collection#idProperty
+     * @name Types/_display/Collection#keyProperty
      */
-    protected _$idProperty: string;
+    protected _$keyProperty: string;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
-     * игнорироваться). Работает только если задано {@link idProperty}.
+     * игнорироваться). Работает только если задано {@link keyProperty}.
      * @name Types/_display/Collection#unique
      */
     protected _$unique: boolean;
@@ -495,7 +499,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     /**
      * Элемент -> уникальный идентификатор
      */
-    protected _itemToUid: Map<CollectionItem<S>, string> = new Map();
+    protected _itemToUid: Map<T, string> = new Map();
 
     /**
      * Уникальные идентификаторы элементов
@@ -505,7 +509,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     /**
      * Компоновщик стратегий
      */
-    protected _composer: ItemsStrategyComposer<S, CollectionItem<S>>;
+    protected _composer: ItemsStrategyComposer<S, T>;
 
     /**
      * Коллекция синхронизирована с проекцией (все события, приходящие от нее, соответсвуют ее состоянию)
@@ -530,12 +534,12 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     /**
      * Служебный энумератор для организации курсора
      */
-    protected _cursorEnumerator: CollectionEnumerator<CollectionItem<S>>;
+    protected _cursorEnumerator: CollectionEnumerator<T>;
 
     /**
      * Служебный энумератор для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
      */
-    protected _utilityEnumerator: CollectionEnumerator<CollectionItem<S>>;
+    protected _utilityEnumerator: CollectionEnumerator<T>;
 
     /**
      * Обработчик события об изменении коллекции
@@ -560,6 +564,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
 
+        // Support of deprecated 'idProperty' option
+        if (!this._$keyProperty && (options as any).idProperty) {
+             this._$keyProperty = (options as any).idProperty;
+        }
+
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
         }
@@ -573,8 +582,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
         this._$sort = normalizeHandlers(this._$sort);
         this._$filter = normalizeHandlers(this._$filter);
 
-        if (this._$idProperty) {
-            this._setImportantProperty(this._$idProperty);
+        if (this._$keyProperty) {
+            this._setImportantProperty(this._$keyProperty);
         }
 
         this._publish('onCurrentChange', 'onCollectionChange', 'onBeforeCollectionChange', 'onAfterCollectionChange');
@@ -596,8 +605,12 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     destroy(): void {
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
-                (this._$collection as ObservableMixin).unsubscribe('onCollectionChange', this._onCollectionChange);
-                (this._$collection as ObservableMixin).unsubscribe('onCollectionItemChange', this._onCollectionItemChange);
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onCollectionChange', this._onCollectionChange
+                );
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onCollectionItemChange', this._onCollectionItemChange
+                );
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -624,7 +637,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @return {Types/_display/CollectionItem}
      * @state mutable
      */
-    getByInstanceId(instanceId: string): CollectionItem<S> {
+    getByInstanceId(instanceId: string): T {
         return this.at(
             this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId)
         );
@@ -724,8 +737,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
         throw new Error(MESSAGE_READ_ONLY);
     }
 
-    // @ts-ignore
-    at(index: number): CollectionItem<S> {
+    at(index: number): T {
         return this._getUtilityEnumerator().at(index) as any;
     }
 
@@ -810,7 +822,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
      * @return {Array.<Types/_display/CollectionItem>}
      */
-    getItems(): Array<CollectionItem<S>> {
+    getItems(): T[] {
         return this._getItems().slice();
     }
 
@@ -833,7 +845,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} item Элемент коллекции
      * @return {String|undefined}
      */
-    getItemUid(item: CollectionItem<S>): string {
+    getItemUid(item: T): string {
         const itemToUid = this._itemToUid;
         if (itemToUid.has(item)) {
             return itemToUid.get(item);
@@ -855,7 +867,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает текущий элемент
      * @return {Types/_display/CollectionItem}
      */
-    getCurrent(): CollectionItem<S> {
+    getCurrent(): T {
         return this._getCursorEnumerator().getCurrent();
     }
 
@@ -864,7 +876,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} item Новый текущий элемент
      * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
      */
-    setCurrent(item: CollectionItem<S>, silent?: boolean): void {
+    setCurrent(item: T, silent?: boolean): void {
         const oldCurrent = this.getCurrent();
         if (oldCurrent !== item) {
             const enumerator = this._getCursorEnumerator();
@@ -915,7 +927,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает первый элемент
      * @return {Types/_display/CollectionItem}
      */
-    getFirst(): CollectionItem<S> {
+    getFirst(): T {
         const enumerator = this._getUtilityEnumerator();
         enumerator.setPosition(0);
 
@@ -937,7 +949,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает последний элемент
      * @return {Types/_display/CollectionItem}
      */
-    getLast(): CollectionItem<S> {
+    getLast(): T {
         const enumerator = this._getUtilityEnumerator();
         const lastIndex = enumerator.getCount() - 1;
 
@@ -961,7 +973,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} item элемент проекции
      * @return {Types/_display/CollectionItem}
      */
-    getNext(item: CollectionItem<S>): CollectionItem<S> {
+    getNext(item: T): T {
         return this._getNearbyItem(
             this._getUtilityEnumerator(),
             item,
@@ -975,7 +987,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} index элемент проекции
      * @return {Types/_display/CollectionItem}
      */
-    getPrevious(item: CollectionItem<S>): CollectionItem<S> {
+    getPrevious(item: T): T {
         return this._getNearbyItem(
             this._getUtilityEnumerator(),
             item,
@@ -1063,7 +1075,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} item Элемент проекции
      * @return {Number} Индекс элемента проекции в коллекции
      */
-    getSourceIndexByItem(item: CollectionItem<S>): number {
+    getSourceIndexByItem(item: T): number {
         const index = this.getIndex(item as any);
         return index === -1 ? -1 : this.getSourceIndexByIndex(index);
     }
@@ -1108,7 +1120,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Number} index Индекс элемента в коллекции
      * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
      */
-    getItemBySourceIndex(index: number): CollectionItem<S> {
+    getItemBySourceIndex(index: number): T {
         index = this.getIndexBySourceIndex(index);
         return index === -1 ? undefined : this.at(index);
     }
@@ -1118,7 +1130,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {*} item Элемент коллекции
      * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
      */
-    getItemBySourceItem(item: S): CollectionItem<S> {
+    getItemBySourceItem(item: S): T {
         const index = this.getIndexBySourceItem(item);
         return index === -1 ? undefined : this.at(index);
     }
@@ -1347,7 +1359,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @see group
      * @see getGroup
      */
-    setGroup(group: GroupFunction<S, T>): void {
+    setGroup(group?: GroupFunction<S, T>): void {
         if (this._$group === group) {
             return;
         }
@@ -1410,7 +1422,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      *     });
      * </pre>
      */
-    getGroupItems(groupId: string): T[] {
+    getGroupItems(groupId: GroupId): T[] {
         const items = [];
         let currentGroupId;
         this.each((item) => {
@@ -1500,7 +1512,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @see setSort
      * @see addSort
      */
-    getSort(): Array<SortFunction<S>> {
+    getSort(): Array<SortFunction<S, T>> {
         return this._$sort.slice();
     }
 
@@ -1568,7 +1580,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      *     });
      * </pre>
      */
-    setSort(...args: Array<SortFunction<T>>): void {
+    setSort(...args: Array<SortFunction<S, T>>): void {
         const session = this._startUpdateSession();
         const sorts = args[0] instanceof Array ? args[0] : args;
 
@@ -1632,7 +1644,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      *     });
      * </pre>
      */
-    addSort(sort: SortFunction<S>, at?: number): void {
+    addSort(sort: SortFunction<S, T>, at?: number): void {
         if (this._$sort.indexOf(sort) > -1) {
             return;
         }
@@ -1691,7 +1703,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      *     });
      * </pre>
      */
-    removeSort(sort: SortFunction<S>): boolean {
+    removeSort(sort: SortFunction<S, T>): boolean {
         const at = this._$sort.indexOf(sort);
         if (at === -1) {
             return false;
@@ -1718,8 +1730,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает Название свойства элемента коллекции, содержащего его уникальный идентификатор.
      * @return {String}
      */
-    getIdProperty(): string {
-        return this._$idProperty;
+    getKeyProperty(): string {
+        return this._$keyProperty;
     }
 
     /**
@@ -1754,7 +1766,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param {Types/_display/CollectionItem} item Элемент проекции
      * @param {Object} [properties] Изменившиеся свойства
      */
-    notifyItemChange(item: CollectionItem<S>, properties?: object): void {
+    notifyItemChange(item: T, properties?: object): void {
         const isFiltered = this._isFiltered();
         const isGrouped = this._isGrouped();
 
@@ -1775,7 +1787,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
         }
 
         const index = this.getIndex(item as any);
-        const items: ISessionItems<CollectionItem<S>> = [item];
+        const items: ISessionItems<T> = [item];
         items.properties = properties;
 
         this._notifyBeforeCollectionChange();
@@ -1866,17 +1878,17 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
     // region SerializableMixin
 
-    _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, CollectionItem<S>> {
+    _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {
         const resultState = SerializableMixin.prototype._getSerializableState.call(
             this, state
-        ) as ISerializableState<S, CollectionItem<S>>;
+        ) as ISerializableState<S, T>;
 
         resultState._composer = this._composer;
 
         return resultState;
     }
 
-    _setSerializableState(state: ISerializableState<S, CollectionItem<S>>): Function {
+    _setSerializableState(state: ISerializableState<S, T>): Function {
         const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
         return function(): void {
             fromSerializableMixin.call(this);
@@ -1928,15 +1940,15 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     /**
      * Рассчитывает идентификатор элемента коллекции.
      */
-    protected _exctractItemId(item: CollectionItem<S>): string {
+    protected _exctractItemId(item: T): string {
         const contents = item.getContents();
         let uid;
         if (contents['[Types/_entity/Model]']) {
             uid = (contents as any).getId();
-        } else if (this._$idProperty) {
-            uid = object.getPropertyValue(contents, this._$idProperty);
+        } else if (this._$keyProperty) {
+            uid = object.getPropertyValue(contents, this._$keyProperty);
         } else {
-            throw new Error('Option "idProperty" must be defined to extract item unique id.');
+            throw new Error('Option "keyProperty" must be defined to extract item unique id.');
         }
 
         return String(uid);
@@ -1947,7 +1959,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param item Элемент коллекции
      * @param baseId Базовое значение
      */
-    protected _searchItemUid(item: CollectionItem<S>, baseId: string): string {
+    protected _searchItemUid(item: T, baseId: string): string {
         let uid = baseId;
         const itemsUid = this._itemsUid;
         let count = 0;
@@ -1979,9 +1991,9 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
     protected _notifyCollectionChange(
         action: string,
-        newItems: Array<CollectionItem<S>>,
+        newItems: T[],
         newItemsIndex: number,
-        oldItems: Array<CollectionItem<S>>,
+        oldItems: T[],
         oldItemsIndex: number,
         session?: IEnumerableComparatorSession
     ): void {
@@ -2039,7 +2051,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param selecItems массив элементов проекции
      * @param selected Элемент выбран.
      */
-    protected _setSelectedItems(selecItems: Array<CollectionItem<S>>, selected: boolean): void {
+    protected _setSelectedItems(selecItems: T[], selected: boolean): void {
         const items = [];
         selected = !!selected;
         for (let i = selecItems.length - 1; i >= 0; i--) {
@@ -2136,7 +2148,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки)
      * @protected
      */
-    protected _getItems(): Array<CollectionItem<S>> {
+    protected _getItems(): T[] {
         return this._getItemsStrategy().items;
     }
 
@@ -2144,8 +2156,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает функцию, создающую элементы проекции
      * @protected
      */
-    protected _getItemsFactory(): ItemsFactory<CollectionItem<S>> {
-        return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): CollectionItem<S> {
+    protected _getItemsFactory(): ItemsFactory<T> {
+        return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             return resolve(this._itemModule, options);
         };
@@ -2155,7 +2167,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает cтратегию получения элементов проекции
      * @protected
      */
-    protected _getItemsStrategy(): IItemsStrategy<S, CollectionItem<S>> {
+    protected _getItemsStrategy(): IItemsStrategy<S, T> {
         if (!this._composer) {
             this._composer = this._createComposer();
         }
@@ -2175,13 +2187,13 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Создает компоновщик стратегий
      * @protected
      */
-    protected _createComposer(): ItemsStrategyComposer<S, CollectionItem<S>> {
-        const composer = new ItemsStrategyComposer<S, CollectionItem<S>>();
+    protected _createComposer(): ItemsStrategyComposer<S, T> {
+        const composer = new ItemsStrategyComposer<S, T>();
 
         composer.append(DirectItemsStrategy, {
             display: this,
             localize: this._localize,
-            idProperty: this._$idProperty,
+            keyProperty: this._$keyProperty,
             unique: this._$unique
         }).append(UserItemsStrategy, {
             handlers: this._$sort
@@ -2197,7 +2209,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param unlink Отвязать от состояния проекции
      * @protected
      */
-    protected _getEnumerator(unlink?: boolean): CollectionEnumerator<CollectionItem<S>> {
+    protected _getEnumerator(unlink?: boolean): CollectionEnumerator<T> {
         return this._buildEnumerator(
             unlink ? this._getItems().slice() : this._getItems.bind(this),
             unlink ? this._filterMap.slice() : this._filterMap,
@@ -2213,11 +2225,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @protected
      */
     protected _buildEnumerator(
-        items: Array<CollectionItem<S>>,
+        items: T[],
         filterMap: boolean[],
         sortMap: number[]
-    ): CollectionEnumerator<CollectionItem<S>> {
-        return new CollectionEnumerator<CollectionItem<S>>({
+    ): CollectionEnumerator<T> {
+        return new CollectionEnumerator<T>({
             items,
             filterMap,
             sortMap
@@ -2228,7 +2240,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * Возвращает служебный энумератор для организации курсора
      * @protected
      */
-    protected _getCursorEnumerator(): CollectionEnumerator<CollectionItem<S>> {
+    protected _getCursorEnumerator(): CollectionEnumerator<T> {
         return this._cursorEnumerator || (this._cursorEnumerator = this._getEnumerator());
     }
 
@@ -2237,7 +2249,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * относительно заданного
      * @protected
      */
-    protected _getUtilityEnumerator(): CollectionEnumerator<CollectionItem<S>> {
+    protected _getUtilityEnumerator(): CollectionEnumerator<T> {
         return this._utilityEnumerator || (this._utilityEnumerator = this._getEnumerator());
     }
 
@@ -2250,11 +2262,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @protected
      */
     protected _getNearbyItem(
-        enumerator: CollectionEnumerator<CollectionItem<S>>,
-        item: CollectionItem<S>,
+        enumerator: CollectionEnumerator<T>,
+        item: T,
         isNext: boolean,
         skipGroups?: boolean
-    ): CollectionItem<S> {
+    ): T {
         const method = isNext ? 'moveNext' : 'movePrevious';
         let nearbyItem;
 
@@ -2612,9 +2624,9 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @return Замененные элементы
      * @protected
      */
-    protected _replaceItems(start: number, newItems: S[]): ISplicedArray<CollectionItem<S>> {
+    protected _replaceItems(start: number, newItems: S[]): ISplicedArray<T> {
         const strategy = this._getItemsStrategy();
-        const result = strategy.splice(start, newItems.length, newItems) as ISplicedArray<CollectionItem<S>>;
+        const result = strategy.splice(start, newItems.length, newItems) as ISplicedArray<T>;
         result.start = strategy.getDisplayIndex(start);
 
         return result;
@@ -2687,7 +2699,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param item Элемент проекции
      * @protected
      */
-    protected _getItemState(item: CollectionItem<S>): ISessionItemState<CollectionItem<S>> {
+    protected _getItemState(item: T): ISessionItemState<T> {
         return {
             item,
             selected: item.isSelected()
@@ -2699,7 +2711,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @param items Элементы проекции
      * @protected
      */
-    protected _getItemsState(items: Array<CollectionItem<S>>): Array<ISessionItemState<CollectionItem<S>>> {
+    protected _getItemsState(items: T[]): Array<ISessionItemState<T>> {
         return items.map(this._getItemState);
     }
 
@@ -2711,9 +2723,9 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @protected
      */
     protected _getItemsDiff(
-        before: Array<ISessionItemState<CollectionItem<S>>>,
-        after: Array<ISessionItemState<CollectionItem<S>>>
-    ): Array<CollectionItem<S>> {
+        before: Array<ISessionItemState<T>>,
+        after: Array<ISessionItemState<T>>
+    ): T[] {
         return after.filter((itemNow, index) => {
             const itemThen = before[index];
             return Object.keys(itemNow).some((prop) => itemNow[prop] !== itemThen[prop]);
@@ -2732,7 +2744,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      */
     protected _checkItemsDiff(
         session: IEnumerableComparatorSession,
-        items: Array<CollectionItem<S>>,
+        items: T[],
         state: any[],
         beforeCheck: Function
     ): void {
@@ -2771,8 +2783,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
      * @protected
      */
     protected _notifyCurrentChange(
-        newCurrent: CollectionItem<S>,
-        oldCurrent: CollectionItem<S>,
+        newCurrent: T,
+        oldCurrent: T,
         newPosition: number,
         oldPosition: number
     ): void {
@@ -2936,7 +2948,7 @@ Object.assign(Collection.prototype, {
     _$filter: null,
     _$group: null,
     _$sort: null,
-    _$idProperty: '',
+    _$keyProperty: '',
     _$unique: false,
     _$importantItemProperties: null,
     _localize: false,
@@ -2949,7 +2961,8 @@ Object.assign(Collection.prototype, {
     _utilityEnumerator: null,
     _onCollectionChange: null,
     _onCollectionItemChange: null,
-    _oEventRaisingChange: null
+    _oEventRaisingChange: null,
+    getIdProperty: Collection.prototype.getKeyProperty
 });
 
 register('Types/display:Collection', Collection);

@@ -1,4 +1,3 @@
-// @ts-ignore
 import Deferred = require('Core/Deferred');
 
 // tslint:disable-next-line:ban-comma-operator

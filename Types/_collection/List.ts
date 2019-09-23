@@ -5,18 +5,17 @@ import IIndexedCollection from './IIndexedCollection';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
-    CloneableMixin,
-    DestroyableMixin,
-    ICloneable,
-    IEquatable,
-    ISerializableState,
-    ManyToManyMixin,
-    ObservableMixin,
-    OptionsToPropertyMixin,
-    ReadWriteMixin,
-    relation,
-    SerializableMixin,
-    VersionableMixin
+   CloneableMixin,
+   DestroyableMixin,
+   IEquatable,
+   ISerializableState,
+   ManyToManyMixin,
+   ObservableMixin,
+   OptionsToPropertyMixin,
+   ReadWriteMixin,
+   relation,
+   SerializableMixin,
+   VersionableMixin
 } from '../entity';
 import {register} from '../di';
 import {deprecateExtend, mixin, object} from '../util';
@@ -61,7 +60,6 @@ export interface IOptions<T> {
  * @implements Types/_collection/IEnumerable
  * @implements Types/_collection/IList
  * @implements Types/_collection/IIndexedCollection
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
@@ -92,11 +90,10 @@ export default class List<T> extends mixin<
     ReadWriteMixin,
     VersionableMixin
 ) implements
-    IEnumerable<T>,
-    IList<T>,
-    IIndexedCollection,
-    ICloneable,
-    IEquatable {
+   IEnumerable<T>,
+   IList<T>,
+   IIndexedCollection,
+   IEquatable {
 
     /**
      * @cfg {Array.<*>} Элементы списка

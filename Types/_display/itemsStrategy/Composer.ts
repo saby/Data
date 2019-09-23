@@ -73,10 +73,10 @@ export default class Composer<S, T> extends mixin<
     /**
      * Добавляет стратегию в начало
      * @param Module Конструктор стратегии
-     * @param options Опции конструктора
+     * @param [options] Опции конструктора
      * @param [before] Перед какой стратегией добавить (по умолчанию в начало)
      */
-    prepend(Module: Function, options: object, before?: Function): this {
+    prepend(Module: Function, options?: object, before?: Function): this {
         let index = this._modules.indexOf(before);
         if (index === -1) {
             index = 0;

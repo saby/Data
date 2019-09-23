@@ -3,20 +3,20 @@ import CollectionItem from '../CollectionItem';
 import {IEnumerable, IList} from '../../collection';
 import {object} from '../../util';
 
-interface IOptions<S, T> extends IAbstractOptions<S, T> {
+export interface IOptions<S, T extends CollectionItem<S>> extends IAbstractOptions<S, T> {
     childrenProperty: string;
     root: string | Function;
 }
 
 interface ISortOptions {
-    indexToPath: string[];
+    indexToPath: any[];
 }
 
 interface ISorter {
     name: string;
     enabled: boolean;
     method: Function;
-    options: () => object;
+    options: () => ISortOptions;
 }
 
 /**
@@ -25,7 +25,8 @@ interface ISorter {
  * @extends Types/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class MaterializedPath<S, T> extends AbstractStrategy<S, T> {
+export default class MaterializedPath<S, T extends CollectionItem<S> = CollectionItem<S>>
+    extends AbstractStrategy<S, T> {
     /**
      * @typedef {Object} Options
      * @property {Types/_display/Collection} display Проекция
@@ -100,7 +101,7 @@ export default class MaterializedPath<S, T> extends AbstractStrategy<S, T> {
         return items[index];
     }
 
-    splice(start: number): T[] {
+    splice(start: number, deleteCount: number, added?: S[]): T[] {
         this._getItems().length = start;
         this._indexToPath.length = start;
         return [];

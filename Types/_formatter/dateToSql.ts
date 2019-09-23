@@ -19,7 +19,7 @@ const MODE: IHashMap<SerializationMode> = {
 const FORMAT = {
     time: 'HH:mm:ss${ms}Z',
     date: 'YYYY-MM-DD',
-    datetime: 'YYYY-MM-DD HH:mm:ss${ms}Z',
+    datetime: 'YYYY-MM-DD HH:mm:ss${ms}Z'
 };
 
 const UNIX_EPOCH_START = new Date(0);

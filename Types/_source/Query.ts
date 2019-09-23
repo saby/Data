@@ -1,8 +1,8 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {IHashMap} from '../_declarations';
 
-type Where<T = any> = IHashMap<T> | ((item: T, index: number) => boolean);
-type Expression = IHashMap<string> | string[] | string;
+export type Where<T = any> = IHashMap<T> | ((item: T, index: number) => boolean);
+export type Expression = IHashMap<string> | string[] | string;
 
 export enum ExpandMode {
     None,
@@ -147,9 +147,9 @@ export class Join extends OptionsToPropertyMixin {
 }
 
 interface IOrderOptions {
-    selector: string;
-    order: boolean | string;
-    nullPolicy?: boolean;
+   selector: string;
+   order?: boolean | string;
+   nullPolicy?: boolean;
 }
 
 /**
@@ -713,7 +713,16 @@ export default class Query implements ICloneable {
                 for (let i = 0; i < selector.length; i++) {
                     const selectorItem = selector[i];
                     if (selectorItem instanceof Array) {
-                        const [selectorField, selectorOrder, selectorNullPolicy]: [string, boolean, boolean] = selectorItem;
+                        const [
+                            selectorField,
+                            selectorOrder,
+                            selectorNullPolicy
+                        ]: [
+                            string,
+                            boolean,
+                            boolean
+                        ] = selectorItem;
+
                         this._orderBy.push(new Order({
                             selector: selectorField,
                             order: selectorOrder,

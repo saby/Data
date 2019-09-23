@@ -44,12 +44,12 @@ export default class RecordSet extends Abstract {
         return object.setPropertyValue(data, property, value);
     }
 
-    getKeyField(data: any): string {
-        if (data && typeof data.getIdProperty === 'function') {
-            return data.getIdProperty();
-        }
-        return undefined;
-    }
+   getKeyField(data: any): string {
+      if (data && typeof data.getKeyProperty === 'function') {
+         return data.getKeyProperty();
+      }
+      return undefined;
+   }
 }
 
 Object.assign(RecordSet.prototype, {

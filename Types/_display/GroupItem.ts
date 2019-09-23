@@ -2,6 +2,7 @@ import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionIt
 import {register} from '../di';
 
 interface IOptions<T> extends ICollectionItemOptions<T> {
+    expanded?: boolean;
 }
 
 /**

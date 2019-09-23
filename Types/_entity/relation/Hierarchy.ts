@@ -9,25 +9,25 @@ import {mixin} from '../../util';
  *
  * Организуем работу с иерархическим каталогом товаров:
  * <pre>
- *     //Создадим экземпляр иерархических отношений и рекордсет
- *     var hierarchy = new Hierarchy({
- *             idProperty: 'id',
- *             parentProperty: 'parent',
- *             nodeProperty: 'parent@',
- *             declaredChildrenProperty: 'parent$'
- *         }),
- *         catalogue = new RecordSet({
- *             rawData: [
- *                 {id: 1, parent: null, 'parent@': true, 'parent$': true, title: 'Computers'},
- *                 {id: 2, parent: 1, 'parent@': true, 'parent$': false, title: 'Mac'},
- *                 {id: 3, parent: 1, 'parent@': true, 'parent$': true, title: 'PC'},
- *                 {id: 4, parent: null, 'parent@': true, 'parent$': true, title: 'Smartphones'},
- *                 {id: 5, parent: 3, 'parent@': false, title: 'Home Station One'},
- *                 {id: 6, parent: 3, 'parent@': false, title: 'Home Station Two'},
- *                 {id: 7, parent: 4, 'parent@': false, title: 'Apple iPhone 7'},
- *                 {id: 8, parent: 4, 'parent@': false, title: 'Samsung Galaxy Note 7'}
- *             ]
- *         });
+ *    //Создадим экземпляр иерархических отношений и рекордсет
+ *    var hierarchy = new Hierarchy({
+ *          keyProperty: 'id',
+ *          parentProperty: 'parent',
+ *          nodeProperty: 'parent@',
+ *          declaredChildrenProperty: 'parent$'
+ *       }),
+ *       catalogue = new RecordSet({
+ *          rawData: [
+ *             {id: 1, parent: null, 'parent@': true, 'parent$': true, title: 'Computers'},
+ *             {id: 2, parent: 1, 'parent@': true, 'parent$': false, title: 'Mac'},
+ *             {id: 3, parent: 1, 'parent@': true, 'parent$': true, title: 'PC'},
+ *             {id: 4, parent: null, 'parent@': true, 'parent$': true, title: 'Smartphones'},
+ *             {id: 5, parent: 3, 'parent@': false, title: 'Home Station One'},
+ *             {id: 6, parent: 3, 'parent@': false, title: 'Home Station Two'},
+ *             {id: 7, parent: 4, 'parent@': false, title: 'Apple iPhone 7'},
+ *             {id: 8, parent: 4, 'parent@': false, title: 'Samsung Galaxy Note 7'}
+ *          ]
+ *       });
  *
  *     //Проверим, является ли узлом запись 'Computers'
  *     hierarchy.isNode(catalogue.at(0));//true
@@ -65,64 +65,69 @@ export default class Hierarchy extends mixin<
 >(DestroyableMixin, OptionsToPropertyMixin) {
     protected _moduleName: string;
 
-    /**
-     * @cfg {String} Название свойства, содержащего идентификатор узла.
-     * @name Types/_entity/relation/Hierarchy#idProperty
-     * @see getIdProperty
-     * @see setIdProperty
-     */
-    protected _$idProperty: string;
+   /**
+    * @cfg {String} Название свойства, содержащего идентификатор узла.
+    * @name Types/_entity/relation/Hierarchy#keyProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
+    */
+   protected _$keyProperty: string;
 
-    /**
-     * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
-     * @name Types/_entity/relation/Hierarchy#parentProperty
-     * @see getIdProperty
-     * @see setIdProperty
-     */
-    protected _$parentProperty: string;
+   /**
+    * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
+    * @name Types/_entity/relation/Hierarchy#parentProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
+    */
+   protected _$parentProperty: string;
 
-    /**
-     * @cfg {String} Название свойства, содержащего признак узла.
-     * @name Types/_entity/relation/Hierarchy#nodeProperty
-     * @see getIdProperty
-     * @see setIdProperty
-     */
-    protected _$nodeProperty: string;
+   /**
+    * @cfg {String} Название свойства, содержащего признак узла.
+    * @name Types/_entity/relation/Hierarchy#nodeProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
+    */
+   protected _$nodeProperty: string;
 
-    /**
-     * @cfg {String} Название свойства, содержащего декларируемый признак наличия детей.
-     * @name Types/_entity/relation/Hierarchy#declaredChildrenProperty
-     * @see getIdProperty
-     * @see setIdProperty
-     */
-    protected _$declaredChildrenProperty: string;
+   /**
+    * @cfg {String} Название свойства, содержащего декларируемый признак наличия детей.
+    * @name Types/_entity/relation/Hierarchy#declaredChildrenProperty
+    * @see getKeyProperty
+    * @see setKeyProperty
+    */
+   protected _$declaredChildrenProperty: string;
 
-    constructor(options?: object) {
-        super(options);
-        OptionsToPropertyMixin.call(this, options);
-    }
+   constructor(options?: object) {
+      super(options);
+      OptionsToPropertyMixin.call(this, options);
+
+      // Support deprecated  option 'idProperty'
+      if (!this._$keyProperty && options && (options as any).idProperty) {
+         this._$keyProperty = (options as any).idProperty;
+      }
+   }
 
     // region Public methods
 
-    /**
-     * Возвращает название свойства, содержащего идентификатор узла.
-     * @return {String}
-     * @see idProperty
-     * @see setIdProperty
-     */
-    getIdProperty(): string {
-        return this._$idProperty;
-    }
+   /**
+    * Возвращает название свойства, содержащего идентификатор узла.
+    * @return {String}
+    * @see keyProperty
+    * @see setKeyProperty
+    */
+   getKeyProperty(): string {
+      return this._$keyProperty;
+   }
 
-    /**
-     * Устанавливает название свойства, содержащего идентификатор узла.
-     * @param {String} idProperty
-     * @see idProperty
-     * @see getIdProperty
-     */
-    setIdProperty(idProperty: string): void {
-        this._$idProperty = idProperty;
-    }
+   /**
+    * Устанавливает название свойства, содержащего идентификатор узла.
+    * @param {String} keyProperty
+    * @see keyProperty
+    * @see getKeyProperty
+    */
+   setKeyProperty(keyProperty: string): void {
+      this._$keyProperty = keyProperty;
+   }
 
     /**
      * Возвращает название свойства, содержащего идентификатор родительского узла.
@@ -218,7 +223,7 @@ export default class Hierarchy extends mixin<
             })() : [];
         }
 
-        const parentId = this._asField(parent, this._$idProperty);
+        const parentId = this._asField(parent, this._$keyProperty);
         let indices = rs.getIndicesByValue(this._$parentProperty, parentId);
         const children = [];
 
@@ -255,8 +260,8 @@ export default class Hierarchy extends mixin<
     hasParent(child: IObject, rs: RecordSet): boolean {
         child = this._asRecord(child, rs);
         const parentId = child.get(this._$parentProperty);
-        const idProperty = this._$idProperty || rs.getIdProperty();
-        const index = rs.getIndexByValue(idProperty, parentId);
+        const keyProperty = this._$keyProperty || rs.getKeyProperty();
+        const index = rs.getIndexByValue(keyProperty, parentId);
 
         return index > -1;
     }
@@ -292,8 +297,8 @@ export default class Hierarchy extends mixin<
             return value;
         }
 
-        const idProperty = this._$idProperty || rs.getIdProperty();
-        const index = rs.getIndexByValue(idProperty, value);
+        const keyProperty = this._$keyProperty || rs.getKeyProperty();
+        const index = rs.getIndexByValue(keyProperty, value);
 
         if (index === -1) {
             throw new ReferenceError(`${this._moduleName}: record with id "${value}" does not found in the recordset`);
@@ -320,9 +325,11 @@ export default class Hierarchy extends mixin<
 }
 
 Object.assign(Hierarchy.prototype, {
-    '[Types/_entity/relation/Hierarchy]': true,
-    _$idProperty: '',
-    _$parentProperty: '',
-    _$nodeProperty: '',
-    _$declaredChildrenProperty: ''
+   '[Types/_entity/relation/Hierarchy]': true,
+   _$keyProperty: '',
+   _$parentProperty: '',
+   _$nodeProperty: '',
+   _$declaredChildrenProperty: '',
+   getIdProperty: Hierarchy.prototype.getKeyProperty,
+   setIdProperty: Hierarchy.prototype.setKeyProperty
 });

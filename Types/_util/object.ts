@@ -6,7 +6,6 @@
 
 import { IObject, ICloneable } from '../entity';
 import {Set} from '../shim';
-// @ts-ignore
 import Serializer = require('Core/Serializer');
 
 function getPropertyMethodName(property: string, prefix: string): string {

@@ -15,12 +15,10 @@ function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
                 const overrides = {};
                 Object.keys(source).forEach((key) => {
                     const sourceItem = source[key];
-                    if (isTraversable(sourceItem)) {
-                        if (target.hasOwnProperty(key) && !path.has(sourceItem)) {
-                            path.add(sourceItem);
-                            overrides[key] = mergeInner(path, target[key], sourceItem);
-                            path.delete(sourceItem);
-                        }
+                    if (isTraversable(sourceItem) && isTraversable(target[key]) && !path.has(sourceItem)) {
+                        path.add(sourceItem);
+                        overrides[key] = mergeInner(path, target[key], sourceItem);
+                        path.delete(sourceItem);
                     }
                 });
 

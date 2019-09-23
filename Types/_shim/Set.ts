@@ -8,6 +8,8 @@ export class SetPolyfill <T> {
     protected _objects: T[];
     _objectPrefix: string;
 
+    size: number;
+
     constructor() {
         this.clear();
     }

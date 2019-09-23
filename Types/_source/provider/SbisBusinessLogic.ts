@@ -9,6 +9,11 @@ interface IEndPoint {
     address?: string;
 }
 
+interface IOptions {
+    endpoint?: IEndPoint;
+    transport?: any;
+}
+
 /**
  * JSON-RPC Провайдер для бизнес-логики СБиС
  * @class Types/_source/provider/SbisBusinessLogic
@@ -46,10 +51,10 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
      */
     protected _nameSpaceSeparator: string;
 
-    constructor(options?: object) {
-        super();
-        OptionsToPropertyMixin.call(this, options);
-    }
+   constructor(options?: IOptions) {
+      super();
+      OptionsToPropertyMixin.call(this, options);
+   }
 
     /**
      * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям БЛ
@@ -60,7 +65,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-    call(name: string, args: string[] | Object): ExtendPromise<any> {
+    call(name: string, args?: any[] | object): ExtendPromise<any> {
         name = name + '';
         args = args || {};
 

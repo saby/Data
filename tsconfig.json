@@ -10,6 +10,7 @@
     "Env/**/*.ts",
     "test/**/*.ts",
     "Types/**/*.ts",
+    "TypesUnit/**/*.ts",
     "I18n/**/*.ts",
     "View/**/*.ts",
     "WS.Core/**/*.ts"

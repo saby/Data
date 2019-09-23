@@ -7,9 +7,7 @@ import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
 import List from 'Types/_collection/List';
 import {ExtendDate, IExtendDateConstructor} from 'Types/_declarations';
-// @ts-ignore
 import Deferred = require('Core/Deferred');
-// @ts-ignore
 import coreExtend = require('Core/core-extend');
 import 'Types/_entity/adapter/Sbis';
 
@@ -29,7 +27,7 @@ describe('Types/_source/SbisService', () => {
         {n: 'Hired', t: 'Логическое'}
     ];
 
-    // Mock of Types/_source/provider/SbisBusinessLogic
+    // ArrayMock of Types/_source/provider/SbisBusinessLogic
     const SbisBusinessLogic = (() => {
         let lastId = 0;
         const existsId = 7;
@@ -188,7 +186,7 @@ describe('Types/_source/SbisService', () => {
 
                 Mock.lastDeferred = def;
 
-                return def;
+                return def as any;
             }
         });
 
@@ -201,7 +199,7 @@ describe('Types/_source/SbisService', () => {
     const getSampleModel = () => {
         const model = new Model({
             adapter: 'Types/entity:adapter.Sbis',
-            idProperty: '@ID'
+            keyProperty: '@ID'
         });
         model.addField({name: '@ID', type: 'integer'}, undefined, 1);
         model.addField({name: 'LastName', type: 'string'}, undefined, 'tst');
@@ -689,7 +687,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should handle not a composite key', () => {
                 const notABlName = SbisBusinessLogic.existsId + ',(USP)';
-                return service.destroy([notABlName]).addCallbacks(() => {
+                return service.destroy([notABlName]).then(() => {
                     throw new Error('It shouldn\'t be a successful call');
                 }, () => {
                     const args = SbisBusinessLogic.lastRequest.args;

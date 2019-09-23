@@ -12,8 +12,9 @@ import {register} from '../di';
 import {mixin} from '../util';
 
 export interface IOptions<T> {
-    contents: T;
-    owner: Collection<T>;
+    contents?: T;
+    selected?: boolean;
+    owner?: Collection<T>;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -27,7 +28,6 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * @class Types/_display/CollectionItem
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
@@ -73,7 +73,7 @@ export default class CollectionItem<T> extends mixin<
      */
     protected _contentsIndex: number;
 
-    constructor(options: IOptions<T>) {
+    constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
@@ -165,7 +165,9 @@ export default class CollectionItem<T> extends mixin<
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
-        const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
+        const resultState = SerializableMixin.prototype._getSerializableState.call(
+            this, state
+        ) as ISerializableState<T>;
 
         if (resultState.$options.owner) {
             // save element index if collections implements Types/_collection/IList
@@ -219,8 +221,7 @@ export default class CollectionItem<T> extends mixin<
         if (this._$owner) {
             this._$owner.notifyItemChange(
                 this,
-                // @ts-ignore fix argument type
-                property
+                property as any
             );
         }
     }

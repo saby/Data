@@ -2,7 +2,6 @@
 
 import IObject from './IObject';
 import IObservableObject from './IObservableObject';
-import ICloneable from './ICloneable';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import DateTime from './DateTime';
@@ -18,7 +17,7 @@ import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
     IOptions as IFormattableOptions
 } from './FormattableMixin';
-import VersionableMixin from './VersionableMixin';
+import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
 import Time from './Time';
 import {IReceiver} from './relation';
@@ -77,8 +76,8 @@ const CACHE_MODE_ALL = protect('all');
 
 type pairsTuple = [string, any, any];
 
-export interface IOptions extends IFormattableOptions {
-    owner?: RecordSet;
+export interface IOptions extends IFormattableOptions, IVersionableMixinOptions {
+   owner?: RecordSet;
 }
 
 export interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
@@ -226,12 +225,10 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/IObject
  * @implements Types/_entity/IObservableObject
- * @implements Types/_entity/ICloneable
  * @implements Types/_entity/IProducible
  * @implements Types/_entity/IEquatable
  * @implements Types/_collection/IEnumerable
  * @implements Types/_entity/relation/IReceiver
- * @implements Types/_entity/IVersionable
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_entity/SerializableMixin
@@ -268,7 +265,6 @@ export default class Record extends mixin<
 ) implements
     IObject,
     IObservableObject,
-    ICloneable,
     IProducible,
     IEquatable,
     IEnumerable<any>,
@@ -354,11 +350,11 @@ export default class Record extends mixin<
      */
     protected _$cloneChanged: boolean;
 
-    /**
-     * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
-     * @name Types/_entity/Record#owner
-     */
-    protected _$owner: any;
+   /**
+    * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
+    * @name Types/_entity/Record#owner
+    */
+   protected _$owner: RecordSet;
 
     constructor(options?: IOptions) {
         if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
@@ -688,15 +684,18 @@ export default class Record extends mixin<
 
     readonly '[Types/_entity/IProducible]': boolean;
 
-    static produceInstance(data?: any, options?: any): any {
-        const instanceOptions: IOptions = {
-            rawData: data
-        };
-        if (options && options.adapter) {
-            instanceOptions.adapter = options.adapter;
-        }
-        return new this(instanceOptions);
-    }
+   static produceInstance(data?: any, options?: any): any {
+      const instanceOptions: IOptions = {
+         rawData: data
+      };
+      if (options && options.adapter) {
+         instanceOptions.adapter = options.adapter;
+      }
+      if (options && options.formatController) {
+         instanceOptions.formatController = options.formatController;
+      }
+      return new this(instanceOptions);
+   }
 
     // endregion
 
@@ -809,25 +808,23 @@ export default class Record extends mixin<
         this._nextVersion();
     }
 
-    protected _getFormat(build: boolean): format.Format {
-        const owner = this.getOwner();
-        if (owner) {
-            // @ts-ignore
-            return owner._getFormat(build);
-        } else {
-            return super._getFormat.call(this, build);
-        }
-    }
+   protected _getFormat(build: boolean): format.Format {
+      const owner = this.getOwner();
+      if (owner) {
+         return (owner as any)._getFormat(build);
+      } else {
+         return super._getFormat.call(this, build);
+      }
+   }
 
-    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
-        const owner = this.getOwner();
-        if (owner) {
-            // @ts-ignore
-            return owner._getFieldFormat(name, adapter);
-        } else {
-            return super._getFieldFormat.call(this, name, adapter);
-        }
-    }
+   protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
+      const owner = this.getOwner();
+      if (owner) {
+         return (owner as any)._getFieldFormat(name, adapter);
+      } else {
+         return super._getFieldFormat.call(this, name, adapter);
+      }
+   }
 
     protected _getRawDataAdapter: () => IRecord;
 
@@ -1276,7 +1273,8 @@ export default class Record extends mixin<
             this._getFieldType(format),
             {
                 format,
-                adapter: this._getAdapter()
+                adapter: this._getAdapter(),
+                formatController: this._$formatController
             }
         );
     }
@@ -1527,20 +1525,19 @@ export default class Record extends mixin<
 }
 
 Object.assign(Record.prototype, {
-    '[Types/_entity/Record]': true,
-    '[Types/_collection/IEnumerable]': true,
-    '[Types/_entity/ICloneable]': true,
-    '[Types/_entity/IEquatable]': true,
-    '[Types/_entity/IObject]': true,
-    '[Types/_entity/IObservableObject]': true,
-    '[Types/_entity/IProducible]': true,
-    '[Types/_entity/relation/IReceiver]': true,
-    _moduleName: 'Types/entity:Record',
-    _$state: STATES.DETACHED,
-    _$cacheMode: CACHE_MODE_OBJECTS,
-    _$cloneChanged: false,
-    _$owner: null,
-    _acceptedState: undefined
+   '[Types/_entity/Record]': true,
+   '[Types/_collection/IEnumerable]': true,
+   '[Types/_entity/IEquatable]': true,
+   '[Types/_entity/IObject]': true,
+   '[Types/_entity/IObservableObject]': true,
+   '[Types/_entity/IProducible]': true,
+   '[Types/_entity/relation/IReceiver]': true,
+   _moduleName: 'Types/entity:Record',
+   _$state: STATES.DETACHED,
+   _$cacheMode: CACHE_MODE_OBJECTS,
+   _$cloneChanged: false,
+   _$owner: null,
+   _acceptedState: undefined
 });
 
 /**

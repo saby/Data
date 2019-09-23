@@ -24,17 +24,17 @@ export default class Grouped<T> extends Abstract<T> {
      */
     protected _value: string | ValueFunc;
 
-    /**
-     * Конструктор группирующего звена цепочки.
-     * @param source Предыдущее звено.
-     * @param Поле группировки или функция группировки для каждого элемента.
-     * @param [value] Поле значения или функция, возвращающая значение для каждого элемента.
-     */
-    constructor(source: Abstract<T>, key: string|GroupFunc, value: string|ValueFunc) {
-        super(source);
-        this._key = key;
-        this._value = value;
-    }
+   /**
+    * Конструктор группирующего звена цепочки.
+    * @param source Предыдущее звено.
+    * @param Поле группировки или функция группировки для каждого элемента.
+    * @param [value] Поле значения или функция, возвращающая значение для каждого элемента.
+    */
+   constructor(source: Abstract<T>, key?: string|GroupFunc, value?: string|ValueFunc) {
+      super(source);
+      this._key = key;
+      this._value = value;
+   }
 
     destroy(): void {
         this._key = null;

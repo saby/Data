@@ -424,7 +424,9 @@ export default class TimeInterval {
         ];
 
         if (allowedOps.indexOf(operation) === -1) {
-            throw new Error(`Operation "${operation}" is not available. Permitted operations: ${allowedOps.join(', ')}.`);
+            throw new Error(
+                `Operation "${operation}" is not available. Permitted operations: ${allowedOps.join(', ')}.`
+            );
         }
         if (!(this instanceof TimeInterval && operand instanceof TimeInterval)) {
             throw new Error('Operand must be an instance of TimeInterval');
