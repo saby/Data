@@ -821,6 +821,9 @@ export default class RecordSet<T = Model> extends mixin<
                 // Support deprecated  option 'idProperty'
                 instanceOptions.keyProperty = (options as any).idProperty;
             }
+            if (options.formatController) {
+                instanceOptions.formatController = options.formatController;
+            }
         }
         return new this(instanceOptions);
     }

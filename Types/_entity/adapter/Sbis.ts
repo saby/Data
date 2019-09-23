@@ -48,18 +48,23 @@ export default class Sbis extends Abstract implements IFormatController {
         // TODO: primary key field index can be defined in this._data.k. and can be -1
         let index;
         let s;
-        if (data && data.s) {
-            s = data.s;
-            for (let i = 0, l = s.length; i < l; i++) {
-                if (s[i].n && s[i].n[0] === '@') {
-                    index = i;
-                    break;
+
+        if (data) {
+            s = data.s || (typeof data.f === 'number' ? this._formatController.getFormat(data.f) : undefined);
+
+            if (s) {
+                for (let i = 0, l = s.length; i < l; i++) {
+                    if (s[i].n && s[i].n[0] === '@') {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index === undefined && s.length) {
+                    index = 0;
                 }
             }
-            if (index === undefined && s.length) {
-                index = 0;
-            }
         }
+
         return index === undefined ? undefined : s[index].n;
     }
 
