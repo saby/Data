@@ -27,6 +27,7 @@ export interface IDeclaration {
     name: string;
     type: string | Function;
     kind?: string;
+    defaultValue?: any;
 }
 
 /**
