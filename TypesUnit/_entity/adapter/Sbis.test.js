@@ -6,6 +6,7 @@ define([
    'Types/_entity/Model',
    'Types/_entity/Record',
    'Types/_collection/RecordSet',
+   'Types/_entity/adapter/SbisFormatFinder',
    'Core/Date'
 ], function(
    SbisAdapter,
@@ -13,7 +14,8 @@ define([
    SbisRecord,
    Model,
    Record,
-   RecordSet
+   RecordSet,
+   SbisFormatFinder
 ) {
    'use strict';
 
@@ -97,6 +99,27 @@ define([
             };
             assert.equal(adapter.getKeyField(data), '@Фамилия');
          });
+
+         it('should return first field prefixed with "@" from cache', function() {
+            var data = {
+               d: [
+               ],
+               f: 0
+            };
+
+            adapter._formatController = new SbisFormatFinder.default({
+               d: [
+               ],
+               f: 0,
+               s: [
+                  {'n': 'Ид', 't': 'Число целое'},
+                  {'n': '@Фамилия', 't': 'Строка'}
+               ]
+            });
+
+            assert.equal(adapter.getKeyField(data), '@Фамилия');
+         });
+
          it('should return first field', function() {
             assert.equal(adapter.getKeyField(data), 'Ид');
          });
