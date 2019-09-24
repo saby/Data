@@ -235,33 +235,33 @@ export default abstract class SbisFormatMixin implements IFormatController {
     }
 
    addField(format: Field, at: number): void {
-      if (!format || !(format instanceof Field)) {
-         throw new TypeError(
-            `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
-         );
-      }
+       if (!format || !(format instanceof Field)) {
+           throw new TypeError(
+               `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+           );
+       }
 
-        const name = format.getName();
-        if (this._has(name)) {
-            throw new ReferenceError(`${this._moduleName}::addField(): field "${name}" already exists`);
-        }
+       const name = format.getName();
+       if (this._has(name)) {
+           throw new ReferenceError(`${this._moduleName}::addField(): field "${name}" already exists`);
+       }
 
-        this._touchData();
-        if (at === undefined) {
-            at = this._data.s.length;
-        }
-        this._checkFieldIndex(at, true);
+       this._touchData();
+       if (at === undefined) {
+           at = this._data.s.length;
+       }
+       this._checkFieldIndex(at, true);
 
-        this._format[name] = format;
-        this._resetFieldIndices();
-        this._data.s.splice(at, 0, this._buildS(format));
-        this._buildD(
-            at,
-            factory.serialize(
-                format.getDefaultValue(),
-                {format}
-            )
-        );
+       this._format[name] = format;
+       this._resetFieldIndices();
+       this._data.s.splice(at, 0, this._buildS(format));
+       this._buildD(
+           at,
+           factory.serialize(
+               format.getDefaultValue(),
+               {format}
+           )
+       );
     }
 
     removeField(name: string): void {
