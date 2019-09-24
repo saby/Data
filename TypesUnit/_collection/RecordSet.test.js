@@ -8,6 +8,7 @@ define([
    'Types/_entity/adapter/Json',
    'Types/_entity/adapter/Sbis',
    'Types/_entity/adapter/Cow',
+   'Types/_entity/adapter/SbisFormatFinder',
    'Core/core-extend',
    'Core/Serializer'
 ], function(
@@ -19,6 +20,7 @@ define([
    JsonAdapter,
    SbisAdapter,
    CowAdapter,
+   SbisFormatFinder,
    coreExtend,
    Serializer
 ) {
@@ -2662,6 +2664,14 @@ define([
 
             assert.instanceOf(instance, Foo);
             assert.equal(instance.getModel(), 'fooModel');
+         });
+
+         it('should return an instance with format controller', function() {
+            var formatController = new SbisFormatFinder.default();
+            var instance = RecordSet.produceInstance([], {formatController});
+
+            assert.instanceOf(instance, RecordSet);
+            assert.deepEqual(instance._$formatController, formatController);
          });
 
          it('should return an instance with the given keyProperty', function() {
