@@ -93,6 +93,21 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
+function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatController: FormatController): void {
+    Object.defineProperty(data, 's', {
+        configurable: true,
+        get(): IFieldFormat[] {
+            if (data.f) {
+                return formatController.getFormat(data.f);
+            }
+        },
+        set(value: IFieldFormat[]): void {
+            delete data.s;
+            data.s = value;
+        }
+    });
+}
+
 /**
  * Миксин для работы с СБИС-форматом в адаптерах
  * @mixin Types/_entity/adapter/SbisFormatMixin
@@ -100,13 +115,11 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
  * @author Мальцев А.А.
  */
 export default abstract class SbisFormatMixin implements IFormatController {
-   '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+   readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
-   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+   readonly '[Types/_entity/format/IFormatController]': boolean;
 
    protected _formatController: FormatController;
-
-   protected _cachedFormat: IFieldFormat[];
 
    protected _moduleName: string;
 
@@ -156,35 +169,15 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
         this._data = data;
         this._format = {};
-
-        if (fieldIndicesSymbol && data && data.s) {
-            data.s[fieldIndicesSymbol] = null;
-        }
-
-        if (this._data && this._data.s === undefined) {
-            const self = this;
-
-            Object.defineProperty(this._data, 's', {
-                get(): IFieldFormat[] {
-                    if (self._cachedFormat) {
-                       return self._cachedFormat;
-                    }
-
-                    if (data.f) {
-                       return self._formatController.getFormat(data.f);
-                    }
-                },
-                set(value: IFieldFormat[]): void {
-                    self._cachedFormat = value;
-                }
-           });
-      }
-   }
+    }
 
    // region IFormatController
 
    setFormatController(controller: FormatController): void {
-      this._formatController = controller;
+       this._formatController = controller;
+       if (this._data && this._data.s === undefined) {
+           defineCalculatedFormat(this._data, this._formatController);
+       }
    }
 
    // endregion
@@ -195,16 +188,16 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return this._data;
     }
 
-   getFields(): string[] {
-      const fields = [];
-      if (this._isValidData()) {
-         const s = this._data.s;
-         for (let i = 0, count = s.length; i < count; i++) {
-            fields.push(s[i].n);
-         }
-      }
-      return fields;
-   }
+    getFields(): string[] {
+        const fields = [];
+        if (this._isValidData()) {
+            const s = this._data.s;
+            for (let i = 0, count = s.length; i < count; i++) {
+                fields.push(s[i].n);
+            }
+        }
+        return fields;
+    }
 
     clear(): void {
         this._touchData();
@@ -339,8 +332,15 @@ export default abstract class SbisFormatMixin implements IFormatController {
         const s = this._data.s;
         let fieldIndices = fieldIndicesSymbol ? s[fieldIndicesSymbol] : this._fieldIndices;
 
-        if (!fieldIndicesSymbol && fieldIndices && this._fieldIndices['[{s}]'] !== s) {
-            fieldIndices = null;
+        if (fieldIndices) {
+            // Invalidate if size doesn't match
+            if (fieldIndicesSymbol && fieldIndices.size !== s.length) {
+                fieldIndices = null;
+            }
+            // Invalidate if reference doesn't match
+            if (!fieldIndicesSymbol && this._fieldIndices['[{s}]'] !== s) {
+                fieldIndices = null;
+            }
         }
 
         if (!fieldIndices) {
@@ -598,6 +598,5 @@ Object.assign(SbisFormatMixin.prototype, {
    _format: null,
    _sharedFieldFormat: null,
    _sharedFieldMeta: null,
-   _cachedFormat: null,
    _formatController: null
 });

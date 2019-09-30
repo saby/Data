@@ -100,14 +100,14 @@ define([
             assert.equal(adapter.getKeyField(data), '@Фамилия');
          });
 
-         it('should return first field prefixed with "@" from cache', function() {
+         it('should return first field prefixed with "@" from format controller', function() {
             var data = {
                d: [
                ],
                f: 0
             };
 
-            adapter._formatController = new SbisFormatFinder.default({
+            adapter.setFormatController(new SbisFormatFinder.default({
                d: [
                ],
                f: 0,
@@ -115,7 +115,7 @@ define([
                   {'n': 'Ид', 't': 'Число целое'},
                   {'n': '@Фамилия', 't': 'Строка'}
                ]
-            });
+            }));
 
             assert.equal(adapter.getKeyField(data), '@Фамилия');
          });

@@ -1,11 +1,13 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
    'Types/_entity/adapter/SbisRecord',
+   'Types/_entity/adapter/SbisFormatFinder',
    'Types/_entity/format',
    'Types/_entity/format/fieldsFactory',
    'Types/_collection/RecordSet'
 ], function(
    SbisRecord,
+   SbisFormatFinder,
    fieldFormat,
    fieldsFactory,
    RecordSet
@@ -13,6 +15,7 @@ define([
    'use strict';
 
    SbisRecord = SbisRecord.default;
+   SbisFormatFinder = SbisFormatFinder.default;
    fieldsFactory = fieldsFactory.default;
    RecordSet = RecordSet.default;
 
@@ -1251,6 +1254,24 @@ define([
             assert.throws(function() {
                adapter.removeFieldAt(9);
             });
+         });
+      });
+
+      describe('.setFormatController()', function() {
+         it('should create enumerable property named "s" after add a field', function() {
+            var data = {};
+            var adapter = new SbisRecord(data);
+            var controller = new SbisFormatFinder(data);
+            var field = fieldsFactory({
+               type: 'string',
+               name: 'foo'
+            });
+            adapter.setFormatController(controller);
+            adapter.addField(field);
+
+            var keys = Object.keys(data);
+            assert.notEqual(keys.indexOf('s'), -1);
+            assert.strictEqual(data.s[0].n, 'foo');
          });
       });
    });

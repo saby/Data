@@ -20,7 +20,7 @@ import IFormatController from '../adapter/IFormatController';
 export default class Sbis extends Abstract implements IFormatController {
    protected _formatController: FormatController;
 
-   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+   readonly '[Types/_entity/format/IFormatController]': boolean;
 
    forTable(data: ITableFormat): SbisTable {
       const table =  new SbisTable(data);
