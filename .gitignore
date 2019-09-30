@@ -28,8 +28,11 @@
 # Temporarily: for complied tests
 /TypesUnit/_chain/**/*.js
 /TypesUnit/_display/**/*.js
+/TypesUnit/_entity/adapter/Sbis.test.js
+/TypesUnit/_entity/adapter/SbisRecord.test.js
 /TypesUnit/_entity/Date.test.js
 /TypesUnit/_entity/DateTime.test.js
+/TypesUnit/_entity/JSONML.test.js
 /TypesUnit/_entity/ReactiveObject.test.js
 /TypesUnit/_entity/Time.test.js
 /TypesUnit/_formatter/**/*.js

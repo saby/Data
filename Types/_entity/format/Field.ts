@@ -59,7 +59,7 @@ export default abstract class Field extends mixin<
      */
     _typeName: string;
 
-    constructor(options?: Object) {
+    constructor(options?: object) {
         super(options);
         OptionsToPropertyMixin.call(this, options);
     }

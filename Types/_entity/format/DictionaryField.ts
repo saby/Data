@@ -1,4 +1,7 @@
 import Field from './Field';
+import {IHashMap} from '../../_declarations';
+
+type Dictionary = string[] | IHashMap<string>;
 
 /**
  * Формат поля со словарём (абстрактный класс)
@@ -13,23 +16,22 @@ export default class DictionaryField extends Field {
      * @name Types/_entity/format/DictionaryField#dictionary
      * @see getDictionary
      */
-    _$dictionary: string[];
+    _$dictionary: Dictionary;
 
     /**
      * @cfg {Array.<String>} Локализованный словарь возможных значений
      * @name Types/_entity/format/DictionaryField#localeDictionary
      * @see getDictionary
      */
-    _$localeDictionary: string[];
+    _$localeDictionary: Dictionary;
 
     // region Public methods
 
     /**
      * Возвращает словарь возможных значений
-     * @return {Array.<String>}
      * @see dictionary
      */
-    getDictionary(): string[] {
+    getDictionary(): Dictionary {
         return this._$dictionary;
     }
 
@@ -38,7 +40,7 @@ export default class DictionaryField extends Field {
      * @return {Array.<String>}
      * @see dictionary
      */
-    getLocaleDictionary(): string[] {
+    getLocaleDictionary(): Dictionary {
         return this._$localeDictionary;
     }
 

@@ -22,12 +22,19 @@ import ArrayField from './ArrayField';
 import Field from './Field';
 import {isRegistered, resolve} from '../../di';
 import {logger} from '../../util';
+import {IHashMap} from '../../_declarations';
+
+type Dictionary = string[] | IHashMap<string>;
 
 export interface IDeclaration {
     name: string;
     type: string | Function;
-    kind?: string;
     defaultValue?: any;
+    kind?: string;
+    precision?: number;
+    large?: boolean;
+    withoutTimeZone?: boolean;
+    dictionary?: Dictionary;
 }
 
 /**
@@ -44,7 +51,7 @@ export interface IDeclaration {
  * @public
  * @author Мальцев А.А.
  */
-export default function(declaration: IDeclaration): Field {
+export default function<T extends Field = Field>(declaration: IDeclaration): T {
      /**
       * @typedef {String} FieldType
       * @variant boolean Logical
@@ -89,62 +96,62 @@ export default function(declaration: IDeclaration): Field {
     if (typeof type === 'string') {
         switch (type.toLowerCase()) {
             case 'boolean':
-                return new BooleanField(declaration);
+                return new BooleanField(declaration) as any;
             case 'integer':
-                return new IntegerField(declaration);
+                return new IntegerField(declaration) as any;
             case 'real':
-                return new RealField(declaration);
+                return new RealField(declaration) as any;
             case 'money':
-                return new MoneyField(declaration);
+                return new MoneyField(declaration) as any;
             case 'string':
-                return new StringField(declaration);
+                return new StringField(declaration) as any;
             case 'text':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
                     'Type "text" has been removed in 3.18.10. Use "string" instead.'
                 );
                 declaration.type = 'string';
-                return new StringField(declaration);
+                return new StringField(declaration) as any;
             case 'xml':
-                return new XmlField(declaration);
+                return new XmlField(declaration) as any;
             case 'datetime':
-                return new DateTimeField(declaration);
+                return new DateTimeField(declaration) as any;
             case 'date':
-                return new DateField(declaration);
+                return new DateField(declaration) as any;
             case 'time':
-                return new TimeField(declaration);
+                return new TimeField(declaration) as any;
             case 'timeinterval':
-                return new TimeIntervalField(declaration);
+                return new TimeIntervalField(declaration) as any;
             case 'link':
-                return new LinkField(declaration);
+                return new LinkField(declaration) as any;
             case 'identity':
-                return new IdentityField(declaration);
+                return new IdentityField(declaration) as any;
             case 'enum':
-                return new EnumField(declaration);
+                return new EnumField(declaration) as any;
             case 'flags':
-                return new FlagsField(declaration);
+                return new FlagsField(declaration) as any;
             case 'record':
             case 'model':
-                return new RecordField(declaration);
+                return new RecordField(declaration) as any;
             case 'recordset':
-                return new RecordSetField(declaration);
+                return new RecordSetField(declaration) as any;
             case 'binary':
-                return new BinaryField(declaration);
+                return new BinaryField(declaration) as any;
             case 'uuid':
-                return new UuidField(declaration);
+                return new UuidField(declaration) as any;
             case 'rpcfile':
-                return new RpcFileField(declaration);
+                return new RpcFileField(declaration) as any;
             case 'hierarchy':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
                     'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.'
                 );
                 declaration.type = 'identity';
-                return new IdentityField(declaration);
+                return new IdentityField(declaration) as any;
             case 'object':
-                return new ObjectField(declaration);
+                return new ObjectField(declaration) as any;
             case 'array':
-                return new ArrayField(declaration);
+                return new ArrayField(declaration) as any;
         }
 
         if (isRegistered(type)) {
@@ -156,24 +163,24 @@ export default function(declaration: IDeclaration): Field {
         const inst = Object.create(type.prototype);
         if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
             // Yes it's Types/_entity/Record
-            return new RecordField(declaration);
+            return new RecordField(declaration) as any;
         } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
             // Yes it's Types/_collection/RecordSet
-            return new RecordSetField(declaration);
+            return new RecordSetField(declaration) as any;
         } else if (inst['[Types/_collection/IEnum]']) {
-            return new EnumField(declaration);
+            return new EnumField(declaration) as any;
         } else if (inst['[Types/_collection/IFlags]']) {
-            return new FlagsField(declaration);
+            return new FlagsField(declaration) as any;
         } else if (inst instanceof Array) {
-            return new ArrayField(declaration);
+            return new ArrayField(declaration) as any;
         } else if (inst instanceof Date) {
-            return new DateField(declaration);
+            return new DateField(declaration) as any;
         } else if (inst instanceof String) {
-            return new StringField(declaration);
+            return new StringField(declaration) as any;
         } else if (inst instanceof Number) {
-            return new RealField(declaration);
+            return new RealField(declaration) as any;
         } else if (type === Object) {
-            return new ObjectField(declaration);
+            return new ObjectField(declaration) as any;
         }
     }
 

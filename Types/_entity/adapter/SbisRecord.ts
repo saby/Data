@@ -54,7 +54,7 @@ export default class SbisRecord extends mixin<
      * Конструктор
      * @param data Сырые данные
      */
-    constructor(data: IRecordFormat) {
+    constructor(data?: IRecordFormat) {
         super(data);
         SbisFormatMixin.call(this, data);
     }

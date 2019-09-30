@@ -22,14 +22,14 @@ export default class Sbis extends Abstract implements IFormatController {
 
    readonly '[Types/_entity/format/IFormatController]': boolean;
 
-   forTable(data: ITableFormat): SbisTable {
+   forTable(data?: ITableFormat): SbisTable {
       const table =  new SbisTable(data);
       table.setFormatController(this._formatController);
 
       return table;
    }
 
-   forRecord(data: IRecordFormat): SbisRecord {
+   forRecord(data?: IRecordFormat): SbisRecord {
       const record = new SbisRecord(data);
       record.setFormatController(this._formatController);
 

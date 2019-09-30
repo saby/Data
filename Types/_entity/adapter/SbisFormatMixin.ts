@@ -43,7 +43,7 @@ export interface IDictFieldType extends IFieldType {
     sl?: string[] | IHashMap<string>;
 }
 
-export interface IDateTeimeFieldType extends IFieldType {
+export interface IDateTimeFieldType extends IFieldType {
     tz: boolean;
 }
 
@@ -204,14 +204,14 @@ export default abstract class SbisFormatMixin implements IFormatController {
         this._data.d.length = 0;
     }
 
-    getFormat(name: string): Field {
+    getFormat<T extends Field = Field>(name: string): T {
         if (!this._has(name)) {
             throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
         }
         if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
         }
-        return this._format[name];
+        return this._format[name] as T;
     }
 
     getSharedFormat(name: string): UniversalField {
@@ -227,7 +227,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return format;
     }
 
-   addField(format: Field, at: number): void {
+   addField(format: Field, at?: number): void {
        if (!format || !(format instanceof Field)) {
            throw new TypeError(
                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
@@ -417,9 +417,9 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
             case 'datetime':
                 (meta as IUniversalFieldDateTimeMeta).withoutTimeZone = info.t
-                    && (info.t as IDateTeimeFieldType).n
-                    && 'tz' in (info.t as IDateTeimeFieldType)
-                        ? !(info.t as IDateTeimeFieldType).tz
+                    && (info.t as IDateTimeFieldType).n
+                    && 'tz' in (info.t as IDateTimeFieldType)
+                        ? !(info.t as IDateTimeFieldType).tz
                         : false;
                 break;
 
@@ -497,8 +497,8 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return declaration;
     }
 
-    protected _buildFormat(name: string): Field {
-        return fieldsFactory(
+    protected _buildFormat<T extends Field = Field>(name: string): T {
+        return fieldsFactory<T>(
             this._buildFormatDeclaration(name)
         );
     }
@@ -562,7 +562,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             case 'datetime':
                 const withoutTimeZone = (format as DateTimeField).isWithoutTimeZone();
                 if (withoutTimeZone) {
-                    (data.t as IDateTeimeFieldType) = {
+                    (data.t as IDateTimeFieldType) = {
                         n: FIELD_TYPE[type],
                         tz: !withoutTimeZone
                     };
