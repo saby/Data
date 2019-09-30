@@ -1,10 +1,14 @@
+import {IHashMap} from '../../_declarations';
+
+type Dictionary = string[] | IHashMap<string>;
+
 export interface IDateTimeMeta {
     withoutTimeZone: boolean;
 }
 
 export interface IDictionaryMeta {
-    dictionary: any[];
-    localeDictionary?: any[];
+    dictionary: Dictionary;
+    localeDictionary?: Dictionary;
 }
 
 export interface IRealMeta {

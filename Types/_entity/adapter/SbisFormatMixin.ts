@@ -43,7 +43,7 @@ export interface IDictFieldType extends IFieldType {
     sl?: string[] | IHashMap<string>;
 }
 
-export interface IDateTeimeFieldType extends IFieldType {
+export interface IDateTimeFieldType extends IFieldType {
     tz: boolean;
 }
 
@@ -93,6 +93,21 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
+function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatController: FormatController): void {
+    Object.defineProperty(data, 's', {
+        configurable: true,
+        get(): IFieldFormat[] {
+            if (data.f) {
+                return formatController.getFormat(data.f);
+            }
+        },
+        set(value: IFieldFormat[]): void {
+            delete data.s;
+            data.s = value;
+        }
+    });
+}
+
 /**
  * Миксин для работы с СБИС-форматом в адаптерах
  * @mixin Types/_entity/adapter/SbisFormatMixin
@@ -100,13 +115,11 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
  * @author Мальцев А.А.
  */
 export default abstract class SbisFormatMixin implements IFormatController {
-   '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+   readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
-   readonly '[Types/_entity/format/IFormatController]': boolean = true;
+   readonly '[Types/_entity/format/IFormatController]': boolean;
 
    protected _formatController: FormatController;
-
-   protected _cachedFormat: IFieldFormat[];
 
    protected _moduleName: string;
 
@@ -156,35 +169,15 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
         this._data = data;
         this._format = {};
-
-        if (fieldIndicesSymbol && data && data.s) {
-            data.s[fieldIndicesSymbol] = null;
-        }
-
-        if (this._data && this._data.s === undefined) {
-            const self = this;
-
-            Object.defineProperty(this._data, 's', {
-                get(): IFieldFormat[] {
-                    if (self._cachedFormat) {
-                       return self._cachedFormat;
-                    }
-
-                    if (data.f) {
-                       return self._formatController.getFormat(data.f);
-                    }
-                },
-                set(value: IFieldFormat[]): void {
-                    self._cachedFormat = value;
-                }
-           });
-      }
-   }
+    }
 
    // region IFormatController
 
    setFormatController(controller: FormatController): void {
-      this._formatController = controller;
+       this._formatController = controller;
+       if (this._data && this._data.s === undefined) {
+           defineCalculatedFormat(this._data, this._formatController);
+       }
    }
 
    // endregion
@@ -195,30 +188,30 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return this._data;
     }
 
-   getFields(): string[] {
-      const fields = [];
-      if (this._isValidData()) {
-         const s = this._data.s;
-         for (let i = 0, count = s.length; i < count; i++) {
-            fields.push(s[i].n);
-         }
-      }
-      return fields;
-   }
+    getFields(): string[] {
+        const fields = [];
+        if (this._isValidData()) {
+            const s = this._data.s;
+            for (let i = 0, count = s.length; i < count; i++) {
+                fields.push(s[i].n);
+            }
+        }
+        return fields;
+    }
 
     clear(): void {
         this._touchData();
         this._data.d.length = 0;
     }
 
-    getFormat(name: string): Field {
+    getFormat<T extends Field = Field>(name: string): T {
         if (!this._has(name)) {
             throw new ReferenceError(`${this._moduleName}::getFormat(): field "${name}" doesn't exist`);
         }
         if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
         }
-        return this._format[name];
+        return this._format[name] as T;
     }
 
     getSharedFormat(name: string): UniversalField {
@@ -234,7 +227,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return format;
     }
 
-   addField(format: Field, at: number): void {
+   addField(format: Field, at?: number): void {
        if (!format || !(format instanceof Field)) {
            throw new TypeError(
                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
@@ -339,8 +332,15 @@ export default abstract class SbisFormatMixin implements IFormatController {
         const s = this._data.s;
         let fieldIndices = fieldIndicesSymbol ? s[fieldIndicesSymbol] : this._fieldIndices;
 
-        if (!fieldIndicesSymbol && fieldIndices && this._fieldIndices['[{s}]'] !== s) {
-            fieldIndices = null;
+        if (fieldIndices) {
+            // Invalidate if size doesn't match
+            if (fieldIndicesSymbol && fieldIndices.size !== s.length) {
+                fieldIndices = null;
+            }
+            // Invalidate if reference doesn't match
+            if (!fieldIndicesSymbol && this._fieldIndices['[{s}]'] !== s) {
+                fieldIndices = null;
+            }
         }
 
         if (!fieldIndices) {
@@ -417,9 +417,9 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
             case 'datetime':
                 (meta as IUniversalFieldDateTimeMeta).withoutTimeZone = info.t
-                    && (info.t as IDateTeimeFieldType).n
-                    && 'tz' in (info.t as IDateTeimeFieldType)
-                        ? !(info.t as IDateTeimeFieldType).tz
+                    && (info.t as IDateTimeFieldType).n
+                    && 'tz' in (info.t as IDateTimeFieldType)
+                        ? !(info.t as IDateTimeFieldType).tz
                         : false;
                 break;
 
@@ -497,8 +497,8 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return declaration;
     }
 
-    protected _buildFormat(name: string): Field {
-        return fieldsFactory(
+    protected _buildFormat<T extends Field = Field>(name: string): T {
+        return fieldsFactory<T>(
             this._buildFormatDeclaration(name)
         );
     }
@@ -562,7 +562,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             case 'datetime':
                 const withoutTimeZone = (format as DateTimeField).isWithoutTimeZone();
                 if (withoutTimeZone) {
-                    (data.t as IDateTeimeFieldType) = {
+                    (data.t as IDateTimeFieldType) = {
                         n: FIELD_TYPE[type],
                         tz: !withoutTimeZone
                     };
@@ -598,6 +598,5 @@ Object.assign(SbisFormatMixin.prototype, {
    _format: null,
    _sharedFieldFormat: null,
    _sharedFieldMeta: null,
-   _cachedFormat: null,
    _formatController: null
 });

@@ -1,6 +1,6 @@
 import ICloneable from './ICloneable';
 import {protect} from '../util';
-import Serializer = require('Core/Serializer');
+import * as Serializer from 'Core/Serializer';
 
 const $clone = protect('clone');
 
