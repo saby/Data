@@ -182,7 +182,7 @@ export default abstract class Dictionary<T> extends mixin<
      * @return {Array}
      * @protected
      */
-    protected _getDictionaryByFormat(format: format.Field | format.UniversalField): any[] {
+    protected _getDictionaryByFormat(format: format.Field | format.UniversalField): any[] | IHashMap<any> {
         if (!format) {
             return [];
         }
@@ -200,7 +200,7 @@ export default abstract class Dictionary<T> extends mixin<
      * @return {Array|undefined}
      * @protected
      */
-    protected _getLocaleDictionaryByFormat(format: format.Field | format.UniversalField): any[] {
+    protected _getLocaleDictionaryByFormat(format: format.Field | format.UniversalField): any[] | IHashMap<any> {
         if (!format) {
             return;
         }

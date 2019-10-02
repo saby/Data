@@ -2965,4 +2965,4 @@ Object.assign(Collection.prototype, {
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
-register('Types/display:Collection', Collection);
+register('Types/display:Collection', Collection, {instantiate: false});

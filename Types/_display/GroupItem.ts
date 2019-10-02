@@ -60,4 +60,4 @@ Object.assign(GroupItem.prototype, {
     _$expanded: true
 });
 
-register('Types/display:GroupItem', GroupItem);
+register('Types/display:GroupItem', GroupItem, {instantiate: false});
