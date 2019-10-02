@@ -21,7 +21,7 @@ import {
     EventRaisingMixin,
     IEnumerableComparatorSession
 } from '../collection';
-import {create, resolve, register} from '../di';
+import {create, register} from '../di';
 import {mixin, object} from '../util';
 import {Set, Map} from '../shim';
 import {Object as EventObject} from 'Env/Event';
@@ -2159,7 +2159,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemsFactory(): ItemsFactory<T> {
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
-            return resolve(this._itemModule, options);
+            return create(this._itemModule, options);
         };
     }
 
@@ -2965,4 +2965,4 @@ Object.assign(Collection.prototype, {
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
-register('Types/display:Collection', Collection);
+register('Types/display:Collection', Collection, {instantiate: false});
