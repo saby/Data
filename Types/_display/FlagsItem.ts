@@ -33,4 +33,4 @@ Object.assign(FlagsItem.prototype, {
     _moduleName: 'Types/display:FlagsItem'
 });
 
-register('Types/display:FlagsItem', FlagsItem);
+register('Types/display:FlagsItem', FlagsItem, {instantiate: false});

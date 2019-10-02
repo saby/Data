@@ -43,4 +43,4 @@ export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
 TreeChildren.prototype['[Types/_display/TreeChildren]'] = true;
 TreeChildren.prototype._$owner = null;
 
-register('Types/display:TreeChildren', TreeChildren);
+register('Types/display:TreeChildren', TreeChildren, {instantiate: false});

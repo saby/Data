@@ -22,6 +22,7 @@ import {create, resolve} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
 import {List, RecordSet} from '../collection';
 import renders = require('Core/defaultRenders');
+import {IHashMap} from '../_declarations';
 
 type ValueType = string | Function | IProducible;
 
@@ -34,7 +35,7 @@ const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
  * Возвращает словарь для поля типа "Словарь"
  * @param format Формат поля
  */
-function getDictionary(format: DictionaryField | UniversalField): any[] {
+function getDictionary(format: DictionaryField | UniversalField): any[] | IHashMap<any> {
     return (format instanceof DictionaryField
         ? format.getDictionary()
         : format.meta && (format.meta as IUniversalFieldDictionaryMeta).dictionary

@@ -119,4 +119,4 @@ Object.assign(Enum.prototype, {
     _onSourceChange: null
 });
 
-register('Types/display:Enum', Enum);
+register('Types/display:Enum', Enum, {instantiate: false});

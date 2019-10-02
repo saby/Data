@@ -239,4 +239,4 @@ Object.assign(CollectionItem.prototype, {
     _contentsIndex: undefined
 });
 
-register('Types/display:CollectionItem', CollectionItem);
+register('Types/display:CollectionItem', CollectionItem, {instantiate: false});

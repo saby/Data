@@ -25,4 +25,4 @@ Object.assign(Search.prototype, {
     '[Types/_display/Search]': true
 });
 
-register('Types/display:Search', Search);
+register('Types/display:Search', Search, {instantiate: false});

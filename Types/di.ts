@@ -1,3 +1,5 @@
+import {IHashMap} from './_declarations';
+
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
  * @class
@@ -9,6 +11,11 @@
 
 const SINGLETONE_MAP_INDEX = 2;
 const map = {};
+
+interface IOptions {
+    instantiate?: boolean;
+    single?: boolean;
+}
 
 /**
  * Проверяет валидность названия зависимости
@@ -69,7 +76,7 @@ function checkAlias(alias: string): void {
  *     });
  * </pre>
  */
-export function register(alias: string, factory: Function | object, options?: object): void {
+export function register(alias: string, factory: Function | object, options?: IOptions): void {
     checkAlias(alias);
     map[alias] = [factory, options];
 }
@@ -120,7 +127,7 @@ export function isRegistered(alias: string): boolean {
  *     });
  * </pre>
  */
-export function create<T>(alias: string | Function | object, options?: object): T {
+export function create<T>(alias: string | Function | object, options?: IHashMap<any>): T {
     const result = resolve<T>(alias, options);
     if (typeof result === 'function') {
         return resolve(result, options);
@@ -150,10 +157,10 @@ export function create<T>(alias: string | Function | object, options?: object): 
  *     });
  * </pre>
  */
-export function resolve<T>(alias: string | Function | object, options?: object): T {
+export function resolve<T>(alias: string | Function | object, options?: IHashMap<any>): T {
     const aliasType = typeof alias;
     let Factory;
-    let config;
+    let config: IOptions;
     let singleInst;
 
     switch (aliasType) {
@@ -162,7 +169,7 @@ export function resolve<T>(alias: string | Function | object, options?: object):
             break;
         case 'object':
             Factory = alias;
-            config = { instantiate: false };
+            config = {instantiate: false};
             break;
         default:
             if (!isRegistered(alias as string)) {
