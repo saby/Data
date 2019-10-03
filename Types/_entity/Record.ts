@@ -429,12 +429,18 @@ export default class Record extends mixin<
      * @return Изменившиеся значения
      * @protected
      */
-    protected _setPairs(pairs: pairsTuple[], errors: string[]): object {
+    protected _setPairs(pairs: pairsTuple[], errors: Error[]): object {
+        const format = this.hasDeclaredFormat() ? this._getFormat(false) : null;
+        const hasDeclaredPartialFormat = this._hasDeclaredPartialFormat();
         let changed = null;
 
         pairs.forEach((item) => {
             const [key, newValue, oldValue]: pairsTuple = item;
             let value = newValue;
+
+            if (!hasDeclaredPartialFormat && format && format.getFieldIndex(key) === -1) {
+                errors.push(new ReferenceError(`Field ${key} doesn't defined in record format`));
+            }
 
             // Check if value changed
             if (isEqualValues(value, oldValue)) {
@@ -708,7 +714,7 @@ export default class Record extends mixin<
 
         // Keep format if record has owner with format
         if (resultState.$options.owner && resultState.$options.owner.hasDeclaredFormat()) {
-            resultState._format = resultState.$options.owner.getFormat();
+            resultState.$options.format = resultState.$options.owner.getFormat();
         }
 
         delete resultState.$options.owner;
@@ -725,9 +731,6 @@ export default class Record extends mixin<
             fromFormattableMixin.call(this);
 
             this[$changedFields] = state._changedFields;
-            if (state._format) {
-                this._$format = state._format;
-            }
         };
     }
 

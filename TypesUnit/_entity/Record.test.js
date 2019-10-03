@@ -404,19 +404,28 @@ define([
             assert.strictEqual(data.foo[1], 'new');
          });
 
-         it('should set value to the raw data if it\'s even not defined in the format', function() {
+         it('should set field value if it\'s not defined in partial format', function() {
             var record = new Record({
-               format: [
-                  {name: 'a', type: 'integer'}
-               ]
+               format: {
+                  'a': 'integer'
+               }
             });
-
-            record.set('a', 1);
-            assert.strictEqual(record.getRawData().a, 1);
 
             record.set('b', 2);
             assert.strictEqual(record.getRawData().b, 2);
          });
+
+          it('should throw an error if field is not defined in full format', function() {
+              var record = new Record({
+                  format: [
+                      {name: 'a', type: 'integer'}
+                  ]
+              });
+
+              assert.throws(function() {
+                  record.set('b', 2);
+              }, ReferenceError);
+          });
 
          it('should set value if field is not defined in raw data but defined in format', function() {
             var data = {
@@ -2116,16 +2125,11 @@ define([
          });
 
          it('should serialize a Record with format', function() {
-            var record = new Record({
-                  format: [{name: 'id', type: 'integer'}]
-               }),
-               json = record.toJSON();
+            var format = [{name: 'id', type: 'integer'}];
+            var record = new Record({format});
+            var json = record.toJSON();
 
-            assert.isTrue(
-               record.getFormat().isEqual(
-                  json.state.$options.format
-               )
-            );
+            assert.deepEqual(json.state.$options.format, format);
          });
 
          it('should set subclass\'s module name', function() {

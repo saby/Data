@@ -22,6 +22,8 @@ export interface IOptions {
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
     $options: T;
+    _format: format.Format;
+    _formatChanged: boolean;
 }
 
 /**
@@ -112,60 +114,60 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': boolean;
 
-   protected _$formatController: FormatController;
+    protected _$formatController: FormatController;
 
-   /**
-    * @cfg {Object} Data in raw format which can be recognized via certain adapter.
-    * @name Types/_entity/FormattableMixin#rawData
-    * @see getRawData
-    * @remark
-    * Data should be in certain format which supported by associated {@link adapter}.
-    * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization objectives.
-    * @example
-    * Let's create an employee record:
-    * <pre>
-    *    import {Record} from 'Types/entity';
-    *    const employee = new Record({
-    *       rawData: {
-    *          id: 1,
-    *          firstName: 'John',
-    *          lastName: 'Smith'
-    *       }
-    *    });
-    *
-    *    console.log(employee.get('id')); // 1
-    *    console.log(employee.get('firstName')); // John
-    *    console.log(employee.get('lastName')); // Smith
-    * </pre>
-    * Let's create recordset with movie characters:
-    * <pre>
-    *    import {RecordSet} from 'Types/collection';
-    *    const characters = new RecordSet({
-    *       rawData: [{
-    *          id: 1,
-    *          firstName: 'John',
-    *          lastName: 'Connor',
-    *          part: 'Savior'
-    *       }, {
-    *          id: 2,
-    *          firstName: 'Sarah',
-    *          lastName: 'Connor',
-    *          part: 'Mother'
-    *       }, {
-    *          id: 3,
-    *          firstName: '-',
-    *          lastName: 'T-800',
-    *          part: 'A human-like robot from the future'
-    *       }]
-    *    });
-    *
-    *    console.log(characters.at(0).get('firstName'));// John
-    *    console.log(characters.at(0).get('lastName'));// Connor
-    *    console.log(characters.at(1).get('firstName'));// Sarah
-    *    console.log(characters.at(1).get('lastName'));// Connor
-    * </pre>
-    */
-   protected _$rawData: any;
+    /**
+     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
+     * @name Types/_entity/FormattableMixin#rawData
+     * @see getRawData
+     * @remark
+     * Data should be in certain format which supported by associated {@link adapter}.
+     * Data should contain only primitive values, arrays and plain objects due to sharing, coping and serialization objectives.
+     * @example
+     * Let's create an employee record:
+     * <pre>
+     *    import {Record} from 'Types/entity';
+     *    const employee = new Record({
+     *       rawData: {
+     *          id: 1,
+     *          firstName: 'John',
+     *          lastName: 'Smith'
+     *       }
+     *    });
+     *
+     *    console.log(employee.get('id')); // 1
+     *    console.log(employee.get('firstName')); // John
+     *    console.log(employee.get('lastName')); // Smith
+     * </pre>
+     * Let's create recordset with movie characters:
+     * <pre>
+     *    import {RecordSet} from 'Types/collection';
+     *    const characters = new RecordSet({
+     *       rawData: [{
+     *          id: 1,
+     *          firstName: 'John',
+     *          lastName: 'Connor',
+     *          part: 'Savior'
+     *       }, {
+     *          id: 2,
+     *          firstName: 'Sarah',
+     *          lastName: 'Connor',
+     *          part: 'Mother'
+     *       }, {
+     *          id: 3,
+     *          firstName: '-',
+     *          lastName: 'T-800',
+     *          part: 'A human-like robot from the future'
+     *       }]
+     *    });
+     *
+     *    console.log(characters.at(0).get('firstName'));// John
+     *    console.log(characters.at(0).get('lastName'));// Connor
+     *    console.log(characters.at(1).get('firstName'));// Sarah
+     *    console.log(characters.at(1).get('lastName'));// Connor
+     * </pre>
+     */
+    protected _$rawData: any;
 
     /**
      * Work with raw data in Copy-On-Write mode.
@@ -363,6 +365,11 @@ export default abstract class FormattableMixin {
     protected _format: format.Format;
 
     /**
+     * Format has been changed somehow
+     */
+    protected _formatChanged: boolean;
+
+    /**
      * Clone of the _format, uses for caching in getFormat()
      */
     protected _formatClone: format.Format;
@@ -401,12 +408,25 @@ export default abstract class FormattableMixin {
 
     _getSerializableState(state: ISerializableState): ISerializableState {
         state.$options.rawData = this._getRawData();
+        if (this._format) {
+            state._format = this._format;
+        }
+        if (this._formatChanged) {
+            state._formatChanged = this._formatChanged;
+        }
+
         return state;
     }
 
     _setSerializableState(state: ISerializableState): Function {
-        // tslint:disable-next-line:only-arrow-functions no-empty
-        return function(): void {};
+        return function(): void {
+            if (state._format) {
+                this._format = state._format;
+            }
+            if (state._formatChanged) {
+                this._formatChanged = state._formatChanged;
+            }
+        };
     }
 
     // endregion
@@ -478,7 +498,7 @@ export default abstract class FormattableMixin {
      * Returns flag which indicates the fact that format was declared directly.
      */
     hasDeclaredFormat(): boolean {
-        return !!this._$format;
+        return this._formatChanged || !!this._$format;
     }
 
     /**
@@ -551,9 +571,10 @@ export default abstract class FormattableMixin {
      */
     addField(format: Field, at: number): void {
         format = this._buildField(format);
-        this._$format = this._getFormat(true);
+        this._format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.add(format, at);
+        this._format.add(format, at);
+        this._formatChanged = true;
         (this._getRawDataAdapter() as ITable).addField(format, at);
         this._resetRawDataFields();
         this._clearFormatClone();
@@ -575,9 +596,10 @@ export default abstract class FormattableMixin {
      * </pre>
      */
     removeField(name: string): void {
-        this._$format = this._getFormat(true);
+        this._format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.removeField(name);
+        this._format.removeField(name);
+        this._formatChanged = true;
         (this._getRawDataAdapter() as ITable).removeField(name);
         this._resetRawDataFields();
         this._clearFormatClone();
@@ -599,9 +621,10 @@ export default abstract class FormattableMixin {
      * </pre>
      */
     removeFieldAt(at: number): void {
-        this._$format = this._getFormat(true);
+        this._format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.removeAt(at);
+        this._format.removeAt(at);
+        this._formatChanged = true;
         (this._getRawDataAdapter() as ITable).removeFieldAt(at);
         this._resetRawDataFields();
         this._clearFormatClone();
@@ -766,7 +789,7 @@ export default abstract class FormattableMixin {
     protected _getFormat(build?: boolean): format.Format {
         if (!this._format) {
             if (this.hasDeclaredFormat()) {
-                this._format = this._$format = FormattableMixin.prototype._buildFormat(
+                this._format = FormattableMixin.prototype._buildFormat(
                     this._$format,
                     () => buildFormatByRawData.call(this)
                 );
@@ -803,8 +826,12 @@ export default abstract class FormattableMixin {
       * @protected
       */
      protected _unlinkFormatOption(): void {
-         if (!this._formatUnlinked && this._$format && this._$format['[Types/_collection/format/Format]']) {
-             this._format = (this._$format as format.Format) = (this._$format as format.Format).clone(true);
+         if (
+             !this._formatUnlinked &&
+             this._$format === this._format &&
+             this._format['[Types/_collection/format/Format]']
+         ) {
+             this._format = (this._$format as format.Format) = (this._format).clone(true);
              this._clearFormatClone();
              this._formatUnlinked = true;
          }
@@ -901,19 +928,28 @@ export default abstract class FormattableMixin {
         return format as format.Format;
     }
 
+    /**
+     * Returns true if option 'format' declares partial format
+     * @protected
+     */
+    protected _hasDeclaredPartialFormat(): boolean {
+        return this._$format && Object.getPrototypeOf(this._$format) === Object.prototype;
+    }
+
     // endregion
 }
 
 Object.assign(FormattableMixin.prototype, {
-   '[Types/_entity/FormattableMixin]': true,
-   _$rawData: null,
-   _$cow: false,
-   _$adapter: defaultAdapter,
-   _$format: null,
-   _format: null,
-   _formatClone: null,
-   _rawDataAdapter: null,
-   _rawDataFields: null,
-   _$formatController: null,
-   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
+    '[Types/_entity/FormattableMixin]': true,
+    _$rawData: null,
+    _$cow: false,
+    _$adapter: defaultAdapter,
+    _$format: null,
+    _format: null,
+    _formatChanged: false,
+    _formatClone: null,
+    _rawDataAdapter: null,
+    _rawDataFields: null,
+    _$formatController: null,
+    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });
