@@ -105,6 +105,26 @@ define([
          });
       });
 
+       describe('.isInstantiable()', function() {
+           it('should return true by default', function() {
+               Di.register('Foo/bar', Object);
+               assert.isTrue(Di.isInstantiable('Foo/bar'));
+               Di.unregister('Foo/bar');
+           });
+
+           it('should return true if option "instantiate" is true', function() {
+               Di.register('Foo/bar', Object, {instantiate: true});
+               assert.isTrue(Di.isInstantiable('Foo/bar'));
+               Di.unregister('Foo/bar');
+           });
+
+           it('should return false if option "instantiate" is false', function() {
+               Di.register('Foo/Bar', Object, {instantiate: false});
+               assert.isFalse(Di.isInstantiable('Foo/Bar'));
+               Di.unregister('Foo/Bar');
+           });
+       });
+
       describe('.create()', function() {
          it('should return an instance of registered module by alias', function() {
             var Module = function() {};
