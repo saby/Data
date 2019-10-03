@@ -46,34 +46,50 @@ function checkAlias(alias: string): void {
  * @example
  * Зарегистрируем модель пользователя:
  * <pre>
- *     var User = Model.extend({});
- *     di.register('model.$user', User, {instantiate: false});
- *     di.register('model.user', User);
+ *     import {register} from 'Types/di';
+ *     import {Model} from 'Types/entity';
+ *
+ *     class User extends Model {
+ *         // ...
+ *     }
+ *
+ *     register('My/User', User, {instantiate: false});
+ *     register('My/user', User);
  * </pre>
  * Зарегистрируем экземпляр текущего пользователя системы:
  * <pre>
- *     var currentUser = new Model();
- *     di.register('app.user', currentUser, {instantiate: false});
+ *     import {register} from 'Types/di';
+ *     import {Model} from 'Types/entity';
+ *
+ *     const currentUser = new Model();
+ *     register('application/user', currentUser, {instantiate: false});
  * </pre>
  * Зарегистрируем логер, который будет singleton:
  * <pre>
- *     define(['Core/core-extend'], function(CoreExtend) {
- *         var Logger = CoreExtend.extend({
- *             log: function() {}
- *         });
- *         di.register('app.logger', Logger, {single: true});
- *     });
+ *     import {register} from 'Types/di';
+ *     import {Model} from 'Types/entity';
+ *
+ *     class Logger {
+ *         log() {
+ *             // ...
+ *         }
+ *     }
+ *
+ *     register('application/logger', Logger, {single: true});
  * </pre>
  * Зарегистрируем модель пользователя с переопределенными аргументами конструктора:
  * <pre>
- *     define(['Core/core-merge'], function(coreMerge) {
- *         di.register('model.crm-user', function(options) {
- *             return new User(coreMerge(options, {
- *                 context: 'crm',
- *                 dateFormat: 'Y/m/d'
- *             }));
- *         });
- *     });
+ *     import {register} from 'Types/di';
+ *     import {Model} from 'Types/entity';
+ *
+ *     class User extends Model {
+ *         // ...
+ *     }
+ *
+ *     register('application/models/user/crm', (options) => new User({...options, {
+ *        context: 'crm',
+ *        dateFormat: 'Y/m/d'
+ *     }}));
  * </pre>
  */
 export function register(alias: string, factory: Function | object, options?: IOptions): void {
@@ -88,7 +104,8 @@ export function register(alias: string, factory: Function | object, options?: IO
  * @param alias Название зависимости
  * @example
  * <pre>
- *     di.unregister('model.user');
+ *     import {unregister} from 'Types/di';
+ *     unregister('application/user');
  * </pre>
  */
 export function unregister(alias: string): void {
@@ -103,12 +120,43 @@ export function unregister(alias: string): void {
  * @param alias Название зависимости
  * @example
  * <pre>
- *     var userRegistered = di.isRegistered('model.user');
+ *     import {isRegistered} from 'Types/di';
+ *     console.log(isRegistered('application/user'));
  * </pre>
  */
 export function isRegistered(alias: string): boolean {
     checkAlias(alias);
     return map.hasOwnProperty(alias);
+}
+
+/**
+ * Возвращает занчение флага 'instantiate', с которым зарегистрирована зависимость
+ * @function
+ * @name Types/di#isInstantiable
+ * @param alias Название зависимости
+ * @example
+ * <pre>
+ *     import {register, isInstantiable} from 'Types/di';
+ *
+ *     class Foo {
+ *         // ...
+ *     }
+ *     register('foo', Foo);
+ *     console.log(isInstantiable('Foo')); // true
+ *
+ *
+ *     class Bar {
+ *         // ...
+ *     }
+ *     register('Bar', Bar, {instantiate: false});
+ *     console.log(isInstantiable('Bar')); // false
+ * </pre>
+ */
+export function isInstantiable(alias: string): boolean {
+    if (isRegistered(alias)) {
+        const config = map[alias][1];
+        return (config && config.instantiate) !== false;
+    }
 }
 
 /**
@@ -119,11 +167,16 @@ export function isRegistered(alias: string): boolean {
  * @param [options] Опции конструктора
  * @example
  * <pre>
- *     var User = Model.extend();
- *     di.register('model.$user', User, {instantiate: false});
- *     //...
- *     var newUser = di.create('model.$user', {
- *         rawData: {}
+ *     import {register, create} from 'Types/di';
+ *
+ *     class User {
+ *         // ...
+ *     }
+ *
+ *     register('application/User', User, {instantiate: false});
+ *
+ *     const newUser = create<User>('application/User', {
+ *         login: 'root'
  *     });
  * </pre>
  */
@@ -143,17 +196,24 @@ export function create<T>(alias: string | Function | object, options?: IHashMap<
  * @param Опции конструктора
  * @example
  * <pre>
- *     var User = Model.extend();
- *     di.register('model.$user', User, {instantiate: false});
- *     di.register('model.user', User);
- *     //...
- *     var User = di.resolve('model.$user'),
- *         newUser = new User({
- *         rawData: {}
+ *     import {register, resolve} from 'Types/di';
+ *
+ *     class User {
+ *         // ...
+ *     }
+ *
+ *     register('application/User', User, {instantiate: false});
+ *     register('application/user', User);
+ *
+ *     // ...
+ *
+ *     const User = di.resolve('application/User');
+ *     const newUserA = new User({
+ *         login: 'root'
  *     });
- *     //...or...
- *     var newUser = di.resolve('model.user', {
- *         rawData: {}
+ *     // ...or the same result via:
+ *     const newUserB = di.resolve('application/user', {
+ *         login: 'root'
  *     });
  * </pre>
  */
