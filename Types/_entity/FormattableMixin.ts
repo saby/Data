@@ -2,7 +2,7 @@ import {Field, fieldsFactory, UniversalField, IFieldDeclaration} from './format'
 import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData} from './adapter';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
-import {format} from '../collection';
+import {format as formats} from '../collection';
 import {object, logger} from '../util';
 import {IHashMap} from '../_declarations';
 import IFormatController from './adapter/IFormatController';
@@ -10,7 +10,8 @@ import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
-type FormatDescriptor = format.Format | IFieldDeclaration[] | IHashMap<IFieldDeclaration>;
+type FormatDeclaration = IFieldDeclaration[] | IHashMap<IFieldDeclaration>;
+type FormatDescriptor = formats.Format | FormatDeclaration;
 
 export interface IOptions {
    adapter?: IAdapter | string;
@@ -22,8 +23,12 @@ export interface IOptions {
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
     $options: T;
-    _format: format.Format;
+    _format: formats.Format;
     _formatChanged: boolean;
+}
+
+export interface IPartialFormat extends formats.Format {
+    partial: boolean;
 }
 
 /**
@@ -31,7 +36,10 @@ export interface ISerializableState<T = IOptions> extends IDefaultSerializableSt
  * @param partialFormat Partial format
  * @param rawDataFormat Format taken from raw data
  */
-function buildFormatFromObject(partialFormat: object, rawDataFormat: format.Format): format.Format {
+function buildFormatFromObject(
+    partialFormat: IHashMap<IFieldDeclaration>,
+    rawDataFormat: formats.Format
+): IPartialFormat {
     let field;
     let fieldIndex;
     for (const name in partialFormat) {
@@ -56,14 +64,18 @@ function buildFormatFromObject(partialFormat: object, rawDataFormat: format.Form
         }
     }
 
-    return rawDataFormat;
+    Object.defineProperty(rawDataFormat, 'partial', {
+        get: () => true
+    });
+
+    return rawDataFormat as IPartialFormat;
 }
 
 /**
  * Builds format by raw data.
  */
-function buildFormatByRawData(): format.Format {
-    const format = create<format.Format>('Types/collection:format.Format');
+function buildFormatByRawData(): formats.Format {
+    const format = create<formats.Format>('Types/collection:format.Format');
     const adapter = this._getRawDataAdapter();
     const fields = this._getRawDataFields();
     const count = fields.length;
@@ -362,7 +374,7 @@ export default abstract class FormattableMixin {
     /**
      * Finally built format
      */
-    protected _format: format.Format;
+    protected _format: formats.Format;
 
     /**
      * Format has been changed somehow
@@ -372,7 +384,7 @@ export default abstract class FormattableMixin {
     /**
      * Clone of the _format, uses for caching in getFormat()
      */
-    protected _formatClone: format.Format;
+    protected _formatClone: formats.Format;
 
      /**
       * Value of _$format is unlinked from original value
@@ -534,7 +546,7 @@ export default abstract class FormattableMixin {
      *     console.log(format.at(1).getName());// 'title'
      * </pre>
      */
-    getFormat(shared?: boolean): format.Format {
+    getFormat(shared?: boolean): formats.Format {
         if (shared) {
             return this._getFormat(true);
         }
@@ -786,7 +798,7 @@ export default abstract class FormattableMixin {
      * @param [build=false] Force format build if it was not created yet
      * @protected
      */
-    protected _getFormat(build?: boolean): format.Format {
+    protected _getFormat(build?: boolean): formats.Format {
         if (!this._format) {
             if (this.hasDeclaredFormat()) {
                 this._format = FormattableMixin.prototype._buildFormat(
@@ -831,7 +843,7 @@ export default abstract class FormattableMixin {
              this._$format === this._format &&
              this._format['[Types/_collection/format/Format]']
          ) {
-             this._format = (this._$format as format.Format) = (this._format).clone(true);
+             this._format = (this._$format as formats.Format) = (this._format).clone(true);
              this._clearFormatClone();
              this._formatUnlinked = true;
          }
@@ -906,7 +918,7 @@ export default abstract class FormattableMixin {
     protected _buildFormat(
         format: FormatDescriptor,
         fullFormatCallback?: Function
-    ): format.Format {
+    ): formats.Format {
         const Format = resolve<any>('Types/collection:format.Format');
 
         if (format) {
@@ -917,7 +929,10 @@ export default abstract class FormattableMixin {
                 format = factory(format);
             } else if (formatProto === Object.prototype) {
                 // Slice of the fields in Object
-                format = buildFormatFromObject(format, fullFormatCallback ? fullFormatCallback() : new Format());
+                format = buildFormatFromObject(
+                    format as IHashMap<IFieldDeclaration>,
+                    fullFormatCallback ? fullFormatCallback() : new Format()
+                );
             }
         }
 
@@ -925,15 +940,7 @@ export default abstract class FormattableMixin {
             format = new Format();
         }
 
-        return format as format.Format;
-    }
-
-    /**
-     * Returns true if option 'format' declares partial format
-     * @protected
-     */
-    protected _hasDeclaredPartialFormat(): boolean {
-        return this._$format && Object.getPrototypeOf(this._$format) === Object.prototype;
+        return format as formats.Format;
     }
 
     // endregion

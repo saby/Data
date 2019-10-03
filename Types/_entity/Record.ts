@@ -15,7 +15,8 @@ import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin from './ReadWriteMixin';
 import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
-    IOptions as IFormattableOptions
+    IOptions as IFormattableOptions,
+    IPartialFormat
 } from './FormattableMixin';
 import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
@@ -23,7 +24,7 @@ import Time from './Time';
 import {IReceiver} from './relation';
 import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
-import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
+import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format as formats} from '../collection';
 import {register, create} from '../di';
 import {protect, mixin, deprecateExtend} from '../util';
 import {Map} from '../shim';
@@ -82,7 +83,7 @@ export interface IOptions extends IFormattableOptions, IVersionableMixinOptions 
 
 export interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
     $options: IOptions;
-    _format: format.Format;
+    _format: formats.Format;
     _changedFields: string[];
 }
 
@@ -439,7 +440,7 @@ export default class Record extends mixin<
             let value = newValue;
 
             if (!hasDeclaredPartialFormat && format && format.getFieldIndex(key) === -1) {
-                errors.push(new ReferenceError(`Field ${key} doesn't defined in record format`));
+                errors.push(new ReferenceError(`Field '${key}' is not defined in record format`));
             }
 
             // Check if value changed
@@ -811,23 +812,23 @@ export default class Record extends mixin<
         this._nextVersion();
     }
 
-   protected _getFormat(build: boolean): format.Format {
-      const owner = this.getOwner();
-      if (owner) {
-         return (owner as any)._getFormat(build);
-      } else {
-         return super._getFormat.call(this, build);
-      }
-   }
+    protected _getFormat(build: boolean): formats.Format {
+        const owner = this.getOwner();
+        if (owner) {
+            return (owner as any)._getFormat(build);
+        } else {
+            return super._getFormat.call(this, build);
+        }
+    }
 
-   protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
-      const owner = this.getOwner();
-      if (owner) {
-         return (owner as any)._getFieldFormat(name, adapter);
-      } else {
-         return super._getFieldFormat.call(this, name, adapter);
-      }
-   }
+    protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
+        const owner = this.getOwner();
+        if (owner) {
+            return (owner as any)._getFieldFormat(name, adapter);
+        } else {
+            return super._getFieldFormat.call(this, name, adapter);
+        }
+    }
 
     protected _getRawDataAdapter: () => IRecord;
 
@@ -1255,6 +1256,15 @@ export default class Record extends mixin<
      */
     protected _haveToClone(value: any): boolean {
         return this._$cloneChanged && value && value['[Types/_entity/ICloneable]'];
+    }
+
+    /**
+     * Returns true if option 'format' declares partial format
+     * @protected
+     */
+    protected _hasDeclaredPartialFormat(): boolean {
+        return this._$format && Object.getPrototypeOf(this._$format) === Object.prototype ||
+            this._format && (this._format as IPartialFormat).partial;
     }
 
     /**

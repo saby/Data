@@ -10,8 +10,8 @@ import {register} from '../../di';
  * @public
  * @author Мальцев А.А.
  */
-export default class Format<T = format.Field> extends List<T> implements IEquatable {
-    protected  _$items: any[];
+export default class Format<T extends format.Field = format.Field> extends List<T> implements IEquatable {
+    protected  _$items: T[];
 
     protected _moduleName: string;
 
