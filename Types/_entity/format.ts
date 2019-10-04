@@ -37,7 +37,8 @@ export {default as DictionaryField} from './format/DictionaryField';
 export {default as EnumField} from './format/EnumField';
 export {
     default as fieldsFactory,
-    IDeclaration as IFieldDeclaration
+    IDeclaration as IFieldDeclaration,
+    FormatDeclaration
 } from './format/fieldsFactory';
 export {default as FlagsField} from './format/FlagsField';
 export {default as HierarchyField} from './format/HierarchyField';
