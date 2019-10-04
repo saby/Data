@@ -1,16 +1,15 @@
-import {Field, fieldsFactory, UniversalField, IFieldDeclaration} from './format';
+import {Field, fieldsFactory, UniversalField, IFieldDeclaration, FormatDeclaration} from './format';
 import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData} from './adapter';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
-import {IHashMap} from '../_declarations';
 import IFormatController from './adapter/IFormatController';
 import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
-type FormatDescriptor = format.Format | IFieldDeclaration[] | IHashMap<IFieldDeclaration>;
+type FormatDescriptor = format.Format | FormatDeclaration;
 
 export interface IOptions {
    adapter?: IAdapter | string;

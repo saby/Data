@@ -37,6 +37,8 @@ export interface IDeclaration {
     dictionary?: Dictionary;
 }
 
+export type FormatDeclaration = IDeclaration[] | IHashMap<IDeclaration> | IHashMap<string>;
+
 /**
  * Creates field format by its declarative definition.
  * @remark

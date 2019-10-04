@@ -2,9 +2,9 @@ import toRoman from './numberRoman';
 import locales = require('Core/helpers/i18n/locales');
 
 interface IDateFormatOptions {
-    lead: number;
-    lower: boolean;
-    separator: string;
+    lead?: number;
+    lower?: boolean;
+    separator?: string;
 }
 
 let tokensRegex;
@@ -211,7 +211,7 @@ function getTokensRegex(): RegExp {
  * @param handler Token handler (for String is the method name in Date.prototype)
  * @param [options] Options to pass to the handler
  */
-function addToken(token: string, handler: string|Function, options: object = {} as IDateFormatOptions): void {
+function addToken(token: string, handler: string|Function, options: IDateFormatOptions = {}): void {
     tokens[token] = [handler, options];
     tokensRegex = null;
 }
@@ -243,37 +243,37 @@ function formatByToken(date: Date, handler: string|Function, options: IDateForma
 }
 
 // Time tokens
-addToken('SSS', 'getMilliseconds', {lead: 3} as IDateFormatOptions);
+addToken('SSS', 'getMilliseconds', {lead: 3});
 addToken('s', 'getSeconds');
-addToken('ss', 'getSeconds', {lead: 2} as IDateFormatOptions);
+addToken('ss', 'getSeconds', {lead: 2});
 addToken('m', 'getMinutes');
-addToken('mm', 'getMinutes', {lead: 2} as IDateFormatOptions);
+addToken('mm', 'getMinutes', {lead: 2});
 addToken('h', getTwelveHours);
-addToken('hh', getTwelveHours, {lead: 2} as IDateFormatOptions);
+addToken('hh', getTwelveHours, {lead: 2});
 addToken('H', 'getHours');
-addToken('HH', 'getHours', {lead: 2} as IDateFormatOptions);
+addToken('HH', 'getHours', {lead: 2});
 addToken('a', getAmPm);
 
 // Date tokens
 addToken('D', 'getDate');
-addToken('DD', 'getDate', {lead: 2} as IDateFormatOptions);
+addToken('DD', 'getDate', {lead: 2});
 addToken('dd', getDayOfWeekMin);
-addToken('ddl', getDayOfWeekMin, {lower: true} as IDateFormatOptions);
+addToken('ddl', getDayOfWeekMin, {lower: true});
 addToken('ddd', getDayOfWeekShort);
-addToken('dddl', getDayOfWeekShort, {lower: true} as IDateFormatOptions);
+addToken('dddl', getDayOfWeekShort, {lower: true});
 addToken('dddd', getDayOfWeekLong);
-addToken('ddddl', getDayOfWeekLong, {lower: true} as IDateFormatOptions);
+addToken('ddddl', getDayOfWeekLong, {lower: true});
 addToken('M', getHumanMonth);
-addToken('MM', getHumanMonth, {lead: 2} as IDateFormatOptions);
+addToken('MM', getHumanMonth, {lead: 2});
 addToken('MMM', getMonthNameShort);
-addToken('MMMl', getMonthNameShort, {lower: true} as IDateFormatOptions);
+addToken('MMMl', getMonthNameShort, {lower: true});
 addToken('MMMM', getMonthNameLong);
-addToken('MMMMl', getMonthNameLong, {lower: true} as IDateFormatOptions);
+addToken('MMMMl', getMonthNameLong, {lower: true});
 addToken('MMMMo', getMonthOrdinal);
-addToken('MMMMlo', getMonthOrdinal, {lower: true} as IDateFormatOptions);
+addToken('MMMMlo', getMonthOrdinal, {lower: true});
 addToken('Y', getYearMin);
 addToken('Yh', getHalfYear);
-addToken('YY', getYearMin, {lead: 2} as IDateFormatOptions);
+addToken('YY', getYearMin, {lead: 2});
 addToken('YYhr', getHalfYearRomanMin);
 addToken('YYYY', 'getFullYear');
 addToken('YYYYhr', getHalfYearRomanLong);
@@ -283,8 +283,8 @@ addToken('QQQr', getQuarterRomanShort);
 addToken('QQQQr', getQuarterRomanLong);
 
 // Time zone tokens
-addToken('Z', getTimeZone, {separator: ':'} as IDateFormatOptions);
-addToken('ZZ', getTimeZone, {separator: ''} as IDateFormatOptions);
+addToken('Z', getTimeZone, {separator: ':'});
+addToken('ZZ', getTimeZone, {separator: ''});
 
 /**
  * Преобразует дату в строку указанного формата.
