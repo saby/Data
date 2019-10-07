@@ -143,6 +143,7 @@ define([
             adapter.addField(field, 0);
             assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
          });
+
          it('should use a field default value', function() {
             var fieldName = 'New',
                def = 'abc';
@@ -153,14 +154,15 @@ define([
             }));
             assert.strictEqual(adapter.get(fieldName), def);
          });
-         it('should throw an error for already exists field', function() {
-            assert.throws(function() {
-               adapter.addField(fieldsFactory({
-                  type: 'string',
-                  name: 'Ид'
-               }));
-            });
+
+         it('should set already exists field', function() {
+             adapter.addField(fieldsFactory({
+                 type: 'string',
+                 name: 'Ид'
+             }));
+             assert.strictEqual(data['Ид'], 1);
          });
+
          it('should throw an error for not a field', function() {
             assert.throws(function() {
                adapter.addField();
