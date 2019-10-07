@@ -7,6 +7,9 @@ import {Field} from '../format';
 import {Set} from '../../shim';
 import {mixin} from '../../util';
 import {merge} from '../../object';
+import {IHashMap} from '../../_declarations';
+
+type Data = IHashMap<any>;
 
 /**
  * Адаптер для таблицы данных в формате JSON.
@@ -43,13 +46,13 @@ export default class JsonTable extends mixin<
     /**
      * Сырые данные
      */
-    protected _data: object[];
+    protected _data: Data[];
 
    /**
     * Конструктор
     * @param data Сырые данные
     */
-   constructor(data?: object[]) {
+   constructor(data?: Data[]) {
       super(data);
       GenericFormatMixin.call(this, data);
       JsonFormatMixin.call(this, data);
@@ -110,7 +113,7 @@ export default class JsonTable extends mixin<
         return this._isValidData() ? this._data.length : 0;
     }
 
-    add(record: object, at: number): void {
+    add(record: Data, at?: number): void {
         this._touchData();
         if (at === undefined) {
             this._data.push(record);
@@ -120,7 +123,7 @@ export default class JsonTable extends mixin<
         }
     }
 
-    at(index: number): object {
+    at(index: number): Data {
         return this._isValidData() ? this._data[index] : undefined;
     }
 
@@ -130,7 +133,7 @@ export default class JsonTable extends mixin<
         this._data.splice(at, 1);
     }
 
-    replace(record: object, at: number): void {
+    replace(record: Data, at: number): void {
         this._touchData();
         this._checkPosition(at);
         this._data[at] = record;
@@ -161,7 +164,7 @@ export default class JsonTable extends mixin<
       this.remove(donor);
    }
 
-    copy(index: number): object {
+    copy(index: number): Data {
         this._touchData();
 
         const source = this.at(index);

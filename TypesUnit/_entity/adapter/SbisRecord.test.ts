@@ -21,12 +21,12 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
     beforeEach(() => {
         data = {
-            d: [1, 'Иванов', 'Иван', 'Иванович'],
+            d: [1, 'Smith', 'John', 'Gordon'],
             s: [
-                {n: 'Ид', t: 'Число целое'},
-                {n: 'Фамилия', t: 'Строка'},
-                {n: 'Имя', t: 'Строка'},
-                {n: 'Отчество', t: 'Строка'}
+                {n: 'id', t: 'Число целое'},
+                {n: 'lastname', t: 'Строка'},
+                {n: 'firstname', t: 'Строка'},
+                {n: 'middlename', t: 'Строка'}
             ]
         };
 
@@ -96,11 +96,11 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return the property value', () => {
             assert.strictEqual(
                 1,
-                adapter.get('Ид')
+                adapter.get('id')
             );
             assert.strictEqual(
-                'Иванов',
-                adapter.get('Фамилия')
+                'Smith',
+                adapter.get('lastname')
             );
             assert.isUndefined(
                 adapter.get('Должность')
@@ -118,7 +118,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 new SbisRecord(0 as any).get(undefined)
             );
             assert.isUndefined(
-                new SbisRecord(undefined).get(undefined)
+                new SbisRecord().get(undefined)
             );
         });
 
@@ -164,7 +164,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
     describe('.set()', () => {
         it('should set the value', () => {
-            adapter.set('Ид', 20);
+            adapter.set('id', 20);
             assert.strictEqual(
                 20,
                 data.d[0]
@@ -260,16 +260,16 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['Ид', 'Фамилия', 'Имя', 'Отчество']
+                ['id', 'lastname', 'firstname', 'middlename']
             );
         });
     });
 
     describe('.getFormat()', () => {
         it('should return Integer field format', () => {
-            const format = adapter.getFormat('Ид');
+            const format = adapter.getFormat('id');
             assert.instanceOf(format, fieldFormat.IntegerField);
-            assert.strictEqual(format.getName(), 'Ид');
+            assert.strictEqual(format.getName(), 'id');
         });
 
         it('should return Real field format', () => {
@@ -303,9 +303,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         });
 
         it('should return String field format', () => {
-            const format = adapter.getFormat('Фамилия');
+            const format = adapter.getFormat('lastname');
             assert.instanceOf(format, fieldFormat.StringField);
-            assert.strictEqual(format.getName(), 'Фамилия');
+            assert.strictEqual(format.getName(), 'lastname');
         });
 
         it('should return XML field format', () => {
@@ -394,9 +394,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return Link field format', () => {
             const adapter = new SbisRecord({
                 d: [0],
-                s: [{n: 'Ид', t: 'Связь'}]
+                s: [{n: 'id', t: 'Связь'}]
             });
-            const format = adapter.getFormat('Ид');
+            const format = adapter.getFormat('id');
             assert.instanceOf(format, fieldFormat.LinkField);
         });
 
@@ -538,11 +538,11 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return String field format for unknown type', () => {
             const adapter = new SbisRecord({
                 d: [0],
-                s: [{n: 'Ид', t: 'Foo'}]
+                s: [{n: 'id', t: 'Foo'}]
             });
-            const format = adapter.getFormat('Ид');
+            const format = adapter.getFormat('id');
             assert.instanceOf(format, fieldFormat.StringField);
-            assert.strictEqual(format.getName(), 'Ид');
+            assert.strictEqual(format.getName(), 'id');
         });
 
         it('should throw an error for not exists field', () => {
@@ -1203,7 +1203,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
                     type: 'string',
-                    name: 'Ид'
+                    name: 'id'
                 }));
             });
         });
@@ -1226,7 +1226,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
     describe('.removeField()', () => {
         it('should remove exists field', () => {
-            const name = 'Ид';
+            const name = 'id';
             const index = 0;
             const newFields = adapter.getFields();
             const newData = adapter.getData().d.slice();
@@ -1252,7 +1252,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
     describe('.removeFieldAt()', () => {
         it('should remove exists field', () => {
-            const name = 'Ид';
+            const name = 'id';
             const index = 0;
             const newFields = adapter.getFields();
             const newData = adapter.getData().d.slice();
