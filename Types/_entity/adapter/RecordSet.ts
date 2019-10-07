@@ -22,7 +22,7 @@ export default class RecordSet extends Abstract {
      * @param {Types/_collection/RecordSet} data Рекордсет
      * @return {Types/_entity/adapter/ITable}
      */
-    forTable(data: collectionRecordSet): RecordSetTable {
+    forTable(data?: collectionRecordSet): RecordSetTable {
         return new RecordSetTable(data);
     }
 
@@ -32,7 +32,7 @@ export default class RecordSet extends Abstract {
      * @param {Types/_collection/RecordSet} [tableData] Таблица
      * @return {Types/_entity/adapter/IRecord}
      */
-    forRecord(data: Record, tableData?: collectionRecordSet): RecordSetRecord {
+    forRecord(data?: Record, tableData?: collectionRecordSet): RecordSetRecord {
         return new RecordSetRecord(data, tableData);
     }
 

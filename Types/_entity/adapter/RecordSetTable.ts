@@ -54,7 +54,7 @@ export default class RecordSetTable extends mixin<
      * Конструктор
      * @param data Таблица
      */
-    constructor(data: RecordSet) {
+    constructor(data?: RecordSet) {
         if (data && !data['[Types/_collection/RecordSet]']) {
             throw new TypeError('Argument "data" should be an instance of Types/collection:RecordSet');
         }

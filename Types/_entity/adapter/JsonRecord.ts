@@ -43,7 +43,7 @@ export default class JsonRecord extends mixin<
      * Конструктор
      * @param data Сырые данные
      */
-    constructor(data: object) {
+    constructor(data?: object) {
         super(data);
         GenericFormatMixin.call(this, data);
         JsonFormatMixin.call(this, data);

@@ -58,11 +58,11 @@ export default class Cow extends mixin<
 
     // region IAdapter
 
-    forTable(data: any): CowTable {
+    forTable(data?: any): CowTable {
         return new CowTable(data, this._original, this._writeCallback);
     }
 
-    forRecord(data: any): CowRecord {
+    forRecord(data?: any): CowRecord {
         return new CowRecord(data, this._original, this._writeCallback);
     }
 
