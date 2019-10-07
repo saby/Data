@@ -56,7 +56,7 @@ export default class SbisTable extends mixin<
      * Конструктор
      * @param data Сырые данные
      */
-    constructor(data: ITableFormat) {
+    constructor(data?: ITableFormat) {
         super(data);
         SbisFormatMixin.call(this, data);
     }
@@ -69,7 +69,7 @@ export default class SbisTable extends mixin<
         return this._isValidData() ? this._data.d.length : 0;
     }
 
-    add(record: IRecordFormat, at: null): void {
+    add(record: IRecordFormat, at: number): void {
         this._touchData();
         record = this._normalizeData(record, SbisRecord.prototype.type);
 

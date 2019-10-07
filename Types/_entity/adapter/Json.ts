@@ -14,15 +14,15 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class Json extends Abstract {
-    forTable(data: object[]): JsonTable {
+    forTable(data?: object[]): JsonTable {
         return new JsonTable(data);
     }
 
-    forRecord(data: object): JsonRecord {
+    forRecord(data?: object): JsonRecord {
         return new JsonRecord(data);
     }
 
-    getKeyField(): string {
+    getKeyField(data: any): string {
         return undefined;
     }
 }

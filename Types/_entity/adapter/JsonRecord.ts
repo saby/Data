@@ -43,7 +43,7 @@ export default class JsonRecord extends mixin<
      * Конструктор
      * @param data Сырые данные
      */
-    constructor(data: object) {
+    constructor(data?: object) {
         super(data);
         GenericFormatMixin.call(this, data);
         JsonFormatMixin.call(this, data);
@@ -57,13 +57,13 @@ export default class JsonRecord extends mixin<
                 `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`
             );
         }
-        const name = format.getName();
-        if (this.has(name)) {
-            throw new Error(`${this._moduleName}::addField(): field "${name}" already exists`);
-        }
 
         super.addField(format, at);
-        this.set(name, format.getDefaultValue());
+
+        const name = format.getName();
+        if (!this.has(name)) {
+            this.set(name, format.getDefaultValue());
+        }
     }
 
     removeField(name: string): void {

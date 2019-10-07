@@ -66,12 +66,12 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
         return (this._originalTable as ITable).getData();
     }
 
-    add(record: any, at: number): void {
+    add(record: any, at?: number): void {
         this._copy();
         return (this._originalTable as ITable).add(record, at);
     }
 
-    at(index: number): void {
+    at(index: number): any {
         return (this._originalTable as ITable).at(index);
     }
 

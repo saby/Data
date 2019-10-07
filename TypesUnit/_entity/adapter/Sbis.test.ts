@@ -16,17 +16,17 @@ describe('Types/_entity/adapter/Sbis', () => {
     beforeEach(() => {
         data = {
             d: [
-                [1, 'Иванов'],
-                [2, 'Петров'],
-                [3, 'Сидоров'],
-                [4, 'Пухов'],
-                [5, 'Молодцов'],
-                [6, 'Годолцов'],
-                [7, 'Арбузнов']
+                [1, 'Smith'],
+                [2, 'Green'],
+                [3, 'Geller'],
+                [4, 'Bing'],
+                [5, 'Tribbiani'],
+                [6, 'Buffay'],
+                [7, 'Tyler']
             ],
             s: [
-                {n: 'Ид', t: 'Число целое'},
-                {n: 'Фамилия', t: 'Строка'}
+                {n: 'id', t: 'Число целое'},
+                {n: 'lastname', t: 'Строка'}
             ]
         };
 
@@ -78,11 +78,11 @@ describe('Types/_entity/adapter/Sbis', () => {
                 d: [
                 ],
                 s: [
-                    {n: 'Ид', t: 'Число целое'},
-                    {n: '@Фамилия', t: 'Строка'}
+                    {n: 'id', t: 'Число целое'},
+                    {n: '@lastname', t: 'Строка'}
                 ]
             };
-            assert.equal(adapter.getKeyField(data), '@Фамилия');
+            assert.equal(adapter.getKeyField(data), '@lastname');
         });
 
         it('should return first field prefixed with "@" from format controller', () => {
@@ -97,16 +97,16 @@ describe('Types/_entity/adapter/Sbis', () => {
                 ],
                 f: 0,
                 s: [
-                    {n: 'Ид', t: 'Число целое'},
-                    {n: '@Фамилия', t: 'Строка'}
+                    {n: 'id', t: 'Число целое'},
+                    {n: '@lastname', t: 'Строка'}
                 ]
             }));
 
-            assert.equal(adapter.getKeyField(data), '@Фамилия');
+            assert.equal(adapter.getKeyField(data), '@lastname');
         });
 
         it('should return first field', () => {
-            assert.equal(adapter.getKeyField(data), 'Ид');
+            assert.equal(adapter.getKeyField(data), 'id');
         });
     });
 
@@ -182,7 +182,7 @@ describe('Types/_entity/adapter/Sbis', () => {
                 data.d[4][0]
             );
             assert.strictEqual(
-                'Годолцов',
+                'Buffay',
                 data.d[5][1]
             );
 
@@ -206,7 +206,7 @@ describe('Types/_entity/adapter/Sbis', () => {
                 moreData.employees.items.d[4][0]
             );
             assert.strictEqual(
-                'Годолцов',
+                'Buffay',
                 moreData.employees.items.d[5][1]
             );
 
@@ -225,7 +225,7 @@ describe('Types/_entity/adapter/Sbis', () => {
                 moreData.employees.items.d[4][0]
             );
             assert.strictEqual(
-                'Годолцов',
+                'Buffay',
                 moreData.employees.items.d[5][1]
             );
         });
