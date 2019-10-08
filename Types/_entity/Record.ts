@@ -77,7 +77,8 @@ const CACHE_MODE_ALL = protect('all');
 type pairsTuple = [string, any, any];
 
 export interface IOptions extends IFormattableOptions, IVersionableMixinOptions {
-   owner?: RecordSet;
+    cacheMode?: string | symbol;
+    owner?: RecordSet;
 }
 
 export interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {

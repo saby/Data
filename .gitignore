@@ -32,6 +32,7 @@
 /TypesUnit/_entity/Date.test.js
 /TypesUnit/_entity/DateTime.test.js
 /TypesUnit/_entity/JSONML.test.js
+/TypesUnit/_entity/Model.test.js
 /TypesUnit/_entity/ReactiveObject.test.js
 /TypesUnit/_entity/Time.test.js
 /TypesUnit/_formatter/**/*.js
