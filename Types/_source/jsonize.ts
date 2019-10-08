@@ -15,18 +15,23 @@ function jsonizePlainObject(obj: object): object {
     }
 
     const keys = Object.keys(obj);
-    let key;
+    let hasChanges = false;
     for (let i = 0; i < keys.length; i++) {
-        key = keys[i];
-        result[key] = jsonize(obj[key]);
+        const key = keys[i];
+        const oldValue = obj[key];
+        const newValue = jsonize(oldValue);
+        if (oldValue !== newValue) {
+            hasChanges = true;
+        }
+        result[key] = newValue;
     }
-    return result;
+    return hasChanges ? result : obj;
 }
 
 function jsonizeObject(obj: ISerializableObject | Date | ExtendDate): object | string {
     if (typeof (obj as ISerializableObject).getRawData === 'function') {
         // Deal with Types/_entity/FormattableMixin and Types/_source/DataSet
-        return (obj as ISerializableObject).getRawData(true);
+        return jsonize((obj as ISerializableObject).getRawData(true));
     } else if (obj instanceof Date) {
         // Deal with Date and its subclasses
         let mode = TO_SQL_MODE.DATETIME;
@@ -49,22 +54,31 @@ function jsonizeObject(obj: ISerializableObject | Date | ExtendDate): object | s
         }
         return dateToSql(obj, mode);
     } else {
+        let result = obj;
         // Check if it's a scalar value wrapper
         if (obj.valueOf) {
-            obj = obj.valueOf();
+            result = obj.valueOf();
         }
 
         // Deal with plain object.
-        if (obj && typeof obj === 'object') {
-            return jsonizePlainObject(obj);
+        if (result && typeof result === 'object') {
+            result = jsonizePlainObject(result);
         }
 
-        return obj;
+        return result;
     }
 }
 
 function jsonizeArray(arr: object[]): Array<object | string> {
-    return arr.map((item) => jsonize(item));
+    let hasChanges = false;
+    const result = arr.map((oldValue) => {
+        const newValue = jsonize(oldValue);
+        if (oldValue !== newValue) {
+            hasChanges = true;
+        }
+        return newValue;
+    });
+    return hasChanges ? result : arr;
 }
 
 /**

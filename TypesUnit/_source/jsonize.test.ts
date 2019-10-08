@@ -108,6 +108,21 @@ describe('Types/_source/jsonize', () => {
             );
         });
 
+        it('should process special Date type inside Record\'s raw data', () => {
+            const date = new TheDate(2019, 6, 12);
+            const rawData = {foo: date};
+            const record = new Record({rawData});
+
+            assert.deepEqual(jsonize<{foo: string}>(record), {foo: '2019-07-12'});
+        });
+
+        it('should return shared Record\'s raw data if there is nothing to process', () => {
+            const rawData = {foo: 'bar'};
+            const record = new Record({rawData});
+
+            assert.strictEqual(jsonize<{foo: string}>(record), rawData);
+        });
+
         it('should return Date as string use default serialization mode', () => {
             const year = 2016;
             const month = 11;
