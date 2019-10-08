@@ -78,10 +78,6 @@ export default class Cow extends mixin<
         return this._original.setProperty(data, property, value);
     }
 
-    serialize(data: any): any {
-        return this._original.serialize(data);
-    }
-
     // endregion
 
     // region IDecorator
