@@ -1483,6 +1483,25 @@ define([
             });
          });
 
+         describe('.getKeyProperty()', function() {
+            it('should return value passed to the constructor as keyProperty even if superclass has old-fashioned idProperty', function() {
+               var testOk = false;
+               var Sub = extend.extend(Model, {
+                  $protected: {
+                     _options: {
+                         idProperty: 'foo'
+                     }
+                  },
+               });
+               var instance = new Sub({
+                   keyProperty: 'bar'
+               });
+               assert.equal(instance.getKeyProperty(), 'bar');
+               instance.destroy();
+               instance = undefined;
+            });
+         });
+
          describe('.toJSON()', function() {
             it('should dont save _$properties', function() {
                var Sub = extend.extend(Model, {
