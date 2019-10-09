@@ -42,12 +42,4 @@ export default interface IAdapter {
     getProperty(data: any, property: string): any;
 
     setProperty(data: any, property: string, value: any): void;
-
-    /**
-     * Сериализует данные - переводит из внешнего формата в формат адаптера
-     * @param {*} data Сериализуемые данные
-     * @return {Object} Сериализованные данные
-     * @static
-     */
-    serialize(data: any): any;
 }

@@ -110,12 +110,6 @@ describe('Types/_entity/adapter/Cow', () => {
         });
     });
 
-    describe('.serialize()', () => {
-        it('should return "{}"', () => {
-            assert.equal(adapter.serialize({}), '{}');
-        });
-    });
-
     describe('.getOriginal()', () => {
         it('should return original adapter', () => {
             assert.strictEqual(adapter.getOriginal(), original);

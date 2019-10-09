@@ -9,6 +9,7 @@ import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
 import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixin';
 import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
+import jsonize from './jsonize';
 import {IAbstract} from './provider';
 import {Record, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
 import {RecordSet} from '../collection';
@@ -411,7 +412,7 @@ export default abstract class Remote extends mixin<
      * @protected
      */
     protected _prepareProviderArguments(args: object): object {
-        return this.getAdapter().serialize(args);
+        return jsonize(args) as object;
     }
 
     protected _getValidKeyProperty(data: any): string {

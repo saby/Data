@@ -4,9 +4,6 @@ import SbisTable from 'Types/_entity/adapter/SbisTable';
 import SbisRecord from 'Types/_entity/adapter/SbisRecord';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
-import Model from 'Types/_entity/Model';
-import Record from 'Types/_entity/Record';
-import RecordSet from 'Types/_collection/RecordSet';
 import 'Core/Date';
 
 describe('Types/_entity/adapter/Sbis', () => {
@@ -228,125 +225,6 @@ describe('Types/_entity/adapter/Sbis', () => {
                 'Buffay',
                 moreData.employees.items.d[5][1]
             );
-        });
-    });
-
-    describe('.serialize()', () => {
-        it('should traverse an arbitrary object', () => {
-            const rec = new Record({
-                adapter: 'Types/entity:adapter.Sbis',
-                rawData: {
-                    d: [
-                        true,
-                        1,
-                        2.5,
-                        'Пустой',
-                        new Date('2015-10-10')
-                    ],
-                    s: [
-                        {n: 'ВызовИзБраузера', t: 'Логическое'},
-                        {n: 'Количество', t: 'Число целое'},
-                        {n: 'Вес', t: 'Число вещественное'},
-                        {n: 'Тип', t: 'Строка'},
-                        {n: 'Дата', t: 'Дата и время'}
-                    ]
-                }
-            });
-
-            const result = adapter.serialize({
-                null: null,
-                false: false,
-                true: true,
-                0: 0,
-                10: 10,
-                string: 'String',
-                date: new Date('2015-12-03'),
-                array: [
-                    false,
-                    true,
-                    0,
-                    1,
-                    'S',
-                    new Date('2001-09-11'),
-                    [],
-                    {}
-                ],
-                emptyArray: [],
-                object: {
-                    a: false,
-                    b: true,
-                    c: 0,
-                    d: 1,
-                    e: 'S',
-                    f: new Date('2001-09-11'),
-                    g: [],
-                    h: {}
-                },
-                emptyObject: {},
-                record: rec
-            });
-
-            const expect = {
-                null: null,
-                false: false,
-                true: true,
-                0: 0,
-                10: 10,
-                string: 'String',
-                date: '2015-12-03',
-                array: [
-                    false,
-                    true,
-                    0,
-                    1,
-                    'S',
-                    '2001-09-11',
-                    [],
-                    {}
-                ],
-                emptyArray: [],
-                object: {
-                    a: false,
-                    b: true,
-                    c: 0,
-                    d: 1,
-                    e: 'S',
-                    f: '2001-09-11',
-                    g: [],
-                    h: {}
-                },
-                emptyObject: {},
-                record: rec.getRawData()
-            };
-
-            for (const key in expect) {
-                if (expect.hasOwnProperty(key)) {
-                    assert.deepEqual(result[key], expect[key], 'Wrong ' + key);
-                }
-            }
-        });
-
-        it('should serialize model', () => {
-            const model = new Model({
-                rawData: {
-                    some: {deep: {object: 'here'}}
-                }
-            });
-            const result = adapter.serialize(model);
-            const expect = model.getRawData();
-            assert.deepEqual(result, expect);
-        });
-
-        it('should serialize RecordSet', () => {
-            const ds = new RecordSet({
-                adapter,
-                rawData: {
-                    d: [], s: []
-                }
-            });
-            const result = adapter.serialize(ds);
-            const expect = ds.getRawData();
-            assert.deepEqual(result, expect);
         });
     });
 });
