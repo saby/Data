@@ -1,88 +1,9 @@
-import DateTime from '../DateTime';
 import DestroyableMixin from '../DestroyableMixin';
 import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin from '../SerializableMixin';
-import TheDate from '../Date';
-import Time from '../Time';
 import {mixin} from '../../util';
-import {dateToSql, TO_SQL_MODE} from '../../formatter';
-import {ExtendDate, IExtendDateConstructor} from '../../_declarations';
-
-const serialize = (() => {
-    interface ISerializableObject extends Object {
-        getRawData?: Function;
-    }
-
-    function serializeAny(data: any): any {
-        if (data instanceof Array) {
-            return serializeArray(data);
-        } else if (data && typeof data === 'object') {
-            return serializeObject(data);
-        } else {
-            return data;
-        }
-    }
-
-    function serializeArray(arr: any[]): any[] {
-        return arr.map((item) => serializeAny(item));
-    }
-
-    function serializeObject(obj: ISerializableObject | ExtendDate): object | string {
-        if (typeof (obj as ISerializableObject).getRawData === 'function') {
-            // Instance of Types/_entity/Record || Types/_collection/RecordSet || Types/_source/DataSet
-            return (obj as ISerializableObject).getRawData(true);
-        } else if (obj instanceof Date) {
-            let mode = TO_SQL_MODE.DATETIME;
-            if (obj instanceof TheDate) {
-                 mode = TO_SQL_MODE.DATE;
-            } else if (obj instanceof Time) {
-                 mode = TO_SQL_MODE.TIME;
-            } else if (obj instanceof DateTime) {
-                 mode = TO_SQL_MODE.DATETIME;
-            } else if (obj.getSQLSerializationMode) {
-                switch (obj.getSQLSerializationMode()) {
-                    case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE:
-                        mode = TO_SQL_MODE.DATE;
-                        break;
-                    case (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME:
-                        mode = TO_SQL_MODE.TIME;
-                        break;
-                }
-            }
-            return dateToSql(obj, mode);
-        } else {
-            // Check if 'obj' is a scalar value wrapper
-            if (obj.valueOf) {
-                obj = obj.valueOf();
-            }
-            if (obj && typeof obj === 'object') {
-                return serializePlainObject(obj);
-            }
-            return obj;
-        }
-    }
-
-    function serializePlainObject(obj: object): object {
-        const result = {};
-
-        const proto = Object.getPrototypeOf(obj);
-        if (proto !== null && proto !== Object.prototype) {
-            throw new TypeError('Unsupported object type. Only plain objects can be serialized.');
-        }
-
-        const keys = Object.keys(obj);
-        let key;
-        for (let i = 0; i < keys.length; i++) {
-            key = keys[i];
-            result[key] = serializeAny(obj[key]);
-        }
-        return result;
-    }
-
-    return serializeAny;
-})();
 
 /**
  * Абстрактный адаптер для данных.
@@ -142,10 +63,6 @@ export default abstract class Abstract extends mixin<
                 current = current[parts[i]];
             }
         }
-    }
-
-    serialize(data: any): any {
-        return serialize(data);
     }
 
     forRecord(data: any, tableData?: any): IRecord {
