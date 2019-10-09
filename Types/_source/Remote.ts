@@ -11,7 +11,7 @@ import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
 import jsonize from './jsonize';
 import {IAbstract} from './provider';
-import {Record, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
+import {adapter, Record, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
@@ -518,5 +518,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
 });
 
 // FIXME: backward compatibility for SbisFile/Source/BL
-// @ts-ignore
-Remote.prototype._prepareArgumentsForCall = Remote.prototype._prepareProviderArguments;
+(Remote.prototype as any)._prepareArgumentsForCall = (Remote.prototype as any)._prepareProviderArguments;
+
+// FIXME: backward compatibility for SBIS3.Plugin/Source/LocalService
+(adapter.Abstract.prototype as any).serialize = jsonize;
