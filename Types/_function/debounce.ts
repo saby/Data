@@ -64,15 +64,20 @@ export default function debounce(original: Function, delay: number, first?: bool
     let timer;
 
     return function(...args: any[]): void {
+        // Do the first call immediately if needed
         if (first && !timer && delay > MIN_DELAY) {
             original.apply(this, args);
         }
 
+        // Clear timeout if timer is still awaiting
         if (timer) {
             clearTimeout(timer);
         }
 
-        // original.bind(this, arg1, arg2, arg3, ...);
-        timer = setTimeout(original.bind(this, ...args), delay);
+        // Setup a new timer in which call the original function
+        timer = setTimeout(() => {
+            timer = null;
+            original.apply(this, args);
+        }, delay);
     };
 }
