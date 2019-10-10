@@ -31,21 +31,20 @@ export default interface IEnumerable<T> {
     getEnumerator(): IEnumerator<T>;
 
     /**
-     * Перебирает все элементы коллекции, начиная с первого.
-     * Цикл проходит полное количество итераций, его невозможно прервать досрочно.
-     * @param {function(*, Number)} callback Ф-я обратного вызова для каждого элемента коллекции
+     * Перебирает все элементы коллекции, начиная с первого. Цикл проходит полное количество итераций, его невозможно прервать досрочно.
+     * @param {function(*, Number)} callback Функция обратного вызова для каждого элемента коллекции.
      * Аргументами придут
-     * <ul>
-     *     <li>первый аргумент: item - обрабатываемый элемент коллекции, например Types/collection:List; возможные типы коллекций можно найти в библиотеке Types/collection;</li>
-     *     <li>второй аргумент: index - порядковый номер такого элемента.</li>
-     * </ul>
+     * <ol>
+     *     <li>item - обрабатываемый элемент коллекции, например {@link https://wi.sbis.ru/docs/js/Types/collection/List/ Types/collection:List}; возможные типы коллекций можно найти в библиотеке {@link https://wi.sbis.ru/docs/js/Types/collection/ Types/collection};</li>
+     *     <li>index - порядковый номер такого элемента.</li>
+     * </ol>
      * @param {Object} [context] Контекст вызова callback
      * @example
      * Получим элементы коллекции:
      * <pre>
-     *     var list = new List({
-     *             items: [1, 2, 3]
-     *         }),
+     *     var list = new collection.List({
+     *         items: [1, 2, 3]
+     *     }),
      *
      *     list.each(function(item) {
      *         console.log(item);
