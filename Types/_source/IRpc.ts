@@ -6,14 +6,12 @@ import {ExtendPromise} from '../_declarations';
  * @remark
  * Заставим тигра прыгнуть:
  * <pre>
- *     var dataSource = new RpcSource({
+ *     const dataSource = new RpcSource({
  *         endpoint: 'Tiger'
  *     });
- *     dataSource.call('jump', {height: '3 meters'}).addCallbacks(function(result) {
+ *     dataSource.call('jump', {height: '3 meters'}).then((result) => {
  *         console.log(result);
- *     }, function(error) {
- *         console.error(error);
- *     });
+ *     }).catch(console.error);
  * </pre>
  * @interface Types/_source/IRpc
  * @public
@@ -32,17 +30,15 @@ export default interface IRpc {
      * @example
      * Раздаем подарки сотрудникам, у которых сегодня день рождения. Также посчитаем их количество:
      * <pre>
-     *     var dataSource = new RpcSource({
+     *     const dataSource = new RpcSource({
      *         endpoint: 'Employee'
      *     });
      *     dataSource.call('giveAGift', {
      *         birthDate: new Date(),
      *         giftCode: 'a-ticket-to-the-bowling'
-     *     }).addCallbacks(function(dataSet) {
-     *         var todaysBirthdayTotal = dataSet.getAll().getCount();
-     *     }, function(error) {
-     *         console.error(error);
-     *     });
+     *     }).then((dataSet) => {
+     *         const todaysBirthdayTotal = dataSet.getAll().getCount();
+     *     }).catch(console.error);
      * </pre>
      */
     call(command: string, data?: object): ExtendPromise<DataSet>;

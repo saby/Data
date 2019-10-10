@@ -29,22 +29,22 @@ export default interface IProvider {
      * @example
      * Добавляем в фильтр выборки поле enabled со значением true:
      * <pre>
-     *     require(['Types/source'], function(source) {
-     *         var dataSource = new source.SbisService({endpoint: 'Pickles'});
-     *         dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args) {
-     *             args = Object.assign({}, args);
-     *             switch (name) {
-     *                 case 'getList':
-     *                     //Select only active users
-     *                     args.filter = args.filter || {};
-     *                     args.filter.active = true;
-     *                     break;
-     *             }
-     *             eventObject.setResult(args);
-     *         });
+     *     import {SbisService} from 'Types/source';
      *
-     *         dataSource.call('getList', {filter: {registered: true}});
+     *     const dataSource = new SbisService({endpoint: 'Pickles'});
+     *     dataSource.subscribe('onBeforeProviderCall', (eventObject, name, args) => {
+     *         args = {...args};
+     *         switch (name) {
+     *             case 'getList':
+     *                 //Select only active users
+     *                 args.filter = args.filter || {};
+     *                 args.filter.active = true;
+     *                 break;
+     *         }
+     *         eventObject.setResult(args);
      *     });
+     *
+     *     dataSource.call('getList', {filter: {registered: true}});
      * </pre>
      */
 
@@ -62,14 +62,16 @@ export default interface IProvider {
      * @example
      * Получим название контракта:
      * <pre>
-     *     var dataSource = new RpcSource({
+     *     import {Rpc} from 'Types/source';
+     *
+     *     const dataSource = new Rpc({
      *         endpoint: {
      *             address: '/api/',
      *             contract: 'User'
      *         }
      *     });
      *
-     *     dataSource.getEndpoint().contract;//'User'
+     *     dataSource.getEndpoint().contract; // 'User'
      * </pre>
      */
     getEndpoint(): IEndpoint;

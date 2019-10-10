@@ -26,104 +26,105 @@ export interface IOptions {
  *
  * Создадим комплексный набор в формате JSON из двух выборок "Заказы" и "Покупатели", одной записи "Итого" и даты выполнения запроса:
  * <pre>
- *     require(['Types/source'], function (source) {
- *         var data = new source.DataSet({
- *             rawData: {
- *                 orders: [
- *                     {id: 1, buyer_id: 1, date: '2016-06-02 14:12:45', amount: 96},
- *                     {id: 2, buyer_id: 2, date: '2016-06-02 17:01:12', amount: 174},
- *                     {id: 3, buyer_id: 1, date: '2016-06-03 10:24:28', amount: 475}
- *                 ],
- *                 buyers: [
- *                     {id: 1, email: 'tony@stark-industries.com', phone: '555-111-222'},
- *                     {id: 2, email: 'steve-rogers@avengers.us', phone: '555-222-333'}
- *                 ],
- *                 total: {
- *                     date_from: '2016-06-01 00:00:00',
- *                     date_to: '2016-07-01 00:00:00',
- *                     amount: 745,
- *                     deals: 3,
- *                     completed: 2,
- *                     paid: 2,
- *                     awaited: 1,
- *                     rejected: 0
- *                 },
- *                 executeDate: '2016-06-27 11:34:57'
+ *     import {DataSet} from 'Types/source';
+ *
+ *     const data = new DataSet({
+ *         rawData: {
+ *             orders: [
+ *                 {id: 1, buyerId: 1, date: '2016-06-02 14:12:45', amount: 96},
+ *                 {id: 2, buyerId: 2, date: '2016-06-02 17:01:12', amount: 174},
+ *                 {id: 3, buyerId: 1, date: '2016-06-03 10:24:28', amount: 475}
+ *             ],
+ *             buyers: [
+ *                 {id: 1, email: 'tony@stark-industries.com', phone: '555-111-222'},
+ *                 {id: 2, email: 'steve-rogers@avengers.us', phone: '555-222-333'}
+ *             ],
+ *             total: {
+ *                 dateFrom: '2016-06-01 00:00:00',
+ *                 dateTo: '2016-07-01 00:00:00',
+ *                 amount: 745,
+ *                 deals: 3,
+ *                 completed: 2,
+ *                 paid: 2,
+ *                 awaited: 1,
+ *                 rejected: 0
  *             },
- *             itemsProperty: 'orders',
- *             keyProperty: 'id'
- *         });
- *
- *         var orders = data.getAll();//Here use itemsProperty option value
- *         console.log(orders.getCount());//3
- *         console.log(orders.at(0).get('amount'));//96
- *
- *         var buyers = data.getAll('buyers');//Here use argument 'property'
- *         console.log(buyers.getCount());//2
- *         console.log(buyers.at(0).get('email'));//'tony@stark-industries.com'
- *
- *         var total = data.getRow('total');
- *         console.log(total.get('amount'));//745
- *
- *         console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
+ *             executeDate: '2016-06-27 11:34:57'
+ *         },
+ *         itemsProperty: 'orders',
+ *         keyProperty: 'id'
  *     });
+ *
+ *     const orders = data.getAll(); // Here use itemsProperty option value
+ *     console.log(orders.getCount()); // 3
+ *     console.log(orders.at(0).get('amount')); // 96
+ *
+ *     const buyers = data.getAll('buyers'); // Here use argument 'property'
+ *     console.log(buyers.getCount()); // 2
+ *     console.log(buyers.at(0).get('email')); // 'tony@stark-industries.com'
+ *
+ *     const total = data.getRow('total');
+ *     console.log(total.get('amount')); // 745
+ *
+ *     console.log(data.getScalar('executeDate')); // '2016-06-27 11:34:57'
  * </pre>
  * Создадим комплексный набор в формате XML из двух выборок "Заказы" и "Покупатели", записи "Итого" и даты выполнения
  * запроса:
  * <pre>
- *     require(['Types/source', 'Types/entity'], function (source, entity) {
- *         var data = new source.DataSet({
- *             adapter: new entity.adapter.Xml(),
- *             rawData: '<?xml version="1.0"?>' +
- *                 '<response>' +
- *                 '    <orders>' +
- *                 '        <order>' +
- *                 '            <id>1</id><buyer_id>1</buyer_id><date>2016-06-02 14:12:45</date><amount>96</amount>' +
- *                 '        </order>' +
- *                 '        <order>' +
- *                 '            <id>2</id><buyer_id>2</buyer_id><date>2016-06-02 17:01:12</date><amount>174</amount>' +
- *                 '        </order>' +
- *                 '        <order>' +
- *                 '            <id>3</id><buyer_id>1</buyer_id><date>2016-06-03 10:24:28</date><amount>475</amount>' +
- *                 '        </order>' +
- *                 '    </orders>' +
- *                 '    <buyers>' +
- *                 '        <buyer>' +
- *                 '            <id>1</id><email>tony@stark-industries.com</email><phone>555-111-222</phone>' +
- *                 '        </buyer>' +
- *                 '        <buyer>' +
- *                 '            <id>2</id><email>steve-rogers@avengers.us</email><phone>555-222-333</phone>' +
- *                 '        </buyer>' +
- *                 '    </buyers>' +
- *                 '    <total>' +
- *                 '        <date_from>2016-06-01 00:00:00</date_from>' +
- *                 '        <date_to>2016-07-01 00:00:00</date_to>' +
- *                 '        <amount>475</amount>' +
- *                 '        <deals>3</deals>' +
- *                 '        <completed>2</completed>' +
- *                 '        <paid>2</paid>' +
- *                 '        <awaited>1</awaited>' +
- *                 '        <rejected>0</rejected>' +
- *                 '    </total>' +
- *                 '    <executeDate>2016-06-27 11:34:57</executeDate>' +
- *                 '</response>',
- *             itemsProperty: 'orders/order',//XPath syntax
- *             keyProperty: 'id'
- *         });
+ *     import {DataSet} from 'Types/source';
+ *     import {adapter} from 'Types/entity';
  *
- *         var orders = data.getAll();
- *         console.log(orders.getCount());//3
- *         console.log(orders.at(0).get('amount'));//96
- *
- *         var buyers = data.getAll('buyers/buyer');//XPath syntax
- *         console.log(buyers.getCount());//2
- *         console.log(buyers.at(0).get('email'));//'tony@stark-industries.com'
- *
- *         var total = data.getRow('total');
- *         console.log(total.get('amount'));//745
- *
- *         console.log(data.getScalar('executeDate'));//'2016-06-27 11:34:57'
+ *     const data = new DataSet({
+ *         adapter: new adapter.Xml(),
+ *         rawData: '<?xml version="1.0"?>' +
+ *             '<response>' +
+ *             '    <orders>' +
+ *             '        <order>' +
+ *             '            <id>1</id><buyerId>1</buyerId><date>2016-06-02 14:12:45</date><amount>96</amount>' +
+ *             '        </order>' +
+ *             '        <order>' +
+ *             '            <id>2</id><buyerId>2</buyerId><date>2016-06-02 17:01:12</date><amount>174</amount>' +
+ *             '        </order>' +
+ *             '        <order>' +
+ *             '            <id>3</id><buyerId>1</buyerId><date>2016-06-03 10:24:28</date><amount>475</amount>' +
+ *             '        </order>' +
+ *             '    </orders>' +
+ *             '    <buyers>' +
+ *             '        <buyer>' +
+ *             '            <id>1</id><email>tony@stark-industries.com</email><phone>555-111-222</phone>' +
+ *             '        </buyer>' +
+ *             '        <buyer>' +
+ *             '            <id>2</id><email>steve-rogers@avengers.us</email><phone>555-222-333</phone>' +
+ *             '        </buyer>' +
+ *             '    </buyers>' +
+ *             '    <total>' +
+ *             '        <dateFrom>2016-06-01 00:00:00</dateFrom>' +
+ *             '        <dateTo>2016-07-01 00:00:00</dateTo>' +
+ *             '        <amount>475</amount>' +
+ *             '        <deals>3</deals>' +
+ *             '        <completed>2</completed>' +
+ *             '        <paid>2</paid>' +
+ *             '        <awaited>1</awaited>' +
+ *             '        <rejected>0</rejected>' +
+ *             '    </total>' +
+ *             '    <executeDate>2016-06-27 11:34:57</executeDate>' +
+ *             '</response>',
+ *         itemsProperty: 'orders/order', // XPath syntax
+ *         keyProperty: 'id'
  *     });
+ *
+ *     const orders = data.getAll();
+ *     console.log(orders.getCount()); // 3
+ *     console.log(orders.at(0).get('amount')); // 96
+ *
+ *     const buyers = data.getAll('buyers/buyer'); // XPath syntax
+ *     console.log(buyers.getCount()); // 2
+ *     console.log(buyers.at(0).get('email')); // 'tony@stark-industries.com'
+ *
+ *     const total = data.getRow('total');
+ *     console.log(total.get('amount')); // 745
+ *
+ *     console.log(data.getScalar('executeDate')); // '2016-06-27 11:34:57'
  * </pre>
  * @class Types/_source/DataSet
  * @mixes Types/_entity/DestroyableMixin
@@ -163,30 +164,30 @@ export default class DataSet extends mixin<
      * @example
      * Создадим набор данных с персонажами фильма:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *                 rawData: [{
-     *                     id: 1,
-     *                     firstName: 'John',
-     *                     lastName: 'Connor',
-     *                     role: 'Savior'
-     *                 }, {
-     *                     id: 2,
-     *                     firstName: 'Sarah',
-     *                     lastName: 'Connor',
-     *                     role: 'Savior\'s Mother'
-     *                 }, {
-     *                     id: 3,
-     *                     firstName: '-',
-     *                     lastName: 'T-800',
-     *                     role: 'Terminator'
-     *                 }]
-     *             }),
-     *             characters = data.getAll();
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(characters.at(0).get('firstName'));//John
-     *         console.log(characters.at(0).get('lastName'));//Connor
+     *     const data = new source.DataSet({
+     *         rawData: [{
+     *             id: 1,
+     *             firstName: 'John',
+     *             lastName: 'Connor',
+     *             role: 'Savior'
+     *         }, {
+     *             id: 2,
+     *             firstName: 'Sarah',
+     *             lastName: 'Connor',
+     *             role: 'Savior\'s Mother'
+     *         }, {
+     *             id: 3,
+     *             firstName: '-',
+     *             lastName: 'T-800',
+     *             role: 'Terminator'
+     *         }]
      *     });
+     *     const characters = data.getAll();
+     *
+     *     console.log(characters.at(0).get('firstName')); // John
+     *     console.log(characters.at(0).get('lastName')); // Connor
      * </pre>
      */
     protected _$rawData: any;
@@ -200,10 +201,11 @@ export default class DataSet extends mixin<
      * @example
      * Установим модель "Пользователь":
      * <pre>
-     *     require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
-     *         var data = new source.DataSet({
-     *             model: UserModel
-     *         });
+     *     import {DataSet} from 'Types/source';
+     *     import {User} from 'My/application/models';
+     *
+     *     const data = new DataSet({
+     *         model: User
      *     });
      * </pre>
      */
@@ -219,10 +221,11 @@ export default class DataSet extends mixin<
      * @example
      * Установим рекодсет "Пользователи":
      * <pre>
-     *     require(['Types/source', 'Application/Collections/Users'], function (source, UsersCollection) {
-     *         var data = new source.DataSet({
-     *             listModule: UsersCollection
-     *         });
+     *     import {DataSet} from 'Types/source';
+     *     import {Users} from 'My/application/models';
+     *
+     *     const data = new DataSet({
+     *         listModule: Users
      *     });
      * </pre>
      */
@@ -236,10 +239,10 @@ export default class DataSet extends mixin<
      * @example
      * Установим свойство 'primaryId' в качестве первичного ключа:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             keyProperty: 'primaryId'
-     *         });
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet({
+     *         keyProperty: 'primaryId'
      *     });
      * </pre>
      */
@@ -253,27 +256,27 @@ export default class DataSet extends mixin<
      * @example
      * Установим свойство 'orders' как содержащее основную выборку:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             rawData: {
-     *                 orders: [
-     *                     {id: 1, date: '2016-06-02 14:12:45', amount: 96},
-     *                     {id: 2, date: '2016-06-02 17:01:12', amount: 174},
-     *                     {id: 3, date: '2016-06-03 10:24:28', amount: 475}
-     *                 ],
-     *                 total: {
-     *                     date_from: '2016-06-01 00:00:00',
-     *                     date_to: '2016-07-01 00:00:00',
-     *                     amount: 745
-     *                 }
-     *             },
-     *             itemsProperty: 'orders'
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         var orders = data.getAll();
-     *         console.log(orders.getCount());//3
-     *         console.log(orders.at(0).get('id'));//1
+     *     const data = new DataSet({
+     *         rawData: {
+     *             orders: [
+     *                 {id: 1, date: '2016-06-02 14:12:45', amount: 96},
+     *                 {id: 2, date: '2016-06-02 17:01:12', amount: 174},
+     *                 {id: 3, date: '2016-06-03 10:24:28', amount: 475}
+     *             ],
+     *             total: {
+     *                 dateFrom: '2016-06-01 00:00:00',
+     *                 dateTo: '2016-07-01 00:00:00',
+     *                 amount: 745
+     *             }
+     *         },
+     *         itemsProperty: 'orders'
      *     });
+     *
+     *     const orders = data.getAll();
+     *     console.log(orders.getCount()); // 3
+     *     console.log(orders.at(0).get('id')); // 1
      * </pre>
      */
     protected _$itemsProperty: string;
@@ -326,10 +329,11 @@ export default class DataSet extends mixin<
      * @example
      * Получим адаптер набора данных, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source', 'Types/entity'], function (source, entity) {
-     *         var data = new source.DataSet();
-     *         console.log(data.getAdapter() instanceof entity.adapter.Json);//true
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *     import {adapter} from 'Types/entity';
+     *
+     *     const data = new DataSet();
+     *     console.log(data.getAdapter() instanceof adapter.Json); // true
      * </pre>
      */
     getAdapter(): adapter.IAdapter {
@@ -348,10 +352,10 @@ export default class DataSet extends mixin<
      * @example
      * Получим конструктор записей, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet();
-     *         console.log(data.getModel());//'Types/entity:Model'
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet();
+     *     console.log(data.getModel()); // 'Types/entity:Model'
      * </pre>
      */
     getModel(): TypeDeclaration {
@@ -368,10 +372,11 @@ export default class DataSet extends mixin<
      * @example
      * Установим конструктор пользовательской модели:
      * <pre>
-     *     require(['Types/source', 'Application/Models/User'], function (source, UserModel) {
-     *         var data = new source.DataSet();
-     *         data.setModel(UserModel);
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *     import {User} from 'My/application/models';
+     *
+     *     const data = new DataSet();
+     *     data.setModel(User);
      * </pre>
      */
     setModel(model: TypeDeclaration): void {
@@ -386,10 +391,10 @@ export default class DataSet extends mixin<
      * @example
      * Получим конструктор рекордсетов, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet();
-     *         console.log(data.getListModule());//'Types/collection:RecordSet'
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet();
+     *     console.log(data.getListModule()); // 'Types/collection:RecordSet'
      * </pre>
      */
     getListModule(): TypeDeclaration {
@@ -405,10 +410,11 @@ export default class DataSet extends mixin<
      * @example
      * Установим конструктор рекордсетов:
      * <pre>
-     *     require(['Types/source', 'Application/Collection/Users'], function (source, UsersCollection) {
-     *         var data = new source.DataSet();
-     *         data.setListModule(UsersCollection);
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *     import {Users} from 'My/application/models';
+     *
+     *     const data = new DataSet();
+     *     data.setListModule(Users);
      * </pre>
      */
     setListModule(listModule: TypeDeclaration): void {
@@ -423,12 +429,12 @@ export default class DataSet extends mixin<
      * @example
      * Получим название свойства модели, содержащего первичный ключ:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             keyProperty: 'id'
-     *         });
-     *         console.log(data.getKeyProperty());//'id'
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet({
+     *        keyProperty: 'id'
      *     });
+     *     console.log(data.getKeyProperty()); // 'id'
      * </pre>
      */
     getKeyProperty(): string {
@@ -444,10 +450,10 @@ export default class DataSet extends mixin<
      * @example
      * Установим название свойства модели, содержащего первичный ключ:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet();
-     *         data.setKeyProperty('id');
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet();
+     *     data.setKeyProperty('id');
      * </pre>
      */
     setKeyProperty(name: string): void {
@@ -462,12 +468,12 @@ export default class DataSet extends mixin<
      * @example
      * Получим название свойства, в котором находится основная выборка:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             itemsProperty: 'items'
-     *         });
-     *         console.log(data.getItemsProperty());//'items'
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet({
+     *         itemsProperty: 'items'
      *     });
+     *     console.log(data.getItemsProperty()); // 'items'
      * </pre>
      */
     getItemsProperty(): string {
@@ -482,10 +488,10 @@ export default class DataSet extends mixin<
      * @example
      * Установим название свойства, в котором находится основная выборка:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet();
-     *         data.setItemsProperty('items');
-     *     });
+     *     import {DataSet} from 'Types/source';
+     *
+     *     const data = new DataSet();
+     *     data.setItemsProperty('items');
      * </pre>
      */
     setItemsProperty(name: string): void {
@@ -501,54 +507,54 @@ export default class DataSet extends mixin<
      * @example
      * Получим основную выборку из набора данных, представляющего выборку:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *                 rawData: [
-     *                     {id: 1, title: 'How to build a Home'},
-     *                     {id: 2, title: 'How to plant a Tree'},
-     *                     {id: 3, title: 'How to grow up a Son'}
-     *                 ]
-     *             }),
-     *             mansGuide = data.getAll();
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(mansGuide.at(0).get('title'));//'How to build a Home'
+     *     const data = new DataSet({
+     *         rawData: [
+     *             {id: 1, title: 'How to build a Home'},
+     *             {id: 2, title: 'How to plant a Tree'},
+     *             {id: 3, title: 'How to grow up a Son'}
+     *         ]
      *     });
+     *     const mansGuide = data.getAll();
+     *
+     *     console.log(mansGuide.at(0).get('title')); // 'How to build a Home'
      * </pre>
      * @example
      * Получим основную и дополнительную выборки из набора данных, представляющего несколько выборок:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *                 rawData: {
-     *                     articles: [{
-     *                         id: 1,
-     *                         topicId: 1,
-     *                         title: 'Captain America'
-     *                     }, {
-     *                         id: 2,
-     *                         topicId: 1,
-     *                         title: 'Iron Man'
-     *                     }, {
-     *                         id: 3,
-     *                         topicId: 2,
-     *                         title: 'Batman'
-     *                     }],
-     *                     topics: [{
-     *                         id: 1,
-     *                         title: 'Marvel Comics'
-     *                     }, {
-     *                         id: 2,
-     *                         title: 'DC Comics'
-     *                     }]
-     *                 },
-     *                 itemsProperty: 'articles'
-     *             }),
-     *             articles = data.getAll(),
-     *             topics = data.getAll('topics');
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(articles.at(0).get('title'));//'Captain America'
-     *         console.log(topics.at(0).get('title'));//'Marvel Comics'
+     *     const data = new DataSet({
+     *         rawData: {
+     *             articles: [{
+     *                 id: 1,
+     *                 topicId: 1,
+     *                 title: 'Captain America'
+     *             }, {
+     *                 id: 2,
+     *                 topicId: 1,
+     *                 title: 'Iron Man'
+     *             }, {
+     *                 id: 3,
+     *                 topicId: 2,
+     *                 title: 'Batman'
+     *             }],
+     *             topics: [{
+     *                 id: 1,
+     *                 title: 'Marvel Comics'
+     *             }, {
+     *                 id: 2,
+     *                 title: 'DC Comics'
+     *             }]
+     *         },
+     *         itemsProperty: 'articles'
      *     });
+     *     const articles = data.getAll();
+     *     const topics = data.getAll('topics');
+     *
+     *     console.log(articles.at(0).get('title')); // 'Captain America'
+     *     console.log(topics.at(0).get('title')); // 'Marvel Comics'
      * </pre>
      */
     getAll(property?: string): RecordSet {
@@ -595,41 +601,41 @@ export default class DataSet extends mixin<
      * @example
      * Получим запись из набора данных, который содержит только ее:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *                 rawData: {
-     *                     id: 1,
-     *                     title: 'C++ Beginners Tutorial'
-     *                 }
-     *             }),
-     *             article = data.getRow();
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(article.get('title'));//'C++ Beginners Tutorial'
+     *     const data = new DataSet({
+     *         rawData: {
+     *             id: 1,
+     *             title: 'C++ Beginners Tutorial'
+     *         }
      *     });
+     *     const article = data.getRow();
+     *
+     *     console.log(article.get('title')); // 'C++ Beginners Tutorial'
      * </pre>
      * @example
      * Получим записи статьи и темы из набора данных, который содержит несколько записей:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *                 rawData: {
-     *                     article: {
-     *                         id: 2,
-     *                         topicId: 1,
-     *                         title: 'Iron Man'
-     *                     },
-     *                     topic: {
-     *                         id: 1,
-     *                         title: 'Marvel Comics'
-     *                     }
-     *                 }
-     *             }),
-     *             article = data.getRow('article'),
-     *             topic = data.getRow('topic');
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(article.get('title'));//'Iron Man'
-     *         console.log(topic.get('title'));//'Marvel Comics'
-     *     });
+     *     const data = new DataSet({
+     *         rawData: {
+     *             article: {
+     *                 id: 2,
+     *                 topicId: 1,
+     *                 title: 'Iron Man'
+     *             },
+     *             topic: {
+     *                 id: 1,
+     *                 title: 'Marvel Comics'
+     *             }
+     *         }
+     *     }),
+     *     const article = data.getRow('article'),
+     *     const topic = data.getRow('topic');
+     *
+     *     console.log(article.get('title')); // 'Iron Man'
+     *     console.log(topic.get('title')); // 'Marvel Comics'
      * </pre>
      */
     getRow(property?: string): Model {
@@ -661,30 +667,30 @@ export default class DataSet extends mixin<
      * @example
      * Получим количество открытых задач:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var statOpen = new source.DataSet({
-     *             rawData: 234
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(statOpen.getScalar());//234
+     *     const statOpen = new DataSet({
+     *         rawData: 234
      *     });
+     *
+     *     console.log(statOpen.getScalar()); // 234
      * </pre>
      * @example
      * Получим количество открытых и закрытых задач:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var stat = new source.DataSet({
-     *             rawData: {
-     *                 total: 500,
-     *                 open: 234,
-     *                 closed: 123,
-     *                 deleted: 2345
-     *              }
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(stat.getScalar('open'));//234
-     *         console.log(stat.getScalar('closed'));//123
+     *     const stat = new DataSet({
+     *         rawData: {
+     *             total: 500,
+     *             open: 234,
+     *             closed: 123,
+     *             deleted: 2345
+     *         }
      *     });
+     *
+     *     console.log(stat.getScalar('open')); // 234
+     *     console.log(stat.getScalar('closed')); // 123
      * </pre>
      */
     getScalar(property?: string): string | number | boolean {
@@ -720,19 +726,19 @@ export default class DataSet extends mixin<
      * @example
      * Проверим наличие свойств 'articles' и 'topics':
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             rawData: {
-     *                 articles: [{
-     *                     id: 1,
-     *                     title: 'C++ Beginners Tutorial'
-     *                 }]
-     *             }
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(data.hasProperty('articles'));//true
-     *         console.log(data.hasProperty('topics'));//false
+     *     const data = new DataSet({
+     *         rawData: {
+     *             articles: [{
+     *                 id: 1,
+     *                 title: 'C++ Beginners Tutorial'
+     *             }]
+     *         }
      *     });
+     *
+     *     console.log(data.hasProperty('articles')); // true
+     *     console.log(data.hasProperty('topics')); // false
      * </pre>
      */
     hasProperty(property?: string): boolean {
@@ -747,18 +753,18 @@ export default class DataSet extends mixin<
      * @example
      * Получим значение свойства 'article':
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             rawData: {
-     *                 article: {
-     *                     id: 1,
-     *                     title: 'C++ Beginners Tutorial'
-     *                 }
-     *             }
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(data.getProperty('article'));//{id: 1, title: 'C++ Beginners Tutorial'}
+     *     const data = new DataSet({
+     *         rawData: {
+     *             article: {
+     *                 id: 1,
+     *                 title: 'C++ Beginners Tutorial'
+     *             }
+     *         }
      *     });
+     *
+     *     console.log(data.getProperty('article')); // {id: 1, title: 'C++ Beginners Tutorial'}
      * </pre>
      */
     getProperty(property?: string): any {
@@ -773,16 +779,16 @@ export default class DataSet extends mixin<
      * @example
      * Получим данные в сыром виде:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet({
-     *             rawData: {
-     *                 id: 1,
-     *                 title: 'C++ Beginners Tutorial'
-     *             }
-     *         });
+     *     import {DataSet} from 'Types/source';
      *
-     *         console.log(data.getRawData());//{id: 1, title: 'C++ Beginners Tutorial'}
+     *     const data = new source.DataSet({
+     *         rawData: {
+     *             id: 1,
+     *             title: 'C++ Beginners Tutorial'
+     *         }
      *     });
+     *
+     *     console.log(data.getRawData()); // {id: 1, title: 'C++ Beginners Tutorial'}
      * </pre>
      */
     getRawData(): any {
@@ -797,15 +803,14 @@ export default class DataSet extends mixin<
      * @example
      * Установим данные в сыром виде:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var data = new source.DataSet();
+     *     import {DataSet} from 'Types/source';
      *
-     *         data.setRawData({
-     *             id: 1,
-     *             title: 'C++ Beginners Tutorial'
-     *         });
-     *         console.log(data.getRow().get('title'));//'C++ Beginners Tutorial'
+     *     const data = new source.DataSet();
+     *     data.setRawData({
+     *         id: 1,
+     *         title: 'C++ Beginners Tutorial'
      *     });
+     *     console.log(data.getRow().get('title')); // 'C++ Beginners Tutorial'
      * </pre>
      */
     setRawData(rawData: any): void {

@@ -30,22 +30,17 @@ export default abstract class DataMixin implements IData {
      * @example
      * Адаптер для данных в формате БЛ СБИС:
      * <pre>
-     *     require([
-     *         'Types/source',
-     *         'Types/entity'
-     *     ], function (source, entity) {
-     *         new source.SbisService({
-     *             endpoint: 'Employee'
-     *         })
-     *         .call('getList', {department: 'Management'})
-     *         .addCallbacks(function(data) {
-     *             var dataSource = new source.Memory({
-     *                 adapter: new entity.adapter.Sbis(),
-     *                 data: data
-     *             });
-     *         }, function(error) {
-     *             console.error('Can\'t call "Employee.getList()"', error);
+     *     import {SbisService, Memory} from 'Types/source';
+     *
+     *     const remoteSource = new SbisService({
+     *         endpoint: 'Employee'
+     *     }).call('getList', {department: 'Management'}).then((data) => {
+     *         const localSource = new Memory({
+     *             adapter: remoteSource.getAdapter(),
+     *             data
      *         });
+     *     }).catch((err) => {
+     *         console.error('Can\'t call "Employee.getList()"', err);
      *     });
      * </pre>
      */
@@ -61,25 +56,34 @@ export default abstract class DataMixin implements IData {
      * @example
      * Конструктор пользовательской модели, внедренный в виде класса:
      * <pre>
-     *     var User = Model.extend({
-     *         identify: function(login, password) {
+     *     import {Memory} from 'Types/source';
+     *     import {Model} from 'Types/entity';
+     *
+     *     class User extends Model {
+     *         identify(login: string, password: string): void {
+     *             // ...
      *         }
-     *     });
-     *     //...
-     *     var dataSource = new MemorySource({
+     *     }
+     *
+     *     const dataSource = new Memory({
      *         model: User
      *     });
      * </pre>
      * Конструктор пользовательской модели, внедренный в виде названия зарегистрированной зависимости:
      * <pre>
-     *     var User = Model.extend({
-     *         identify: function(login, password) {
+     *     import {Memory} from 'Types/source';
+     *     import {Model} from 'Types/entity';
+     *     import {register} from 'Types/di';
+     *
+     *     class User extends Model {
+     *         identify(login: string, password: string): void {
+     *             // ...
      *         }
-     *     });
-     *     Di.register('app.model.user', User);
-     *     //...
-     *     var dataSource = new MemorySource({
-     *         model: 'app.model.user'
+     *     }
+     *     register('My/application/models/User', User, {instantiate: false});
+     *
+     *     const dataSource = new Memory({
+     *         model: 'My/application/models/User'
      *     });
      * </pre>
      */
@@ -95,25 +99,36 @@ export default abstract class DataMixin implements IData {
      * @example
      * Конструктор рекордсета, внедренный в виде класса:
      * <pre>
-     *     var Users = RecordSet.extend({
-     *         getAdministrators: function() {
+     *     import {Memory} from 'Types/source';
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Model} from 'Types/entity';
+     *
+     *     class Users extends RecordSet{
+     *         getAdministrators(): Model[] {
+     *             // ...
      *         }
-     *     });
-     *     //...
-     *     var dataSource = new MemorySource({
+     *     }
+     *
+     *     const dataSource = new Memory({
      *         listModule: Users
      *     });
      * </pre>
      * Конструктор рекордсета, внедренный в виде названия зарегистрированной зависимости:
      * <pre>
-     *     var Users = RecordSet.extend({
-     *         getAdministrators: function() {
+     *     import {Memory} from 'Types/source';
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Model} from 'Types/entity';
+     *     import {register} from 'Types/di';
+     *
+     *     class Users extends RecordSet{
+     *         getAdministrators(): Model[] {
+     *             // ...
      *         }
-     *     });
-     *     Di.register('app.collections.users', Users);
-     *     //...
-     *     var dataSource = new MemorySource({
-     *         listModule: 'app.collections.users'
+     *     }
+     *     register('My/application/models/Users', Users, {instantiate: false});
+     *
+     *     const dataSource = new MemorySource({
+     *         listModule: 'My/application/models/Users'
      *     });
      * </pre>
      */
@@ -127,9 +142,11 @@ export default abstract class DataMixin implements IData {
     * @example
     * Установим свойство 'primaryId' в качестве первичного ключа:
     * <pre>
-    *    var dataSource = new MemorySource({
-    *       keyProperty: 'primaryId'
-    *    });
+    *     import {Memory} from 'Types/source';
+    *
+    *     const dataSource = new Memory({
+    *         keyProperty: 'primaryId'
+    *     });
     * </pre>
     */
    protected _$keyProperty: string;
@@ -281,6 +298,7 @@ export default abstract class DataMixin implements IData {
      * <pre>
      * import {Base} from 'Types/source';
      * import {Model} from 'Types/entity';
+     *
      * const instance = new Model();
      * console.log(Base.isModelInstance(instance)); // true
      * </pre>
@@ -298,6 +316,7 @@ export default abstract class DataMixin implements IData {
      * <pre>
      * import {Base} from 'Types/source';
      * import {RecordSet} from 'Types/collection';
+     *
      * const instance = new RecordSet();
      * console.log(Base.isRecordSetInstance(instance)); // true
      * </pre>
