@@ -26,8 +26,7 @@ import {IHashMap} from '../../_declarations';
 
 type Dictionary = string[] | IHashMap<string>;
 
-export interface IDeclaration {
-    name: string;
+export interface IShortDeclaration {
     type: string | Function;
     defaultValue?: any;
     kind?: string;
@@ -37,7 +36,11 @@ export interface IDeclaration {
     dictionary?: Dictionary;
 }
 
-export type FormatDeclaration = IDeclaration[] | IHashMap<IDeclaration> | IHashMap<string>;
+export interface IDeclaration extends IShortDeclaration {
+    name: string;
+}
+
+export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | IHashMap<string>;
 
 /**
  * Creates field format by its declarative definition.
