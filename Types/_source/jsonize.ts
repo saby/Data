@@ -88,7 +88,7 @@ function jsonizeArray(arr: object[]): Array<object | string> {
  * @author Мальцев А.А.
  */
 export default function jsonize<T = object>(data: T | object): T {
-    if (data instanceof Array) {
+    if (Array.isArray(data)) {
         return jsonizeArray(data) as any;
     } else if (data && typeof data === 'object') {
         return jsonizeObject(data) as any;
