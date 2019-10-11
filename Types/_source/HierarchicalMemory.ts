@@ -31,35 +31,33 @@ interface ISerializableState extends IDefaultSerializableState {
  *
  * Let's create hierarchical source and select data with breadcrumbs:
  * <pre>
- *     require(['Types/source'], function (source) {
- *         var goods = new source.HierarchicalMemory({
- *             data: [
- *                 {id: 1, parent: null, name: 'Laptops'},
- *                 {id: 10, parent: 1, name: 'Apple MacBook Pro'},
- *                 {id: 11, parent: 1, name: 'Xiaomi Mi Notebook Air'},
- *                 {id: 2, parent: null, name: 'Smartphones'},
- *                 {id: 20, parent: 2, name: 'Apple iPhone'},
- *                 {id: 21, parent: 2, name: 'Samsung Galaxy'}
- *             ],
- *             keyProperty: 'id',
- *             parentProperty: 'parent'
- *         });
+ *     import {HierarchicalMemory, Query} from 'Types/source';
  *
- *         var laptopsQuery = new source.Query();
- *         laptopsQuery.where({parent: 1});
- *
- *         goods.query(laptopsQuery).addCallbacks(function(response) {
- *             var items = response.getAll();
- *             items.forEach(function(item) {
- *                  console.log(item.get('name'));//'Apple MacBook Pro', 'Xiaomi Mi Notebook Air'
- *             });
- *             items.getMetaData().path.map(function(item) {
- *                 console.log(item.get('name'));//'Laptops'
- *             });
- *         }, function(error) {
- *             console.error(error);
- *         });
+ *     const goods = new HierarchicalMemory({
+ *         data: [
+ *             {id: 1, parent: null, name: 'Laptops'},
+ *             {id: 10, parent: 1, name: 'Apple MacBook Pro'},
+ *             {id: 11, parent: 1, name: 'Xiaomi Mi Notebook Air'},
+ *             {id: 2, parent: null, name: 'Smartphones'},
+ *             {id: 20, parent: 2, name: 'Apple iPhone'},
+ *             {id: 21, parent: 2, name: 'Samsung Galaxy'}
+ *         ],
+ *         keyProperty: 'id',
+ *         parentProperty: 'parent'
  *     });
+ *
+ *     const laptopsQuery = new Query();
+ *     laptopsQuery.where({parent: 1});
+ *
+ *     goods.query(laptopsQuery).then((response) => {
+ *         const items = response.getAll();
+ *         items.forEach((item) => {
+ *              console.log(item.get('name')); // 'Apple MacBook Pro', 'Xiaomi Mi Notebook Air'
+ *         });
+ *         items.getMetaData().path.map((item) => {
+ *             console.log(item.get('name')); // 'Laptops'
+ *         });
+ *     }).catch(console.error);
  * </pre>
  * @class Types/_source/HierarchicalMemory
  * @mixes Types/_entity/DestroyableMixin
@@ -155,7 +153,7 @@ export default class HierarchicalMemory extends mixin<
         return this._source.destroy(keys, meta);
     }
 
-    query(query: Query): ExtendPromise<DataSet> {
+    query(query?: Query): ExtendPromise<DataSet> {
         const result = new Deferred();
 
         require(['Types/collection'], (collection) => {

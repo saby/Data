@@ -31,7 +31,9 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
      * @see getEndPoint
      * @example
      * <pre>
-     *     var dataSource = new SbisBusinessLogic({
+     *     import {provider} from 'Types/source';
+     *
+     *     const dataSource = new provider.SbisBusinessLogic({
      *         endpoint: {
      *             address: '/service/url/',
      *             contract: 'Сотрудник'

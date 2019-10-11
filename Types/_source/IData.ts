@@ -18,10 +18,11 @@ export default interface IData {
      * @example
      * Получим адаптер источника, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source', 'Types/entity'], function(source, entity) {
-     *         var dataSource = new source.MemorySource();
-     *         console.assert(dataSource.getAdapter() instanceof entity.adapter.Json);//correct
-     *     });
+     *     import {Memory} from 'Types/source';
+     *     import {adapter} from 'Types/entity';
+     *
+     *     const dataSource = new Memory();
+     *     console.assert(dataSource.getAdapter() instanceof adapter.Json); // correct
      * </pre>
      */
     getAdapter(): adapter.IAdapter;
@@ -35,10 +36,10 @@ export default interface IData {
      * @example
      * Получим конструктор записей, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source'], function(source) {
-     *         var dataSource = new source.MemorySource();
-     *         console.assert(dataSource.getModel() === 'Types/entity:Model');//correct
-     *     });
+     *     import {Memory} from 'Types/source';
+     *
+     *     const dataSource = new Memory();
+     *     console.assert(dataSource.getModel() === 'Types/entity:Model'); // correct
      * </pre>
      */
     getModel(): Function | string;
@@ -52,10 +53,10 @@ export default interface IData {
      * @example
      * Получим конструктор рекордсетов, используемый по умолчанию:
      * <pre>
-     *     require(['Types/source'], function(source) {
-     *         var dataSource = new source.MemorySource();
-     *         console.assert(dataSource.getListModule() === 'Types/collection:RecordSet');//correct
-     *     });
+     *     import {Memory} from 'Types/source';
+     *
+     *     const dataSource = new Memory();
+     *     console.assert(dataSource.getListModule() === 'Types/collection:RecordSet'); // correct
      * </pre>
      */
     getListModule(): Function | string;
@@ -70,12 +71,12 @@ export default interface IData {
     * @example
     * Получим название свойства записи, содержащего первичный ключ:
     * <pre>
-    *    require(['Types/source'], function(source) {
-    *       var dataSource = new source.Memory({
-    *          keyProperty: 'id'
-    *       });
-    *       console.log(dataSource.getKeyProperty());//'id'
-    *    });
+    *     import {Memory} from 'Types/source';
+    *
+    *     const dataSource = new Memory({
+    *         keyProperty: 'id'
+    *     });
+    *     console.log(dataSource.getKeyProperty()); // 'id'
     * </pre>
     */
    getKeyProperty(): string;

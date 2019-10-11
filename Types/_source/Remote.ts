@@ -125,7 +125,7 @@ function passDestroy(keys: string | string[], meta?: object|Record): any[] {
  * Формирует данные, передваемые в провайдер при вызове query().
  * @param [query] Запрос
  */
-function passQuery(query: Query): any[] {
+function passQuery(query?: Query): any[] {
     return query instanceof Query ? [
          query.getSelect(),
          query.getFrom(),
@@ -209,7 +209,9 @@ export default abstract class Remote extends mixin<
      * @see Types/di
      * @example
      * <pre>
-     *     var dataSource = new Remote({
+     *     import {Remote} from 'Types/source';
+     *
+     *     const dataSource = new Remote({
      *         endpoint: '/users/'
      *         provider: new AjaxProvider()
      *     });
@@ -223,10 +225,10 @@ export default abstract class Remote extends mixin<
      * @example
      * Подключаем пользователей через HTTP API, для метода create() передадим данные как объект с полем 'data':
      * <pre>
-     *     var dataSource = new HttpSource({
+     *     const dataSource = new HttpSource({
      *         endpoint: '//some.server/users/',
      *         passing: {
-     *             create: function(meta) {
+     *             create(meta) {
      *                 return {
      *                     data: meta
      *                 }

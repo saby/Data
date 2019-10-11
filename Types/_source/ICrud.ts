@@ -9,46 +9,38 @@ import {ExtendPromise} from '../_declarations';
  * @remark
  * Создадим новую статью:
  * <pre>
- *     var dataSource = new CrudSource();
- *     dataSource.create().addCallbacks(function(article) {
+ *     const dataSource = new CrudSource();
+ *     dataSource.create().then((article) => {
  *         console.log(article.getId());
- *     }, function(error) {
- *         console.error(error);
- *     });
+ *     }).catch(console.error);
  * </pre>
  * Прочитаем статью:
  * <pre>
- *     var dataSource = new CrudSource();
- *     dataSource.read('article-1').addCallbacks(function(article) {
+ *     const dataSource = new CrudSource();
+ *     dataSource.read('article-1').then((article) => {
  *         console.log(article.get('title'));
- *     }, function(error) {
- *         console.error(error);
- *     });
+ *     }).catch(console.error);
  * </pre>
  * Сохраним статью:
  * <pre>
- *     var dataSource = new CrudSource(),
- *         article = new Record({
- *             rawData: {
- *                 id: 'article-1',
- *                 title: 'Article 1'
- *             }
- *         });
- *
- *     dataSource.update(article).addCallbacks(function() {
- *         console.log('Article updated!');
- *     }, function(error) {
- *         console.error(error);
+ *     const dataSource = new CrudSource();
+ *     const article = new Record({
+ *         rawData: {
+ *             id: 'article-1',
+ *             title: 'Article 1'
+ *         }
  *     });
+ *
+ *     dataSource.update(article).then(() => {
+ *         console.log('Article updated!');
+ *     }).catch(console.error);
  * </pre>
  * Удалим статью:
  * <pre>
- *     var dataSource = new CrudSource();
- *     dataSource.destroy('article-1').addCallbacks(function(article) {
+ *     const dataSource = new CrudSource();
+ *     dataSource.destroy('article-1').then((article) => {
  *         console.log('Article deleted!');
- *     }, function(error) {
- *         console.error(error);
- *     });
+ *     }).catch(console.error);
  * </pre>
  * @interface Types/_source/ICrud
  * @public
@@ -65,26 +57,26 @@ export default interface ICrud {
      * @example
      * Создадим новую статью:
      * <pre>
-     *     var dataSource = new CrudSource({
+     *     const dataSource = new CrudSource({
      *         endpoint: '/articles/',
      *         keyProperty: 'id'
      *     });
-     *     dataSource.create().addCallbacks(function(article) {
-     *         console.log(article.get('id')),//01c5151e-21fe-5316-d118-cb13216c9412
-     *         console.log(article.get('title'));//Untitled
-     *     }, function(error) {
+     *     dataSource.create().then((article) => {
+     *         console.log(article.get('id')), // 01c5151e-21fe-5316-d118-cb13216c9412
+     *         console.log(article.get('title')); // Untitled
+     *     }).catch((error) => {
      *         console.error('Can\'t create an article', error);
      *     });
      * </pre>
      * Создадим нового сотрудника:
      * <pre>
-     *      var dataSource = new SbisService({
+     *      const dataSource = new SbisService({
      *          endpoint: 'Employee',
      *          keyProperty: '@Employee'
      *      });
-     *      dataSource.create().addCallbacks(function(employee) {
+     *      dataSource.create().then((employee) => {
      *          console.log(employee.get('Name'));
-     *      }, function(error) {
+     *      }).catch((error) => {
      *          console.error('Can\'t create an employee', error);
      *     });
      * </pre>
@@ -99,26 +91,26 @@ export default interface ICrud {
      * @example
      * Прочитаем статью с ключом 'how-to-read-an-item':
      * <pre>
-     *     var dataSource = new CrudSource({
+     *     const dataSource = new CrudSource({
      *         endpoint: '/articles/',
      *         keyProperty: 'code'
      *     });
-     *     dataSource.read('how-to-read-an-item').addCallbacks(function(article) {
-     *         console.log(article.get('code')),//how-to-read-an-item
-     *         console.log(article.get('title'));//How to read an item
-     *     }, function(error) {
+     *     dataSource.read('how-to-read-an-item').then((article) => {
+     *         console.log(article.get('code')), // how-to-read-an-item
+     *         console.log(article.get('title')); // How to read an item
+     *     }).catch((error) => {
      *         console.error('Can\'t read the article', error);
      *     });
      * </pre>
      * Прочитаем данные сотрудника с идентификатором 123321:
      * <pre>
-     *      var dataSource = new SbisService({
+     *      const dataSource = new SbisService({
      *          endpoint: 'Employee',
      *          keyProperty: '@Employee'
      *      });
-     *      dataSource.read(123321).addCallbacks(function(employee) {
-     *            console.log(employee.get('Name'));
-     *      }, function(error) {
+     *      dataSource.read(123321).then((employee) => {
+     *         console.log(employee.get('Name'));
+     *      }).catch((error) => {
      *         console.error('Can\'t read the employee', error);
      *     });
      * </pre>
@@ -133,47 +125,50 @@ export default interface ICrud {
      * @example
      * Обновим статью с ключом 'how-to-update-an-item':
      * <pre>
-     *     var dataSource = new CrudSource({
-     *             endpoint: '/articles/',
-     *             keyProperty: 'code'
-     *         }),
-     *         article = new Record({
-     *             rawData: {
-     *                 code: 'how-to-update-an-item',
-     *                 title: 'How to update an item'
-     *             }
-     *         });
-     *     dataSource.update(article).addCallbacks(function() {
+     *     const dataSource = new CrudSource({
+     *         endpoint: '/articles/',
+     *         keyProperty: 'code'
+     *     });
+     *     const article = new Record({
+     *         rawData: {
+     *             code: 'how-to-update-an-item',
+     *             title: 'How to update an item'
+     *         }
+     *     });
+     *
+     *     dataSource.update(article).then(() => {
      *         console.log('The article has been updated successfully');
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t update the article', error);
      *     });
      * </pre>
      * Обновим данные сотрудника с идентификатором 123321:
      * <pre>
-     *     require(['Types/source', Types/entity], function(source, entity) {
-     *         var dataSource = new source.SbisService({
-     *                 endpoint: 'Employee'
-     *                 keyProperty: '@Employee'
-     *             }),
-     *             employee = new entity.Record({
-     *                 format: [
-     *                     {name: '@Employee', type: 'identity'},
-     *                     {name: 'Position', type: 'string'}
-     *                 ],
-     *                 adapter: dataSource.getAdapter()
-     *             });
+     *     import {SbisService} from 'Types/source';
+     *     import {Record} from 'Types/entity';
      *
-     *         employee.set({
-     *             '@Employee':  [123321],
-     *             Position: 'Senior manager'
-     *         });
+     *     const dataSource = new SbisService({
+     *         endpoint: 'Employee'
+     *         keyProperty: '@Employee'
+     *     });
      *
-     *         dataSource.update(employee).addCallbacks(function() {
-     *             console.log('The employee has been updated successfully');
-     *         }, function(error) {
-     *             console.error('Can\'t update the article', error);
-     *         });
+     *     const employee = new Record({
+     *         format: [
+     *             {name: '@Employee', type: 'identity'},
+     *             {name: 'Position', type: 'string'}
+     *         ],
+     *         adapter: dataSource.getAdapter()
+     *     });
+     *
+     *     employee.set({
+     *         '@Employee':  [123321],
+     *         Position: 'Senior manager'
+     *     });
+     *
+     *     dataSource.update(employee).then(() => {
+     *         console.log('The employee has been updated successfully');
+     *     }).catch((error) => {
+     *         console.error('Can\'t update the article', error);
      *     });
      * </pre>
      */
@@ -187,25 +182,25 @@ export default interface ICrud {
      * @example
      * Удалим статью с ключом 'article-id-to-destroy':
      * <pre>
-     *     var dataSource = new CrudSource({
+     *     const dataSource = new CrudSource({
      *         endpoint: '/articles/',
      *         keyProperty: 'code'
      *     });
-     *     dataSource.destroy('article-id-to-destroy').addCallbacks(function() {
+     *     dataSource.destroy('article-id-to-destroy').then(() => {
      *         console.log('The article has been deleted successfully');
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t delete the article', error);
      *     });
      * </pre>
      * Удалим сотрудника с идентификатором 123321:
      * <pre>
-     *      var dataSource = new SbisService({
+     *      const dataSource = new SbisService({
      *          endpoint: 'Employee',
      *          keyProperty: '@Employee'
      *      });
-     *      dataSource.destroy(123321).addCallbacks(function() {
+     *      dataSource.destroy(123321).then(() => {
      *         console.log('The employee has been deleted successfully');
-     *      }, function(error) {
+     *      }).catch((error) => {
      *         console.error('Can\'t delete the article', error);
      *      });
      * </pre>
@@ -221,10 +216,10 @@ export default interface ICrud {
      * @example
      * Выберем новые книги опредленного жанра:
      * <pre>
-     *     var dataSource = new CrudSource({
-     *             endpoint: '/books/'
-     *         }),
-     *         query = new Query();
+     *     const dataSource = new CrudSource({
+     *         endpoint: '/books/'
+     *     });
+     *     const query = new Query();
      *
      *     query
      *         .select(['id', 'name', 'author', 'genre'])
@@ -233,37 +228,35 @@ export default interface ICrud {
      *         })
      *         .orderBy('date', false);
      *
-     *     dataSource.query(query).addCallbacks(function(dataSet) {
+     *     dataSource.query(query).then((dataSet) => {
      *         var books = dataSet.getAll();
      *         //Deal with the books
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t read the books', error);
      *     });
      * </pre>
      * Найдем молодые таланты среди сотрудников:
      * <pre>
-     *     var dataSource = new MemorySource({
-     *             data: [
-     *                 //Some data here
-     *             ]
-     *         }),
-     *         query = new Query();
+     *     const dataSource = new Memory({
+     *         data: [
+     *             //Some data here
+     *         ]
+     *     });
      *
+     *     const query = new Query();
      *     query
      *         .select(['id', 'name', 'position' ])
-     *         .where(function(employee) {
-     *             return employee.get('position') === 'TeamLead' && employee.get('age') <= 18;
-     *         })
+     *         .where((employee) => employee.get('position') === 'TeamLead' && employee.get('age') <= 18)
      *         .orderBy('age');
      *
-     *     dataSource.query(query).addCallbacks(function(dataSet) {
+     *     dataSource.query(query).then((dataSet) => {
      *         if (dataSet.getAll().getCount() > 0) {
      *             //A new Mark Zuckerberg detected
      *         }
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t read the employees', error);
      *     });
      * </pre>
      */
-    query(query: Query): ExtendPromise<DataSet>;
+    query(query?: Query): ExtendPromise<DataSet>;
 }
