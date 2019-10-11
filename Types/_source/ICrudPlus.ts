@@ -29,13 +29,13 @@ export default interface ICrudPlus {
      * @example
      * Объединим статью с ключом 'article-from' со статьей с ключом 'article-to':
      * <pre>
-     *     var dataSource = new CrudPlusSource({
+     *     const dataSource = new CrudPlusSource({
      *         endpoint: '/articles/',
      *         keyProperty: 'code'
      *     });
-     *     dataSource.merge('article-from', 'article-to').addCallbacks(function() {
+     *     dataSource.merge('article-from', 'article-to').then(() => {
      *         console.log('The articles has been merged successfully');
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t merge the articles', error);
      *     });
      * </pre>
@@ -50,13 +50,13 @@ export default interface ICrudPlus {
      * @example
      * Скопируем статью с ключом 'what-about-to-copy-me':
      * <pre>
-     *     var dataSource = new CrudPlusSource({
+     *     const dataSource = new CrudPlusSource({
      *         endpoint: '/articles/',
      *         keyProperty: 'code'
      *     });
-     *     dataSource.copy('what-about-to-copy-me').addCallbacks(function(copy) {
+     *     dataSource.copy('what-about-to-copy-me').then((copy) => {
      *         console.log('The article has been copied successfully. The new id is: ' + copy.getId());
-     *     }, function(error) {
+     *     }).catch((error) => {
      *         console.error('Can\'t copy the article', error);
      *     });
      * </pre>

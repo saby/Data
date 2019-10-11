@@ -78,66 +78,62 @@ export default abstract class Local extends mixin<
      * @example
      * Спрячем Землю из результатов выборки:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var solarSystem = new source.Memory({
-     *             data: [
-     *                 {id: 1, name: 'Sun', kind: 'Star'},
-     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
-     *                 {id: 3, name: 'Venus', kind: 'Planet'},
-     *                 {id: 4, name: 'Earth', kind: 'Planet'},
-     *                 {id: 5, name: 'Mars', kind: 'Planet'},
-     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
-     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
-     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
-     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
-     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-     *             ],
-     *             filter: function(item) {
-     *                 return item.get('name') !== 'Earth';
-     *             },
-     *             keyProperty: 'id'
-     *         });
+     *     import {Memory} from 'Types/source';
      *
-     *         solarSystem.query().addCallback(function(result) {
-     *             result.getAll().each(function(record) {
-     *                 console.log(record.get('name'));
-     *                 //'Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'
-     *             });
+     *     const solarSystem = new Memory({
+     *         data: [
+     *             {id: 1, name: 'Sun', kind: 'Star'},
+     *             {id: 2, name: 'Mercury', kind: 'Planet'},
+     *             {id: 3, name: 'Venus', kind: 'Planet'},
+     *             {id: 4, name: 'Earth', kind: 'Planet'},
+     *             {id: 5, name: 'Mars', kind: 'Planet'},
+     *             {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *             {id: 7, name: 'Saturn', kind: 'Planet'},
+     *             {id: 8, name: 'Uranus', kind: 'Planet'},
+     *             {id: 9, name: 'Neptune', kind: 'Planet'},
+     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *         ],
+     *         filter: (item) => item.get('name') !== 'Earth',
+     *         keyProperty: 'id'
+     *     });
+     *
+     *     solarSystem.query().then((result) => {
+     *         result.getAll().each((record) => {
+     *             console.log(record.get('name'));
+     *             //'Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'
      *         });
      *     });
      * </pre>
      * Выберем все объекты, имена которых начинаются на 'S':
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var solarSystem = new source.Memory({
-     *             data: [
-     *                 {id: 1, name: 'Sun', kind: 'Star'},
-     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
-     *                 {id: 3, name: 'Venus', kind: 'Planet'},
-     *                 {id: 4, name: 'Earth', kind: 'Planet'},
-     *                 {id: 5, name: 'Mars', kind: 'Planet'},
-     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
-     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
-     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
-     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
-     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-     *             ],
-     *             filter: function(item, where) {
-     *                 return Object.keys(where).some(function(field) {
-     *                     var value = item.get(field),
-     *                         needed = where[field];
-     *                     return String(value).indexOf(needed) === 0;
-     *                 });
-     *             },
-     *             keyProperty: 'id'
-     *         });
+     *     import {Memory} from 'Types/source';
      *
-     *         var query = new source.Query();
-     *         query.where({name: 'S'});
-     *         solarSystem.query(query).addCallback(function(result) {
-     *             result.getAll().each(function(record) {
-     *                 console.log(record.get('name'));//'Sun', 'Saturn'
-     *             });
+     *     const solarSystem = new source.Memory({
+     *         data: [
+     *             {id: 1, name: 'Sun', kind: 'Star'},
+     *             {id: 2, name: 'Mercury', kind: 'Planet'},
+     *             {id: 3, name: 'Venus', kind: 'Planet'},
+     *             {id: 4, name: 'Earth', kind: 'Planet'},
+     *             {id: 5, name: 'Mars', kind: 'Planet'},
+     *             {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *             {id: 7, name: 'Saturn', kind: 'Planet'},
+     *             {id: 8, name: 'Uranus', kind: 'Planet'},
+     *             {id: 9, name: 'Neptune', kind: 'Planet'},
+     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *         ],
+     *         filter: (item, where) => Object.keys(where).some((field) => {
+     *             const value = item.get(field);
+     *             const needed = where[field];
+     *             return String(value).indexOf(needed) === 0;
+     *         }),
+     *         keyProperty: 'id'
+     *     });
+     *
+     *     const query = new source.Query();
+     *     query.where({name: 'S'});
+     *     solarSystem.query(query).then((result) => {
+     *         result.getAll().each((record) => {
+     *             console.log(record.get('name'));//'Sun', 'Saturn'
      *         });
      *     });
      * </pre>
@@ -381,7 +377,7 @@ export default abstract class Local extends mixin<
 
     /**
      * Возвращает данные модели с указанным ключом
-     * @param {key Значение ключа
+     * @param key Значение ключа
      * @protected
      */
     protected _getRecordByKey(key: string): adapter.IRecord {
@@ -437,7 +433,7 @@ export default abstract class Local extends mixin<
      * @protected
      */
     protected _applyWhere(data: any, where?: object | Function, meta?: IMeta): any {
-        //TODO: support for IMeta.expand values
+        // TODO: support for IMeta.expand values
         where = where || {};
         if (!this._$filter && typeof where === 'object' && !Object.keys(where).length) {
             return data;
@@ -495,7 +491,7 @@ export default abstract class Local extends mixin<
             return data;
         }
 
-        //Создаем карту сортировки
+        // Создаем карту сортировки
         const orderMap = [];
         for (let i = 0; i < order.length; i++) {
             orderMap.push({
@@ -504,7 +500,7 @@ export default abstract class Local extends mixin<
             });
         }
 
-        //Создаем служебный массив, который будем сортировать
+        // Создаем служебный массив, который будем сортировать
         const adapter = this.getAdapter();
         const dataMap = [];
         this._each(data, (item, index) => {
@@ -525,11 +521,11 @@ export default abstract class Local extends mixin<
 
         const compare = (a, b) => {
             if (a === null && b !== null) {
-                //Считаем null меньше любого не-null
+                // Считаем null меньше любого не-null
                 return -1;
             }
             if (a !== null && b === null) {
-                //Считаем любое не-null больше null
+                // Считаем любое не-null больше null
                 return 1;
             }
             // tslint:disable-next-line:triple-equals

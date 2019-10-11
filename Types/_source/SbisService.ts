@@ -389,7 +389,7 @@ function passCreate(meta?: any): object {
         }
     }
 
-    //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
+    // TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
     return {
         Фильтр: buildRecord(meta, this._$adapter),
         ИмяМетода: this._$binding.format || null
@@ -456,7 +456,7 @@ function passDestroy(keys: string | string[], meta?: object): object {
 /**
  * Returns data to send in query()
  */
-function passQuery(query: Query): object {
+function passQuery(query?: Query): object {
     const nav = getNavigationParams(query, this._$options, this._$adapter);
     const filter = getFilterParams(query);
     const sort = getSortingParams(query);
@@ -586,7 +586,7 @@ function oldMove(
  *
  *     dataSource.create().then((article) => {
  *         const id = article.getId();
- *     }, (error) => {
+ *     }.then((error) => {
  *         console.error(error);
  *     });
  * </pre>
@@ -600,7 +600,7 @@ function oldMove(
  *
  *     dataSource.read('article-1').then((article) => {
  *         const title = article.get('title');
- *     }, (error) => {
+ *     }.then((error) => {
  *         console.error(error);
  *     });
  * </pre>
@@ -628,7 +628,7 @@ function oldMove(
  *
  *     dataSource.update(article).then(() => {
  *         console.log('Article updated!');
- *     }, (error) => {
+ *     }.then((error) => {
  *         console.error(error);
  *     });
  * </pre>
@@ -642,7 +642,7 @@ function oldMove(
  *
  *     dataSource.destroy('article-1').then(() => {
  *         console.log('Article deleted!');
- *     }, (error) => {
+ *     }.then((error) => {
  *         console.error(error);
  *     });
  * </pre>
@@ -659,7 +659,7 @@ function oldMove(
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`Articles count: ${articles.getCount()}`);
- *     }, (error) => {
+ *     }.then((error) => {
  *         console.error(error);
  *     });
  * </pre>
@@ -830,7 +830,7 @@ export default class SbisService extends Rpc {
      *    });
      *    dataSource.create().then((employee) => {
      *       console.log(employee.get('FirstName'));
-     *    }, (error) => {
+     *    }.then((error) => {
      *       console.error(error);
      *    });
      * </pre>
@@ -846,7 +846,7 @@ export default class SbisService extends Rpc {
      *    });
      *    dataSource.create().then((employee) => {
      *       console.log(employee.get('FirstName'));
-     *    }, (error) => {
+     *    }.then((error) => {
      *       console.error(error);
      *    });
      * </pre>
@@ -905,7 +905,7 @@ export default class SbisService extends Rpc {
         return pd.done().getResult();
     }
 
-   query(query: Query): ExtendPromise<DataSet> {
+   query(query?: Query): ExtendPromise<DataSet> {
       query = object.clonePlain(query, true);
       return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
