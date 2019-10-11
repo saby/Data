@@ -88,6 +88,14 @@ function jsonizeArray(arr: object[]): Array<object | string> {
  * @author Мальцев А.А.
  */
 export default function jsonize<T = object>(data: T | object): T {
+    /**
+     * It used to be 'if (data instanceof Array)' but we faced a problem in FireFox managed under Selenium:
+     * https://online.sbis.ru/opendoc.html?guid=640a4b89-79f2-4de0-9ac3-27f4b215131e
+     * The point is that here we have an object looks like an array, swims like an array, and quacks like an array, so
+     * it probably is an array, but it don't pass an instanceof check. I have no idea what it is, maybe it's something
+     * to do with an array instantiated in another namespace (document or window) such as iframe.
+     * Nevertheless, the check via Array.isArray() is passing successfully for those array-like-not-like objects.
+     */
     if (Array.isArray(data)) {
         return jsonizeArray(data) as any;
     } else if (data && typeof data === 'object') {
