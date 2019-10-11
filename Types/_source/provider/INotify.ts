@@ -7,22 +7,22 @@ import IChannel from './IChannel';
  * @author Мальцев А.А.
  * @example
  * <pre>
- *     require(['Types/source', 'Core/core-instance'], function(source, coreInstance) {
- *         //...
- *         if (dataSource instanceof source.Remote) {
- *             var provider = dataSource.getProvider();
- *             if (coreInstance.instanceOfMixin(provider, 'Types/_source/provider/INotify') {
- *                 provider.getEventsChannel().subscribe('onMessage', function(event, message) {
- *                     console.log('A message from the server: ' + message);
- *                 });
- *             }
+ *     import {DataSet} from 'Types/source';
+ *
+ *     // ...
+ *     if (dataSource instanceof source.Remote) {
+ *         const provider = dataSource.getProvider();
+ *         if (provider['[Types/_source/provider/INotify]']) {
+ *             provider.getEventsChannel().subscribe('onMessage', (event, message) => {
+ *                 console.log(`A message from the server: ${message}`);
+ *             });
  *         }
- *     });
+ *     }
  * </pre>
  * @example
  * <pre>
- *     dataSource.getProvider().getEventsChannel('ErrorLog').subscribe('onMessage', function(event, message) {
- *         console.error('Something went wrong: ' + message);
+ *     dataSource.getProvider().getEventsChannel('ErrorLog').subscribe('onMessage', (event, message) => {
+ *         console.error(`Something went wrong: ${message}`);
  *     });
  * </pre>
  */

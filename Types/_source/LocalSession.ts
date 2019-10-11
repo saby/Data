@@ -568,7 +568,9 @@ class Converter {
  * @example
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *     var solarSystem = new LocalSession({
+ *     import {LocalSession} from 'Types/source';
+ *
+ *     const solarSystem = new LocalSession({
  *         data: [
  *             {id: '1', name: 'Sun', kind: 'Star'},
  *             {id: '2', name: 'Mercury', kind: 'Planet'},
@@ -713,7 +715,7 @@ export default class LocalSession extends mixin<
      * <pre>
      *    solarSystem.create(
      *       {id: '11', name: 'Moon', 'kind': 'Satellite'}
-     *    ).addCallback(function(satellite) {
+     *    ).then((satellite) => {
      *       satellite.get('name');//'Moon'
      *    });
      * </pre>
@@ -733,7 +735,7 @@ export default class LocalSession extends mixin<
      * @see Types/_entity/Model
      * Прочитаем данные о Солнце:
      * <pre>
-     *    solarSystem.read(1).addCallback(function(star) {
+     *     solarSystem.read(1).then((star) => {
      *        star.get('name');//'Sun'
      *     });
      * </pre>
@@ -763,7 +765,7 @@ export default class LocalSession extends mixin<
      *       kind: 'Planet'
      *    });
      *
-     *    solarSystem.update(pluto).addCallback(function() {
+     *    solarSystem.update(pluto).then(() => {
      *       alert('Pluto is a planet again!');
      *    });
      * </pre>
@@ -811,7 +813,7 @@ export default class LocalSession extends mixin<
      * @example
      * Удалим Марс:
      * <pre>
-     *    solarSystem.destroy('5').addCallback(function() {
+     *    solarSystem.destroy('5').then(() => {
      *       alert('Mars deleted!');
      *    });
      * </pre>
@@ -833,7 +835,7 @@ export default class LocalSession extends mixin<
      * @see Types/_source/DataSet
      * @example
      * <pre>
-     *   solarSystem.query().addCallbacks(function (ds) {
+     *   solarSystem.query().then( (ds) => {
      *      console.log(ds.getAll().at(0));
      *   });
      * </pre>
@@ -876,10 +878,9 @@ export default class LocalSession extends mixin<
     * @return {Core/Deferred} Асинхронный результат выполнения
     * @example
     * <pre>
-    *  solarSystem.merge('5','6')
-    *     .addCallbacks(function () {
-    *         alert('Mars became Jupiter!');
-    *     })
+    *  solarSystem.merge('5','6').then(() => {
+    *      alert('Mars became Jupiter!');
+    *  });
     * </pre>
     */
    merge(from: string | number, to: string | number): ExtendPromise<any> {
@@ -901,7 +902,7 @@ export default class LocalSession extends mixin<
     * {@link Types/_entity/Model копия модели}.
     * @example
     * <pre>
-    *   solarSystem.copy('5').addCallbacks(function (copy) {
+    *   solarSystem.copy('5').then((copy) => {
     *      console.log('New id: ' + copy.getId());
     *   });
     * </pre>
@@ -925,11 +926,10 @@ export default class LocalSession extends mixin<
     * @return {Core/Deferred} Асинхронный результат выполнения.
     * @example
     * <pre>
-    * var ls = new LocalStorage('mdl_solarsystem');
-    * solarSystem.move('6','3',{position: 'after'})
-    *    .addCallbacks(function () {
-    *       console.log(ls.getItem('i')[3] === '6');
-    *    })
+    * const ls = new LocalStorage('mdl_solarsystem');
+    * solarSystem.move('6','3',{position: 'after'}).then(() => {
+    *     console.log(ls.getItem('i')[3] === '6');
+    * });
     * </pre>
     */
    move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {

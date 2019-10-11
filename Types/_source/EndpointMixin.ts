@@ -23,7 +23,7 @@ export default abstract class EndpointMixin {
      * @example
      * Подключаем пользователей через HTTP API:
      * <pre>
-     *     var dataSource = new HttpSource({
+     *     const dataSource = new HttpSource({
      *         endpoint: {
      *             address: '/api/',
      *             contract: 'users/'
@@ -32,13 +32,13 @@ export default abstract class EndpointMixin {
      * </pre>
      * Подключаем пользователей через HTTP API с использованием сокращенной нотации:
      * <pre>
-     *     var dataSource = new HttpSource({
+     *     const dataSource = new HttpSource({
      *         endpoint: '/users/'
      *     });
      * </pre>
      * Подключаем пользователей через HTTP API с указанием адреса подключения:
      * <pre>
-     *     var dataSource = new RpcSource({
+     *     const dataSource = new RpcSource({
      *         endpoint: {
      *             address: '//server.name/api/rpc/',
      *             contract: 'Users'

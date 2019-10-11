@@ -31,61 +31,61 @@ export interface IOptions extends ILocalOptions {
  * @remark
  * Создадим источник со списком объектов солнечной системы:
  * <pre>
- *     require(['Types/source'], function (source) {
- *         var solarSystem = new source.Memory({
- *             data: [
- *                 {id: 1, name: 'Sun', kind: 'Star'},
- *                 {id: 2, name: 'Mercury', kind: 'Planet'},
- *                 {id: 3, name: 'Venus', kind: 'Planet'},
- *                 {id: 4, name: 'Earth', kind: 'Planet'},
- *                 {id: 5, name: 'Mars', kind: 'Planet'},
- *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
- *                 {id: 7, name: 'Saturn', kind: 'Planet'},
- *                 {id: 8, name: 'Uranus', kind: 'Planet'},
- *                 {id: 9, name: 'Neptune', kind: 'Planet'},
- *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
- *             ],
- *             keyProperty: 'id'
- *         });
+ *     import {Memory} from 'Types/source';
  *
- *         //Создадим новый объект:
- *         solarSystem.create(
- *             {id: 11, name: 'Moon', 'kind': 'Satellite'}
- *         ).addCallback(function(satellite) {
- *             console.log('Object created:', satellite.get('name'));//'Object created: Moon'
- *         });
+ *     const solarSystem = new Memory({
+ *         data: [
+ *             {id: 1, name: 'Sun', kind: 'Star'},
+ *             {id: 2, name: 'Mercury', kind: 'Planet'},
+ *             {id: 3, name: 'Venus', kind: 'Planet'},
+ *             {id: 4, name: 'Earth', kind: 'Planet'},
+ *             {id: 5, name: 'Mars', kind: 'Planet'},
+ *             {id: 6, name: 'Jupiter', kind: 'Planet'},
+ *             {id: 7, name: 'Saturn', kind: 'Planet'},
+ *             {id: 8, name: 'Uranus', kind: 'Planet'},
+ *             {id: 9, name: 'Neptune', kind: 'Planet'},
+ *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+ *         ],
+ *         keyProperty: 'id'
+ *     });
  *
- *         //Прочитаем данные о Солнце:
- *         solarSystem.read(1).addCallback(function(star) {
- *             console.log('Object readed:', star.get('name'));//'Object readed: Sun'
- *         });
+ *     //Создадим новый объект:
+ *     solarSystem.create(
+ *         {id: 11, name: 'Moon', 'kind': 'Satellite'}
+ *     ).then((satellite) => {
+ *         console.log('Object created:', satellite.get('name')); // 'Object created: Moon'
+ *     });
  *
- *         //Вернем Плутону статус планеты:
- *         solarSystem.read(10).addCallback(function(pluto) {
- *             pluto.set('kind', 'Planet');
- *             solarSystem.update(pluto).addCallback(function() {
- *                 console.log('Pluto is the planet again!');
- *             });
- *         });
+ *     //Прочитаем данные о Солнце:
+ *     solarSystem.read(1).then((star) => {
+ *         console.log('Object readed:', star.get('name')); // 'Object readed: Sun'
+ *     });
  *
- *         //Удалим Марс:
- *         solarSystem.destroy(5).addCallback(function() {
- *             console.log('Bye Mars!');
+ *     //Вернем Плутону статус планеты:
+ *     solarSystem.read(10).then((pluto) => {
+ *         pluto.set('kind', 'Planet');
+ *         solarSystem.update(pluto).then(() => {
+ *             console.log('Pluto is the planet again!');
  *         });
+ *     });
  *
- *         //Получим список планет:
- *         var query = new Query();
- *         query.where({
- *             kind: 'Planet'
+ *     //Удалим Марс:
+ *     solarSystem.destroy(5).then(() => {
+ *         console.log('Bye Mars!');
+ *     });
+ *
+ *     //Получим список планет:
+ *     const query = new Query();
+ *     query.where({
+ *         kind: 'Planet'
+ *     });
+ *     solarSystem.query(query).then((dataSet) => {
+ *         const planets = dataSet.getAll();
+ *         planets.getCount();//8
+ *         planets.each((planet) => {
+ *             console.log(planet.get('name'));
  *         });
- *         solarSystem.query(query).addCallback(function(dataSet) {
- *             var planets = dataSet.getAll();
- *             planets.getCount();//8
- *             planets.each(function(planet) {
- *                 console.log(planet.get('name'));
- *             });
- *             //Mercury, Venus, Earth, Jupiter, Saturn, Uranus, Neptune, Pluto
- *         });
+ *         //Mercury, Venus, Earth, Jupiter, Saturn, Uranus, Neptune, Pluto
  *     });
  * </pre>
  * @class Types/_source/Memory
@@ -102,55 +102,49 @@ export default class Memory extends Local {
      * @example
      * Создадим источник с данными объектов солнечной системы, данные представлены в виде массива:
      * <pre>
-     *     require(['Types/source'], function (source) {
-     *         var solarSystem = new source.Memory({
-     *             data: [
-     *                 {id: 1, name: 'Sun', kind: 'Star'},
-     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
-     *                 {id: 3, name: 'Venus', kind: 'Planet'},
-     *                 {id: 4, name: 'Earth', kind: 'Planet'},
-     *                 {id: 5, name: 'Mars', kind: 'Planet'},
-     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
-     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
-     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
-     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
-     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-     *             ],
-     *             keyProperty: 'id'
-     *         });
+     *     import {Memory} from 'Types/source';
+     *
+     *     const solarSystem = new Memory({
+     *         data: [
+     *             {id: 1, name: 'Sun', kind: 'Star'},
+     *             {id: 2, name: 'Mercury', kind: 'Planet'},
+     *             {id: 3, name: 'Venus', kind: 'Planet'},
+     *             {id: 4, name: 'Earth', kind: 'Planet'},
+     *             {id: 5, name: 'Mars', kind: 'Planet'},
+     *             {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *             {id: 7, name: 'Saturn', kind: 'Planet'},
+     *             {id: 8, name: 'Uranus', kind: 'Planet'},
+     *             {id: 9, name: 'Neptune', kind: 'Planet'},
+     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *         ],
+     *         keyProperty: 'id'
      *     });
      * </pre>
      * Создадим источник с данными объектов солнечной системы, данные представлены в виде
      * {@link Types/_collection/RecordSet рекордсета}:
      * <pre>
-     *     require([
-     *         'Types/source',
-     *         'Types/collection',
-     *         'Types/entity'
-     *     ], function (
-     *         source,
-     *         collection,
-     *         entity
-     *     ) {
-     *         var solarData = new collection.RecordSet({
-     *             rawData: [
-     *                 {id: 1, name: 'Sun', kind: 'Star'},
-     *                 {id: 2, name: 'Mercury', kind: 'Planet'},
-     *                 {id: 3, name: 'Venus', kind: 'Planet'},
-     *                 {id: 4, name: 'Earth', kind: 'Planet'},
-     *                 {id: 5, name: 'Mars', kind: 'Planet'},
-     *                 {id: 6, name: 'Jupiter', kind: 'Planet'},
-     *                 {id: 7, name: 'Saturn', kind: 'Planet'},
-     *                 {id: 8, name: 'Uranus', kind: 'Planet'},
-     *                 {id: 9, name: 'Neptune', kind: 'Planet'},
-     *                 {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
-     *             ]
-     *         });
-     *         var solarSystem = new source.Memory({
-     *             data: solarData,
-     *             adapter: new entity.adapter.RecordSet(),
-     *             keyProperty: 'id'
-     *         });
+     *     import {Memory} from 'Types/source';
+     *     import {RecordSet} from 'Types/collection';
+     *     import {adapter} from 'Types/entity';
+     *
+     *     const solarData = new RecordSet({
+     *         rawData: [
+     *             {id: 1, name: 'Sun', kind: 'Star'},
+     *             {id: 2, name: 'Mercury', kind: 'Planet'},
+     *             {id: 3, name: 'Venus', kind: 'Planet'},
+     *             {id: 4, name: 'Earth', kind: 'Planet'},
+     *             {id: 5, name: 'Mars', kind: 'Planet'},
+     *             {id: 6, name: 'Jupiter', kind: 'Planet'},
+     *             {id: 7, name: 'Saturn', kind: 'Planet'},
+     *             {id: 8, name: 'Uranus', kind: 'Planet'},
+     *             {id: 9, name: 'Neptune', kind: 'Planet'},
+     *             {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+     *         ]
+     *     });
+     *     const solarSystem = new Memory({
+     *         data: solarData,
+     *         adapter: new adapter.RecordSet(),
+     *         keyProperty: 'id'
      *     });
      * </pre>
      */
