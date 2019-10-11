@@ -78,10 +78,10 @@ interface ISerializableState extends IRecordSerializableState {
  * <pre>
  *     //My/Awesome/Model.ts
  *     import {Salt} from 'Application/Lib';
- *     import {Model} from 'Types/entity';
+ *     import {Model, format} from 'Types/entity';
  *
  *    export default class User extends Model{
- *       protected _$format: object[] = [
+ *       protected _$format: format.FormatDeclaration = [
  *          {name: 'login', type: 'string'},
  *          {name: 'salt', type: 'string'}
  *       ];
