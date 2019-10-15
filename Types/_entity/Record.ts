@@ -748,7 +748,7 @@ export default class Record extends mixin<
         if (owner) {
             return owner.hasDeclaredFormat();
         } else {
-            return super.hasDeclaredFormat.call(this);
+            return super.hasDeclaredFormat();
         }
     }
 
