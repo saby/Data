@@ -18,20 +18,17 @@ function getPropertyMethodName(property: string, prefix: string): string {
  * @param property Название свойства.
  */
 function getPropertyValue<T>(object: Object | IObject, property: string): T {
-    const checkedProperty = property || '';
-
-    if (!(object instanceof Object)) {
+    if (!object  || typeof object !== 'object') {
         return undefined;
     }
+
+    const checkedProperty = property || '';
 
     if (checkedProperty in object) {
         return object[checkedProperty];
     }
 
-    if (object &&
-        (object['[Types/_entity/IObject]']) &&
-        (object as IObject).has(checkedProperty)
-    ) {
+    if (object['[Types/_entity/IObject]']) {
         return (object as IObject).get(checkedProperty);
     }
 
@@ -50,21 +47,18 @@ function getPropertyValue<T>(object: Object | IObject, property: string): T {
  * @param value Значение свойства.
  */
 function setPropertyValue<T>(object: Object | IObject, property: string, value: T): void {
-    const checkedProperty = property || '';
-
-    if (!(object instanceof Object)) {
+    if (!object  || typeof object !== 'object') {
         throw new TypeError('Argument object should be an instance of Object');
     }
+
+    const checkedProperty = property || '';
 
     if (checkedProperty in object) {
         object[checkedProperty] = value;
         return;
     }
 
-    if (object &&
-        (object['[Types/_entity/IObject]']) &&
-        (object as IObject).has(checkedProperty)
-    ) {
+    if (object['[Types/_entity/IObject]'] && (object as IObject).has(checkedProperty)) {
         (object as IObject).set(checkedProperty, value);
         return;
     }

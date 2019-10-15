@@ -11,8 +11,7 @@ export function getMergeableProperty<T>(value: T): T {
     return value;
 }
 
-function defineProperty(instance: object, name: string, key: string, scope: object): void {
-    const proto = Object.getPrototypeOf(instance);
+function defineProperty(instance: object, proto: object, name: string, key: string, scope: object): void {
     const isMergeable = proto[name] && proto[name][$mergeable];
 
     Object.defineProperty(instance, name, {
@@ -78,15 +77,18 @@ export default abstract class OptionsToPropertyMixin {
      */
     constructor(options?: IHashMap<any>) {
         if (options && typeof options === 'object') {
-            const prefix = optionPrefix;
             const keys = Object.keys(options);
-            let option;
-            let property;
-            for (let i = 0, count = keys.length; i < count; i++) {
-                option = keys[i];
-                property = prefix + option;
-                if (property in this) {
-                    defineProperty(this, property, option, options);
+            if (keys.length) {
+                const proto = Object.getPrototypeOf(this);
+                const prefix = optionPrefix;
+                let option;
+                let property;
+                for (let i = 0, count = keys.length; i < count; i++) {
+                    option = keys[i];
+                    property = prefix + option;
+                    if (property in this) {
+                        defineProperty(this, proto, property, option, options);
+                    }
                 }
             }
         }
