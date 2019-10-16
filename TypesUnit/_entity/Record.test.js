@@ -2128,13 +2128,25 @@ define([
             );
          });
 
-         it('should set subclass\'s module name', function() {
+         it('should set subclass\'s module name from prototype', function() {
             var Sub = extend.extend(Record, {
                   _moduleName: 'My.Sub'
                }),
                record = new Sub(),
                json = record.toJSON();
             assert.strictEqual(json.module, 'My.Sub');
+         });
+
+         it('should set subclass\'s module name from instance', function() {
+             var Sub = extend.extend(Record, {
+                 constructor: function() {
+                     Record.apply(this, arguments);
+                     this._moduleName = 'My.Sub';
+                 }
+             });
+             var record = new Sub();
+             var json = record.toJSON();
+             assert.strictEqual(json.module, 'My.Sub');
          });
 
          it('should throw an error if subclass\'s module name is not defined', function() {
