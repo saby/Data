@@ -81,7 +81,7 @@ function serializeCode(instance: object): string {
  */
 function createModuleNameError(instance: object, critical?: boolean, skip?: number): void {
     const text = `Property "_moduleName" with module name for RequireJS's define() is not found` +
-        ` in this prototype: "${serializeCode(instance)}"`;
+        ` in this instance: "${serializeCode(instance)}"`;
     if (critical) {
         throw new ReferenceError(text);
     } else {
@@ -183,8 +183,7 @@ export default class SerializableMixin<T = any> {
      * @protected
      */
     protected _checkModuleName(critical: boolean, skip?: number): void {
-        let proto = this;
-        if (!proto._moduleName) {
+        if (!this._moduleName) {
             createModuleNameError(this, critical, skip);
             return;
         }
@@ -193,8 +192,10 @@ export default class SerializableMixin<T = any> {
         if (!isProtoSupported) {
             return;
         }
-        proto = this.__proto__;
-        if (!proto.hasOwnProperty('_moduleName')) {
+
+        // Check that _moduleName is not defined in neither instance nor prototype.
+        const proto = this.__proto__;
+        if (!this.hasOwnProperty('_moduleName') && !proto.hasOwnProperty('_moduleName')) {
             createModuleNameError(this, critical, skip);
         }
     }
