@@ -4,7 +4,7 @@ import java.lang.Math
 node ('controls') {
 def version = "20.1000"
 def workspace = "/home/sbis/workspace/types_${version}/${BRANCH_NAME}"
-    ws (workspace){
+    dir (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
             branches: [[name: "rc-${version}"]],
