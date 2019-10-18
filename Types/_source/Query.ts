@@ -3,6 +3,7 @@ import {IHashMap} from '../_declarations';
 
 export type Where<T = any> = IHashMap<T> | ((item: T, index: number) => boolean);
 export type Expression = IHashMap<string> | string[] | string;
+export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
 
 export enum ExpandMode {
     None,
@@ -684,7 +685,7 @@ export default class Query implements ICloneable {
      * </pre>
      */
     orderBy(
-        selector: string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>,
+        selector: OrderSelector,
         desc?: boolean,
         nullPolicy?: boolean
     ): this {
