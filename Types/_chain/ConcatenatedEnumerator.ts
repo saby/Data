@@ -63,7 +63,7 @@ export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
                 this.currentItem = this.currentItem.getEnumerator();
             } else {
                 throw new TypeError(
-                    `Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`
+                    `Collection at argument ${this.currentItemIndex} should implement [Types/collection#IEnumerable]`,
                 );
             }
             return this.moveNext();
@@ -88,5 +88,5 @@ Object.assign(ConcatenatedEnumerator.prototype, {
     index: null,
     current: undefined,
     currentItem: null,
-    currentItemIndex: null
+    currentItemIndex: null,
 });

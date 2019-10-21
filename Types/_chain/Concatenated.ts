@@ -35,7 +35,7 @@ export default class Concatenated<T> extends Abstract<T> {
     getEnumerator(): ConcatenatedEnumerator<T> {
         return new ConcatenatedEnumerator(
             this._previous,
-            this._items
+            this._items,
         );
     }
 
@@ -44,7 +44,7 @@ export default class Concatenated<T> extends Abstract<T> {
 
 Object.assign(Concatenated.prototype, {
     '[Types/_chain/Concatenated]': true,
-    _items: null
+    _items: null,
 });
 
 Object.defineProperty(Concatenated.prototype, 'shouldSaveIndices', { value: false });

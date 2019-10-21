@@ -238,7 +238,7 @@ export default abstract class DataMixin implements IData {
          writable: this._writable,
          rawData: data,
          adapter: this.getAdapter(),
-         keyProperty: this.getKeyProperty()
+         keyProperty: this.getKeyProperty(),
       });
    }
 
@@ -256,8 +256,8 @@ export default abstract class DataMixin implements IData {
                 model: this.getModel(),
                 listModule: this.getListModule(),
                 keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
-                ...cfg
-            }
+                ...cfg,
+            },
         );
     }
 
@@ -269,7 +269,7 @@ export default abstract class DataMixin implements IData {
         return this._getDataSetInstance({
             rawData: data,
             itemsProperty: this._dataSetItemsProperty,
-            metaProperty: this._dataSetMetaProperty
+            metaProperty: this._dataSetMetaProperty,
         });
     }
 
@@ -342,5 +342,5 @@ Object.assign(DataMixin.prototype, {
     _dataSetMetaProperty: '',
     _writable: ReadWriteMixin.prototype.writable,
      getIdProperty: DataMixin.prototype.getKeyProperty,
-     setIdProperty: DataMixin.prototype.setKeyProperty
+     setIdProperty: DataMixin.prototype.setKeyProperty,
  });

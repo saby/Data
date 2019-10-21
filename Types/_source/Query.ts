@@ -9,13 +9,13 @@ export enum ExpandMode {
     None,
     Nodes,
     Leaves,
-    All
+    All,
 }
 
 export enum NavigationType {
     Page = 'Page',
     Offset = 'Offset',
-    Position = 'Position'
+    Position = 'Position',
 }
 
 export interface IMeta extends IHashMap<any> {
@@ -540,7 +540,7 @@ export default class Query implements ICloneable {
             as: name.shift() || '',
             on,
             select: parseSelectExpression(expression),
-            inner: inner === undefined ? true : inner
+            inner: inner === undefined ? true : inner,
         }));
 
         return this;
@@ -687,7 +687,7 @@ export default class Query implements ICloneable {
     orderBy(
         selector: OrderSelector,
         desc?: boolean,
-        nullPolicy?: boolean
+        nullPolicy?: boolean,
     ): this {
         if (desc === undefined) {
             desc = true;
@@ -704,7 +704,7 @@ export default class Query implements ICloneable {
                     if (obj.hasOwnProperty(key)) {
                         this._orderBy.push(new Order({
                             selector: key,
-                            order: obj[key]
+                            order: obj[key],
                         }));
                     }
                 }
@@ -717,7 +717,7 @@ export default class Query implements ICloneable {
                         const [
                             selectorField,
                             selectorOrder,
-                            selectorNullPolicy
+                            selectorNullPolicy,
                         ]: [
                             string,
                             boolean,
@@ -727,7 +727,7 @@ export default class Query implements ICloneable {
                         this._orderBy.push(new Order({
                             selector: selectorField,
                             order: selectorOrder,
-                            nullPolicy: selectorNullPolicy
+                            nullPolicy: selectorNullPolicy,
                         }));
                     } else {
                         processObject(selectorItem);
@@ -740,7 +740,7 @@ export default class Query implements ICloneable {
             this._orderBy.push(new Order({
                 selector,
                 order: desc,
-                nullPolicy
+                nullPolicy,
             }));
         }
 
@@ -916,5 +916,5 @@ export default class Query implements ICloneable {
 
 Object.assign(Query.prototype, {
     '[Types/_source/Query]': true,
-    _moduleName: 'Types/source:Query'
+    _moduleName: 'Types/source:Query',
 });

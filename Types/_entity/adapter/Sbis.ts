@@ -77,7 +77,7 @@ Object.assign(Sbis.prototype, {
    '[Types/_entity/adapter/Sbis]': true,
    '[Types/_entity/format/IFormatController]': true,
    _formatController: null,
-   _moduleName: 'Types/entity:adapter.Sbis'
+   _moduleName: 'Types/entity:adapter.Sbis',
 });
 
 register('Types/entity:adapter.Sbis', Sbis, {instantiate: false});

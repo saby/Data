@@ -5,7 +5,7 @@
  * @author Мальцев А.А.
  */
 const IBind = {
-    '[Types/_display/IBind]': true
+    '[Types/_display/IBind]': true,
 
     /**
      * @event После изменения коллекции

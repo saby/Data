@@ -41,7 +41,7 @@ export default class FilteredEnumerator<T> implements IEnumerator<T> {
             if (this.callback.call(
                 this.callbackContext,
                 this.enumerator.getCurrent(),
-                this.enumerator.getCurrentIndex()
+                this.enumerator.getCurrentIndex(),
             )) {
                 return true;
             }
@@ -59,5 +59,5 @@ Object.assign(FilteredEnumerator.prototype, {
     previous: null,
     callback: null,
     callbackContext: null,
-    enumerator: null
+    enumerator: null,
 });

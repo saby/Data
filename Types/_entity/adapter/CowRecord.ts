@@ -124,8 +124,8 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
             } else {
                 this._originalRecord = this._original.forRecord(
                     object.clonePlain(
-                        (this._originalRecord as IRecord).getData()
-                    )
+                        (this._originalRecord as IRecord).getData(),
+                    ),
                 );
             }
             this._copied = true;
@@ -147,5 +147,5 @@ Object.assign(CowRecord.prototype, {
     _original: null,
     _originalRecord: null,
     _writeCallback: null,
-    _copied: false
+    _copied: false,
 });

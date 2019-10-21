@@ -54,7 +54,7 @@ export default class RecordSet extends Abstract {
 
 Object.assign(RecordSet.prototype, {
     '[Types/_entity/adapter/RecordSet]': true,
-    _moduleName: 'Types/entity:adapter.RecordSet'
+    _moduleName: 'Types/entity:adapter.RecordSet',
 });
 
 register('Types/entity:adapter.RecordSet', RecordSet, {instantiate: false});

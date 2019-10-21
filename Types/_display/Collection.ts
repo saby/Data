@@ -12,14 +12,14 @@ import {
     ObservableMixin,
     SerializableMixin,
     ISerializableState as IDefaultSerializableState,
-    functor
+    functor,
 } from '../entity';
 import {
     EnumeratorCallback,
     IList,
     IObservable,
     EventRaisingMixin,
-    IEnumerableComparatorSession
+    IEnumerableComparatorSession,
 } from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
@@ -45,7 +45,7 @@ type FilterFunction<S> = (
     index: number,
     collectionItem: CollectionItem<S>,
     collectionIndex: number,
-    hasMembers?: boolean
+    hasMembers?: boolean,
 ) => boolean;
 
 type GroupId = number | string | null;
@@ -120,7 +120,7 @@ function onCollectionChange<T>(
     newItems: T[],
     newItemsIndex: number,
     oldItems: T[],
-    oldItemsIndex: number
+    oldItemsIndex: number,
 ): void {
     let session;
 
@@ -136,7 +136,7 @@ function onCollectionChange<T>(
                 projectionNewItems,
                 0,
                 projectionOldItems,
-                0
+                0,
             );
             this._notifyAfterCollectionChange();
             return;
@@ -206,7 +206,7 @@ function onCollectionItemChange<T>(
     event: EventObject,
     item: T,
     index: number,
-    properties?: object
+    properties?: object,
 ): void {
     if (!this.isEventRaising()) {
         return;
@@ -284,7 +284,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 >(
     Abstract,
     SerializableMixin,
-    EventRaisingMixin
+    EventRaisingMixin,
 ) implements IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
@@ -606,10 +606,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
                 (this._$collection as ObservableMixin).unsubscribe(
-                    'onCollectionChange', this._onCollectionChange
+                    'onCollectionChange', this._onCollectionChange,
                 );
                 (this._$collection as ObservableMixin).unsubscribe(
-                    'onCollectionItemChange', this._onCollectionItemChange
+                    'onCollectionItemChange', this._onCollectionItemChange,
                 );
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
@@ -639,7 +639,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     getByInstanceId(instanceId: string): T {
         return this.at(
-            this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId)
+            this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId),
         );
     }
 
@@ -712,7 +712,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             callback.call(
                 context,
                 enumerator.getCurrent(),
-                index
+                index,
             );
         }
     }
@@ -888,7 +888,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     this.getCurrent(),
                     oldCurrent,
                     enumerator.getPosition(),
-                    oldPosition
+                    oldPosition,
                 );
             }
         }
@@ -917,7 +917,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     this.getCurrent(),
                     oldCurrent,
                     position,
-                    oldPosition
+                    oldPosition,
                 );
             }
         }
@@ -938,7 +938,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 enumerator,
                 item,
                 true,
-                true
+                true,
             );
         }
 
@@ -961,7 +961,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 enumerator,
                 undefined,
                 false,
-                true
+                true,
             );
         }
 
@@ -978,7 +978,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._getUtilityEnumerator(),
             item,
             true,
-            true
+            true,
         );
     }
 
@@ -992,7 +992,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._getUtilityEnumerator(),
             item,
             false,
-            true
+            true,
         );
     }
 
@@ -1009,7 +1009,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 this.getCurrent(),
                 oldCurrent,
                 this.getCurrentPosition(),
-                oldCurrentPosition
+                oldCurrentPosition,
             );
         }
         return hasNext;
@@ -1028,7 +1028,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 this.getCurrent(),
                 oldCurrent,
                 this.getCurrentPosition(),
-                oldCurrentPosition
+                oldCurrentPosition,
             );
         }
         return hasPrevious;
@@ -1796,7 +1796,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             index,
             items,
-            index
+            index,
         );
         this._notifyAfterCollectionChange();
     }
@@ -1838,7 +1838,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const sourceItems = [];
         for (let i = 0, count = items.length; i < count; i++) {
             sourceItems.push(
-                this.getItemBySourceItem(items[i])
+                this.getItemBySourceItem(items[i]),
             );
         }
         this._setSelectedItems(sourceItems, selected);
@@ -1869,7 +1869,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             0,
             items,
-            0
+            0,
         );
         this._notifyAfterCollectionChange();
     }
@@ -1880,7 +1880,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {
         const resultState = SerializableMixin.prototype._getSerializableState.call(
-            this, state
+            this, state,
         ) as ISerializableState<S, T>;
 
         resultState._composer = this._composer;
@@ -1995,7 +1995,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         newItemsIndex: number,
         oldItems: T[],
         oldItemsIndex: number,
-        session?: IEnumerableComparatorSession
+        session?: IEnumerableComparatorSession,
     ): void {
         if (!this._isNeedNotifyCollectionChange()) {
             return;
@@ -2011,7 +2011,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 newItems,
                 newItemsIndex,
                 oldItems,
-                oldItemsIndex
+                oldItemsIndex,
             );
             return;
         }
@@ -2025,7 +2025,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     newItems.slice(start, finish),
                     newItems.length ? newItemsIndex + start : 0,
                     oldItems.slice(start, finish),
-                    oldItems.length ? oldItemsIndex + start : 0
+                    oldItems.length ? oldItemsIndex + start : 0,
                 );
             }
         };
@@ -2068,7 +2068,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 items,
                 index,
                 items,
-                index
+                index,
             );
             this._notifyAfterCollectionChange();
         }
@@ -2194,11 +2194,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             display: this,
             localize: this._localize,
             keyProperty: this._$keyProperty,
-            unique: this._$unique
+            unique: this._$unique,
         }).append(UserItemsStrategy, {
-            handlers: this._$sort
+            handlers: this._$sort,
         }).append(GroupItemsStrategy, {
-            handler: this._$group
+            handler: this._$group,
         });
 
         return composer;
@@ -2213,7 +2213,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._buildEnumerator(
             unlink ? this._getItems().slice() : this._getItems.bind(this),
             unlink ? this._filterMap.slice() : this._filterMap,
-            unlink ? this._sortMap.slice() : this._sortMap
+            unlink ? this._sortMap.slice() : this._sortMap,
         );
     }
 
@@ -2227,12 +2227,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _buildEnumerator(
         items: T[],
         filterMap: boolean[],
-        sortMap: number[]
+        sortMap: number[],
     ): CollectionEnumerator<T> {
         return new CollectionEnumerator<T>({
             items,
             filterMap,
-            sortMap
+            sortMap,
         });
     }
 
@@ -2265,7 +2265,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator: CollectionEnumerator<T>,
         item: T,
         isNext: boolean,
-        skipGroups?: boolean
+        skipGroups?: boolean,
     ): T {
         const method = isNext ? 'moveNext' : 'movePrevious';
         let nearbyItem;
@@ -2422,7 +2422,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index,
                     item,
                     position,
-                    hasMembers
+                    hasMembers,
                 );
                 if (!result) {
                     break;
@@ -2702,7 +2702,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemState(item: T): ISessionItemState<T> {
         return {
             item,
-            selected: item.isSelected()
+            selected: item.isSelected(),
         };
     }
 
@@ -2724,7 +2724,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _getItemsDiff(
         before: Array<ISessionItemState<T>>,
-        after: Array<ISessionItemState<T>>
+        after: Array<ISessionItemState<T>>,
     ): T[] {
         return after.filter((itemNow, index) => {
             const itemThen = before[index];
@@ -2746,11 +2746,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         session: IEnumerableComparatorSession,
         items: T[],
         state: any[],
-        beforeCheck: Function
+        beforeCheck: Function,
     ): void {
         const diff = state ? this._getItemsDiff(
             state,
-            this._getItemsState(items)
+            this._getItemsState(items),
         ) : [];
 
         if (beforeCheck) {
@@ -2767,7 +2767,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index,
                     items,
                     index,
-                    session
+                    session,
                 );
             });
             this._notifyAfterCollectionChange();
@@ -2786,7 +2786,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         newCurrent: T,
         oldCurrent: T,
         newPosition: number,
-        oldPosition: number
+        oldPosition: number,
     ): void {
         if (!this.isEventRaising()) {
             return;
@@ -2798,7 +2798,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             newCurrent,
             oldCurrent,
             newPosition,
-            oldPosition
+            oldPosition,
         );
     }
 
@@ -2829,9 +2829,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index,
                     pack,
                     index,
-                    session
+                    session,
                 );
-            }
+            },
         );
         this._notifyAfterCollectionChange();
     }
@@ -2848,7 +2848,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         event: EventObject,
         item: any,
         index: number,
-        properties?: object
+        properties?: object,
     ): void {
         const enumerator = this._getUtilityEnumerator();
         const internalItems = this._getItems();
@@ -2872,7 +2872,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     }
                     this._reAnalize(
                         index,
-                        1
+                        1,
                     );
                     break;
                 }
@@ -2962,7 +2962,7 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    getIdProperty: Collection.prototype.getKeyProperty
+    getIdProperty: Collection.prototype.getKeyProperty,
 });
 
 register('Types/display:Collection', Collection, {instantiate: false});

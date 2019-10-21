@@ -49,5 +49,5 @@ export default abstract class DataCrudMixin extends mixin<DataMixin>(Object) {
 }
 
 Object.assign(DataCrudMixin.prototype, {
-    '[Types/_source/DataCrudMixin]': true
+    '[Types/_source/DataCrudMixin]': true,
 });

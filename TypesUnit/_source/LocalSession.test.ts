@@ -27,7 +27,7 @@ const mock = [
     {id: '7', title: 'Saturn', kind: 'Planet', material: 'clay'},
     {id: '8', title: 'Uranus', kind: 'Planet', material: 'asphalt'},
     {id: '9', title: 'Neptune', kind: 'Planet', material: 'gravel'},
-    {id: '10', title: 'Plutonis', kind: 'Da planet', material: null}
+    {id: '10', title: 'Plutonis', kind: 'Da planet', material: null},
 ];
 
 let source: LocalSession;
@@ -37,7 +37,7 @@ describe('Types/_source/LocalSession', () => {
         source = new LocalSession({
             prefix: 'mdl_solarsystem',
             keyProperty: 'id',
-            data: mock
+            data: mock,
         });
     });
 
@@ -145,7 +145,7 @@ describe('Types/_source/LocalSession', () => {
             it('should create the model by 2nd way', () => {
                 const oldLength = mock.length;
                 const model = new Model({
-                    keyProperty: 'id'
+                    keyProperty: 'id',
                 });
 
                 model.set('title', 'Овечкин');
@@ -156,7 +156,7 @@ describe('Types/_source/LocalSession', () => {
 
             it('should generate id and set it in raw data', () => {
                 const model = new Model({
-                    keyProperty: 'id'
+                    keyProperty: 'id',
                 });
 
                 return source.update(model).then((id) => {
@@ -171,9 +171,9 @@ describe('Types/_source/LocalSession', () => {
                 const data = new RecordSet({
                     rawData: [
                         {id: null, title: 'Neptune', kind: 'Planet'},
-                        {id: 90, title: 'Pluto', kind: 'Dwarf planet'}
+                        {id: 90, title: 'Pluto', kind: 'Dwarf planet'},
                     ],
-                    keyProperty: 'id'
+                    keyProperty: 'id',
                 });
 
                 source.update(data).then((ids) => {
@@ -193,9 +193,9 @@ describe('Types/_source/LocalSession', () => {
                 const rs = new RecordSet({
                     rawData: [
                         {id: 90, title: 'Pluto', kind: 'Dwarf planet'},
-                        {id: null, title: 'Neptune', kind: 'COCO-COLA Planet'}
+                        {id: null, title: 'Neptune', kind: 'COCO-COLA Planet'},
                     ],
-                    keyProperty: 'id'
+                    keyProperty: 'id',
                 });
 
                 return source.update(rs).then(() => {
@@ -221,7 +221,7 @@ describe('Types/_source/LocalSession', () => {
                     source.read(existsId).then(() => {
                         throw new Error('The model still exists');
                     }, (err) => {
-                        //ok if err == Model is not found
+                        // ok if err == Model is not found
                         assert.isTrue(!!err);
                     });
                 });
@@ -341,12 +341,12 @@ describe('Types/_source/LocalSession', () => {
 
         it('should keep modules of cloned instances', () => {
             const data = [{
-                a: new Model()
+                a: new Model(),
             }];
             const source2 = new LocalSession({
                 keyProperty: 'id',
                 prefix: 'mdl_solarsystem_2',
-                data
+                data,
             });
 
             return source2.query().then((ds) => {
@@ -378,7 +378,7 @@ describe('Types/_source/LocalSession', () => {
                     result.push([
                         item.get('first'),
                         item.get('second'),
-                        item.get('third')
+                        item.get('third'),
                     ].join(''));
                 });
                 return result;
@@ -417,8 +417,8 @@ describe('Types/_source/LocalSession', () => {
                         {first: 'c', second: 'b', third: 'c'},
                         {first: 'c', second: 'c', third: 'a'},
                         {first: 'c', second: 'c', third: 'b'},
-                        {first: 'c', second: 'c', third: 'c'}
-                    ]
+                        {first: 'c', second: 'c', third: 'c'},
+                    ],
                 });
             });
 
@@ -455,7 +455,7 @@ describe('Types/_source/LocalSession', () => {
                     'cbc',
                     'acc',
                     'bcc',
-                    'ccc'
+                    'ccc',
                 ];
                 query.orderBy([{third: false}, {second: false}, {first: false}]);
 
@@ -478,7 +478,7 @@ describe('Types/_source/LocalSession', () => {
 
                     'acc', 'acb', 'aca',
                     'abc', 'abb', 'aba',
-                    'aac', 'aab', 'aaa'
+                    'aac', 'aab', 'aaa',
                 ];
                 query.orderBy([{first: true}, {second: true}, {third: true}]);
 
@@ -501,7 +501,7 @@ describe('Types/_source/LocalSession', () => {
 
                     'acc', 'bcc', 'ccc',
                     'abc', 'bbc', 'cbc',
-                    'aac', 'bac', 'cac'
+                    'aac', 'bac', 'cac',
                 ];
                 query.orderBy([{third: false}, {second: true}, {first: false}]);
 
@@ -515,61 +515,61 @@ describe('Types/_source/LocalSession', () => {
         context('when the filter applied', () => {
             const tests = [{
                 filter: {title: 'Neptune'},
-                expect: 2
+                expect: 2,
             }, {
                 filter: (item) => item.get('title') === 'Neptune',
-                expect: 2
+                expect: 2,
             }, {
                 filter: (item, index) => index < 3,
-                expect: 3
+                expect: 3,
             }, {
                 filter: {title: ['Neptune', 'Uranus'], material: ['asphalt', 'sand']},
-                expect: 2
+                expect: 2,
             }, {
                 filter: {title: 'Neptune'},
                 offset: 0,
-                expect: 2
+                expect: 2,
             }, {
                 filter: {title: 'Neptune'},
                 offset: 0,
                 limit: 0,
-                expect: 0
+                expect: 0,
             }, {
                 filter: {title: 'Sun'},
                 offset: 0,
                 limit: 1,
-                expect: 1
+                expect: 1,
             }, {
                 filter: {title: 'Mercury'},
                 offset: 0,
                 limit: 2,
-                expect: 1
+                expect: 1,
             }, {
                 filter: {title: 'Mercury'},
                 offset: 1,
-                expect: 0
+                expect: 0,
             }, {
                 filter: {title: 'Sun'},
                 offset: 1,
                 limit: 0,
-                expect: 0
+                expect: 0,
             }, {
                 filter: {title: 'Neptune'},
                 offset: 1,
                 limit: 1,
-                expect: 1
+                expect: 1,
             }, {
                 filter: {title: 'Neptune'},
                 offset: 2,
-                expect: 0
+                expect: 0,
             }, {
                 filter: {title: 'Neptune'},
                 offset: 2,
                 limit: 1,
-                expect: 0
+                expect: 0,
             }, {
                 filter: {material: null},
-                expect: 1
+                expect: 1,
             }];
             for (let i = 0; i < tests.length; i++) {
                 ((test, num) => {
@@ -590,52 +590,52 @@ describe('Types/_source/LocalSession', () => {
             const order1 = 'id';
             const tests = [{
                 check: order1,
-                expect: ['1', '2', '3', '4', 5, '6', '7', '8', '9', '10']
+                expect: ['1', '2', '3', '4', 5, '6', '7', '8', '9', '10'],
             }, {
                 offset: 2,
                 check: order1,
-                expect: ['3', '4', 5, '6', '7', '8', '9', '10']
+                expect: ['3', '4', 5, '6', '7', '8', '9', '10'],
             }, {
                 limit: 4,
                 check: order1,
-                expect: ['1', '2', '3', '4']
+                expect: ['1', '2', '3', '4'],
             }, {
                offset: 3,
                 limit: 2,
                 check: order1,
-                expect: ['4', 5]
+                expect: ['4', 5],
             }, {
                 sorting: [{title: false}],
                 limit: 5,
                 check: 'title',
-                expect: ['Earth', 'Jupiter', 'Mars', 'Mercury', 'Neptune']
+                expect: ['Earth', 'Jupiter', 'Mars', 'Mercury', 'Neptune'],
             }, {
                 sorting: [{title: true}],
                 limit: 3,
                 check: 'title',
-                expect: ['Uranus', 'Sun', 'Saturn']
+                expect: ['Uranus', 'Sun', 'Saturn'],
             }, {
                 sorting: [{material: true}],
                 limit: 4,
                 check: 'material',
-                expect: ['sand', 'gravel', 'gravel', 'gravel']
+                expect: ['sand', 'gravel', 'gravel', 'gravel'],
             }, {
                 sorting: [{title: false}, {material: true}],
                 check: ['title', 'material'],
                 expect: ['Earth+gravel', 'Jupiter+gravel', 'Mars+dirt', 'Mercury+clay', 'Neptune+sand',
-                    'Neptune+gravel', 'Plutonis+', 'Saturn+clay', 'Sun+dirt', 'Uranus+asphalt']
+                    'Neptune+gravel', 'Plutonis+', 'Saturn+clay', 'Sun+dirt', 'Uranus+asphalt'],
             }, {
                 sorting: [{title: false}, {material: false}],
                 limit: 7,
                 check: ['title', 'material'],
                 expect: ['Earth+gravel', 'Jupiter+gravel', 'Mars+dirt', 'Mercury+clay', 'Neptune+gravel',
-                    'Neptune+sand', 'Plutonis+']
+                    'Neptune+sand', 'Plutonis+'],
             }, {
                 sorting: [{title: false}, {material: true}],
                 limit: 7,
                 check: ['title', 'material'],
                 expect: ['Earth+gravel', 'Jupiter+gravel', 'Mars+dirt', 'Mercury+clay', 'Neptune+sand',
-                    'Neptune+gravel', 'Plutonis+']
+                    'Neptune+gravel', 'Plutonis+'],
             }];
 
             for (let i = 0; i < tests.length; i++) {
@@ -680,7 +680,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 [existsId],
                 '6',
-                {position: 'before'}
+                {position: 'before'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[4], existsId);
             });
@@ -690,7 +690,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6'],
                 existsId,
-                {position: 'before'}
+                {position: 'before'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[4], '6');
                 assert.strictEqual(ls.getItem('i')[5], existsId);
@@ -701,7 +701,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6'],
                 existsId,
-                {position: 'after'}
+                {position: 'after'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[4], existsId);
                 assert.strictEqual(ls.getItem('i')[5], '6');
@@ -712,7 +712,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6'],
                 '3',
-                {position: 'after'}
+                {position: 'after'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[3], '6');
             });
@@ -722,7 +722,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6'],
                 '3',
-                {position: 'after'}
+                {position: 'after'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[3], '6');
             });
@@ -732,7 +732,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6'],
                 '3',
-                {position: 'after'}
+                {position: 'after'},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[3], '6');
             });
@@ -742,7 +742,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 '6',
                 '3',
-                {before: false}
+                {before: false},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[3], '6');
             });
@@ -752,7 +752,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 ['6', '5'],
                 '3',
-                {before: true}
+                {before: true},
             ).then(() => {
                 assert.strictEqual(ls.getItem('i')[2], '6');
             });
@@ -762,7 +762,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 '6',
                 '3',
-                {position: 'on', parentProperty: 'title'}
+                {position: 'on', parentProperty: 'title'},
             ).then(() => {
                 assert.equal(ls.getItem('d' + '6').title, 'Neptune');
             });
@@ -772,7 +772,7 @@ describe('Types/_source/LocalSession', () => {
             return source.move(
                 '6',
                 null,
-                {position: 'on', parentProperty: 'title'}
+                {position: 'on', parentProperty: 'title'},
             ).then(() => {
                 assert.equal(ls.getItem('d' + '6').title, null);
             });
@@ -786,14 +786,14 @@ describe('Types/_source/LocalSession', () => {
         beforeEach(() => {
             recordset = new RecordSet({
                 keyProperty: 'id',
-                rawData: mock
+                rawData: mock,
             });
 
             source6 = new LocalSession({
                 prefix: 'mdl_solarsystem_6',
                 adapter: 'Types/entity:adapter.RecordSet',
                 keyProperty: 'id',
-                data: recordset
+                data: recordset,
             });
         });
 
@@ -812,8 +812,8 @@ describe('Types/_source/LocalSession', () => {
                 const model = new Model({
                     rawData: {
                         a: 1,
-                        b: true
-                    }
+                        b: true,
+                    },
                 });
 
                 return source6.create(model).then((model) => {
@@ -873,7 +873,7 @@ describe('Types/_source/LocalSession', () => {
                 it('should create the model by 1st way', () => {
                     const oldLength = ls6.getItem('k');
                     return source6.create(new Model({
-                        adapter: recordset.getAdapter()
+                        adapter: recordset.getAdapter(),
                     })).then((model) => {
                         model.set('Фамилия', 'Козлов');
                         return source6.update(model).then((success) => {
@@ -887,7 +887,7 @@ describe('Types/_source/LocalSession', () => {
                     const model = new Model({
                         rawData: new Model(),
                         keyProperty: 'Ид',
-                        adapter: 'Types/entity:adapter.RecordSet'
+                        adapter: 'Types/entity:adapter.RecordSet',
                     });
                     model.set('Фамилия', 'Овечкин');
                     return source6.update(model).then((success) => {
@@ -899,11 +899,11 @@ describe('Types/_source/LocalSession', () => {
                     const source7 = new LocalSession({
                         prefix: 'mdl_solarsystem_7',
                         data: [{id: 0, name: 'name'}],
-                        keyProperty: 'id'
+                        keyProperty: 'id',
                     });
                     const model = new Model({
                         rawData: {id: 0, name: '11'},
-                        keyProperty: 'id'
+                        keyProperty: 'id',
                     });
                     source7.update(model);
                     assert.equal(ls7.getItem('i').length, 1);

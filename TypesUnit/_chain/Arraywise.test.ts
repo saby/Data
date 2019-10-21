@@ -179,7 +179,7 @@ describe('Types/_chain/Arraywise', () => {
             const expect = [
                 ['one', 1, true],
                 ['two', 2, true],
-                ['three', 3, false]
+                ['three', 3, false],
             ];
 
             let index = 0;
@@ -195,7 +195,7 @@ describe('Types/_chain/Arraywise', () => {
         it('should zip the collections', () => {
             assert.deepEqual(
                 chain.zipObject([1, 2, 3]),
-                {one: 1, two: 2, three: 3}
+                {one: 1, two: 2, three: 3},
             );
         });
     });
@@ -279,7 +279,7 @@ describe('Types/_chain/Arraywise', () => {
                 {id: 1, title: 'a'},
                 {id: 2, title: 'b'},
                 {id: 3, title: 'a'},
-                {id: 4, title: 'c'}
+                {id: 4, title: 'c'},
             ];
             const expect = [1, 2, 4];
             const chain = new Arraywise(items);
@@ -352,14 +352,14 @@ describe('Types/_chain/Arraywise', () => {
                 {id: 1, title: 'foo', genre: 'bar'},
                 {id: 2, title: 'fooz', genre: 'baz'},
                 {id: 3, title: 'foo', genre: 'bar'},
-                {id: 2, title: 'foox', genre: 'baz'}
+                {id: 2, title: 'foox', genre: 'baz'},
             ];
             const expect = [items[0], items[2]];
             const chain = new Arraywise(items);
 
             const result = chain.where({
                 title: 'foo',
-                genre: 'bar'
+                genre: 'bar',
             }).value();
             assert.deepEqual(result, expect);
         });
@@ -383,7 +383,7 @@ describe('Types/_chain/Arraywise', () => {
         it('should return first "n" items', () => {
             assert.deepEqual(
                 chain.first(2).value(),
-                items.slice(0, 2)
+                items.slice(0, 2),
             );
         });
     });

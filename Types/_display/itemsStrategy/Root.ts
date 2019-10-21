@@ -20,7 +20,7 @@ export default class Root<S, T> extends mixin<
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IItemsStrategy<S, T> {
     /**
      * @typedef {Object} Options
@@ -121,5 +121,5 @@ export default class Root<S, T> extends mixin<
 
 Object.assign(Root.prototype, {
     '[Types/_display/itemsStrategy/Root]': true,
-    _moduleName: 'Types/display:itemsStrategy.Root'
+    _moduleName: 'Types/display:itemsStrategy.Root',
 });

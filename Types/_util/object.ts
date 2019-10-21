@@ -17,7 +17,7 @@ function getPropertyMethodName(property: string, prefix: string): string {
  * @param object Объект.
  * @param property Название свойства.
  */
-function getPropertyValue<T>(object: Object | IObject, property: string): T {
+export function getPropertyValue<T>(object: Object | IObject, property: string): T {
     if (!object  || typeof object !== 'object') {
         return undefined;
     }
@@ -46,7 +46,7 @@ function getPropertyValue<T>(object: Object | IObject, property: string): T {
  * @param property Название свойства.
  * @param value Значение свойства.
  */
-function setPropertyValue<T>(object: Object | IObject, property: string, value: T): void {
+export function setPropertyValue<T>(object: Object | IObject, property: string, value: T): void {
     if (!object  || typeof object !== 'object') {
         throw new TypeError('Argument object should be an instance of Object');
     }
@@ -77,7 +77,7 @@ function setPropertyValue<T>(object: Object | IObject, property: string, value: 
  * @param original Объект для клонирования
  * @return Клон объекта
  */
-function clone<T>(original: T | ICloneable): T {
+export function clone<T>(original: T | ICloneable): T {
     if (original instanceof Object) {
         if (original['[Types/_entity/ICloneable]']) {
             return (original as ICloneable).clone<T>();
@@ -85,7 +85,7 @@ function clone<T>(original: T | ICloneable): T {
             const serializer = new Serializer();
             return JSON.parse(
                 JSON.stringify(original, serializer.serialize),
-                serializer.deserialize
+                serializer.deserialize,
             );
         }
     } else {
@@ -99,7 +99,7 @@ function clone<T>(original: T | ICloneable): T {
  * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
  * @return Клон объекта
  */
-function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean, processing?: Set<Object>): T {
+export function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean, processing?: Set<Object>): T {
     let result;
     let checkedProcessing = processing;
 
@@ -133,10 +133,3 @@ function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean, pro
 
     return result;
 }
-
-export default {
-    getPropertyValue,
-    setPropertyValue,
-    clone,
-    clonePlain
-};

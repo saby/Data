@@ -45,7 +45,7 @@ export {
     Expression as QueryExpression,
     NavigationType as QueryNavigationType,
     ExpandMode as QueryExpandMode,
-    IMeta as IQueryMeta
+    IMeta as IQueryMeta,
 } from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';

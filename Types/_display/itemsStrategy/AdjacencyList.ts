@@ -136,7 +136,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
         logger.error(
             'Types/display:itemsStrategy.AdjacencyList',
             `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" is already in ` +
-            `progress. Path: ${path.join(' -> ')}.`
+            `progress. Path: ${path.join(' -> ')}.`,
         );
         return result;
     }
@@ -211,7 +211,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IItemsStrategy<S, T> {
     /**
      * @typedef {Object} Options
@@ -307,7 +307,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         } else if (sourceItem instanceof CollectionItem) {
             item = this.options.display.createItem({
                 contents: sourceItem.getContents(),
-                parent: this._getParent(index)
+                parent: this._getParent(index),
             });
         } else {
             throw new TypeError('Unexpected item type');
@@ -335,7 +335,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         const sourceItems = this._getSourceItems();
 
         // There is the one and only case to move items with two in turn splices
-        if ((<ISplicedArray> added).hasBeenRemoved) {
+        if ((added as ISplicedArray).hasBeenRemoved) {
             added.forEach((item, index) => {
                 // Actual index of added items in source
                 const startInSource = source.getDisplayIndex(start + index - deleteCount);
@@ -370,7 +370,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
                 if (isRemoved) {
                     // Splice in 'items' should mind the shift of the index by previously deleted elements count
                     removed.push(
-                        items.splice(inner - deletedCount, 1)[0]
+                        items.splice(inner - deletedCount, 1)[0],
                     );
                     sourceItems.splice(outer, 1);
                     deletedCount++;
@@ -387,7 +387,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             });
 
             // Set removed flag to use in possible move operation
-            (<ISplicedArray> removed).hasBeenRemoved = true;
+            (removed as ISplicedArray).hasBeenRemoved = true;
         }
 
         this._itemsOrder = itemsOrder;
@@ -556,7 +556,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         }
         root = normalizeId(root && typeof root === 'object'
             ? object.getPropertyValue(root, options.keyProperty)
-            : root
+            : root,
         );
 
         const childrenMap = buildChildrenMap(sourceItems, options.parentProperty);
@@ -573,7 +573,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             childrenMap,
             groupsMap,
             parentsMap: this._parentsMap,
-            path: [root]
+            path: [root],
         });
     }
 
@@ -600,5 +600,5 @@ Object.assign(AdjacencyList.prototype, {
     _items: null,
     _sourceItems: null,
     _itemsOrder: null,
-    _parentsMap: null
+    _parentsMap: null,
 });

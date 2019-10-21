@@ -14,7 +14,7 @@ export default class ReversedEnumerator<T> extends IndexedEnumerator<T> {
             if (!this.previous.shouldSaveIndices) {
                 this._items = this._items.map((item, index) => [
                     index,
-                    item[1]
+                    item[1],
                 ], this);
             }
         }

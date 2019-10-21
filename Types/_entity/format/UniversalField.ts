@@ -68,5 +68,5 @@ Object.assign(UniversalField.prototype, {
     name: '',
     defaultValue: null,
     nullable: false,
-    meta: null
+    meta: null,
 });

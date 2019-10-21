@@ -46,12 +46,12 @@ class Compute implements IFunctor {
         Object.defineProperty(fn, 'functor', {
             get(): Function {
                 return Compute;
-            }
+            },
         });
         Object.defineProperty(fn, 'properties', {
             get(): string[] {
                 return properties;
-            }
+            },
         });
 
         return fn as any;

@@ -80,7 +80,7 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
 Object.assign(BreadcrumbsItem.prototype, {
     '[Types/_display/BreadcrumbsItem]': true,
     _moduleName: 'Types/display:BreadcrumbsItem',
-    _$last: null
+    _$last: null,
 });
 
 register('Types/display:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});

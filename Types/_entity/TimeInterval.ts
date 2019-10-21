@@ -11,15 +11,15 @@ const millisecondsConst = {
     hours: millisecondsInHour,
     minutes: millisecondsInMinute,
     seconds: millisecondsInSecond,
-    milliseconds: 1
+    milliseconds: 1,
 };
 const regExesForParsing = {
     regExp: /^P(?:(-?[0-9]+)D)?(?:T(?:(-?[0-9]+)H)?(?:(-?[0-9]+)M)?(?:(-?[0-9]+(?:\.[0-9]{0,3})?)[0-9]*S)?)?$/i,
-    format: 'P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]'
+    format: 'P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]',
 };
 const regExesForValidation = {
     regExp: /^P(-?[0-9]+D)?(T(-?[0-9]+H)?(-?[0-9]+M)?(-?[0-9]+(\.[0-9]+)?S)?)?$/i,
-    format: 'P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]'
+    format: 'P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]',
 };
 
 interface IIntervalObject {
@@ -45,7 +45,7 @@ function fromIntervalStrToIntervalArray(intervalStr: string): Array<string|numbe
     const regexResult = regExesForParsing.regExp.exec(intervalStr);
     if (!isValidStrInterval(intervalStr)) {
         throw new Error(
-            `The argument does not correspond to the ISO 8601 format. Allowed formats: ${regExesForValidation.format}.`
+            `The argument does not correspond to the ISO 8601 format. Allowed formats: ${regExesForValidation.format}.`,
         );
     }
 
@@ -101,7 +101,7 @@ function fromMillisecondsToNormIntervalObj(milliseconds: number): IIntervalObjec
 // {days: 1, hours: 2, minutes: 3, seconds: 4, milliseconds: 5} => "P1DT2H3M4.005S"
 function fromNormIntervalObjToNormIntervalStr(normIntervalObj: IIntervalObject): string {
     const secondsWithMilliseconds = Number(
-        (normIntervalObj.seconds + normIntervalObj.milliseconds / 1000).toFixed(3)
+        (normIntervalObj.seconds + normIntervalObj.milliseconds / 1000).toFixed(3),
     );
 
     return `P${normIntervalObj.days}DT${normIntervalObj.hours}H${normIntervalObj.minutes}M${secondsWithMilliseconds}S`;
@@ -147,25 +147,6 @@ export default class TimeInterval {
         } else {
             throw new Error('TimeInterval call via operator new');
         }
-    }
-
-    /**
-     * Возвращает строку формата ISO 8601.
-     * P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]
-     * @param source Может быть:
-     * строка - “P20DT3H1M5S”,
-     * массив - [5, 2, 3, -4],
-     * объект - {days: 1, minutes: 5},
-     * число – 6 или объект типа Types/_entity/TimeInterval.
-     * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
-     * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
-     */
-    static toString(source: TimeInterval | String | Array<string|number> | IIntervalObject | Number): string {
-        if (source !== undefined) {
-            return TimeInterval.prototype.set.call({}, source)._normIntervalStr;
-        }
-
-        return Function.toString.call(this);
     }
 
     /**
@@ -420,12 +401,12 @@ export default class TimeInterval {
             '+',
             '-',
             '+=',
-            '-='
+            '-=',
         ];
 
         if (allowedOps.indexOf(operation) === -1) {
             throw new Error(
-                `Operation "${operation}" is not available. Permitted operations: ${allowedOps.join(', ')}.`
+                `Operation "${operation}" is not available. Permitted operations: ${allowedOps.join(', ')}.`,
             );
         }
         if (!(this instanceof TimeInterval && operand instanceof TimeInterval)) {
@@ -491,5 +472,24 @@ export default class TimeInterval {
         resultDate.setTime(resultDate.getTime() + sign * this.getTotalMilliseconds());
 
         return resultDate;
+    }
+
+    /**
+     * Возвращает строку формата ISO 8601.
+     * P[<Число_дней>D][T[<Число_часов>H][<Число_минут>M][<Число_секунд>[.Число_долей_секунды]S]
+     * @param source Может быть:
+     * строка - “P20DT3H1M5S”,
+     * массив - [5, 2, 3, -4],
+     * объект - {days: 1, minutes: 5},
+     * число – 6 или объект типа Types/_entity/TimeInterval.
+     * Если передается массив, то первый элемент – дни, второй – часы, т.д. до миллисекунд.
+     * Остальные элементы игнорируются. Если передается число, то оно интерпретируется, как количество миллисекунд.
+     */
+    static toString(source: TimeInterval | String | Array<string|number> | IIntervalObject | Number): string {
+        if (source !== undefined) {
+            return TimeInterval.prototype.set.call({}, source)._normIntervalStr;
+        }
+
+        return Function.toString.call(this);
     }
 }

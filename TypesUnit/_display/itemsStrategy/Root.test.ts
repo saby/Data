@@ -31,7 +31,7 @@ describe('Types/_display/itemsStrategy/Root', () => {
             },
             reset(): void {
                 items.length = 0;
-            }
+            },
         };
     }
 
@@ -48,7 +48,7 @@ describe('Types/_display/itemsStrategy/Root', () => {
         source = getSource(items);
         strategy = new Root({
             source,
-            root
+            root,
         });
     });
 

@@ -28,7 +28,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IItemsStrategy<S, T> {
     /**
      * @typedef {Object} Options
@@ -141,7 +141,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         resultState.$options = this._options;
         resultState._itemsOrder = this._itemsOrder;
 
-        //If some handlers are defined force calc order because handlers can be lost during serialization
+        // If some handlers are defined force calc order because handlers can be lost during serialization
         if (!resultState._itemsOrder && this._options.handlers.length) {
             resultState._itemsOrder = this._getItemsOrder();
         }
@@ -184,7 +184,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         return User.sortItems<T>(
             items,
             current,
-            this._options && this._options.handlers || []
+            this._options && this._options.handlers || [],
         );
     }
 
@@ -220,7 +220,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
                     item,
                     collectionItem: item.getContents(),
                     index,
-                    collectionIndex: index
+                    collectionIndex: index,
                 });
             }
         }
@@ -244,5 +244,5 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
 Object.assign(User.prototype, {
     '[Types/_display/itemsStrategy/User]': true,
     _moduleName: 'Types/display:itemsStrategy.User',
-    _itemsOrder: null
+    _itemsOrder: null,
 });

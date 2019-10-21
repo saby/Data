@@ -27,7 +27,7 @@ export default abstract class Abstract<S, T extends CollectionItem<S> = Collecti
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IItemsStrategy<S, T> {
     /**
      * @typedef {Object} Options
@@ -187,7 +187,7 @@ export default abstract class Abstract<S, T extends CollectionItem<S> = Collecti
      */
     protected _createItem(contents: S): T {
         return this.options.display.createItem({
-            contents
+            contents,
         }) as any as T;
     }
 
@@ -198,5 +198,5 @@ Object.assign(Abstract.prototype, {
     '[Types/_display/itemsStrategy/DestroyableMixin]': true,
     _moduleName: 'Types/display:itemsStrategy.DestroyableMixin',
     _items: null,
-    _sourceItems: null
+    _sourceItems: null,
 });

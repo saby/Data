@@ -10,7 +10,7 @@ class TestSource extends BaseSource {
    }
 }
 Object.assign(TestSource.prototype, {
-   _moduleName: '[TestSource]'
+   _moduleName: '[TestSource]',
 });
 
 describe('Types/_source/Base', () => {
@@ -33,7 +33,7 @@ describe('Types/_source/Base', () => {
         it('should return value passed to the constructor', () => {
             const adapter = new JsonAdapter();
             const source = new TestSource({
-                adapter
+                adapter,
             });
 
             assert.strictEqual(source.getAdapter(), adapter);
@@ -47,7 +47,7 @@ describe('Types/_source/Base', () => {
 
         it('should return value passed to the constructor', () => {
             const source = new TestSource({
-                model: 'my.model'
+                model: 'my.model',
             });
 
             assert.equal(source.getModel(), 'my.model');
@@ -68,7 +68,7 @@ describe('Types/_source/Base', () => {
 
         it('should return value passed to the constructor', () => {
             const source = new TestSource({
-                listModule: 'my.list'
+                listModule: 'my.list',
             });
 
             assert.equal(source.getListModule(), 'my.list');
@@ -89,7 +89,7 @@ describe('Types/_source/Base', () => {
 
         it('should return value passed to the constructor', () => {
             const source = new TestSource({
-                keyProperty: 'test'
+                keyProperty: 'test',
             });
 
             assert.equal(source.getKeyProperty(), 'test');
@@ -110,7 +110,7 @@ describe('Types/_source/Base', () => {
 
         it('should return value passed to the constructor', () => {
             const source = new TestSource({
-                options: {debug: true}
+                options: {debug: true},
             });
 
             assert.strictEqual(source.getOptions().debug, true);
@@ -118,7 +118,7 @@ describe('Types/_source/Base', () => {
 
         it('should return merged value of the prototype and the constructor', () => {
             const source = new TestSource({
-                options: {foo: 'bar'} as any
+                options: {foo: 'bar'} as any,
             });
 
             assert.isFalse(source.getOptions().debug);
@@ -130,7 +130,7 @@ describe('Types/_source/Base', () => {
         it('should set new value', () => {
             const options = {
                 debug: true,
-                foo: 'bar'
+                foo: 'bar',
             };
             source = new TestSource({options});
 

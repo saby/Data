@@ -18,7 +18,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
             id: 1,
             lastname: 'Smith',
             firstname: 'John',
-            middlename: 'Joshua'
+            middlename: 'Joshua',
         };
 
         adapter = new JsonRecord(data);
@@ -33,36 +33,36 @@ describe('Types/_entity/adapter/JsonRecord', () => {
         it('should return the property value', () => {
             assert.strictEqual(
                 1,
-                adapter.get('id')
+                adapter.get('id'),
             );
 
             assert.strictEqual(
                 'Smith',
-                adapter.get('lastname')
+                adapter.get('lastname'),
             );
 
             assert.isUndefined(
-                adapter.get('position')
+                adapter.get('position'),
             );
 
             assert.isUndefined(
-                new JsonRecord({}).get('position')
+                new JsonRecord({}).get('position'),
             );
 
             assert.isUndefined(
-                new JsonRecord().get(undefined)
+                new JsonRecord().get(undefined),
             );
 
             assert.isUndefined(
-                new JsonRecord('' as any).get(undefined)
+                new JsonRecord('' as any).get(undefined),
             );
 
             assert.isUndefined(
-                new JsonRecord(0 as any).get(undefined)
+                new JsonRecord(0 as any).get(undefined),
             );
 
             assert.isUndefined(
-                new JsonRecord().get(undefined)
+                new JsonRecord().get(undefined),
             );
         });
     });
@@ -72,18 +72,18 @@ describe('Types/_entity/adapter/JsonRecord', () => {
             adapter.set('id', 20);
             assert.strictEqual(
                 20,
-                data.id
+                data.id,
             );
 
             adapter.set('foo', 5);
             assert.strictEqual(
                 5,
-                (data as any).foo
+                (data as any).foo,
             );
 
             adapter.set('bar', undefined);
             assert.isUndefined(
-                (data as any).bar
+                (data as any).bar,
             );
         });
 
@@ -123,7 +123,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'lastname', 'firstname', 'middlename']
+                ['id', 'lastname', 'firstname', 'middlename'],
             );
         });
     });
@@ -146,7 +146,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
             const fieldName = 'foo';
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, 0);
             assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
@@ -159,7 +159,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def
+                defaultValue: def,
             }), 0);
             assert.strictEqual(adapter.get(fieldName), def);
         });
@@ -167,7 +167,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
         it('should set already exists field', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
-                name: 'id'
+                name: 'id',
             }), 0);
             assert.strictEqual(data.id, 1);
         });
@@ -184,7 +184,7 @@ describe('Types/_entity/adapter/JsonRecord', () => {
             assert.throws(() => {
                 adapter.addField({
                     type: 'string',
-                    name: 'foo'
+                    name: 'foo',
                 } as any, 0);
             });
         });

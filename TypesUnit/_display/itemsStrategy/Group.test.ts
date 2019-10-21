@@ -8,7 +8,7 @@ import IItemsStrategy from 'Types/_display/IItemsStrategy';
 describe('Types/_display/itemsStrategy/Group', () => {
     function wrapItem<S, T = TreeItem<S>>(item: S): T {
         return new TreeItem<S>({
-            contents: item
+            contents: item,
         }) as any as T;
     }
 
@@ -19,7 +19,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             '[Types/_display/IItemsStrategy]': true,
             source: null,
             options: {
-                display: null
+                display: null,
             },
             get count(): number {
                 return wraps.length;
@@ -45,7 +45,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             },
             reset(): void {
                 items.length = 0;
-            }
+            },
         };
     }
 
@@ -83,13 +83,13 @@ describe('Types/_display/itemsStrategy/Group', () => {
                 source,
                 handler: () => {
                     return 'foo';
-                }
+                },
             });
             const expected = [
                 'foo',
                 source.items[0].getContents(),
                 source.items[1].getContents(),
-                source.items[2].getContents()
+                source.items[2].getContents(),
             ];
 
             assert.instanceOf(strategy.at(0), GroupItem);
@@ -117,7 +117,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return items count with groups', () => {
             const strategy = new Group<string>({
                 source,
-                handler: (item) => item
+                handler: (item) => item,
             });
             assert.strictEqual(strategy.count, 2 * source.items.length);
         });
@@ -131,7 +131,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return items with groups', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const expected = [];
 
@@ -142,7 +142,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
 
             assert.deepEqual(
                 strategy.items.map((item) => item.getContents()),
-                expected
+                expected,
             );
         });
 
@@ -151,12 +151,12 @@ describe('Types/_display/itemsStrategy/Group', () => {
                 {id: 'a', group: 'one'},
                 {id: 'b', group: 'two'},
                 {id: 'c', group: 'one'},
-                {id: 'd', group: 'two'}
+                {id: 'd', group: 'two'},
             ];
             const source = getSource(items);
             const strategy = new Group({
                 source,
-                handler: (item) => item.group
+                handler: (item) => item.group,
             });
             const expected = [
                 'one',
@@ -164,12 +164,12 @@ describe('Types/_display/itemsStrategy/Group', () => {
                 items[2],
                 'two',
                 items[1],
-                items[3]
+                items[3],
             ];
 
             assert.deepEqual(
                 strategy.items.map((item) => item.getContents()),
-                expected
+                expected,
             );
         });
 
@@ -178,7 +178,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
 
             ['#one', 'one', '#two', 'two', '#three', 'three'].forEach((expect, index) => {
@@ -205,7 +205,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should add items before first group', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const newItems = ['four', 'five'];
             const expected = ['#four', 'four', '#five', 'five', '#one', 'one', '#two', 'two', '#three', 'three'];
@@ -220,7 +220,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should add items after first group', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const newItems = ['four', 'five'];
             const expected = ['#one', 'one', '#four', 'four', '#five', 'five', '#two', 'two', '#three', 'three'];
@@ -235,7 +235,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should add items after last group', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const newItems = ['four', 'five'];
             const expected = ['#one', 'one', '#two', 'two', '#three', 'three', '#four', 'four', '#five', 'five'];
@@ -250,7 +250,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should remove item and group', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const expected = ['#two', 'two', '#three', 'three'];
 
@@ -264,7 +264,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should remove item and keep group', () => {
             const strategy = new Group({
                 source,
-                handler: () => '#foo'
+                handler: () => '#foo',
             });
             const expected = ['#foo', 'two', 'three'];
 
@@ -280,7 +280,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should reset group items', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
             const oldItems = strategy.items;
 
@@ -302,13 +302,13 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return valid index', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
 
             source.items.forEach((item, index) => {
                 assert.strictEqual(
                     strategy.getDisplayIndex(index),
-                    1 + 2 * index
+                    1 + 2 * index,
                 );
             });
         });
@@ -316,12 +316,12 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return last index', () => {
             const strategy = new Group({
                 source,
-                handler: () => 'foo'
+                handler: () => 'foo',
             });
 
             assert.strictEqual(
                 strategy.getDisplayIndex(strategy.count),
-                strategy.count
+                strategy.count,
             );
         });
 
@@ -330,7 +330,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
 
             [1, 3, 5].forEach((expect, index) => {
@@ -350,13 +350,13 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return valid index', () => {
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
 
             strategy.items.forEach((item, index) => {
                 assert.strictEqual(
                     strategy.getCollectionIndex(index),
-                    index % 2 ? (index - 1) / 2 : -1
+                    index % 2 ? (index - 1) / 2 : -1,
                 );
             });
         });
@@ -364,12 +364,12 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should return -1 if index out of bounds', () => {
             const strategy = new Group({
                 source,
-                handler: () => 'foo'
+                handler: () => 'foo',
             });
 
             assert.strictEqual(
                 strategy.getCollectionIndex(strategy.count),
-                -1
+                -1,
             );
         });
 
@@ -378,7 +378,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             });
 
             [-1, 0, -1, 1, -1, 2].forEach((expect, index) => {
@@ -401,7 +401,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const options: any = {
                 display: {},
                 groups,
-                handler: null
+                handler: null,
             };
             const expected = [0, 1, 2];
             const given = Group.sortItems(items, options);
@@ -413,13 +413,13 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const items = [
                 new CollectionItem({contents: 'one'}),
                 new CollectionItem({contents: 'two'}),
-                new CollectionItem({contents: 'three'})
+                new CollectionItem({contents: 'three'}),
             ];
             const groups = [];
             const options: any = {
                 display: {},
                 groups,
-                handler: () => 'foo'
+                handler: () => 'foo',
             };
             const expected = [0, 1, 2, 3];
             const given = Group.sortItems(items, options);
@@ -434,13 +434,13 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const items = [
                 new CollectionItem({contents: 'one'}),
                 new CollectionItem({contents: 'two'}),
-                new CollectionItem({contents: 'three'})
+                new CollectionItem({contents: 'three'}),
             ];
             const groups = [];
             const options: any = {
                 display: {},
                 groups,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             };
             const expected = [0, 3, 1, 4, 2, 5];
             const expectedGroups = ['#one', '#two', '#three'];
@@ -458,16 +458,16 @@ describe('Types/_display/itemsStrategy/Group', () => {
             const items = [
                 new CollectionItem({contents: 'one'}),
                 new CollectionItem({contents: 'two'}),
-                new CollectionItem({contents: 'three'})
+                new CollectionItem({contents: 'three'}),
             ];
             const groups = [
                 new GroupItem({contents: '#one'}),
-                new GroupItem({contents: '#three'})
+                new GroupItem({contents: '#three'}),
             ];
             const options: any = {
                 display: {},
                 groups,
-                handler: (item) => '#' + item
+                handler: (item) => '#' + item,
             };
             const expected = [0, 3, 2, 4, 1, 5];
             const expectedGroups = ['#one', '#three', '#two'];
@@ -496,7 +496,7 @@ describe('Types/_display/itemsStrategy/Group', () => {
         it('should serialize itemsOrder if handler is defined', () => {
             const strategy = new Group({
                 source,
-                handler: () => '#foo'
+                handler: () => '#foo',
             });
             const json = strategy.toJSON() as any;
 

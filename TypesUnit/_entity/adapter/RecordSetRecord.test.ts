@@ -13,15 +13,15 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
     beforeEach(() => {
         format = [
             {name: 'id', type: 'integer'},
-            {name: 'name', type: 'string'}
+            {name: 'name', type: 'string'},
         ];
 
         data = new Record({
             format,
             rawData: {
                 id: 1,
-                name: 'Sample'
-            }
+                name: 'Sample',
+            },
         });
 
         adapter = new RecordSetRecordAdapter(data);
@@ -64,29 +64,29 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
         it('should return the property value', () => {
             assert.strictEqual(
                 1,
-                adapter.get('id')
+                adapter.get('id'),
             );
             assert.strictEqual(
                 'Sample',
-                adapter.get('name')
+                adapter.get('name'),
             );
         });
 
         it('should return undefined for not exists property', () => {
             assert.isUndefined(
-                adapter.get('age')
+                adapter.get('age'),
             );
 
             assert.isUndefined(
-                new RecordSetRecordAdapter().get('age')
+                new RecordSetRecordAdapter().get('age'),
             );
 
             assert.isUndefined(
-                new RecordSetRecordAdapter(null).get('age')
+                new RecordSetRecordAdapter(null).get('age'),
             );
 
             assert.isUndefined(
-                new RecordSetRecordAdapter().get(undefined)
+                new RecordSetRecordAdapter().get(undefined),
             );
         });
 
@@ -110,7 +110,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             adapter.set('id', 20);
             assert.strictEqual(
                 20,
-                data.get('id')
+                data.get('id'),
             );
         });
 
@@ -118,20 +118,20 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             const data = new Record({
                 rawData: {
                     id: 1,
-                    name: 'test'
-                }
+                    name: 'test',
+                },
             });
             const adapter = new RecordSetRecordAdapter(data);
 
             adapter.set('a', 5);
             assert.strictEqual(
                 5,
-                data.get('a')
+                data.get('a'),
             );
 
             adapter.set('b', undefined);
             assert.isUndefined(
-                data.get('b')
+                data.get('b'),
             );
         });
 
@@ -191,7 +191,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'name']
+                ['id', 'name'],
             );
         });
 
@@ -206,19 +206,19 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
                     foo: {
                         get: () => {
                             return 'bar';
-                        }
-                    }
+                        },
+                    },
                 },
                 rawData: {
                     id: 1,
-                    name: 'Sample'
-                }
+                    name: 'Sample',
+                },
             });
             const adapter = new RecordSetRecordAdapter(data);
 
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'name']
+                ['id', 'name'],
             );
         });
     });
@@ -241,7 +241,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             const fieldName = 'New';
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName
+                name: fieldName,
             });
 
             adapter.addField(field, 0);
@@ -255,7 +255,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def
+                defaultValue: def,
             }), 0);
             assert.strictEqual(adapter.get(fieldName), def);
             assert.strictEqual(data.get(fieldName), def);
@@ -265,7 +265,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
                     type: 'string',
-                    name: 'name'
+                    name: 'name',
                 }), 0);
             });
         });
@@ -283,7 +283,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             const adapter = new RecordSetRecordAdapter();
             const field = fieldsFactory({
                 type: 'string',
-                name: 'id'
+                name: 'id',
             });
 
             adapter.addField(field, 0);
@@ -323,12 +323,12 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             return {
                 d: [
                     1,
-                    'Sample'
+                    'Sample',
                 ],
                 s: [
                     {n: 'id', t: 'Число целое'},
-                    {n: 'name', t: 'Строка'}
-                ]
+                    {n: 'name', t: 'Строка'},
+                ],
             };
         };
 
@@ -336,7 +336,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             const data = new Record({
                 format,
                 rawData: getRawData(),
-                adapter: 'Types/entity:adapter.Sbis'
+                adapter: 'Types/entity:adapter.Sbis',
             });
             const adapter = new RecordSetRecordAdapter(data);
             const oldF = adapter.getFields();
@@ -354,7 +354,7 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
             const data = new Record({
                 format,
                 rawData: getRawData(),
-                adapter: 'Types/entity:adapter.Sbis'
+                adapter: 'Types/entity:adapter.Sbis',
             });
             const adapter = new RecordSetRecordAdapter(data);
 

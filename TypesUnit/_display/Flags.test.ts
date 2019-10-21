@@ -12,11 +12,11 @@ describe('Types/_display/Flags', () => {
         dict = ['one', 'two', 'three'];
 
         collection = new FlagsType({
-            dictionary: dict
+            dictionary: dict,
         });
 
         display = new FlagsDisplay({
-            collection
+            collection,
         });
     });
 
@@ -36,17 +36,17 @@ describe('Types/_display/Flags', () => {
 
             assert.throws(() => {
                 display = new FlagsDisplay({
-                    collection: []
+                    collection: [],
                 });
             });
             assert.throws(() => {
                 display = new FlagsDisplay({
-                    collection: {}
+                    collection: {},
                 });
             });
             assert.throws(() => {
                 display = new FlagsDisplay({
-                    collection: null
+                    collection: null,
                 });
             });
             assert.throws(() => {
@@ -63,7 +63,7 @@ describe('Types/_display/Flags', () => {
 
             collection.set('one', true);
             const displayToo = new FlagsDisplay({
-                collection
+                collection,
             });
             displayToo.each((item) => {
                 assert.strictEqual(item.isSelected(), collection.get(item.getContents() as any));
@@ -101,7 +101,7 @@ describe('Types/_display/Flags', () => {
                 given.push({
                     action,
                     items,
-                    index
+                    index,
                 });
             };
 
@@ -112,15 +112,15 @@ describe('Types/_display/Flags', () => {
             const expected = [{
                 action: 'ch',
                 items: [display.at(0)],
-                index: 0
+                index: 0,
             }, {
                 action: 'ch',
                 items: [display.at(1)],
-                index: 1
+                index: 1,
             }, {
                 action: 'ch',
                 items: [display.at(2)],
-                index: 2
+                index: 2,
             }];
             assert.deepEqual(given, expected);
         });
@@ -130,11 +130,11 @@ describe('Types/_display/Flags', () => {
         const dict = {1: 'one', 2: 'two', 3: 'three'};
 
         const collection = new FlagsType({
-            dictionary: dict
+            dictionary: dict,
         });
 
         const display = new FlagsDisplay({
-            collection
+            collection,
         });
 
         const given: any = {};

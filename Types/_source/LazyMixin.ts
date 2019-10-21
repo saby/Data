@@ -87,6 +87,6 @@ Object.assign(LazyMixin.prototype, {
     _additionalDependencies: [
         'Types/source',
         'Types/entity',
-        'Types/collection'
-    ]
+        'Types/collection',
+    ],
 });

@@ -31,7 +31,7 @@ describe('Types/_chain/Zipped', () => {
             const itemsMap = ['1', '2'];
             const expect = [
                 ['one', '1'],
-                ['two', '2']
+                ['two', '2'],
             ];
             const chain = new Zipped(prev, [itemsMap]);
             const enumerator = chain.getEnumerator();
@@ -49,7 +49,7 @@ describe('Types/_chain/Zipped', () => {
             const itemsMap = new List({items: ['1', '2']});
             const expect = [
                 ['one', '1'],
-                ['two', '2']
+                ['two', '2'],
             ];
             const chain = new Zipped(prev, [itemsMap]);
             const enumerator = chain.getEnumerator();
@@ -67,7 +67,7 @@ describe('Types/_chain/Zipped', () => {
             const itemsMap = ['1', '2'];
             const expect = [
                 ['one', '1'],
-                ['two', '2']
+                ['two', '2'],
             ];
             const chain = new Zipped(prev, [itemsMap]);
             const enumerator = chain.getEnumerator();

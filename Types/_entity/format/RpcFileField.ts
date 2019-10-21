@@ -21,5 +21,5 @@ export default class RpcFileField extends Field {
 Object.assign(RpcFileField.prototype, {
     '[Types/_entity/format/RpcFileField]': true,
     _moduleName: 'Types/entity:format.RpcFileField',
-    _typeName: 'RpcFile'
+    _typeName: 'RpcFile',
 });

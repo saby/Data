@@ -15,7 +15,7 @@ import {
     IUniversalFieldDictionaryMeta,
     IUniversalFieldDateTimeMeta,
     IUniversalFieldIdentityMeta,
-    IUniversalFieldArrayMeta
+    IUniversalFieldArrayMeta,
 } from '../format';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
@@ -104,7 +104,7 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatContro
         set(value: IFieldFormat[]): void {
             delete data.s;
             data.s = value;
-        }
+        },
     });
 }
 
@@ -162,7 +162,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             }
             if (data._type && data._type !== this.type) {
                 throw new TypeError(
-                    `Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`
+                    `Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`,
                 );
             }
         }
@@ -230,7 +230,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
    addField(format: Field, at?: number): void {
        if (!format || !(format instanceof Field)) {
            throw new TypeError(
-               `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+               `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`,
            );
        }
 
@@ -252,8 +252,8 @@ export default abstract class SbisFormatMixin implements IFormatController {
            at,
            factory.serialize(
                format.getDefaultValue(),
-               {format}
-           )
+               {format},
+           ),
        );
     }
 
@@ -455,7 +455,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
                 error = this._checkFormatColumns(
                     inner[i],
                     outer[i],
-                    i
+                    i,
                 );
                 if (error) {
                     break;
@@ -499,14 +499,14 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     protected _buildFormat<T extends Field = Field>(name: string): T {
         return fieldsFactory<T>(
-            this._buildFormatDeclaration(name)
+            this._buildFormatDeclaration(name),
         );
     }
 
     protected _buildS(format: Field): IFieldFormat {
         const data = {
             t: '',
-            n: format.getName()
+            n: format.getName(),
         };
         this._buildSType(data, format);
 
@@ -530,7 +530,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
                 if (precision || isLarge) {
                     data.t = {
-                         n: FIELD_TYPE[type]
+                         n: FIELD_TYPE[type],
                     };
                     if (precision) {
                         (data.t as IRealFieldType).p = precision;
@@ -555,7 +555,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
                 }
                 (data.t as IDictFieldType) = {
                     n: FIELD_TYPE[type],
-                    s: dictHash || dict
+                    s: dictHash || dict,
                 };
                 break;
 
@@ -564,7 +564,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
                 if (withoutTimeZone) {
                     (data.t as IDateTimeFieldType) = {
                         n: FIELD_TYPE[type],
-                        tz: !withoutTimeZone
+                        tz: !withoutTimeZone,
                     };
                 } else {
                     data.t = FIELD_TYPE[type];
@@ -574,7 +574,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             case 'array':
                 (data.t as IArrayFieldType) = {
                     n: FIELD_TYPE[type],
-                    t: getFieldInnerTypeNameByOuter((format as ArrayField).getKind())
+                    t: getFieldInnerTypeNameByOuter((format as ArrayField).getKind()),
                 };
                 break;
 
@@ -598,5 +598,5 @@ Object.assign(SbisFormatMixin.prototype, {
    _format: null,
    _sharedFieldFormat: null,
    _sharedFieldMeta: null,
-   _formatController: null
+   _formatController: null,
 });

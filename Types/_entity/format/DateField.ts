@@ -32,5 +32,5 @@ export default class DateField extends Field {
 Object.assign(DateField.prototype, {
     '[Types/_entity/format/DateField]': true,
     _moduleName: 'Types/entity:format.DateField',
-    _typeName: 'Date'
+    _typeName: 'Date',
 });

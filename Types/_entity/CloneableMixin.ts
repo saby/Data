@@ -36,7 +36,7 @@ export default class CloneableMixin implements ICloneable {
             const serializer = new Serializer();
             clone = JSON.parse(
                 JSON.stringify(this, serializer.serialize),
-                serializer.deserialize
+                serializer.deserialize,
             );
         }
         clone[$clone] = true;
@@ -86,5 +86,5 @@ export default class CloneableMixin implements ICloneable {
 
 Object.assign(CloneableMixin.prototype, {
     '[Types/_entity/CloneableMixin]': true,
-    '[Types/_entity/ICloneable]': true
+    '[Types/_entity/ICloneable]': true,
 });

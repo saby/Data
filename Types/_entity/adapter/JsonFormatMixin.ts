@@ -56,7 +56,7 @@ export default abstract class JsonFormatMixin {
     addField(format: Field, at: number): void {
         if (!format || !(format instanceof Field)) {
             throw new TypeError(
-                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`,
             );
         }
         const name = format.getName();
@@ -98,7 +98,7 @@ export default abstract class JsonFormatMixin {
     protected _buildFormat(name: string): Field {
         return fieldsFactory({
             name,
-            type: 'string'
+            type: 'string',
         });
     }
 
@@ -107,5 +107,5 @@ export default abstract class JsonFormatMixin {
 
 Object.assign(JsonFormatMixin.prototype, {
     '[Types/_entity/adapter/GenericFormatMixin]': true,
-    _format: null
+    _format: null,
 });

@@ -3,7 +3,7 @@ import {
     OptionsToPropertyMixin,
     InstantiableMixin,
     SerializableMixin,
-    IInstantiable
+    IInstantiable,
 } from '../entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
@@ -42,7 +42,7 @@ export default class CollectionItem<T> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IInstantiable {
 
     // region IInstantiable
@@ -166,7 +166,7 @@ export default class CollectionItem<T> extends mixin<
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
         const resultState = SerializableMixin.prototype._getSerializableState.call(
-            this, state
+            this, state,
         ) as ISerializableState<T>;
 
         if (resultState.$options.owner) {
@@ -221,7 +221,7 @@ export default class CollectionItem<T> extends mixin<
         if (this._$owner) {
             this._$owner.notifyItemChange(
                 this,
-                property as any
+                property as any,
             );
         }
     }
@@ -236,7 +236,7 @@ Object.assign(CollectionItem.prototype, {
     _$contents: null,
     _$selected: false,
     _instancePrefix: 'collection-item-',
-    _contentsIndex: undefined
+    _contentsIndex: undefined,
 });
 
 register('Types/display:CollectionItem', CollectionItem, {instantiate: false});

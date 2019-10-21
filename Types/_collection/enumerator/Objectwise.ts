@@ -99,5 +99,5 @@ Object.assign(Objectwise.prototype, {
     _items: null,
     _keys: null,
     _index: -1,
-    _filter: null
+    _filter: null,
 });

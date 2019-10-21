@@ -35,7 +35,7 @@ export default class Sorted<T> extends Abstract<T> {
     getEnumerator(): SortedEnumerator<T> {
         return new SortedEnumerator(
             this._previous,
-            this._compareFunction
+            this._compareFunction,
         );
     }
 
@@ -44,5 +44,5 @@ export default class Sorted<T> extends Abstract<T> {
 
 Object.assign(Sorted.prototype, {
     '[Types/_chain/Sorted]': true,
-    _compareFunction: null
+    _compareFunction: null,
 });

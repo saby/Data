@@ -21,5 +21,5 @@ export default class BooleanField extends Field {
 Object.assign(BooleanField.prototype, {
     '[Types/_entity/format/BooleanField]': true,
     _moduleName: 'Types/entity:format.BooleanField',
-    _typeName: 'Boolean'
+    _typeName: 'Boolean',
 });

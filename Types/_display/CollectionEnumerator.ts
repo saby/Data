@@ -19,7 +19,7 @@ export default class CollectionEnumerator<T> extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    IndexedEnumeratorMixin
+    IndexedEnumeratorMixin,
 ) implements IEnumerator<T> {
     protected readonly _moduleName: string;
 
@@ -325,5 +325,5 @@ Object.assign(CollectionEnumerator.prototype, {
     _position: -1,
     _current: undefined,
     _internalToSource: null,
-    _sourceToInternal: null
+    _sourceToInternal: null,
 });

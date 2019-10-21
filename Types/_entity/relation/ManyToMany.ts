@@ -7,7 +7,7 @@ import {Map, Set} from '../../shim';
 export enum ClearType {
     All,
     Masters,
-    Slaves
+    Slaves,
 }
 
 /**
@@ -119,7 +119,7 @@ export default class ManyToMany extends DestroyableMixin {
                     callback.call(
                         this,
                         slave,
-                        names.get(slave)
+                        names.get(slave),
                     );
                 }
             });
@@ -139,7 +139,7 @@ export default class ManyToMany extends DestroyableMixin {
                     callback.call(
                         this,
                         master,
-                        names.get(master)
+                        names.get(master),
                     );
                 }
             });

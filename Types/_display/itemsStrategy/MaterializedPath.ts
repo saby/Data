@@ -55,7 +55,7 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
             method: MaterializedPath.sortItems,
             options: () => {
                 return {indexToPath: this._indexToPath};
-            }
+            },
         });
 
         return sorters;
@@ -93,7 +93,7 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
             if (contents) {
                 items[index] = this.options.display.createItem({
                     contents,
-                    parent: this._getParent(index, path)
+                    parent: this._getParent(index, path),
                 });
             }
         }
@@ -250,9 +250,9 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
         if (isArray) {
             item = collection[at];
         } else if (isList) {
-            item = (<IList<any>> collection).at(at);
+            item = (collection as IList<any>).at(at);
         } else if (isEnumerable) {
-            const enumerator = (<IEnumerable<any>> collection).getEnumerator();
+            const enumerator = (collection as IEnumerable<any>).getEnumerator();
             let current;
             let index = 0;
             while (enumerator.moveNext()) {
@@ -326,7 +326,7 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
                 // Different paths possibly are not equal
                 result = comparePaths(
                     pathA.slice(0, 1 + level),
-                    pathB.slice(0, 1 + level)
+                    pathB.slice(0, 1 + level),
                 );
 
                 if (result !== 0) {
@@ -349,5 +349,5 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
 
 Object.assign(MaterializedPath.prototype, {
     '[Types/_display/itemsStrategy/MaterializedPath]': true,
-    _moduleName: 'Types/display:itemsStrategy.MaterializedPath'
+    _moduleName: 'Types/display:itemsStrategy.MaterializedPath',
 });

@@ -24,7 +24,7 @@ describe('Types/_source/SbisService', () => {
         {n: 'MiddleName', t: 'Строка'},
         {n: '@ID', t: 'Число целое'},
         {n: 'Position', t: 'Строка'},
-        {n: 'Hired', t: 'Логическое'}
+        {n: 'Hired', t: 'Логическое'},
     ];
 
     // ArrayMock of Types/_source/provider/SbisBusinessLogic
@@ -60,9 +60,9 @@ describe('Types/_source/SbisService', () => {
                                         '',
                                         ++lastId,
                                         '',
-                                        false
+                                        false,
                                     ],
-                                    s: meta
+                                    s: meta,
                                 };
                                 break;
 
@@ -76,9 +76,9 @@ describe('Types/_source/SbisService', () => {
                                             'Levitt',
                                             existsId,
                                             'Engineer',
-                                            true
+                                            true,
                                         ],
-                                        s: meta
+                                        s: meta,
                                     };
                                 } else {
                                     error = 'Model is not found';
@@ -126,7 +126,7 @@ describe('Types/_source/SbisService', () => {
                                             'Levitt',
                                             existsId,
                                             'Engineer',
-                                            true
+                                            true,
                                         ],
                                         [
                                             'Cameron',
@@ -134,10 +134,10 @@ describe('Types/_source/SbisService', () => {
                                             'William Donald',
                                             1 + existsId,
                                             'Prime minister',
-                                            true
-                                        ]
+                                            true,
+                                        ],
                                     ],
-                                    s: meta
+                                    s: meta,
                                 };
                                 break;
 
@@ -174,7 +174,7 @@ describe('Types/_source/SbisService', () => {
                     Mock.lastRequest = {
                         cfg: this._cfg,
                         method,
-                        args
+                        args,
                     };
 
                     if (error) {
@@ -187,7 +187,7 @@ describe('Types/_source/SbisService', () => {
                 Mock.lastDeferred = def;
 
                 return def as any;
-            }
+            },
         });
 
         Mock.existsId = existsId;
@@ -199,7 +199,7 @@ describe('Types/_source/SbisService', () => {
     const getSampleModel = () => {
         const model = new Model({
             adapter: 'Types/entity:adapter.Sbis',
-            keyProperty: '@ID'
+            keyProperty: '@ID',
         });
         model.addField({name: '@ID', type: 'integer'}, undefined, 1);
         model.addField({name: 'LastName', type: 'string'}, undefined, 'tst');
@@ -211,7 +211,7 @@ describe('Types/_source/SbisService', () => {
         return {
             a: 1,
             b: 2,
-            c: 3
+            c: 3,
         };
     };
 
@@ -237,7 +237,7 @@ describe('Types/_source/SbisService', () => {
         di.register(provider, SbisBusinessLogic);
 
         service = new SbisService({
-            endpoint: 'USP'
+            endpoint: 'USP',
         });
     });
 
@@ -261,13 +261,13 @@ describe('Types/_source/SbisService', () => {
 
                     assert.isNull(args.ИмяМетода);
                     assert.strictEqual(
-                        args.Фильтр.d[0], true, 'Wrong value for argument Фильтр.ВызовИзБраузера'
+                        args.Фильтр.d[0], true, 'Wrong value for argument Фильтр.ВызовИзБраузера',
                     );
                     assert.strictEqual(
-                        args.Фильтр.s[0].n, 'ВызовИзБраузера', 'Wrong name for argument Фильтр.ВызовИзБраузера'
+                        args.Фильтр.s[0].n, 'ВызовИзБраузера', 'Wrong name for argument Фильтр.ВызовИзБраузера',
                     );
                     assert.strictEqual(
-                        args.Фильтр.s[0].t, 'Логическое', 'Wrong type for argument Фильтр.ВызовИзБраузера'
+                        args.Фильтр.s[0].t, 'Логическое', 'Wrong type for argument Фильтр.ВызовИзБраузера',
                     );
                 });
             });
@@ -332,8 +332,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'USP',
                     binding: {
-                        format: 'ПрочитатьФормат'
-                    }
+                        format: 'ПрочитатьФормат',
+                    },
                 });
                 return service.create().then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
@@ -355,12 +355,12 @@ describe('Types/_source/SbisService', () => {
                     Тип: 3,
                     'Раздел@': true,
                     Демо: true,
-                    Раздел$: true
+                    Раздел$: true,
                 };
                 return service.create(filter).then(() => {
                     const s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
                     const sortNames = s.map(
-                        (i) => i.n
+                        (i) => i.n,
                     ).sort();
                     for (let i = 0; i < sortNames.length; i++) {
                         assert.strictEqual(s[i].n, sortNames[i]);
@@ -373,7 +373,7 @@ describe('Types/_source/SbisService', () => {
         context('when the service isn\'t exists', () => {
             it('should return an error', () => {
                 const service = new SbisService({
-                    endpoint: 'Unknown'
+                    endpoint: 'Unknown',
                 });
                 return service.create().then(() => {
                     throw new Error('Method should return an error');
@@ -399,8 +399,8 @@ describe('Types/_source/SbisService', () => {
                     const service = new SbisService({
                         endpoint: 'USP',
                         binding: {
-                            format: 'Формат'
-                        }
+                            format: 'Формат',
+                        },
                     });
                     return service.read(SbisBusinessLogic.existsId).then(() => {
                         const args = SbisBusinessLogic.lastRequest.args;
@@ -412,7 +412,7 @@ describe('Types/_source/SbisService', () => {
                 it('should generate request with additional fields from record', () => {
                     return service.read(
                         SbisBusinessLogic.existsId,
-                        getSampleModel()
+                        getSampleModel(),
                     ).then(() => {
                         const args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args.ДопПоля, getSampleModel());
@@ -422,7 +422,7 @@ describe('Types/_source/SbisService', () => {
                 it('should generate request with additional fields from object', () => {
                     return service.read(
                         SbisBusinessLogic.existsId,
-                        getSampleMeta()
+                        getSampleMeta(),
                     ).then(() => {
                         const args = SbisBusinessLogic.lastRequest.args;
                         assert.deepEqual(args.ДопПоля, getSampleMeta());
@@ -444,7 +444,7 @@ describe('Types/_source/SbisService', () => {
         context('when the service isn\'t exists', () => {
             it('should return an error', () => {
                 const service = new SbisService({
-                    endpoint: 'Unknown'
+                    endpoint: 'Unknown',
                 });
                 return service.read(SbisBusinessLogic.existsId).then(() => {
                     throw new Error('Method should return an error');
@@ -480,7 +480,7 @@ describe('Types/_source/SbisService', () => {
                 it('should create the model by 1st way', () => {
                     const service = new SbisService({
                         endpoint: 'USP',
-                        keyProperty: '@ID'
+                        keyProperty: '@ID',
                     });
                     return service.create().then((model) => {
                         return service.update(model).then((success) => {
@@ -492,7 +492,7 @@ describe('Types/_source/SbisService', () => {
                 it('should create the model by 2nd way', () => {
                     const service = new SbisService({
                         endpoint: 'USP',
-                        keyProperty: '@ID'
+                        keyProperty: '@ID',
                     });
                     const model = getSampleModel();
 
@@ -506,8 +506,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'USP',
                     binding: {
-                        format: 'Формат'
-                    }
+                        format: 'Формат',
+                    },
                 });
                 return service.read(SbisBusinessLogic.existsId).then((model) => {
                     return service.update(model).then(() => {
@@ -519,12 +519,12 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with additional fields from record', () => {
                 const meta = new Model({
-                    adapter: 'Types/entity:adapter.Sbis'
+                    adapter: 'Types/entity:adapter.Sbis',
                 });
                 meta.addField({name: 'Тест', type: 'integer'}, undefined, 7);
                 return service.update(
                     getSampleModel(),
-                    meta
+                    meta,
                 ).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     testArgIsModel(args.ДопПоля, meta);
@@ -534,7 +534,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with additional fields from object', () => {
                 return service.update(
                     getSampleModel(),
-                    getSampleMeta()
+                    getSampleMeta(),
                 ).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     assert.deepEqual(args.ДопПоля, getSampleMeta());
@@ -555,7 +555,7 @@ describe('Types/_source/SbisService', () => {
             it('should return an error', () => {
                 return service.create().then((model) => {
                     const service = new SbisService({
-                        endpoint: 'Unknown'
+                        endpoint: 'Unknown',
                     });
                     return service.update(model).then(() => {
                         throw new Error('Method should return an error');
@@ -577,14 +577,14 @@ describe('Types/_source/SbisService', () => {
                             'Levitt',
                             1,
                             'Engineer',
-                            true
+                            true,
                         ]],
-                        s: meta
+                        s: meta,
                     },
-                    adapter: 'Types/entity:adapter.Sbis'
+                    adapter: 'Types/entity:adapter.Sbis',
                 });
                 const service = new SbisService({
-                    endpoint: 'Goods'
+                    endpoint: 'Goods',
                 });
 
                 return service.update(rs).then(() => {
@@ -597,21 +597,21 @@ describe('Types/_source/SbisService', () => {
                 const RecordState = (Model as any).RecordState;
                 const format = [
                     {name: 'id', type: 'integer'},
-                    {name: 'name', type: 'string'}
+                    {name: 'name', type: 'string'},
                 ];
                 const rs = new RecordSet({
                     format,
-                    adapter: 'Types/entity:adapter.Sbis'
+                    adapter: 'Types/entity:adapter.Sbis',
                 });
                 const service = new SbisService({
-                    endpoint: 'Goods'
+                    endpoint: 'Goods',
                 });
                 const binding = service.getBinding() as IBinding;
                 let record;
                 const addRecord = (data) => {
                     record = new Model({
                         format: rs.getFormat(),
-                        adapter: rs.getAdapter()
+                        adapter: rs.getAdapter(),
                     });
                     record.set(data);
                     rs.add(record);
@@ -714,7 +714,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with additional fields from record', () => {
                 return service.destroy(
                     SbisBusinessLogic.existsId,
-                    getSampleModel()
+                    getSampleModel(),
                 ).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     testArgIsModel(args.ДопПоля, getSampleModel());
@@ -724,7 +724,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with additional fields from object', () => {
                 return service.destroy(
                     SbisBusinessLogic.existsId,
-                    getSampleMeta()
+                    getSampleMeta(),
                 ).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     assert.deepEqual(args.ДопПоля, getSampleMeta());
@@ -735,7 +735,7 @@ describe('Types/_source/SbisService', () => {
         context('when the service isn\'t exists', () => {
             it('should return an error', () => {
                 const service = new SbisService({
-                    endpoint: 'Unknown'
+                    endpoint: 'Unknown',
                 });
                 return service.destroy(SbisBusinessLogic.existsId).then(() => {
                     throw new Error('Method should return an error');
@@ -787,11 +787,11 @@ describe('Types/_source/SbisService', () => {
             it('should generate a valid request', () => {
                 const recData = {
                     d: [1],
-                    s: [{n: 'Число целое'}]
+                    s: [{n: 'Число целое'}],
                 };
                 const rsData = {
                     d: [[1], [2]],
-                    s: [{n: 'Число целое'}]
+                    s: [{n: 'Число целое'}],
                 };
                 const query = new Query()
                     .from('Goods')
@@ -803,16 +803,16 @@ describe('Types/_source/SbisService', () => {
                         obj: {a: 1, b: 2},
                         rec: new Model({
                             adapter: 'Types/entity:adapter.Sbis',
-                            rawData: recData
+                            rawData: recData,
                         }),
                         rs: new RecordSet({
                             adapter: 'Types/entity:adapter.Sbis',
-                            rawData: rsData
-                        })
+                            rawData: rsData,
+                        }),
                     })
                     .orderBy({
                         id: false,
-                        enabled: true
+                        enabled: true,
                     })
                     .offset(100)
                     .limit(33);
@@ -881,16 +881,16 @@ describe('Types/_source/SbisService', () => {
                     $protected: {
                         _options: {
                             rawData: {
-                                a: 1
-                            }
-                        }
-                    }
+                                a: 1,
+                            },
+                        },
+                    },
                 });
                 const query = new Query();
 
                 service.setModel(MyModel);
                 query.where({
-                    b: 2
+                    b: 2,
                 });
 
                 return service.query(query).then(() => {
@@ -931,7 +931,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with expand "None" mode', () => {
                 const query = new Query();
                 query.meta({
-                    expand: ExpandMode.None
+                    expand: ExpandMode.None,
                 });
 
                 return service.query(query).then(() => {
@@ -945,7 +945,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with expand "Nodes" mode', () => {
                 const query = new Query();
                 query.meta({
-                    expand: ExpandMode.Nodes
+                    expand: ExpandMode.Nodes,
                 });
 
                 return service.query(query).then(() => {
@@ -961,7 +961,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with expand "Leaves" mode', () => {
                 const query = new Query();
                 query.meta({
-                    expand: ExpandMode.Leaves
+                    expand: ExpandMode.Leaves,
                 });
 
                 return service.query(query).then(() => {
@@ -977,7 +977,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with expand "All" mode', () => {
                 const query = new Query();
                 query.meta({
-                    expand: ExpandMode.All
+                    expand: ExpandMode.All,
                 });
 
                 return service.query(query).then(() => {
@@ -1022,8 +1022,8 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'USP',
                     options: {
-                        navigationType: SbisService.NAVIGATION_TYPE.OFFSET
-                    }
+                        navigationType: SbisService.NAVIGATION_TYPE.OFFSET,
+                    },
                 });
                 const query = new Query();
                 const offset = 15;
@@ -1049,7 +1049,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with offset type navigation by meta data', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query();
                 const offset = 15;
@@ -1076,7 +1076,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with null navigation if there is no limit', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query()
                     .meta({navigationType: NavigationType.Position});
@@ -1091,7 +1091,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and null position and "after" order', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const limit = 9;
                 const query = new Query()
@@ -1119,7 +1119,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and null position and "before" order', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const limit = 9;
                 const query = new Query()
@@ -1148,7 +1148,7 @@ describe('Types/_source/SbisService', () => {
             it('should generate request with position navigation and null position if there is undefined value in ' +
                 'conditions', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const limit = 9;
                 const query = new Query()
@@ -1176,7 +1176,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and "after" order as default', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query();
                 const limit = 50;
@@ -1207,7 +1207,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and "after" order', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query();
                 const where = {'id>=': 10};
@@ -1243,7 +1243,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and "before" order', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query();
                 const where = {'id<=': 10};
@@ -1273,7 +1273,7 @@ describe('Types/_source/SbisService', () => {
 
             it('should generate request with position navigation and "both" order', () => {
                 const service = new SbisService({
-                    endpoint: 'USP'
+                    endpoint: 'USP',
                 });
                 const query = new Query();
                 const where = {'id~': 10};
@@ -1301,7 +1301,7 @@ describe('Types/_source/SbisService', () => {
                     .offset(0)
                     .limit(10)
                     .meta({
-                        hasMore
+                        hasMore,
                     });
 
                 return service.query(query).then(() => {
@@ -1324,7 +1324,7 @@ describe('Types/_source/SbisService', () => {
         context('when the service isn\'t exists', () => {
             it('should return an error', () => {
                 const service = new SbisService({
-                    endpoint: 'Unknown'
+                    endpoint: 'Unknown',
                 });
                 return service.query(new Query()).then(() => {
                     throw new Error('Method should return an error');
@@ -1341,8 +1341,8 @@ describe('Types/_source/SbisService', () => {
                 const rs = new RecordSet({
                     rawData: [
                         {f1: 1, f2: 2},
-                        {f1: 3, f2: 4}
-                    ]
+                        {f1: 3, f2: 4},
+                    ],
                 });
                 const sent = {
                     bool: false,
@@ -1351,7 +1351,7 @@ describe('Types/_source/SbisService', () => {
                     string: 'test',
                     obj: {a: 1, b: 2, c: 3},
                     rec: getSampleModel(),
-                    rs
+                    rs,
                 };
 
                 return service.call('Dummy', sent).then(() => {
@@ -1388,13 +1388,13 @@ describe('Types/_source/SbisService', () => {
                         d: [
                             [1, true],
                             [2, false],
-                            [5, true]
+                            [5, true],
                         ],
                         s: [
                             {n: '@ID', t: 'Идентификатор'},
-                            {n: 'Флаг', t: 'Логическое'}
-                        ]
-                    }
+                            {n: 'Флаг', t: 'Логическое'},
+                        ],
+                    },
                 });
 
                 return service.call('Dummy', dataSet).then(() => {
@@ -1420,7 +1420,7 @@ describe('Types/_source/SbisService', () => {
         it('should call move', () => {
             return service.move([1], 2, {
                 parentProperty: 'parent',
-                position: 'before'
+                position: 'before',
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
                 const etalon = {
@@ -1431,7 +1431,7 @@ describe('Types/_source/SbisService', () => {
                     DestinationId: '2',
                     Order: 'before',
                     ReadMethod: 'USP.Прочитать',
-                    UpdateMethod: 'USP.Записать'
+                    UpdateMethod: 'USP.Записать',
                 };
                 assert.deepEqual(etalon, args);
             });
@@ -1441,13 +1441,13 @@ describe('Types/_source/SbisService', () => {
             const service = new SbisService({
                 endpoint: 'Goods',
                 binding: {
-                    move: 'Product.Mymove'
-                }
+                    move: 'Product.Mymove',
+                },
             });
 
             return service.move([1], 2, {
                 parentProperty: 'parent',
-                position: 'before'
+                position: 'before',
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
                 const etalon = {
@@ -1458,7 +1458,7 @@ describe('Types/_source/SbisService', () => {
                     DestinationId: '2',
                     Order: 'before',
                     ReadMethod: 'Goods.Прочитать',
-                    UpdateMethod: 'Goods.Записать'
+                    UpdateMethod: 'Goods.Записать',
                 };
                 assert.deepEqual(etalon, args);
             });
@@ -1467,7 +1467,7 @@ describe('Types/_source/SbisService', () => {
         it('should call move with complex ids', () => {
             return service.move(['1,Item'], '2,Item', {
                 parentProperty: 'parent',
-                position: 'before'
+                position: 'before',
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
                 const etalon = {
@@ -1478,7 +1478,7 @@ describe('Types/_source/SbisService', () => {
                     DestinationId: '2',
                     Order: 'before',
                     ReadMethod: 'Item.Прочитать',
-                    UpdateMethod: 'Item.Записать'
+                    UpdateMethod: 'Item.Записать',
                 };
                 assert.deepEqual(etalon, args);
             });
@@ -1489,16 +1489,16 @@ describe('Types/_source/SbisService', () => {
             const SbisBusinessLogic2 = coreExtend(SbisBusinessLogic, {
                 call: () => {
                     return new Deferred().errback(originError);
-                }
+                },
             });
             di.register(provider, SbisBusinessLogic2);
             service = new SbisService({
-                endpoint: 'USP'
+                endpoint: 'USP',
             });
 
             return service.move(['1,Item'], '2,Item', {
                 parentProperty: 'parent',
-                position: 'before'
+                position: 'before',
             }).then((error) => {
                 throw new Error('Method should return an error');
             }, (error) => {
@@ -1512,19 +1512,19 @@ describe('Types/_source/SbisService', () => {
                 oldWayService = new SbisService({
                     endpoint: {
                         contract: 'USP',
-                        moveContract: 'ПорядковыйНомер'
+                        moveContract: 'ПорядковыйНомер',
                     },
                     binding: {
                         moveBefore: 'ВставитьДо',
-                        moveAfter: 'ВставитьПосле'
-                    }
+                        moveAfter: 'ВставитьПосле',
+                    },
                 });
             });
 
             it('should call move', () => {
                 return oldWayService.move(1, 2, {
                     before: true,
-                    hierField: 'parent'
+                    hierField: 'parent',
                 }).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     const etalon = {
@@ -1532,7 +1532,7 @@ describe('Types/_source/SbisService', () => {
                         Иерархия: 'parent',
                         Объект: 'ПорядковыйНомер',
                         ИдО: ['1', 'USP'],
-                        ИдОДо: ['2', 'USP']
+                        ИдОДо: ['2', 'USP'],
                     };
                     assert.deepEqual(etalon, args);
                 });
@@ -1541,7 +1541,7 @@ describe('Types/_source/SbisService', () => {
             it('should call move with complex ids', () => {
                 return oldWayService.move('1,Item', '2,Item', {
                     before: true,
-                    hierField: 'parent'
+                    hierField: 'parent',
                 }).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     const etalon = {
@@ -1549,7 +1549,7 @@ describe('Types/_source/SbisService', () => {
                         Иерархия: 'parent',
                         Объект: 'ПорядковыйНомер',
                         ИдО: ['1', 'Item'],
-                        ИдОДо: ['2', 'Item']
+                        ИдОДо: ['2', 'Item'],
                     };
                     assert.deepEqual(etalon, args);
                 });
@@ -1565,7 +1565,7 @@ describe('Types/_source/SbisService', () => {
 
         it('should return value passed to the constructor', () => {
             const source = new SbisService({
-                orderProperty: 'test'
+                orderProperty: 'test',
             });
             assert.equal(source.getOrderProperty(), 'test');
         });
@@ -1585,7 +1585,7 @@ describe('Types/_source/SbisService', () => {
             di.register('Foo', Foo);
 
             const source = new SbisService({
-                provider: 'Foo'
+                provider: 'Foo',
             });
             const provider = source.getProvider();
             const json = source.toJSON();

@@ -28,7 +28,7 @@ export default class DateTime extends mixin(SerializableMixin) {
         hour?: number,
         minute?: number,
         second?: number,
-        millisecond?: number
+        millisecond?: number,
     ) {
         super();
 
@@ -89,5 +89,5 @@ Interlayer.prototype = {...Object.getPrototypeOf(DateTime.prototype)};
 Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
 Object.assign(DateTime.prototype, {
-   _moduleName: 'Types/entity:DateTime'
+   _moduleName: 'Types/entity:DateTime',
 });

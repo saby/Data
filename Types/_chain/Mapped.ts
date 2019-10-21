@@ -46,7 +46,7 @@ export default class Mapped<T> extends Abstract<T> {
         return new MappedEnumerator(
             this._previous,
             this._callback,
-            this._callbackContext
+            this._callbackContext,
         );
     }
 
@@ -56,5 +56,5 @@ export default class Mapped<T> extends Abstract<T> {
 Object.assign(Mapped.prototype, {
     ['[Types/_chain/Mapped]']: true,
     _callback: null,
-    _callbackContext: null
+    _callbackContext: null,
 });

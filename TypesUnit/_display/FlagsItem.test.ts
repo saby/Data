@@ -11,11 +11,11 @@ describe('Types/_display/FlagsItem', () => {
         dict = ['one', 'two', 'three'];
 
         collection = new FlagsType({
-            dictionary: dict
+            dictionary: dict,
         });
 
         display = new FlagsDisplay({
-            collection
+            collection,
         });
     });
 
@@ -37,7 +37,7 @@ describe('Types/_display/FlagsItem', () => {
             display.each((item) => {
                 assert.strictEqual(
                     item.isSelected(),
-                    collection.get(item.getContents())
+                    collection.get(item.getContents()),
                 );
             });
         });
@@ -50,17 +50,17 @@ describe('Types/_display/FlagsItem', () => {
             collection = new FlagsType({
                 dictionary: dict,
                 localeDictionary: localeDict,
-                values: expected
+                values: expected,
             });
 
             const display = new FlagsDisplay({
-                collection
+                collection,
             });
 
             display.each((item, index) => {
                 assert.strictEqual(
                     item.isSelected(),
-                    expected[index]
+                    expected[index],
                 );
             });
         });
@@ -75,12 +75,12 @@ describe('Types/_display/FlagsItem', () => {
 
                 assert.strictEqual(
                     item.isSelected(),
-                    values[index]
+                    values[index],
                 );
 
                 assert.strictEqual(
                     collection.get(item.getContents()),
-                    values[index]
+                    values[index],
                 );
             });
         });
@@ -92,11 +92,11 @@ describe('Types/_display/FlagsItem', () => {
 
             collection = new FlagsType({
                 dictionary: dict,
-                localeDictionary: localeDict
+                localeDictionary: localeDict,
             });
 
             const display = new FlagsDisplay({
-                collection
+                collection,
             });
 
             display.each((item, index) => {
@@ -104,12 +104,12 @@ describe('Types/_display/FlagsItem', () => {
 
                 assert.strictEqual(
                     item.isSelected(),
-                    values[index]
+                    values[index],
                 );
 
                 assert.strictEqual(
                     collection.get(item.getContents() as any, true),
-                    values[index]
+                    values[index],
                 );
             });
         });

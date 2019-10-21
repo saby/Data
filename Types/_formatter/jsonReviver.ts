@@ -50,7 +50,7 @@ export default function jsonReviver(name: string | number, value: any): any {
                 unresolvedInstances.push({
                     scope: this,
                     name,
-                    value
+                    value,
                 });
                 unresolvedInstancesId.push(value.id);
                 break;

@@ -8,12 +8,12 @@ const FORMATS = {
         patterns: {
             decimal: {
                 positivePattern: '{number}',
-                negativePattern: '{minusSign}{number}'
+                negativePattern: '{minusSign}{number}',
             },
             percent: {
                 positivePattern: '{number} {percentSign}',
-                negativePattern: '{minusSign}{number} {percentSign}'
-            }
+                negativePattern: '{minusSign}{number} {percentSign}',
+            },
         },
         symbols: {
             latn: {
@@ -23,20 +23,20 @@ const FORMATS = {
                 plusSign: '+',
                 minusSign: '-',
                 percentSign: '%',
-                infinity: '∞'
-            }
-        }
+                infinity: '∞',
+            },
+        },
     },
     'en-US': {
         patterns: {
             decimal: {
                 positivePattern: '{number}',
-                negativePattern: '{minusSign}{number}'
+                negativePattern: '{minusSign}{number}',
             },
             percent: {
                 positivePattern: '{number} {percentSign}',
-                negativePattern: '{minusSign}{number} {percentSign}'
-            }
+                negativePattern: '{minusSign}{number} {percentSign}',
+            },
         },
         symbols: {
             latn: {
@@ -46,10 +46,10 @@ const FORMATS = {
                 plusSign: '+',
                 minusSign: '-',
                 percentSign: '%',
-                infinity: '∞'
-            }
-        }
-    }
+                infinity: '∞',
+            },
+        },
+    },
 };
 
 const groupSize = 3;
@@ -79,7 +79,7 @@ function formatNumberToString(numberFormat: IFormat, x: number): string {
         return toRawPrecision(
             x,
             numberFormat.minimumSignificantDigits,
-            numberFormat.maximumSignificantDigits
+            numberFormat.maximumSignificantDigits,
         );
     }
 
@@ -87,7 +87,7 @@ function formatNumberToString(numberFormat: IFormat, x: number): string {
         x,
         numberFormat.minimumIntegerDigits || 1,
         numberFormat.minimumFractionDigits || 0,
-        numberFormat.maximumFractionDigits || DEFAULT_MAXIMUM_FRACTION_DIGITS
+        numberFormat.maximumFractionDigits || DEFAULT_MAXIMUM_FRACTION_DIGITS,
     );
 }
 
@@ -291,7 +291,7 @@ function getNumberFormat(options: IFormat): IFormat {
         useGrouping: true,
         minimumIntegerDigits: 0,
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+        maximumFractionDigits: 0,
     }, ...options || {}};
 }
 

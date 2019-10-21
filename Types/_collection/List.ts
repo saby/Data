@@ -15,7 +15,7 @@ import {
    ReadWriteMixin,
    relation,
    SerializableMixin,
-   VersionableMixin
+   VersionableMixin,
 } from '../entity';
 import {register} from '../di';
 import {deprecateExtend, mixin, object} from '../util';
@@ -88,7 +88,7 @@ export default class List<T> extends mixin<
     CloneableMixin,
     ManyToManyMixin,
     ReadWriteMixin,
-    VersionableMixin
+    VersionableMixin,
 ) implements
    IEnumerable<T>,
    IList<T>,
@@ -150,7 +150,7 @@ export default class List<T> extends mixin<
                 context || this,
                 this.at(i),
                 i,
-                this
+                this,
             );
         }
     }
@@ -366,7 +366,7 @@ export default class List<T> extends mixin<
             this._$items,
             (items) => items.length,
             (items, at) => items[at],
-            (item, property) => object.getPropertyValue(item, property)
+            (item, property) => object.getPropertyValue(item, property),
         ));
     }
 
@@ -461,7 +461,7 @@ export default class List<T> extends mixin<
             return result;
         } else {
             throw new TypeError(
-                'Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.'
+                'Argument "items" must be an instance of Array or implement Types/collection:IEnumerable.',
             );
         }
     }
@@ -478,7 +478,7 @@ export default class List<T> extends mixin<
              this,
              classExtender,
              mixinsList,
-             'Types/_collection/List'
+             'Types/_collection/List',
         );
     }
 
@@ -493,7 +493,7 @@ Object.assign(List.prototype, {
     '[Types/_entity/IEquatable]': true,
     _moduleName: 'Types/collection:List',
     _$items: null,
-    _indexer: null
+    _indexer: null,
 });
 
 // Aliases

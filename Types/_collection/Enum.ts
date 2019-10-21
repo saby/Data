@@ -5,7 +5,7 @@ import {
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin,
-   format
+   format,
 } from '../entity';
 import {register} from '../di';
 import {mixin} from '../util';
@@ -35,7 +35,7 @@ export default class Enum<T> extends mixin<
    Dictionary,
    ManyToManyMixin,
    SerializableMixin,
-   CloneableMixin
+   CloneableMixin,
 ) implements IEnum<T>, IProducible {
    /**
     * @cfg {Number|sting|null} Key of the selected item
@@ -94,7 +94,7 @@ export default class Enum<T> extends mixin<
             this._$index = value as null;
         } else if (index === undefined) {
             throw new ReferenceError(
-                `${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`
+                `${this._moduleName}::setByValue(): the value "${value}" doesn't found in dictionary`,
             );
         } else {
             this._$index = index;
@@ -115,7 +115,7 @@ export default class Enum<T> extends mixin<
         return new this({
             dictionary: this.prototype._getDictionaryByFormat(options && options.format),
             localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-            index: data
+            index: data,
         });
     }
 
@@ -192,7 +192,7 @@ Object.assign(Enum.prototype, {
    '[Types/_entity/IProducible]': true,
    _moduleName: 'Types/collection:Enum',
    _$index: null,
-   _type: 'enum'
+   _type: 'enum',
 });
 
 register('Types/collection:Enum', Enum, {instantiate: false});
