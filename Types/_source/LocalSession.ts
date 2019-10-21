@@ -11,7 +11,7 @@ import {
     Model,
     OptionsToPropertyMixin,
     ReadWriteMixin,
-    adapter as adapters
+    adapter as adapters,
 } from '../entity';
 import {RecordSet} from '../collection';
 import {create, register} from '../di';
@@ -60,7 +60,7 @@ function itemToObject(item: any, adapter: string | adapters.IAdapter): object {
     if (!isRecord) {
         record = new Record({
             adapter,
-            rawData: item
+            rawData: item,
         });
     }
 
@@ -118,7 +118,7 @@ class WhereTokenizer {
         }
         return {
             field: m[0],
-            op: fn
+            op: fn,
         };
     }
 
@@ -444,7 +444,7 @@ class ModelManager {
             return new Model({
                rawData: new Record({rawData: data}),
                adapter: create(this.adapter),
-               keyProperty: this.keyProperty
+               keyProperty: this.keyProperty,
             });
 
             case 'Types/entity:adapter.Sbis':
@@ -455,7 +455,7 @@ class ModelManager {
             return new Model({
                rawData: data,
                adapter: create(this.adapter),
-                keyProperty: this.keyProperty
+                keyProperty: this.keyProperty,
             });
       }
    }
@@ -468,7 +468,7 @@ class ModelManager {
         const model = new Model({
             format,
             adapter: create(this.adapter),
-            keyProperty: this.keyProperty
+            keyProperty: this.keyProperty,
         });
 
         while (enumerator.moveNext()) {
@@ -509,7 +509,7 @@ class Converter {
       if (data.length === 0) {
          return new RecordSet({
             rawData: _data,
-             keyProperty: this.keyProperty
+             keyProperty: this.keyProperty,
          });
       }
 
@@ -519,8 +519,8 @@ class Converter {
          _data.push(model);
       }
       return new RecordSet({
-         rawData: _data,
-          keyProperty: this.keyProperty
+          rawData: _data,
+          keyProperty: this.keyProperty,
       });
    }
 
@@ -528,9 +528,7 @@ class Converter {
         if (data.length === 0) {
             return data;
         }
-        const rs = new RecordSet({
-            adapter: this.adapter
-        });
+        const rs = new RecordSet({adapter: this.adapter});
 
         const format = new Record({rawData: data[0]}).getFormat();
 
@@ -538,7 +536,7 @@ class Converter {
             const item = data[j];
             const rec = new Record({
                 format,
-                adapter: this.adapter
+                adapter: this.adapter,
             });
             const enumerator = rec.getEnumerator();
             while (enumerator.moveNext()) {
@@ -591,7 +589,7 @@ export default class LocalSession extends mixin<
     OptionsToPropertyMixin
 >(
     DestroyableMixin,
-    OptionsToPropertyMixin
+    OptionsToPropertyMixin,
 ) implements ICrud, ICrudPlus, IData {
     protected _writable: boolean;
 
@@ -860,8 +858,8 @@ export default class LocalSession extends mixin<
         return Deferred.success(this._getDataSet({
             items: this.converter.get(data),
             meta: {
-                total: data.length
-            }
+                total: data.length,
+            },
         })) as ExtendPromise<any>;
     }
 
@@ -1026,12 +1024,12 @@ export default class LocalSession extends mixin<
                 adapter: this.getAdapter(),
                 model: this.getModel(),
                 listModule: this.getListModule(),
-                keyProperty: this.getKeyProperty()
+                keyProperty: this.getKeyProperty(),
             }, ...{
                 rawData,
                 itemsProperty: this._dataSetItemsProperty,
-                metaProperty: this._dataSetMetaProperty
-            }}
+                metaProperty: this._dataSetMetaProperty,
+            }},
         );
     }
 
@@ -1094,8 +1092,8 @@ Object.assign(LocalSession.prototype, {
     _options: {
         prefix: '',
         model: Model,
-        data: []
-    }
+        data: [],
+    },
 });
 
 register('Types/source:LocalSession', LocalSession, {instantiate: false});

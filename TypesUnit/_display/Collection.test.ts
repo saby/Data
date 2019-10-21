@@ -26,25 +26,25 @@ describe('Types/_display/Collection', () => {
     function getItems(): IItem[] {
         return [{
             id: 1,
-            name: 'Иванов'
+            name: 'Иванов',
         }, {
             id: 2,
-            name: 'Петров'
+            name: 'Петров',
         }, {
             id: 3,
-            name: 'Сидоров'
+            name: 'Сидоров',
         }, {
             id: 4,
-            name: 'Пухов'
+            name: 'Пухов',
         }, {
             id: 5,
-            name: 'Молодцов'
+            name: 'Молодцов',
         }, {
             id: 6,
-            name: 'Годолцов'
+            name: 'Годолцов',
         }, {
             id: 7,
-            name: 'Арбузнов'
+            name: 'Арбузнов',
         }];
     }
 
@@ -56,12 +56,12 @@ describe('Types/_display/Collection', () => {
         items = getItems();
 
         list = new ObservableList({
-            items
+            items,
         });
 
         display = new CollectionDisplay({
             collection: list,
-            keyProperty: 'id'
+            keyProperty: 'id',
         });
     });
 
@@ -78,12 +78,12 @@ describe('Types/_display/Collection', () => {
     describe('.constructor()', () => {
         it('should use filter from options', () => {
             const list = new List({
-                items: [1, 2, 3, 4]
+                items: [1, 2, 3, 4],
             });
 
             const display = new CollectionDisplay({
                 collection: list,
-                filter: (item) => item === 3
+                filter: (item) => item === 3,
             });
 
             let count = 0;
@@ -100,12 +100,12 @@ describe('Types/_display/Collection', () => {
                     {id: 1, group: 1},
                     {id: 2, group: 2},
                     {id: 3, group: 1},
-                    {id: 4, group: 3}
-                ]
+                    {id: 4, group: 3},
+                ],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item.group
+                group: (item) => item.group,
             });
             const groupedItems = [1, list.at(0), list.at(2), 2, list.at(1), 3, list.at(3)];
 
@@ -116,11 +116,11 @@ describe('Types/_display/Collection', () => {
 
         it('should use sort from options', () => {
             const list = new ObservableList({
-                items: [5, 4, 3, 2, 1]
+                items: [5, 4, 3, 2, 1],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                sort: (a, b) => a.collectionItem - b.collectionItem
+                sort: (a, b) => a.collectionItem - b.collectionItem,
             });
             const sortedItems = [1, 2, 3, 4, 5];
 
@@ -134,22 +134,22 @@ describe('Types/_display/Collection', () => {
 
             assert.throws(() => {
                 display = new CollectionDisplay({
-                    collection: {} as any
+                    collection: {} as any,
                 });
             });
             assert.throws(() => {
                 display = new CollectionDisplay({
-                    collection: 'a' as any
+                    collection: 'a' as any,
                 });
             });
             assert.throws(() => {
                 display = new CollectionDisplay({
-                    collection: 1 as any
+                    collection: 1 as any,
                 });
             });
             assert.throws(() => {
                 display = new CollectionDisplay({
-                    collection: undefined
+                    collection: undefined,
                 });
             });
 
@@ -160,12 +160,12 @@ describe('Types/_display/Collection', () => {
             const importantProps = ['bar'];
             const functor = new ComputeFunctor(
                 (a, b) => a - b,
-                ['foo']
+                ['foo'],
             );
             const display = new CollectionDisplay({
                 collection: list,
                 sort: functor,
-                importantItemProperties: importantProps
+                importantItemProperties: importantProps,
             });
 
             assert.isTrue(importantProps.indexOf('foo') > -1);
@@ -178,12 +178,12 @@ describe('Types/_display/Collection', () => {
             const importantProps = ['bar'];
             const functor = new ComputeFunctor(
                 () => 'banana',
-                ['foo']
+                ['foo'],
             );
             const display = new CollectionDisplay({
                 collection: list,
                 group: functor,
-                importantItemProperties: importantProps
+                importantItemProperties: importantProps,
             });
 
             assert.isTrue(importantProps.indexOf('foo') > -1);
@@ -196,10 +196,10 @@ describe('Types/_display/Collection', () => {
     describe('.getEnumerator()', () => {
         it('should return a display enumerator', () => {
             const display = new CollectionDisplay({
-                collection: new ObservableList()
+                collection: new ObservableList(),
             });
             assert.isTrue(
-                coreInstance.instanceOfModule(display.getEnumerator(), 'Types/_display/CollectionEnumerator')
+                coreInstance.instanceOfModule(display.getEnumerator(), 'Types/_display/CollectionEnumerator'),
             );
         });
 
@@ -216,13 +216,13 @@ describe('Types/_display/Collection', () => {
                         {id: 'b'},
                         {id: 'ba'},
                         {id: 'b'},
-                        {id: 'bb'}
-                    ]
+                        {id: 'bb'},
+                    ],
                 });
 
                 display = new CollectionDisplay({
                     collection: items,
-                    keyProperty: 'id'
+                    keyProperty: 'id',
                 });
             });
 
@@ -293,15 +293,15 @@ describe('Types/_display/Collection', () => {
                     {id: 1, title: 1},
                     {id: 2, title: 2},
                     {id: 3, title: 3},
-                    {id: 4, title: 4}
+                    {id: 4, title: 4},
                 ],
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
             const display = new CollectionDisplay({
                 collection: list,
                 importantItemProperties: ['title'],
                 filter: (a) => a.get('title') < 3,
-                sort: (a, b) => a.collectionItem.get('title') - b.collectionItem.get('title')
+                sort: (a, b) => a.collectionItem.get('title') - b.collectionItem.get('title'),
             });
             const sortedItems = [1, 4, 2];
 
@@ -337,16 +337,16 @@ describe('Types/_display/Collection', () => {
         it.skip('should remain empty group that match filter after remove last it member', () => {
             const items = [
                 {id: 1, group: 1},
-                {id: 2, group: 2}
+                {id: 2, group: 2},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
                 group: (item) => item.group,
-                filter: () => true
+                filter: () => true,
             });
             const expected = [2, items[1], 1];
             let count = 0;
@@ -362,16 +362,16 @@ describe('Types/_display/Collection', () => {
         it('should return new group after prepend an item with filter', () => {
             const items = [
                 {id: 1, group: 1},
-                {id: 2, group: 2}
+                {id: 2, group: 2},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
                 group: (item) => item.group,
-                filter: () => true
+                filter: () => true,
             });
             const item = {id: 2, group: 3};
             const expected = [3, item, 1, items[0], 2, items[1]];
@@ -389,15 +389,15 @@ describe('Types/_display/Collection', () => {
         it('should remove empty groups after add an item', () => {
             const items = [
                 {id: 1, group: 1},
-                {id: 2, group: 2}
+                {id: 2, group: 2},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
-                group: (item) => item.group
+                group: (item) => item.group,
             });
             const item = {id: 2, group: 3};
             const expected = [2, items[1], 3, item];
@@ -448,7 +448,7 @@ describe('Types/_display/Collection', () => {
 
             display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item % 2
+                group: (item) => item % 2,
             });
         });
 
@@ -468,11 +468,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display by collection item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -486,11 +486,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display by collection position', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item, index) => index === 1;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -504,11 +504,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display by display item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item, index, displayItem) => displayItem.getContents() === 2;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -524,12 +524,12 @@ describe('Types/_display/Collection', () => {
             const filter = (item, index, displayItem, displayIndex) => displayIndex === 3;
             const sort = (a, b) => b.collectionItem - a.collectionItem;
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
                 collection: list,
                 filter,
-                sort
+                sort,
             });
 
             display.setFilter(filter);
@@ -544,7 +544,7 @@ describe('Types/_display/Collection', () => {
         it('should call filter for all items if it use display index', () => {
             const data = [{id: 1}, {id: 2}, {id: 3}];
             const list = new RecordSet({
-                rawData: data
+                rawData: data,
             });
             const display = new CollectionDisplay({
                 collection: list,
@@ -552,7 +552,7 @@ describe('Types/_display/Collection', () => {
                 filter: (item, index, displayItem, displayIndex) => {
                     count++;
                     return displayIndex > -1;
-                }
+                },
             });
 
             let count = 0;
@@ -565,12 +565,12 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display use array of filters', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filterA = (item) => item > 2;
             const filterB = (item) => item < 4;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter([filterA, filterB] as any);
@@ -584,12 +584,12 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display use several filters', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filterA = (item) => item > 2;
             const filterB = (item) => item < 4;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filterA, filterB);
@@ -603,11 +603,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display after assign an items', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item) => item === 5 || item === 6;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -622,11 +622,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display after add item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -642,11 +642,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display after remove item', () => {
             const list = new ObservableList({
-                items: [1, 2, 3, 3]
+                items: [1, 2, 3, 3],
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -661,11 +661,11 @@ describe('Types/_display/Collection', () => {
 
         it('should filter display after replace item', () => {
             const list = new ObservableList({
-                items: [1, 2, 3, 2]
+                items: [1, 2, 3, 2],
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -680,25 +680,25 @@ describe('Types/_display/Collection', () => {
 
         it('should not refilter display after change item', () => {
             const changeModel = new Model({
-                rawData: {max: 2}
+                rawData: {max: 2},
             });
             const list = new ObservableList({
                 items: [
                     new Model({
-                        rawData: {max: 1}
+                        rawData: {max: 1},
                     }),
                     new Model({
-                        rawData: {max: 3}
+                        rawData: {max: 3},
                     }),
                     new Model({
-                        rawData: {max: 4}
+                        rawData: {max: 4},
                     }),
-                    changeModel
-                ]
+                    changeModel,
+                ],
             });
             const filter = (item) => item.get('max') === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setFilter(filter);
@@ -713,26 +713,26 @@ describe('Types/_display/Collection', () => {
 
         it('should refilter display after change item', () => {
             const changeModel = new Model({
-                rawData: {max: 2}
+                rawData: {max: 2},
             });
             const list = new ObservableList({
                 items: [
                     new Model({
-                        rawData: {max: 1}
+                        rawData: {max: 1},
                     }),
                     new Model({
-                        rawData: {max: 3}
+                        rawData: {max: 3},
                     }),
                     new Model({
-                        rawData: {max: 4}
+                        rawData: {max: 4},
                     }),
-                    changeModel
-                ]
+                    changeModel,
+                ],
             });
             const filter = (item) => item.get('max') === 3;
             const display = new CollectionDisplay({
                 collection: list,
-                importantItemProperties: ['max']
+                importantItemProperties: ['max'],
             });
 
             display.setFilter(filter);
@@ -749,7 +749,7 @@ describe('Types/_display/Collection', () => {
     describe('.getFilter()', () => {
         it('should return a display filters', () => {
             const display = new CollectionDisplay({
-                collection: new ObservableList()
+                collection: new ObservableList(),
             });
             const filter = () => {
                 return true;
@@ -769,11 +769,11 @@ describe('Types/_display/Collection', () => {
 
         it('should add a filter', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.addFilter(filter);
@@ -787,23 +787,23 @@ describe('Types/_display/Collection', () => {
 
         it('should trigger onCollectionChange', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [{
                 action: IBindCollection.ACTION_REMOVE,
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [display.at(0), display.at(1)],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_REMOVE,
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [display.at(3)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -812,7 +812,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
             const filter = (item) => item === 3;
@@ -838,12 +838,12 @@ describe('Types/_display/Collection', () => {
 
         it('should remove a filter', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const filter = (item) => item === 3;
             const display = new CollectionDisplay({
                 collection: list,
-                filter
+                filter,
             });
 
             display.removeFilter(filter);
@@ -857,23 +857,23 @@ describe('Types/_display/Collection', () => {
 
         it('should trigger onCollectionChange', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [{
                 action: IBindCollection.ACTION_ADD,
                 newItems: [display.at(0), display.at(1)],
                 newItemsIndex: 0,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [display.at(3)],
                 newItemsIndex: 3,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -882,7 +882,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
             const filter = (item) => item === 3;
@@ -913,11 +913,11 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const sortedItems = getSortedItems();
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setSort(sort);
@@ -931,13 +931,13 @@ describe('Types/_display/Collection', () => {
                 {id: 0, x: 1, y: 1},
                 {id: 1, x: 1, y: 2},
                 {id: 2, x: 2, y: 1},
-                {id: 3, x: 2, y: 2}
+                {id: 3, x: 2, y: 2},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const sortX = (a, b) => a.collectionItem.x - b.collectionItem.x;
             const sortY = (a, b) => b.collectionItem.y - a.collectionItem.y;
@@ -951,29 +951,29 @@ describe('Types/_display/Collection', () => {
 
         it('should trigger onCollectionChange', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [{
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(3)],
                 newItemsIndex: 0,
                 oldItems: [display.at(3)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(2)],
                 newItemsIndex: 1,
                 oldItems: [display.at(2)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(1)],
                 newItemsIndex: 2,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -982,7 +982,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -995,11 +995,11 @@ describe('Types/_display/Collection', () => {
 
         it('should reset a sort display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const sortedItems = getItems();
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setSort(sort);
@@ -1011,11 +1011,11 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display after add item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const sortedItems = [5, 4, 3, 2, 1];
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setSort(sort);
@@ -1027,10 +1027,10 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display after remove item', () => {
             const list = new ObservableList({
-                items: [1, 2, 10, 3, 4]
+                items: [1, 2, 10, 3, 4],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [4, 3, 2, 1];
             const given = [];
@@ -1046,10 +1046,10 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display after replace item', () => {
             const list = new ObservableList({
-                items: [1, 2, 2, 3, 5]
+                items: [1, 2, 2, 3, 5],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [5, 4, 3, 2, 1];
 
@@ -1062,25 +1062,25 @@ describe('Types/_display/Collection', () => {
 
         it('should not resort display after change item', () => {
             const changeModel = new Model({
-                rawData: {max: 2}
+                rawData: {max: 2},
             });
             const list = new ObservableList({
                 items: [
                     new Model({
-                        rawData: {max: 1}
+                        rawData: {max: 1},
                     }),
                     new Model({
-                        rawData: {max: 3}
+                        rawData: {max: 3},
                     }),
                     new Model({
-                        rawData: {max: 4}
+                        rawData: {max: 4},
                     }),
-                    changeModel
-                ]
+                    changeModel,
+                ],
             });
             const sortedItems = [4, 3, 10, 1];
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setSort((a, b) => b.collectionItem.get('max') - a.collectionItem.get('max'));
@@ -1092,26 +1092,26 @@ describe('Types/_display/Collection', () => {
 
         it('should resort display after change item', () => {
             const changeModel = new Model({
-                rawData: {max: 2}
+                rawData: {max: 2},
             });
             const list = new ObservableList({
                 items: [
                     new Model({
-                        rawData: {max: 1}
+                        rawData: {max: 1},
                     }),
                     new Model({
-                        rawData: {max: 3}
+                        rawData: {max: 3},
                     }),
                     new Model({
-                        rawData: {max: 4}
+                        rawData: {max: 4},
                     }),
-                    changeModel
-                ]
+                    changeModel,
+                ],
             });
             const sortedItems = [10, 4, 3, 1];
             const display = new CollectionDisplay({
                 collection: list,
-                importantItemProperties: ['max']
+                importantItemProperties: ['max'],
             });
 
             display.setSort((a, b) => b.collectionItem.get('max') - a.collectionItem.get('max'));
@@ -1125,11 +1125,11 @@ describe('Types/_display/Collection', () => {
             const importantProps = ['bar'];
             const functor = new ComputeFunctor(
                 (a, b) => a - b,
-                ['foo']
+                ['foo'],
             );
             const display = new CollectionDisplay({
                 collection: list,
-                importantItemProperties: importantProps
+                importantItemProperties: importantProps,
             });
 
             display.setSort(functor);
@@ -1141,12 +1141,12 @@ describe('Types/_display/Collection', () => {
             const importantProps = ['bar'];
             const functor = new ComputeFunctor(
                 (a, b) => a - b,
-                ['foo']
+                ['foo'],
             );
             const display = new CollectionDisplay({
                 collection: list,
                 sort: functor,
-                importantItemProperties: importantProps
+                importantItemProperties: importantProps,
             });
 
             display.setSort();
@@ -1162,7 +1162,7 @@ describe('Types/_display/Collection', () => {
             };
             const display = new CollectionDisplay({
                 collection: new ObservableList(),
-                sort
+                sort,
             });
 
             assert.deepEqual(display.getSort(), [sort]);
@@ -1176,11 +1176,11 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const sortedItems = getSortedItems();
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.addSort(sort);
@@ -1191,29 +1191,29 @@ describe('Types/_display/Collection', () => {
 
         it('should trigger onCollectionChange', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [{
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(3)],
                 newItemsIndex: 0,
                 oldItems: [display.at(3)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(2)],
                 newItemsIndex: 1,
                 oldItems: [display.at(2)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(1)],
                 newItemsIndex: 2,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -1222,7 +1222,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -1246,12 +1246,12 @@ describe('Types/_display/Collection', () => {
 
         it('should sort display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const unsortedItems = getItems();
             const display = new CollectionDisplay({
                 collection: list,
-                sort
+                sort,
             });
 
             display.removeSort(sort);
@@ -1262,30 +1262,30 @@ describe('Types/_display/Collection', () => {
 
         it('should trigger onCollectionChange', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
                 collection: list,
-                sort
+                sort,
             });
             const expected = [{
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(3)],
                 newItemsIndex: 0,
                 oldItems: [display.at(3)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(2)],
                 newItemsIndex: 1,
                 oldItems: [display.at(2)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(1)],
                 newItemsIndex: 2,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -1294,7 +1294,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -1318,7 +1318,7 @@ describe('Types/_display/Collection', () => {
                 {id: 1, group: 1},
                 {id: 2, group: 2},
                 {id: 3, group: 1},
-                {id: 4, group: 2}
+                {id: 4, group: 2},
             ];
         }
 
@@ -1329,7 +1329,7 @@ describe('Types/_display/Collection', () => {
             }, ['foo']);
             const display = new CollectionDisplay({
                 collection: list,
-                importantItemProperties: importantProps
+                importantItemProperties: importantProps,
             });
 
             display.setGroup(functor);
@@ -1339,7 +1339,7 @@ describe('Types/_display/Collection', () => {
 
         it('should group the display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const groupedItems = [
                 1,
@@ -1347,10 +1347,10 @@ describe('Types/_display/Collection', () => {
                 list.at(2),
                 2,
                 list.at(1),
-                list.at(3)
+                list.at(3),
             ];
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setGroup((item) => item.group);
@@ -1364,10 +1364,10 @@ describe('Types/_display/Collection', () => {
                 {id: 1, group: 1, enabled: true},
                 {id: 2, group: 2, enabled: false},
                 {id: 3, group: 3, enabled: true},
-                {id: 4, group: 4, enabled: false}
+                {id: 4, group: 4, enabled: false},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
@@ -1376,7 +1376,7 @@ describe('Types/_display/Collection', () => {
                         return hasMembers;
                     }
                     return item.enabled;
-                }
+                },
             });
             const expectedItems = [1, items[0], 3, items[2]];
 
@@ -1396,10 +1396,10 @@ describe('Types/_display/Collection', () => {
                 {id: 3, group: 3, enabled: true},
                 {id: 4, group: 4, enabled: false},
                 {id: 5, group: 3, enabled: true},
-                {id: 6, group: 5, enabled: true}
+                {id: 6, group: 5, enabled: true},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
@@ -1408,7 +1408,7 @@ describe('Types/_display/Collection', () => {
                         return hasMembers;
                     }
                     return item.enabled;
-                }
+                },
             });
             const expectedItems = [1, items[0], 3, items[2], items[4], 5, items[5]];
 
@@ -1446,13 +1446,13 @@ describe('Types/_display/Collection', () => {
                 {id: 21, group: 6},
                 {id: 22, group: 6},
                 {id: 23, group: 6},
-                {id: 24, group: 6}
+                {id: 24, group: 6},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             let index = 0;
@@ -1485,19 +1485,19 @@ describe('Types/_display/Collection', () => {
                 {id: 13, group: 4},
                 {id: 14, group: 4},
                 {id: 15, group: 4},
-                {id: 16, group: 4}
+                {id: 16, group: 4},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [
                 4, items[15], items[14], items[13], items[12],
                 3, items[11], items[10], items[9],  items[8],
                 2, items[7],  items[6],  items[5],  items[4],
-                1, items[3],  items[2],  items[1],  items[0]
+                1, items[3],  items[2],  items[1],  items[0],
             ];
 
             let index = 0;
@@ -1512,16 +1512,16 @@ describe('Types/_display/Collection', () => {
 
         it('should reset a group of the display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const expected = [
                 list.at(0),
                 list.at(1),
                 list.at(2),
-                list.at(3)
+                list.at(3),
             ];
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setGroup((item) => item.group);
@@ -1533,10 +1533,10 @@ describe('Types/_display/Collection', () => {
 
         it('should regroup the display after add an item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const added = {id: 5, group: 1};
             const expected = [
@@ -1546,7 +1546,7 @@ describe('Types/_display/Collection', () => {
                 added,
                 2,
                 list.at(1),
-                list.at(3)
+                list.at(3),
             ];
 
             display.setGroup((item) => item.group);
@@ -1558,17 +1558,17 @@ describe('Types/_display/Collection', () => {
 
         it('should regroup the display after remove an item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [
                 1,
                 list.at(0),
                 2,
                 list.at(1),
-                list.at(3)
+                list.at(3),
             ];
 
             display.setGroup((item) => item.group);
@@ -1580,10 +1580,10 @@ describe('Types/_display/Collection', () => {
 
         it('should regroup the display after replace an item', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const replace = {id: 5, group: 2};
             const expected = [1, list.at(0), 2, list.at(1), replace, list.at(3)];
@@ -1597,25 +1597,25 @@ describe('Types/_display/Collection', () => {
 
         it('should regroup the display after change an item', () => {
             const changeModel = new Model({
-                rawData: {id: 4, group: 2}
+                rawData: {id: 4, group: 2},
             });
             const list = new ObservableList({
                 items: [
                     new Model({
-                        rawData: {id: 1, group: 1}
+                        rawData: {id: 1, group: 1},
                     }),
                     new Model({
-                        rawData: {id: 2, group: 2}
+                        rawData: {id: 2, group: 2},
                     }),
                     new Model({
-                        rawData: {id: 3, group: 1}
+                        rawData: {id: 3, group: 1},
                     }),
-                    changeModel
-                ]
+                    changeModel,
+                ],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                importantItemProperties: ['group']
+                importantItemProperties: ['group'],
             });
             const expected = [
                 1,
@@ -1623,7 +1623,7 @@ describe('Types/_display/Collection', () => {
                 list.at(2),
                 list.at(3),
                 2,
-                list.at(1)
+                list.at(1),
             ];
 
             display.setGroup((item) => item.get('group'));
@@ -1638,11 +1638,11 @@ describe('Types/_display/Collection', () => {
                 items: [
                     {id: 1, group: 2},
                     {id: 2, group: 3},
-                    {id: 3, group: 2}
-                ]
+                    {id: 3, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const added = {id: 4, group: 1};
             const expected = [
@@ -1652,7 +1652,7 @@ describe('Types/_display/Collection', () => {
                 1,
                 added,
                 3,
-                list.at(1)
+                list.at(1),
             ];
 
             display.setGroup((item) => item.group);
@@ -1667,15 +1667,15 @@ describe('Types/_display/Collection', () => {
                 items: [
                     {id: 1, group: 2},
                     {id: 2, group: 3},
-                    {id: 3, group: 2}
-                ]
+                    {id: 3, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const newItems = [
                 {id: 4, group: 2},
-                {id: 5, group: 1}
+                {id: 5, group: 1},
             ];
             const expected = [
                 2,
@@ -1685,7 +1685,7 @@ describe('Types/_display/Collection', () => {
                 3,
                 list.at(1),
                 1,
-                newItems[1]
+                newItems[1],
             ];
 
             display.setGroup((item) => item.group);
@@ -1700,23 +1700,23 @@ describe('Types/_display/Collection', () => {
                 items: [
                     {id: 1, group: 2},
                     {id: 2, group: 3},
-                    {id: 3, group: 2}
-                ]
+                    {id: 3, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const replace = [
                 {id: 1, group: 3},
                 {id: 2, group: 3},
-                {id: 3, group: 2}
+                {id: 3, group: 2},
             ];
             const expected = [
                 3,
                 replace[0],
                 replace[1],
                 2,
-                replace[2]
+                replace[2],
             ];
 
             display.setGroup((item) => item.group);
@@ -1733,7 +1733,7 @@ describe('Types/_display/Collection', () => {
                 {id: 1, group: 1},
                 {id: 2, group: 2},
                 {id: 3, group: 1},
-                {id: 4, group: 2}
+                {id: 4, group: 2},
             ];
         }
 
@@ -1746,10 +1746,10 @@ describe('Types/_display/Collection', () => {
 
         it('should return group items', () => {
             const list = new List({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setGroup((item) => item.group);
@@ -1762,10 +1762,10 @@ describe('Types/_display/Collection', () => {
 
         it('should return group for new items', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setGroup((item) => item.group);
@@ -1781,10 +1781,10 @@ describe('Types/_display/Collection', () => {
 
         it('should return empty group for old items', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.setGroup((item) => item.group);
@@ -1811,16 +1811,16 @@ describe('Types/_display/Collection', () => {
                 {id: 1, group: 1},
                 {id: 2, group: 2},
                 {id: 3, group: 1},
-                {id: 4, group: 2}
+                {id: 4, group: 2},
             ];
         }
 
         it('should return group id', () => {
             const list = new List({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [1, 1, 1, 2, 2, 2];
 
@@ -1829,26 +1829,26 @@ describe('Types/_display/Collection', () => {
             for (let index = 0; index < expected.length; index++) {
                 assert.equal(
                     display.getGroupByIndex(index),
-                    expected[index]
+                    expected[index],
                 );
             }
         });
 
         it('should return valid group id in filtered mode', () => {
             const list = new List({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
                 collection: list,
                 group: (item) => item.group,
-                filter: (item) => item && item.id !== 2
+                filter: (item) => item && item.id !== 2,
             });
             const expected = [1, 1, 1, 2, 2];
 
             for (let index = 0; index < expected.length; index++) {
                 assert.equal(
                     display.getGroupByIndex(index),
-                    expected[index]
+                    expected[index],
                 );
             }
         });
@@ -1882,10 +1882,10 @@ describe('Types/_display/Collection', () => {
 
         beforeEach(() => {
             list = new ObservableList({
-                items: [1, 2, 3, 4]
+                items: [1, 2, 3, 4],
             });
             display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
         });
 
@@ -2160,7 +2160,7 @@ describe('Types/_display/Collection', () => {
         it('should return source collection', () => {
             assert.strictEqual(
                 list,
-                display.getCollection() as any
+                display.getCollection() as any,
             );
         });
     });
@@ -2172,7 +2172,7 @@ describe('Types/_display/Collection', () => {
             for (let i = 0; i < items.length; i++) {
                 assert.strictEqual(
                     items[i],
-                    display.at(i)
+                    display.at(i),
                 );
             }
         });
@@ -2184,13 +2184,13 @@ describe('Types/_display/Collection', () => {
                 items: [
                     new Model({
                         rawData: {id: 1, foo: 'bar'},
-                        keyProperty: 'foo'
-                    })
-                ]
+                        keyProperty: 'foo',
+                    }),
+                ],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
 
             assert.strictEqual(display.getItemUid(display.at(0)), 'bar');
@@ -2198,11 +2198,11 @@ describe('Types/_display/Collection', () => {
 
         it('should return keyProperty value as String', () => {
             const list = new ObservableList({
-                items: [{id: 1}]
+                items: [{id: 1}],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
 
             assert.strictEqual(display.getItemUid(display.at(0)), '1');
@@ -2210,11 +2210,11 @@ describe('Types/_display/Collection', () => {
 
         it('should return same value for same item', () => {
             const list = new ObservableList({
-                items: [{id: 'foo'}]
+                items: [{id: 'foo'}],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
             const item = display.at(0);
 
@@ -2228,12 +2228,12 @@ describe('Types/_display/Collection', () => {
                     {id: 'foo'},
                     {id: 'bar'},
                     {id: 'foo'},
-                    {id: 'foo'}
-                ]
+                    {id: 'foo'},
+                ],
             });
             const display = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
 
             assert.strictEqual(display.getItemUid(display.at(0)), 'foo');
@@ -2244,10 +2244,10 @@ describe('Types/_display/Collection', () => {
 
         it('should throw an error if keyProperty is empty', () => {
             const list = new ObservableList({
-                items: [{id: 1}]
+                items: [{id: 1}],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const item = display.at(0);
 
@@ -2265,11 +2265,11 @@ describe('Types/_display/Collection', () => {
         it('should skip groups', () => {
             const items = [1, 2];
             const list = new List({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item % 2
+                group: (item) => item % 2,
             });
 
             assert.strictEqual(display.getFirst(), display.at(1));
@@ -2291,11 +2291,11 @@ describe('Types/_display/Collection', () => {
         it('should skip groups', () => {
             const items = [1, 2, 3];
             const list = new List({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item % 2
+                group: (item) => item % 2,
             });
 
             let item = display.at(1); // contents = 1
@@ -2318,11 +2318,11 @@ describe('Types/_display/Collection', () => {
         it('should skip groups', () => {
             const items = [1, 2, 3];
             const list = new List({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item % 2
+                group: (item) => item % 2,
             });
 
             let item = display.at(1); // contents = 1
@@ -2443,7 +2443,7 @@ describe('Types/_display/Collection', () => {
                     newCurrent,
                     oldCurrent,
                     newPosition,
-                    oldPosition
+                    oldPosition,
                 });
                 while (position < max) {
                     display.setCurrentPosition(++position);
@@ -2600,11 +2600,11 @@ describe('Types/_display/Collection', () => {
         it('should selected was given items', () => {
             display.setSelectedItems(
                 [list.at(0), list.at(1)],
-                true
+                true,
             );
             const selected = [
                 display.getItemBySourceItem(list.at(0)),
-                display.getItemBySourceItem(list.at(1))
+                display.getItemBySourceItem(list.at(1)),
             ];
             display.each((item) => {
                 if (selected.indexOf(item) !== -1) {
@@ -2619,11 +2619,11 @@ describe('Types/_display/Collection', () => {
             display.setSelectedItemsAll(true);
             display.setSelectedItems(
                 [list.at(0), list.at(1)],
-                false
+                false,
             );
             const deselect = [
                 display.getItemBySourceItem(list.at(0)),
-                display.getItemBySourceItem(list.at(1))
+                display.getItemBySourceItem(list.at(1)),
             ];
             display.each((item) => {
                 if (deselect.indexOf(item) !== -1) {
@@ -2666,14 +2666,14 @@ describe('Types/_display/Collection', () => {
         const sort = (a, b) => b.collectionItem - a.collectionItem;
         const filter = (item) => outsideItems.indexOf(item) === -1;
         const getCollectionChangeHandler = (given, itemsMapper?) => (
-            event, action, newItems, newItemsIndex, oldItems, oldItemsIndex
+            event, action, newItems, newItemsIndex, oldItems, oldItemsIndex,
         ) => {
             given.push({
                 action,
                 newItems: itemsMapper ? newItems.map(itemsMapper) : newItems,
                 newItemsIndex,
                 oldItems: itemsMapper ? oldItems.map(itemsMapper) : oldItems,
-                oldItemsIndex
+                oldItemsIndex,
             });
         };
         const handleGiven = (given, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -2682,7 +2682,7 @@ describe('Types/_display/Collection', () => {
                 newItems,
                 newItemsIndex,
                 oldItems,
-                oldItemsIndex
+                oldItemsIndex,
             });
         };
         const checkGivenAndExpected = (given, expected) => {
@@ -2714,28 +2714,28 @@ describe('Types/_display/Collection', () => {
                 newAt: 0,
                 newItems: itemsNew,
                 oldAt: 0,
-                oldItems: itemsOld
+                oldItems: itemsOld,
             }, {
                 method: 'append',
                 action: IBindCollection.ACTION_ADD,
                 newAt: 4,
                 newItems: itemsNew,
                 oldAt: 0,
-                oldItems: []
+                oldItems: [],
             }, {
                 method: 'prepend',
                 action: IBindCollection.ACTION_ADD,
                 newAt: 0,
                 newItems: itemsNew,
                 oldAt: 0,
-                oldItems: []
+                oldItems: [],
             }, {
                 method: 'clear',
                 action: IBindCollection.ACTION_RESET,
                 newAt: 0,
                 newItems: [],
                 oldAt: 0,
-                oldItems: itemsOld
+                oldItems: itemsOld,
             }];
 
             while (cases.length) {
@@ -2748,14 +2748,14 @@ describe('Types/_display/Collection', () => {
                                 newItems,
                                 newItemsIndex,
                                 oldItems,
-                                oldItemsIndex
+                                oldItemsIndex,
                             });
                         };
                         const list = new ObservableList({
-                            items: itemsOld.slice()
+                            items: itemsOld.slice(),
                         });
                         const display = new CollectionDisplay({
-                            collection: list
+                            collection: list,
                         });
 
                         display.subscribe('onCollectionChange', handler);
@@ -2770,13 +2770,13 @@ describe('Types/_display/Collection', () => {
                         assert.strictEqual(
                             firstGiven.newItems.length,
                             theCase.newItems.length,
-                            'Invalid newItems length'
+                            'Invalid newItems length',
                         );
                         for (let i = 0; i < theCase.newItems.length; i++) {
                             assert.strictEqual(
                                 firstGiven.newItems[i].getContents(),
                                 theCase.newItems[i],
-                                `Invalid newItems[${i}]`
+                                `Invalid newItems[${i}]`,
                             );
                         }
                         assert.strictEqual(firstGiven.newItemsIndex, theCase.newAt, 'Invalid newItemsIndex');
@@ -2784,13 +2784,13 @@ describe('Types/_display/Collection', () => {
                         assert.strictEqual(
                             firstGiven.oldItems.length,
                             theCase.oldItems.length,
-                            'Invalid oldItems length'
+                            'Invalid oldItems length',
                         );
                         for (let i = 0; i < theCase.oldItems.length; i++) {
                             assert.strictEqual(
                                 firstGiven.oldItems[i].getContents(),
                                 theCase.oldItems[i],
-                                `Invalid oldItems[${i}]`
+                                `Invalid oldItems[${i}]`,
                             );
                         }
                         assert.strictEqual(firstGiven.oldItemsIndex, theCase.oldAt, 'Invalid oldItemsIndex');
@@ -2810,10 +2810,10 @@ describe('Types/_display/Collection', () => {
                             given.push('after');
                         };
                         const list = new ObservableList({
-                            items: itemsOld.slice()
+                            items: itemsOld.slice(),
                         });
                         const display = new CollectionDisplay({
-                            collection: list
+                            collection: list,
                         });
 
                         display.subscribe('onBeforeCollectionChange', handlerBefore);
@@ -2835,10 +2835,10 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after add an item', (done) => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 try {
@@ -2861,15 +2861,15 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after add an item if filter uses display index', () => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                filter: (item, index, collectionItem, collectionIndex) => collectionIndex < 3
+                filter: (item, index, collectionItem, collectionIndex) => collectionIndex < 3,
             });
             const expected = [
                 [IBindCollection.ACTION_REMOVE, [], 0, [3], 2],
-                [IBindCollection.ACTION_ADD, [999], 1, [], 0]
+                [IBindCollection.ACTION_ADD, [999], 1, [], 0],
             ];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -2878,7 +2878,7 @@ describe('Types/_display/Collection', () => {
                     newItems.map((item) => item.getContents()),
                     newItemsIndex,
                     oldItems.map((item) => item.getContents()),
-                    oldItemsIndex
+                    oldItemsIndex,
                 ]);
             };
 
@@ -2892,10 +2892,10 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after remove an item', (done) => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 try {
@@ -2918,15 +2918,15 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after remove an item if filter uses display index', () => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                filter: (item, index, collectionItem, collectionIndex) => collectionIndex < 3
+                filter: (item, index, collectionItem, collectionIndex) => collectionIndex < 3,
             });
             const expected = [
                 [IBindCollection.ACTION_REMOVE, [], 0, [2], 1],
-                [IBindCollection.ACTION_ADD, [4], 2, [], 0]
+                [IBindCollection.ACTION_ADD, [4], 2, [], 0],
             ];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -2935,7 +2935,7 @@ describe('Types/_display/Collection', () => {
                     newItems.map((item) => item.getContents()),
                     newItemsIndex,
                     oldItems.map((item) => item.getContents()),
-                    oldItemsIndex
+                    oldItemsIndex,
                 ]);
             };
 
@@ -2949,10 +2949,10 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after replace an item', () => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -2960,13 +2960,13 @@ describe('Types/_display/Collection', () => {
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [3],
-                oldItemsIndex: 2
+                oldItemsIndex: 2,
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [33],
                 newItemsIndex: 2,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -2982,10 +2982,10 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after move an item forward', () => {
             const items = [1, 2, 3, 4];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const moveFrom = 1;
             const moveTo = 2;
@@ -2994,7 +2994,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [items[moveTo]],
                 newItemsIndex: moveFrom,
                 oldItems: [items[moveTo]],
-                oldItemsIndex: moveTo
+                oldItemsIndex: moveTo,
             }];
             const given = [];
             const handler = getCollectionChangeHandler(given, (item) => item.getContents());
@@ -3009,10 +3009,10 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after move an item backward', () => {
             const items = [1, 2, 3, 4];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const moveFrom = 2;
             const moveTo = 1;
@@ -3021,7 +3021,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [items[moveFrom]],
                 newItemsIndex: moveTo,
                 oldItems: [items[moveFrom]],
-                oldItemsIndex: moveFrom
+                oldItemsIndex: moveFrom,
             }];
             const given = [];
             const handler = getCollectionChangeHandler(given, (item) => item.getContents());
@@ -3036,16 +3036,16 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after change wreezed item with grouping', () => {
             const items = [
                 {id: 1},
-                {id: 2}
+                {id: 2},
             ];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 group: () => {
                     return 'group';
-                }
+                },
             });
             const changedItem = list.at(0);
             const given = [];
@@ -3054,7 +3054,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [changedItem],
                 newItemsIndex: 1,
                 oldItems: [changedItem],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3071,10 +3071,10 @@ describe('Types/_display/Collection', () => {
 
         it('should fire "onCollectionChange" after sort the display', () => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -3082,19 +3082,19 @@ describe('Types/_display/Collection', () => {
                 newItems: [4],
                 newItemsIndex: 0,
                 oldItems: [4],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE, // 4, 3, 1, 2
                 newItems: [3],
                 newItemsIndex: 1,
                 oldItems: [3],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }, {
                 action: IBindCollection.ACTION_MOVE, // 4, 3, 2, 1
                 newItems: [2],
                 newItemsIndex: 2,
                 oldItems: [2],
-                oldItemsIndex: 3
+                oldItemsIndex: 3,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3109,10 +3109,10 @@ describe('Types/_display/Collection', () => {
 
         it('should fire "onCollectionChange" after sort the display if items moved forward', () => {
             const list = new ObservableList({
-                items: [1, 2, 4, 5, 6, 3, 7, 8, 9, 10]
+                items: [1, 2, 4, 5, 6, 3, 7, 8, 9, 10],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -3120,7 +3120,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [3],
                 newItemsIndex: 2,
                 oldItems: [3],
-                oldItemsIndex: 5
+                oldItemsIndex: 5,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3136,10 +3136,10 @@ describe('Types/_display/Collection', () => {
 
         it('should fire "onCollectionChange" after filter the display', (done) => {
             const list = new ObservableList({
-                items: getItems()
+                items: getItems(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const firesToBeDone = 1;
             let fireId = 0;
@@ -3170,11 +3170,11 @@ describe('Types/_display/Collection', () => {
                     {id: 1, group: 1},
                     {id: 2, group: 2},
                     {id: 3, group: 1},
-                    {id: 4, group: 2}
-                ]
+                    {id: 4, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -3182,25 +3182,25 @@ describe('Types/_display/Collection', () => {
                 newItems: [1],
                 newItemsIndex: 0,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [2],
                 newItemsIndex: 3,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [list.at(2)],
                 newItemsIndex: 2,
                 oldItems: [list.at(2)],
-                oldItemsIndex: 4
+                oldItemsIndex: 4,
             }, {
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [2],
                 newItemsIndex: 3,
                 oldItems: [2],
-                oldItemsIndex: 4
+                oldItemsIndex: 4,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3225,17 +3225,17 @@ describe('Types/_display/Collection', () => {
                     {id: 1, group: 1},
                     {id: 2, group: 1},
                     {id: 3, group: 1},
-                    {id: 4, group: 1}
-                ]
+                    {id: 4, group: 1},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const newItems = [
                 {id: 5, group: 2},
                 {id: 6, group: 1},
                 {id: 7, group: 2},
-                {id: 8, group: 3}
+                {id: 8, group: 3},
             ];
             const given = [];
             const expected = [{
@@ -3243,19 +3243,19 @@ describe('Types/_display/Collection', () => {
                 newItems: [newItems[1]],
                 newItemsIndex: 5,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [2, newItems[0], newItems[2]],
                 newItemsIndex: 6,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [3, newItems[3]],
                 newItemsIndex: 9,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3280,11 +3280,11 @@ describe('Types/_display/Collection', () => {
                     {id: 1, group: 1},
                     {id: 2, group: 1},
                     {id: 3, group: 2},
-                    {id: 4, group: 2}
-                ]
+                    {id: 4, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -3292,13 +3292,13 @@ describe('Types/_display/Collection', () => {
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [1, list.at(0), list.at(1)],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }, {
                 action: IBindCollection.ACTION_REMOVE,
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [list.at(3)],
-                oldItemsIndex: 2
+                oldItemsIndex: 2,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3324,11 +3324,11 @@ describe('Types/_display/Collection', () => {
                     {id: 1, group: 1},
                     {id: 2, group: 1},
                     {id: 3, group: 2},
-                    {id: 4, group: 2}
-                ]
+                    {id: 4, group: 2},
+                ],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
@@ -3336,7 +3336,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [],
                 newItemsIndex: 0,
                 oldItems: [list.at(1)],
-                oldItemsIndex: 2
+                oldItemsIndex: 2,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 handleGiven(given, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3354,14 +3354,14 @@ describe('Types/_display/Collection', () => {
 
         it('should fire "onCollectionChange" with valid item contents when work in events queue', () => {
             const getModel = (data) => new Model({
-                    rawData: data
+                    rawData: data,
             });
             const list = new ObservableList({
                 items: [
                     getModel({id: 1}),
                     getModel({id: 2}),
-                    getModel({id: 3})
-                ]
+                    getModel({id: 3}),
+                ],
             });
 
             let updatedItem;
@@ -3372,7 +3372,7 @@ describe('Types/_display/Collection', () => {
             });
 
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
 
             display.subscribe('onCollectionChange', (e, action, newItems) => {
@@ -3415,7 +3415,7 @@ describe('Types/_display/Collection', () => {
             list.subscribe('onCollectionChange', handlerOnList);
 
             display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             display.subscribe('onBeforeCollectionChange', handlerBefore);
             display.subscribe('onCollectionChange', handlerOn);
@@ -3470,11 +3470,11 @@ describe('Types/_display/Collection', () => {
             const expected = [{
                 action: IBindCollection.ACTION_REMOVE,
                 newItems: [],
-                oldItems: [list.at(0)]
+                oldItems: [list.at(0)],
             }, {
                 action: IBindCollection.ACTION_ADD,
                 newItems: [list.at(0)],
-                oldItems: []
+                oldItems: [],
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -3483,7 +3483,7 @@ describe('Types/_display/Collection', () => {
                     newItems: newItems.map((item) => item.getContents()),
                     newItemsIndex,
                     oldItems: oldItems.map((item) => item.getContents()),
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -3511,13 +3511,13 @@ describe('Types/_display/Collection', () => {
             const items = [
                 getModel({id: 'one'}),
                 getModel({id: 'two'}),
-                getModel({id: 'three'})
+                getModel({id: 'three'}),
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             let expectItem;
             let givenItem;
@@ -3553,15 +3553,15 @@ describe('Types/_display/Collection', () => {
         it('should fire "onBeforeCollectionChange" and "onAfterCollectionChange" around each change when the display ' +
             'and the collection are not synchronized', () => {
             const list = new RecordSet({
-                rawData: [{id: 1}, {id: 2}, {id: 3}, {id: 4}]
+                rawData: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [
                 'before', IBindCollection.ACTION_REMOVE, 'after',
                 'before', IBindCollection.ACTION_CHANGE, 'after',
-                'before', IBindCollection.ACTION_CHANGE, 'after'
+                'before', IBindCollection.ACTION_CHANGE, 'after',
             ];
             const given = [];
             const handlerBefore = () => {
@@ -3600,17 +3600,17 @@ describe('Types/_display/Collection', () => {
         it('should trigger "onCollectionChange" with ACTION_CHANGE if source collection item changed while frozen',
         () => {
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = [{
                 action: IBindCollection.ACTION_CHANGE,
                 newItems: [list.at(2)],
                 newItemsIndex: 2,
                 oldItems: [list.at(2)],
-                oldItemsIndex: 2
+                oldItemsIndex: 2,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -3619,7 +3619,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -3650,31 +3650,31 @@ describe('Types/_display/Collection', () => {
         it('should trigger "onCollectionChange" with ACTION_CHANGE if source collection items changed while frozen ' +
             'and display inverts the collection', () => {
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const max = list.getCount() - 1;
             const display = new CollectionDisplay({
                 collection: list,
-                sort: (a, b) => b.index - a.index
+                sort: (a, b) => b.index - a.index,
             });
             const expected = [{
                 action: IBindCollection.ACTION_CHANGE,
                 newItems: [list.at(1)],
                 newItemsIndex: max - 1,
                 oldItems: [list.at(1)],
-                oldItemsIndex: max - 1
+                oldItemsIndex: max - 1,
             }, {
                 action: IBindCollection.ACTION_CHANGE,
                 newItems: [list.at(4), list.at(3)],
                 newItemsIndex: max - 4,
                 oldItems: [list.at(4), list.at(3)],
-                oldItemsIndex: max - 4
+                oldItemsIndex: max - 4,
             }, {
                 action: IBindCollection.ACTION_CHANGE,
                 newItems: [list.at(6)],
                 newItemsIndex: max - 6,
                 oldItems: [list.at(6)],
-                oldItemsIndex: max - 6
+                oldItemsIndex: max - 6,
             }];
             const given = [];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -3683,7 +3683,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -3717,20 +3717,20 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after change an item', () => {
             const items = [{id: 1}, {id: 2}, {id: 3}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const given = [];
             const expected = [{
                 items: [display.at(1)],
-                index: 1
+                index: 1,
             }];
             const handler = (event, action, newItems, newItemsIndex) => {
                 given.push({
                     items: newItems,
-                    index: newItemsIndex
+                    index: newItemsIndex,
                 });
             };
 
@@ -3748,21 +3748,21 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after change an item in group', () => {
             const items = [{id: 1, g: 1}, {id: 2, g: 1}, {id: 3, g: 2}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
                 collection: list,
-                group: (item) => item.get('g')
+                group: (item) => item.get('g'),
             });
             const given = [];
             const expected = [{
                 items: [display.at(2)],
-                index: 2
+                index: 2,
             }];
             const handler = (event, action, newItems, newItemsIndex) => {
                 given.push({
                     items: newItems,
-                    index: newItemsIndex
+                    index: newItemsIndex,
                 });
             };
 
@@ -3780,12 +3780,12 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after changed item is not moved as item only changed', () => {
             const items = [{id: 1}, {id: 3}, {id: 5}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
-                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id')
+                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id'),
             });
             const given = [];
             const expected = [{
@@ -3793,7 +3793,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [display.at(1)],
                 newItemsIndex: 1,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 given.push({
@@ -3801,7 +3801,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -3823,12 +3823,12 @@ describe('Types/_display/Collection', () => {
             'changed', () => {
             const items = [{id: 1}, {id: 3}, {id: 5}];
             list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
-                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id')
+                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id'),
             });
             const given = [];
             const expected = [{
@@ -3836,13 +3836,13 @@ describe('Types/_display/Collection', () => {
                 newItems: [display.at(1)],
                 newItemsIndex: 0,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }, {
                 action: IBindCollection.ACTION_CHANGE,
                 newItems: [display.at(0)],
                 newItemsIndex: 1,
                 oldItems: [display.at(0)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 given.push({
@@ -3850,7 +3850,7 @@ describe('Types/_display/Collection', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -3871,19 +3871,19 @@ describe('Types/_display/Collection', () => {
         it('should fire "onCollectionChange" after changed item is moved up as it\'s really moved up', () => {
             const items = [{id: 1}, {id: 3}, {id: 5}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
                 collection: list,
                 keyProperty: 'id',
-                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id')
+                sort: (a, b) => a.collectionItem.get('id') - b.collectionItem.get('id'),
             });
             const expected = [{
                 action: IBindCollection.ACTION_MOVE,
                 newItems: [display.at(1)],
                 newItemsIndex: 0,
                 oldItems: [display.at(1)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const given = [];
             const handler = getCollectionChangeHandler(given);
@@ -3899,10 +3899,10 @@ describe('Types/_display/Collection', () => {
             'after change an item', () => {
             const items = [{id: 1}, {id: 2}, {id: 3}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = ['before', 'on', 'after'];
             const given = [];
@@ -3933,10 +3933,10 @@ describe('Types/_display/Collection', () => {
             'after change an item while frozen', () => {
             const items = [{id: 1}, {id: 2}, {id: 3}];
             const list = new RecordSet({
-                rawData: items
+                rawData: items,
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const expected = ['before', 'on', 'after'];
             const given = [];
@@ -3968,10 +3968,10 @@ describe('Types/_display/Collection', () => {
         it('should observe "onEventRaisingChange" with analize=false on the source collection and become actual ' +
             'on enable', () => {
             const list = new ObservableList({
-                items: items.slice()
+                items: items.slice(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const at = 1;
             const listItem = list.at(at);
@@ -3994,10 +3994,10 @@ describe('Types/_display/Collection', () => {
         it('should observe "onEventRaisingChange" with analize=true on the source collection and become actual ' +
             'on enable', () => {
             const list = new ObservableList({
-                items: items.slice()
+                items: items.slice(),
             });
             const display = new CollectionDisplay({
-                collection: list
+                collection: list,
             });
             const at = 1;
             const listItem = list.at(at);
@@ -4026,7 +4026,7 @@ describe('Types/_display/Collection', () => {
                 newItems: [item],
                 newItemsIndex: 7,
                 oldItems: [],
-                oldItemsIndex: 0
+                oldItemsIndex: 0,
             }];
             const given = [];
             const handler = getCollectionChangeHandler(given, (item) => item.getContents());
@@ -4047,10 +4047,10 @@ describe('Types/_display/Collection', () => {
     describe('::getDefaultDisplay()', () => {
         it('should return certain class instance for ObservableList', () => {
             const items = [
-                {id: 0}
+                {id: 0},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const display = Display.getDefaultDisplay(list);
 
@@ -4083,22 +4083,22 @@ describe('Types/_display/Collection', () => {
             for (let i = 0; i < items.length; i++) {
                 assert.strictEqual(
                     clone.at(i),
-                    cloneItems[i]
+                    cloneItems[i],
                 );
 
                 assert.strictEqual(
                     cloneItems[i].getInstanceId(),
-                    items[i].getInstanceId()
+                    items[i].getInstanceId(),
                 );
 
                 assert.deepEqual(
                     cloneItems[i].getContents(),
-                    items[i].getContents()
+                    items[i].getContents(),
                 );
 
                 assert.strictEqual(
                     cloneItems[i].getOwner(),
-                    clone
+                    clone,
                 );
             }
         });
@@ -4118,11 +4118,11 @@ describe('Types/_display/Collection', () => {
         it('should keep items order if source collection has been affected', () => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const strategy = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
             const serializer = new Serializer();
             const json = JSON.stringify(strategy, serializer.serialize);
@@ -4140,11 +4140,11 @@ describe('Types/_display/Collection', () => {
         it('should restore items contents in all decorators', () => {
             const items = getItems();
             const list = new ObservableList({
-                items
+                items,
             });
             const strategy = new CollectionDisplay({
                 collection: list,
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
             const serializer = new Serializer();
             const json = JSON.stringify(strategy, serializer.serialize);

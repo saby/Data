@@ -63,7 +63,7 @@ describe('Types/_source/PrefetchProxy', () => {
                 this.lastMethod = 'setOptions';
                 this.lastArgs = Array.prototype.slice.call(arguments);
                 return '!setOptions';
-            }
+            },
         });
 
         return new Target();
@@ -78,7 +78,7 @@ describe('Types/_source/PrefetchProxy', () => {
         targetData = [
             {id: 1},
             {id: 2},
-            {id: 3}
+            {id: 3},
         ];
 
         target = getTarget(targetData);
@@ -103,7 +103,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.getOriginal()', () => {
         it('should return value from "target" option', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
 
             assert.strictEqual(source.getOriginal(), target);
@@ -113,7 +113,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.create()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo'];
 
@@ -126,7 +126,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.read()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar'];
 
@@ -140,8 +140,8 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    read: expected
-                }
+                    read: expected,
+                },
             });
 
             return source.read(undefined).then((data) => {
@@ -155,11 +155,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    read: expected
+                    read: expected,
                 },
                 validators: {
-                    read: () => true
-                }
+                    read: () => true,
+                },
             });
 
             return source.read(undefined).then((data) => {
@@ -175,11 +175,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    read: {} as any
+                    read: {} as any,
                 },
                 validators: {
-                    read: () => false
-                }
+                    read: () => false,
+                },
             });
 
             assert.equal(source.read(undefined) as any, '!read');
@@ -190,7 +190,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.update()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar'];
 
@@ -203,7 +203,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.destroy()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar'];
 
@@ -216,7 +216,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.query()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo'];
 
@@ -230,8 +230,8 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    query: expected
-                }
+                    query: expected,
+                },
             });
 
             return source.query(undefined).then((data) => {
@@ -246,11 +246,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    query: expected
+                    query: expected,
                 },
                 validators: {
-                    query: () => true
-                }
+                    query: () => true,
+                },
             });
 
             return source.query().then((data) => {
@@ -266,11 +266,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    query: {} as any
+                    query: {} as any,
                 },
                 validators: {
-                    query: () => false
-                }
+                    query: () => false,
+                },
             });
 
             assert.equal(source.query() as any, '!query');
@@ -281,7 +281,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.merge()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar'];
 
@@ -294,7 +294,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.copy()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar'];
 
@@ -308,8 +308,8 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    copy: expected
-                }
+                    copy: expected,
+                },
             });
 
             return source.copy(undefined).then((data) => {
@@ -324,11 +324,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    copy: expected
+                    copy: expected,
                 },
                 validators: {
-                    copy: () => true
-                }
+                    copy: () => true,
+                },
             });
 
             return source.copy(undefined).then((data) => {
@@ -344,11 +344,11 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    copy: {} as any
+                    copy: {} as any,
                 },
                 validators: {
-                    copy: () => false
-                }
+                    copy: () => false,
+                },
             });
 
             assert.equal(source.copy(undefined) as any, '!copy');
@@ -359,7 +359,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.move()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foo', 'bar', 'baz'];
 
@@ -372,7 +372,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.getOptions()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = [];
 
@@ -385,7 +385,7 @@ describe('Types/_source/PrefetchProxy', () => {
     describe('.setOptions()', () => {
         it('should call the same method on target', () => {
             const source = new PrefetchProxy({
-                target
+                target,
             });
             const args = ['foor'];
 
@@ -400,8 +400,8 @@ describe('Types/_source/PrefetchProxy', () => {
             const source = new PrefetchProxy({
                 target,
                 data: {
-                    read: {foo: 'bar'} as any
-                }
+                    read: {foo: 'bar'} as any,
+                },
             });
 
             const argsA = ['foo', 1];

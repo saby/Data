@@ -9,7 +9,7 @@ import {
     IUniversalFieldMoneyMeta,
     IUniversalFieldDictionaryMeta,
     IUniversalFieldIdentityMeta,
-    IUniversalFieldArrayMeta
+    IUniversalFieldArrayMeta,
 } from '../format';
 import {format} from '../../collection';
 
@@ -82,7 +82,7 @@ export default abstract class GenericFormatMixin {
     addField(format: Field, at: number): void {
         if (!format || !(format instanceof Field)) {
             throw new TypeError(
-                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`
+                `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`,
             );
         }
         const name = format.getName();
@@ -166,5 +166,5 @@ Object.assign(GenericFormatMixin.prototype, {
     '[Types/_entity/adapter/GenericFormatMixin]': true,
     _data: null,
     _sharedFieldFormat: null,
-    _sharedFieldMeta: null
+    _sharedFieldMeta: null,
 });

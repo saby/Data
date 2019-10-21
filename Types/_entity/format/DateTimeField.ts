@@ -41,5 +41,5 @@ Object.assign(DateTimeField.prototype, {
     '[Types/_entity/format/DateTimeField]': true,
     _moduleName: 'Types/entity:format.DateTimeField',
     _typeName: 'DateTime',
-    _$withoutTimeZone: false
+    _$withoutTimeZone: false,
 });

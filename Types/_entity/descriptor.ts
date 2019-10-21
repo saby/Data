@@ -59,7 +59,7 @@ function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
         if (!hasSuitable) {
             return new TypeError(
                 'There are following restrictions for composite type: ' +
-                errors.map((err) => `"${err.message}"`).join(' or ')
+                errors.map((err) => `"${err.message}"`).join(' or '),
             );
         }
 
@@ -117,7 +117,7 @@ function validate<T>(type: Descriptor): ValidateFunc<T> {
     }
 
     throw new TypeError(
-         `Argument "type" should be one of following types: string, function or object but "${typeName}" received.`
+         `Argument "type" should be one of following types: string, function or object but "${typeName}" received.`,
     );
 }
 
@@ -257,20 +257,20 @@ function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
     Object.defineProperties(wrapper, {
         required: {
             enumerable: true,
-            value: required
+            value: required,
         },
         oneOf: {
             enumerable: true,
-            value: oneOf
+            value: oneOf,
         },
         not: {
             enumerable: true,
-            value: not
+            value: not,
         },
         arrayOf: {
             enumerable: true,
-            value: arrayOf
-        }
+            value: arrayOf,
+        },
     });
 
     return wrapper as ChainedValidator<T>;
@@ -345,6 +345,6 @@ export default function descriptor<T = any>(...types: Descriptor[]): ChainedVali
     }
 
     return chain(
-        types.length > 1 ? validateComposite<T>(...types) : validate<T>(types[0])
+        types.length > 1 ? validateComposite<T>(...types) : validate<T>(types[0]),
     );
 }

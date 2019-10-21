@@ -9,7 +9,7 @@ import {
     OptionsToPropertyMixin,
     SerializableMixin,
     Record,
-    ISerializableState
+    ISerializableState,
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
@@ -67,7 +67,7 @@ const defaultValidators = {
             return true;
         }
         return false;
-    }
+    },
 };
 
 /**
@@ -129,7 +129,7 @@ export default class PrefetchProxy extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IDecorator, ICrud, ICrudPlus {
     /**
      * @cfg {Types/_source/ICrud} Target data source
@@ -160,7 +160,7 @@ export default class PrefetchProxy extends mixin<
          * @cfg {Types/_entity/Record} Prefetched data for {@link Types/_source/ICrud#copy} method.
          * @name Types/_source/PrefetchProxy#data.copy
          */
-        copy: null
+        copy: null,
     };
 
     /**
@@ -258,12 +258,12 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrud).create(meta);
     }
 
-   read(key: any, meta?: object): ExtendPromise<Record> {
-      if (this._validators.read(this._$data.read, this._done)) {
-         return Deferred.success(this._$data.read) as ExtendPromise<Record>;
-      }
-      return (this._$target as ICrud).read(key, meta);
-   }
+    read(key: any, meta?: object): ExtendPromise<Record> {
+       if (this._validators.read(this._$data.read, this._done)) {
+          return Deferred.success(this._$data.read) as ExtendPromise<Record>;
+       }
+       return (this._$target as ICrud).read(key, meta);
+    }
 
     update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
         return (this._$target as ICrud).update(data, meta);
@@ -345,5 +345,5 @@ Object.assign(PrefetchProxy.prototype, {
     '[Types/_source/PrefetchProxy]': true,
     _moduleName: 'Types/source:PrefetchProxy',
     _$data: null,
-    _$validators: null
+    _$validators: null,
 });

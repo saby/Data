@@ -153,7 +153,7 @@ interface ISerializableState extends IRecordSerializableState {
 export default class Model extends mixin<
     Record, InstantiableMixin
 >(
-   Record, InstantiableMixin
+   Record, InstantiableMixin,
 ) {
    /**
     * @typedef {Object} Property
@@ -449,7 +449,7 @@ export default class Model extends mixin<
                         // Remove cached value
                         if (this._fieldsCache.has(key)) {
                             this._removeChild(
-                                this._fieldsCache.get(key)
+                                this._fieldsCache.get(key),
                             );
                             this._fieldsCache.delete(key);
                         }
@@ -695,7 +695,7 @@ export default class Model extends mixin<
             const property = this._$properties[name];
             if (property && 'def' in property) {
                 defaultPropertiesValues[name] = [
-                    property.def instanceof Function ? property.def.call(this) : property.def
+                    property.def instanceof Function ? property.def.call(this) : property.def,
                 ];
             } else {
                 defaultPropertiesValues[name] = [];
@@ -971,8 +971,8 @@ export default class Model extends mixin<
         return new Model({
             rawData: record.getRawData(true),
             adapter: record.getAdapter(),
-            //@ts-ignore
-            format: record._getFormat(true)// "Anakin, I Am Your Son"
+            // @ts-ignore
+            format: record._getFormat(true), // "Anakin, I Am Your Son"
         });
     }
 
@@ -988,7 +988,7 @@ export default class Model extends mixin<
               this,
               classExtender,
               mixinsList,
-              'Types/_entity/Model'
+              'Types/_entity/Model',
          );
     }
 
@@ -1008,7 +1008,7 @@ Object.assign(Model.prototype, {
    _calculatingProperties: null,
    _deepChangedProperties: null,
    getIdProperty: Model.prototype.getKeyProperty,
-   setIdProperty: Model.prototype.setKeyProperty
+   setIdProperty: Model.prototype.setKeyProperty,
 });
 
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'

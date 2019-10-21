@@ -13,15 +13,15 @@ describe('Types/_display/CollectionEnumerator', () => {
 
     beforeEach(() => {
         items = [{
-            index: 0
+            index: 0,
         }, {
-            index: 1
+            index: 1,
         }, {
-            index: 2
+            index: 2,
         }, {
-            index: 3
+            index: 3,
         }, {
-            index: 4
+            index: 4,
         }];
 
         filterMap = [true, true, true, true, true];
@@ -31,7 +31,7 @@ describe('Types/_display/CollectionEnumerator', () => {
         enumerator = new DisplayEnumerator({
             items,
             filterMap,
-            sortMap
+            sortMap,
         });
     });
 
@@ -50,42 +50,42 @@ describe('Types/_display/CollectionEnumerator', () => {
                 display = new DisplayEnumerator({
                     items: {},
                     filterMap: {},
-                    sortMap: {}
+                    sortMap: {},
                 });
             });
             assert.throws(() => {
                 display = new DisplayEnumerator({
                     items: '',
                     filterMap: '',
-                    sortMap: ''
+                    sortMap: '',
                 });
             });
             assert.throws(() => {
                 display = new DisplayEnumerator({
                     items: 0,
                     filterMap: 1,
-                    sortMap: 2
+                    sortMap: 2,
                 });
             });
             assert.throws(() => {
                 display = new DisplayEnumerator({
                     items: undefined,
                     filterMap: undefined,
-                    sortMap: undefined
+                    sortMap: undefined,
                 });
             });
             assert.throws(() => {
                 display = new DisplayEnumerator({
                     items: [],
                     filterMap: undefined,
-                    sortMap: undefined
+                    sortMap: undefined,
                 });
             });
             assert.throws(() => {
                 display = new DisplayEnumerator({
                     items: [],
                     filterMap: [],
-                    sortMap: undefined
+                    sortMap: undefined,
                 });
             });
 
@@ -149,7 +149,7 @@ describe('Types/_display/CollectionEnumerator', () => {
             const enumerator = new DisplayEnumerator({
                 items,
                 filterMap: [true, true, true, true, true],
-                sortMap
+                sortMap,
             });
 
             let index = -1;
@@ -228,7 +228,7 @@ describe('Types/_display/CollectionEnumerator', () => {
             const enumerator = new DisplayEnumerator({
                 items,
                 filterMap,
-                sortMap
+                sortMap,
             });
 
             assert.strictEqual(sortMap.length, enumerator.getCount());
@@ -245,7 +245,7 @@ describe('Types/_display/CollectionEnumerator', () => {
             enumerator = new DisplayEnumerator({
                 items,
                 filterMap,
-                sortMap
+                sortMap,
             });
 
             assert.strictEqual(expectedCount, enumerator.getCount());
@@ -334,9 +334,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: -1,
                 posToOriginal: {
                     0: 1,
-                    1: 2
-                }
-            }
+                    1: 2,
+                },
+            },
         }, {
             // 1
             goto: 0,
@@ -347,8 +347,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: -1,
                 current: false,
                 next: 1,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 2
             goto: 1,
@@ -359,8 +359,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 0,
                 current: true,
                 next: 2,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 3
             goto: 4,
@@ -374,9 +374,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: 2,
                 posToOriginal: {
                     2: 2,
-                    3: 4
-                }
-            }
+                    3: 4,
+                },
+            },
         }, {
             // 4
             goto: 1,
@@ -391,9 +391,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 posToOriginal: {
                     0: 0,
                     1: 1,
-                    2: 3
-                }
-            }
+                    2: 3,
+                },
+            },
         }, {
             // 5
             goto: -1,
@@ -407,9 +407,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: -1,
                 posToOriginal: {
                     0: 1,
-                    1: 2
-                }
-            }
+                    1: 2,
+                },
+            },
         }, {
             // 6
             goto: 0,
@@ -420,8 +420,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: -1,
                 current: false,
                 next: 1,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 7
             goto: 1,
@@ -432,8 +432,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 0,
                 current: true,
                 next: 2,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 8
             goto: 4,
@@ -447,9 +447,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: 2,
                 posToOriginal: {
                     2: 2,
-                    3: 4
-                }
-            }
+                    3: 4,
+                },
+            },
         }, {
             // 9
             goto: 1,
@@ -464,9 +464,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 posToOriginal: {
                     0: 0,
                     1: 1,
-                    2: 3
-                }
-            }
+                    2: 3,
+                },
+            },
         }, {
             // 10
             goto: -1,
@@ -480,9 +480,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: -1,
                 posToOriginal: {
                     0: 2,
-                    1: 3
-                }
-            }
+                    1: 3,
+                },
+            },
         }, {
             // 11
             goto: 0,
@@ -493,8 +493,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: -1,
                 current: false,
                 next: 2,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 12
             goto: 1,
@@ -505,8 +505,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: -1,
                 current: false,
                 next: 2,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 13
             goto: 2,
@@ -517,8 +517,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 0,
                 current: true,
                 next: 3,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 14
             goto: 1,
@@ -533,9 +533,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 posToOriginal: {
                     0: 1,
                     1: 3,
-                    2: 4
-                }
-            }
+                    2: 4,
+                },
+            },
         }, {
             // 15
             goto: 2,
@@ -549,9 +549,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 previous: -1,
                 posToOriginal: {
                     0: 0,
-                    1: 4
-                }
-            }
+                    1: 4,
+                },
+            },
         }, {
             // 16
             goto: 2,
@@ -566,9 +566,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 posToOriginal: {
                     0: 0,
                     1: 2,
-                    2: 4
-                }
-            }
+                    2: 4,
+                },
+            },
         }, {
             // 17
             goto: -1,
@@ -585,9 +585,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                     1: 3,
                     2: 2,
                     3: 1,
-                    4: 0
-                }
-            }
+                    4: 0,
+                },
+            },
         }, {
             // 18
             goto: 0,
@@ -598,8 +598,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 4,
                 current: true,
                 next: -1,
-                previous: 1
-            }
+                previous: 1,
+            },
         }, {
             // 19
             goto: 1,
@@ -610,8 +610,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 3,
                 current: true,
                 next: 0,
-                previous: 2
-            }
+                previous: 2,
+            },
         }, {
             // 20
             goto: 2,
@@ -628,9 +628,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                     1: 3,
                     2: 0,
                     3: 4,
-                    4: 2
-                }
-            }
+                    4: 2,
+                },
+            },
         }, {
             // 21
             goto: 0,
@@ -641,8 +641,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 2,
                 current: true,
                 next: 4,
-                previous: 3
-            }
+                previous: 3,
+            },
         }, {
             // 22
             goto: 1,
@@ -653,8 +653,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: -1,
                 current: false,
                 next: 4,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 23
             goto: 3,
@@ -665,8 +665,8 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 0,
                 current: true,
                 next: 0,
-                previous: -1
-            }
+                previous: -1,
+            },
         }, {
             // 24
             goto: 2,
@@ -677,9 +677,9 @@ describe('Types/_display/CollectionEnumerator', () => {
                 position: 1,
                 current: true,
                 next: 0,
-                previous: 4
-            }
-        }
+                previous: 4,
+            },
+        },
         ];
 
         for (let testNum = 0; testNum < tests.length; testNum++) {
@@ -745,7 +745,7 @@ describe('Types/_display/CollectionEnumerator', () => {
                         it(`the next is ${nextTitle}`, () => {
                             assert.strictEqual(
                                 original[test.expect.next],
-                                enumerator.moveNext() ? enumerator.getCurrent() : undefined
+                                enumerator.moveNext() ? enumerator.getCurrent() : undefined,
                             );
                         });
 
@@ -755,7 +755,7 @@ describe('Types/_display/CollectionEnumerator', () => {
                         it(`the previous is ${previousTitle}` , () => {
                             assert.strictEqual(
                                 original[test.expect.previous],
-                                enumerator.movePrevious() ? enumerator.getCurrent() : undefined
+                                enumerator.movePrevious() ? enumerator.getCurrent() : undefined,
                             );
                         });
 
@@ -766,7 +766,7 @@ describe('Types/_display/CollectionEnumerator', () => {
                                         enumerator.setPosition(Number(position));
                                         assert.strictEqual(
                                             original[test.expect.posToOriginal[position]],
-                                            enumerator.getCurrent()
+                                            enumerator.getCurrent(),
                                         );
                                     }
                                 }

@@ -35,7 +35,7 @@ export default abstract class Base extends mixin<
     SerializableMixin,
     OptionsMixin,
     LazyMixin,
-    DataMixin
+    DataMixin,
 ) implements IData {
     protected constructor(options?: IOptions) {
         options = {...(options || {})};
@@ -54,12 +54,12 @@ export default abstract class Base extends mixin<
               this,
               classExtender,
               mixinsList,
-              'Types/_source/Base'
+              'Types/_source/Base',
          );
     }
 }
 
 Object.assign(Base.prototype, {
     '[Types/_source/Base]': true,
-    _moduleName: 'Types/source:Base'
+    _moduleName: 'Types/source:Base',
 });

@@ -14,21 +14,21 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
     beforeEach(() => {
         format = [
             {name: 'id', type: 'integer'},
-            {name: 'name', type: 'string'}
+            {name: 'name', type: 'string'},
         ];
 
         data = new RecordSet({
             format,
             rawData: [{
                 id: 1,
-                name: 'Smith'
+                name: 'Smith',
             }, {
                 id: 2,
-                name: 'Green'
+                name: 'Green',
             }, {
                 id: 3,
-                name: 'Geller'
-            }]
+                name: 'Geller',
+            }],
         });
 
         adapter = new RecordSetTableAdapter(data);
@@ -57,7 +57,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             for (let i = 0; i < format.length; i++) {
                 assert.equal(
                     fields[i],
-                    format[i].name
+                    format[i].name,
                 );
             }
         });
@@ -75,9 +75,9 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
                         foo: {
                             get: () => {
                                 return 'bar';
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 }, ...opts});
             };
 
@@ -85,15 +85,15 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
                 model: Foo,
                 rawData: [{
                     id: 1,
-                    name: 'Sample'
-                }]
+                    name: 'Sample',
+                }],
             });
 
             const adapter = new RecordSetTableAdapter(data);
 
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'name']
+                ['id', 'name'],
             );
         });
     });
@@ -102,7 +102,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
         it('should return records count', () => {
             assert.deepEqual(
                 adapter.getCount(),
-                data.getCount()
+                data.getCount(),
             );
         });
 
@@ -116,35 +116,35 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
         it('should append a record', () => {
             const count = data.getCount();
             const rec = new Record({
-                rawData: {id: 9, name: 'foo'}
+                rawData: {id: 9, name: 'foo'},
             });
 
             adapter.add(rec, undefined);
             assert.strictEqual(
                 data.at(count).get('name'),
-                'foo'
+                'foo',
             );
         });
 
         it('should prepend a record', () => {
             const rec = new Record({
-                rawData: {id: 9, name: 'foo'}
+                rawData: {id: 9, name: 'foo'},
             });
             adapter.add(rec, 0);
             assert.strictEqual(
                 data.at(0).get('name'),
-                'foo'
+                'foo',
             );
         });
 
         it('should insert a record', () => {
             const rec = new Record({
-                rawData: {id: 9, name: 'foo'}
+                rawData: {id: 9, name: 'foo'},
             });
             adapter.add(rec, 1);
             assert.strictEqual(
                 data.at(1).get('name'),
-                'foo'
+                'foo',
             );
         });
 
@@ -159,7 +159,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const adapter = new RecordSetTableAdapter();
             const rec = new Record({
                 format: [],
-                adapter: 'Types/entity:adapter.Sbis'
+                adapter: 'Types/entity:adapter.Sbis',
             });
             adapter.add(rec, undefined);
             assert.strictEqual(adapter.getData().getAdapter(), rec.getAdapter());
@@ -170,7 +170,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const rec = new Model({
                 format: [],
                 adapter: 'Types/entity:adapter.Sbis',
-                keyProperty: 'id'
+                keyProperty: 'id',
             });
             adapter.add(rec, undefined);
             assert.strictEqual(adapter.getData().getKeyProperty(), rec.getKeyProperty());
@@ -192,16 +192,16 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
         it('should return valid record', () => {
             assert.strictEqual(
                 data.at(0),
-                adapter.at(0)
+                adapter.at(0),
             );
         });
 
         it('should return undefined on invalid position', () => {
             assert.isUndefined(
-                adapter.at(-1)
+                adapter.at(-1),
             );
             assert.isUndefined(
-                adapter.at(99)
+                adapter.at(99),
             );
         });
 
@@ -217,7 +217,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.remove(0);
             assert.notEqual(
                 rec,
-                adapter.at(0)
+                adapter.at(0),
             );
         });
 
@@ -241,12 +241,12 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
     describe('.replace()', () => {
         it('should replace the record', () => {
             const rec = new Record({
-                rawData: {id: 9, name: 'foo'}
+                rawData: {id: 9, name: 'foo'},
             });
             adapter.replace(rec, 0);
             assert.strictEqual(
                 data.at(0).get('name'),
-                'foo'
+                'foo',
             );
         });
 
@@ -274,15 +274,15 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.move(0, 2);
             assert.strictEqual(
                 'Green',
-                adapter.at(0).get('name')
+                adapter.at(0).get('name'),
             );
             assert.strictEqual(
                 'Geller',
-                adapter.at(1).get('name')
+                adapter.at(1).get('name'),
             );
             assert.strictEqual(
                 'Smith',
-                adapter.at(2).get('name')
+                adapter.at(2).get('name'),
             );
         });
 
@@ -290,15 +290,15 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.move(2, 0);
             assert.strictEqual(
                 'Geller',
-                adapter.at(0).get('name')
+                adapter.at(0).get('name'),
             );
             assert.strictEqual(
                 'Smith',
-                adapter.at(1).get('name')
+                adapter.at(1).get('name'),
             );
             assert.strictEqual(
                 'Green',
-                adapter.at(2).get('name')
+                adapter.at(2).get('name'),
             );
         });
 
@@ -306,11 +306,11 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.move(1, 2);
             assert.strictEqual(
                 'Green',
-                adapter.at(2).get('name')
+                adapter.at(2).get('name'),
             );
             assert.strictEqual(
                 'Geller',
-                adapter.at(1).get('name')
+                adapter.at(1).get('name'),
             );
         });
 
@@ -318,7 +318,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.move(1, 1);
             assert.strictEqual(
                 'Green',
-                adapter.at(1).get('name')
+                adapter.at(1).get('name'),
             );
         });
 
@@ -353,8 +353,8 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const copy = adapter.copy(1);
             assert.isTrue(
                 copy.isEqual(
-                    data.at(1)
-                )
+                    data.at(1),
+                ),
             );
         });
 
@@ -363,7 +363,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             assert.isTrue(copy.get('id') > 0);
             assert.strictEqual(
                 copy.get('id'),
-                data.at(2).get('id')
+                data.at(2).get('id'),
             );
         });
     });
@@ -412,7 +412,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const fieldName = 'New';
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, 0);
             assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
@@ -425,7 +425,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def
+                defaultValue: def,
             }), 0);
             for (let i = 0; i < adapter.getCount(); i++) {
                 assert.strictEqual(adapter.at(i).get(fieldName), def);
@@ -437,7 +437,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
                     type: 'string',
-                    name: 'id'
+                    name: 'id',
                 }), 0);
             });
         });
@@ -456,7 +456,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const adapter = new RecordSetTableAdapter();
             const field = fieldsFactory({
                 type: 'string',
-                name: 'id'
+                name: 'id',
             });
             assert.throws(() => {
                 adapter.addField(field, undefined);
@@ -497,12 +497,12 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
                 d: [
                     [1, 'Smith'],
                     [2, 'Green'],
-                    [3, 'Geller']
+                    [3, 'Geller'],
                 ],
                 s: [
                     {n: 'id', t: 'Число целое'},
-                    {n: 'name', t: 'Строка'}
-                ]
+                    {n: 'name', t: 'Строка'},
+                ],
             };
         };
 
@@ -510,7 +510,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             const data = new RecordSet({
                 format,
                 rawData: getRawData(),
-                adapter: 'Types/entity:adapter.Sbis'
+                adapter: 'Types/entity:adapter.Sbis',
             });
             const adapter = new RecordSetTableAdapter(data);
             const oldF = adapter.getFields();
@@ -527,7 +527,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
         it('should throw an error', () => {
             const data = new RecordSet({
                 rawData: getRawData(),
-                adapter: 'Types/entity:adapter.Sbis'
+                adapter: 'Types/entity:adapter.Sbis',
             });
             const adapter = new RecordSetTableAdapter(data);
 

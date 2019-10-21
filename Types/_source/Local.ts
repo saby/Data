@@ -15,7 +15,7 @@ import randomId = require('Core/helpers/Number/randomId');
 const MOVE_POSITION = {
     on: 'on',
     before: 'before',
-    after: 'after'
+    after: 'after',
 };
 
 function compareValues(given: any, expect: any, operator: string): boolean {
@@ -67,7 +67,7 @@ export default abstract class Local extends mixin<
     DataCrudMixin
 >(
     Base,
-    DataCrudMixin
+    DataCrudMixin,
 ) implements ICrud, ICrudPlus {
     /**
      * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Фильтр записей, используемый при вызове метода {@link query}.
@@ -213,7 +213,7 @@ export default abstract class Local extends mixin<
         }
 
         return this._loadAdditionalDependencies().addCallback(
-            () => this._prepareUpdateResult(data, keys)
+            () => this._prepareUpdateResult(data, keys),
         );
     }
 
@@ -261,9 +261,7 @@ export default abstract class Local extends mixin<
 
         return this._loadAdditionalDependencies().addCallback(() => this._prepareQueryResult({
             items,
-            meta: {
-                total
-            }
+            meta: {total},
         }, query));
     }
 
@@ -282,7 +280,7 @@ export default abstract class Local extends mixin<
           this._getTableAdapter().merge(
              indexOne,
              indexTwo,
-             this.getKeyProperty()
+             this.getKeyProperty(),
           );
           this._reIndex();
           return Deferred.success(true) as ExtendPromise<any>;
@@ -297,7 +295,7 @@ export default abstract class Local extends mixin<
           const copy = this._getTableAdapter().copy(index);
           this._reIndex();
           return this._loadAdditionalDependencies().addCallback(
-             () => this._prepareReadResult(copy)
+             () => this._prepareReadResult(copy),
           );
        }
     }
@@ -342,9 +340,7 @@ export default abstract class Local extends mixin<
     // region DataMixin
 
     protected _wrapToDataSet(data: any): DataSet {
-        return super._wrapToDataSet(
-            object.clonePlain(data, true)
-        );
+        return super._wrapToDataSet(object.clonePlain(data, true));
     }
 
     // endregion
@@ -354,14 +350,14 @@ export default abstract class Local extends mixin<
     protected _prepareCreateResult(data: any): Model {
         return super._prepareCreateResult.call(
             this,
-            object.clonePlain(data, true)
+            object.clonePlain(data, true),
         );
     }
 
     protected _prepareReadResult(data: any): Model {
         return super._prepareReadResult.call(
             this,
-            object.clonePlain(data, true)
+            object.clonePlain(data, true),
         );
     }
 
@@ -381,9 +377,7 @@ export default abstract class Local extends mixin<
      * @protected
      */
     protected _getRecordByKey(key: string): adapter.IRecord {
-        return this._getTableAdapter().at(
-            this._getIndexByKey(key)
-        );
+        return this._getTableAdapter().at(this._getIndexByKey(key));
     }
 
     /**
@@ -448,7 +442,7 @@ export default abstract class Local extends mixin<
                 result = compareValues(
                     item.get(name),
                     fields[name],
-                    '='
+                    '=',
                 );
                 if (!result) {
                     break;
@@ -496,7 +490,7 @@ export default abstract class Local extends mixin<
         for (let i = 0; i < order.length; i++) {
             orderMap.push({
                 field: order[i].getSelector(),
-                order: order[i].getOrder()
+                order: order[i].getOrder(),
             });
         }
 
@@ -515,7 +509,7 @@ export default abstract class Local extends mixin<
             }
             dataMap.push({
                 index,
-                values
+                values,
             });
         });
 
@@ -541,7 +535,7 @@ export default abstract class Local extends mixin<
             for (let index = 0; index < orderMap.length; index++) {
                 result = (orderMap[index].order ? -1 : 1) * compare(
                     a.values[index],
-                    b.values[index]
+                    b.values[index],
                 );
                 if (result !== 0) {
                     break;
@@ -585,7 +579,7 @@ export default abstract class Local extends mixin<
         const beginIndex = offset;
         const endIndex = Math.min(
             dataAdapter.getCount(),
-            beginIndex + limit
+            beginIndex + limit,
         );
         for (let index = beginIndex; index < endIndex; index++, newIndex++) {
             newDataAdapter.add(dataAdapter.at(index));
@@ -642,5 +636,5 @@ Object.assign(Local.prototype, {
     '[Types/_source/Local]': true,
     _moduleName: 'Types/source:Local',
     _$filter: null,
-    _index: null
+    _index: null,
 });

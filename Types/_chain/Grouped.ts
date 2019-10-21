@@ -64,7 +64,7 @@ export default class Grouped<T> extends Abstract<T> {
 
                 return memo;
             },
-            new Map())
+            new Map()),
         );
     }
 
@@ -74,5 +74,5 @@ export default class Grouped<T> extends Abstract<T> {
 Object.assign(Grouped.prototype, {
     '[Types/_chain/Grouped]': true,
     _key: null,
-    _value: null
+    _value: null,
 });

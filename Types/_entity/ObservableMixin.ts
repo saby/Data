@@ -212,7 +212,7 @@ export default abstract class ObservableMixin {
                 results.push(this._eventBusChannel._notifyWithTarget(
                     item[0],
                     this,
-                    item.slice(1)
+                    item.slice(1),
                 ));
                 eventsQueue.shift();
             }
@@ -245,5 +245,5 @@ Object.assign(ObservableMixin.prototype, {
     '[Types/_entity/ObservableMixin]': true,
     _eventBusChannel: null,
     _eventsQueue: null,
-    _publishedEvents: null
+    _publishedEvents: null,
 });

@@ -22,5 +22,5 @@ export default class EnumField extends DictionaryField {
 Object.assign(EnumField.prototype, {
     '[Types/_entity/format/EnumField]': true,
     _moduleName: 'Types/entity:format.EnumField',
-    _typeName: 'Enum'
+    _typeName: 'Enum',
 });

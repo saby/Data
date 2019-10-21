@@ -64,7 +64,7 @@ export default class Indexer<T> {
         collection: T,
         count: (items: T) => number,
         at: (items: T, index: number) => any,
-        prop: (item: any, prop: string) => any
+        prop: (item: any, prop: string) => any,
     ) {
         this._collection = collection;
         this._count = count;
@@ -267,7 +267,7 @@ export default class Indexer<T> {
             positions.splice(
                 getPosition(positions, i),
                 0,
-                i
+                i,
             );
         }
     }

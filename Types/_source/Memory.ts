@@ -248,7 +248,7 @@ Object.assign(Memory.prototype, {
     _$data: null,
     _dataSetItemsProperty: 'items',
     _dataSetMetaProperty: 'meta',
-    _emptyData: null
+    _emptyData: null,
 });
 
 register('Types/source:Memory', Memory, {instantiate: false});

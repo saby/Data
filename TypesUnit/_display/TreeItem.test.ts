@@ -83,11 +83,11 @@ describe('Types/_display/TreeItem', () => {
             const root = new TreeItem({owner});
             const level1 = new TreeItem({
                 parent: root,
-                owner
+                owner,
             });
             const level2 = new TreeItem({
                 parent: level1,
-                owner
+                owner,
             });
 
             assert.strictEqual(root.getLevel(), 1);
@@ -134,7 +134,7 @@ describe('Types/_display/TreeItem', () => {
         it('should notify owner if changed', () => {
             const owner = getOwnerMock();
             const item = new TreeItem({
-                owner
+                owner,
             });
 
             item.setExpanded(true);
@@ -146,7 +146,7 @@ describe('Types/_display/TreeItem', () => {
         it('should not notify owner if changed in silent mode', () => {
             const owner = getOwnerMock();
             const item = new TreeItem({
-                owner
+                owner,
             });
 
             item.setExpanded(true, true);

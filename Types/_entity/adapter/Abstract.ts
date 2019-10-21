@@ -20,7 +20,7 @@ export default abstract class Abstract extends mixin<
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin
+    SerializableMixin,
 ) implements IAdapter {
     readonly '[Types/_entity/adapter/IAdapter]': boolean;
 
@@ -81,5 +81,5 @@ export default abstract class Abstract extends mixin<
 Object.assign(Abstract.prototype, {
     '[Types/_entity/adapter/Abstract]': true,
     '[Types/_entity/adapter/IAdapter]': true,
-    _pathSeparator: '.'
+    _pathSeparator: '.',
 });

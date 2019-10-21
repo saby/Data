@@ -4,7 +4,7 @@ const barFunction = (() => {
       return {
          $serialized$: 'func',
          module: 'test/_source/data.sample',
-         path: 'barFunction'
+         path: 'barFunction',
       };
    };
 
@@ -13,10 +13,10 @@ const barFunction = (() => {
 
 const arrayWithFunctions = [{
    foo: 'foo',
-   bar: barFunction
+   bar: barFunction,
 }];
 
 export {
    barFunction,
-   arrayWithFunctions
+   arrayWithFunctions,
 };

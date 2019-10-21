@@ -8,7 +8,7 @@ import Enum from 'Types/_collection/Enum';
 describe('Types/_display/itemsStrategy/Direct', () => {
     function getStrategy<T>(display: CollectionDisplay<T>): Direct<T> {
         return new Direct({
-            display
+            display,
         });
     }
 
@@ -118,14 +118,14 @@ describe('Types/_display/itemsStrategy/Direct', () => {
             const items = [
                 {id: 1},
                 {id: 1},
-                {id: 2}
+                {id: 2},
             ];
             const list = new List({items});
             const display = new CollectionDisplay({collection: list});
             const strategy = new Direct({
                 display,
                 keyProperty: 'id',
-                unique: true
+                unique: true,
             });
             const expected = [0, 2, 1];
 
@@ -146,14 +146,14 @@ describe('Types/_display/itemsStrategy/Direct', () => {
             const items = [
                 {id: 1},
                 {id: 1},
-                {id: 2}
+                {id: 2},
             ];
             const list = new List({items});
             const display = new CollectionDisplay({collection: list});
             const strategy = new Direct({
                 display,
                 keyProperty: 'id',
-                unique: true
+                unique: true,
             });
             const expected = [0, 2, -1];
 
@@ -177,11 +177,11 @@ describe('Types/_display/itemsStrategy/Direct', () => {
                 new CollectionItem({contents: {id: 1}}),
                 new CollectionItem({contents: {id: 2}}),
                 new CollectionItem({contents: {id: 1}}),
-                new CollectionItem({contents: {id: 3}})
+                new CollectionItem({contents: {id: 3}}),
             ];
             const options = {
                 unique: true,
-                keyProperty: 'id'
+                keyProperty: 'id',
             };
             const expected = [0, 1, 3];
             const given = Direct.sortItems(items, options);

@@ -84,7 +84,7 @@ const logger = {
         }
 
         IoC.resolve('ILogger')[level](error.message, callStack);
-    }
+    },
 };
 
 export default logger;

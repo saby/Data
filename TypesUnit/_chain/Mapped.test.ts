@@ -59,7 +59,7 @@ describe('Types/_chain/Mapped', () => {
                 assert.strictEqual(enumerator.getCurrentIndex(), keys[index]);
                 assert.deepEqual(
                     enumerator.getCurrent(),
-                    [items[enumerator.getCurrentIndex()], enumerator.getCurrentIndex()] as any
+                    [items[enumerator.getCurrentIndex()], enumerator.getCurrentIndex()] as any,
                 );
                 index++;
             }

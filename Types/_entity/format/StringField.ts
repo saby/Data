@@ -21,5 +21,5 @@ export default class StringField extends Field {
 Object.assign(StringField.prototype, {
     '[Types/_entity/format/StringField]': true,
     _moduleName: 'Types/entity:format.StringField',
-    _typeName: 'String'
+    _typeName: 'String',
 });

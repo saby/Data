@@ -1,6 +1,6 @@
 import AbstractStrategy, {
     IOptions as IAbstractOptions,
-    ISerializableState as IDefaultSerializableState
+    ISerializableState as IDefaultSerializableState,
 } from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import {object} from '../../util';
@@ -81,7 +81,7 @@ export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> 
         added = added || [];
 
         const reallyAdded: T[] = added.map(
-            (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents)
+            (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents),
         );
         const result = this._getItems().splice(start, deleteCount, ...reallyAdded);
 
@@ -162,7 +162,7 @@ export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> 
     protected _createItemsOrder(): number[] {
         return Direct.sortItems<T>(this._getItems(), {
             keyProperty: this._options.keyProperty,
-            unique: this._options.unique
+            unique: this._options.unique,
         });
     }
 
@@ -189,7 +189,7 @@ export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> 
         (items as any as Array<CollectionItem<any>>).forEach((item, index) => {
             itemId = object.getPropertyValue(
                 item.getContents(),
-                keyProperty
+                keyProperty,
             );
             if (processed.has(itemId)) {
                 return;
@@ -208,5 +208,5 @@ export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> 
 Object.assign(Direct.prototype, {
     '[Types/_display/itemsStrategy/Direct]': true,
     _moduleName: 'Types/display:itemsStrategy.Direct',
-    _itemsOrder: null
+    _itemsOrder: null,
 });

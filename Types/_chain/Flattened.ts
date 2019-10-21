@@ -13,7 +13,7 @@ export default class Flattened<T> extends Abstract<T> {
 
     getEnumerator(): FlattenedEnumerator<T> {
         return new FlattenedEnumerator(
-            this._previous
+            this._previous,
         );
     }
 

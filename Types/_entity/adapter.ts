@@ -30,7 +30,7 @@ export {default as SbisFieldType} from './adapter/SbisFieldType';
 export {default as SbisRecord} from './adapter/SbisRecord';
 export {default as SbisTable} from './adapter/SbisTable';
 
-//FIXME: deprecated implementation for externals
+// FIXME: deprecated implementation for externals
 import GenericFormatMixinOrig from './adapter/GenericFormatMixin';
 const GenericFormatMixin = GenericFormatMixinOrig.prototype;
 export {GenericFormatMixin};

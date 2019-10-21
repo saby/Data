@@ -16,10 +16,6 @@ export class MapPolyfill<K, V> {
         this.clear();
     }
 
-    static _getUnhashedKey(key: string): string {
-        return String(key).split('@', 2)[1];
-    }
-
     clear(): void {
         this._hash = {};
         this._objects = [];
@@ -129,12 +125,16 @@ export class MapPolyfill<K, V> {
         const index = parseInt(key.substr(this._objectPrefix.length), 10);
         return this._objects[index];
     }
+
+    static _getUnhashedKey(key: string): string {
+        return String(key).split('@', 2)[1];
+    }
 }
 
 Object.assign(MapPolyfill.prototype, {
     _hash: null,
     _objectPrefix: SetPolyfill.prototype._objectPrefix,
-    _objects: null
+    _objects: null,
 });
 
 Object.defineProperty(MapPolyfill.prototype, 'size', {
@@ -142,7 +142,7 @@ Object.defineProperty(MapPolyfill.prototype, 'size', {
         return Object.keys(this._hash).length;
     },
     enumerable: true,
-    configurable: false
+    configurable: false,
 });
 
 // Use native implementation if supported

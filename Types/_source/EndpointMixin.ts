@@ -64,5 +64,5 @@ export default abstract class EndpointMixin {
 
 Object.assign(EndpointMixin.prototype, {
     '[Types/_source/EndpointMixin]': true,
-    _$endpoint: getMergeableProperty<IEndpoint>({})
+    _$endpoint: getMergeableProperty<IEndpoint>({}),
 });

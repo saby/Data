@@ -7,7 +7,7 @@ import {SortFunction} from 'Types/_display/Collection';
 describe('Types/_display/itemsStrategy/User', () => {
     function wrapItem<S, T>(item: S): T {
         return new CollectionItem({
-            contents: item
+            contents: item,
         }) as any as T;
     }
 
@@ -44,17 +44,17 @@ describe('Types/_display/itemsStrategy/User', () => {
             reset(): void {
                 items.length = 0;
                 wraps.length = 0;
-            }
+            },
         };
     }
 
     function getStrategy<S, T extends CollectionItem<S> = CollectionItem<S>>(
         source: IItemsStrategy<S, T>,
-        handlers: Array<SortFunction<S, T>>
+        handlers: Array<SortFunction<S, T>>,
     ): User<S, T> {
         return new User({
             source,
-            handlers
+            handlers,
         });
     }
 
@@ -88,7 +88,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => a.item.getContents() - b.item.getContents()]
+                [(a, b) => a.item.getContents() - b.item.getContents()],
             );
             const expected = [1, 2, 3];
 
@@ -101,7 +101,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => b.item.getContents() - a.item.getContents()]
+                [(a, b) => b.item.getContents() - a.item.getContents()],
             );
             const expected = [3, 2, 1];
 
@@ -126,7 +126,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => a.item.getContents() - b.item.getContents()]
+                [(a, b) => a.item.getContents() - b.item.getContents()],
             );
             const items = strategy.items;
             const expected = [1, 2, 3];
@@ -141,7 +141,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => b.item.getContents() - a.item.getContents()]
+                [(a, b) => b.item.getContents() - a.item.getContents()],
             );
             const items = strategy.items;
             const expected = [3, 2, 1];
@@ -197,7 +197,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => a.item.getContents() - b.item.getContents()]
+                [(a, b) => a.item.getContents() - b.item.getContents()],
             );
             const expected = [0, 1, 2];
 
@@ -210,7 +210,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => b.item.getContents() - a.item.getContents()]
+                [(a, b) => b.item.getContents() - a.item.getContents()],
             );
             const expected = [2, 1, 0];
 
@@ -231,7 +231,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => a.item.getContents() - b.item.getContents()]
+                [(a, b) => a.item.getContents() - b.item.getContents()],
             );
             const expected = [0, 1, 2];
 
@@ -244,7 +244,7 @@ describe('Types/_display/itemsStrategy/User', () => {
             const source = getSource([1, 2, 3]);
             const strategy = getStrategy(
                 source,
-                [(a, b) => b.item.getContents() - a.item.getContents()]
+                [(a, b) => b.item.getContents() - a.item.getContents()],
             );
             const expected = [2, 1, 0];
 

@@ -142,7 +142,7 @@ export default class DataSet extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    SerializableMixin
+    SerializableMixin,
 ) {
     /**
      * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы данными, по умолчанию
@@ -564,7 +564,7 @@ export default class DataSet extends mixin<
         }
 
         const items = this._getListInstance(
-            this._getDataProperty(property)
+            this._getDataProperty(property),
         );
 
         if (this._$metaProperty && items.getMetaData instanceof Function) {
@@ -583,7 +583,7 @@ export default class DataSet extends mixin<
 
                 // FIXME: don't use 'more' anymore
                 if (!itemsMetaData.hasOwnProperty('more') && metaData.hasOwnProperty('total')) {
-                    itemsMetaData.more = (<any> metaData).total;
+                    itemsMetaData.more = (metaData as any).total;
                 }
 
                 items.setMetaData(itemsMetaData);
@@ -846,7 +846,7 @@ export default class DataSet extends mixin<
             writable: this._$writable,
             rawData,
             adapter: this._$adapter,
-            keyProperty: this._$keyProperty
+            keyProperty: this._$keyProperty,
         });
     }
 
@@ -861,7 +861,7 @@ export default class DataSet extends mixin<
             rawData,
             adapter: this._$adapter,
             model: this._$model,
-            keyProperty: this._$keyProperty
+            keyProperty: this._$keyProperty,
         });
     }
 
@@ -890,7 +890,7 @@ Object.assign(DataSet.prototype, {
     _$metaProperty: '',
     _$writable: true,
      getIdProperty: DataSet.prototype.getKeyProperty,
-     setIdProperty: DataSet.prototype.setKeyProperty
+     setIdProperty: DataSet.prototype.setKeyProperty,
 });
 
 register('Types/source:DataSet', DataSet, {instantiate: false});

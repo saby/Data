@@ -164,7 +164,7 @@ export default class EventRaisingMixin {
                 changes.newItemsIndex,
                 changes.oldItems,
                 changes.oldItemsIndex,
-                session
+                session,
             );
         });
     }
@@ -185,7 +185,7 @@ export default class EventRaisingMixin {
         newItemsIndex: number,
         oldItems: any[],
         oldItemsIndex: number,
-        session?: ISession
+        session?: ISession,
     ): void {
         if (!this._isNeedNotifyCollectionChange()) {
             return;
@@ -197,7 +197,7 @@ export default class EventRaisingMixin {
             newItems,
             newItemsIndex,
             oldItems,
-            oldItemsIndex
+            oldItemsIndex,
         );
     }
 
@@ -262,5 +262,5 @@ Object.assign(EventRaisingMixin.prototype, {
     '[Types/_entity/EventRaisingMixin]': true,
     _eventRaising: true,
     _sessionItemContentsGetter: '',
-    _beforeRaiseOff: null
+    _beforeRaiseOff: null,
 });

@@ -13,7 +13,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         return {
             display,
             childrenProperty: display.getChildrenProperty(),
-            root: display.getRoot.bind(display)
+            root: display.getRoot.bind(display),
         };
     }
 
@@ -28,19 +28,19 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
                 {id: 11, children: []},
                 {id: 12, children: [
                     {id: 121, children: []},
-                    {id: 122}
+                    {id: 122},
                 ]},
-                {id: 13, children: []}
+                {id: 13, children: []},
             ]},
             {id: 2, children: [
                 {id: 21},
-                {id: 22}
-            ]}
+                {id: 22},
+            ]},
         ];
         expandedItems = [1, 11, 12, 121, 122, 13, 2, 21, 22];
         display = new TreeDisplay({
             collection: items,
-            childrenProperty: 'children'
+            childrenProperty: 'children',
         });
         strategy = new MaterializedPath(getOptions(display));
     });
@@ -76,7 +76,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
             const display = new TreeDisplay({
                 collection: items,
                 childrenProperty: 'children',
-                root: {id: 0}
+                root: {id: 0},
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -91,7 +91,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should return a TreeItem as node', () => {
             const display = new TreeDisplay({
                 collection: [{node: true}],
-                nodeProperty: 'node'
+                nodeProperty: 'node',
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -101,7 +101,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should return a TreeItem as leaf', () => {
             const display = new TreeDisplay({
                 collection: [{node: false}],
-                nodeProperty: 'node'
+                nodeProperty: 'node',
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -111,7 +111,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should return a TreeItem with children', () => {
             const display = new TreeDisplay({
                 collection: [{hasChildren: true}],
-                hasChildrenProperty: 'hasChildren'
+                hasChildrenProperty: 'hasChildren',
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -121,7 +121,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should return a TreeItem without children', () => {
             const display = new TreeDisplay({
                 collection: [{hasChildren: false}],
-                hasChildrenProperty: 'hasChildren'
+                hasChildrenProperty: 'hasChildren',
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -131,7 +131,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should return a TreeItem with inverted children having', () => {
             const display = new TreeDisplay({
                 collection: [{hasChildren: true}],
-                hasChildrenProperty: '!hasChildren'
+                hasChildrenProperty: '!hasChildren',
             });
             const strategy = new MaterializedPath(getOptions(display));
 
@@ -158,7 +158,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
         it('should add items', () => {
             const item = {id: 10, children: [
                 {id: 100},
-                {id: 101}
+                {id: 101},
             ]};
             items[0].children.unshift(item);
             expandedItems.splice(1, 0, 10, 100, 101);
@@ -215,7 +215,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
             const current = expandedItems.map((it, i) => i);
             const sorter = strategy.getSorters().pop();
             const options = {
-                indexToPath: sorter.options().indexToPath
+                indexToPath: sorter.options().indexToPath,
             };
             const expect = [1, 11, 12, 121, 122, 13, 2, 21, 22];
 
@@ -233,7 +233,7 @@ describe('Types/_display/itemsStrategy/MaterializedPath', () => {
             const current = expandedItems.map((it, i) => i).reverse();
             const sorter = strategy.getSorters().pop();
             const options = {
-                indexToPath: sorter.options().indexToPath
+                indexToPath: sorter.options().indexToPath,
             };
             // [1, 11, 12, 121, 122, 13, 2, 21, 22] => [2, 22, 21, 1, 13, 12, 122, 121, 11]
             const expect = [2, 22, 21, 1, 13, 12, 122, 121, 11];

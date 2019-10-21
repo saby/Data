@@ -8,46 +8,46 @@ describe('Types/_display/Search', () => {
             const items = [{
                 id: 'A',
                 pid: '+',
-                node: true
+                node: true,
             }, {
                 id: 'AA',
                 pid: 'A',
-                node: true
+                node: true,
             }, {
                 id: 'AAa',
                 pid: 'AA',
-                node: false
+                node: false,
             }, {
                 id: 'AB',
                 pid: 'A',
-                node: true
+                node: true,
             }, {
                 id: 'ABa',
                 pid: 'AB',
-                node: false
+                node: false,
             }, {
                 id: 'AC',
                 pid: 'A',
-                node: true
+                node: true,
             }, {
                 id: 'B',
                 pid: '+',
-                node: true
+                node: true,
             }, {
                 id: 'Ba',
                 pid: 'B',
-                node: false
+                node: false,
             }, {
                 id: 'C',
                 pid: '+',
-                node: true
+                node: true,
             }];
             const search = new Search({
                 collection: items,
                 root: {id: '+'},
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node'
+                nodeProperty: 'node',
             });
             const expected = [['A', 'AA'], 'AAa', ['A', 'AB'], 'ABa', ['A', 'AC'], ['B'], 'Ba', ['C']];
 
@@ -66,29 +66,29 @@ describe('Types/_display/Search', () => {
             const items = [{
                 id: 'A',
                 pid: '+',
-                node: true
+                node: true,
             }, {
                 id: 'AA',
                 pid: 'A',
-                node: true
+                node: true,
             }, {
                 id: 'AAA',
                 pid: 'AA',
-                node: true
+                node: true,
             }, {
                 id: 'AAAa',
-                pid: 'AAA'
+                pid: 'AAA',
             }, {
                 id: 'AA',
                 pid: 'A',
-                node: true
+                node: true,
             }, {
                 id: 'AAB',
                 pid: 'AA',
-                node: true
+                node: true,
             }, {
                 id: 'AABa',
-                pid: 'AAB'
+                pid: 'AAB',
             }];
             const search = new Search({
                 collection: items,
@@ -96,7 +96,7 @@ describe('Types/_display/Search', () => {
                 unique: true,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node'
+                nodeProperty: 'node',
             });
             const expected = [['A', 'AA', 'AAA'], 'AAAa', ['A', 'AA', 'AAB'], 'AABa'];
 

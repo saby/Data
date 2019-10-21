@@ -41,7 +41,7 @@ export default class JsonTable extends mixin<
 >(
     DestroyableMixin,
     GenericFormatMixin,
-    JsonFormatMixin
+    JsonFormatMixin,
 ) implements ITable {
     /**
      * Сырые данные
@@ -218,5 +218,5 @@ export default class JsonTable extends mixin<
 
 Object.assign(JsonTable.prototype, {
     '[Types/_entity/adapter/JsonTable]': true,
-    _data: null
+    _data: null,
 });

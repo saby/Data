@@ -127,7 +127,7 @@ describe('Types/_entity/adapter/CowRecord', () => {
         it('should return the property value from shared data', () => {
             assert.equal(
                 adapter.get('foo'),
-                'bar'
+                'bar',
             );
             assert.strictEqual(adapter.getData(), data);
         });
@@ -179,7 +179,7 @@ describe('Types/_entity/adapter/CowRecord', () => {
         it('should return an empty array', () => {
             assert.strictEqual(
                 adapter.getFields().length,
-                0
+                0,
             );
         });
 

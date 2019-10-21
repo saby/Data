@@ -11,7 +11,7 @@ import {enumerator} from '../collection';
 export default class Arraywise<T> extends Abstract<T> {
     protected _source: any[];
 
-    constructor(source: any[]) {
+    constructor(source: T[]) {
         if (!(source instanceof Array)) {
             throw new TypeError('Source should be an instance of Array');
         }
@@ -24,12 +24,12 @@ export default class Arraywise<T> extends Abstract<T> {
         return new enumerator.Arraywise(this._source);
     }
 
-    each(callback: (item: any, index: number) => void, context?: object): void {
+    each(callback: (item: T, index: number) => void, context?: object): void {
         for (let i = 0, count = this._source.length; i < count; i++) {
             callback.call(
                 context || this,
                 this._source[i],
-                i
+                i,
             );
         }
     }
@@ -38,7 +38,7 @@ export default class Arraywise<T> extends Abstract<T> {
 
     // region Public
 
-    toArray(): any[] {
+    toArray(): T[] {
         return this._source.slice();
     }
 

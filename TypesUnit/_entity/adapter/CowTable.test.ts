@@ -147,7 +147,7 @@ describe('Types/_entity/adapter/CowTable', () => {
         it('should return an empty array', () => {
             assert.strictEqual(
                 adapter.getFields().length,
-                0
+                0,
             );
         });
 
@@ -161,7 +161,7 @@ describe('Types/_entity/adapter/CowTable', () => {
         it('should return 0', () => {
             assert.strictEqual(
                 adapter.getCount(),
-                0
+                0,
             );
         });
 

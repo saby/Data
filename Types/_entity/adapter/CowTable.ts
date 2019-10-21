@@ -149,8 +149,8 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
             } else {
                 this._originalTable = this._original.forTable(
                     object.clonePlain(
-                        (this._originalTable as ITable).getData()
-                    )
+                        (this._originalTable as ITable).getData(),
+                    ),
                 );
             }
             this._copied = true;
@@ -172,5 +172,5 @@ Object.assign(CowTable.prototype, {
     _original: null,
     _originalTable: null,
     _writeCallback: null,
-    _copied: false
+    _copied: false,
 });

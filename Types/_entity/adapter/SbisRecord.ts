@@ -37,7 +37,7 @@ export default class SbisRecord extends mixin<
     SbisFormatMixin
 >(
     DestroyableMixin,
-    SbisFormatMixin
+    SbisFormatMixin,
 ) implements IRecord, ICloneable {
     protected _data: IRecordFormat;
 
@@ -150,5 +150,5 @@ Object.assign(SbisRecord.prototype, {
     '[Types/_entity/adapter/SbisRecord]': true,
     '[Types/_entity/adapter/IRecord]': true,
     '[Types/_entity/ICloneable]': true,
-    _castSeparator: ','
+    _castSeparator: ',',
 });

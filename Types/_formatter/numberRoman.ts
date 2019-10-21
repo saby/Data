@@ -11,7 +11,7 @@ const boundaries = {
     IX: 9,
     V: 5,
     IV: 4,
-    I: 1
+    I: 1,
 };
 
 /**

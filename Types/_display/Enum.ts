@@ -1,7 +1,7 @@
 import CollectionItem from './CollectionItem';
 import Collection, {
     ISourceCollection as IGeneralSourceCollection,
-    IOptions as ICollectionOptions
+    IOptions as ICollectionOptions,
 } from './Collection';
 import {IEnum} from '../collection';
 import {register} from '../di';
@@ -42,7 +42,7 @@ export default class Enum<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         }
 
         this._getCursorEnumerator().setPosition(
-            this.getIndexBySourceIndex(this._$collection.get() as number)
+            this.getIndexBySourceIndex(this._$collection.get() as number),
         );
 
         if (this._$collection['[Types/_entity/ObservableMixin]']) {
@@ -71,7 +71,7 @@ export default class Enum<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         newCurrent: T,
         oldCurrent: T,
         newPosition: number,
-        oldPosition: number
+        oldPosition: number,
     ): void {
         let value = null;
         if (newPosition > -1) {
@@ -116,7 +116,7 @@ Object.assign(Enum.prototype, {
     '[Types/_display/Enum]': true,
     _moduleName: 'Types/display:Enum',
     _localize: true,
-    _onSourceChange: null
+    _onSourceChange: null,
 });
 
 register('Types/display:Enum', Enum, {instantiate: false});

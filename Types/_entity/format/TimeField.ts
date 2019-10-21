@@ -33,5 +33,5 @@ export default class TimeField extends Field {
 Object.assign(TimeField.prototype, {
     '[Types/_entity/format/TimeField]': true,
     _moduleName: 'Types/entity:format.TimeField',
-    _typeName: 'Time'
+    _typeName: 'Time',
 });

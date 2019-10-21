@@ -30,7 +30,7 @@ export default class Cow extends mixin<
     SerializableMixin
 >(
     Abstract,
-    SerializableMixin
+    SerializableMixin,
 ) implements IDecorator {
     /**
      * Оригинальный адаптер
@@ -114,7 +114,7 @@ Object.assign(Cow.prototype, {
     '[Types/_entity/adapter/IDecorator]': true,
     _moduleName: 'Types/entity:adapter.Cow',
     _original: null,
-    _writeCallback: null
+    _writeCallback: null,
 });
 
 register('Types/entity:adapter.Cow', Cow, {instantiate: false});

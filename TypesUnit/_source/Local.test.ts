@@ -47,7 +47,7 @@ describe('Types/_source/Local', () => {
                 assert.instanceOf(data.get('foo'), Date);
                 assert.strictEqual(
                    data.get('foo').getSQLSerializationMode(),
-                   (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE
+                   (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATE,
                 );
             });
         });
@@ -64,7 +64,7 @@ describe('Types/_source/Local', () => {
                 assert.instanceOf(data.get('foo'), Date);
                 assert.strictEqual(
                     data.get('foo').getSQLSerializationMode(),
-                    (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME
+                    (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME,
                 );
             });
         });

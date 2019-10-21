@@ -17,31 +17,31 @@ describe('Types/_display/Ladder', () => {
         return [{
             id: 1,
             LastName: 'Lennon',
-            FirstName: 'John'
+            FirstName: 'John',
         }, {
             id: 2,
             LastName: 'Bowring',
-            FirstName: 'John'
+            FirstName: 'John',
         }, {
             id: 3,
             LastName: 'Smith',
-            FirstName: 'Adam'
+            FirstName: 'Adam',
         }, {
             id: 4,
             LastName: 'Smith',
-            FirstName: 'Ted'
+            FirstName: 'Ted',
         }, {
             id: 5,
             LastName: 'Smith',
-            FirstName: 'Ted'
+            FirstName: 'Ted',
         }, {
             id: 6,
             LastName: 'Bowring',
-            FirstName: 'John'
+            FirstName: 'John',
         }, {
             id: 7,
             LastName: 'Bowring',
-            FirstName: 'John'
+            FirstName: 'John',
         }];
     }
 
@@ -52,7 +52,7 @@ describe('Types/_display/Ladder', () => {
         assert.strictEqual(
             ladder.get(item.getContents(), column),
             primary ? value : '',
-            msg || `Error idx: ${idx}, column: ${column}`
+            msg || `Error idx: ${idx}, column: ${column}`,
         );
     }
 
@@ -65,11 +65,11 @@ describe('Types/_display/Ladder', () => {
         items = getItems();
 
         list = new ObservableList({
-            items
+            items,
         });
 
         collection = new Collection({
-            collection: list
+            collection: list,
         });
 
         ladder = new Ladder(collection);
@@ -112,13 +112,13 @@ describe('Types/_display/Ladder', () => {
         it('should move self handler to the end', () => {
             const items = [
                 {id: 1, title: 'foo'},
-                {id: 2, title: 'bar'}
+                {id: 2, title: 'bar'},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
             const expected = [IBindCollection.ACTION_ADD];
@@ -147,13 +147,13 @@ describe('Types/_display/Ladder', () => {
             const itemsA = [
                 {id: 1, title: 'foo'},
                 {id: 2, title: 'bar'},
-                {id: 3, title: 'bar'}
+                {id: 3, title: 'bar'},
             ];
             const listA = new ObservableList({
-                items: itemsA
+                items: itemsA,
             });
             const collectionA = new Collection({
-                collection: listA
+                collection: listA,
             });
 
             const ladder = new Ladder(collectionA);
@@ -164,13 +164,13 @@ describe('Types/_display/Ladder', () => {
             const itemsB = [
                 {id: 1, title: 'foo'},
                 {id: 2, title: 'foo'},
-                {id: 3, title: 'bar'}
+                {id: 3, title: 'bar'},
             ];
             const listB = new ObservableList({
-                items: itemsB
+                items: itemsB,
             });
             const collectionB = new Collection({
-                collection: listB
+                collection: listB,
             });
 
             ladder.setCollection(collectionB);
@@ -225,11 +225,11 @@ describe('Types/_display/Ladder', () => {
                     {id: 2, name: 'bar'},
                     {id: 3, name: 'bar'},
                     {id: 4, name: 'bar'},
-                    {id: 5, name: 'bar'}
-                ]
+                    {id: 5, name: 'bar'},
+                ],
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -280,7 +280,7 @@ describe('Types/_display/Ladder', () => {
             assert.strictEqual(
                 ladder.isPrimary(collection.at(idx).getContents(), column),
                 primary,
-                `'Error idx: ${idx}, column: ${column}`
+                `'Error idx: ${idx}, column: ${column}`,
             );
         }
 
@@ -320,13 +320,13 @@ describe('Types/_display/Ladder', () => {
                 {id: 1, date: now},
                 {id: 2, date: now},
                 {id: 3, date: new Date(now.getTime())},
-                {id: 4, date: notNow}
+                {id: 4, date: notNow},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -341,13 +341,13 @@ describe('Types/_display/Ladder', () => {
                 {id: 1, title: 'foo'},
                 'foo',
                 {id: 3, title: 'foo'},
-                {id: 4, title: 'foo'}
+                {id: 4, title: 'foo'},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -367,14 +367,14 @@ describe('Types/_display/Ladder', () => {
                 {id: 1, pos: 1, title: 'a'},
                 {id: 2, pos: 2, title: 'b'},
                 {id: 3, pos: 3, title: 'a'},
-                {id: 4, pos: 4, title: 'a'}
+                {id: 4, pos: 4, title: 'a'},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
                 collection: list,
-                sort: (a, b) => a.item.getContents().pos - b.item.getContents().pos
+                sort: (a, b) => a.item.getContents().pos - b.item.getContents().pos,
             });
             const ladder = new Ladder(collection);
             const expected = [true, false, true, true];
@@ -396,12 +396,12 @@ describe('Types/_display/Ladder', () => {
                     {id: 1, title: 'a'},
                     {id: 2, title: 'b'},
                     {id: 3, title: 'a'},
-                    {id: 4, title: 'b'}
-                ]
+                    {id: 4, title: 'b'},
+                ],
             });
             const collection = new Collection({
                 collection: list,
-                filter: (item) => item.title === 'a'
+                filter: (item) => item.title === 'a',
             });
             const ladder = new Ladder(collection);
 
@@ -460,7 +460,7 @@ describe('Types/_display/Ladder', () => {
             list.add({
                 id: 8,
                 LastName: 'Lennon',
-                FirstName: 'Ted'
+                FirstName: 'Ted',
             }, at);
 
             checkItem(at - 1, 'FirstName', true); // Adam
@@ -479,20 +479,20 @@ describe('Types/_display/Ladder', () => {
             list.add({
                 id: 8,
                 LastName: 'McCartney',
-                FirstName: 'John'
+                FirstName: 'John',
             });
 
             list.add({
                 id: 9,
                 LastName: 'McCartney',
-                FirstName: 'Paul'
+                FirstName: 'Paul',
             });
 
             const at = list.getCount() - 1;
 
             checkItem(at - 3, 'FirstName', true); // John
             checkItem(at - 2, 'FirstName', false); // John
-            checkItem(at - 1, 'FirstName', false); //John
+            checkItem(at - 1, 'FirstName', false); // John
             checkItem(at, 'FirstName', true); // Paul
 
             checkItem(at - 3, 'LastName', true); // Bowring
@@ -557,7 +557,7 @@ describe('Types/_display/Ladder', () => {
             list.replace({
                 id: 4,
                 LastName: 'Smiths',
-                FirstName: 'Афина'
+                FirstName: 'Афина',
             }, 3);
 
             checkItem(2, 'FirstName', true); // Adam
@@ -652,25 +652,25 @@ describe('Types/_display/Ladder', () => {
         it('should change ladder after collection reset', () => {
             list.assign([{
                 id: 1,
-                LastName: 'Lennon'
+                LastName: 'Lennon',
             }, {
                 id: 2,
-                LastName: 'Bowring'
+                LastName: 'Bowring',
             }, {
                 id: 3,
-                LastName: 'Smith'
+                LastName: 'Smith',
             }, {
                 id: 4,
-                LastName: 'Smith'
+                LastName: 'Smith',
             }, {
                 id: 5,
-                LastName: 'Smith'
+                LastName: 'Smith',
             }, {
                 id: 6,
-                LastName: 'Bowring'
+                LastName: 'Bowring',
             }, {
                 id: 7,
-                LastName: 'Bowring'
+                LastName: 'Bowring',
             }]);
 
             checkItem(0, 'LastName', true);
@@ -685,20 +685,20 @@ describe('Types/_display/Ladder', () => {
         it('should change ladder after Record change', () => {
             const items = [
                 new Record({
-                    rawData: {id: 1, name: 'one'}
+                    rawData: {id: 1, name: 'one'},
                 }),
                 new Record({
-                    rawData: {id: 2, name: 'one'}
+                    rawData: {id: 2, name: 'one'},
                 }),
                 new Record({
-                    rawData: {id: 3, name: 'two'}
-                })
+                    rawData: {id: 3, name: 'two'},
+                }),
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -713,22 +713,22 @@ describe('Types/_display/Ladder', () => {
             const items = [
                 new Model({
                     rawData: {uid: 1, name: 'one'},
-                    keyProperty: 'uid'
+                    keyProperty: 'uid',
                 }),
                 new Model({
                     rawData: {uid: 2, name: 'one'},
-                    keyProperty: 'uid'
+                    keyProperty: 'uid',
                 }),
                 new Model({
                     rawData: {uid: 3, name: 'two'},
-                    keyProperty: 'uid'
-                })
+                    keyProperty: 'uid',
+                }),
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -743,26 +743,26 @@ describe('Types/_display/Ladder', () => {
             const items = [
                 new Model({
                     rawData: {uid: 2, name: 'two'},
-                    keyProperty: 'uid'
+                    keyProperty: 'uid',
                 }),
                 new Model({
                     rawData: {uid: 1, name: 'one'},
-                    keyProperty: 'uid'
+                    keyProperty: 'uid',
                 }),
                 new Model({
                     rawData: {uid: 3, name: 'two'},
-                    keyProperty: 'uid'
+                    keyProperty: 'uid',
                 }),
                 new Model({
                     rawData: {uid: 4, name: 'two'},
-                    keyProperty: 'uid'
-                })
+                    keyProperty: 'uid',
+                }),
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -785,13 +785,13 @@ describe('Types/_display/Ladder', () => {
                 {id: 1},
                 {id: 2},
                 {id: 3},
-                {id: 4}
+                {id: 4},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
             let index = 0;
@@ -811,13 +811,13 @@ describe('Types/_display/Ladder', () => {
                 {id: 1, date: '11.10.2016 08:00'},
                 {id: 2, date: '11.10.2016 09:00'},
                 {id: 3, date: '12.10.2016 07:00'},
-                {id: 4, date: '13.10.2016 08:00'}
+                {id: 4, date: '13.10.2016 08:00'},
             ];
             const list = new ObservableList({
-                items
+                items,
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -836,7 +836,7 @@ describe('Types/_display/Ladder', () => {
                 given.push({
                     action,
                     item: newItems,
-                    index: newItemsIndex
+                    index: newItemsIndex,
                 });
             };
 
@@ -852,7 +852,7 @@ describe('Types/_display/Ladder', () => {
                 newItems: [collection.at(1)],
                 newItemsIndex: 1,
                 oldItems: [collection.at(1)],
-                oldItemsIndex: 1
+                oldItemsIndex: 1,
             }];
             const given = [];
             const handler = (e, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
@@ -861,7 +861,7 @@ describe('Types/_display/Ladder', () => {
                     newItems,
                     newItemsIndex,
                     oldItems,
-                    oldItemsIndex
+                    oldItemsIndex,
                 });
             };
 
@@ -902,7 +902,7 @@ describe('Types/_display/Ladder', () => {
                         newItems,
                         newItemsIndex,
                         oldItems,
-                        oldItemsIndex
+                        oldItemsIndex,
                     });
                 }
             };
@@ -931,7 +931,7 @@ describe('Types/_display/Ladder', () => {
             list.add({
                 id: 8,
                 LastName: 'Bowring',
-                FirstName: 'Peter'
+                FirstName: 'Peter',
             }, 1);
             unsubscribe();
 
@@ -955,12 +955,12 @@ describe('Types/_display/Ladder', () => {
                 items: [
                     {id: 1, name: 'foo'},
                     {id: 2, name: 'foo'},
-                    {id: 3, name: 'bar'}
-                ]
+                    {id: 3, name: 'bar'},
+                ],
             });
             const collection = new Collection({
                 collection: list,
-                filter: (item) => item.name === 'foo'
+                filter: (item) => item.name === 'foo',
             });
 
             let ladder;
@@ -985,7 +985,7 @@ describe('Types/_display/Ladder', () => {
             list.assign([
                 {id: 2, name: 'foo'},
                 {id: 1, name: 'foo'},
-                {id: 3, name: 'bar'}
+                {id: 3, name: 'bar'},
             ]);
 
             assert.isFalse(hasChanges);
@@ -996,11 +996,11 @@ describe('Types/_display/Ladder', () => {
                 items: [
                     {id: 1, name: 'foo'},
                     {id: 2, name: 'foo'},
-                    {id: 3, name: 'bar'}
-                ]
+                    {id: 3, name: 'bar'},
+                ],
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
 
@@ -1024,16 +1024,16 @@ describe('Types/_display/Ladder', () => {
             const list = new ObservableList({
                 items: [
                     {id: 1, name: 'foo'},
-                    {id: 2, name: 'foo'}
-                ]
+                    {id: 2, name: 'foo'},
+                ],
             });
             const collection = new Collection({
-                collection: list
+                collection: list,
             });
             const ladder = new Ladder(collection);
             const newItems = [
                 {id: 10, name: 'bar'},
-                {id: 11, name: 'bar'}
+                {id: 11, name: 'bar'},
             ];
             const moreItem = {id: 12, name: 'baz'};
 
@@ -1061,7 +1061,7 @@ describe('Types/_display/Ladder', () => {
     describe('.toJSON()', () => {
         it('should save collection as options', () => {
             const collection = new Collection({
-                collection: []
+                collection: [],
             });
             const ladder = new Ladder(collection);
             const data = ladder.toJSON();
@@ -1078,7 +1078,7 @@ describe('Types/_display/Ladder', () => {
 
         it('should save offset', () => {
             const collection = new Collection({
-                collection: []
+                collection: [],
             });
             const ladder = new Ladder(collection);
             const offset = 1;
@@ -1091,7 +1091,7 @@ describe('Types/_display/Ladder', () => {
         it('should save columnNames', () => {
             const items = [{id: 1}, {id: 2}];
             const collection = new Collection({
-                collection: items
+                collection: items,
             });
             const ladder = new Ladder(collection);
 
@@ -1104,7 +1104,7 @@ describe('Types/_display/Ladder', () => {
     describe('::fromJSON()', () => {
         it('should restore collection', () => {
             const collection = new Collection({
-                collection: []
+                collection: [],
             });
             const ladder = new Ladder(collection);
             const clone = (Ladder as any).fromJSON(ladder.toJSON());
@@ -1121,7 +1121,7 @@ describe('Types/_display/Ladder', () => {
 
         it('should restore offset', () => {
             const collection = new Collection({
-                collection: []
+                collection: [],
             });
             const ladder = new Ladder(collection);
             const offset = 1;
@@ -1135,7 +1135,7 @@ describe('Types/_display/Ladder', () => {
         it('should save columnNames', () => {
             const items = [{id: 1}, {id: 2}];
             const collection = new Collection({
-                collection: items
+                collection: items,
             });
             const ladder = new Ladder(collection);
 
@@ -1149,11 +1149,11 @@ describe('Types/_display/Ladder', () => {
             const items = new ObservableList({
                 items: [
                     {id: 1, name: 'a'},
-                    {id: 2, name: 'a'}
-                ]
+                    {id: 2, name: 'a'},
+                ],
             });
             const collection = new Collection({
-                collection: items
+                collection: items,
             });
             const ladder = new Ladder(collection);
             const addItem = {id: 3, name: 'b'};

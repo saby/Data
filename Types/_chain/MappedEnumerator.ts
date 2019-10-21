@@ -41,7 +41,7 @@ export default class MappedEnumerator<T> implements IEnumerator<T> {
             this.current = this.callback.call(
                 this.callbackContext,
                 this.enumerator.getCurrent(),
-                this.enumerator.getCurrentIndex()
+                this.enumerator.getCurrentIndex(),
             );
             return true;
         }
@@ -60,5 +60,5 @@ Object.assign(MappedEnumerator.prototype, {
     callback: null,
     callbackContext: null,
     enumerator: null,
-    current: null
+    current: null,
 });

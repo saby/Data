@@ -10,7 +10,7 @@ export default function deprecateExtend(
     superClass: any,
     mixinsList: any,
     tag: string,
-    skipFor?: string[]
+    skipFor?: string[],
 ): Function {
     let isTrusted = false;
     if (skipFor && subClass && subClass._moduleName) {
@@ -21,9 +21,7 @@ export default function deprecateExtend(
     }
 
     if (!require.defined('Core/core-extend')) {
-        throw new ReferenceError(
-            'You should require module "Core/core-extend" to use old-fashioned extending via static extend() method.'
-        );
+        throw new ReferenceError('You should require module "Core/core-extend" to use old-fashioned extending via static extend() method.');
     }
     const coreExtend = require('Core/core-extend');
     return coreExtend(subClass, mixinsList, superClass);

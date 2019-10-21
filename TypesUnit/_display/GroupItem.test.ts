@@ -9,7 +9,7 @@ describe('Types/_display/GroupItem', () => {
             notifyItemChange(item: GroupItem<string>, property: string): void {
                 this.lastChangedItem = item;
                 this.lastChangedProperty = property;
-            }
+            },
         };
     };
 
@@ -39,7 +39,7 @@ describe('Types/_display/GroupItem', () => {
         it('should notify owner if changed', () => {
             const owner = getOwnerMock();
             const item = new GroupItem({
-                owner: owner as any
+                owner: owner as any,
             });
 
             item.setExpanded(false);
@@ -51,7 +51,7 @@ describe('Types/_display/GroupItem', () => {
         it('should not notify owner if changed in silent mode', () => {
             const owner = getOwnerMock();
             const item = new GroupItem({
-                owner: owner as any
+                owner: owner as any,
             });
 
             item.setExpanded(false, true);

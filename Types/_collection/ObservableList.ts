@@ -43,7 +43,7 @@ export default class ObservableList<T> extends mixin<
 >(
     List,
     IObservable,
-    EventRaisingMixin
+    EventRaisingMixin,
 ) implements IReceiver {
     /**
      * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
@@ -78,7 +78,7 @@ export default class ObservableList<T> extends mixin<
                 this._itemsSlice(),
                 0,
                 oldItems,
-                0
+                0,
             );
         }
     }
@@ -96,7 +96,7 @@ export default class ObservableList<T> extends mixin<
             this._itemsSlice(count),
             count,
             [],
-            0
+            0,
         );
     }
 
@@ -113,7 +113,7 @@ export default class ObservableList<T> extends mixin<
             this._itemsSlice(0, this.getCount() - length),
             0,
             [],
-            0
+            0,
         );
     }
 
@@ -130,7 +130,7 @@ export default class ObservableList<T> extends mixin<
             this._itemsSlice(),
             0,
             oldItems,
-            0
+            0,
         );
     }
 
@@ -142,7 +142,7 @@ export default class ObservableList<T> extends mixin<
             this._itemsSlice(at, at + 1),
             at,
             [],
-            0
+            0,
         );
     }
 
@@ -153,7 +153,7 @@ export default class ObservableList<T> extends mixin<
             [],
             0,
             [item],
-            index
+            index,
         );
         return item;
     }
@@ -169,7 +169,7 @@ export default class ObservableList<T> extends mixin<
                 this._itemsSlice(at, at + 1),
                 at,
                 [oldItem],
-                at
+                at,
             );
         }
     }
@@ -184,7 +184,7 @@ export default class ObservableList<T> extends mixin<
                 [item],
                 to,
                 [item],
-                from
+                from,
             );
         }
     }
@@ -204,7 +204,7 @@ export default class ObservableList<T> extends mixin<
             this._reindex(
                 '',
                 index,
-                1
+                1,
             );
         }
 
@@ -212,14 +212,14 @@ export default class ObservableList<T> extends mixin<
         if (name === undefined) {
             this._notifyItemChange(
                 target,
-                which.data || {}
+                which.data || {},
             );
         }
 
         data[index] = target;
         return {
             target,
-            data
+            data,
         };
     }
 
@@ -240,7 +240,7 @@ export default class ObservableList<T> extends mixin<
                     this._itemsSlice(),
                     0,
                     [],
-                    0
+                    0,
                 );
             } else {
                 // Собираем изменившиеся элементы в пачки
@@ -253,9 +253,9 @@ export default class ObservableList<T> extends mixin<
                             pack,
                             index,
                             pack,
-                            index
+                            index,
                         );
-                    }
+                    },
                 );
             }
         }
@@ -278,7 +278,7 @@ export default class ObservableList<T> extends mixin<
                 'onCollectionItemChange',
                 this._$items[index],
                 index,
-                properties
+                properties,
             );
         }
 
@@ -318,7 +318,7 @@ Object.assign(ObservableList.prototype, {
     '[Types/_collection/ObservableList]': true,
     '[Types/_entity/relation/IReceiver]': true,
     _moduleName: 'Types/collection:ObservableList',
-    _resetChangesCount: 100
+    _resetChangesCount: 100,
 });
 
 register('Types/collection:ObservableList', ObservableList, {instantiate: false});

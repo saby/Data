@@ -149,7 +149,7 @@ class ReactiveObject<T> extends VersionableMixin {
                         }
                     } : undefined,
                     configurable: descriptor.configurable,
-                    enumerable: descriptor.enumerable
+                    enumerable: descriptor.enumerable,
                 };
             }
 

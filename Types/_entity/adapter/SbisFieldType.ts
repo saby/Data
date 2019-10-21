@@ -52,7 +52,7 @@ const SbisFieldType = {
     uuid: 'UUID',
     rpcfile: 'Файл-rpc',
     object: 'JSON-объект',
-    array: 'Массив'
+    array: 'Массив',
 };
 
 export default SbisFieldType;

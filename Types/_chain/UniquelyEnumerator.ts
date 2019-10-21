@@ -71,5 +71,5 @@ Object.assign(UniquelyEnumerator.prototype, {
     enumerator: null,
     idExtractor: null,
     keysHash: null,
-    objectsHash: null
+    objectsHash: null,
 });

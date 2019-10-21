@@ -7,7 +7,7 @@ import {
     IFieldType,
     IMoneyFieldType,
     IRealFieldType,
-    IRecordFormat
+    IRecordFormat,
 } from 'Types/_entity/adapter/SbisFormatMixin';
 import * as fieldFormat from 'Types/_entity/format';
 import fieldsFactory from 'Types/_entity/format/fieldsFactory';
@@ -26,8 +26,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 {n: 'id', t: 'Число целое'},
                 {n: 'lastname', t: 'Строка'},
                 {n: 'firstname', t: 'Строка'},
-                {n: 'middlename', t: 'Строка'}
-            ]
+                {n: 'middlename', t: 'Строка'},
+            ],
         };
 
         adapter = new SbisRecord(data);
@@ -52,7 +52,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
             assert.throws(() => {
                 adapter = new SbisRecord({
-                    _type: 'recordset'
+                    _type: 'recordset',
                 } as any);
             });
 
@@ -96,29 +96,29 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return the property value', () => {
             assert.strictEqual(
                 1,
-                adapter.get('id')
+                adapter.get('id'),
             );
             assert.strictEqual(
                 'Smith',
-                adapter.get('lastname')
+                adapter.get('lastname'),
             );
             assert.isUndefined(
-                adapter.get('Должность')
+                adapter.get('Должность'),
             );
             assert.isUndefined(
-                adapter.get(undefined)
+                adapter.get(undefined),
             );
             assert.isUndefined(
-                new SbisRecord({} as any).get('Должность')
+                new SbisRecord({} as any).get('Должность'),
             );
             assert.isUndefined(
-                new SbisRecord('' as any).get(undefined)
+                new SbisRecord('' as any).get(undefined),
             );
             assert.isUndefined(
-                new SbisRecord(0 as any).get(undefined)
+                new SbisRecord(0 as any).get(undefined),
             );
             assert.isUndefined(
-                new SbisRecord().get(undefined)
+                new SbisRecord().get(undefined),
             );
         });
 
@@ -127,8 +127,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [[1]],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -140,8 +140,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [[1, 'foo']],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -153,8 +153,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [[null]],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -167,7 +167,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             adapter.set('id', 20);
             assert.strictEqual(
                 20,
-                data.d[0]
+                data.d[0],
             );
         });
 
@@ -176,8 +176,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [[null]],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -190,8 +190,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [null],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -204,8 +204,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [[null]],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
 
@@ -260,7 +260,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'lastname', 'firstname', 'middlename']
+                ['id', 'lastname', 'firstname', 'middlename'],
             );
         });
     });
@@ -277,8 +277,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [100.9999],
                 s: [{
                     n: 'real',
-                    t: {n: 'Число вещественное', p: 20}
-                }]
+                    t: {n: 'Число вещественное', p: 20},
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.RealField>('real');
@@ -292,8 +292,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [100.9999],
                 s: [{
                     n: 'money',
-                    t: {n: 'Деньги', p: 2}
-                }]
+                    t: {n: 'Деньги', p: 2},
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.RealField>('money');
@@ -313,8 +313,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: ['<?xml version="1.1" encoding="UTF-8"?>'],
                 s: [{
                     n: 'xml',
-                    t: 'XML-файл'
-                }]
+                    t: 'XML-файл',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('xml');
@@ -326,8 +326,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'dt',
-                    t: 'Дата и время'
-                }]
+                    t: 'Дата и время',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.DateTimeField>('dt');
@@ -342,9 +342,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'dt',
                     t: {
                         n: 'Дата и время',
-                        tz: false
-                    }
-                }]
+                        tz: false,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.DateTimeField>('dt');
@@ -357,8 +357,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'date',
-                    t: 'Дата'
-                }]
+                    t: 'Дата',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('date');
@@ -370,8 +370,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'time',
-                    t: 'Время'
-                }]
+                    t: 'Время',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('time');
@@ -383,8 +383,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'timeint',
-                    t: 'Временной интервал'
-                }]
+                    t: 'Временной интервал',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('timeint');
@@ -394,7 +394,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return Link field format', () => {
             const adapter = new SbisRecord({
                 d: [0],
-                s: [{n: 'id', t: 'Связь'}]
+                s: [{n: 'id', t: 'Связь'}],
             });
             const format = adapter.getFormat('id');
             assert.instanceOf(format, fieldFormat.LinkField);
@@ -405,8 +405,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'id',
-                    t: 'Идентификатор'
-                }]
+                    t: 'Идентификатор',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('id');
@@ -422,10 +422,10 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                         n: 'Перечисляемое',
                         s: {
                             0: 'one',
-                            1: 'two'
-                        }
-                    }
-                }]
+                            1: 'two',
+                        },
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.DictionaryField>('enum');
@@ -442,10 +442,10 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                         n: 'Флаги',
                         s: {
                             0: 'one',
-                            1: 'two'
-                        }
-                    }
-                }]
+                            1: 'two',
+                        },
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.DictionaryField>('flags');
@@ -458,8 +458,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [{d: [], s: []}],
                 s: [{
                     n: 'rec',
-                    t: 'Запись'
-                }]
+                    t: 'Запись',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('rec');
@@ -471,8 +471,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [{d: [], s: []}],
                 s: [{
                     n: 'rs',
-                    t: 'Выборка'
-                }]
+                    t: 'Выборка',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('rs');
@@ -484,8 +484,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [''],
                 s: [{
                     n: 'bin',
-                    t: 'Двоичное'
-                }]
+                    t: 'Двоичное',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('bin');
@@ -497,8 +497,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [''],
                 s: [{
                     n: 'uuid',
-                    t: 'UUID'
-                }]
+                    t: 'UUID',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('uuid');
@@ -510,8 +510,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [''],
                 s: [{
                     n: 'file',
-                    t: 'Файл-rpc'
-                }]
+                    t: 'Файл-rpc',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat('file');
@@ -525,9 +525,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'arr',
                     t: {
                         n: 'Массив',
-                        t: 'Логическое'
-                    }
-                }]
+                        t: 'Логическое',
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getFormat<fieldFormat.ArrayField>('arr');
@@ -538,7 +538,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return String field format for unknown type', () => {
             const adapter = new SbisRecord({
                 d: [0],
-                s: [{n: 'id', t: 'Foo'}]
+                s: [{n: 'id', t: 'Foo'}],
             });
             const format = adapter.getFormat('id');
             assert.instanceOf(format, fieldFormat.StringField);
@@ -554,7 +554,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         it('should return format for reused data', () => {
             const data = {
                 d: [1],
-                s: [{n: 'foo', t: 'Число целое'}]
+                s: [{n: 'foo', t: 'Число целое'}],
             };
 
             const adapterA = new SbisRecord(data);
@@ -571,7 +571,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const adapter = new SbisRecord(data);
             const field = fieldsFactory({
                 type: 'string',
-                name: 'foo'
+                name: 'foo',
             });
             adapter.addField(field);
 
@@ -587,9 +587,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'foo',
                     t: {
                         n: 'Деньги',
-                        l: true
-                    }
-                }]
+                        l: true,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -602,8 +602,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'foo',
-                    t: 'Деньги'
-                }]
+                    t: 'Деньги',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -616,8 +616,8 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 d: [123],
                 s: [{
                     n: 'dt',
-                    t: 'Дата и время'
-                }]
+                    t: 'Дата и время',
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('dt');
@@ -632,9 +632,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'dt',
                     t: {
                         n: 'Дата и время',
-                        tz: false
-                    }
-                }]
+                        tz: false,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('dt');
@@ -649,13 +649,13 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'Перечисляемое',
                     s: {
                         0: 'one',
-                        1: 'two'
-                    }
-                }
+                        1: 'two',
+                    },
+                },
             };
             const data = {
                 d: [1],
-                s: [declaration]
+                s: [declaration],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('enum');
@@ -673,17 +673,17 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'Перечисляемое',
                     s: {
                         0: 'one',
-                        1: 'two'
+                        1: 'two',
                     },
                     sl: {
                         0: 'uno',
-                        1: 'dos'
-                    }
-                }
+                        1: 'dos',
+                    },
+                },
             };
             const data = {
                 d: [1],
-                s: [declaration]
+                s: [declaration],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('enum');
@@ -701,9 +701,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'foo',
                     t: {
                         n: 'Массив',
-                        t: 'Деньги'
-                    }
-                }]
+                        t: 'Деньги',
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -721,9 +721,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     t: {
                         n: 'Массив',
                         t: 'Деньги',
-                        p: 3
-                    }
-                }]
+                        p: 3,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -741,9 +741,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     t: {
                         n: 'Массив',
                         t: 'Деньги',
-                        l: true
-                    }
-                }]
+                        l: true,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -760,9 +760,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     n: 'foo',
                     t: {
                         n: 'Массив',
-                        t: 'Дата и время'
-                    }
-                }]
+                        t: 'Дата и время',
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -780,9 +780,9 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                     t: {
                         n: 'Массив',
                         t: 'Дата и время',
-                        tz: false
-                    }
-                }]
+                        tz: false,
+                    },
+                }],
             };
             const adapter = new SbisRecord(data);
             const format = adapter.getSharedFormat('foo');
@@ -799,7 +799,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 1;
             const field = fieldsFactory({
                 type: 'boolean',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -814,7 +814,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 1;
             const field = fieldsFactory({
                 type: 'integer',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -827,7 +827,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'real',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -842,7 +842,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'real',
                 name: fieldName,
-                precision
+                precision,
             });
             adapter.addField(field, fieldIndex);
 
@@ -855,7 +855,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'money',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -870,7 +870,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'money',
                 name: fieldName,
-                precision
+                precision,
             });
             adapter.addField(field, fieldIndex);
 
@@ -886,7 +886,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'money',
                 name: fieldName,
-                large: true
+                large: true,
             });
             adapter.addField(field, fieldIndex);
 
@@ -900,7 +900,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 2;
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -913,7 +913,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 2;
             const field = fieldsFactory({
                 type: 'text',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -926,7 +926,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 3;
             const field = fieldsFactory({
                 type: 'xml',
-                name: fieldName
+                name: fieldName,
             });
 
             adapter.addField(field, fieldIndex);
@@ -939,7 +939,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 3;
             const field = fieldsFactory({
                 type: 'datetime',
-                name: fieldName
+                name: fieldName,
             });
 
             adapter.addField(field, fieldIndex);
@@ -955,7 +955,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'datetime',
                 name: fieldName,
-                withoutTimeZone: true
+                withoutTimeZone: true,
             });
 
             adapter.addField(field, fieldIndex);
@@ -974,7 +974,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 type: 'datetime',
                 name: fieldName,
                 withoutTimeZone: true,
-                defaultValue: fieldValue
+                defaultValue: fieldValue,
             });
             adapter.addField(field, fieldIndex);
 
@@ -986,7 +986,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 4;
             const field = fieldsFactory({
                 type: 'date',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -999,7 +999,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 4;
             const field = fieldsFactory({
                 type: 'time',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1011,7 +1011,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 4;
             const field = fieldsFactory({
                 type: 'timeinterval',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), 'P0DT0H0M0S');
@@ -1023,7 +1023,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 4;
             const field = fieldsFactory({
                 type: 'identity',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -1038,7 +1038,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 type: 'enum',
                 name: fieldName,
                 defaultValue: 1,
-                dictionary: ['1st', '2nd']
+                dictionary: ['1st', '2nd'],
             });
             const expectedDict = {0: '1st', 1: '2nd'};
             adapter.addField(field, fieldIndex);
@@ -1056,7 +1056,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 type: 'enum',
                 name: fieldName,
                 defaultValue: 1,
-                dictionary: {0: '1st', 1: '2nd'}
+                dictionary: {0: '1st', 1: '2nd'},
             });
             const expectedDict = {0: '1st', 1: '2nd'};
             adapter.addField(field, fieldIndex);
@@ -1074,7 +1074,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 type: 'flags',
                 name: fieldName,
                 defaultValue: [1],
-                dictionary: {0: '1st', 1: '2nd'}
+                dictionary: {0: '1st', 1: '2nd'},
             });
             adapter.addField(field, fieldIndex);
 
@@ -1089,7 +1089,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'record',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1101,7 +1101,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'recordset',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1113,7 +1113,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: RecordSet,
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1125,7 +1125,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'binary',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1137,7 +1137,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'uuid',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
             assert.strictEqual(adapter.get(fieldName), null);
@@ -1149,7 +1149,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const fieldIndex = 0;
             const field = fieldsFactory({
                 type: 'rpcfile',
-                name: fieldName
+                name: fieldName,
             });
             adapter.addField(field, fieldIndex);
 
@@ -1163,7 +1163,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'hierarchy',
                 name: fieldName,
-                kind: 'Identity'
+                kind: 'Identity',
             });
             adapter.addField(field, fieldIndex);
 
@@ -1177,7 +1177,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = fieldsFactory({
                 type: 'array',
                 name: fieldName,
-                kind: 'Boolean'
+                kind: 'Boolean',
             });
             adapter.addField(field, fieldIndex);
 
@@ -1193,7 +1193,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def
+                defaultValue: def,
             }));
 
             assert.strictEqual(adapter.get(fieldName), def);
@@ -1203,7 +1203,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
                     type: 'string',
-                    name: 'id'
+                    name: 'id',
                 }));
             });
         });
@@ -1218,7 +1218,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.throws(() => {
                 adapter.addField({
                     type: 'string',
-                    name: 'New'
+                    name: 'New',
                 } as any);
             });
         });
@@ -1283,7 +1283,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const controller = new SbisFormatFinder(data);
             const field = fieldsFactory({
                 type: 'string',
-                name: 'foo'
+                name: 'foo',
             });
             adapter.setFormatController(controller);
             adapter.addField(field);

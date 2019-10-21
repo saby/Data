@@ -44,7 +44,7 @@ Object.assign(InstantiableMixin.prototype, {
     '[Types/_entity/InstantiableMixin]': true,
     '[Types/_entity/IInstantiable]': true,
     _instancePrefix: 'id-',
-    _instanceId: ''
+    _instanceId: '',
 });
 
 // Deprecated implementation

@@ -72,7 +72,7 @@ describe('Types/_source/Query', () => {
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => [item.getSelector(), item.getOrder()]),
-                [['customerId', true]]
+                [['customerId', true]],
             );
         });
 
@@ -81,7 +81,7 @@ describe('Types/_source/Query', () => {
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => [item.getSelector(), item.getOrder()]),
-                [['customerId', true], ['date', false]]
+                [['customerId', true], ['date', false]],
             );
         });
 
@@ -90,7 +90,7 @@ describe('Types/_source/Query', () => {
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => [item.getSelector(), item.getOrder()]),
-                [['customerId', true], ['date', false]]
+                [['customerId', true], ['date', false]],
             );
         });
 
@@ -99,7 +99,7 @@ describe('Types/_source/Query', () => {
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => item.getNullPolicy()),
-                [false]
+                [false],
             );
         });
 
@@ -108,22 +108,22 @@ describe('Types/_source/Query', () => {
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => item.getNullPolicy()),
-                [true]
+                [true],
             );
         });
 
         it('should set nullPolicy from array', () => {
             query.orderBy([
                 ['id', true, true],
-                ['customerId', true, false]
+                ['customerId', true, false],
             ]);
 
             assert.deepEqual(
                 query.getOrderBy().map((item) => [item.getSelector(), item.getOrder(), item.getNullPolicy()]),
                 [
                     ['id', true, true],
-                    ['customerId', true, false]
-                ]
+                    ['customerId', true, false],
+                ],
             );
         });
     });
@@ -177,8 +177,8 @@ describe('Types/_source/Query', () => {
                 {id: 'customerId'},
                 {
                     customerName: 'name',
-                    customerEmail: 'email'
-                }
+                    customerEmail: 'email',
+                },
             );
             assert.equal(query.getJoin().length, 1);
         });
@@ -204,7 +204,7 @@ describe('Types/_source/Query:Join', () => {
             as,
             on,
             select,
-            inner
+            inner,
         });
     });
 
@@ -256,7 +256,7 @@ describe('Types/_source/Query.Order', () => {
 
         it('should return value passed to the constructor', () => {
             const order = new Order({
-                selector: 'test'
+                selector: 'test',
             });
             assert.equal(order.getSelector(), 'test');
         });
@@ -271,7 +271,7 @@ describe('Types/_source/Query.Order', () => {
         it('should return boolean value passed to the constructor', () => {
             const order = new Order({
                 selector: 'foo',
-                order: false
+                order: false,
             });
             assert.isFalse(order.getOrder());
         });
@@ -279,19 +279,19 @@ describe('Types/_source/Query.Order', () => {
         it('should return false from string "ASC" passed to the constructor', () => {
             const orderA = new Order({
                 selector: 'foo',
-                order: 'ASC'
+                order: 'ASC',
             });
             assert.isFalse(orderA.getOrder());
 
             const orderB = new Order({
                 selector: 'foo',
-                order: 'asc'
+                order: 'asc',
             });
             assert.isFalse(orderB.getOrder());
 
             const orderC = new Order({
                 selector: 'foo',
-                order: 'Asc'
+                order: 'Asc',
             });
             assert.isFalse(orderC.getOrder());
         });
@@ -299,19 +299,19 @@ describe('Types/_source/Query.Order', () => {
         it('should return true from string "DESC" passed to the constructor', () => {
             const orderA = new Order({
                 selector: 'foo',
-                order: 'DESC'
+                order: 'DESC',
             });
             assert.isTrue(orderA.getOrder());
 
             const orderB = new Order({
                 selector: 'foo',
-                order: 'desc'
+                order: 'desc',
             });
             assert.isTrue(orderB.getOrder());
 
             const orderC = new Order({
                 selector: 'foo',
-                order: 'Desc'
+                order: 'Desc',
             });
             assert.isTrue(orderC.getOrder());
         });
@@ -326,13 +326,13 @@ describe('Types/_source/Query.Order', () => {
         it('should return value opposite to "order" option', () => {
             const orderAsc = new Order({
                 selector: 'foo',
-                order: false
+                order: false,
             });
             assert.isTrue(orderAsc.getNullPolicy());
 
             const orderDesc = new Order({
                 selector: 'foo',
-                order: true
+                order: true,
             });
             assert.isFalse(orderDesc.getNullPolicy());
         });
@@ -340,20 +340,20 @@ describe('Types/_source/Query.Order', () => {
         it('should return value passed to the constructor', () => {
             const orderWithTrue = new Order({
                 selector: 'foo',
-                nullPolicy: true
+                nullPolicy: true,
             });
             assert.isTrue(orderWithTrue.getNullPolicy());
 
             const orderWithFalse = new Order({
                 selector: 'foo',
-                nullPolicy: false
+                nullPolicy: false,
             });
             assert.isFalse(orderWithFalse.getNullPolicy());
 
             const orderWithOption = new Order({
                 selector: 'foo',
                 nullPolicy: true,
-                order: true
+                order: true,
             });
             assert.isTrue(orderWithOption.getNullPolicy());
         });

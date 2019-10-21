@@ -36,7 +36,7 @@ export default class Sliced<T> extends Abstract<T> {
         return new SlicedEnumerator(
             this._previous,
             this._begin,
-            this._end
+            this._end,
         );
     }
 
@@ -46,5 +46,5 @@ export default class Sliced<T> extends Abstract<T> {
 Object.assign(Sliced.prototype, {
     '[Types/_chain/Sliced]': true,
     _begin: 0,
-    _end: 0
+    _end: 0,
 });

@@ -92,7 +92,7 @@ export default abstract class ManyToManyMixin {
         const which = {
             target: this,
             data,
-            original: data
+            original: data,
         };
         this._getMediator().hasMany(this, (slave, name) => {
             if (slave['[Types/_entity/relation/IReceiver]']) {
@@ -114,7 +114,7 @@ export default abstract class ManyToManyMixin {
                 const which = {
                     target: child,
                     data,
-                    original
+                    original,
                 };
                 let parentWhich;
 
@@ -180,5 +180,5 @@ export default abstract class ManyToManyMixin {
 
 Object.assign(ManyToManyMixin.prototype, {
     '[Types/_entity/ManyToManyMixin]': true,
-    _mediator: null
+    _mediator: null,
 });

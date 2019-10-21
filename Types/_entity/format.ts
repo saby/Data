@@ -38,7 +38,7 @@ export {default as EnumField} from './format/EnumField';
 export {
     default as fieldsFactory,
     IDeclaration as IFieldDeclaration,
-    FormatDeclaration
+    FormatDeclaration,
 } from './format/fieldsFactory';
 export {default as FlagsField} from './format/FlagsField';
 export {default as HierarchyField} from './format/HierarchyField';
@@ -62,7 +62,7 @@ export {
     IRealMeta as IUniversalFieldRealMeta,
     IMoneyMeta as IUniversalFieldMoneyMeta,
     IIdentityMeta as IUniversalFieldIdentityMeta,
-    IArrayMeta as IUniversalFieldArrayMeta
+    IArrayMeta as IUniversalFieldArrayMeta,
 } from './format/UniversalField';
 export {default as UuidField} from './format/UuidField';
 export {default as XmlField} from './format/XmlField';

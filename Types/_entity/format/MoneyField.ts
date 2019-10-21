@@ -45,5 +45,5 @@ Object.assign(MoneyField.prototype, {
     _moduleName: 'Types/entity:format.MoneyField',
     _typeName: 'Money',
     _$precision: DEFAULT_PRECISION,
-    _$large: false
+    _$large: false,
 });
