@@ -9,13 +9,13 @@ class Mock<T> implements IAdapter {
 
     forTable(data: T): any {
         return {
-            getData: () => data,
+            getData: () => data
         };
     }
 
     forRecord(data: T): any {
         return {
-            getData: () => data,
+            getData: () => data
         };
     }
 
@@ -54,7 +54,7 @@ describe('Types/_entity/adapter/Cow', () => {
         it('should return table adapter', () => {
             assert.instanceOf(
                 adapter.forTable(),
-                CowTable,
+                CowTable
             );
         });
 
@@ -62,7 +62,7 @@ describe('Types/_entity/adapter/Cow', () => {
             const data = [{foo: 'bar'}];
             assert.strictEqual(
                 adapter.forTable(data).getData(),
-                data,
+                data
             );
         });
     });
@@ -71,7 +71,7 @@ describe('Types/_entity/adapter/Cow', () => {
         it('should return record adapter', () => {
             assert.instanceOf(
                 adapter.forRecord(),
-                CowRecord,
+                CowRecord
             );
         });
 
@@ -79,7 +79,7 @@ describe('Types/_entity/adapter/Cow', () => {
             const data = {foo: 'bar'};
             assert.strictEqual(
                 adapter.forRecord(data).getData(),
-                data,
+                data
             );
         });
     });
@@ -94,7 +94,7 @@ describe('Types/_entity/adapter/Cow', () => {
         it('should return the property value', () => {
             assert.equal(
                 adapter.getProperty({foo: 'bar'}, 'foo'),
-                'bar',
+                'bar'
             );
         });
     });
@@ -105,7 +105,7 @@ describe('Types/_entity/adapter/Cow', () => {
             adapter.setProperty(data, 'foo', 'baz');
             assert.equal(
                 data.foo,
-                'baz',
+                'baz'
             );
         });
     });

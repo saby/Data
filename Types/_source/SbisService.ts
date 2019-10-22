@@ -2,7 +2,7 @@ import Rpc from './Rpc';
 import {
     IOptions as IRemoteOptions,
     IOptionsOption as IRemoteOptionsOption,
-    IPassing as IRemotePassing,
+    IPassing as IRemotePassing
 } from './Remote';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
@@ -21,7 +21,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 enum PoitionNavigationOrder {
     before = 'before',
     after = 'after',
-    both = 'both',
+    both = 'both'
 }
 
 /**
@@ -140,11 +140,11 @@ function callDestroyWithComplexId(
     instance: SbisService | any,
     ids: string[],
     name: string,
-    meta: object,
+    meta: object
 ): ExtendPromise<any> {
     return instance._callProvider(
-        instance._$endpoint.contract === name ? instance._$binding.destroy :  `${name}.${instance._$binding.destroy}`,
-        instance._$passing.destroy.call(instance, ids, meta),
+        instance._$endpoint.contract === name ? instance._$binding.destroy :  name + '.' + instance._$binding.destroy,
+        instance._$passing.destroy.call(instance, ids, meta)
     );
 }
 
@@ -173,7 +173,10 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: strin
     }
 
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
-    const records = new RecordSetType({adapter, keyProperty});
+    const records = new RecordSetType({
+        adapter,
+        keyProperty
+    });
     const count = data.length || 0;
 
     for (let i = 0; i < count; i++) {
@@ -202,7 +205,7 @@ function getSortingParams(query: Query): string[] | null {
         sort.push({
             n: order.getSelector(),
             o: order.getOrder(),
-            l: order.getNullPolicy(),
+            l: order.getNullPolicy()
         });
     }
     return sort;
@@ -232,7 +235,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
                 params = {
                     Страница: limit > 0 ? Math.floor(offset / limit) : 0,
                     РазмерСтраницы: limit,
-                    ЕстьЕще: more,
+                    ЕстьЕще: more
                 };
             }
             break;
@@ -290,7 +293,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
                     HasMore: more,
                     Limit: limit,
                     Order: order || PoitionNavigationOrder.after,
-                    Position: buildRecord(position, adapter),
+                    Position: buildRecord(position, adapter)
                 };
             }
             break;
@@ -300,7 +303,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: ada
                 params = {
                     Offset: offset || 0,
                     Limit: limit,
-                    HasMore: more,
+                    HasMore: more
                 };
             }
     }
@@ -389,7 +392,7 @@ function passCreate(meta?: any): object {
     // TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
     return {
         Фильтр: buildRecord(meta, this._$adapter),
-        ИмяМетода: this._$binding.format || null,
+        ИмяМетода: this._$binding.format || null
     };
 }
 
@@ -399,7 +402,7 @@ function passCreate(meta?: any): object {
 function passRead(key: string | number, meta?: object): object {
     const args: any = {
         ИдО: key,
-        ИмяМетода: this._$binding.format || null,
+        ИмяМетода: this._$binding.format || null
     };
     if (meta && Object.keys(meta).length) {
         args.ДопПоля = meta;
@@ -433,7 +436,7 @@ function passUpdateBatch(items: RecordSet, meta?: object): object {
     return {
         changed: patch.get('changed'),
         added: patch.get('added'),
-        removed: patch.get('removed'),
+        removed: patch.get('removed')
     };
 }
 
@@ -441,7 +444,9 @@ function passUpdateBatch(items: RecordSet, meta?: object): object {
  * Returns data to send in destroy()
  */
 function passDestroy(keys: string | string[], meta?: object): object {
-    const args: any = {ИдО: keys};
+    const args: any = {
+        ИдО: keys
+    };
     if (meta && Object.keys(meta).length) {
         args.ДопПоля = meta;
     }
@@ -461,7 +466,7 @@ function passQuery(query?: Query): object {
         Фильтр: buildRecord(filter, this._$adapter),
         Сортировка: buildRecordSet(sort, this._$adapter, this.getKeyProperty()),
         Навигация: buildRecord(nav, this._$adapter),
-        ДопПоля: add,
+        ДопПоля: add
     };
 }
 
@@ -471,7 +476,7 @@ function passQuery(query?: Query): object {
 function passCopy(key: string | number, meta?: object): object {
     const args: any = {
         ИдО: key,
-        ИмяМетода: this._$binding.format,
+        ИмяМетода: this._$binding.format
     };
     if (meta && Object.keys(meta).length) {
         args.ДопПоля = meta;
@@ -485,7 +490,7 @@ function passCopy(key: string | number, meta?: object): object {
 function passMerge(from: string | number, to: string | number): object {
     return {
         ИдО: from,
-        ИдОУд: to,
+        ИдОУд: to
     };
 }
 
@@ -501,7 +506,7 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
         DestinationId: to,
         Order: meta.position,
         ReadMethod: meta.objectName + '.' + this._$binding.read,
-        UpdateMethod: meta.objectName + '.' + this._$binding.update,
+        UpdateMethod: meta.objectName + '.' + this._$binding.update
     };
 }
 
@@ -515,11 +520,11 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
 function oldMove(
     instance: SbisService | any,
     from: string | Array<string | number>,
-    to: string, meta: IOldMoveMeta,
+    to: string, meta: IOldMoveMeta
 ): ExtendPromise<any> {
     logger.info(
         instance._moduleName,
-        'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.',
+        'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.'
     );
 
     const moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
@@ -527,14 +532,14 @@ function oldMove(
         ПорядковыйНомер: instance._$orderProperty,
         Иерархия: meta.hierField || null,
         Объект: instance._$endpoint.moveContract,
-        ИдО: createComplexId(from as string, instance._$endpoint.contract),
+        ИдО: createComplexId(from as string, instance._$endpoint.contract)
     };
 
     params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, instance._$endpoint.contract);
 
     return instance._callProvider(
         instance._$endpoint.moveContract + '.' + moveMethod,
-        params,
+        params
     );
 }
 
@@ -851,7 +856,7 @@ export default class SbisService extends Rpc {
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
                 super.create(meta) as any,
-                ready,
+                ready
             );
         });
     }
@@ -862,9 +867,11 @@ export default class SbisService extends Rpc {
                 this._connectAdditionalDependencies(
                     this._callProvider(
                         this._$binding.updateBatch,
-                        passUpdateBatch(data as RecordSet, meta),
-                    ).addCallback((key) => this._prepareUpdateResult(data, key)) as any,
-                    ready,
+                        passUpdateBatch(data as RecordSet, meta)
+                    ).addCallback(
+                        (key) => this._prepareUpdateResult(data, key)
+                    ) as any,
+                    ready
                 );
             });
         }
@@ -878,7 +885,7 @@ export default class SbisService extends Rpc {
                 this,
                 [getKeyByComplexId(keys)],
                 getNameByComplexId(keys, this._$endpoint.contract),
-                meta,
+                meta
             );
         }
 
@@ -891,7 +898,7 @@ export default class SbisService extends Rpc {
                     this,
                     groups[name],
                     name,
-                    meta,
+                    meta
                 ));
             }
         }
@@ -903,7 +910,7 @@ export default class SbisService extends Rpc {
       return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
             super.query(query) as any,
-            ready,
+            ready
          );
       });
    }
@@ -935,7 +942,7 @@ export default class SbisService extends Rpc {
                     this._$binding.move.indexOf('.') > -1 ?
                         this._$binding.move :
                         this._$endpoint.moveContract + '.' + this._$binding.move,
-                    this._$passing.move.call(this, groups[name], target, meta),
+                    this._$passing.move.call(this, groups[name], target, meta)
                 );
                 if (groupsCount === 1) {
                     // TODO: нужно доработать ParallelDeferred что бы он возвращал оригинал ошибки:
@@ -961,7 +968,7 @@ export default class SbisService extends Rpc {
 
                 // TODO: remove pass 'service' and 'resource'
                 service: this._$endpoint.address,
-                resource: this._$endpoint.contract,
+                resource: this._$endpoint.contract
             });
         }
 
@@ -1148,7 +1155,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
          * Метод должен быть декларативным.
          * @name Types/_source/SbisService#binding.format
          */
-        format: '',
+        format: ''
     }),
 
     _$passing: getMergeableProperty<IRemotePassing>({
@@ -1198,7 +1205,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
          * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
          * @name Types/_source/BindingMixin#passing.move
          */
-        move: passMove,
+        move: passMove
     }),
 
     /**
@@ -1242,8 +1249,8 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
          * значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
          * @name Types/_source/SbisService#options.hasMoreProperty
          */
-        hasMoreProperty: 'hasMore',
-    })),
+        hasMoreProperty: 'hasMore'
+    }))
 });
 
 register('Types/source:SbisService', SbisService, {instantiate: false});

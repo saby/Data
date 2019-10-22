@@ -1,6 +1,6 @@
 import CollectionItem, {
     IOptions as ICollectionItemOptions,
-    ISerializableState as ICollectionItemSerializableState,
+    ISerializableState as ICollectionItemSerializableState
 } from './CollectionItem';
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
@@ -244,7 +244,7 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: true,
     _$childrenProperty: '',
-    _instancePrefix: 'tree-item-',
+    _instancePrefix: 'tree-item-'
 });
 
 register('Types/display:TreeItem', TreeItem, {instantiate: false});

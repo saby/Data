@@ -23,5 +23,5 @@ Object.assign(IntegerField.prototype, {
     '[Types/_entity/format/IntegerField]': true,
     _moduleName: 'Types/entity:format.IntegerField',
     _typeName: 'Integer',
-    _$defaultValue: 0,
+    _$defaultValue: 0
 });

@@ -22,7 +22,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends Tree
 
 Object.assign(Search.prototype, {
     _moduleName: 'Types/display:Search',
-    '[Types/_display/Search]': true,
+    '[Types/_display/Search]': true
 });
 
 register('Types/display:Search', Search, {instantiate: false});

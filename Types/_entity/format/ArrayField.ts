@@ -42,5 +42,5 @@ Object.assign(ArrayField.prototype, {
     '[Types/_entity/format/ArrayField]': true,
     _moduleName: 'Types/entity:format.ArrayField',
     _typeName: 'Array',
-    _$kind: '',
+    _$kind: ''
 });

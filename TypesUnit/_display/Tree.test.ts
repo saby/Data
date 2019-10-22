@@ -22,77 +22,77 @@ describe('Types/_display/Tree', () => {
              id: 10,
              pid: 1,
              node: true,
-             title: 'AA',
+             title: 'AA'
          }, {
              id: 11,
              pid: 1,
              node: true,
-             title: 'AB',
+             title: 'AB'
          }, {
              id: 12,
              pid: 1,
              node: true,
-             title: 'AC',
+             title: 'AC'
          }, {
              id: 121,
              pid: 12,
              node: true,
-             title: 'ACA',
+             title: 'ACA'
          }, {
              id: 122,
              pid: 12,
              node: false,
-             title: 'ACB',
+             title: 'ACB'
          }, {
              id: 123,
              pid: 12,
              node: false,
-             title: 'ACC',
+             title: 'ACC'
          }, {
              id: 1,
              pid: 0,
              node: true,
-             title: 'A',
+             title: 'A'
          }, {
              id: 2,
              pid: 0,
              node: true,
-             title: 'B',
+             title: 'B'
          }, {
              id: 20,
              pid: 2,
              node: true,
-             title: 'BA',
+             title: 'BA'
          }, {
              id: 200,
              pid: 20,
              node: true,
-             title: 'BAA',
+             title: 'BAA'
          }, {
              id: 2000,
              pid: 200,
-             title: 'BAAA',
+             title: 'BAAA'
          }, {
              id: 3,
              pid: 0,
              node: false,
-             title: 'C',
+             title: 'C'
          }, {
              id: 4,
              pid: 0,
-             title: 'D',
+             title: 'D'
          }];
      }
 
     function getItems(): List<IData> {
         return new List({
-            items: getData(),
+            items: getData()
         });
     }
 
     function getObservableItems(): ObservableList<IData> {
         return new ObservableList({
-            items: getData(),
+            items: getData()
         });
     }
 
@@ -101,11 +101,11 @@ describe('Types/_display/Tree', () => {
             collection: items || getItems(),
             root: {
                 id: 0,
-                title: 'Root',
+                title: 'Root'
             },
             keyProperty: 'id',
             parentProperty: 'pid',
-            nodeProperty: 'node',
+            nodeProperty: 'node'
         });
     }
 
@@ -114,18 +114,18 @@ describe('Types/_display/Tree', () => {
             collection: items || getObservableItems(),
             root: {
                 id: 0,
-                title: 'Root',
+                title: 'Root'
             },
             keyProperty: 'id',
             parentProperty: 'pid',
-            nodeProperty: 'node',
+            nodeProperty: 'node'
         });
     }
 
     function getRecordSetTree(): Tree<Model> {
         const rs = new RecordSet({
             rawData: getData(),
-            keyProperty: 'id',
+            keyProperty: 'id'
         });
         return getObservableTree<Model>(rs);
     }
@@ -163,22 +163,22 @@ describe('Types/_display/Tree', () => {
                         {id: 11, children: []},
                         {id: 12, children: [
                                 {id: 121, children: []},
-                                {id: 122},
+                                {id: 122}
                             ]},
-                        {id: 13, children: []},
+                        {id: 13, children: []}
                     ]},
                 {id: 2, children: [
                         {id: 21},
-                        {id: 22},
-                    ]},
+                        {id: 22}
+                    ]}
             ];
             const tree = new Tree({
                 collection: items,
                 root: {
                     id: 0,
-                    title: 'Root',
+                    title: 'Root'
                 },
-                childrenProperty: 'children',
+                childrenProperty: 'children'
             });
             const enumerator = tree.getEnumerator();
             const expect = [1, 11, 12, 121, 122, 13, 2, 21, 22];
@@ -203,7 +203,7 @@ describe('Types/_display/Tree', () => {
 
         it('should traverse all items as flat list if no options specified', () => {
             const tree = new Tree({
-                collection: items,
+                collection: items
             });
             const enumerator = tree.getEnumerator();
             let index = 0;
@@ -221,12 +221,12 @@ describe('Types/_display/Tree', () => {
                 collection: items,
                 root: {
                     id: 0,
-                    title: 'Root',
+                    title: 'Root'
                 },
                 rootEnumerable: true,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node',
+                nodeProperty: 'node'
             });
             const enumerator = tree.getEnumerator();
             const expect = ['Root', 'A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'];
@@ -247,15 +247,15 @@ describe('Types/_display/Tree', () => {
                 rawData: [
                     {id: 1, pid: 1, group: 'a'},
                     {id: 2, pid: 1, group: 'a'},
-                    {id: 3, pid: 1, group: 'a'},
-                ],
+                    {id: 3, pid: 1, group: 'a'}
+                ]
             });
             const tree = new Tree({
                 collection: rs,
                 root: 1,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                group: (item) => item.get('group'),
+                group: (item) => item.get('group')
             });
             const model = rs.at(1);
             const expectedBefore = ['a', rs.at(0), rs.at(1), rs.at(2)];
@@ -327,7 +327,7 @@ describe('Types/_display/Tree', () => {
             const tree = new Tree({
                 collection: items,
                 root: 0,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents(), 0 as any);
         });
@@ -336,7 +336,7 @@ describe('Types/_display/Tree', () => {
             const tree = new Tree({
                 collection: items,
                 root: '',
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents(), '' as any);
         });
@@ -345,7 +345,7 @@ describe('Types/_display/Tree', () => {
             const tree = new Tree({
                 collection: items,
                 root: {id: 1, title: 'Root'},
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot().getContents().id, 1);
             assert.strictEqual(tree.getRoot().getContents().title, 'Root');
@@ -354,12 +354,12 @@ describe('Types/_display/Tree', () => {
         it('should return given root from a TreeItem', () => {
             const root = new TreeItem({contents: {
                 id: null,
-                title: 'Root',
+                title: 'Root'
             }});
             const tree = new Tree({
                 collection: items,
                 root,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
             assert.strictEqual(tree.getRoot(), root);
         });
@@ -369,7 +369,7 @@ describe('Types/_display/Tree', () => {
                 collection: items,
                 root: null,
                 rootEnumerable: true,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
             const root = tree.getRoot();
 
@@ -382,7 +382,7 @@ describe('Types/_display/Tree', () => {
             const tree = new Tree({
                 collection: items,
                 root: 0,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
 
             let triggered = false;
@@ -413,7 +413,7 @@ describe('Types/_display/Tree', () => {
         it('should set root as tree item', () => {
             const root = new TreeItem({contents: {
                     id: null,
-                    title: 'Root',
+                    title: 'Root'
                 }});
             tree.setRoot(root);
             assert.strictEqual(tree.getRoot(), root);
@@ -469,17 +469,17 @@ describe('Types/_display/Tree', () => {
             const items = [
                 {id: 1, pid: 0, g: 0},
                 {id: 2, pid: 0, g: 1},
-                {id: 11, pid: 1, g: 0},
+                {id: 11, pid: 1, g: 0}
             ];
             const list = new List({
-                items,
+                items
             });
             const tree = new Tree({
                 collection: list,
                 root: 0,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                group: (item) => item.g,
+                group: (item) => item.g
             });
 
             tree.setRoot(1);
@@ -560,14 +560,14 @@ describe('Types/_display/Tree', () => {
 
             assert.equal(
                 tree.getChildren(tree.at(0), true).getCount(),
-                expect.length - 1,
+                expect.length - 1
             );
 
             const children = tree.getChildren(tree.at(0), false);
 
             assert.equal(
                 children.getCount(),
-                expect.length,
+                expect.length
             );
             children.each((child, index) => {
                 assert.strictEqual(child.getContents().title, expect[index]);
@@ -589,10 +589,10 @@ describe('Types/_display/Tree', () => {
             const data = [
                 {id: 1, pid: 0},
                 {id: 2, pid: 1},
-                {id: 3, pid: 2},
+                {id: 3, pid: 2}
             ];
             const items = new List({
-                items: data,
+                items: data
             });
             const tree = getTree(items);
             const expect = ['1', '2:1', '3:2:1'];
@@ -610,10 +610,10 @@ describe('Types/_display/Tree', () => {
                 {id: 1, pid: 0},
                 {id: 2, pid: 1},
                 {id: 3, pid: 2},
-                {id: 2, pid: 1},
+                {id: 2, pid: 1}
             ];
             const items = new List({
-                items: data,
+                items: data
             });
             const tree = getTree(items);
             const expect = ['1', '2:1', '3:2:1', '2:1-1', '3:2:1-1'];
@@ -633,7 +633,7 @@ describe('Types/_display/Tree', () => {
                 collection: items,
                 root: items[1],
                 rootEnumerable: true,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
 
             assert.strictEqual(tree.getIndexBySourceItem(items[1]), 0);
@@ -647,7 +647,7 @@ describe('Types/_display/Tree', () => {
                 const index = tree.getIndexBySourceIndex(i);
                 assert.strictEqual(
                     items.at(i),
-                    tree.at(index).getContents(),
+                    tree.at(index).getContents()
                 );
             }
         });
@@ -661,12 +661,12 @@ describe('Types/_display/Tree', () => {
                 if (index === -1) {
                     assert.strictEqual(
                         tree.at(i),
-                        tree.getRoot(),
+                        tree.getRoot()
                     );
                 } else {
                     assert.strictEqual(
                         tree.at(i).getContents(),
-                        items.at(index),
+                        items.at(index)
                     );
                 }
             }
@@ -685,17 +685,17 @@ describe('Types/_display/Tree', () => {
                 {id: 2, pid: 0, g: 1},
                 {id: 11, pid: 1, g: 0},
                 {id: 12, pid: 1, g: 0},
-                {id: 22, pid: 2, g: 2},
+                {id: 22, pid: 2, g: 2}
             ];
             const list = new List({
-                items,
+                items
             });
             const display = new Tree({
                 collection: list,
                 root: 0,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                group: (item) => item.g,
+                group: (item) => item.g
             });
 
             let item = display.at(1); // id = 1
@@ -718,17 +718,17 @@ describe('Types/_display/Tree', () => {
                 {id: 2, pid: 0, g: 1},
                 {id: 11, pid: 1, g: 0},
                 {id: 12, pid: 1, g: 0},
-                {id: 22, pid: 2, g: 2},
+                {id: 22, pid: 2, g: 2}
             ];
             const list = new List({
-                items,
+                items
             });
             const display = new Tree({
                 collection: list,
                 root: 0,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                group: (item) => item.g,
+                group: (item) => item.g
             });
 
             let item = display.at(5); // id = 2
@@ -904,23 +904,23 @@ describe('Types/_display/Tree', () => {
                 {id: 1, pid: 0, node: false},
                 {id: 2, pid: 0, node: false},
                 {id: 3, pid: 0, node: true},
-                {id: 4, pid: 0, node: true},
+                {id: 4, pid: 0, node: true}
             ];
             const collection = new List({
-                items,
+                items
             });
             const display = new Tree({
                 collection,
                 root: 0,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node',
+                nodeProperty: 'node'
             });
             const exected = [
                 items[2],
                 items[3],
                 items[0],
-                items[1],
+                items[1]
             ];
             const given = [];
 
@@ -949,16 +949,16 @@ describe('Types/_display/Tree', () => {
                 {id: 2, node: false, group: 'b'},
                 {id: 3, node: true, group: 'a'},
                 {id: 4, node: true, group: 'b'},
-                {id: 5, node: false, group: 'a'},
+                {id: 5, node: false, group: 'a'}
             ];
             const list = new List({
-                items,
+                items
             });
             const display = new Tree({
                 collection: list,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node',
+                nodeProperty: 'node'
             });
             const expected = [
                 'a',
@@ -967,7 +967,7 @@ describe('Types/_display/Tree', () => {
                 items[4],
                 'b',
                 items[1],
-                items[3],
+                items[3]
             ];
             const given = [];
 
@@ -986,17 +986,17 @@ describe('Types/_display/Tree', () => {
                 {id: 3, pid: 0, node: false, group: 'a'},
                 {id: 11, pid: 1, node: false, group: 'b'},
                 {id: 12, pid: 1, node: false, group: 'b'},
-                {id: 13, pid: 1, node: false, group: 'c'},
+                {id: 13, pid: 1, node: false, group: 'c'}
             ];
             const list = new List({
-                items,
+                items
             });
             const display = new Tree({
                 collection: list,
                 root: 0,
                 keyProperty: 'id',
                 parentProperty: 'pid',
-                nodeProperty: 'node',
+                nodeProperty: 'node'
             });
             const expectedA = [
                 items[0],
@@ -1004,7 +1004,7 @@ describe('Types/_display/Tree', () => {
                 items[4],
                 items[5],
                 items[1],
-                items[2],
+                items[2]
             ];
             const givenA = [];
 
@@ -1024,7 +1024,7 @@ describe('Types/_display/Tree', () => {
                 items[5],
                 'a',
                 items[1],
-                items[2],
+                items[2]
             ];
             const givenB = [];
             display.each((item) => {
@@ -1036,13 +1036,13 @@ describe('Types/_display/Tree', () => {
         it('should leave groups inside nodes after add items', () => {
             const items = [
                 {id: 1, pid: 0, node: true, group: 'a'},
-                {id: 2, pid: 0, node: false, group: 'b'},
+                {id: 2, pid: 0, node: false, group: 'b'}
             ];
             const addItems = [
-                {id: 11, pid: 1, node: false, group: 'c'},
+                {id: 11, pid: 1, node: false, group: 'c'}
             ];
             const list = new ObservableList({
-                items,
+                items
             });
             const display = new Tree({
                 collection: list,
@@ -1050,7 +1050,7 @@ describe('Types/_display/Tree', () => {
                 keyProperty: 'id',
                 parentProperty: 'pid',
                 nodeProperty: 'node',
-                group: (item) => item.group,
+                group: (item) => item.group
             });
             const expected = [
                 'a',
@@ -1058,7 +1058,7 @@ describe('Types/_display/Tree', () => {
                 'c',
                 addItems[0],
                 'b',
-                items[1],
+                items[1]
             ];
             const given = [];
 
@@ -1090,7 +1090,7 @@ describe('Types/_display/Tree', () => {
                     newItems: itemsMapper ? newItems.map(itemsMapper) : newItems,
                     newItemsIndex,
                     oldItems: itemsMapper ? oldItems.map(itemsMapper) : oldItems,
-                    oldItemsIndex,
+                    oldItemsIndex
                 });
             };
         };
@@ -1103,7 +1103,7 @@ describe('Types/_display/Tree', () => {
                     {id: 51,  pid: 5,  title: 'EA'},
                     {id: 52,  pid: 5,  title: 'EB'},
                     {id: 521, pid: 52, title: 'EBA'},
-                    {id: 53,  pid: 5,  title: 'EC'},
+                    {id: 53,  pid: 5,  title: 'EC'}
                 ];
                 const newNode = {id: 5, pid: 0, title: 'E'};
                 const expected = [{
@@ -1111,7 +1111,7 @@ describe('Types/_display/Tree', () => {
                     newItems: ['E', 'EA', 'EB', 'EBA', 'EC'],
                     newItemsIndex: list.getCount(),
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().title);
@@ -1132,7 +1132,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().title);
@@ -1149,17 +1149,17 @@ describe('Types/_display/Tree', () => {
                     {id: 1, pid: 0},
                     {id: 11, pid: 1},
                     {id: 2, pid: 0},
-                    {id: 3, pid: 0},
+                    {id: 3, pid: 0}
                 ];
                 const list = new ObservableList({
-                    items: data,
+                    items: data
                 });
                 const tree = new Tree({
                     collection: list,
                     root: 0,
                     keyProperty: 'id',
                     parentProperty: 'pid',
-                    filter: (item) => item.pid === 0,
+                    filter: (item) => item.pid === 0
                 });
                 const given = [];
                 const handler = getCollectionChangeHandler(given);
@@ -1169,7 +1169,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: [tree.at(0)],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
 
                 tree.subscribe('onCollectionChange', handler);
@@ -1183,16 +1183,16 @@ describe('Types/_display/Tree', () => {
                 const items = [
                     {id: 1, pid: 0},
                     {id: 2, pid: 0},
-                    {id: 3, pid: 0},
+                    {id: 3, pid: 0}
                 ];
                 const list = new ObservableList({
-                    items,
+                    items
                 });
                 const tree = new Tree({
                     collection: list,
                     root: 0,
                     keyProperty: 'id',
-                    parentProperty: 'pid',
+                    parentProperty: 'pid'
                 });
                 const moveFrom = 1;
                 const moveTo = 2;
@@ -1201,7 +1201,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [items[moveTo]],
                     newItemsIndex: moveFrom,
                     oldItems: [items[moveTo]],
-                    oldItemsIndex: moveTo,
+                    oldItemsIndex: moveTo
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents());
@@ -1217,16 +1217,16 @@ describe('Types/_display/Tree', () => {
                 const items = [
                     {id: 1, pid: 0},
                     {id: 2, pid: 0},
-                    {id: 3, pid: 0},
+                    {id: 3, pid: 0}
                 ];
                 const list = new ObservableList({
-                    items,
+                    items
                 });
                 const tree = new Tree({
                     collection: list,
                     root: 0,
                     keyProperty: 'id',
-                    parentProperty: 'pid',
+                    parentProperty: 'pid'
                 });
                 const moveFrom = 2;
                 const moveTo = 0;
@@ -1235,7 +1235,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [items[moveFrom]],
                     newItemsIndex: moveTo,
                     oldItems: [items[moveFrom]],
-                    oldItemsIndex: moveFrom,
+                    oldItemsIndex: moveFrom
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents());
@@ -1264,8 +1264,8 @@ describe('Types/_display/Tree', () => {
                         {id: 3, pid: 0, node: false},
                         {id: 4, pid: 1, node: false},
                         {id: 5, pid: 1, node: false},
-                        {id: 6, pid: 0, node: true},
-                    ],
+                        {id: 6, pid: 0, node: true}
+                    ]
                 });
                 const tree = new Tree({
                     collection: list,
@@ -1273,7 +1273,7 @@ describe('Types/_display/Tree', () => {
                     keyProperty: 'id',
                     parentProperty: 'pid',
                     nodeProperty: 'node',
-                    sort,
+                    sort
                 });
                 const moveFrom = 5;
                 const moveTo = 2;
@@ -1295,8 +1295,8 @@ describe('Types/_display/Tree', () => {
                         {id: 'aaa', pid: 'aa'},
                         {id: 'b',   pid: 0},
                         {id: 'ba',  pid: 'b'},
-                        {id: 'bb',  pid: 'b'},
-                    ],
+                        {id: 'bb',  pid: 'b'}
+                    ]
                 });
                 const tree = getObservableTree(list);
 
@@ -1325,13 +1325,13 @@ describe('Types/_display/Tree', () => {
                     newItems: ['aa1'],
                     newItemsIndex: 3,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }, {
                     action: IBindCollectionDisplay.ACTION_ADD,
                     newItems: ['a', 'aa', 'aaa', 'aa1'],
                     newItemsIndex: 7,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().id);
@@ -1339,7 +1339,7 @@ describe('Types/_display/Tree', () => {
                 tree.subscribe('onCollectionChange', handler);
                 list.append([
                     {id: 'a',   pid: 0},
-                    {id: 'aa1', pid: 'a'},
+                    {id: 'aa1', pid: 'a'}
                 ]);
                 tree.unsubscribe('onCollectionChange', handler);
 
@@ -1359,7 +1359,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [tree.at(0)],
                     newItemsIndex: 0,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
 
                 assert.deepEqual(given, expected);
@@ -1375,7 +1375,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: [tree.at(0)],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
 
                 tree.subscribe('onCollectionChange', handler);
@@ -1397,13 +1397,13 @@ describe('Types/_display/Tree', () => {
                     newItems: [999],
                     newItemsIndex: 1,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: [0],
                     newItemsIndex: 0,
                     oldItems: [0],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().id);
@@ -1429,13 +1429,13 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: [item.title],
-                    oldItemsIndex: 3,
+                    oldItemsIndex: 3
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: ['A'],
                     newItemsIndex: 1,
                     oldItems: ['A'],
-                    oldItemsIndex: 1,
+                    oldItemsIndex: 1
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().title);
@@ -1494,23 +1494,23 @@ describe('Types/_display/Tree', () => {
                     {id: 1, pid: 0},
                     {id: 11, pid: 1},
                     {id: 111, pid: 11},
-                    {id: 1111, pid: 111},
+                    {id: 1111, pid: 111}
                 ];
                 const items = new RecordSet({
-                    rawData,
+                    rawData
                 });
                 const tree = new Tree({
                     collection: items,
                     root: 0,
                     keyProperty: 'id',
-                    parentProperty: 'pid',
+                    parentProperty: 'pid'
                 });
                 const expected = [{
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: [1, 11, 111, 1111],
                     newItemsIndex: 0,
                     oldItems: [1, 11, 111, 1111],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().get('id'));
@@ -1535,13 +1535,13 @@ describe('Types/_display/Tree', () => {
                     newItems: [itemD.get('title')],
                     newItemsIndex: 7,
                     oldItems: [itemD.get('title')],
-                    oldItemsIndex: 12,
+                    oldItemsIndex: 12
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: ['AC'],
                     newItemsIndex: 3,
                     oldItems: ['AC'],
-                    oldItemsIndex: 3,
+                    oldItemsIndex: 3
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().get('title'));
@@ -1564,19 +1564,19 @@ describe('Types/_display/Tree', () => {
                     newItems: ['BAA', 'BAAA'],
                     newItemsIndex: 7,
                     oldItems: ['BAA', 'BAAA'],
-                    oldItemsIndex: 9,
+                    oldItemsIndex: 9
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: ['AC'],
                     newItemsIndex: 3,
                     oldItems: ['AC'],
-                    oldItemsIndex: 3,
+                    oldItemsIndex: 3
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: ['BA'],
                     newItemsIndex: 10,
                     oldItems: ['BA'],
-                    oldItemsIndex: 10,
+                    oldItemsIndex: 10
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().get('title'));
@@ -1601,7 +1601,7 @@ describe('Types/_display/Tree', () => {
                     newItems: ['A'],
                     newItemsIndex: 0,
                     oldItems: ['A'],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.getContents().get('title'));
@@ -1627,13 +1627,13 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: [true],
-                    oldItemsIndex: 1,
+                    oldItemsIndex: 1
                 }, {
                     action: IBindCollectionDisplay.ACTION_ADD,
                     newItems: [true],
                     newItemsIndex: 1,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.isExpanded());
@@ -1660,13 +1660,13 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: [true],
-                    oldItemsIndex: 1,
+                    oldItemsIndex: 1
                 }, {
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: [false],
                     newItemsIndex: 0,
                     oldItems: [false],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 }];
                 const given = [];
                 const handler = getCollectionChangeHandler(given, (item) => item.isExpanded());
@@ -1686,10 +1686,10 @@ describe('Types/_display/Tree', () => {
                 const items = [
                     {id: 'a', pid: null},
                     {id: 'b', pid: null},
-                    {id: 'c', pid: 'a'},
+                    {id: 'c', pid: 'a'}
                 ];
                 const list = new ObservableList({
-                    items,
+                    items
                 });
                 let hidden = [];
                 const tree = new Tree({
@@ -1697,7 +1697,7 @@ describe('Types/_display/Tree', () => {
                     parentProperty: 'pid',
                     root: null,
                     collection: list,
-                    filter: (item) => hidden.indexOf(item.id) === -1,
+                    filter: (item) => hidden.indexOf(item.id) === -1
                 });
                 const expected = [];
                 const given = [];
@@ -1715,7 +1715,7 @@ describe('Types/_display/Tree', () => {
                     newItems: [],
                     newItemsIndex: 0,
                     oldItems: ['a', 'c'],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 });
 
                 hidden = ['c'];
@@ -1725,7 +1725,7 @@ describe('Types/_display/Tree', () => {
                     newItems: ['a'],
                     newItemsIndex: -1,
                     oldItems: ['a'],
-                    oldItemsIndex: -1,
+                    oldItemsIndex: -1
                 });
 
                 list.add(removedItem);
@@ -1735,7 +1735,7 @@ describe('Types/_display/Tree', () => {
                     newItems: ['a'],
                     newItemsIndex: 1,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 });
 
                 hidden = [];
@@ -1745,14 +1745,14 @@ describe('Types/_display/Tree', () => {
                     newItems: ['c'],
                     newItemsIndex: 2,
                     oldItems: [],
-                    oldItemsIndex: 0,
+                    oldItemsIndex: 0
                 });
                 expected.push({
                     action: IBindCollectionDisplay.ACTION_CHANGE,
                     newItems: ['a'],
                     newItemsIndex: 1,
                     oldItems: ['a'],
-                    oldItemsIndex: 1,
+                    oldItemsIndex: 1
                 });
 
                 tree.unsubscribe('onCollectionChange', handler);
@@ -1774,7 +1774,7 @@ describe('Types/_display/Tree', () => {
                 assert.strictEqual(
                     items[i].getInstanceId(),
                     cloneItems[i].getInstanceId(),
-                    'at ' + i,
+                    'at ' + i
                 );
 
                 const parent = items[i].getParent();
@@ -1782,7 +1782,7 @@ describe('Types/_display/Tree', () => {
                 assert.strictEqual(
                     parent.getInstanceId(),
                     cloneParent.getInstanceId(),
-                    'at parent for ' + i,
+                    'at parent for ' + i
                 );
             }
         });

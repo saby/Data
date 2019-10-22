@@ -14,6 +14,10 @@ export class SetPolyfill <T> {
         this.clear();
     }
 
+    static _getHashedKey<T>(key: T): string {
+        return (typeof key) + '@' + key;
+    }
+
     add(value: T): this {
         const key = this._isObject(value) ? this._addObject(value) : value;
 
@@ -112,16 +116,12 @@ export class SetPolyfill <T> {
         }
         return this._objectPrefix + index;
     }
-
-    static _getHashedKey<T>(key: T): string {
-        return (typeof key) + '@' + key;
-    }
 }
 
 Object.assign(SetPolyfill.prototype, {
     _hash: null,
     _objectPrefix: '{[object]}:',
-    _objects: null,
+    _objects: null
 });
 
 Object.defineProperty(SetPolyfill.prototype, 'size', {
@@ -129,7 +129,7 @@ Object.defineProperty(SetPolyfill.prototype, 'size', {
         return Object.keys(this._hash).length;
     },
     enumerable: true,
-    configurable: false,
+    configurable: false
 });
 
 // Use native implementation if supported

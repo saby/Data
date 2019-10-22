@@ -59,5 +59,5 @@ Object.assign(RealField.prototype, {
     _moduleName: 'Types/entity:format.RealField',
     _typeName: 'Real',
     _$defaultValue: 0,
-    _$precision: DEFAULT_PRECISION,
+    _$precision: DEFAULT_PRECISION
 });

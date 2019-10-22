@@ -2,13 +2,13 @@ import {assert} from 'chai';
 import SbisBusinessLogic from 'Types/_source/provider/SbisBusinessLogic';
 
 class TransportMock {
+   static lastMethod: string;
+   static lastArgs: any;
 
    callMethod(method: string, args: any): void {
       TransportMock.lastMethod = method;
       TransportMock.lastArgs = args;
    }
-   static lastMethod: string;
-   static lastArgs: any;
 }
 
 describe('Types/_source/provider/SbisBusinessLogic', () => {
@@ -17,13 +17,13 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
          const provider = new SbisBusinessLogic({
             endpoint: {
                address: '/foo',
-               contract: 'bar',
-            },
+               contract: 'bar'
+            }
          });
 
          assert.deepEqual(provider.getEndpoint(), {
             address: '/foo',
-            contract: 'bar',
+            contract: 'bar'
          });
       });
    });
@@ -34,9 +34,9 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
       beforeEach(() => {
          provider = new SbisBusinessLogic({
             endpoint: {
-               contract: 'foo',
+               contract: 'foo'
             },
-            transport: TransportMock,
+            transport: TransportMock
          });
       });
 

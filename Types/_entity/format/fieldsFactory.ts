@@ -113,7 +113,7 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
             case 'text':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
-                    'Type "text" has been removed in 3.18.10. Use "string" instead.',
+                    'Type "text" has been removed in 3.18.10. Use "string" instead.'
                 );
                 declaration.type = 'string';
                 return new StringField(declaration) as any;
@@ -149,7 +149,7 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
             case 'hierarchy':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
-                    'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.',
+                    'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.'
                 );
                 declaration.type = 'identity';
                 return new IdentityField(declaration) as any;
@@ -191,6 +191,6 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
 
     throw new TypeError(
         'Types/_entity/format/fieldsFactory: ' +
-        `unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`,
+        `unsupported field type ${typeof type === 'function' ? type.name : '"' + type + '"'}`
     );
 }

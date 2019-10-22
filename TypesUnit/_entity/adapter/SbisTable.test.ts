@@ -9,7 +9,7 @@ import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin'
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
         {n: 'id', t: 'Число целое'},
-        {n: 'lastname', t: 'Строка'},
+        {n: 'lastname', t: 'Строка'}
     ];
 
     let data: ITableFormat;
@@ -24,9 +24,9 @@ describe('Types/_entity/adapter/SbisTable', () => {
                 [4, 'Bing'],
                 [5, 'Tribbiani'],
                 [6, 'Buffay'],
-                [7, 'Tyler'],
+                [7, 'Tyler']
             ],
-            s: getFormat(),
+            s: getFormat()
         };
 
         adapter = new SbisTable(data);
@@ -49,7 +49,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return results field', () => {
             const data = {
                 d: [],
-                r: {d: [], s: []},
+                r: {d: [], s: []}
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -61,7 +61,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return path field', () => {
             const data = {
                 d: [],
-                p: {d: [], s: []},
+                p: {d: [], s: []}
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -73,7 +73,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return total field for Number', () => {
             const data = {
                 n: 1,
-                d: [],
+                d: []
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -88,7 +88,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return total field for Boolean', () => {
             const data = {
                 n: true,
-                d: [],
+                d: []
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -104,9 +104,9 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const data = {
                 n: {
                     after: false,
-                    before: true,
+                    before: true
                 },
-                d: [],
+                d: []
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -123,9 +123,9 @@ describe('Types/_entity/adapter/SbisTable', () => {
                 n: {
                     _type: 'recordset',
                     d: [],
-                    s: [],
+                    s: []
                 },
-                d: [],
+                d: []
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -142,9 +142,9 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const data = {
                 m: {
                     d: [1, 'foo'],
-                    s: format,
+                    s: format
                 },
-                d: [],
+                d: []
             };
             const adapter = new SbisTable(data);
             const descriptor = adapter.getMetaDataDescriptor();
@@ -179,7 +179,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'lastname'],
+                ['id', 'lastname']
             );
         });
     });
@@ -188,27 +188,27 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return records count', () => {
             assert.strictEqual(
                 7,
-                adapter.getCount(),
+                adapter.getCount()
             );
 
             assert.strictEqual(
                 0,
-                new SbisTable({} as any).getCount(),
+                new SbisTable({} as any).getCount()
             );
 
             assert.strictEqual(
                 0,
-                new SbisTable('' as any).getCount(),
+                new SbisTable('' as any).getCount()
             );
 
             assert.strictEqual(
                 0,
-                new SbisTable(0 as any).getCount(),
+                new SbisTable(0 as any).getCount()
             );
 
             assert.strictEqual(
                 0,
-                new SbisTable().getCount(),
+                new SbisTable().getCount()
             );
         });
     });
@@ -217,66 +217,66 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should append a record', () => {
             adapter.add({
                 d: [30, 'Огурцов'],
-                s: getFormat(),
+                s: getFormat()
             }, undefined);
 
             assert.strictEqual(
                 8,
-                data.d.length,
+                data.d.length
             );
 
             assert.strictEqual(
                 30,
-                data.d[data.d.length - 1][0],
+                data.d[data.d.length - 1][0]
             );
 
             assert.strictEqual(
                 'Огурцов',
-                data.d[data.d.length - 1][1],
+                data.d[data.d.length - 1][1]
             );
         });
 
         it('should prepend a record', () => {
             adapter.add(
                 {d: [40, 'Перцов'], s: getFormat()},
-                0,
+                0
             );
 
             assert.strictEqual(
                 8,
-                data.d.length,
+                data.d.length
             );
 
             assert.strictEqual(
                 40,
-                data.d[0][0],
+                data.d[0][0]
             );
 
             assert.strictEqual(
                 'Перцов',
-                data.d[0][1],
+                data.d[0][1]
             );
         });
 
         it('should insert a record', () => {
             adapter.add({
                 d: [50, 'Горохов'],
-                s: getFormat(),
+                s: getFormat()
             }, 2);
 
             assert.strictEqual(
                 8,
-                data.d.length,
+                data.d.length
             );
 
             assert.strictEqual(
                 50,
-                data.d[2][0],
+                data.d[2][0]
             );
 
             assert.strictEqual(
                 'Горохов',
-                data.d[2][1],
+                data.d[2][1]
             );
         });
 
@@ -284,18 +284,18 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const format = [{n: 'id', t: 'Число целое'}];
             const data = {
                 d: [],
-                s: format,
+                s: format
             };
             const adapter = new SbisTable(data);
 
             adapter.add({d: [5], s: format}, 0);
             assert.strictEqual(
                 1,
-                data.d.length,
+                data.d.length
             );
             assert.strictEqual(
                 5,
-                data.d[0][0],
+                data.d[0][0]
             );
         });
 
@@ -303,18 +303,18 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const format = [{n: 'id', t: 'Число целое'}];
             const data = {
                 d: [[1], [2]],
-                s: format,
+                s: format
             };
             const adapter = new SbisTable(data);
 
             adapter.add({d: [33], s: format}, 2);
             assert.strictEqual(
                 3,
-                data.d.length,
+                data.d.length
             );
             assert.strictEqual(
                 33,
-                data.d[2][0],
+                data.d[2][0]
             );
         });
 
@@ -359,7 +359,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
 
             assert.strictEqual(
                 1 + count,
-                data.d.length,
+                data.d.length
             );
         });
 
@@ -372,7 +372,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
 
             assert.strictEqual(
                 1 + count,
-                data.d.length,
+                data.d.length
             );
         });
 
@@ -385,14 +385,14 @@ describe('Types/_entity/adapter/SbisTable', () => {
 
             assert.strictEqual(
                 1 + count,
-                data.d.length,
+                data.d.length
             );
         });
 
         it('should take the format from the record if don\'t have own and not empty owns format', () => {
             const table = {
                 d: [],
-                s: [{n: 'id', t: 'Строка'}],
+                s: [{n: 'id', t: 'Строка'}]
             };
             const adapter = new SbisTable(table);
             const format = [{n: 'id', t: 'Число целое'}];
@@ -407,35 +407,35 @@ describe('Types/_entity/adapter/SbisTable', () => {
         it('should return valid record', () => {
             assert.strictEqual(
                 1,
-                adapter.at(0).d[0] as any,
+                adapter.at(0).d[0] as any
             );
             assert.strictEqual(
                 3,
-                adapter.at(2).d[0] as any,
+                adapter.at(2).d[0] as any
             );
         });
 
         it('should return undefined on invalid position', () => {
             assert.isUndefined(
-                adapter.at(-1),
+                adapter.at(-1)
             );
             assert.isUndefined(
-                adapter.at(99),
+                adapter.at(99)
             );
         });
 
         it('should return undefined on invalid data', () => {
             assert.isUndefined(
-                new SbisTable({} as any).at(undefined),
+                new SbisTable({} as any).at(undefined)
             );
             assert.isUndefined(
-                new SbisTable('' as any).at(undefined),
+                new SbisTable('' as any).at(undefined)
             );
             assert.isUndefined(
-                new SbisTable(0 as any).at(undefined),
+                new SbisTable(0 as any).at(undefined)
             );
             assert.isUndefined(
-                new SbisTable().at(undefined),
+                new SbisTable().at(undefined)
             );
         });
     });
@@ -445,18 +445,18 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.remove(0);
             assert.strictEqual(
                 2,
-                data.d[0][0],
+                data.d[0][0]
             );
 
             adapter.remove(2);
             assert.strictEqual(
                 5,
-                data.d[2][0],
+                data.d[2][0]
             );
 
             adapter.remove(4);
             assert.isUndefined(
-                data.d[4],
+                data.d[4]
             );
         });
 
@@ -475,7 +475,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.merge(0, 1);
             assert.strictEqual(
                 'Green',
-                data.d[0][1],
+                data.d[0][1]
             );
         });
     });
@@ -485,7 +485,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const copy = adapter.copy(1);
             assert.deepEqual(
                 copy,
-                data.d[1],
+                data.d[1]
             );
         });
 
@@ -493,7 +493,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const copy = adapter.copy(1);
             assert.strictEqual(
                 copy,
-                data.d[2],
+                data.d[2]
             );
         });
     });
@@ -503,13 +503,13 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.replace({d: [11], s: getFormat()}, 0);
             assert.strictEqual(
                 11,
-                data.d[0][0],
+                data.d[0][0]
             );
 
             adapter.replace({d: [12], s: getFormat()}, 4);
             assert.strictEqual(
                 12,
-                data.d[4][0],
+                data.d[4][0]
             );
 
         });
@@ -542,15 +542,15 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.move(0, 2);
             assert.strictEqual(
                 'Green',
-                data.d[0][1],
+                data.d[0][1]
             );
             assert.strictEqual(
                 'Geller',
-                data.d[1][1],
+                data.d[1][1]
             );
             assert.strictEqual(
                 'Smith',
-                data.d[2][1],
+                data.d[2][1]
             );
         });
 
@@ -558,15 +558,15 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.move(2, 0);
             assert.strictEqual(
                 'Geller',
-                data.d[0][1],
+                data.d[0][1]
             );
             assert.strictEqual(
                 'Smith',
-                data.d[1][1],
+                data.d[1][1]
             );
             assert.strictEqual(
                 'Green',
-                data.d[2][1],
+                data.d[2][1]
             );
         });
 
@@ -574,11 +574,11 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.move(1, 6);
             assert.strictEqual(
                 'Green',
-                data.d[6][1],
+                data.d[6][1]
             );
             assert.strictEqual(
                 'Tyler',
-                data.d[5][1],
+                data.d[5][1]
             );
         });
 
@@ -586,11 +586,11 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.move(1, 1);
             assert.strictEqual(
                 'Green',
-                data.d[1][1],
+                data.d[1][1]
             );
             assert.strictEqual(
                 'Buffay',
-                data.d[5][1],
+                data.d[5][1]
             );
         });
     });
@@ -642,7 +642,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const fieldPos = 1;
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName,
+                name: fieldName
             });
             adapter.addField(field, fieldPos);
             assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
@@ -658,7 +658,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def,
+                defaultValue: def
             }), fieldPos);
             for (let i = 0; i < adapter.getCount(); i++) {
                 assert.strictEqual(adapter.at(i).d[fieldPos] as any, def);
@@ -669,7 +669,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
                     type: 'string',
-                    name: 'id',
+                    name: 'id'
                 }));
             });
         });
@@ -686,7 +686,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
             assert.throws(() => {
                 adapter.addField({
                     type: 'string',
-                    name: 'New',
+                    name: 'New'
                 } as any);
             });
         });

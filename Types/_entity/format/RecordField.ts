@@ -21,5 +21,5 @@ export default class RecordField extends Field {
 Object.assign(RecordField.prototype, {
     '[Types/_entity/format/RecordField]': true,
     _moduleName: 'Types/entity:format.RecordField',
-    _typeName: 'Record',
+    _typeName: 'Record'
 });

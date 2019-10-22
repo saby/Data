@@ -8,7 +8,7 @@ import {
     DestroyableMixin,
     OptionsToPropertyMixin,
     ObservableMixin,
-    format,
+    format
 } from '../entity';
 import {mixin} from '../util';
 import {IHashMap} from '../_declarations';
@@ -33,7 +33,7 @@ export default abstract class Dictionary<T> extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    ObservableMixin,
+    ObservableMixin
 ) implements IEnumerable<T>, IEquatable {
     /**
      * @cfg {Array.<String>|Object.<String>} Collection of keys and values
@@ -64,7 +64,6 @@ export default abstract class Dictionary<T> extends mixin<
         super.destroy();
     }
 
-
     // region IEnumerable
 
     readonly '[Types/_collection/IEnumerable]': boolean;
@@ -89,7 +88,7 @@ export default abstract class Dictionary<T> extends mixin<
             callback.call(
                 context,
                 enumerator.getCurrent(),
-                enumerator.getCurrentIndex(),
+                enumerator.getCurrentIndex()
             );
         }
     }
@@ -222,5 +221,5 @@ Object.assign(Dictionary.prototype, {
     '[Types/_entity/IEquatable]': true,
     _$dictionary: undefined,
     _$localeDictionary: undefined,
-    _type: undefined,
+    _type: undefined
 });

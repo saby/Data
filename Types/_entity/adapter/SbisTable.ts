@@ -45,7 +45,7 @@ export default class SbisTable extends mixin<
     SbisFormatMixin
 >(
     DestroyableMixin,
-    SbisFormatMixin,
+    SbisFormatMixin
 ) implements ITable, IMetaData, ICloneable {
 
     get type(): string {
@@ -91,7 +91,7 @@ export default class SbisTable extends mixin<
     at(index: number): ITableFormat {
         return this._isValidData() && this._data.d[index] ? {
             d: this._data.d[index],
-            s: this._data.s,
+            s: this._data.s
         } : undefined;
     }
 
@@ -127,7 +127,7 @@ export default class SbisTable extends mixin<
         this._checkRowIndex(donor);
         merge(
             this._data.d[acceptor],
-            this._data.d[donor],
+            this._data.d[donor]
         );
         this.remove(donor);
     }
@@ -158,14 +158,14 @@ export default class SbisTable extends mixin<
         if (data.hasOwnProperty('r')) {
             result.push(fieldsFactory({
                 name: 'results',
-                type: 'record',
+                type: 'record'
             }));
         }
 
         if (data.hasOwnProperty('p')) {
             result.push(fieldsFactory({
                 name: 'path',
-                type: 'recordset',
+                type: 'recordset'
             }));
         }
 
@@ -191,12 +191,12 @@ export default class SbisTable extends mixin<
 
             result.push(fieldsFactory({
                 name: 'total',
-                type,
+                type
             }));
 
             result.push(fieldsFactory({
                 name: 'more',
-                type,
+                type
             }));
         }
 
@@ -297,5 +297,5 @@ Object.assign(SbisTable.prototype, {
     '[Types/_entity/adapter/SbisTable]': true,
     '[Types/_entity/adapter/ITable]': true,
     '[Types/_entity/adapter/IMetaData]': true,
-    '[Types/_entity/ICloneable]': true,
+    '[Types/_entity/ICloneable]': true
 });

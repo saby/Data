@@ -62,7 +62,7 @@ Object.assign(VersionableMixin.prototype, {
     '[Types/_entity/VersionableMixin]': true,
     '[Types/_entity/IVersionable]': true,
     _version: 0,
-    _$versionCallback: null,
+    _$versionCallback: null
 });
 
 // Deprecated implementation

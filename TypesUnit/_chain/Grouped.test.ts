@@ -22,12 +22,12 @@ describe('Types/_chain/Grouped', () => {
             const expectedKeys = [
                 'one',
                 'two',
-                'three',
+                'three'
             ];
             const expectedValues = [
                 ['one'],
                 ['two', 'two'],
-                ['three'],
+                ['three']
             ];
 
             let index = 0;
@@ -47,12 +47,12 @@ describe('Types/_chain/Grouped', () => {
             const expectedKeys = [
                 1,
                 2,
-                3,
+                3
             ];
             const expectedValues = [
                 [1],
                 [2, 2],
-                [3],
+                [3]
             ];
 
             let index = 0;
@@ -69,7 +69,7 @@ describe('Types/_chain/Grouped', () => {
                 {id: 1},
                 {id: 2},
                 {id: 1},
-                {id: 3},
+                {id: 3}
             ];
             const prev = new ArrayMock(items);
             const chain = new GroupedChain(prev, 'id');
@@ -77,12 +77,12 @@ describe('Types/_chain/Grouped', () => {
             const expectedKeys = [
                 1,
                 2,
-                3,
+                3
             ];
             const expectedValues = [
                 [items[0], items[2]],
                 [items[1]],
-                [items[3]],
+                [items[3]]
             ];
 
             let index = 0;
@@ -99,7 +99,7 @@ describe('Types/_chain/Grouped', () => {
                 {id: 1, value: 'one'},
                 {id: 2, value: 'two'},
                 {id: 1, value: 'three'},
-                {id: 3, value: 'four'},
+                {id: 3, value: 'four'}
             ];
             const prev = new ArrayMock(items);
             const chain = new GroupedChain(prev, 'id', 'value');
@@ -107,12 +107,12 @@ describe('Types/_chain/Grouped', () => {
             const expectedKeys = [
                 1,
                 2,
-                3,
+                3
             ];
             const expectedValues = [
                 ['one', 'three'],
                 ['two'],
-                ['four'],
+                ['four']
             ];
 
             let index = 0;
@@ -131,11 +131,11 @@ describe('Types/_chain/Grouped', () => {
             const enumerator = chain.getEnumerator();
             const expectedKeys = [
                 'odd',
-                'even',
+                'even'
             ];
             const expectedValues = [
                 [1, 3, 5],
-                [2, 4],
+                [2, 4]
             ];
 
             let index = 0;
@@ -153,16 +153,16 @@ describe('Types/_chain/Grouped', () => {
             const chain = new GroupedChain(
                 prev,
                 (item) => item % 2 === 0 ? 'even' : 'odd',
-                (item) => item * item,
+                (item) => item * item
             );
             const enumerator = chain.getEnumerator();
             const expectedKeys = [
                 'odd',
-                'even',
+                'even'
             ];
             const expectedValues = [
                 [1, 9, 25],
-                [4, 16],
+                [4, 16]
             ];
 
             let index = 0;

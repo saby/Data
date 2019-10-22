@@ -15,25 +15,25 @@ describe('Types/_entity/adapter/Json', () => {
     beforeEach(() => {
         data = [{
             id: 1,
-            lastname: 'Smith',
+            lastname: 'Smith'
         }, {
             id: 2,
-            lastname: 'Green',
+            lastname: 'Green'
         }, {
             id: 3,
-            lastname: 'Geller',
+            lastname: 'Geller'
         }, {
             id: 4,
-            lastname: 'Bing',
+            lastname: 'Bing'
         }, {
             id: 5,
-            lastname: 'Tribbiani',
+            lastname: 'Tribbiani'
         }, {
             id: 6,
-            lastname: 'Buffay',
+            lastname: 'Buffay'
         }, {
             id: 7,
-            lastname: 'Tyler',
+            lastname: 'Tyler'
         }];
 
         adapter = new JsonAdapter();
@@ -48,7 +48,7 @@ describe('Types/_entity/adapter/Json', () => {
         it('should return table adapter', () => {
             assert.instanceOf(
                 adapter.forTable(),
-                JsonTable,
+                JsonTable
             );
         });
 
@@ -56,7 +56,7 @@ describe('Types/_entity/adapter/Json', () => {
             const data = [{a: 1}, {b: 2}];
             assert.strictEqual(
                 adapter.forTable(data).getData(),
-                data,
+                data
             );
         });
     });
@@ -65,7 +65,7 @@ describe('Types/_entity/adapter/Json', () => {
         it('should return record adapter', () => {
             assert.instanceOf(
                 adapter.forRecord(),
-                JsonRecord,
+                JsonRecord
             );
         });
 
@@ -73,7 +73,7 @@ describe('Types/_entity/adapter/Json', () => {
             const data = {a: 1};
             assert.strictEqual(
                 adapter.forRecord(data).getData(),
-                data,
+                data
             );
         });
     });
@@ -90,8 +90,8 @@ describe('Types/_entity/adapter/Json', () => {
                 123,
                 adapter.getProperty({
                     items: data,
-                    total: 123,
-                }, 'total'),
+                    total: 123
+                }, 'total')
             );
 
             assert.strictEqual(
@@ -99,39 +99,39 @@ describe('Types/_entity/adapter/Json', () => {
                 adapter.getProperty({
                     employees: {
                         items: data,
-                        total: 456,
-                    },
-                }, 'employees.total'),
+                        total: 456
+                    }
+                }, 'employees.total')
             );
 
             assert.isUndefined(
                 adapter.getProperty({
-                    items: data,
-                }, 'total'),
+                    items: data
+                }, 'total')
             );
 
             assert.isUndefined(
                 adapter.getProperty({
-                    items: data,
-                }, undefined),
+                    items: data
+                }, undefined)
             );
         });
 
         it('should return undefined on invalid data', () => {
             assert.isUndefined(
-                adapter.getProperty({}, undefined),
+                adapter.getProperty({}, undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty('', undefined),
+                adapter.getProperty('', undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty(0, undefined),
+                adapter.getProperty(0, undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty(undefined, undefined),
+                adapter.getProperty(undefined, undefined)
             );
         });
     });
@@ -140,67 +140,67 @@ describe('Types/_entity/adapter/Json', () => {
         it('should set the property value', () => {
             const dataA = {
                 items: data,
-                total: 123,
+                total: 123
             };
             adapter.setProperty(dataA, 'total', 456);
 
             assert.strictEqual(
                 456,
-                dataA.total,
+                dataA.total
             );
             assert.strictEqual(
                 1,
-                dataA.items[0].id,
+                dataA.items[0].id
             );
             assert.strictEqual(
                 5,
-                dataA.items[4].id,
+                dataA.items[4].id
             );
             assert.strictEqual(
                 'Buffay',
-                dataA.items[5].lastname,
+                dataA.items[5].lastname
             );
 
             const dataB = {
                 employees: {
                     items: data,
-                    total: 789,
-                },
+                    total: 789
+                }
             };
             adapter.setProperty(dataB, 'employees.total', 987);
             assert.strictEqual(
                 987,
-                dataB.employees.total,
+                dataB.employees.total
             );
             assert.strictEqual(
                 1,
-                dataB.employees.items[0].id,
+                dataB.employees.items[0].id
             );
             assert.strictEqual(
                 5,
-                dataB.employees.items[4].id,
+                dataB.employees.items[4].id
             );
             assert.strictEqual(
                 'Buffay',
-                dataB.employees.items[5].lastname,
+                dataB.employees.items[5].lastname
             );
 
             const dataC = {
                 a: 1,
-                b: 2,
+                b: 2
             };
             adapter.setProperty(dataC, 'c.d.e.f', 'g');
             assert.strictEqual(
                 'g',
-                (dataC as any).c.d.e.f,
+                (dataC as any).c.d.e.f
             );
             assert.strictEqual(
                 1,
-                dataC.a,
+                dataC.a
             );
             assert.strictEqual(
                 2,
-                dataC.b,
+                dataC.b
             );
         });
     });

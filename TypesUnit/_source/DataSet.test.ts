@@ -11,13 +11,13 @@ describe('Types/_source/DataSet', () => {
     beforeEach(() => {
         list = [{
             id: 1,
-            lastname: 'Иванов',
+            lastname: 'Иванов'
         }, {
             id: 2,
-            lastname: 'Петров',
+            lastname: 'Петров'
         }, {
             id: 3,
-            lastname: 'Сидоров',
+            lastname: 'Сидоров'
         }];
     });
 
@@ -33,7 +33,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return value from option', () => {
             const ds = new DataSet({
-                writable: false,
+                writable: false
             });
             assert.isFalse(ds.writable);
         });
@@ -49,7 +49,7 @@ describe('Types/_source/DataSet', () => {
         it('should return the adapter', () => {
             const adapter = new JsonAdapter();
             const ds = new DataSet({
-                adapter,
+                adapter
             });
             assert.strictEqual(ds.getAdapter(), adapter);
         });
@@ -63,7 +63,7 @@ describe('Types/_source/DataSet', () => {
     describe('.getModel()', () => {
         it('should return a given model', () => {
             const ds = new DataSet({
-                model: Model,
+                model: Model
             });
             assert.strictEqual(ds.getModel(), Model);
         });
@@ -92,7 +92,7 @@ describe('Types/_source/DataSet', () => {
         it('should return the given list', () => {
             const MyList = coreExtend.extend(RecordSet, {});
             const ds = new DataSet({
-                listModule: MyList,
+                listModule: MyList
             });
             assert.strictEqual(ds.getListModule(), MyList);
         });
@@ -110,7 +110,7 @@ describe('Types/_source/DataSet', () => {
     describe('.getKeyProperty()', () => {
         it('should return the key property', () => {
             const ds = new DataSet({
-                keyProperty: '123',
+                keyProperty: '123'
             });
             assert.strictEqual(ds.getKeyProperty(), '123');
         });
@@ -138,28 +138,28 @@ describe('Types/_source/DataSet', () => {
         it('should return pass keyProperty to the model', () => {
             const ds = new DataSet({
                 rawData: [{}],
-                keyProperty: 'myprop',
+                keyProperty: 'myprop'
             });
             assert.strictEqual(ds.getAll().at(0).getKeyProperty(), 'myprop');
         });
 
         it('should return a recordset of 2 by default', () => {
             const ds = new DataSet({
-                rawData: [1, 2],
+                rawData: [1, 2]
             });
             assert.equal(ds.getAll().getCount(), 2);
         });
 
         it('should return a recordset of 2 from given property', () => {
             const ds = new DataSet({
-                rawData: {some: {prop: [1, 2]}},
+                rawData: {some: {prop: [1, 2]}}
             });
             assert.equal(ds.getAll('some.prop').getCount(), 2);
         });
 
         it('should return an empty recordset from undefined property', () => {
             const ds = new DataSet({
-                rawData: {},
+                rawData: {}
             });
             assert.equal(ds.getAll('some.prop').getCount(), 0);
         });
@@ -167,9 +167,9 @@ describe('Types/_source/DataSet', () => {
         it('should return recordset with metadata from given property', () => {
             const ds = new DataSet({
                 rawData: {
-                    meta: {bar: 'foo'},
+                    meta: {bar: 'foo'}
                 },
-                metaProperty: 'meta',
+                metaProperty: 'meta'
             });
             const meta = ds.getAll().getMetaData();
 
@@ -181,9 +181,9 @@ describe('Types/_source/DataSet', () => {
                 rawData: {
                     d: [1],
                     s: [{n: 'Id', t: 'Число целое'}],
-                    _type: 'record',
+                    _type: 'record'
                 },
-                adapter: 'Types/entity:adapter.Sbis',
+                adapter: 'Types/entity:adapter.Sbis'
             });
             assert.throws(() => {
                 ds.getAll();
@@ -199,7 +199,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return a model by default', () => {
             const ds = new DataSet({
-                rawData: {a: 1, b: 2},
+                rawData: {a: 1, b: 2}
             });
             assert.strictEqual(ds.getRow().get('a'), 1);
             assert.strictEqual(ds.getRow().get('b'), 2);
@@ -212,7 +212,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return read only model', () => {
             const ds = new DataSet({
-                writable: false,
+                writable: false
             });
             assert.isFalse(ds.getRow().writable);
         });
@@ -222,19 +222,19 @@ describe('Types/_source/DataSet', () => {
                 _type: 'record',
                 d: ['Test'],
                 s: [
-                    {n: 'Name', t: 'Строка'},
-                ],
+                    {n: 'Name', t: 'Строка'}
+                ]
             };
             const ds = new DataSet({
                 adapter: 'Types/entity:adapter.Sbis',
-                rawData: data,
+                rawData: data
             });
             assert.equal(ds.getRow().get('Name'), 'Test');
         });
 
         it('should return a model from given property', () => {
             const ds = new DataSet({
-                rawData: {some: {prop: {a: 1, b: 2}}},
+                rawData: {some: {prop: {a: 1, b: 2}}}
             });
             assert.equal(ds.getRow('some.prop').get('a'), 1);
             assert.equal(ds.getRow('some.prop').get('b'), 2);
@@ -242,7 +242,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return an empty recordset from undefined property', () => {
             const ds = new DataSet({
-                rawData: {},
+                rawData: {}
             });
             assert.instanceOf(ds.getRow('some.prop'), Model);
         });
@@ -250,7 +250,7 @@ describe('Types/_source/DataSet', () => {
         it('should return a first item of recordset', () => {
             const data: any = [{a: 1}, {a: 2}];
             const ds = new DataSet({
-                rawData: data,
+                rawData: data
             });
             data._type = 'recordset';
             assert.equal(ds.getRow().get('a'), 1);
@@ -259,7 +259,7 @@ describe('Types/_source/DataSet', () => {
         it('should return undefined from empty recordset', () => {
             const data: any = [];
             const ds = new DataSet({
-                rawData: data,
+                rawData: data
             });
             data._type = 'recordset';
             assert.isUndefined(ds.getRow());
@@ -268,7 +268,7 @@ describe('Types/_source/DataSet', () => {
         it('should set id property to model', () => {
             const ds = new DataSet({
                 rawData: list,
-                keyProperty: 'lastname',
+                keyProperty: 'lastname'
             });
             assert.equal(ds.getRow().getKeyProperty(), 'lastname');
         });
@@ -277,7 +277,7 @@ describe('Types/_source/DataSet', () => {
     describe('.getScalar()', () => {
         it('should return a default value', () => {
             const ds = new DataSet({
-                rawData: 'qwe',
+                rawData: 'qwe'
             });
             assert.equal(ds.getScalar(), 'qwe');
         });
@@ -287,9 +287,9 @@ describe('Types/_source/DataSet', () => {
                 rawData: {
                     some: {
                         propA: 'a',
-                        propB: 'b',
-                    },
-                },
+                        propB: 'b'
+                    }
+                }
             });
             assert.equal(ds.getScalar('some.propA'), 'a');
             assert.equal(ds.getScalar('some.propB'), 'b');
@@ -297,7 +297,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return undefined from undefined property', () => {
             const ds = new DataSet({
-                rawData: {},
+                rawData: {}
             });
             assert.isUndefined(ds.getScalar('some.prop'));
         });
@@ -306,7 +306,7 @@ describe('Types/_source/DataSet', () => {
     describe('.hasProperty()', () => {
         it('should return true for defined property', () => {
             const ds = new DataSet({
-                rawData: {a: {b: {c: {}}}},
+                rawData: {a: {b: {c: {}}}}
             });
             assert.isTrue(ds.hasProperty('a'));
             assert.isTrue(ds.hasProperty('a.b'));
@@ -317,7 +317,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return false for undefined property', () => {
             const ds = new DataSet({
-                rawData: {a: {b: {c: {}}}},
+                rawData: {a: {b: {c: {}}}}
             });
             assert.isFalse(ds.hasProperty('e'));
             assert.isFalse(ds.hasProperty('a.e'));
@@ -329,7 +329,7 @@ describe('Types/_source/DataSet', () => {
         it('should return defined property', () => {
             const data = {a: {b: {c: {}}}};
             const ds = new DataSet({
-                rawData: data,
+                rawData: data
             });
             assert.strictEqual(ds.getProperty('a'), data.a);
             assert.strictEqual(ds.getProperty('a.b'), data.a.b);
@@ -340,7 +340,7 @@ describe('Types/_source/DataSet', () => {
 
         it('should return undefined for undefined property', () => {
             const ds = new DataSet({
-                rawData: {a: {b: {c: {}}}},
+                rawData: {a: {b: {c: {}}}}
             });
             assert.isUndefined(ds.getProperty('e'));
             assert.isUndefined(ds.getProperty('a.e'));
@@ -352,7 +352,7 @@ describe('Types/_source/DataSet', () => {
         it('should return raw data', () => {
             const data = {a: {b: {c: {}}}};
             const ds = new DataSet({
-                rawData: data,
+                rawData: data
             });
             assert.strictEqual(ds.getRawData(), data);
         });
@@ -370,7 +370,7 @@ describe('Types/_source/DataSet', () => {
     describe('.toJSON()', () => {
         it('should return valid signature', () => {
             const options = {
-                rawData: {foo: 'bar'},
+                rawData: {foo: 'bar'}
             };
             const ds = new DataSet(options);
             const json = ds.toJSON();

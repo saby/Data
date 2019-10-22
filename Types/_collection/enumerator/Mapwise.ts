@@ -89,5 +89,5 @@ Object.assign(Mapwise.prototype, {
     '[Types/_collection/enumerator/Mapwise]': true,
     _items: null,
     _index: -1,
-    _cachedKeys: undefined,
+    _cachedKeys: undefined
 });

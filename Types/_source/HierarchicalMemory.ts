@@ -9,7 +9,7 @@ import {
     SerializableMixin,
     ISerializableState as IDefaultSerializableState,
     Record,
-    relation,
+    relation
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
@@ -72,7 +72,7 @@ export default class HierarchicalMemory extends mixin<
     SerializableMixin
 >(
     OptionsToPropertyMixin,
-    SerializableMixin,
+    SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus {
     /**
      * @cfg {Object} See {@link Types/_source/Memory#data}.
@@ -161,18 +161,18 @@ export default class HierarchicalMemory extends mixin<
                 if (this._$parentProperty) {
                     const hierarchy = new relation.Hierarchy({
                         keyProperty: this._keyProperty,
-                        parentProperty: this._$parentProperty,
+                        parentProperty: this._$parentProperty
                     });
 
                     const sourceRecords = new collection.RecordSet({
                         rawData: this._source.data,
                         adapter: this._source.getAdapter(),
-                        keyProperty: this._keyProperty,
+                        keyProperty: this._keyProperty
                     });
 
                     const breadcrumbs = new collection.RecordSet({
                         adapter: this._source.getAdapter(),
-                        keyProperty: this._keyProperty,
+                        keyProperty: this._keyProperty
                     });
 
                     // Extract breadcrumbs as path from filtered node to the root
@@ -251,5 +251,5 @@ export default class HierarchicalMemory extends mixin<
 Object.assign(HierarchicalMemory.prototype, {
     '[Types/_source/HierarchicalMemory]': true,
     _moduleName: 'Types/source:HierarchicalMemory',
-    _$parentProperty: null,
+    _$parentProperty: null
 });

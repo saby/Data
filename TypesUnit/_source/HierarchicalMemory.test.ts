@@ -12,12 +12,12 @@ describe('Types/_source/HierarchicalMemory', () => {
     beforeEach(() => {
         data = [
             {id: 1, title: 'foo'},
-            {id: 2, title: 'bar'},
+            {id: 2, title: 'bar'}
         ];
 
         source = new HierarchicalMemory({
             data,
-            keyProperty: 'id',
+            keyProperty: 'id'
         });
     });
 
@@ -52,7 +52,7 @@ describe('Types/_source/HierarchicalMemory', () => {
     describe('.update()', () => {
         it('should update record', () => {
             const rec = new Record({
-                rawData: {id: 1, title: 'one'},
+                rawData: {id: 1, title: 'one'}
             });
             return source.update(rec).then((result) => {
                 assert.equal(result, 1);
@@ -84,10 +84,10 @@ describe('Types/_source/HierarchicalMemory', () => {
                     {id: 1000, parent: 100, name: 'Apple MacBook Pro'},
                     {id: 1001, parent: 100, name: 'Xiaomi Mi Notebook Air'},
                     {id: 11, parent: 1, name: 'Smartphones'},
-                    {id: 110, parent: 11, name: 'Apple iPhone'},
+                    {id: 110, parent: 11, name: 'Apple iPhone'}
                 ],
                 keyProperty: 'id',
-                parentProperty: 'parent',
+                parentProperty: 'parent'
             });
 
             const query = new Query();
@@ -140,7 +140,7 @@ describe('Types/_source/HierarchicalMemory', () => {
         it('should serialize its own options', () => {
             const data = {foo: 'bar'};
             const options = {
-                parentProperty: 'id',
+                parentProperty: 'id'
             };
             const source = new HierarchicalMemory({data, ...options});
             const serialized = source.toJSON();

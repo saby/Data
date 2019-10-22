@@ -43,7 +43,7 @@ export default class RecordSetTable extends mixin<
     GenericFormatMixin
 >(
     DestroyableMixin,
-    GenericFormatMixin,
+    GenericFormatMixin
 ) implements ITable {
     /**
      * Список
@@ -207,5 +207,5 @@ export default class RecordSetTable extends mixin<
 Object.assign(RecordSetTable.prototype, {
     '[Types/_entity/adapter/RecordSetTable]': true,
     '[Types/_entity/adapter/ITable]': true,
-    _data: null,
+    _data: null
 });

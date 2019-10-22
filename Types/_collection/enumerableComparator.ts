@@ -34,7 +34,7 @@ function extractItems(collection: IEnumerable<any>, contentsWrapper?: string): a
 
     return {
         items,
-        contents: contentsWrapper ? contents : null,
+        contents: contentsWrapper ? contents : null
     };
 }
 
@@ -61,7 +61,7 @@ function getGroupChanges(
     session: ISession,
     collection: IEnumerable<any>,
     startFrom?: number,
-    offset?: number,
+    offset?: number
 ): object {
     session.addedProcessed = session.addedProcessed || [];
     session.removedProcessed = session.removedProcessed || {};
@@ -199,7 +199,7 @@ function getGroupChanges(
                 // собираем перемещенные элементы
                 if (before.length !== after.length) {
                     throw new Error(
-                        'The "before" and "after" arrays are not synchronized by the length, "move" can\'t be applied.',
+                        'The "before" and "after" arrays are not synchronized by the length - "move" can\'t be applied.'
                     );
                 }
                 if (beforeItem === afterItem) {
@@ -242,7 +242,7 @@ function getGroupChanges(
         oldItems,
         oldItemsIndex,
         endAt: exit ? index : -1,
-        offset,
+        offset
     };
 }
 
@@ -277,7 +277,7 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
             if (beforeContents !== null) {
                 const added = afterContents.slice(
                     changes.newItemsIndex,
-                    changes.newItemsIndex + changes.newItems.length,
+                    changes.newItemsIndex + changes.newItems.length
                 );
                 beforeContents.splice(changes.newItemsIndex, 0, ...added);
             }
@@ -299,7 +299,7 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
             if (beforeContents !== null) {
                 const added = afterContents.slice(
                     changes.newItemsIndex,
-                    changes.newItemsIndex + changes.newItems.length,
+                    changes.newItemsIndex + changes.newItems.length
                 );
                 beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length, ...added);
             }
@@ -317,7 +317,7 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
                 beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
                 const added = afterContents.slice(
                     changes.newItemsIndex,
-                    changes.newItemsIndex + changes.newItems.length,
+                    changes.newItemsIndex + changes.newItems.length
                 );
                 beforeContents.splice(afterSpliceIndex, 0, ...added);
             }
@@ -348,7 +348,7 @@ const enumerableComparator = {
         return {
             id: getId(),
             before: items.items,
-            beforeContents: items.contents,
+            beforeContents: items.contents
         };
     },
 
@@ -378,7 +378,7 @@ const enumerableComparator = {
         let changes;
         let maxRepeats = Math.max(
             65535,
-            groups.length * session.before.length * session.after.length,
+            groups.length * session.before.length * session.after.length
         );
         let startFrom;
         let offset;
@@ -398,7 +398,7 @@ const enumerableComparator = {
                     session,
                     collection,
                     startFrom,
-                    offset,
+                    offset
                 );
 
                 // Есть какие-то изменения
@@ -427,7 +427,7 @@ const enumerableComparator = {
                     applyGroupChanges(
                         groupName,
                         changes,
-                        session,
+                        session
                     );
                 }
 
@@ -444,7 +444,7 @@ const enumerableComparator = {
                 offset = changes.offset;
             }
         }
-    },
+    }
 };
 
 export default enumerableComparator;

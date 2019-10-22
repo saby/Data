@@ -22,5 +22,5 @@ export default class FlagsField extends DictionaryField {
 Object.assign(FlagsField.prototype, {
     '[Types/_entity/format/FlagsField]': true,
     _moduleName: 'Types/entity:format.FlagsField',
-    _typeName: 'Flags',
+    _typeName: 'Flags'
 });

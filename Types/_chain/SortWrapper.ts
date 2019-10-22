@@ -7,6 +7,7 @@ import { protect } from '../util';
  * @protected
  */
 export default class SortWrapper {
+    static indexKey: string | Symbol;
     private item: any;
     private index: number;
 
@@ -26,8 +27,6 @@ export default class SortWrapper {
     indexOf(): number {
         return this.index;
     }
-
-    static indexKey: string | Symbol;
 
     static valueOf(item: any): any {
         return item instanceof SortWrapper ? item.valueOf() : item;

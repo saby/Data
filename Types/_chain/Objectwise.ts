@@ -34,7 +34,7 @@ export default class Objectwise<T> extends Abstract<T> {
             callback.call(
                 context || this,
                 this._source[key],
-                key,
+                key
             );
         }
     }

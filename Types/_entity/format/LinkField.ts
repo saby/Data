@@ -23,5 +23,5 @@ Object.assign(LinkField.prototype, {
     '[Types/_entity/format/LinkField]': true,
     _moduleName: 'Types/entity:format.LinkField',
     _typeName: 'Link',
-    _$defaultValue: 0,
+    _$defaultValue: 0
 });

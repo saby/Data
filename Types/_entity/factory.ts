@@ -12,7 +12,7 @@ import {
     IUniversalFieldRealMeta,
     IUniversalFieldMoneyMeta,
     IUniversalFieldDictionaryMeta,
-    IUniversalFieldArrayMeta,
+    IUniversalFieldArrayMeta
 } from './format';
 import Record from './Record';
 import TimeInterval from './TimeInterval';
@@ -193,7 +193,7 @@ function convertListToRecordSet(list: List<Record>): RecordSet {
     }
 
     const rs = create<RecordSet>('Types/collection:RecordSet', {
-        adapter,
+        adapter
     });
     for (let i = 0; i < count; i++) {
         rs.add(list.at(i));
@@ -333,7 +333,7 @@ const factory = {
             if (TypeConstructor.prototype['[Types/_entity/IProducible]']) {
                 return (TypeConstructor as IProducibleConstructor).produceInstance(
                     value,
-                    options,
+                    options
                 );
             }
 
@@ -449,7 +449,7 @@ const factory = {
             default:
                 return value;
         }
-    },
+    }
 };
 
 export default factory;

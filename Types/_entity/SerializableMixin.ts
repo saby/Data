@@ -151,7 +151,7 @@ export default class SerializableMixin<T = any> {
             $serialized$: 'inst',
             module: this._moduleName,
             id: getInstanceId.call(this),
-            state: this._getSerializableState({}),
+            state: this._getSerializableState({})
         };
     }
 
@@ -224,7 +224,7 @@ export default class SerializableMixin<T = any> {
 
 Object.assign(SerializableMixin.prototype, {
     '[Types/_entity/SerializableMixin]': true,
-    _instanceNumber: null,
+    _instanceNumber: null
 });
 
 // FIXME: For subclasses created via Core/core-extend

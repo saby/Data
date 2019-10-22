@@ -45,7 +45,7 @@ export default class Filtered<T> extends Abstract<T> {
         return new FilteredEnumerator(
             this._previous,
             this._callback,
-            this._callbackContext,
+            this._callbackContext
         );
     }
 

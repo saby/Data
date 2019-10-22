@@ -57,6 +57,6 @@ Object.assign(OptionsMixin.prototype, {
          * @cfg {Boolean} Режим отладки.
          * @name Types/_source/OptionsMixin#options.debug
          */
-        debug: false,
-    }),
+        debug: false
+    })
 });

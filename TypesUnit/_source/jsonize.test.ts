@@ -36,7 +36,7 @@ describe('Types/_source/jsonize', () => {
                 d: true,
                 e: null,
                 f: [1, false, true, null, [2], {foo: 'bar'}],
-                g: {g1: 2, g2: 'q'},
+                g: {g1: 2, g2: 'q'}
             };
             assert.deepEqual(jsonize(data), data);
         });
@@ -44,7 +44,7 @@ describe('Types/_source/jsonize', () => {
         it('should return the clone of Record\'s raw data', () => {
             const rawData = {foo: 'bar'};
             const data = {
-                rec: new Record({rawData}),
+                rec: new Record({rawData})
             };
 
             assert.deepEqual(jsonize<{rec: typeof rawData}>(data).rec, rawData);
@@ -53,7 +53,7 @@ describe('Types/_source/jsonize', () => {
         it('should return the clone of RecordSet\'s raw data', () => {
             const rawData = [{foo: 'bar'}];
             const data = {
-                rs: new RecordSet({rawData}),
+                rs: new RecordSet({rawData})
             };
 
             assert.deepEqual(jsonize<{rs: typeof rawData}>(data).rs, rawData);
@@ -62,7 +62,7 @@ describe('Types/_source/jsonize', () => {
         it('should return the clone of DataSet\'s raw data', () => {
             const rawData = [[{foo: 'bar'}]];
             const data = {
-                ds: new DataSet({rawData}),
+                ds: new DataSet({rawData})
             };
 
             assert.deepEqual(jsonize<{ds: typeof rawData}>(data).ds, rawData);
@@ -86,7 +86,7 @@ describe('Types/_source/jsonize', () => {
 
             assert.equal(
                 jsonize<string>(dateTime).substr(0, 22),
-                '2019-07-12 00:00:00+03',
+                '2019-07-12 00:00:00+03'
             );
         });
 
@@ -95,7 +95,7 @@ describe('Types/_source/jsonize', () => {
 
             assert.equal(
                 jsonize<string>(date),
-                '2019-07-12',
+                '2019-07-12'
             );
         });
 
@@ -104,7 +104,7 @@ describe('Types/_source/jsonize', () => {
 
             assert.equal(
                 jsonize<string>(time).substr(0, 8),
-                '16:07:14',
+                '16:07:14'
             );
         });
 
@@ -131,7 +131,7 @@ describe('Types/_source/jsonize', () => {
 
             assert.equal(
                 jsonize<string>(date),
-                '2016-12-12',
+                '2016-12-12'
             );
         });
 
@@ -144,7 +144,7 @@ describe('Types/_source/jsonize', () => {
             if (date.setSQLSerializationMode) {
                 date.setSQLSerializationMode((Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_DATETIME);
                 assert.isTrue(
-                    jsonize<string>(date).startsWith('2016-12-12 00:00:00'),
+                    jsonize<string>(date).startsWith('2016-12-12 00:00:00')
                 );
             }
         });

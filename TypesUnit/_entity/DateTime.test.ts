@@ -27,8 +27,8 @@ describe('Types/_entity/DateTime', () => {
                 module: '',
                 id: 0,
                 state: {
-                    $options: time,
-                },
+                    $options: time
+                }
             });
 
             assert.equal(instance.getTime(), time);

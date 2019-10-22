@@ -18,7 +18,7 @@ describe('Types/_source/Rpc', () => {
             this.lastName = name;
             this.lastArgs = args;
             return Deferred.success(this.result);
-        },
+        }
     });
 
     const provider = new ProviderMock();
@@ -36,8 +36,8 @@ describe('Types/_source/Rpc', () => {
                 update: 'updateUser',
                 destroy: 'deleteUser',
                 copy: 'copyUser',
-                merge: 'mergeUsers',
-            },
+                merge: 'mergeUsers'
+            }
         });
     });
 
@@ -48,7 +48,7 @@ describe('Types/_source/Rpc', () => {
     describe('.call()', () => {
         it('should send method name and arguments', () => {
             const dataSource = new TestSource({
-                provider,
+                provider
             });
             const method = 'foo';
             const args = ['bar', 'baz'];
@@ -61,7 +61,7 @@ describe('Types/_source/Rpc', () => {
 
         it('should return writable DataSet', () => {
             const dataSource = new TestSource({
-                provider,
+                provider
             });
 
             provider.result = {foo: 'bar'};

@@ -67,7 +67,7 @@ function buildFormatByRawData(): format.Format {
 
     for (let i = 0; i < count; i++) {
         format.add(
-            adapter.getFormat(fields[i]),
+            adapter.getFormat(fields[i])
         );
     }
 
@@ -727,7 +727,7 @@ export default abstract class FormattableMixin {
         if (!internalProto.isPrototypeOf(foreign)) {
             throw new TypeError(
                 `The foreign adapter "${(foreign as any)._moduleName}" is incompatible with the internal adapter ` +
-                `"${(internal as any)._moduleName}"`,
+                `"${(internal as any)._moduleName}"`
             );
         }
     }
@@ -767,7 +767,7 @@ export default abstract class FormattableMixin {
             if (this.hasDeclaredFormat()) {
                 this._format = this._$format = FormattableMixin.prototype._buildFormat(
                     this._$format,
-                    () => buildFormatByRawData.call(this),
+                    () => buildFormatByRawData.call(this)
                 );
             } else if (build) {
                 this._format = buildFormatByRawData.call(this);
@@ -877,7 +877,7 @@ export default abstract class FormattableMixin {
      */
     protected _buildFormat(
         format: FormatDescriptor,
-        fullFormatCallback?: Function,
+        fullFormatCallback?: Function
     ): format.Format {
         const Format = resolve<any>('Types/collection:format.Format');
 
@@ -914,5 +914,5 @@ Object.assign(FormattableMixin.prototype, {
    _rawDataAdapter: null,
    _rawDataFields: null,
    _$formatController: null,
-   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat, // Deprecated
+   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

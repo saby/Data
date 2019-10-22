@@ -36,7 +36,7 @@ export default class RecordSetRecord extends mixin<
     GenericFormatMixin
 >(
     DestroyableMixin,
-    GenericFormatMixin,
+    GenericFormatMixin
 ) implements IRecord {
     /**
      * Запись
@@ -187,5 +187,5 @@ Object.assign(RecordSetRecord.prototype, {
     '[Types/_entity/adapter/RecordSetRecord]': true,
     '[Types/_entity/adapter/IRecord]': true,
     _data: null,
-    _tableData: null,
+    _tableData: null
 });

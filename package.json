@@ -21,7 +21,7 @@
       "test:node-coverage": "saby-units --isolated --report --coverage",
       "test:browser": "saby-units --browser --report",
       "test:browser-coverage": "saby-units --browser --report --coverage",
-      "tslint": "tslint -q Types/**/*.ts TypesUnit/**/*.ts"
+      "tslint": "tslint -q Types/**/*.ts"
    },
    "saby-units": {
       "moduleType": "amd",

@@ -12,7 +12,7 @@ const DIGITS = [
     'six',
     'seven',
     'eight',
-    'nine',
+    'nine'
 ];
 
 const TENS = [
@@ -25,7 +25,7 @@ const TENS = [
     'sixteen',
     'seventeen',
     'eighteen',
-    'nineteen',
+    'nineteen'
 ];
 
 const TWENTIES = {
@@ -36,7 +36,7 @@ const TWENTIES = {
     6: 'sixty',
     7: 'seventy',
     8: 'eighty',
-    9: 'ninety',
+    9: 'ninety'
 };
 
 const THOUSANDS = {
@@ -50,7 +50,7 @@ const THOUSANDS = {
     8: 'septillion',
     9: 'octillion',
     10: 'nonillion',
-    11: 'decillion',
+    11: 'decillion'
 };
 
 const negword = 'minus';
@@ -67,17 +67,17 @@ function concat(right: IWordConcatnumberUS, left: IWordConcatnumberUS): IWordCon
     } else if (left.value < 100 && left.value > right.value) {
         return {
             title: `${left.title}-${right.title}`,
-            value: left.value  + right.value,
+            value: left.value  + right.value
         };
     } else if (left.value >= 100 && left.value > right.value) {
         return {
             title: `${left.title} and ${right.title}`,
-            value: left.value + right.value,
+            value: left.value + right.value
         };
     }
     return {
         title: `${left.title} ${right.title}`,
-        value: left.value + right.value,
+        value: left.value + right.value
     };
 }
 

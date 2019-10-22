@@ -25,7 +25,7 @@ function withLeadZeroes(value: number, count: number): string {
     const sign = value >= 0 ? '' : '-';
     return sign + (String(Math.pow(
          DECIMAL_BASE,
-        Math.max(0, restCount),
+        Math.max(0, restCount)
     )).substr(1) + absValue);
 }
 
@@ -112,7 +112,7 @@ function getQuarterRoman(date: Date): string {
 function getQuarterRomanMin(date: Date): string {
     return locale.config.minQuarter.replace(
         '$digit$s$',
-        getQuarterRoman(date),
+        getQuarterRoman(date)
     );
 }
 
@@ -122,7 +122,7 @@ function getQuarterRomanMin(date: Date): string {
 function getQuarterRomanShort(date: Date): string {
     return locale.config.shortQuarter.replace(
         '$digit$s$',
-        getQuarterRoman(date),
+        getQuarterRoman(date)
     );
 }
 
@@ -132,7 +132,7 @@ function getQuarterRomanShort(date: Date): string {
 function getQuarterRomanLong(date: Date): string {
     return locale.config.longQuarter.replace(
         '$digit$s$',
-        getQuarterRoman(date),
+        getQuarterRoman(date)
     );
 }
 
@@ -163,7 +163,7 @@ function getHalfYearRoman(date: Date): string {
 function getHalfYearRomanMin(date: Date): string {
     return locale.config.minHalfYear.replace(
         '$digit$s$',
-        getHalfYearRoman(date),
+        getHalfYearRoman(date)
     );
 }
 
@@ -173,7 +173,7 @@ function getHalfYearRomanMin(date: Date): string {
 function getHalfYearRomanLong(date: Date): string {
     return locale.config.longHalfYear.replace(
         '$digit$s$',
-        getHalfYearRoman(date),
+        getHalfYearRoman(date)
     );
 }
 
@@ -505,6 +505,6 @@ Object.getOwnPropertyNames(Constants.prototype)
         Object.defineProperty(
             format,
             name,
-             Object.getOwnPropertyDescriptor(Constants.prototype, name),
+             Object.getOwnPropertyDescriptor(Constants.prototype, name)
         );
 });

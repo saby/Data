@@ -19,19 +19,19 @@ describe('Types/_display/Enum', () => {
         holeyDict = {1: 'one', 4: 'two', 6: 'three'};
 
         collection = new EnumType({
-            dictionary: dict,
+            dictionary: dict
         });
 
         holeyCollection = new EnumType({
-            dictionary: holeyDict,
+            dictionary: holeyDict
         });
 
         display = new EnumDisplay({
-            collection,
+            collection
         });
 
         holeyDisplay = new EnumDisplay({
-            collection: holeyCollection,
+            collection: holeyCollection
         });
     });
 
@@ -51,17 +51,17 @@ describe('Types/_display/Enum', () => {
 
             assert.throws(() => {
                 display = new EnumDisplay({
-                    collection: [] as any,
+                    collection: [] as any
                 });
             });
             assert.throws(() => {
                 display = new EnumDisplay({
-                    collection: {} as any,
+                    collection: {} as any
                 });
             });
             assert.throws(() => {
                 display = new EnumDisplay({
-                    collection: null,
+                    collection: null
                 });
             });
             assert.throws(() => {
@@ -77,7 +77,7 @@ describe('Types/_display/Enum', () => {
 
             collection.set(1);
             const displayToo = new EnumDisplay({
-                collection,
+                collection
             });
 
             assert.strictEqual(displayToo.getCurrent().getContents(), collection.getAsValue());
@@ -88,10 +88,10 @@ describe('Types/_display/Enum', () => {
     describe('.each()', () => {
         it('should return original values', () => {
             const collection = new EnumType({
-                dictionary: dict,
+                dictionary: dict
             });
             const display = new EnumDisplay({
-                collection,
+                collection
             });
 
             display.each((item, index) => {
@@ -102,10 +102,10 @@ describe('Types/_display/Enum', () => {
         it('should return localized values', () => {
             const collection = new EnumType({
                 dictionary: dict,
-                localeDictionary: localeDict,
+                localeDictionary: localeDict
             });
             const display = new EnumDisplay({
-                collection,
+                collection
             });
 
             display.each((item, index) => {
@@ -138,10 +138,10 @@ describe('Types/_display/Enum', () => {
         it('should reset the Enum', () => {
             const collection = new EnumType({
                 dictionary: dict,
-                index: 0,
+                index: 0
             });
             const display = new EnumDisplay({
-                collection,
+                collection
             });
 
             assert.strictEqual(collection.get(), 0);
@@ -183,10 +183,10 @@ describe('Types/_display/Enum', () => {
         it('should return localized value index', () => {
             const collection = new EnumType({
                 dictionary: dict,
-                localeDictionary: localeDict,
+                localeDictionary: localeDict
             });
             const display = new EnumDisplay({
-                collection,
+                collection
             });
 
             for (let index = 0; index < localeDict.length; index++) {
@@ -199,10 +199,10 @@ describe('Types/_display/Enum', () => {
         it('should return localized value index', () => {
             const collection = new EnumType({
                 dictionary: dict,
-                localeDictionary: localeDict,
+                localeDictionary: localeDict
             });
             const display = new EnumDisplay({
-                collection,
+                collection
             });
             const item = display.at(0);
 

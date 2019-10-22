@@ -29,7 +29,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin,
+    SerializableMixin
 ) implements IItemsStrategy<S, T> {
     /**
      * Constructor options
@@ -141,7 +141,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         return Search.sortItems<S, T>(this.source.items, {
             originalBreadcrumbs: this._originalBreadcrumbs,
             originalParents: this._originalParents,
-            display: this.options.display as Tree<S, T>,
+            display: this.options.display as Tree<S, T>
         });
     }
 
@@ -199,7 +199,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                              currentBreadcrumbs = new BreadcrumbsItem<S>({
                                   contents: null,
                                   owner: display as any,
-                                  last: item,
+                                  last: item
                              });
                              originalBreadcrumbs.set(item, currentBreadcrumbs);
                         }
@@ -246,5 +246,5 @@ Object.assign(Search.prototype, {
     '[Types/_display/itemsStrategy/Search]': true,
     _moduleName: 'Types/display:itemsStrategy.Search',
     _originalBreadcrumbs: null,
-    _originalParents: null,
+    _originalParents: null
 });

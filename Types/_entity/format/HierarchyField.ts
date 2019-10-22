@@ -39,5 +39,5 @@ Object.assign(HierarchyField.prototype, {
     '[Types/_entity/format/HierarchyField]': true,
     _moduleName: 'Types/entity:format.HierarchyField',
     _typeName: 'Hierarchy',
-    _$kind: '',
+    _$kind: ''
 });

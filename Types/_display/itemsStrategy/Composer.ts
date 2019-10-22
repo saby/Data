@@ -20,7 +20,7 @@ export default class Composer<S, T> extends mixin<
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin,
+    SerializableMixin
 ) {
     /**
      * Композируемые модули
@@ -211,5 +211,5 @@ export default class Composer<S, T> extends mixin<
 Object.assign(Composer.prototype, {
     '[Types/_display/itemsStrategy/Composer]': true,
     _moduleName: 'Types/display:itemsStrategy.Composer',
-    _result: null,
+    _result: null
 });

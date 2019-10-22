@@ -79,14 +79,16 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
             name = endpoint.contract + this._nameSpaceSeparator + name;
         }
 
-        return new Transport({serviceUrl: endpoint.address}).callMethod(name, args);
+        return new Transport({
+            serviceUrl: endpoint.address
+        }).callMethod(name, args);
     }
 }
 
 Object.assign(SbisBusinessLogic.prototype, {
     '[Types/_source/provider/SbisBusinessLogic]': true,
     _$transport: RPCJSON,
-    _nameSpaceSeparator: '.',
+    _nameSpaceSeparator: '.'
 });
 
 register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});

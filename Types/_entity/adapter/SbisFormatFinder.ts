@@ -6,7 +6,7 @@ interface IResultGenerator {
     done: boolean;
 }
 
-// TODO Использовать только после полного перехода на стандарт es6.
+//TODO Использовать только после полного перехода на стандарт es6.
 /**
  * Функция генератор. Ищит в данных формат по индефикатору.
  * @param {Number} id - индефикатор формата.
@@ -102,9 +102,9 @@ class RecursiveIterator {
    constructor(data: IRecordFormat | ITableFormat) {
       this.stackNodes = new RecursiveStack();
 
-      // Сразу же добавляем в стек корень дерева.
+      //Сразу же добавляем в стек корень дерева.
       this.stackNodes.push({
-         data,
+         data
       });
    }
 
@@ -135,7 +135,7 @@ class RecursiveIterator {
      * @private
      */
    protected _process(id: number, storage: Map<number, IFieldFormat[]>): IFieldFormat[] {
-       // Получаем из стека послдений узел, чтобы обработь его.
+       //Получаем из стека послдений узел, чтобы обработь его.
       const node = this.stackNodes.currentNode;
 
       if (node.data instanceof Array) {
@@ -150,10 +150,10 @@ class RecursiveIterator {
                break;
             }
 
-            // Оптимизация, в массивах нас интересуют только объекты.
+            //Оптимизация, в массивах нас интересуют только объекты.
             if (item.value instanceof Object) {
                this.stackNodes.push({
-                  data: item.value,
+                  data: item.value
                });
 
                const result = this._process(id, storage);
@@ -179,10 +179,10 @@ class RecursiveIterator {
 
          let result;
 
-         // Если в record есть данные их надо обработать.
+         //Если в record есть данные их надо обработать.
          if (node.data.d) {
             this.stackNodes.push( {
-               data: node.data.d,
+               data: node.data.d
             });
 
             node.completed = true;
