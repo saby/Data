@@ -35,7 +35,7 @@ export default class Zipped<T> extends Abstract<T> {
     getEnumerator(): ZippedEnumerator<T> {
         return new ZippedEnumerator(
             this._previous,
-            this._items,
+            this._items
         );
     }
 
@@ -44,5 +44,5 @@ export default class Zipped<T> extends Abstract<T> {
 
 Object.assign(Zipped.prototype, {
     '[Types/_chain/Zipped]': true,
-    _items: null,
+    _items: null
 });

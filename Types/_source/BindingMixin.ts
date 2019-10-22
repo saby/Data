@@ -160,6 +160,6 @@ Object.assign(BindingMixin.prototype, {
         query: 'query',
         copy: 'copy',
         merge: 'merge',
-        move: 'move',
-    }),
+        move: 'move'
+    })
 });

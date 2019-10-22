@@ -21,5 +21,5 @@ export default class BinaryField extends Field {
 Object.assign(BinaryField.prototype, {
     '[Types/_entity/format/BinaryField]': true,
     _moduleName: 'Types/entity:format.BinaryField',
-    _typeName: 'Binary',
+    _typeName: 'Binary'
 });

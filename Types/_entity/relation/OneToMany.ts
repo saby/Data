@@ -92,7 +92,7 @@ export default class OneToMany extends DestroyableMixin {
                     callback.call(
                         this,
                         child,
-                        this._childToParent.get(child) === parent ? this._childToRelation.get(child) : undefined,
+                        this._childToParent.get(child) === parent ? this._childToRelation.get(child) : undefined
                     );
                 }
             });

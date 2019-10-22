@@ -15,7 +15,7 @@ import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin from './ReadWriteMixin';
 import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
-    IOptions as IFormattableOptions,
+    IOptions as IFormattableOptions
 } from './FormattableMixin';
 import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
@@ -56,7 +56,7 @@ const STATES: IStatesHash = {
     DELETED: 'Deleted',
     CHANGED: 'Changed',
     UNCHANGED: 'Unchanged',
-    DETACHED: 'Detached',
+    DETACHED: 'Detached'
 };
 
 /**
@@ -169,8 +169,8 @@ function getValueType(value: any): string | IFieldDeclaration {
                                  }
                             }
                             return true;
-                        }),
-                    ),
+                        })
+                    )
                 } as IFieldDeclaration;
             }
             return 'object';
@@ -262,7 +262,7 @@ export default class Record extends mixin<
     ManyToManyMixin,
     ReadWriteMixin,
     FormattableMixin,
-    VersionableMixin,
+    VersionableMixin
 ) implements
     IObject,
     IObservableObject,
@@ -409,7 +409,7 @@ export default class Record extends mixin<
 
         const changed = this._setPairs(
             Object.keys(map).map((key) => [key, map[key], this.get(key)] as pairsTuple),
-            errors,
+            errors
         );
 
         if (changed) {
@@ -534,7 +534,7 @@ export default class Record extends mixin<
     getEnumerator(): enumerator.Arraywise<any> {
         return create<enumerator.Arraywise<any>>(
             'Types/collection:enumerator.Arraywise',
-            this._getRawDataFields(),
+            this._getRawDataFields()
         );
     }
 
@@ -568,7 +568,7 @@ export default class Record extends mixin<
             callback.call(
                 context || this,
                 name,
-                this.get(name),
+                this.get(name)
             );
         }
     }
@@ -662,7 +662,7 @@ export default class Record extends mixin<
                     // Set which data to field name => value
                     return {
                         target,
-                        data: map,
+                        data: map
                     };
                 }
         }
@@ -687,7 +687,7 @@ export default class Record extends mixin<
 
    static produceInstance(data?: any, options?: any): any {
       const instanceOptions: IOptions = {
-         rawData: data,
+         rawData: data
       };
       if (options && options.adapter) {
          instanceOptions.adapter = options.adapter;
@@ -763,7 +763,7 @@ export default class Record extends mixin<
             this.set(name, value);
         } else {
              this._notifyChange({
-                  [name]: format.getDefaultValue(),
+                  [name]: format.getDefaultValue()
              }, false);
         }
         this._childChanged(Record.prototype.addField);
@@ -780,7 +780,7 @@ export default class Record extends mixin<
         super.removeField(name);
 
         this._notifyChange({
-             [name]: undefined,
+             [name]: undefined
         }, false);
         this._childChanged(Record.prototype.removeField);
         this._nextVersion();
@@ -802,7 +802,7 @@ export default class Record extends mixin<
 
         if (field) {
             this._notifyChange({
-                [name]: undefined,
+                [name]: undefined
             }, false);
         }
         this._childChanged(Record.prototype.removeFieldAt);
@@ -846,7 +846,7 @@ export default class Record extends mixin<
         if (owner) {
             throw new Error(
                 'Record format has read only access if record belongs to recordset. ' +
-                'You should change recordset format instead.',
+                'You should change recordset format instead.'
             );
         }
     }
@@ -1275,8 +1275,8 @@ export default class Record extends mixin<
             {
                 format,
                 adapter: this._getAdapter(),
-                formatController: this._$formatController,
-            },
+                formatController: this._$formatController
+            }
         );
     }
 
@@ -1299,7 +1299,7 @@ export default class Record extends mixin<
 
         value = factory.serialize(value, {
             format: this._getFieldFormat(name, adapter),
-            adapter: this.getAdapter(),
+            adapter: this.getAdapter()
         });
 
         adapter.set(name, value);
@@ -1387,7 +1387,7 @@ export default class Record extends mixin<
               this,
               classExtender,
               mixinsList,
-              'Types/_entity/Record',
+              'Types/_entity/Record'
          );
     }
 
@@ -1435,7 +1435,7 @@ export default class Record extends mixin<
 
         const record = new Record({
             adapter: adapter || 'Types/entity:adapter.Json',
-            format: [],
+            format: []
         });
 
         let sortNames = [];
@@ -1468,7 +1468,7 @@ export default class Record extends mixin<
      */
     static filter(record: Record, callback: (name: string, value: any) => boolean): Record {
         const result = new Record({
-            adapter: record.getAdapter(),
+            adapter: record.getAdapter()
         });
 
         record.getFormat().each((field) => {
@@ -1538,7 +1538,7 @@ Object.assign(Record.prototype, {
    _$cacheMode: CACHE_MODE_OBJECTS,
    _$cloneChanged: false,
    _$owner: null,
-   _acceptedState: undefined,
+   _acceptedState: undefined
 });
 
 /**

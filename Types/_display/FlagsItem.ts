@@ -14,7 +14,7 @@ export default class FlagsItem<T> extends CollectionItem<T> {
 
     isSelected(): boolean {
         return this._$owner.getCollection().get(
-            this._$contents, this._$owner.localize,
+            this._$contents, this._$owner.localize
         );
     }
 
@@ -23,14 +23,14 @@ export default class FlagsItem<T> extends CollectionItem<T> {
             return;
         }
         this._$owner.getCollection().set(
-            this._$contents, selected, this._$owner.localize,
+            this._$contents, selected, this._$owner.localize
         );
     }
 }
 
 Object.assign(FlagsItem.prototype, {
     '[Types/_display/FlagsItem]': true,
-    _moduleName: 'Types/display:FlagsItem',
+    _moduleName: 'Types/display:FlagsItem'
 });
 
 register('Types/display:FlagsItem', FlagsItem, {instantiate: false});

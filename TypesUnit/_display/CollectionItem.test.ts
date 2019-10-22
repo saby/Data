@@ -63,7 +63,7 @@ describe('Types/_display/CollectionItem', () => {
                 notifyItemChange(item: CollectionItem<string>, property: string): void {
                     given.item = item;
                     given.property = property;
-                },
+                }
             };
             const item = new CollectionItem({owner: owner as any});
 
@@ -80,7 +80,7 @@ describe('Types/_display/CollectionItem', () => {
                 notifyItemChange(item: CollectionItem<string>, property: string): void {
                     given.item = item;
                     given.property = property;
-                },
+                }
             };
             const item = new CollectionItem({owner: owner as any});
 
@@ -94,11 +94,11 @@ describe('Types/_display/CollectionItem', () => {
     describe('.getUid()', () => {
         it('should return calling result of getItemUid() on owner', () => {
             const owner = {
-                getItemUid: (item) => `[${item.getContents()}]`,
+                getItemUid: (item) => `[${item.getContents()}]`
             };
             const item = new CollectionItem({
                 owner: owner as any,
-                contents: 'foo',
+                contents: 'foo'
             });
 
             assert.equal(item.getUid(), '[foo]');
@@ -140,7 +140,7 @@ describe('Types/_display/CollectionItem', () => {
                 notifyItemChange(item: CollectionItem<string>, property: string): void {
                     given.item = item;
                     given.property = property;
-                },
+                }
             };
 
             const item = new CollectionItem({owner: owner as any});
@@ -156,7 +156,7 @@ describe('Types/_display/CollectionItem', () => {
                 notifyItemChange(item: CollectionItem<string>, property: string): void {
                     given.item = item;
                     given.property = property;
-                },
+                }
             };
 
             const item = new CollectionItem({owner: owner as any});
@@ -188,12 +188,12 @@ describe('Types/_display/CollectionItem', () => {
             const owner = {
                 getCollection(): number[] {
                     return items;
-                },
+                }
             };
 
             const item = new CollectionItem({
                 owner: owner as any,
-                contents: 'foo',
+                contents: 'foo'
             });
             const json = item.toJSON();
 
@@ -206,12 +206,12 @@ describe('Types/_display/CollectionItem', () => {
             const owner = {
                 getCollection(): number[] {
                     return items;
-                },
+                }
             };
 
             const item = new CollectionItem({
                 owner: owner as any,
-                contents: 'foo',
+                contents: 'foo'
             });
             const json = item.toJSON();
 
@@ -224,14 +224,14 @@ describe('Types/_display/CollectionItem', () => {
             const owner = {
                 getCollection(): number[] {
                     return items;
-                },
+                }
             };
             items['[Types/_collection/IList]'] = true;
             (items as any).getIndex = Array.prototype.indexOf;
 
             const item = new CollectionItem({
                 owner: owner as any,
-                contents: items[0],
+                contents: items[0]
             });
             const json = item.toJSON();
 

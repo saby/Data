@@ -40,12 +40,12 @@ describe('Types/_chain/factory', () => {
                 {title: 'Cherry', kind: 'fruit'},
                 {title: 'Cucumber', kind: 'vegetable'},
                 {title: 'Pear', kind: 'fruit'},
-                {title: 'Potato', kind: 'vegetable'},
+                {title: 'Potato', kind: 'vegetable'}
             ]).group('kind', 'title').toObject();
 
             assert.deepEqual(result, {
                 fruit: ['Apple', 'Cherry', 'Pear'],
-                vegetable: ['Cucumber', 'Potato'],
+                vegetable: ['Cucumber', 'Potato']
             });
         });
     });
@@ -58,7 +58,7 @@ describe('Types/_chain/factory', () => {
 
         it('should count aggregated elements', () => {
             const result = (chain([1, 2, 3]).count(
-                (item) => item % 2 === 0,
+                (item) => item % 2 === 0
             ) as Counted<number>).value();
             assert.deepEqual(result, [2, 1]);
         });

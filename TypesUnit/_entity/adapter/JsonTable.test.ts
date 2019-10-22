@@ -14,25 +14,25 @@ describe('Types/_entity/adapter/JsonTable', () => {
     beforeEach(() => {
         data = [{
             id: 1,
-            lastname: 'Smith',
+            lastname: 'Smith'
         }, {
             id: 2,
-            lastname: 'Green',
+            lastname: 'Green'
         }, {
             id: 3,
-            lastname: 'Geller',
+            lastname: 'Geller'
         }, {
             id: 4,
-            lastname: 'Bing',
+            lastname: 'Bing'
         }, {
             id: 5,
-            lastname: 'Tribbiani',
+            lastname: 'Tribbiani'
         }, {
             id: 6,
-            lastname: 'Buffay',
+            lastname: 'Buffay'
         }, {
             id: 7,
-            lastname: 'Tyler',
+            lastname: 'Tyler'
         }];
 
         adapter = new JsonTable(data);
@@ -47,24 +47,24 @@ describe('Types/_entity/adapter/JsonTable', () => {
         it('should return fields list', () => {
             assert.deepEqual(
                 adapter.getFields(),
-                ['id', 'lastname'],
+                ['id', 'lastname']
             );
         });
 
         it('should return fields use each row', () => {
             const data = [{
-                foo: 1,
+                foo: 1
             }, {
                 foo: 2,
-                bar: 3,
+                bar: 3
             }, {
-                baz: 4,
+                baz: 4
             }];
             const adapter = new JsonTable(data);
 
             assert.deepEqual(
                 adapter.getFields(),
-                ['foo', 'bar', 'baz'],
+                ['foo', 'bar', 'baz']
             );
         });
 
@@ -80,32 +80,32 @@ describe('Types/_entity/adapter/JsonTable', () => {
         it('should return records count', () => {
             assert.strictEqual(
                 adapter.getCount(),
-                7,
+                7
             );
 
             assert.strictEqual(
                 new JsonTable([]).getCount(),
-                0,
+                0
             );
 
             assert.strictEqual(
                 new JsonTable({} as any).getCount(),
-                0,
+                0
             );
 
             assert.strictEqual(
                 new JsonTable('' as any).getCount(),
-                0,
+                0
             );
 
             assert.strictEqual(
                 new JsonTable(0 as any).getCount(),
-                0,
+                0
             );
 
             assert.strictEqual(
                 new JsonTable().getCount(),
-                0,
+                0
             );
         });
     });
@@ -113,62 +113,62 @@ describe('Types/_entity/adapter/JsonTable', () => {
     describe('.add()', () => {
         it('should append a record', () => {
             adapter.add({
-                id: 30,
+                id: 30
             });
 
             assert.strictEqual(
                 8,
-                data.length,
+                data.length
             );
 
             assert.strictEqual(
                 30,
-                data[data.length - 1].id,
+                data[data.length - 1].id
             );
         });
 
         it('should prepend a record', () => {
             adapter.add({
-                id: 31,
+                id: 31
             }, 0);
 
             assert.strictEqual(
                 8,
-                data.length,
+                data.length
             );
 
             assert.strictEqual(
                 31,
-                data[0].id,
+                data[0].id
             );
         });
 
         it('should insert a record', () => {
             adapter.add({
-                id: 32,
+                id: 32
             }, 2);
 
             assert.strictEqual(
                 8,
-                data.length,
+                data.length
             );
 
             assert.strictEqual(
                 32,
-                data[2].id,
+                data[2].id
             );
         });
 
         it('should throw an error on invalid position', () => {
             assert.throws(() => {
                 adapter.add({
-                    id: 33,
+                    id: 33
                 }, 100);
             });
 
             assert.throws(() => {
                 adapter.add({
-                    id: 34,
+                    id: 34
                 }, -1);
             });
         });
@@ -178,40 +178,40 @@ describe('Types/_entity/adapter/JsonTable', () => {
         it('should return valid record', () => {
             assert.strictEqual(
                 1,
-                adapter.at(0).id,
+                adapter.at(0).id
             );
 
             assert.strictEqual(
                 3,
-                adapter.at(2).id,
+                adapter.at(2).id
             );
         });
 
         it('should return undefined on invalid position', () => {
             assert.isUndefined(
-                adapter.at(-1),
+                adapter.at(-1)
             );
 
             assert.isUndefined(
-                adapter.at(99),
+                adapter.at(99)
             );
         });
 
         it('should return undefined on invalid data', () => {
             assert.isUndefined(
-                new JsonTable({} as any).at(undefined),
+                new JsonTable({} as any).at(undefined)
             );
 
             assert.isUndefined(
-                new JsonTable('' as any).at(undefined),
+                new JsonTable('' as any).at(undefined)
             );
 
             assert.isUndefined(
-                new JsonTable(0 as any).at(undefined),
+                new JsonTable(0 as any).at(undefined)
             );
 
             assert.isUndefined(
-                new JsonTable().at(undefined),
+                new JsonTable().at(undefined)
             );
         });
     });
@@ -221,18 +221,18 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.remove(0);
             assert.strictEqual(
                 2,
-                data[0].id,
+                data[0].id
             );
 
             adapter.remove(2);
             assert.strictEqual(
                 5,
-                data[2].id,
+                data[2].id
             );
 
             adapter.remove(5);
             assert.isUndefined(
-                data[5],
+                data[5]
             );
         });
 
@@ -249,19 +249,19 @@ describe('Types/_entity/adapter/JsonTable', () => {
     describe('.replace()', () => {
         it('should replace the record', () => {
             adapter.replace({
-                id: 11,
+                id: 11
             }, 0);
             assert.strictEqual(
                 11,
-                data[0].id,
+                data[0].id
             );
 
             adapter.replace({
-                id: 12,
+                id: 12
             }, 4);
             assert.strictEqual(
                 12,
-                data[4].id,
+                data[4].id
             );
 
         });
@@ -281,15 +281,15 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.move(0, 2);
             assert.strictEqual(
                 'Green',
-                data[0].lastname,
+                data[0].lastname
             );
             assert.strictEqual(
                 'Geller',
-                data[1].lastname,
+                data[1].lastname
             );
             assert.strictEqual(
                 'Smith',
-                data[2].lastname,
+                data[2].lastname
             );
         });
 
@@ -297,15 +297,15 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.move(2, 0);
             assert.strictEqual(
                 'Geller',
-                data[0].lastname,
+                data[0].lastname
             );
             assert.strictEqual(
                 'Smith',
-                data[1].lastname,
+                data[1].lastname
             );
             assert.strictEqual(
                 'Green',
-                data[2].lastname,
+                data[2].lastname
             );
         });
 
@@ -313,11 +313,11 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.move(1, 6);
             assert.strictEqual(
                 'Green',
-                data[6].lastname,
+                data[6].lastname
             );
             assert.strictEqual(
                 'Tyler',
-                data[5].lastname,
+                data[5].lastname
             );
         });
 
@@ -325,11 +325,11 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.move(1, 1);
             assert.strictEqual(
                 'Green',
-                data[1].lastname,
+                data[1].lastname
             );
             assert.strictEqual(
                 'Buffay',
-                data[5].lastname,
+                data[5].lastname
             );
         });
     });
@@ -339,7 +339,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.merge(0, 1, 'id');
             assert.strictEqual(
                 'Green',
-                data[0].lastname,
+                data[0].lastname
             );
         });
     });
@@ -349,7 +349,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             const copy = adapter.copy(1);
             assert.deepEqual(
                 copy,
-                data[1],
+                data[1]
             );
         });
 
@@ -357,7 +357,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             const copy = adapter.copy(1);
             assert.strictEqual(
                 copy,
-                data[2],
+                data[2]
             );
         });
     });
@@ -388,11 +388,11 @@ describe('Types/_entity/adapter/JsonTable', () => {
 
         it('should return field format for any record', () => {
             const data = [{
-                foo: 1,
+                foo: 1
             }, {
-                bar: 2,
+                bar: 2
             }, {
-                baz: 3,
+                baz: 3
             }];
             const adapter = new JsonTable(data);
 
@@ -413,7 +413,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             const fieldName = 'New';
             const field = fieldsFactory({
                 type: 'string',
-                name: fieldName,
+                name: fieldName
             });
             adapter.addField(field, 0);
             assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
@@ -425,7 +425,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
                 name: fieldName,
-                defaultValue: def,
+                defaultValue: def
             }), undefined);
             for (let i = 0; i < adapter.getCount(); i++) {
                 assert.strictEqual(adapter.at(i)[fieldName], def);
@@ -435,7 +435,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
         it('should don\'t throw an error for already exists field', () => {
             adapter.addField(fieldsFactory({
                 type: 'string',
-                name: 'id',
+                name: 'id'
             }), undefined);
         });
 
@@ -451,7 +451,7 @@ describe('Types/_entity/adapter/JsonTable', () => {
             assert.throws(() => {
                 adapter.addField({
                     type: 'string',
-                    name: 'foo',
+                    name: 'foo'
                 } as any, undefined);
             });
         });

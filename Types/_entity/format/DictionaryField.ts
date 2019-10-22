@@ -52,5 +52,5 @@ Object.assign(DictionaryField.prototype, {
     _moduleName: 'Types/entity:format.DictionaryField',
     _typeName: 'Dictionary',
     _$dictionary: null,
-    _$localeDictionary: null,
+    _$localeDictionary: null
 });

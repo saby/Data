@@ -17,7 +17,7 @@ type ResolveFunc<T> = (index: number) => T;
 export default class Arraywise<T> extends mixin<
     IndexedEnumeratorMixin<any>
 >(
-    IndexedEnumeratorMixin,
+    IndexedEnumeratorMixin
 ) implements IEnumerator<T> {
     /**
      * Array to traverse
@@ -118,7 +118,7 @@ Object.assign(Arraywise.prototype, {
     _items: null,
     _index: -1,
     _resolver: null,
-    _filter: null,
+    _filter: null
 });
 
 register('Types/collection:enumerator.Arraywise', Arraywise, {instantiate: false});

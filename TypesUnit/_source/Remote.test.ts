@@ -14,7 +14,7 @@ class RemoteTesting extends Remote {
     }
 }
 Object.assign(RemoteTesting.prototype, {
-    _moduleName: 'RemoteTesing',
+    _moduleName: 'RemoteTesing'
 });
 
 class ProviderMock {
@@ -47,8 +47,8 @@ describe('Types/_source/Remote', () => {
                 destroy: 'deleteUser',
                 query: 'getUsers',
                 copy: 'copyUser',
-                merge: 'mergeUsers',
-            },
+                merge: 'mergeUsers'
+            }
         });
     });
 
@@ -65,10 +65,10 @@ describe('Types/_source/Remote', () => {
                 },
                 read: () => {
                     return {};
-                },
+                }
             };
             const source = new RemoteTesting({
-                passing,
+                passing
             });
 
             const passingOption = source['_$' + 'passing'];
@@ -84,7 +84,7 @@ describe('Types/_source/Remote', () => {
     describe('.getEndpoint()', () => {
         it('should return normalized endpoint from String', () => {
             const source = new RemoteTesting({
-                endpoint: 'Test',
+                endpoint: 'Test'
             });
             const ep = source.getEndpoint();
             assert.equal(ep.contract, 'Test');
@@ -94,8 +94,8 @@ describe('Types/_source/Remote', () => {
             const source = new RemoteTesting({
                 endpoint: {
                     contract: 'Test',
-                    address: '//stdin',
-                },
+                    address: '//stdin'
+                }
             });
             const ep = source.getEndpoint();
             assert.equal(ep.contract, 'Test');
@@ -104,7 +104,7 @@ describe('Types/_source/Remote', () => {
 
         it('should return merged value of the prototype and the constructor', () => {
             const source = new RemoteTesting({
-                endpoint: {contract: 'foo'},
+                endpoint: {contract: 'foo'}
             });
             const endpointProto = Remote.prototype['_$' + 'endpoint'];
 
@@ -114,7 +114,7 @@ describe('Types/_source/Remote', () => {
 
         it('should return value of the subclass', () => {
             const SubRemoteSource = coreExtend.extend(Remote, {
-                _$endpoint: {foo: 'bar'},
+                _$endpoint: {foo: 'bar'}
             });
             const source = new SubRemoteSource();
 
@@ -128,10 +128,10 @@ describe('Types/_source/Remote', () => {
                 create: 'c',
                 read: 'r',
                 update: 'u',
-                destroy: 'd',
+                destroy: 'd'
             };
             const source = new RemoteTesting({
-                binding,
+                binding
             });
             assert.strictEqual(source.getBinding().create, binding.create);
             assert.strictEqual(source.getBinding().read, binding.read);
@@ -141,7 +141,7 @@ describe('Types/_source/Remote', () => {
 
         it('should return merged value of the prototype and the constructor', () => {
             const source = new RemoteTesting({
-                binding: {read: 'foo'},
+                binding: {read: 'foo'}
             });
 
             assert.equal(source.getBinding().create, 'create');
@@ -155,7 +155,7 @@ describe('Types/_source/Remote', () => {
                 create: 'c',
                 read: 'r',
                 update: 'u',
-                destroy: 'd',
+                destroy: 'd'
             };
             const source = new RemoteTesting();
 
@@ -180,7 +180,7 @@ describe('Types/_source/Remote', () => {
     describe('.create()', () => {
         it('should return writable Record', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             provider.result = {foo: 'bar'};
 
@@ -195,7 +195,7 @@ describe('Types/_source/Remote', () => {
     describe('.read()', () => {
         it('should send primary key value', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const value = 'foo';
 
@@ -214,10 +214,10 @@ describe('Types/_source/Remote', () => {
     describe('.update()', () => {
         it('should send all record fields', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const record = new Record({
-                rawData: {a: 1, b: 2, c: 3},
+                rawData: {a: 1, b: 2, c: 3}
             });
 
             return dataSource.update(record).then(() => {
@@ -233,11 +233,11 @@ describe('Types/_source/Remote', () => {
                 provider,
                 keyProperty: 'a',
                 options: {
-                    updateOnlyChanged: true,
-                },
+                    updateOnlyChanged: true
+                }
             });
             const record = new Record({
-                rawData: {a: 1, b: 2, c: 3},
+                rawData: {a: 1, b: 2, c: 3}
             });
 
             record.set('b', 20);
@@ -254,12 +254,12 @@ describe('Types/_source/Remote', () => {
                 provider,
                 keyProperty: 'a',
                 options: {
-                    updateOnlyChanged: true,
-                },
+                    updateOnlyChanged: true
+                }
             });
             const model = new Model({
                 keyProperty: 'c',
-                rawData: {a: 1, b: 2, c: 3},
+                rawData: {a: 1, b: 2, c: 3}
             });
 
             model.set('b', 20);
@@ -276,12 +276,12 @@ describe('Types/_source/Remote', () => {
             const dataSource = new RemoteTesting({
                 provider,
                 options: {
-                    updateOnlyChanged: true,
-                },
+                    updateOnlyChanged: true
+                }
             });
             const model = new Model({
                 keyProperty: 'a',
-                rawData: {a: 1, b: 2, c: 3},
+                rawData: {a: 1, b: 2, c: 3}
             });
 
             return dataSource.update(model).then(() => {
@@ -296,17 +296,17 @@ describe('Types/_source/Remote', () => {
 
         it('should send all records', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const data = [
                 {id: 1},
                 {id: 2},
                 {id: 3},
                 {id: 4},
-                {id: 5},
+                {id: 5}
             ];
             const rs = new RecordSet({
-                rawData: data,
+                rawData: data
             });
 
             return dataSource.update(rs).then(() => {
@@ -320,8 +320,8 @@ describe('Types/_source/Remote', () => {
                 provider,
                 keyProperty: 'id',
                 options: {
-                    updateOnlyChanged: true,
-                },
+                    updateOnlyChanged: true
+                }
             });
             const rs = new RecordSet({
                 rawData: [
@@ -329,8 +329,8 @@ describe('Types/_source/Remote', () => {
                     {id: 2},
                     {id: 3},
                     {id: 4},
-                    {id: 5},
-                ],
+                    {id: 5}
+                ]
             });
 
             rs.at(0).set('a', 1);
@@ -352,7 +352,7 @@ describe('Types/_source/Remote', () => {
     describe('.destroy()', () => {
         it('should send primary key value', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const value = 'foo';
 
@@ -366,7 +366,7 @@ describe('Types/_source/Remote', () => {
     describe('.query()', () => {
         it('should send query', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const query = new Query();
 
@@ -379,7 +379,7 @@ describe('Types/_source/Remote', () => {
     describe('.merge()', () => {
         it('should send two keys', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const from = 'foo';
             const to = 'bar';
@@ -409,7 +409,7 @@ describe('Types/_source/Remote', () => {
     describe('.move()', () => {
         it('should send two keys', () => {
             const dataSource = new RemoteTesting({
-                provider,
+                provider
             });
             const from = 'foo';
             const to = 'bar';
@@ -512,7 +512,7 @@ describe('Types/_source/Remote', () => {
             di.register('Foo', Foo);
 
             const source = new RemoteTesting({
-                provider: 'Foo',
+                provider: 'Foo'
             });
             const provider = source.getProvider();
             const json = source.toJSON();
@@ -529,13 +529,13 @@ describe('Types/_source/Remote', () => {
             };
             const source = new RemoteTesting({
                 passing: {
-                    read,
-                },
+                    read
+                }
             });
             const json = source.toJSON();
 
             assert.deepEqual(json.state.$options.passing, {
-                read,
+                read
             });
         });
     });

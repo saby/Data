@@ -32,7 +32,7 @@ function getModelData(): IData {
         calcRead: 5,
         calcWrite: 5,
         title: 'A',
-        id: 1,
+        id: 1
     };
 }
 
@@ -41,25 +41,25 @@ function getModelProperties(sqMaxVal: number = 33): IProperties {
         calc: {
             def: 1,
             get: (value) => 10 * value,
-            set: (value) => value / 10,
+            set: (value) => value / 10
         },
         calcRead: {
             def: 2,
-            get: (value) => 10 * value,
+            get: (value) => 10 * value
         },
         calcWrite: {
             def: 3,
-            set: (value) => value / 10,
+            set: (value) => value / 10
         },
         title: {
             def: 4,
-            get: (value) => value + ' B',
+            get: (value) => value + ' B'
         },
         sqMax: {
             def: () => sqMaxVal++,
             get(): number {
                 return this.get('max') * this.get('max');
-            },
+            }
         },
         internal: {
             get(): string {
@@ -67,11 +67,11 @@ function getModelProperties(sqMaxVal: number = 33): IProperties {
             },
             set(value: string): void {
                 this._internal = value;
-            },
+            }
         },
         date: {
-            get: () => new Date(),
-        },
+            get: () => new Date()
+        }
     };
 }
 
@@ -79,7 +79,7 @@ function getModel(modelData?: IData, modelProperties?: IProperties): Model {
     return new Model({
         keyProperty: 'id',
         rawData: modelData || getModelData(),
-        properties: modelProperties || getModelProperties(),
+        properties: modelProperties || getModelProperties()
     });
 }
 
@@ -124,9 +124,9 @@ describe('Types/_entity/Model', () => {
                 cacheMode: (Model as any).CACHE_MODE_ALL,
                 properties: {
                     foo: {
-                        get: () => values.pop(),
-                    },
-                },
+                        get: () => values.pop()
+                    }
+                }
             });
 
             assert.strictEqual(model.get('foo'), 3);
@@ -145,13 +145,13 @@ describe('Types/_entity/Model', () => {
         it('should prevent caching for overridden property', () => {
             const model = new Model({
                 rawData: {
-                    test: {a: 1},
+                    test: {a: 1}
                 },
                 properties: {
                     test: {
-                        get: () => 2,
-                    },
-                },
+                        get: () => 2
+                    }
+                }
             });
             assert.strictEqual(model.get('test'), 2);
             assert.strictEqual(model.get('test'), 2);
@@ -161,7 +161,7 @@ describe('Types/_entity/Model', () => {
             let cached;
             const model = new Model({
                 rawData: {
-                    foo: {bar: 'bar'},
+                    foo: {bar: 'bar'}
                 },
                 properties: {
                     foo: {
@@ -169,9 +169,9 @@ describe('Types/_entity/Model', () => {
                             cached = this.get('foo');
                             return value;
                         },
-                        set: (value) => value,
-                    },
-                },
+                        set: (value) => value
+                    }
+                }
             });
 
             const foo = model.get('foo');
@@ -186,19 +186,19 @@ describe('Types/_entity/Model', () => {
             const SubModel = extend(Model, {
                 _$properties: {
                     id: {
-                        get: (value) => value.toDateString(),
-                    },
-                },
+                        get: (value) => value.toDateString()
+                    }
+                }
             });
             const date = new Date();
             const rs = new RecordSet({
                 model: SubModel,
-                format: [{name: 'id', type: 'datetime'}],
+                format: [{name: 'id', type: 'datetime'}]
             });
             const model = new Model({
                 rawData: {
-                    id: date.getTime(),
-                },
+                    id: date.getTime()
+                }
             });
 
             rs.add(model);
@@ -207,12 +207,12 @@ describe('Types/_entity/Model', () => {
 
         it('should use recordset format for not a property', () => {
             const rs = new RecordSet({
-                format: [{name: 'id', type: 'datetime'}],
+                format: [{name: 'id', type: 'datetime'}]
             });
             const model = new Model({
                 rawData: {
-                    id: 1,
-                },
+                    id: 1
+                }
             });
             rs.add(model);
             assert.instanceOf(rs.at(0).get('id'), Date);
@@ -222,12 +222,12 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 properties: {
                     id: {
-                        def: 0,
-                    },
+                        def: 0
+                    }
                 },
                 rawData: {
-                    id: 1,
-                },
+                    id: 1
+                }
             });
             assert.equal(model.get('id'), 1);
         });
@@ -256,7 +256,7 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 rawData: {
                     foo: 'one',
-                    bar: 'two',
+                    bar: 'two'
                 },
                 properties: {
                     moreFoo: {
@@ -266,9 +266,9 @@ describe('Types/_entity/Model', () => {
                             this.set('bar', '[' + value + ']');
                             this.set('foo', value);
                             return realValue;
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             let changed;
@@ -283,7 +283,7 @@ describe('Types/_entity/Model', () => {
             assert.deepEqual(changed, {
                 foo: 'three',
                 bar: '[three]',
-                moreFoo: '{three}',
+                moreFoo: '{three}'
             });
         });
 
@@ -291,16 +291,16 @@ describe('Types/_entity/Model', () => {
             let updatedValue;
             const model = new Model({
                 rawData: {
-                    foo: [1],
+                    foo: [1]
                 },
                 properties: {
                     bar: {
                         set(value: string): void {
                             this.set('foo', [value]);
                             updatedValue = this.get('foo');
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             model.set('bar', 2);
@@ -312,12 +312,12 @@ describe('Types/_entity/Model', () => {
         it('shouldn\'t change cached field value taken from format if model has any properties', () => {
             const model = new Model({
                 format: {
-                    foo: Model,
+                    foo: Model
                 } as any,
                 rawData: {
-                    foo: {bar: 1},
+                    foo: {bar: 1}
                 },
-                properties: {},
+                properties: {}
             });
             const foo = model.get('foo');
             model.set('foo', foo);
@@ -352,7 +352,7 @@ describe('Types/_entity/Model', () => {
                         get: () => 'ro',
                         set: () => {
                             throw new Error('oops!');
-                        },
+                        }
                     },
                     bar: {
                         get(): string {
@@ -360,14 +360,14 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._bar = value;
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             assert.throws(() => {
                 model.set({
                     foo: 'one',
-                    bar: 'two',
+                    bar: 'two'
                 });
             });
             assert.strictEqual(model.get('foo'), 'ro');
@@ -381,7 +381,7 @@ describe('Types/_entity/Model', () => {
                         get: () => 'foo',
                         set: () => {
                             throw new Error('oops foo!');
-                        },
+                        }
                     },
                     bar: {
                         get(): string {
@@ -389,22 +389,22 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._bar = value;
-                        },
+                        }
                     },
                     baz: {
                         get: () => 'baz',
                         set: () => {
                             throw new Error('oops baz!');
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             assert.throws(() => {
                 model.set({
                     foo: 'one',
                     bar: 'two',
-                    baz: 'three',
+                    baz: 'three'
                 });
             });
 
@@ -417,9 +417,9 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 properties: {
                     test: {
-                        def: null,
-                    },
-                },
+                        def: null
+                    }
+                }
             });
             assert.strictEqual(model.get('test'), null);
             model.set('test', 'new');
@@ -439,14 +439,14 @@ describe('Types/_entity/Model', () => {
         it('should set inverted rawData value', () => {
             const model = new Model({
                 rawData: {
-                    foo: false,
+                    foo: false
                 },
                 properties: {
                     foo: {
                         get: (value) => !value,
-                        set: (value) => !value,
-                    },
-                },
+                        set: (value) => !value
+                    }
+                }
             });
 
             assert.isTrue(model.get('foo'));
@@ -477,9 +477,9 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._p1 = value;
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             // Get twice checks valid state
@@ -497,7 +497,7 @@ describe('Types/_entity/Model', () => {
             model.set({
                 calc: 50,
                 calcWrite: 50,
-                id: 'test',
+                id: 'test'
             });
             assert.strictEqual(model.get('calc'), 50);
             assert.strictEqual(model.get('calcWrite'), 5);
@@ -510,7 +510,7 @@ describe('Types/_entity/Model', () => {
                     calc: 50,
                     calcRead: 100,
                     calcWrite: 50,
-                    id: 'test',
+                    id: 'test'
                 });
             });
             assert.strictEqual(model.get('calc'), 50);
@@ -523,12 +523,12 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 properties: {
                     id: {
-                        def: 0,
-                    },
+                        def: 0
+                    }
                 },
                 rawData: {
-                    id: 1,
-                },
+                    id: 1
+                }
             });
             model.set('id', 2);
             assert.equal(model.get('id'), 2);
@@ -543,9 +543,9 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._id = value.toString();
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             model.set('id', [1, 2, 3]);
@@ -555,15 +555,15 @@ describe('Types/_entity/Model', () => {
         it('should reset cached property value if related raw field has been changed', () => {
             const model = new Model({
                 rawData: {
-                    foo: 1,
+                    foo: 1
                 },
                 properties: {
                     bar: {
                         get(): string {
                             return this.get('foo');
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             assert.strictEqual(model.get('bar'), 1);
@@ -581,14 +581,14 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): string {
                             return this._foo = value;
-                        },
+                        }
                     },
                     bar: {
                         get(): string {
                             return this.get('foo');
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             assert.strictEqual(model.get('bar'), 1);
@@ -600,19 +600,19 @@ describe('Types/_entity/Model', () => {
         it('should reset changed flag for modified by link property on related property change', () => {
             const model = new Model({
                 rawData: {
-                    foo: '1',
+                    foo: '1'
                 },
                 properties: {
                     bar: {
                         get(): Model {
                             return new Model({
                                 rawData: {
-                                    foo: this.get('foo'),
-                                },
+                                    foo: this.get('foo')
+                                }
                             });
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             const bar = model.get('bar');
@@ -630,7 +630,7 @@ describe('Types/_entity/Model', () => {
                             get: new Compute(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat(bar);
-                            }, ['bar']),
+                            }, ['bar'])
                         },
                         bar: {
                             get(): string {
@@ -638,9 +638,9 @@ describe('Types/_entity/Model', () => {
                             },
                             set(value: string): void {
                                 this._bar = [value];
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
 
                 const fooA = model.get('foo');
@@ -662,7 +662,7 @@ describe('Types/_entity/Model', () => {
                             get: new Compute(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat(bar);
-                            }, []),
+                            }, [])
                         },
                         bar: {
                             get(): string {
@@ -670,9 +670,9 @@ describe('Types/_entity/Model', () => {
                             },
                             set(value: string): void {
                                 this._bar = [value];
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
 
                 const fooA = model.get('foo');
@@ -691,17 +691,17 @@ describe('Types/_entity/Model', () => {
                             get: new Compute(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat([bar.get('a'), bar.get('b')]);
-                            }, ['bar.a']),
+                            }, ['bar.a'])
                         },
                         bar: {
                             get: () => {
                                 return new Model({rawData: {
                                         a: 1,
-                                        b: 2,
+                                        b: 2
                                     }});
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
 
                 const bar = model.get('bar');
@@ -726,19 +726,19 @@ describe('Types/_entity/Model', () => {
                         get(): object {
                             return {
                                 p2: this.get('p2'),
-                                p3: this.get('p3'),
+                                p3: this.get('p3')
                             };
-                        },
+                        }
                     },
                     p3: {
                         get(): object {
                             return {
                                 p4: this.get('p4'),
-                                p5: this.get('p5'),
+                                p5: this.get('p5')
                             };
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
 
             const getMyModel = () => {
@@ -746,8 +746,8 @@ describe('Types/_entity/Model', () => {
                     rawData: {
                         p2: 'v2',
                         p4: 'v4',
-                        p5: 'v5',
-                    },
+                        p5: 'v5'
+                    }
                 });
             };
 
@@ -785,7 +785,7 @@ describe('Types/_entity/Model', () => {
                         a: {
                             get(): string[] {
                                 return ['a'].concat(this.get('b'));
-                            },
+                            }
                         },
                         b: {
                             get(): string[] {
@@ -793,9 +793,9 @@ describe('Types/_entity/Model', () => {
                             },
                             set(): void {
                                 // Do nothing
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
 
                 const model = new MyModel();
@@ -824,19 +824,19 @@ describe('Types/_entity/Model', () => {
                 return {
                     d: [
                         1,
-                        '2',
+                        '2'
                     ],
                     s: [
                         {n: 'a'},
-                        {n: 'b'},
-                    ],
+                        {n: 'b'}
+                    ]
                 };
             };
 
             it('should throw an error', () => {
                 const model = new Model({
                     rawData: getData(),
-                    adapter: new SbisAdapter(),
+                    adapter: new SbisAdapter()
                 });
                 assert.throws(() => {
                     model.set('c', 50);
@@ -849,9 +849,9 @@ describe('Types/_entity/Model', () => {
                     adapter: new SbisAdapter(),
                     properties: {
                         c: {
-                            set: () => {/**/},
-                        },
-                    },
+                            set: () => {/**/}
+                        }
+                    }
                 });
                 model.set('c', 50);
             });
@@ -862,9 +862,9 @@ describe('Types/_entity/Model', () => {
                     adapter: new SbisAdapter(),
                     properties: {
                         c: {
-                            set: (value) => value,
-                        },
-                    },
+                            set: (value) => value
+                        }
+                    }
                 });
                 assert.throws(() => {
                     model.set('c', 50);
@@ -959,16 +959,16 @@ describe('Types/_entity/Model', () => {
                 d: [
                     1,
                     'a',
-                    'test',
+                    'test'
                 ],
                 s: [
                     {n: 'Num'},
                     {n: '@Key'},
-                    {n: 'Name'}],
+                    {n: 'Name'}]
             };
             const model = new Model({
                 rawData: data,
-                adapter: new SbisAdapter(),
+                adapter: new SbisAdapter()
             });
             assert.strictEqual(model.getKeyProperty(), '@Key');
             assert.strictEqual(model.getId(), data.d[1]);
@@ -976,7 +976,7 @@ describe('Types/_entity/Model', () => {
 
         it('should return undefined for empty key property', () => {
             const newModel = new Model({
-                rawData: modelData,
+                rawData: modelData
             });
             assert.isUndefined(newModel.getId());
         });
@@ -991,7 +991,7 @@ describe('Types/_entity/Model', () => {
     describe('.setKeyProperty()', () => {
         it('should set id property', () => {
             const newModel = new Model({
-                rawData: modelData,
+                rawData: modelData
             });
             newModel.setKeyProperty('id');
             assert.strictEqual(newModel.getId(), modelData.id);
@@ -1038,8 +1038,8 @@ describe('Types/_entity/Model', () => {
                 keyProperty: 'id',
                 rawData: {
                     title: 'new',
-                    link: '123',
-                },
+                    link: '123'
+                }
             });
             newModel.merge(model);
             assert.strictEqual(newModel.getId(), modelData.id);
@@ -1049,8 +1049,8 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 keyProperty: 'id',
                 rawData: {
-                    foo: 'bar',
-                },
+                    foo: 'bar'
+                }
             });
 
             sinon.spy(model, 'set');
@@ -1064,30 +1064,30 @@ describe('Types/_entity/Model', () => {
                     d: [
                         1,
                         2,
-                        3,
+                        3
                     ],
                     s: [
                         {n: 'a'},
                         {n: 'b'},
-                        {n: 'c'},
-                    ],
+                        {n: 'c'}
+                    ]
                 };
             };
             const getSimpleData = () => {
                 return {
                     c: 4,
                     d: 5,
-                    e: 6,
+                    e: 6
                 };
             };
 
             it('should append new fields if acceptor\'s adapter supports dynamic fields definition', () => {
                 const acceptor = new Model({
-                    rawData: getSimpleData(),
+                    rawData: getSimpleData()
                 });
                 const donor = new Model({
                     rawData: getSbisData(),
-                    adapter: new SbisAdapter(),
+                    adapter: new SbisAdapter()
                 });
 
                 acceptor.merge(donor);
@@ -1099,10 +1099,10 @@ describe('Types/_entity/Model', () => {
             it('should update exists fields if acceptor\'s adapter doesn\'t support dynamic fields definition', () => {
                 const acceptor = new Model({
                     rawData: getSbisData(),
-                    adapter: new SbisAdapter(),
+                    adapter: new SbisAdapter()
                 });
                 const donor = new Model({
-                    rawData: getSimpleData(),
+                    rawData: getSimpleData()
                 });
 
                 acceptor.merge(donor);
@@ -1125,8 +1125,8 @@ describe('Types/_entity/Model', () => {
             assert.isFalse(model.isChanged());
             const anotherModel = new Model({
                 rawData: {
-                    max: modelData.max,
-                },
+                    max: modelData.max
+                }
             });
             model.merge(anotherModel);
             assert.isFalse(model.isChanged());
@@ -1137,8 +1137,8 @@ describe('Types/_entity/Model', () => {
             assert.isTrue(model.isChanged());
             const anotherModel = new Model({
                 rawData: {
-                    max: 157,
-                },
+                    max: 157
+                }
             });
             model.merge(anotherModel);
             assert.isTrue(model.isChanged());
@@ -1148,8 +1148,8 @@ describe('Types/_entity/Model', () => {
             assert.isFalse(model.isChanged());
             const anotherModel = new Model({
                 rawData: {
-                    max: 157,
-                },
+                    max: 157
+                }
             });
             model.merge(anotherModel);
             assert.isTrue(model.isChanged());
@@ -1161,23 +1161,23 @@ describe('Types/_entity/Model', () => {
                     d: ['qwe'],
                     s: [{
                         n: 'name',
-                        t: 'Строка',
-                    }],
+                        t: 'Строка'
+                    }]
                 },
-                adapter: 'Types/entity:adapter.Sbis',
+                adapter: 'Types/entity:adapter.Sbis'
             });
             const anotherModel = new Model({
                 rawData: {
                     d: ['qwe2', 'qwe3'],
                     s: [{
                         n: 'name2',
-                        t: 'Строка',
+                        t: 'Строка'
                     }, {
                         n: 'name',
-                        t: 'Строка',
-                    }],
+                        t: 'Строка'
+                    }]
                 },
-                adapter: 'Types/entity:adapter.Sbis',
+                adapter: 'Types/entity:adapter.Sbis'
             });
 
             model.merge(anotherModel);
@@ -1197,12 +1197,12 @@ describe('Types/_entity/Model', () => {
         it('should return affected "which"', () => {
             const rawData = {foo: ['bar']};
             const model = new Model({
-                rawData,
+                rawData
             });
             const target = model.get('foo');
             const which = {
                 target,
-                data: {baz: 'bad'},
+                data: {baz: 'bad'}
             };
             const route = ['field.foo'];
 
@@ -1217,9 +1217,9 @@ describe('Types/_entity/Model', () => {
                     obj: {
                         get: () => {
                             return {};
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             const obj = model.get('obj');
 
@@ -1233,16 +1233,16 @@ describe('Types/_entity/Model', () => {
                     obj: {
                         get: () => {
                             return {};
-                        },
+                        }
                     },
                     obj2: {
                         get(): object {
                             return {
-                                obj: this.get('obj'),
+                                obj: this.get('obj')
                             };
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             const obj = model.get('obj');
             const obj2 = model.get('obj2');
@@ -1260,12 +1260,12 @@ describe('Types/_entity/Model', () => {
                     record: {
                         get: () => {
                             return new Model();
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             const given = {
-                properties: undefined,
+                properties: undefined
             };
             const handler = (event, properties) => {
                 given.properties = properties;
@@ -1288,12 +1288,12 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._record = value;
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             const given = {
-                properties: undefined,
+                properties: undefined
             };
             const handler = (event, properties) => {
                 given.properties = properties;
@@ -1319,12 +1319,12 @@ describe('Types/_entity/Model', () => {
                         },
                         set(value: string): void {
                             this._record = value;
-                        },
-                    },
-                },
+                        }
+                    }
+                }
             });
             const given = {
-                properties: undefined,
+                properties: undefined
             };
             const handler = (event, properties) => {
                 given.properties = properties;
@@ -1346,9 +1346,9 @@ describe('Types/_entity/Model', () => {
                 properties: {
                     foo: {
                         def: () => new Model(),
-                        get: (value) => value,
-                    },
-                },
+                        get: (value) => value
+                    }
+                }
             });
             const foo = model.get('foo');
             let given = {};
@@ -1397,7 +1397,7 @@ describe('Types/_entity/Model', () => {
     describe('.toString()', () => {
         it('should serialize a model', () => {
             const model = new Model({
-                rawData: {to: 'String'},
+                rawData: {to: 'String'}
             });
             assert.equal(model.toString(), '{"to":"String"}');
         });
@@ -1410,7 +1410,7 @@ describe('Types/_entity/Model', () => {
                 const Sub = extend(Model, {
                     $constructor: () => {
                         testOk = true;
-                    },
+                    }
                 });
                 const instance = new Sub();
                 assert.isTrue(testOk);
@@ -1422,12 +1422,12 @@ describe('Types/_entity/Model', () => {
                 const Sub = extend(Model, {
                     $constructor: () => {
                         testOk++;
-                    },
+                    }
                 });
                 const MoreSub = extend(Sub, {
                     $constructor: () => {
                         testOk += 2;
-                    },
+                    }
                 });
 
                 const instance = new MoreSub();
@@ -1442,12 +1442,12 @@ describe('Types/_entity/Model', () => {
                 const Sub = extend(Model, {
                     $protected: {
                         _options: {
-                            idProperty: 'foo',
-                        },
-                    },
+                            idProperty: 'foo'
+                        }
+                    }
                 });
                 const instance = new Sub({
-                    keyProperty: 'bar',
+                    keyProperty: 'bar'
                 });
 
                 assert.equal(instance.getKeyProperty(), 'bar');
@@ -1463,9 +1463,9 @@ describe('Types/_entity/Model', () => {
                         some: {
                             foo: () => {
                                 return 'bar';
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
                 const instance = new Sub();
                 const serialized = instance.toJSON();
@@ -1479,12 +1479,12 @@ describe('Types/_entity/Model', () => {
                     $protected: {
                         _options: {
                             opt1: 1,
-                            opt2: 'a',
-                        },
-                    },
+                            opt2: 'a'
+                        }
+                    }
                 });
                 const instance = new Sub({
-                    opt2: 'b',
+                    opt2: 'b'
                 });
                 const serialized = instance.toJSON();
 
@@ -1499,7 +1499,7 @@ describe('Types/_entity/Model', () => {
                     id: 1,
                     title: 'title',
                     selected: true,
-                    pid: null,
+                    pid: null
                 };
                 const model = (Model as any).fromObject(data);
 

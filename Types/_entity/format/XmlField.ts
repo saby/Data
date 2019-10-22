@@ -23,5 +23,5 @@ Object.assign(XmlField.prototype, {
     '[Types/_entity/format/XmlField]': true,
     _moduleName: 'Types/entity:format.XmlField',
     _typeName: 'Xml',
-    _$defaultValue: '',
+    _$defaultValue: ''
 });

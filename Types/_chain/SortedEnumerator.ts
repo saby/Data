@@ -30,7 +30,7 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
                 .map((item, index) => {
                     const result = [
                         shouldSaveIndices ? SortWrapper.indexOf(item) : index,
-                        SortWrapper.valueOf(item),
+                        SortWrapper.valueOf(item)
                     ];
                     SortWrapper.clear(item);
 
@@ -47,5 +47,5 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
 }
 
 Object.assign(SortedEnumerator.prototype, {
-    compareFunction: null,
+    compareFunction: null
 });

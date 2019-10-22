@@ -331,5 +331,5 @@ Object.assign(Hierarchy.prototype, {
    _$nodeProperty: '',
    _$declaredChildrenProperty: '',
    getIdProperty: Hierarchy.prototype.getKeyProperty,
-   setIdProperty: Hierarchy.prototype.setKeyProperty,
+   setIdProperty: Hierarchy.prototype.setKeyProperty
 });

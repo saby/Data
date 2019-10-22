@@ -80,5 +80,5 @@ Object.assign(ZippedEnumerator.prototype, {
     itemsEnumerators: null,
     enumerator: null,
     index: null,
-    current: undefined,
+    current: undefined
 });

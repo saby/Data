@@ -29,7 +29,7 @@ export default class Json extends Abstract {
 
 Object.assign(Json.prototype, {
     '[Types/_entity/adapter/Json]': true,
-    _moduleName: 'Types/entity:adapter.Json',
+    _moduleName: 'Types/entity:adapter.Json'
 });
 
 register('Types/entity:adapter.Json', Json, {instantiate: false});

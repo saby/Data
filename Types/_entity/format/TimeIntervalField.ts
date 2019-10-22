@@ -23,5 +23,5 @@ Object.assign(TimeIntervalField.prototype, {
     '[Types/_entity/format/TimeIntervalField]': true,
     _moduleName: 'Types/entity:format.TimeIntervalField',
     _typeName: 'TimeInterval',
-    _$defaultValue: 0,
+    _$defaultValue: 0
 });

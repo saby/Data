@@ -7,7 +7,7 @@ describe('Types/_formatter/debounce', () => {
         args: T[],
         callback: Function,
         interval: number = 5,
-        timeout: number = 50,
+        timeout: number = 50
     ): void {
         const begin = Date.now();
         const intervalHandle = setInterval(() => {

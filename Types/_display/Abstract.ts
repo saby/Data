@@ -46,7 +46,7 @@ export default abstract class Abstract<S, T> extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    ObservableMixin,
+    ObservableMixin
 ) {
     constructor(options?: IOptions<S>) {
         super(options);
@@ -73,7 +73,7 @@ export default abstract class Abstract<S, T> extends mixin<
     static getDefaultDisplay<S, T, U extends Abstract<S, T> = Abstract<S, T>>(
         collection: IEnumerable<S> | S[],
         options?: IOptions<S>,
-        single?: boolean,
+        single?: boolean
     ): U {
         if (arguments.length === 2 && (typeof options !== 'object')) {
             single = options;

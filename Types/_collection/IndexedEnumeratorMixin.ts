@@ -160,7 +160,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
                 index,
                 property,
                 enumerator.getCurrent(),
-                position,
+                position
             );
             position++;
         }
@@ -190,7 +190,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
                             index,
                             property,
                             enumerator.getCurrent(),
-                            position,
+                            position
                         );
                     }
                     position++;
@@ -309,7 +309,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
         newItems: any[],
         newItemsIndex: number,
         oldItems: any[],
-        oldItemsIndex: number,
+        oldItemsIndex: number
     ): void {
         switch (action) {
             case IObservable.ACTION_ADD:
@@ -329,5 +329,5 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
 Object.assign(IndexedEnumeratorMixin.prototype, {
     '[Types/_collection/IndexedEnumeratorMixin]': true,
-    _enumeratorIndexes: null,
+    _enumeratorIndexes: null
 });

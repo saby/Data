@@ -21,12 +21,12 @@ describe('Types/_chain/Counted', () => {
             const expectedKeys = [
                 'one',
                 'two',
-                'three',
+                'three'
             ];
             const expectedValues = [
                 1,
                 2,
-                1,
+                1
             ];
 
             let index = 0;
@@ -43,7 +43,7 @@ describe('Types/_chain/Counted', () => {
                 {id: 1},
                 {id: 1},
                 {id: 3},
-                {id: 2},
+                {id: 2}
             ];
             const prev = new ArrayMock(items);
             const chain = new Counted(prev, 'id');
@@ -51,12 +51,12 @@ describe('Types/_chain/Counted', () => {
             const expectedKeys = [
                 1,
                 3,
-                2,
+                2
             ];
             const expectedValues = [
                 2,
                 1,
-                1,
+                1
             ];
 
             let index = 0;
@@ -75,11 +75,11 @@ describe('Types/_chain/Counted', () => {
             const enumerator = chain.getEnumerator();
             const expectedKeys = [
                 'odd',
-                'even',
+                'even'
             ];
             const expectedValues = [
                 3,
-                2,
+                2
             ];
 
             let index = 0;

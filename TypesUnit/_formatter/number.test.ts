@@ -11,7 +11,7 @@ describe('Types/_formatter/number', () => {
             const expect = {
                 'en-US': '1,234.5',
                 'ru-RU': '1 234,5',
-                'foo-BAR': '1,234.5',
+                'foo-BAR': '1,234.5'
             };
             let stubIntl;
 

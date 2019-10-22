@@ -41,7 +41,7 @@ export {format};
 export {
     default as FormattableMixin,
     IOptions as IFormattableOptions,
-    ISerializableState as IFormattableSerializableState,
+    ISerializableState as IFormattableSerializableState
 } from './_entity/FormattableMixin';
 import * as functor from './_entity/functor';
 export {functor};
@@ -70,6 +70,6 @@ export {default as TimeInterval} from './_entity/TimeInterval';
 export {
     default as VersionableMixin,
     IOptions as IVersionableMixinOptions,
-    VersionCallback as VersionableMixinVersionCallback,
+    VersionCallback as VersionableMixinVersionCallback
 } from './_entity/VersionableMixin';
 export {default as JSONML, IJSONML} from './_entity/JSONML';

@@ -10,7 +10,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
         return {
             getRoot(): TreeItem<number | object> {
                 return this.root || (this.root = new TreeItem({
-                    contents: root,
+                    contents: root
                 }));
             },
 
@@ -18,7 +18,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 options.node = options.contents.node;
                 options.hasChildren = options.contents.hasChildren;
                 return new TreeItem(options);
-            },
+            }
         };
     }
 
@@ -27,7 +27,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             return item as any as T;
         }
         return new TreeItem({
-            contents: item,
+            contents: item
         }) as any as T;
     }
 
@@ -36,7 +36,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
 
         const options = {
             display,
-            items,
+            items
         };
 
         const wraps = items.map<T>(wrapItem);
@@ -72,7 +72,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             reset(): void {
                 wraps.length = 0;
                 items.length = 0;
-            },
+            }
         };
     }
 
@@ -81,13 +81,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [
                 {id: 1},
                 {id: 2},
-                {id: 3},
+                {id: 3}
             ];
             const source = getSource(items);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             strategy.items.forEach((item, index) => {
@@ -104,13 +104,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1},
                 new GroupItem({contents: 'b'}),
                 {id: 2},
-                {id: 3},
+                {id: 3}
             ];
             const source = getSource(items);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expectedInstances = [GroupItem, TreeItem, GroupItem, TreeItem, TreeItem];
             const expectedContents = ['a', items[1], 'b', items[3], items[4]];
@@ -129,13 +129,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 11, pid: 1},
                 {id: 1, pid: 0},
                 new GroupItem({contents: 'b'}),
-                {id: 2, pid: 0},
+                {id: 2, pid: 0}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = ['a', items[2], items[1], 'b', items[4]];
 
@@ -152,13 +152,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: 0},
                 {id: 2, pid: 0},
                 new GroupItem({contents: 'b'}),
-                {id: 11, pid: 1},
+                {id: 11, pid: 1}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = ['a', items[1], 'b', items[4], 'a', items[2]];
 
@@ -177,13 +177,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 new GroupItem({contents: 'c'}),
                 {id: 2, pid: 0},
                 new GroupItem({contents: 'b'}),
-                {id: 11, pid: 1},
+                {id: 11, pid: 1}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = ['a', items[1], 'b', items[5], 'c', items[3]];
 
@@ -203,13 +203,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 new GroupItem({contents: 'aa'}),
                 {id: 11, pid: 1},
                 new GroupItem({contents: 'bb'}),
-                {id: 22, pid: 2},
+                {id: 22, pid: 2}
             ];
             const source = getSource(items);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             const givenA = strategy.items.map((item) => {
@@ -239,13 +239,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 31, pid: 3},
                 {id: 21, pid: 2},
                 {id: 41, pid: 4},
-                {id: 111, pid: 11},
+                {id: 111, pid: 11}
             ];
             source = getSource(items, 0);
             strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
         });
 
@@ -270,7 +270,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 11, 111, 2, 21, 3, 31, 4, 41];
 
@@ -287,13 +287,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: rootId},
                 {id: 2, pid: rootId},
                 {id: 11, pid: 1},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             const source = getSource(items, rootId);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 11, 2, 21];
 
@@ -310,13 +310,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1},
                 {id: 2},
                 {id: 11, pid: 1},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             const source = getSource(items, rootId);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [items[0], items[2], items[1], items[3]];
             const expectedParent = [rootId, items[0], rootId, items[1]];
@@ -336,7 +336,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [11, 111];
 
@@ -352,13 +352,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: 0},
                 {id: 2, pid: '0'},
                 {id: 11, pid: 1},
-                {id: 12, pid: '1'},
+                {id: 12, pid: '1'}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 11, 12, 2];
 
@@ -376,13 +376,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 11, pid: 1},
                 {id: 1, pid: 0},
                 {id: 2, pid: 0},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             const source = getSource(items, root);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 11, 2, 21];
 
@@ -397,7 +397,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 2, 3, 4];
 
@@ -415,13 +415,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 2, pid: 0},
                 {id: 11, pid: 1},
                 {id: 111, pid: 11},
-                {id: 11, pid: 2},
+                {id: 11, pid: 2}
             ];
             const source = getSource(items, rootId);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [1, 11, 111, 2, 11, 111];
             const treeItems = [];
@@ -441,7 +441,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             assert.throws(() => {
@@ -453,7 +453,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [{node: true}];
             const source = getSource(items);
             const strategy = new AdjacencyList({
-                source,
+                source
             });
 
             assert.isTrue(strategy.at(0).isNode());
@@ -463,7 +463,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [{node: false}];
             const source = getSource(items);
             const strategy = new AdjacencyList({
-                source,
+                source
             });
 
             assert.isFalse(strategy.at(0).isNode());
@@ -473,7 +473,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [{hasChildren: true}];
             const source = getSource(items);
             const strategy = new AdjacencyList({
-                source,
+                source
             });
 
             assert.isTrue(strategy.at(0).isHasChildren());
@@ -483,7 +483,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [{hasChildren: false}];
             const source = getSource(items);
             const strategy = new AdjacencyList({
-                source,
+                source
             });
 
             assert.isFalse(strategy.at(0).isHasChildren());
@@ -499,7 +499,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: 0},
                 {id: 3, pid: 0},
                 {id: 11, pid: 1},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             source = getSource(items, 0);
         });
@@ -513,7 +513,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             assert.strictEqual(strategy.count, 3);
@@ -522,7 +522,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
         it('should return valid items count if keyProperty is not injected', () => {
             const strategy = new AdjacencyList({
                 source,
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             assert.strictEqual(strategy.count, 2);
@@ -531,7 +531,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
         it('should return 0 if parentProperty is not injected', () => {
             const strategy = new AdjacencyList({
                 source,
-                keyProperty: 'id',
+                keyProperty: 'id'
             });
 
             assert.strictEqual(strategy.count, 0);
@@ -546,7 +546,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: 0},
                 {id: 2, pid: 0},
                 {id: 3, pid: 0},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
         });
 
@@ -559,7 +559,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const newItem = {id: 11, pid: 1};
             const position = 3;
@@ -580,13 +580,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const newItems = [
                 {id: 11, pid: 1},
                 {id: 12, pid: 1},
                 {id: 22, pid: 2},
-                {id: 4, pid: 0},
+                {id: 4, pid: 0}
             ];
             const itemsCount = items.length;
             const expected = [1, 11, 12, 2, 21, 22, 3, 4];
@@ -605,13 +605,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const items = [
                 {id: 1, pid: 0},
                 {id: 2, pid: 0},
-                {id: 31, pid: 3},
+                {id: 31, pid: 3}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const newItem = {id: 4, pid: 0};
 
@@ -625,7 +625,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const newItems = [{id: 2, pid: 0}];
             const itemsCount = items.length;
@@ -654,13 +654,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 3, pid: 0},
                 {id: 21, pid: 2},
                 {id: 211, pid: 21},
-                {id: 22, pid: 2},
+                {id: 22, pid: 2}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const displayAt = 2;
             const removeAt = 3;
@@ -686,13 +686,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1, pid: 0},
                 {id: 2, pid: 0},
                 {id: 3, pid: 0},
-                {id: 4, pid: 0},
+                {id: 4, pid: 0}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             const expected = [strategy.at(1), strategy.at(2)];
@@ -704,13 +704,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
         it('should return undefined for item that\'s not created yet', () => {
             const items = [
                 {id: 1, pid: 0},
-                {id: 2, pid: 0},
+                {id: 2, pid: 0}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             const result = strategy.splice(0, 1, []);
@@ -725,18 +725,18 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 2, pid: 0},
                 {id: 3, pid: 0},
                 {id: 2, pid: 0},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             const source = getSource(items, 0);
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const removeAt = 1;
             const expected = [1, 3, 2, 21];
 
-            // Force create item
+            //Force create item
             assert.strictEqual(strategy.at(removeAt).getContents().id, 2);
 
             const result = strategy.splice(removeAt, 1, []);
@@ -770,7 +770,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             assert.isUndefined(source.invalidated);
@@ -783,13 +783,13 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 1},
                 {id: 2},
                 {id: 11, pid: 1},
-                {id: 22, pid: 2},
+                {id: 22, pid: 2}
             ];
             const sourceA = getSource(items);
             const strategy = new AdjacencyList({
                 source: sourceA,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
 
             const givenA = strategy.items.map((item) => item.getContents().id);
@@ -799,7 +799,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const affectedItemsB = [
                 items[1],
                 items[3],
-                items[0],
+                items[0]
             ];
             const sourceB = getSource(affectedItemsB);
             strategy['_opt' + 'ions'].source = sourceB;
@@ -828,7 +828,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 2, pid: 0},
                 {id: 3, pid: 0},
                 {id: 11, pid: 1},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             source = getSource(items, 0);
         });
@@ -842,7 +842,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [0, 2, 4, 1, 3];
 
@@ -855,7 +855,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [2, 4, 1, 3];
 
@@ -877,7 +877,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
                 {id: 2, pid: 0},
                 {id: 3, pid: 0},
                 {id: 11, pid: 1},
-                {id: 21, pid: 2},
+                {id: 21, pid: 2}
             ];
             source = getSource(items, 0);
         });
@@ -891,7 +891,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [0, 3, 1, 4, 2];
 
@@ -904,7 +904,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const strategy = new AdjacencyList({
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             });
             const expected = [3, 1, 4, 2];
 
@@ -922,7 +922,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const options = {
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             };
             const strategy = new AdjacencyList(options);
             const items = strategy.items;
@@ -941,7 +941,7 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             const options = {
                 source,
                 keyProperty: 'id',
-                parentProperty: 'pid',
+                parentProperty: 'pid'
             };
             const strategy = new AdjacencyList(options);
             const items = strategy.items;

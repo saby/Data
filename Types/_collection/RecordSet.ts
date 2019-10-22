@@ -19,7 +19,7 @@ import {
     format,
     Record,
     Model,
-    adapter,
+    adapter
 } from '../entity';
 import {create, register} from '../di';
 import {mixin, logger} from '../util';
@@ -119,7 +119,7 @@ export default class RecordSet<T = Model> extends mixin<
 >(
     ObservableList,
     FormattableMixin,
-    InstantiableMixin,
+    InstantiableMixin
 ) implements IObservableObject, IProducible {
     /**
      * @typedef {Object} MergeOptions
@@ -415,7 +415,7 @@ export default class RecordSet<T = Model> extends mixin<
                     context,
                     record,
                     index++,
-                    this,
+                    this
                 );
             }
         }
@@ -655,7 +655,7 @@ export default class RecordSet<T = Model> extends mixin<
                 this._getRawData(),
                 () => tableAdapter.getCount(),
                 (items, at) => tableAdapter.at(at),
-                (item, property) => adapter.forRecord(item).get(property),
+                (item, property) => adapter.forRecord(item).get(property)
             );
         } else {
             // Slow mode: indexing use record instances
@@ -663,7 +663,7 @@ export default class RecordSet<T = Model> extends mixin<
                 this._$items,
                 (items) => items.length,
                 (items, at) => this.at(at),
-                (item, property) => item.get(property),
+                (item, property) => item.get(property)
             );
         }
 
@@ -708,7 +708,7 @@ export default class RecordSet<T = Model> extends mixin<
     _setSerializableState(state: ISerializableState): Function {
         const fromSuper = super._setSerializableState(state);
         const fromFormattableMixin = FormattableMixin.prototype._setSerializableState(
-            state as IFormattableSerializableState,
+            state as IFormattableSerializableState
         );
         return function(): void {
             fromSuper.call(this);
@@ -736,7 +736,7 @@ export default class RecordSet<T = Model> extends mixin<
             this._$items,
             0,
             oldItems,
-            0,
+            0
         );
     }
 
@@ -773,7 +773,7 @@ export default class RecordSet<T = Model> extends mixin<
 
     protected _createRawDataAdapter(): adapter.ITable {
         return (this._getAdapter() as adapter.IAdapter).forTable(
-            this._getRawData(true),
+            this._getRawData(true)
         );
     }
 
@@ -806,7 +806,7 @@ export default class RecordSet<T = Model> extends mixin<
 
     static produceInstance(data: any, options: IOptions): RecordSet {
         const instanceOptions: any = {
-            rawData: data,
+            rawData: data
         };
         if (options) {
             if (options.adapter) {
@@ -842,7 +842,7 @@ export default class RecordSet<T = Model> extends mixin<
             if (selfData !== recordData) {
                 adapter.replace(
                     recordData,
-                    index,
+                    index
                 );
             }
         }
@@ -880,7 +880,7 @@ export default class RecordSet<T = Model> extends mixin<
         // TODO: compare using formats
         return isEqual(
             this._getRawData(),
-            to.getRawData(true),
+            to.getRawData(true)
         );
     }
 
@@ -1102,7 +1102,7 @@ export default class RecordSet<T = Model> extends mixin<
      */
     getRecordById(id: string | number): T {
         return this.at(
-            this.getIndexByValue(this._$keyProperty, id),
+            this.getIndexByValue(this._$keyProperty, id)
         );
     }
 
@@ -1125,8 +1125,8 @@ export default class RecordSet<T = Model> extends mixin<
                 {
                     format,
                     adapter: this._getAdapter(),
-                    keyProperty: this._$keyProperty,
-                },
+                    keyProperty: this._$keyProperty
+                }
             );
         };
 
@@ -1146,7 +1146,7 @@ export default class RecordSet<T = Model> extends mixin<
                             fieldFormat = metaFormat.at(fieldIndex);
                             fieldValue = cast(
                                 fieldValue,
-                                fieldFormat.getType(),
+                                fieldFormat.getType()
                             );
                         }
                     }
@@ -1177,7 +1177,7 @@ export default class RecordSet<T = Model> extends mixin<
 
                     metaData[fieldName] = cast(
                         (adapter as adapter.IMetaData).getMetaData(fieldName),
-                        fieldFormat ? fieldFormat.getType() : this._getFieldType(format),
+                        fieldFormat ? fieldFormat.getType() : this._getFieldType(format)
                     );
                 });
             }
@@ -1211,8 +1211,8 @@ export default class RecordSet<T = Model> extends mixin<
                         meta[name],
                         {
                             format,
-                            adapter: this.getAdapter(),
-                        },
+                            adapter: this.getAdapter()
+                        }
                     );
                     adapter.setMetaData(name, value);
                 });
@@ -1343,7 +1343,7 @@ export default class RecordSet<T = Model> extends mixin<
             item = items[i];
             adapter.add(
                 item.getRawData(true),
-                at === undefined ? undefined : at + i,
+                at === undefined ? undefined : at + i
             );
         }
 
@@ -1420,7 +1420,7 @@ export default class RecordSet<T = Model> extends mixin<
         }
 
         return this._buildRecord(
-            normalizedRawData,
+            normalizedRawData
         );
     }
 
@@ -1450,7 +1450,7 @@ export default class RecordSet<T = Model> extends mixin<
             adapter: this.getAdapter(),
             rawData: data,
             keyProperty: this._$keyProperty,
-            formatController: this._$formatController,
+            formatController: this._$formatController
         });
 
         return record;
@@ -1504,7 +1504,7 @@ export default class RecordSet<T = Model> extends mixin<
         const filter = (state) => {
             const result = new RecordSet({
                 adapter: items.getAdapter(),
-                keyProperty: items.getKeyProperty(),
+                keyProperty: items.getKeyProperty()
             });
 
             items.each((item) => {
@@ -1529,9 +1529,9 @@ export default class RecordSet<T = Model> extends mixin<
             format: [
                 {name: names[0], type: 'recordset'},
                 {name: names[1], type: 'recordset'},
-                {name: names[2], type: 'array', kind: 'string'},
+                {name: names[2], type: 'array', kind: 'string'}
             ],
-            adapter: items.getAdapter(),
+            adapter: items.getAdapter()
         });
 
         result.set(names[0], filter(RECORD_STATE.CHANGED));
@@ -1558,7 +1558,7 @@ Object.assign(RecordSet.prototype, {
     _$metaFormat: null,
     _metaData: null,
     getIdProperty: RecordSet.prototype.getKeyProperty,
-    setIdProperty: RecordSet.prototype.setKeyProperty,
+    setIdProperty: RecordSet.prototype.setKeyProperty
 });
 
 // Aliases

@@ -32,7 +32,7 @@ export default class JsonRecord extends mixin<
 >(
     DestroyableMixin,
     GenericFormatMixin,
-    JsonFormatMixin,
+    JsonFormatMixin
 ) implements IRecord {
     /**
      * Сырые данные
@@ -54,7 +54,7 @@ export default class JsonRecord extends mixin<
     addField(format: Field, at: number): void {
         if (!format || !(format instanceof Field)) {
             throw new TypeError(
-                `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`,
+                `${this._moduleName}::addField(): argument "format" should be an instance of Types/entity:format.Field`
             );
         }
 
@@ -124,5 +124,5 @@ export default class JsonRecord extends mixin<
 Object.assign(JsonRecord.prototype, {
     '[Types/_entity/adapter/JsonRecord]': true,
     '[Types/_entity/adapter/IRecord]': true,
-    _data: null,
+    _data: null
 });

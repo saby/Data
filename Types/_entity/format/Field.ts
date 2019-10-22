@@ -21,7 +21,7 @@ import {isEqual} from '../../object';
 export default abstract class Field extends mixin<
     DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 >(
-   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin,
+   DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements IEquatable {
    /**
     * @cfg {String} Имя поля

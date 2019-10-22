@@ -4,20 +4,20 @@ import merge from 'Types/_object/merge';
 describe('Types/_object/merge', () => {
     it('should merge two objects', () => {
         const origin = {
-            a: 1,
+            a: 1
         };
         const ext = {
-            b: 1,
+            b: 1
         };
         assert.deepEqual(merge(origin, ext), {a: 1, b: 1});
     });
 
     it('should replace value in the same fields', () => {
         const origin = {
-            a: 1,
+            a: 1
         };
         const ext = {
-            a: 2,
+            a: 2
         };
         merge(origin, ext);
         assert.equal(origin.a, 2);
@@ -27,13 +27,13 @@ describe('Types/_object/merge', () => {
         const origin = {
             a: {
                 b: 1,
-                c: 2,
-            },
+                c: 2
+            }
         };
         const ext = {
             a: {
-                c: 3,
-            },
+                c: 3
+            }
         };
         merge(origin, ext);
         assert.deepEqual(origin, {a: {b: 1, c: 3}});
@@ -41,12 +41,12 @@ describe('Types/_object/merge', () => {
 
     it('should replace primitive with object', () => {
         const origin: any = {
-            a: 1,
+            a: 1
         };
         const ext = {
             a: {
-                b: 2,
-            },
+                b: 2
+            }
         };
         merge(origin, ext);
         assert.deepEqual(origin, {a: {b: 2}});
@@ -72,31 +72,31 @@ describe('Types/_object/merge', () => {
 
         const origin: object = {
             then: soThen,
-            now: new Date(2),
+            now: new Date(2)
         };
         const ext: object = {now: soNow};
 
         const result = merge({}, origin, ext);
         assert.deepEqual(result, {
             then: soThen,
-            now: soNow,
+            now: soNow
         });
     });
 
     it('should prevent endless recursiion', () => {
         const repeat = {
             a: {
-                b: null,
-            },
+                b: null
+            }
         };
         repeat.a.b = repeat;
 
         const result = merge({
             a: {
                 b: {
-                    a: {},
-                },
-            },
+                    a: {}
+                }
+            }
         }, repeat);
         assert.strictEqual(result.a.b.a, repeat.a);
     });

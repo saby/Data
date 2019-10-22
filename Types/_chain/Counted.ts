@@ -44,7 +44,7 @@ export default class Counted<T> extends Abstract<T> {
                 memo.set(key, count + 1);
                 return memo;
             },
-            new Map()),
+            new Map())
         );
     }
 
@@ -53,5 +53,5 @@ export default class Counted<T> extends Abstract<T> {
 
 Object.assign(Counted.prototype, {
     '[Types/_chain/Counted]': true,
-    _key: null,
+    _key: null
 });

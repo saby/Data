@@ -61,5 +61,5 @@ export default class IndexedEnumerator<T> implements IEnumerator<T> {
 Object.assign(IndexedEnumerator.prototype, {
     previous: null,
     index: -1,
-    _items: null,
+    _items: null
 });

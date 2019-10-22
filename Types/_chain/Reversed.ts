@@ -13,7 +13,7 @@ export default class Reversed<T> extends Abstract<T> {
 
     getEnumerator(): ReversedEnumerator<T> {
         return new ReversedEnumerator(
-            this._previous,
+            this._previous
         );
     }
 

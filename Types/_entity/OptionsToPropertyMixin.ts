@@ -26,7 +26,7 @@ function defineProperty(instance: object, proto: object, name: string, key: stri
             delete instance[name];
             const newValue = isMergeable ? {...proto[name], ...value} : value;
             instance[name] = newValue;
-        },
+        }
     });
 }
 

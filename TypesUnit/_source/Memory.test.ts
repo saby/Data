@@ -34,7 +34,7 @@ describe('Types/_source/Memory', () => {
             LastName: 'Иванов',
             FirstName: 'Иван',
             MiddleName: 'Иванович',
-            Position: 'Инженер',
+            Position: 'Инженер'
         }, {
             Id: 4,
             Order: 1,
@@ -42,9 +42,9 @@ describe('Types/_source/Memory', () => {
             LastName: 'Петров',
             FirstName: 'Федор',
             MiddleName: 'Иванович',
-            Position: 'Директор',
+            Position: 'Директор'
         }, {
-            Order: null,
+            Order: null
         }, {
             Id: 7,
             Order: 6,
@@ -52,7 +52,7 @@ describe('Types/_source/Memory', () => {
             LastName: 'Аксенова',
             FirstName: 'Федора',
             MiddleName: 'Сергеевна',
-            Position: 'Инженер',
+            Position: 'Инженер'
         }, {
             Id: 2,
             Order: 0,
@@ -60,9 +60,9 @@ describe('Types/_source/Memory', () => {
             LastName: 'Афанасьев',
             FirstName: 'Иван',
             MiddleName: 'Андреевич',
-            Position: 'Директор',
+            Position: 'Директор'
         }, {
-            Id: null,
+            Id: null
         }, {
             Id: 5,
             Order: 4,
@@ -70,7 +70,7 @@ describe('Types/_source/Memory', () => {
             LastName: 'Баранов',
             FirstName: 'Иванко',
             MiddleName: 'Петрович',
-            Position: 'Карапуз',
+            Position: 'Карапуз'
         }, {
             Id: 1,
             Order: 5,
@@ -78,7 +78,7 @@ describe('Types/_source/Memory', () => {
             LastName: 'Годолцов',
             FirstName: 'Иван',
             MiddleName: 'Викторович',
-            Position: 'Директор',
+            Position: 'Директор'
         }, {
             Id: 3,
             Order: 3,
@@ -86,12 +86,12 @@ describe('Types/_source/Memory', () => {
             LastName: 'Иванов',
             FirstName: 'Ян',
             MiddleName: 'Яковлевич',
-            Position: 'Маркетолог',
+            Position: 'Маркетолог'
         }];
 
         source = new MemorySource({
             data,
-            keyProperty: 'Id',
+            keyProperty: 'Id'
         });
     });
 
@@ -120,7 +120,7 @@ describe('Types/_source/Memory', () => {
         it('should return an model with initial data', () => {
             return source.create({
                 a: 1,
-                b: true,
+                b: true
             }).then((model) => {
                 assert.strictEqual(model.get('a'), 1);
                 assert.strictEqual(model.get('b'), true);
@@ -130,7 +130,7 @@ describe('Types/_source/Memory', () => {
         it('should return an unlinked model', () => {
             const meta = {
                 a: 1,
-                b: true,
+                b: true
             };
             return source.create(meta).then((model) => {
                 model.set('a', 2);
@@ -212,7 +212,7 @@ describe('Types/_source/Memory', () => {
             it('should create the model by 2nd way', () => {
                 const oldLength = data.length;
                 const model = new Model({
-                    keyProperty: 'Id',
+                    keyProperty: 'Id'
                 });
 
                 model.set('LastName', 'Овечкин');
@@ -223,7 +223,7 @@ describe('Types/_source/Memory', () => {
 
             it('should generate id and set it in raw data', () => {
                 const model = new Model({
-                    keyProperty: 'Id',
+                    keyProperty: 'Id'
                 });
 
                 return source.update(model).then((id) => {
@@ -243,16 +243,16 @@ describe('Types/_source/Memory', () => {
                         LastName: 'Иванов',
                         FirstName: 'Иван',
                         MiddleName: 'Иванович',
-                        Position: 'Инженер',
+                        Position: 'Инженер'
                     }, {
                         Order: 1,
                         ParentId: [null],
                         LastName: 'Петровский',
                         FirstName: 'Федор',
                         MiddleName: 'Иванович',
-                        Position: 'Директор',
+                        Position: 'Директор'
                     }],
-                    keyProperty: 'Id',
+                    keyProperty: 'Id'
                 });
 
                 return source.update(data).then((ids) => {
@@ -275,7 +275,7 @@ describe('Types/_source/Memory', () => {
             it('should insert new rows', () => {
                 const source = new MemorySource({
                     data,
-                    keyProperty: 'Id',
+                    keyProperty: 'Id'
                 });
                 const rs = new RecordSet({
                     rawData: [{
@@ -285,7 +285,7 @@ describe('Types/_source/Memory', () => {
                         LastName: 'Иванов',
                         FirstName: 'Иван',
                         MiddleName: 'Иванович',
-                        Position: 'Инженер',
+                        Position: 'Инженер'
                     }, {
                         Id: 15,
                         Order: 1,
@@ -293,8 +293,8 @@ describe('Types/_source/Memory', () => {
                         LastName: 'Петровский',
                         FirstName: 'Федор',
                         MiddleName: 'Иванович',
-                        Position: 'Директор',
-                   }],
+                        Position: 'Директор'
+                   }]
                 });
 
                 return source.update(rs).then(() => {
@@ -420,10 +420,10 @@ describe('Types/_source/Memory', () => {
 
         it('should keep functions in data', () => {
             const data = [{
-                a: () => undefined,
+                a: () => undefined
             }];
             const source = new MemorySource({
-                data,
+                data
             });
 
             return source.query().then((ds) => {
@@ -434,10 +434,10 @@ describe('Types/_source/Memory', () => {
 
         it('should keep modules of cloned instances', () => {
             const data = [{
-                a: new Model(),
+                a: new Model()
             }];
             const source = new MemorySource({
-                data,
+                data
             });
 
             return source.query().then((ds) => {
@@ -466,11 +466,11 @@ describe('Types/_source/Memory', () => {
             const artifact = [{foo: 'bar'}];
             const data = {
                 d: [],
-                s: artifact,
+                s: artifact
             };
             const source = new MemorySource({
                 data,
-                adapter: 'Types/entity:adapter.Sbis',
+                adapter: 'Types/entity:adapter.Sbis'
             });
 
             return source.query().then((ds) => {
@@ -482,11 +482,11 @@ describe('Types/_source/Memory', () => {
             const artifact = [{n: 'foo', t: 'Число целое'}];
             const data = {
                 d: [[1]],
-                s: artifact,
+                s: artifact
             };
             const source = new MemorySource({
                 data,
-                adapter: 'Types/entity:adapter.Sbis',
+                adapter: 'Types/entity:adapter.Sbis'
             });
             const query = new Query();
 
@@ -501,11 +501,11 @@ describe('Types/_source/Memory', () => {
                 {id: 1},
                 {id: 2},
                 {id: 3},
-                {id: 4},
+                {id: 4}
             ];
             const source = new MemorySource({
                 data,
-                filter: (item) => item.get('id') % 2 === 0,
+                filter: (item) => item.get('id') % 2 === 0
             });
             const expected = [2, 4];
 
@@ -523,7 +523,7 @@ describe('Types/_source/Memory', () => {
                 {id: 2, title: 'b'},
                 {id: 3, title: 'c'},
                 {id: 4, title: 'd'},
-                {id: 5, title: 'e'},
+                {id: 5, title: 'e'}
             ];
             const source = new MemorySource({
                 data,
@@ -535,7 +535,7 @@ describe('Types/_source/Memory', () => {
                     } else {
                         return value === check;
                     }
-                }, true),
+                }, true)
             });
             const query = new Query();
             const expected = [3, 4, 5];
@@ -557,7 +557,7 @@ describe('Types/_source/Memory', () => {
                     result.push([
                         item.get('first'),
                         item.get('second'),
-                        item.get('third'),
+                        item.get('third')
                     ].join(''));
                 });
                 return result;
@@ -591,8 +591,8 @@ describe('Types/_source/Memory', () => {
                     {first: 'c', second: 'b', third: 'c'},
                     {first: 'c', second: 'c', third: 'a'},
                     {first: 'c', second: 'c', third: 'b'},
-                    {first: 'c', second: 'c', third: 'c'},
-                ],
+                    {first: 'c', second: 'c', third: 'c'}
+                ]
             });
 
             it('should sort asc from right to left', () => {
@@ -608,7 +608,7 @@ describe('Types/_source/Memory', () => {
 
                     'aac', 'bac', 'cac',
                     'abc', 'bbc', 'cbc',
-                    'acc', 'bcc', 'ccc',
+                    'acc', 'bcc', 'ccc'
                 ];
                 query.orderBy([{third: false}, {second: false}, {first: false}]);
                 return source.query(query).then((ds) => {
@@ -630,7 +630,7 @@ describe('Types/_source/Memory', () => {
 
                     'acc', 'acb', 'aca',
                     'abc', 'abb', 'aba',
-                    'aac', 'aab', 'aaa',
+                    'aac', 'aab', 'aaa'
                 ];
                 query.orderBy([{first: true}, {second: true}, {third: true}]);
                 return source.query(query).then((ds) => {
@@ -652,7 +652,7 @@ describe('Types/_source/Memory', () => {
 
                     'acc', 'bcc', 'ccc',
                     'abc', 'bbc', 'cbc',
-                    'aac', 'bac', 'cac',
+                    'aac', 'bac', 'cac'
                 ];
                 query.orderBy([{third: false}, {second: true}, {first: false}]);
 
@@ -666,105 +666,105 @@ describe('Types/_source/Memory', () => {
         context('when the filter applied', () => {
             const tests = [{
                 filter: {LastName: 'Иванов'},
-                expect: 2,
+                expect: 2
             }, {
                 filter: (item) => item.get('LastName') === 'Иванов',
-                expect: 2,
+                expect: 2
             }, {
                 filter: (item, index) => index < 3,
-                expect: 3,
+                expect: 3
             }, {
                 filter: {LastName: ['Иванов', 'Петров']},
-                expect: 3,
+                expect: 3
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 0,
-                expect: 2,
+                expect: 2
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 0,
                 limit: 0,
-                expect: 0,
+                expect: 0
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 0,
                 limit: 1,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 0,
                 limit: 2,
-                expect: 2,
+                expect: 2
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 1,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 1,
                 limit: 0,
-                expect: 0,
+                expect: 0
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 1,
                 limit: 1,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 2,
-                expect: 0,
+                expect: 0
             }, {
                 filter: {LastName: 'Иванов'},
                 offset: 2,
                 limit: 1,
-                expect: 0,
+                expect: 0
             }, {
                 filter: {FirstName: 'Иван'},
-                expect: 3,
+                expect: 3
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 0,
-                expect: 3,
+                expect: 3
             }, {
                 filter: {FirstName: 'Иван'},
                 limit: 2,
-                expect: 2,
+                expect: 2
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 0,
                 limit: 1,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 0,
                 limit: 2,
-                expect: 2,
+                expect: 2
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 1,
                 limit: 2,
-                expect: 2,
+                expect: 2
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 2,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {FirstName: 'Иван'},
                 offset: 2,
                 limit: 2,
-                expect: 1,
+                expect: 1
             }, {
                 filter: {MiddleName: 'Оглы'},
-                expect: 0,
+                expect: 0
             }, {
                 filter: {ParentId: null},
-                expect: 6,
+                expect: 6
             }, {
                 filter: {ParentId: 6},
-                expect: 2,
+                expect: 2
             }, {
                 filter: {ParentId: 99},
-                expect: 0,
+                expect: 0
             }];
 
             for (let i = 0; i < tests.length; i++) {
@@ -786,76 +786,76 @@ describe('Types/_source/Memory', () => {
             const tests = [{
                 sorting: 'Id',
                 check: 'Id',
-                expect: [7, 6, 5, 4, 3, 2, 1, undefined, null],
+                expect: [7, 6, 5, 4, 3, 2, 1, undefined, null]
             }, {
                 sorting: [{Id: true}],
                 check: 'Id',
-                expect: [7, 6, 5, 4, 3, 2, 1, undefined, null],
+                expect: [7, 6, 5, 4, 3, 2, 1, undefined, null]
             }, {
                 sorting: [{Id: false}],
                 offset: 2,
                 check: 'Id',
-                expect: [1, 2, 3, 4, 5, 6, 7],
+                expect: [1, 2, 3, 4, 5, 6, 7]
             }, {
                 sorting: [{Id: true}],
                 offset: 2,
                 check: 'Id',
-                expect: [5, 4, 3, 2, 1, undefined, null],
+                expect: [5, 4, 3, 2, 1, undefined, null]
             }, {
                 sorting: [{Id: false}],
                 limit: 4,
                 check: 'Id',
-                expect: [undefined, null, 1, 2, 3, 4],
+                expect: [undefined, null, 1, 2, 3, 4]
             }, {
                 sorting: [{Id: true}],
                 limit: 4,
                 check: 'Id',
-                expect: [7, 6, 5, 4],
+                expect: [7, 6, 5, 4]
             }, {
                 sorting: [{Id: false}],
                 offset: 3,
                 limit: 2,
                 check: 'Id',
-                expect: [2, 3, 4],
+                expect: [2, 3, 4]
             }, {
                 sorting: [{Id: true}],
                 offset: 3,
                 limit: 2,
                 check: 'Id',
-                expect: [4, 3],
+                expect: [4, 3]
             }, {
                 sorting: [{LastName: false}],
                 limit: 5,
                 check: 'LastName',
-                expect: [undefined, undefined, 'Аксенова', 'Афанасьев', 'Баранов'],
+                expect: [undefined, undefined, 'Аксенова', 'Афанасьев', 'Баранов']
             }, {
                 sorting: [{LastName: true}],
                 limit: 3,
                 check: 'LastName',
-                expect: ['Петров', 'Иванов', 'Иванов'],
+                expect: ['Петров', 'Иванов', 'Иванов']
             }, {
                 sorting: [{FirstName: true}],
                 limit: 4,
                 check: 'FirstName',
-                expect: ['Ян', 'Федора', 'Федор', 'Иванко'],
+                expect: ['Ян', 'Федора', 'Федор', 'Иванко']
             }, {
                 sorting: [{LastName: false}, {FirstName: true}],
                 check: ['LastName', 'FirstName'],
-                expect: ['+', '+', 'Аксенова+Федора', 'Афанасьев+Иван', 'Баранов+Иванко', 'Годолцов+Иван', 'Иванов+Ян', 'Иванов+Иван', 'Петров+Федор'],
+                expect: ['+', '+', 'Аксенова+Федора', 'Афанасьев+Иван', 'Баранов+Иванко', 'Годолцов+Иван', 'Иванов+Ян', 'Иванов+Иван', 'Петров+Федор']
             }, {
                 sorting: [{FirstName: false}, {MiddleName: false}],
                 limit: 7,
                 check: ['FirstName', 'MiddleName'],
-                expect: ['+', '+', 'Иван+Андреевич', 'Иван+Викторович', 'Иван+Иванович', 'Иванко+Петрович', 'Федор+Иванович'],
+                expect: ['+', '+', 'Иван+Андреевич', 'Иван+Викторович', 'Иван+Иванович', 'Иванко+Петрович', 'Федор+Иванович']
             }, {
                 sorting: [{FirstName: false}, {MiddleName: true}],
                 limit: 7,
                 check: ['FirstName', 'MiddleName'],
-                expect: ['+', '+', 'Иван+Иванович', 'Иван+Викторович', 'Иван+Андреевич', 'Иванко+Петрович', 'Федор+Иванович'],
+                expect: ['+', '+', 'Иван+Иванович', 'Иван+Викторович', 'Иван+Андреевич', 'Иванко+Петрович', 'Федор+Иванович']
             }, {
                 sorting: [{Position: false}, {LastName: false}, {FirstName: false}],
                 check: ['Position', 'LastName', 'FirstName'],
-                expect: ['++', '++', 'Директор+Афанасьев+Иван', 'Директор+Годолцов+Иван', 'Директор+Петров+Федор', 'Инженер+Аксенова+Федора', 'Инженер+Иванов+Иван', 'Карапуз+Баранов+Иванко', 'Маркетолог+Иванов+Ян'],
+                expect: ['++', '++', 'Директор+Афанасьев+Иван', 'Директор+Годолцов+Иван', 'Директор+Петров+Федор', 'Инженер+Аксенова+Федора', 'Инженер+Иванов+Иван', 'Карапуз+Баранов+Иванко', 'Маркетолог+Иванов+Ян']
             }];
 
             for (let i = 0; i < tests.length; i++) {
@@ -900,7 +900,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [5],
                 6,
-                {position: 'before'},
+                {position: 'before'}
             ).then(() => {
                 assert.strictEqual(data[0].Id, 5);
             });
@@ -910,7 +910,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [6],
                 5,
-                {position: 'before'},
+                {position: 'before'}
             ).then(() => {
                assert.strictEqual(data[5].Id, 6);
                assert.strictEqual(data[6].Id, 5);
@@ -921,7 +921,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [6],
                 5,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[5].Id, 5);
                 assert.strictEqual(data[6].Id, 6);
@@ -932,7 +932,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [6],
                 3,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[data.length - 1].Id, 6);
             });
@@ -942,7 +942,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [6],
                 3,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[data.length - 1].Id, 6);
             });
@@ -952,7 +952,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [6],
                 3,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[data.length - 1].Id, 6);
             });
@@ -962,7 +962,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 6,
                 3,
-                {before: false},
+                {before: false}
             ).then(() => {
                 assert.strictEqual(data[data.length - 1].Id, 6);
             });
@@ -972,7 +972,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 6,
                 3,
-                {before: true},
+                {before: true}
             ).then(() => {
                 assert.strictEqual(data[data.length - 2].Id, 6);
             });
@@ -981,7 +981,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 6,
                 3,
-                {position: 'on', parentProperty: 'ParentId'},
+                {position: 'on', parentProperty: 'ParentId'}
             ).then(() => {
                 assert.equal(data[0].ParentId, 3 as any);
             });
@@ -991,7 +991,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 3,
                 null,
-                {position: 'on', parentProperty: 'ParentId'},
+                {position: 'on', parentProperty: 'ParentId'}
             ).then(() => {
                 assert.equal(data[8].ParentId, null);
             });
@@ -1001,7 +1001,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 5,
                 7,
-                {position: 'before'},
+                {position: 'before'}
             ).then(() => {
                 assert.strictEqual(data[3].Id, 5);
             });
@@ -1011,7 +1011,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 5,
                 7,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[4].Id, 5);
             });
@@ -1021,7 +1021,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [5, 1],
                 7,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[4].Id, 5);
                 assert.strictEqual(data[5].Id, 1);
@@ -1032,7 +1032,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [5, 1],
                 7,
-                {position: 'before'},
+                {position: 'before'}
             ).then(() => {
                 assert.strictEqual(data[3].Id, 5);
                 assert.strictEqual(data[4].Id, 1);
@@ -1043,7 +1043,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [4, 7],
                 1,
-                {position: 'after'},
+                {position: 'after'}
             ).then(() => {
                 assert.strictEqual(data[6].Id, 4);
                 assert.strictEqual(data[7].Id, 7);
@@ -1054,7 +1054,7 @@ describe('Types/_source/Memory', () => {
             return source.move(
                 [4, 7],
                 1,
-                {position: 'before'},
+                {position: 'before'}
             ).then(() => {
                 assert.strictEqual(data[5].Id, 4);
                 assert.strictEqual(data[6].Id, 7);
@@ -1068,13 +1068,13 @@ describe('Types/_source/Memory', () => {
 
         beforeEach(() => {
             recordset = new RecordSet({
-                rawData: data,
+                rawData: data
             });
 
             source = new MemorySource({
                 data: recordset,
                 adapter: 'Types/entity:adapter.RecordSet',
-                keyProperty: 'Id',
+                keyProperty: 'Id'
             });
         });
 
@@ -1089,8 +1089,8 @@ describe('Types/_source/Memory', () => {
                 return source.create(new Model({
                     rawData: {
                         a: 1,
-                        b: true,
-                    },
+                        b: true
+                    }
                 })).then((model) => {
                     assert.strictEqual(model.get('a'), 1);
                     assert.strictEqual(model.get('b'), true);
@@ -1122,10 +1122,10 @@ describe('Types/_source/Memory', () => {
         describe('.update()', () => {
             it('should update data if it\'s null by default', () => {
                 const source = new MemorySource({
-                    keyProperty: 'foo',
+                    keyProperty: 'foo'
                 });
                 const model = new Model({
-                    rawData: {foo: 'bar'},
+                    rawData: {foo: 'bar'}
                 });
 
                 return source.update(model).then(() => {
@@ -1161,7 +1161,7 @@ describe('Types/_source/Memory', () => {
                 it('should create the model by 1st way', () => {
                     const oldLength = recordset.getCount();
                     return source.create(new Model({
-                        adapter: recordset.getAdapter(),
+                        adapter: recordset.getAdapter()
                     })).then((model) => {
                         model.set('LastName', 'Козлов');
                         return source.update(model).then((success) => {
@@ -1175,7 +1175,7 @@ describe('Types/_source/Memory', () => {
                     const model = new Model({
                         rawData: new Model(),
                         keyProperty: 'Id',
-                        adapter: 'Types/entity:adapter.RecordSet',
+                        adapter: 'Types/entity:adapter.RecordSet'
                     });
 
                     model.set('LastName', 'Овечкин');
@@ -1187,11 +1187,11 @@ describe('Types/_source/Memory', () => {
                 it('should nod clone row when it have key 0', () => {
                     const source = new MemorySource({
                          data: [{id: 0, name: 'name'}],
-                         keyProperty: 'id',
+                         keyProperty: 'id'
                     });
                     const model = new Model({
                         rawData: {id: 0, name: '11'},
-                        keyProperty: 'id',
+                        keyProperty: 'id'
                     });
 
                     source.update(model);
@@ -1290,16 +1290,16 @@ describe('Types/_source/Memory', () => {
                 const format = [{name: 'id', type: 'integer'}];
                 const recordset = new RecordSet({
                     format,
-                    adapter: 'Types/entity:adapter.Sbis',
+                    adapter: 'Types/entity:adapter.Sbis'
                 });
                 const source = new MemorySource({
                     data: recordset,
                     adapter: 'Types/entity:adapter.RecordSet',
-                    keyProperty: 'Id',
+                    keyProperty: 'Id'
                 });
                 const record = new Model({
                     format: recordset.getFormat(),
-                    adapter: recordset.getAdapter(),
+                    adapter: recordset.getAdapter()
                 });
 
                 record.set('id', 1);

@@ -15,9 +15,9 @@ const getSerializedObj = () => {
         h: {
             ha: undefined,
             hb: Infinity,
-            hc: -Infinity,
+            hc: -Infinity
         },
-        j: NaN,
+        j: NaN
     };
 };
 
@@ -69,7 +69,7 @@ describe('Types/_formatter/jsonReplacer', () => {
 
        it('should serialize string if it contents function', () => {
           const plainObj = JSON.parse(JSON.stringify({
-              a: 'functionsdf',
+              a: 'functionsdf'
           }, jsonReplacer), jsonReviver);
           assert.strictEqual(plainObj.a, 'functionsdf');
        });
@@ -88,7 +88,7 @@ describe('Types/_formatter/jsonReviver', () => {
     it('should deserialize Infinity', () => {
        const result = jsonReviver(
           'i',
-          jsonReviver('i', Infinity),
+          jsonReviver('i', Infinity)
        );
        assert.strictEqual(result, Infinity);
     });
@@ -96,7 +96,7 @@ describe('Types/_formatter/jsonReviver', () => {
     it('should deserialize -Infinity', () => {
        const result = jsonReviver(
           'i',
-          jsonReviver('i', -Infinity),
+          jsonReviver('i', -Infinity)
        );
        assert.strictEqual(result, -Infinity);
     });
@@ -104,7 +104,7 @@ describe('Types/_formatter/jsonReviver', () => {
     it('should deserialize NaN', () => {
        const result = jsonReviver(
           'n',
-          jsonReviver('n', NaN),
+          jsonReviver('n', NaN)
        );
        assert.isNaN(result);
     });
@@ -118,7 +118,7 @@ describe('Types/_formatter/jsonReviver', () => {
     it('should deserialize undefined if it\'s an array element', () => {
        const result = jsonReviver(
           1,
-          jsonReviver(1, undefined),
+          jsonReviver(1, undefined)
        );
        assert.strictEqual(result, undefined);
     });
@@ -127,51 +127,51 @@ describe('Types/_formatter/jsonReviver', () => {
        assert.strictEqual(
           jsonReviver(
              'a',
-             undefined,
+             undefined
           ),
-          undefined,
+          undefined
        );
 
        assert.strictEqual(
           jsonReviver(
              'a',
-             null,
+             null
           ),
-          null,
+          null
        );
 
        assert.strictEqual(
           jsonReviver(
              'a',
-             1,
+             1
           ),
-          1,
+          1
        );
 
        assert.strictEqual(
           jsonReviver(
              'a',
-             'b',
+             'b'
           ),
-          'b',
+          'b'
        );
 
        const arr = [];
        assert.strictEqual(
           jsonReviver(
              'a',
-             arr,
+             arr
           ),
-          arr,
+          arr
        );
 
        const obj = {};
        assert.strictEqual(
           jsonReviver(
              'a',
-             obj,
+             obj
           ),
-          obj,
+          obj
        );
     });
 

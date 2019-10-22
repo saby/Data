@@ -14,14 +14,14 @@ describe('Types/_entity/adapter/RecordSet', () => {
         data = new RecordSet({
             rawData: [{
                 id: 1,
-                name: 'Smith',
+                name: 'Smith'
             }, {
                 id: 2,
-                name: 'Green',
+                name: 'Green'
             }, {
                 id: 3,
-                name: 'Geller',
-            }],
+                name: 'Geller'
+            }]
         });
 
         adapter = new RecordSetAdapter();
@@ -36,14 +36,14 @@ describe('Types/_entity/adapter/RecordSet', () => {
         it('should return table adapter', () => {
             assert.instanceOf(
                 adapter.forTable(),
-                RecordSetTableAdapter,
+                RecordSetTableAdapter
             );
         });
 
         it('should pass data to the table adapter', () => {
             assert.strictEqual(
                 adapter.forTable(data).getData(),
-                data,
+                data
             );
         });
     });
@@ -52,7 +52,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
         it('should return record adapter', () => {
             assert.instanceOf(
                 adapter.forRecord(),
-                RecordSetRecordAdaprter,
+                RecordSetRecordAdaprter
             );
         });
 
@@ -60,7 +60,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
             const data = new Record();
             assert.strictEqual(
                 adapter.forRecord(data).getData(),
-                data,
+                data
             );
         });
 
@@ -68,16 +68,16 @@ describe('Types/_entity/adapter/RecordSet', () => {
             class ModelA extends Model {
                 protected _$properties: object = {
                     propA: {
-                        get: () => 'A',
-                    },
+                        get: () => 'A'
+                    }
                 };
             }
 
             class ModelB extends Model {
                 protected _$properties: object = {
                     propB: {
-                        get: () => 'B',
-                    },
+                        get: () => 'B'
+                    }
                 };
             }
 
@@ -87,10 +87,10 @@ describe('Types/_entity/adapter/RecordSet', () => {
                 model = new ModelA({
                     rawData: new ModelB({
                         rawData: {
-                            propC: 'C',
-                        },
+                            propC: 'C'
+                        }
                     }),
-                    adapter: new RecordSetAdapter(),
+                    adapter: new RecordSetAdapter()
                 });
             });
 
@@ -109,13 +109,13 @@ describe('Types/_entity/adapter/RecordSet', () => {
                     format: [],
                     rawData: new ModelB({
                         format: [{
-                            name: 'propC', type: 'string',
+                            name: 'propC', type: 'string'
                         }],
                         rawData: {
-                            propC: 'C',
-                        },
+                            propC: 'C'
+                        }
                     }),
-                    adapter: new RecordSetAdapter(),
+                    adapter: new RecordSetAdapter()
                 });
 
                 assert.strictEqual(model.get('propA'), 'A');
@@ -128,13 +128,13 @@ describe('Types/_entity/adapter/RecordSet', () => {
                     format: [{name: 'date', type: 'date'}],
                     rawData: new ModelB({
                         format: [{
-                            name: 'date', type: 'date',
+                            name: 'date', type: 'date'
                         }],
                         rawData: {
-                            date: '2016-01-01',
-                        },
+                            date: '2016-01-01'
+                        }
                     }),
-                    adapter: new RecordSetAdapter(),
+                    adapter: new RecordSetAdapter()
                 });
 
                 assert.deepEqual(model.get('date'), new Date(2016, 0, 1));
@@ -149,7 +149,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
 
         it('should return option keyProperty for model', () => {
             const data = new Model({
-                keyProperty: 'test',
+                keyProperty: 'test'
             });
             assert.strictEqual(adapter.getKeyField(data), 'test');
         });
@@ -159,33 +159,33 @@ describe('Types/_entity/adapter/RecordSet', () => {
         it('should return the property value', () => {
             assert.strictEqual(
                 3,
-                adapter.getProperty(data, 'count'),
+                adapter.getProperty(data, 'count')
             );
 
             assert.isUndefined(
-                adapter.getProperty(data, 'total'),
+                adapter.getProperty(data, 'total')
             );
 
             assert.isUndefined(
-                adapter.getProperty(data, undefined),
+                adapter.getProperty(data, undefined)
             );
         });
 
         it('should return undefined on invalid data', () => {
             assert.isUndefined(
-                adapter.getProperty({}, undefined),
+                adapter.getProperty({}, undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty('' as any, undefined),
+                adapter.getProperty('' as any, undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty(0 as any, undefined),
+                adapter.getProperty(0 as any, undefined)
             );
 
             assert.isUndefined(
-                adapter.getProperty(undefined, undefined),
+                adapter.getProperty(undefined, undefined)
             );
         });
     });
@@ -195,7 +195,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
             adapter.setProperty(data, 'keyProperty', 'name');
             assert.strictEqual(
                 'name',
-                data.getKeyProperty(),
+                data.getKeyProperty()
             );
         });
 

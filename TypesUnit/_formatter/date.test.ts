@@ -37,7 +37,7 @@ describe('Types/_formatter/date', () => {
         Y: '9',
         YY: '09',
         YYYY: '2009',
-        Yh: '1',
+        Yh: '1'
     };
 
     const localized = {
@@ -59,7 +59,7 @@ describe('Types/_formatter/date', () => {
             QQQr: 'I квр',
             QQQQr: 'I квартал',
             YYhr: 'I пл',
-            YYYYhr: 'I полугодие',
+            YYYYhr: 'I полугодие'
         },
         'en-US': {
             a: 'am',
@@ -79,15 +79,15 @@ describe('Types/_formatter/date', () => {
             QQQr: 'I qtr',
             QQQQr: 'I quarter',
             YYhr: 'I hy',
-            YYYYhr: 'I half year',
-        },
+            YYYYhr: 'I half year'
+        }
     };
 
     Object.keys(generic).forEach((pattern) => {
         const expected = generic[pattern];
         it(
             `should format "${pattern}"${expected instanceof Function ? '' : ' as "' + expected + '"'}`,
-            check(date, pattern, expected),
+            check(date, pattern, expected)
         );
     });
 
@@ -114,7 +114,7 @@ describe('Types/_formatter/date', () => {
                 const expected = data[pattern];
                 it(
                   `should format "${pattern}"${expected instanceof Function ? '' : ' as "' + expected + '"'}`,
-                  check(date, pattern, expected),
+                  check(date, pattern, expected)
                 );
             });
         });
@@ -194,7 +194,7 @@ describe('Types/_formatter/date', () => {
         const dt: any = {
             getDay: () => {
                 return -1;
-            },
+            }
         };
         assert.equal(format(dt, 'ddl'), 'undefined');
     });
@@ -237,7 +237,7 @@ describe('Types/_formatter/date', () => {
         const date = new Date(2018, 4, 7);
         assert.equal(format(
             date,
-            '[Today is ]D.MM, YY. [How long ago it was?]',
+            '[Today is ]D.MM, YY. [How long ago it was?]'
         ), 'Today is 7.05, 18. How long ago it was?');
     });
 
@@ -261,7 +261,7 @@ describe('Types/_formatter/date', () => {
             SHORT_HALF_YEAR: 'shortHalfYearFormat',
             SHORT_MONTH: 'shortMonthFormat',
             SHORT_QUATER: 'shortQuarterFormat',
-            SHORT_TIME: 'shortTimeFormat',
+            SHORT_TIME: 'shortTimeFormat'
         };
 
         Object.keys(map).forEach((constant) => {
@@ -273,7 +273,7 @@ describe('Types/_formatter/date', () => {
         it('SHORT_DATETIME', () => {
             assert.strictEqual(
                 format.SHORT_DATETIME,
-                locales.current.config.shortDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat,
+                locales.current.config.shortDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat
             );
         });
 

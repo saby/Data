@@ -23,8 +23,8 @@ export default abstract class Rpc extends Remote implements IRpc {
     call(command: string, data?: object): ExtendPromise<DataSet> {
         return this._callProvider(command, data).addCallback(Deferred.skipLogExecutionTime(
             (data) => this._loadAdditionalDependencies().addCallback(Deferred.skipLogExecutionTime(
-                () => this._wrapToDataSet(data),
-            )),
+                () => this._wrapToDataSet(data)
+            ))
         ));
     }
 
@@ -33,5 +33,5 @@ export default abstract class Rpc extends Remote implements IRpc {
 
 Object.assign(Rpc.prototype, {
     '[Types/_source/Rpc]': true,
-    _moduleName: 'Types/source:Rpc',
+    _moduleName: 'Types/source:Rpc'
 });

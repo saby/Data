@@ -33,7 +33,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
             },
             reset(): void {
                 items.length = 0;
-            },
+            }
         };
     }
 
@@ -45,63 +45,63 @@ describe('Types/_display/itemsStrategy/Search', () => {
         items = [];
         items[0] = new TreeItem({
             contents: 'A',
-            node: true,
+            node: true
         });
         items[1] = new TreeItem({
             parent: items[0],
             contents: 'AA',
-            node: true,
+            node: true
         });
         items[2] = new TreeItem({
             parent: items[1],
             contents: 'AAA',
-            node: true,
+            node: true
         });
         items[3] = new TreeItem({
             parent: items[2],
-            contents: 'AAAa',
+            contents: 'AAAa'
         });
         items[4] = new TreeItem({
             parent: items[2],
-            contents: 'AAAb',
+            contents: 'AAAb'
         });
         items[5] = new TreeItem({
             parent: items[1],
             contents: 'AAB',
-            node: true,
+            node: true
         });
         items[6] = new TreeItem({
             parent: items[1],
             contents: 'AAC',
-            node: true,
+            node: true
         });
         items[7] = new TreeItem({
             parent: items[6],
-            contents: 'AACa',
+            contents: 'AACa'
         });
         items[8] = new TreeItem({
             parent: items[1],
             contents: 'AAD',
-            node: true,
+            node: true
         });
         items[9] = new TreeItem({
             contents: 'B',
-            node: true,
+            node: true
         });
         items[10] = new TreeItem({
             contents: 'C',
-            node: true,
+            node: true
         });
         items[11] = new TreeItem({
-            contents: 'd',
+            contents: 'd'
         });
         items[12] = new TreeItem({
-            contents: 'e',
+            contents: 'e'
         });
 
         source = getSource(items);
         strategy = new Search({
-            source,
+            source
         });
     });
 
@@ -120,7 +120,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
     describe('.items', () => {
         it('should group breadcrumbs nodes', () => {
             const strategy = new Search<string | string[]>({
-                source,
+                source
             });
 
             const expected = [
@@ -134,7 +134,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 '#B',
                 '#C',
                 'd',
-                'e',
+                'e'
             ];
 
             strategy.items.forEach((item, index) => {
@@ -142,7 +142,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 assert.equal(
                     contents instanceof Array ? '#' + contents.join(',') : contents,
                     expected[index],
-                    'at ' + index,
+                    'at ' + index
                 );
             });
 
@@ -153,22 +153,22 @@ describe('Types/_display/itemsStrategy/Search', () => {
             const items = [];
             items[0] = new TreeItem({
                 contents: 'A',
-                node: true,
+                node: true
             });
             items[1] = new TreeItem({
                 parent: items[0],
                 contents: 'AA',
-                node: true,
+                node: true
             });
             items[2] = new TreeItem({
                 parent: items[1],
                 contents: 'AAA',
-                node: true,
+                node: true
             });
 
             const source = getSource(items);
             const strategy = new Search({
-                source,
+                source
             });
 
             const result = strategy.items.map((item) => {
@@ -183,26 +183,26 @@ describe('Types/_display/itemsStrategy/Search', () => {
             const items = [];
             items[0] = new TreeItem({
                 contents: 'A',
-                node: true,
+                node: true
             });
             items[1] = new TreeItem({
                 parent: items[0],
                 contents: 'AA',
-                node: true,
+                node: true
             });
             items[2] = new TreeItem({
                 parent: items[1],
                 contents: 'AAa',
-                node: false,
+                node: false
             });
             items[3] = new TreeItem({
                 contents: 'b',
-                node: false,
+                node: false
             });
 
             const source = getSource(items);
             const strategy = new Search({
-                source,
+                source
             });
 
             const result = strategy.items.map((item) => {
@@ -248,20 +248,20 @@ describe('Types/_display/itemsStrategy/Search', () => {
                         assert.instanceOf(
                             item.getParent(),
                             parents[index],
-                            'at ' + index,
+                            'at ' + index
                         );
                     } else {
                         assert.strictEqual(
                             item.getParent(),
                             parents[index],
-                            'at ' + index,
+                            'at ' + index
                         );
                     }
 
                     assert.equal(
                         item.getLevel(),
                         levels[index],
-                        'at ' + index,
+                        'at ' + index
                     );
                 }
             });
@@ -307,12 +307,12 @@ describe('Types/_display/itemsStrategy/Search', () => {
         it('should add items', () => {
             const source = getSource(items);
             const strategy = new Search<string | string[]>({
-                source: source as any,
+                source: source as any
             });
 
             const newItems = [new TreeItem({
                 parent: items[2],
-                contents: 'AAAc',
+                contents: 'AAAc'
             })];
             const at = 3;
             const expected = [
@@ -327,7 +327,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 '#B',
                 '#C',
                 'd',
-                'e',
+                'e'
             ];
 
             strategy.splice(at, 0, newItems as any);
@@ -337,7 +337,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 assert.equal(
                     contents instanceof Array ? '#' + contents.join(',') : contents,
                     expected[index],
-                    'at ' + index,
+                    'at ' + index
                 );
             });
 
@@ -346,7 +346,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
 
         it('should remove items', () => {
             const strategy = new Search<string | string[]>({
-                source,
+                source
             });
 
             // AA
@@ -366,7 +366,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 '#B',
                 '#C',
                 'd',
-                'e',
+                'e'
             ];
 
             strategy.splice(at, removeCount, []);
@@ -378,7 +378,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 assert.equal(
                     contents instanceof Array ? '#' + contents.join(',') : contents,
                     expected[index],
-                    'at ' + index,
+                    'at ' + index
                 );
             });
         });

@@ -1,5 +1,5 @@
 import Collection, {
-    ISourceCollection as IGeneralSourceCollection,
+    ISourceCollection as IGeneralSourceCollection
 } from './Collection';
 import FlagsItem from './FlagsItem';
 import {IFlags, IFlagsValue} from '../collection';
@@ -73,7 +73,7 @@ Object.assign(Flags.prototype, {
     '[Types/_display/Flags]': true,
     _moduleName: 'Types/display:Flags',
     _itemModule: 'Types/display:FlagsItem',
-    _localize: true,
+    _localize: true
 });
 
 register('Types/display:Flags', Flags, {instantiate: false});

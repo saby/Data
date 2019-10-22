@@ -12,14 +12,14 @@ describe('Types/_entity/ReactiveObject', () => {
     describe('[key: string]', () => {
         it('should return property value', () => {
             const instance = new ReactiveObject({
-                foo: 'bar',
+                foo: 'bar'
             });
             assert.equal(instance.foo, 'bar');
         });
 
         it('should update property value', () => {
             const instance = new ReactiveObject({
-                foo: 'bar',
+                foo: 'bar'
             });
             instance.foo = 'baz';
             assert.equal(instance.foo, 'baz');
@@ -28,7 +28,7 @@ describe('Types/_entity/ReactiveObject', () => {
         it('should invoke callback if property value being updated', () => {
             let given;
             const instance = new ReactiveObject({
-                foo: 'bar',
+                foo: 'bar'
             }, (version: number) => {
                 given = version;
             });
@@ -40,7 +40,7 @@ describe('Types/_entity/ReactiveObject', () => {
             const instance = new ReactiveObject({
                 get foo(): string {
                     return 'bar';
-                },
+                }
             });
             assert.equal(instance.foo, 'bar');
         });
@@ -49,7 +49,7 @@ describe('Types/_entity/ReactiveObject', () => {
             const instance: any = new ReactiveObject({
                 get foo(): string {
                     return 'bar';
-                },
+                }
             });
             assert.throws(() => {
                 instance.foo = 'baz';
@@ -66,7 +66,7 @@ describe('Types/_entity/ReactiveObject', () => {
                     const parts = this.email.split('@');
                     parts[1] = value;
                     this.email = parts.join('@');
-                },
+                }
             });
             assert.equal(instance.domain, 'bar.com');
             instance.domain = 'bar.org';
@@ -86,7 +86,7 @@ describe('Types/_entity/ReactiveObject', () => {
     describe('.getVersion()', () => {
         it('should update version after update property', () => {
             const instance = new ReactiveObject({
-                foo: 'bar',
+                foo: 'bar'
             });
             const initialVersion = instance.getVersion();
 
@@ -96,7 +96,7 @@ describe('Types/_entity/ReactiveObject', () => {
 
         it('shouldn\'t update version after set the same property value', () => {
             const instance = new ReactiveObject({
-                foo: 'bar',
+                foo: 'bar'
             });
             const initialVersion = instance.getVersion();
 
@@ -111,7 +111,7 @@ describe('Types/_entity/ReactiveObject', () => {
                 },
                 set foo(value: string) {
                     // do nothing
-                },
+                }
             });
             const initialVersion = instance.getVersion();
             instance.foo = 'baz';
@@ -125,7 +125,7 @@ describe('Types/_entity/ReactiveObject', () => {
                 },
                 set foo(value: string) {
                     // do nothing
-                },
+                }
             });
             const initialVersion = instance.getVersion();
 
@@ -146,8 +146,8 @@ describe('Types/_entity/ReactiveObject', () => {
         it('should update version on nested object update', () => {
             const instance = new ReactiveObject({
                 foo: new ReactiveObject({
-                    bar: 'baz',
-                }),
+                    bar: 'baz'
+                })
             });
             const initialVersion = instance.getVersion();
             assert.equal(initialVersion, instance.getVersion());

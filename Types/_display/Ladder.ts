@@ -3,7 +3,7 @@ import CollectionItem from './CollectionItem';
 import {
     DestroyableMixin,
     SerializableMixin,
-    ISerializableState as IDefaultSerializableState,
+    ISerializableState as IDefaultSerializableState
 } from '../entity';
 import {IObservable} from '../collection';
 import {mixin, object} from '../util';
@@ -51,7 +51,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin,
+    SerializableMixin
 ) {
     /**
      * Проекция, по которой строится лесенка
@@ -304,7 +304,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
     protected _spliceCollection(
         at: number,
         deleteCount: number,
-        added: T[],
+        added: T[]
     ): T[] {
         if (!this._collectionItems) {
             return;
@@ -337,7 +337,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
         newItems: T[],
         newItemsIndex: number,
         oldItems: T[],
-        oldItemsIndex: number,
+        oldItemsIndex: number
     ): void {
         const push = Array.prototype.push;
         let result = [];
@@ -353,7 +353,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
 
                 newItems.forEach((item) => {
                     newItemsId.add(
-                        getCollectionItemId(item),
+                        getCollectionItemId(item)
                     );
                 });
 
@@ -456,7 +456,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
             if (optimized.hasOwnProperty(idx)) {
                 collection.notifyItemChange(
                     collectionItems[idx],
-                    {contents: optimized[idx]},
+                    {contents: optimized[idx]}
                 );
             }
         }
@@ -480,7 +480,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
                     idx,
                     byOriginal ? collection.at(idx) : collectionItems[idx],
                     columnNames[columnIndex],
-                    byOriginal,
+                    byOriginal
                 );
                 if (adjusted !== null) {
                     result.push(adjusted);
@@ -495,7 +495,7 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
         idx: number,
         item: T,
         columnName: string,
-        byOriginal?: boolean,
+        byOriginal?: boolean
     ): any[] {
         if (!item) {
             return null;
@@ -548,5 +548,5 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
 
 Object.assign(Ladder.prototype, {
     '[Types/_display/Ladder]': true,
-    _moduleName: 'Types/display:Ladder',
+    _moduleName: 'Types/display:Ladder'
 });

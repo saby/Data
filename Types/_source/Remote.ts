@@ -24,7 +24,7 @@ const DeferredCanceledError = global.DeferredCanceledError;
 export enum NavigationTypes {
     PAGE = NavigationType.Page,
     OFFSET = NavigationType.Offset,
-    POSITION = NavigationType.Position,
+    POSITION = NavigationType.Position
 }
 
 export interface IPassing {
@@ -95,7 +95,7 @@ function passUpdate(data: Record | RecordSet, meta?: object): any[] {
                     const RecordSet = require('Types/collection').RecordSet;
                     const result = new RecordSet({
                         adapter: source.getAdapter(),
-                        keyProperty: (source as RecordSet).getKeyProperty(),
+                        keyProperty: (source as RecordSet).getKeyProperty()
                     });
 
                     source.each((record) => {
@@ -132,7 +132,7 @@ function passQuery(query?: Query): any[] {
          query.getWhere(),
          query.getOrderBy(),
          query.getOffset(),
-         query.getLimit(),
+         query.getLimit()
     ] : query;
 }
 
@@ -193,7 +193,7 @@ export default abstract class Remote extends mixin<
     ObservableMixin,
     DataCrudMixin,
     BindingMixin,
-    EndpointMixin,
+    EndpointMixin
 ) implements ICrud, ICrudPlus, IProvider {
 
     /**
@@ -260,48 +260,50 @@ export default abstract class Remote extends mixin<
     create(meta?: object): ExtendPromise<Record> {
         return this._callProvider(
             this._$binding.create,
-            this._$passing.create.call(this, meta),
+            this._$passing.create.call(this, meta)
         ).addCallback(
             (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareCreateResult(data),
-            ),
+                () => this._prepareCreateResult(data)
+            )
         );
     }
 
     read(key: any, meta?: object): ExtendPromise<Record> {
         return this._callProvider(
             this._$binding.read,
-            this._$passing.read.call(this, key, meta),
+            this._$passing.read.call(this, key, meta)
         ).addCallback(
             (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareReadResult(data),
-            ),
+                () => this._prepareReadResult(data)
+            )
         );
     }
 
     update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
         return this._callProvider(
             this._$binding.update,
-            this._$passing.update.call(this, data, meta),
-        ).addCallback((key) => this._prepareUpdateResult(data, key));
+            this._$passing.update.call(this, data, meta)
+        ).addCallback(
+            (key) => this._prepareUpdateResult(data, key)
+        );
     }
 
     // @ts-ignore
     destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
         return this._callProvider(
             this._$binding.destroy,
-            this._$passing.destroy.call(this, keys, meta),
+            this._$passing.destroy.call(this, keys, meta)
         );
     }
 
     query(query?: Query): ExtendPromise<DataSet> {
         return this._callProvider(
             this._$binding.query,
-            this._$passing.query.call(this, query),
+            this._$passing.query.call(this, query)
         ).addCallback(
             (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareQueryResult(data),
-            ),
+                () => this._prepareQueryResult(data)
+            )
         );
     }
 
@@ -314,21 +316,23 @@ export default abstract class Remote extends mixin<
     merge(from: string | number, to: string | number): ExtendPromise<any> {
         return this._callProvider(
             this._$binding.merge,
-            this._$passing.merge.call(this, from, to),
+            this._$passing.merge.call(this, from, to)
         );
     }
 
     copy(key: string | number, meta?: object): ExtendPromise<Record> {
         return this._callProvider(
             this._$binding.copy,
-            this._$passing.copy.call(this, key, meta),
-        ).addCallback((data) => this._prepareReadResult(data));
+            this._$passing.copy.call(this, key, meta)
+        ).addCallback(
+            (data) => this._prepareReadResult(data)
+        );
     }
 
     move(items: string | number | Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
         return this._callProvider(
             this._$binding.move,
-            this._$passing.move.call(this, items, target, meta),
+            this._$passing.move.call(this, items, target, meta)
         );
     }
 
@@ -342,7 +346,7 @@ export default abstract class Remote extends mixin<
         if (!this._provider) {
             this._provider = this._createProvider(this._$provider, {
                 endpoint: this._$endpoint,
-                options: this._$options,
+                options: this._$options
             });
         }
 
@@ -385,7 +389,10 @@ export default abstract class Remote extends mixin<
             args = eventResult;
         }
 
-        const result = provider.call(name, this._prepareProviderArguments(args));
+        const result = provider.call(
+            name,
+            this._prepareProviderArguments(args)
+        );
 
         if (this._$options.debug) {
             result.addErrback((error) => {
@@ -491,7 +498,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
          * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
          * @name Types/_source/Remote#passing.move
          */
-        move: passMove,
+        move: passMove
     }),
 
     _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
@@ -508,8 +515,8 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
          * @name Types/_source/Remote#options.navigationType
          * @deprecated Set the meta-data in {@link Types/_source/Query#meta query} instead
          */
-        navigationType: NavigationTypes.PAGE,
-    })),
+        navigationType: NavigationTypes.PAGE
+    }))
 });
 
 // FIXME: backward compatibility for SbisFile/Source/BL

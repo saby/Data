@@ -5,7 +5,7 @@ import {
    ManyToManyMixin,
    SerializableMixin,
    CloneableMixin,
-   format,
+   format
 } from '../entity';
 import {register} from '../di';
 import {mixin} from '../util';
@@ -39,7 +39,7 @@ export default class Flags<T> extends mixin<
    Dictionary,
    ManyToManyMixin,
    SerializableMixin,
-   CloneableMixin,
+   CloneableMixin
 ) implements IFlags<T>, IProducible {
    /**
     * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
@@ -98,7 +98,7 @@ export default class Flags<T> extends mixin<
         const name = this._getValue(index);
         if (name === undefined) {
             throw new ReferenceError(
-                `${this._moduleName}::setByIndex(): the index ${index} doesn't found in dictionary`,
+                `${this._moduleName}::setByIndex(): the index ${index} doesn't found in dictionary`
             );
         }
 
@@ -174,7 +174,7 @@ export default class Flags<T> extends mixin<
         return new this({
             dictionary: this.prototype._getDictionaryByFormat(options && options.format),
             localeDictionary: this.prototype._getLocaleDictionaryByFormat(options && options.format),
-            values: data,
+            values: data
         });
     }
 
@@ -271,7 +271,7 @@ Object.assign(Flags.prototype, {
    '[Types/_entity/IProducible]': true,
    _moduleName: 'Types/collection:Flags',
    _$values: undefined,
-   _type: 'flags',
+   _type: 'flags'
 });
 
 register('Types/collection:Flags', Flags, {instantiate: false});

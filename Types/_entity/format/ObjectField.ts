@@ -21,5 +21,5 @@ export default class ObjectField extends Field {
 Object.assign(ObjectField.prototype, {
     '[Types/_entity/format/ObjectField]': true,
     _moduleName: 'Types/entity:format.ObjectField',
-    _typeName: 'Object',
+    _typeName: 'Object'
 });

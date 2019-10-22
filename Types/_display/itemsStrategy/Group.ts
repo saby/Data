@@ -5,7 +5,7 @@ import GroupItem from '../GroupItem';
 import {
     DestroyableMixin,
     SerializableMixin,
-    ISerializableState as IDefaultSerializableState,
+    ISerializableState as IDefaultSerializableState
 } from '../../entity';
 import {mixin} from '../../util';
 
@@ -43,7 +43,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     SerializableMixin
 >(
     DestroyableMixin,
-    SerializableMixin,
+    SerializableMixin
 ) implements IItemsStrategy<S, T> {
     /**
      * @typedef {Object} Options
@@ -117,7 +117,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         return this.source.splice(
             start,
             deleteCount,
-            added,
+            added
         );
     }
 
@@ -211,7 +211,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         return Group.sortItems<S, T>(this.source.items, {
             display: this.options.display as Collection<S, T>,
             handler: this._options.handler,
-            groups: this._groups,
+            groups: this._groups
         });
     }
 
@@ -234,7 +234,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
      */
     static sortItems<S, T extends CollectionItem<S> = CollectionItem<S>>(
         items: T[],
-        options: ISortOptions<S, T>,
+        options: ISortOptions<S, T>
     ): number[] {
         const groups = options.groups;
         const display = options.display;
@@ -246,12 +246,12 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
             return items.map((item, index) => index);
         }
 
-        let groupsId; // {Array}: Group index -> group ID
+        let groupsId; //{Array}: Group index -> group ID
         // Fill groupsId by groups
         groupsId = groups.map((item) => item.getContents());
 
-        const groupsOrder = []; // {Array.<Number>}: Group position -> Group index
-        const groupsItems = []; // {Array.<Number>}: Group index -> Item index
+        const groupsOrder = []; //{Array.<Number>}: Group position -> Group index
+        const groupsItems = []; //{Array.<Number>}: Group index -> Item index
         // Check group ID and group instance for every item and join them all together
         for (let position = 0; position < items.length; position++) {
             const item = items[position];
@@ -264,7 +264,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
             if (groupsId.indexOf(groupId) === -1) {
                 const group = new GroupItem<GroupContents>({
                     owner: display as any,
-                    contents: groupId,
+                    contents: groupId
                 });
 
                 groupIndex = groups.length;
@@ -306,5 +306,5 @@ Object.assign(Group.prototype, {
     '[Types/_display/itemsStrategy/Group]': true,
     _moduleName: 'Types/display:itemsStrategy.Group',
     _groups: null,
-    _itemsOrder: null,
+    _itemsOrder: null
 });

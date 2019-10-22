@@ -108,7 +108,7 @@ export default abstract class IObservable {
 }
 
 Object.assign(IObservable.prototype, {
-    '[Types/_collection/IObservable]': true,
+    '[Types/_collection/IObservable]': true
 });
 
 Object.assign(IObservable, {
@@ -117,5 +117,5 @@ Object.assign(IObservable, {
     ACTION_CHANGE: 'ch',
     ACTION_REPLACE: 'rp',
     ACTION_MOVE: 'm',
-    ACTION_RESET: 'rs',
+    ACTION_RESET: 'rs'
 });

@@ -36,7 +36,7 @@ export default class Uniquely<T> extends Abstract<T> {
     getEnumerator(): UniquelyEnumerator<T> {
         return new UniquelyEnumerator(
             this._previous,
-            this._idExtractor,
+            this._idExtractor
         );
     }
 
@@ -45,5 +45,5 @@ export default class Uniquely<T> extends Abstract<T> {
 
 Object.assign(Uniquely.prototype, {
     '[Types/_chain/Uniquely]': true,
-    _idExtractor: null,
+    _idExtractor: null
 });

@@ -47,7 +47,7 @@ describe('Types/_chain/Uniquely', () => {
                 sameItem,
                 {id: 3},
                 sameItem,
-                {id: 5},
+                {id: 5}
             ];
             const prev = new ArrayMock(items);
             const expect = [1, 2, 3, 5];
@@ -68,7 +68,7 @@ describe('Types/_chain/Uniquely', () => {
                 {id: 1, foo: 'bar'},
                 {id: 2, foo: 'bar'},
                 {id: 3, foo: 'baz'},
-                {id: 4, foo: 'bar'},
+                {id: 4, foo: 'bar'}
             ];
             const prev = new ArrayMock(items);
             const expect = [1, 3];

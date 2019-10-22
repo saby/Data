@@ -3,7 +3,7 @@ import Collection, {
     IOptions as ICollectionOptions,
     ISessionItemState,
     ISerializableState as IDefaultSerializableState,
-    ISplicedArray,
+    ISplicedArray
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
@@ -64,7 +64,7 @@ function onCollectionChange<T>(
     newItems: T[],
     newItemsIndex: number,
     oldItems: T[],
-    oldItemsIndex: number,
+    oldItemsIndex: number
 ): void {
     // Fix state of all nodes
     const nodes = this.instance._getItems().filter((item) => item.isNode && item.isNode());
@@ -322,7 +322,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                     owner: this as any,
                     node: true,
                     expanded: true,
-                    hasChildren: false,
+                    hasChildren: false
                 }) as T;
             }
         }
@@ -384,7 +384,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     getChildren(parent: T, withFilter?: boolean): TreeChildren<S> {
         return new TreeChildren<S>({
             owner: parent,
-            items: this._getChildrenArray(parent, withFilter),
+            items: this._getChildrenArray(parent, withFilter)
         });
     }
 
@@ -465,14 +465,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 childrenProperty: this._$childrenProperty,
                 nodeProperty: this._$nodeProperty,
                 hasChildrenProperty: this._$hasChildrenProperty,
-                root: this.getRoot.bind(this),
+                root: this.getRoot.bind(this)
             });
         } else {
             composer.append(AdjacencyListStrategy, {
                 keyProperty: this._$keyProperty,
                 parentProperty: this._$parentProperty,
                 nodeProperty: this._$nodeProperty,
-                hasChildrenProperty: this._$hasChildrenProperty,
+                hasChildrenProperty: this._$hasChildrenProperty
             });
         }
 
@@ -484,7 +484,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _wrapRootStrategy(composer: ItemsStrategyComposer<S, CollectionItem<S>>): void {
         if (this._$rootEnumerable && !composer.getInstance(RootStrategy)) {
             composer.append(RootStrategy, {
-                root: this.getRoot.bind(this),
+                root: this.getRoot.bind(this)
             });
         }
     }
@@ -505,12 +505,12 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
         this._onCollectionChange = onCollectionChange.bind({
             instance: this,
-            prev: this._onCollectionChange,
+            prev: this._onCollectionChange
         });
 
         this._onCollectionItemChange = onCollectionItemChange.bind({
             instance: this,
-            prev: this._onCollectionItemChange,
+            prev: this._onCollectionItemChange
         });
     }
 
@@ -550,7 +550,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _checkItem(item: CollectionItem<S>): void {
         if (!item || !(item instanceof CollectionItem)) {
             throw new Error(
-                `${this._moduleName}::_checkItem(): item should be in instance of Types/_display/CollectionItem`,
+                `${this._moduleName}::_checkItem(): item should be in instance of Types/_display/CollectionItem`
             );
         }
     }
@@ -578,7 +578,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 enumerator = this._buildEnumerator(
                     this._getItems.bind(this),
                     this._filterMap.map(() => true),
-                    this._sortMap,
+                    this._sortMap
                 );
             }
 
@@ -608,7 +608,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         enumerator: CollectionEnumerator<T>,
         item: T,
         isNext: boolean,
-        skipGroups?: boolean,
+        skipGroups?: boolean
     ): T {
         const method = isNext ? 'moveNext' : 'movePrevious';
         const parent = item && item.getParent && item.getParent() || this.getRoot();
@@ -681,7 +681,7 @@ Object.assign(Tree.prototype, {
     _$hasChildrenProperty: '',
     _$root: undefined,
     _$rootEnumerable: false,
-    _root: null,
+    _root: null
 });
 
 register('Types/display:Tree', Tree, {instantiate: false});

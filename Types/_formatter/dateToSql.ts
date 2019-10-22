@@ -13,13 +13,13 @@ type SerializationMode = 'time' | 'date' | 'datetime';
 const MODE: IHashMap<SerializationMode> = {
     TIME: 'time',
     DATE: 'date',
-    DATETIME: 'datetime',
+    DATETIME: 'datetime'
 };
 
 const FORMAT = {
     time: 'HH:mm:ss${ms}Z',
     date: 'YYYY-MM-DD',
-    datetime: 'YYYY-MM-DD HH:mm:ss${ms}Z',
+    datetime: 'YYYY-MM-DD HH:mm:ss${ms}Z'
 };
 
 const UNIX_EPOCH_START = new Date(0);

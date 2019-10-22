@@ -61,7 +61,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         super();
 
         if (source['[Types/_chain/Abstract]']) {
-            this._previous = source;
+            this._previous = source as Abstract<T>;
             this._source = this._previous._source;
         } else {
             this._source = source;
@@ -102,7 +102,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
             callback.call(
                 context || this,
                 enumerator.getCurrent(),
-                enumerator.getCurrentIndex(),
+                enumerator.getCurrentIndex()
             );
         }
     }
@@ -308,7 +308,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         return new Next(
             this,
             callback,
-            thisArg,
+            thisArg
         );
     }
 
@@ -332,7 +332,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         const Next = resolve<any>('Types/chain:Zipped');
         return new Next(
             this,
-            args,
+            args
         );
     }
 
@@ -475,7 +475,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         return new Next(
             this,
             key,
-            value,
+            value
         );
     }
 
@@ -609,7 +609,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         return new Next(
             this,
             callback,
-            thisArg,
+            thisArg
         );
     }
 
@@ -659,7 +659,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
         const keys = Object.keys(properties);
         return this.filter((item) => keys.reduce(
             (prev, key) => prev && object.getPropertyValue(item, key) === properties[key],
-            true,
+            true
         ));
     }
 
@@ -770,5 +770,5 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 Object.assign(Abstract.prototype, {
     '[Types/_chain/Abstract]': true,
     _source: null,
-    _previous: null,
+    _previous: null
 });

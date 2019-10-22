@@ -190,7 +190,7 @@ export default class Format<T = format.Field> extends List<T> implements IEquata
 Object.assign(Format.prototype, {
     '[Types/_collection/format/Format]': true,
     '[Types/_entity/IEquatable]': true,
-    _moduleName: 'Types/collection:format.Format',
+    _moduleName: 'Types/collection:format.Format'
 });
 
 register('Types/collection:format.Format', Format, {instantiate: false});

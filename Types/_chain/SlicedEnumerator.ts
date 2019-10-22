@@ -63,5 +63,5 @@ Object.assign(SlicedEnumerator.prototype, {
     now: 0,
     begin: 0,
     end: 0,
-    enumerator: null,
+    enumerator: null
 });

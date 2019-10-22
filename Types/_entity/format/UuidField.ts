@@ -21,5 +21,5 @@ export default class UuidField extends Field {
 Object.assign(UuidField.prototype, {
     '[Types/_entity/format/UuidField]': true,
     _moduleName: 'Types/entity:format.UuidField',
-    _typeName: 'Uuid',
+    _typeName: 'Uuid'
 });

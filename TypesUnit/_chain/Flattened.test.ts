@@ -91,7 +91,7 @@ describe('Types/_chain/Flattened', () => {
         it('should return an enumerator with nesting IEnumerable', () => {
             const items = [
                 'one',
-                new List({items: ['two', [['three']]]}),
+                new List({items: ['two', [['three']]]})
             ];
             const expect = ['one', 'two', 'three'];
             const prev = new Mock(items);

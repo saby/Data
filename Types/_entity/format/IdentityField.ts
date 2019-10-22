@@ -44,5 +44,5 @@ Object.assign(IdentityField.prototype, {
     _moduleName: 'Types/entity:format.IdentityField',
     _typeName: 'Identity',
     _separator: ',',
-    _$defaultValue: [null],
+    _$defaultValue: [null]
 });

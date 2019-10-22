@@ -93,7 +93,7 @@ export default abstract class ReadWriteMixin {
 }
 
 Object.assign(ReadWriteMixin.prototype, {
-    '[Types/_entity/ReadWriteMixin]': true,
+    '[Types/_entity/ReadWriteMixin]': true
 });
 
 const IS_BROWSER = typeof window !== 'undefined';
@@ -105,5 +105,5 @@ const IS_TESTING = !!(typeof global !== 'undefined' && global.assert && global.a
  */
 Object.defineProperty(ReadWriteMixin.prototype, $writable, {
     writable: true,
-    value: IS_BROWSER || IS_TESTING,
+    value: IS_BROWSER || IS_TESTING
 });

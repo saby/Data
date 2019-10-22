@@ -10,12 +10,7 @@ describe('Types/entity:JSONML', () => {
     const SIMPLE_NODE_WITH_ATTRS_JSONML = ['p', attributes];
     const SIMPLE_NODE_WITH_CHILDREN = ['p', ...children];
     const SIMPLE_NODE_WITH_ATTRS_CHILDREN = ['p', attributes, ...children];
-    const FEW_NODES = [
-        SIMPLE_NODE_JSONML,
-        SIMPLE_NODE_WITH_ATTRS_CHILDREN,
-        SIMPLE_NODE_WITH_ATTRS_JSONML,
-        SIMPLE_NODE_WITH_CHILDREN,
-    ];
+    const FEW_NODES = [SIMPLE_NODE_JSONML, SIMPLE_NODE_WITH_ATTRS_CHILDREN, SIMPLE_NODE_WITH_ATTRS_JSONML, SIMPLE_NODE_WITH_CHILDREN];
 
     describe('isNode', () => {
         it('should return true', () => {

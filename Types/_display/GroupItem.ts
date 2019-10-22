@@ -57,7 +57,7 @@ Object.assign(GroupItem.prototype, {
     '[Types/_display/GroupItem]': true,
     _moduleName: 'Types/display:GroupItem',
     _instancePrefix: 'group-item-',
-    _$expanded: true,
+    _$expanded: true
 });
 
 register('Types/display:GroupItem', GroupItem, {instantiate: false});
