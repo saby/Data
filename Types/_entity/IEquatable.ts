@@ -28,5 +28,5 @@ export default interface IEquatable {
      * });
      * </pre>
      */
-    isEqual(to: object): boolean;
+    isEqual(to: this): boolean;
 }

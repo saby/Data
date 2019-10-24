@@ -6,6 +6,7 @@ define([
    'Types/_collection/RecordSet',
    'Types/_collection/format/Format',
    'Types/_entity/adapter/Sbis',
+    'Types/_entity/adapter/RecordSet',
    'Types/_entity/format/IntegerField',
    'Types/_entity/format/fieldsFactory',
    'Types/_entity/DateTime',
@@ -21,6 +22,7 @@ define([
    RecordSet,
    Format,
    SbisAdapter,
+   RecordSetAdapter,
    IntegerField,
    fieldsFactory,
    DateTime,
@@ -34,6 +36,7 @@ define([
    ObservableList = ObservableList.default;
    RecordSet = RecordSet.default;
    SbisAdapter = SbisAdapter.default;
+   RecordSetAdapter = RecordSetAdapter.default;
    Format = Format.default;
    IntegerField = IntegerField.default;
    fieldsFactory = fieldsFactory.default;
@@ -1829,6 +1832,9 @@ define([
 
          it('should return true for itself', function() {
             assert.isTrue(record.isEqual(record));
+
+             record.set('max', 1 + record.get('max'));
+             assert.isTrue(record.isEqual(record));
          });
 
          it('should return true for the clone', function() {
@@ -1884,13 +1890,6 @@ define([
             assert.isTrue(record.isEqual(anotherRecord));
          });
 
-         it('should return true with itself', function() {
-            assert.isTrue(record.isEqual(record));
-
-            record.set('max', 1 + record.get('max'));
-            assert.isTrue(record.isEqual(record));
-         });
-
          it('should return true for same module and submodule', function() {
             var MyRecord = extend.extend(Record, {}),
                recordA = new Record(),
@@ -1899,6 +1898,27 @@ define([
             assert.isTrue(recordA.isEqual(recordB));
             assert.isTrue(recordA.isEqual(recordC));
          });
+
+          it('should return true with nested records', function() {
+              var nestedRecordA =  new Record({
+                  rawData: {foo: 'bar'}
+              });
+              var recordA =  new Record({
+                  rawData: nestedRecordA,
+                  adapter: new RecordSetAdapter()
+              });
+
+              var nestedRecordB =  new Record({
+                  rawData: {foo: 'bar'}
+              });
+              var recordB =  new Record({
+                  rawData: nestedRecordB,
+                  adapter: new RecordSetAdapter(),
+                  idProperty: 'foo'
+              });
+
+              assert.isTrue(recordA.isEqual(recordB));
+          });
 
          it('should work fine with invalid argument', function() {
             assert.isFalse(record.isEqual());

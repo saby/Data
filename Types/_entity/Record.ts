@@ -585,18 +585,24 @@ export default class Record extends mixin<
 
     readonly '[Types/_entity/IEquatable]': boolean;
 
-    isEqual(to: any): boolean {
+    isEqual(to: Record): boolean {
         if (to === this) {
             return true;
         }
-        if (!to) {
-            return false;
-        }
-        if (!(to instanceof Record)) {
+
+        if (!to || !(to instanceof Record)) {
             return false;
         }
 
-        return JSON.stringify(this._getRawData()) === JSON.stringify(to.getRawData(true));
+        const rawData = this._getRawData();
+        const toRawData = to.getRawData(true);
+
+        // Check that if we have nested records here
+        if (rawData instanceof Record) {
+            return rawData.isEqual(toRawData);
+        }
+
+        return JSON.stringify(rawData) === JSON.stringify(toRawData);
     }
 
     // endregion
