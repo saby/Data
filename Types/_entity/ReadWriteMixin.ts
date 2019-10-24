@@ -3,6 +3,10 @@ import ObservableMixin from './ObservableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
 import {protect} from '../util';
 
+export interface IOptions {
+    writable?: boolean;
+}
+
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 /**

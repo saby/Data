@@ -40,7 +40,7 @@ export interface IDeclaration extends IShortDeclaration {
     name: string;
 }
 
-export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | IHashMap<string>;
+export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | IHashMap<Function> | IHashMap<string>;
 
 /**
  * Creates field format by its declarative definition.
