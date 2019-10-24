@@ -591,14 +591,14 @@ export default class Model extends mixin<
 
     // region Record
 
-    rejectChanges(fields: string[], spread?: boolean): void {
+    rejectChanges(fields: string[] | boolean, spread?: boolean): void {
         super.rejectChanges(fields, spread);
         if (!(fields instanceof Array)) {
             this._isChanged = false;
         }
     }
 
-    acceptChanges(fields: string[], spread?: boolean): void {
+    acceptChanges(fields: string[] | boolean, spread?: boolean): void {
         super.acceptChanges(fields, spread);
         if (!(fields instanceof Array)) {
             this._isChanged = false;
