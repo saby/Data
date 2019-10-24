@@ -8,11 +8,11 @@ import DateTime from './DateTime';
 import DestroyableMixin from './DestroyableMixin';
 import factory from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
-import ObservableMixin from './ObservableMixin';
+import ObservableMixin, {IOptions as IObservableMixinOptions} from './ObservableMixin';
 import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
-import ReadWriteMixin from './ReadWriteMixin';
+import ReadWriteMixin, {IOptions as IReadWriteMixinOptions} from './ReadWriteMixin';
 import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
     IOptions as IFormattableOptions
@@ -76,9 +76,14 @@ const CACHE_MODE_ALL = protect('all');
 
 type pairsTuple = [string, any, any];
 
-export interface IOptions extends IFormattableOptions, IVersionableMixinOptions {
+export interface IOptions extends IObservableMixinOptions,
+    IFormattableOptions,
+    IVersionableMixinOptions,
+    IReadWriteMixinOptions {
     cacheMode?: string | symbol;
+    cloneChanged?: boolean;
     owner?: RecordSet;
+    state?: State;
 }
 
 export interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
@@ -585,19 +590,31 @@ export default class Record extends mixin<
 
     readonly '[Types/_entity/IEquatable]': boolean;
 
-    isEqual(to: any): boolean {
+    isEqual(to: Record): boolean {
         if (to === this) {
             return true;
         }
-        if (!to) {
-            return false;
-        }
-        if (!(to instanceof Record)) {
+
+        if (!to || !(to instanceof Record)) {
             return false;
         }
 
-        return JSON.stringify(this._getRawData()) === JSON.stringify(to.getRawData(true));
+        const rawData = this._getRawData();
+        const toRawData = to.getRawData(true);
+
+        // Check that if we have nested records here
+        if (rawData instanceof Record) {
+            return rawData.isEqual(toRawData);
+        }
+
+        return JSON.stringify(rawData) === JSON.stringify(toRawData);
     }
+
+    // endregion
+
+    // region Types/_entity/ICloneable
+
+    clone: <T = Record>(shallow?: boolean) => T;
 
     // endregion
 
@@ -1007,8 +1024,8 @@ export default class Record extends mixin<
      *     </li>
      * </ul>
      * Если передан аргумент fields, то подтверждаются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
-     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-     * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+     * @param [fields] Поля, в которых подтвердить изменения.
+     * @param [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
      * @example
      * Подтвердим изменения в записи:
      * <pre>
@@ -1047,7 +1064,7 @@ export default class Record extends mixin<
      *     article.getState() === RecordState.CHANGED;//true
      * </pre>
      */
-    acceptChanges(fields?: string[], spread?: boolean): void {
+    acceptChanges(fields?: string[] | boolean, spread?: boolean): void {
         if (spread === undefined && typeof fields === 'boolean') {
             spread = fields;
             fields = undefined;
@@ -1090,8 +1107,8 @@ export default class Record extends mixin<
      *     <li>{@link state State} возвращается к состоянию, в котором он был сразу после вызова acceptChanges.</li>
      * </ul>
      * Если передан аргумент fields, то откатываются изменения только указанного набора полей. {@link state State} в этом случае меняется только если fields включает в себя весь набор измененных полей.
-     * @param {Array.<String>} [fields] Поля, в которых подтвердить изменения.
-     * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
+     * @param [fields] Поля, в которых подтвердить изменения.
+     * @param [spread=false] Распространять изменения по иерархии родителей. При включениии будут вызваны acceptChanges всех владельцев.
      * @example
      * Отменим изменения в записи:
      * <pre>
@@ -1132,7 +1149,7 @@ export default class Record extends mixin<
      *     article.get('password');//'123'
      * </pre>
      */
-    rejectChanges(fields?: string[], spread?: boolean): void {
+    rejectChanges(fields?: string[] | boolean, spread?: boolean): void {
         if (spread === undefined && typeof fields === 'boolean') {
             spread = fields;
             fields = undefined;
