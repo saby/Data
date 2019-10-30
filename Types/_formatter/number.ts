@@ -3,53 +3,58 @@ import 'i18n!Types/_formatter/number';
 
 const DEFAULT_LOCALE = 'en-US';
 
-const FORMATS = {
-    'ru-RU': {
-        patterns: {
-            decimal: {
-                positivePattern: '{number}',
-                negativePattern: '{minusSign}{number}'
-            },
-            percent: {
-                positivePattern: '{number} {percentSign}',
-                negativePattern: '{minusSign}{number} {percentSign}'
-            }
+let russianFormat = {
+    patterns: {
+        decimal: {
+            positivePattern: '{number}',
+            negativePattern: '{minusSign}{number}'
         },
-        symbols: {
-            latn: {
-                decimal: ',',
-                group: ' ',
-                nan: 'не число',
-                plusSign: '+',
-                minusSign: '-',
-                percentSign: '%',
-                infinity: '∞'
-            }
+        percent: {
+            positivePattern: '{number} {percentSign}',
+            negativePattern: '{minusSign}{number} {percentSign}'
         }
     },
-    'en-US': {
-        patterns: {
-            decimal: {
-                positivePattern: '{number}',
-                negativePattern: '{minusSign}{number}'
-            },
-            percent: {
-                positivePattern: '{number} {percentSign}',
-                negativePattern: '{minusSign}{number} {percentSign}'
-            }
-        },
-        symbols: {
-            latn: {
-                decimal: '.',
-                group: ',',
-                nan: 'NAN',
-                plusSign: '+',
-                minusSign: '-',
-                percentSign: '%',
-                infinity: '∞'
-            }
+    symbols: {
+        latn: {
+            decimal: ',',
+            group: ' ',
+            nan: 'не число',
+            plusSign: '+',
+            minusSign: '-',
+            percentSign: '%',
+            infinity: '∞'
         }
     }
+};
+let englishFormat = {
+    patterns: {
+        decimal: {
+            positivePattern: '{number}',
+            negativePattern: '{minusSign}{number}'
+        },
+        percent: {
+            positivePattern: '{number} {percentSign}',
+            negativePattern: '{minusSign}{number} {percentSign}'
+        }
+    },
+    symbols: {
+        latn: {
+            decimal: '.',
+            group: ',',
+            nan: 'NAN',
+            plusSign: '+',
+            minusSign: '-',
+            percentSign: '%',
+            infinity: '∞'
+        }
+    }
+};
+
+const FORMATS = {
+    'ru-RU': russianFormat,
+    ru: russianFormat,
+    'en-US': englishFormat,
+    en: englishFormat
 };
 
 const groupSize = 3;
