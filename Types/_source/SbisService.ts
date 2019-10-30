@@ -585,7 +585,7 @@ function oldMove(
  *     });
  *
  *     dataSource.create().then((article) => {
- *         const id = article.getId();
+ *         const id = article.getKey();
  *     }.then((error) => {
  *         console.error(error);
  *     });

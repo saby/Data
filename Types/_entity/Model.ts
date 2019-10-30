@@ -288,7 +288,7 @@ export default class Model extends mixin<
     * @name Types/_entity/Model#keyProperty
     * @see getKeyProperty
     * @see setKeyProperty
-    * @see getId
+    * @see getKey
     * @example
     * Зададим первичным ключом модели свойство с названием id:
     * <pre>
@@ -299,7 +299,7 @@ export default class Model extends mixin<
     *          title: 'How to make a Model'
     *       }
     *    });
-    *    article.getId();//1
+    *    article.getKey(); // 1
     * </pre>
     */
    protected _$keyProperty: string;
@@ -766,13 +766,13 @@ export default class Model extends mixin<
     *          title: 'How to make a Model'
     *       }
     *    });
-    *    article.getId();//1
+    *    article.getKey(); // 1
     * </pre>
     */
-   getId(): any {
+   getKey(): any {
       const keyProperty = this.getKeyProperty();
       if (!keyProperty) {
-         logger.info(this._moduleName + '::getId(): keyProperty is not defined');
+         logger.info(this._moduleName + '::getKey(): keyProperty is not defined');
          return undefined;
       }
       return this.get(keyProperty);
@@ -783,7 +783,7 @@ export default class Model extends mixin<
     * @return {String}
     * @see keyProperty
     * @see setKeyProperty
-    * @see getId
+    * @see getKey
     * @example
     * Получим название свойства первичного ключа:
     * <pre>
@@ -806,7 +806,7 @@ export default class Model extends mixin<
     * @param {String} keyProperty Название свойства для первичного ключа модели.
     * @see keyProperty
     * @see getKeyProperty
-    * @see getId
+    * @see getKey
     * @example
     * Зададим название свойства первичного ключа:
     * <pre>
@@ -817,7 +817,7 @@ export default class Model extends mixin<
     *       }
     *    });
     *    article.setKeyProperty('id');
-    *    article.getId();//1
+    *    article.getKey(); // 1
     * </pre>
     */
    setKeyProperty(keyProperty: string): void {
@@ -1007,6 +1007,7 @@ Object.assign(Model.prototype, {
    _propertiesDependencyGathering: '',
    _calculatingProperties: null,
    _deepChangedProperties: null,
+   getId: Model.prototype.getKey,
    getIdProperty: Model.prototype.getKeyProperty,
    setIdProperty: Model.prototype.setKeyProperty
 });

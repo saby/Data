@@ -44,7 +44,7 @@ describe('Types/_source/HierarchicalMemory', () => {
         it('should return record', () => {
             return source.read(1).then((model) => {
                 assert.instanceOf(model, Model);
-                assert.equal(model.getId(), 1);
+                assert.equal(model.getKey(), 1);
             });
         });
     });
@@ -123,7 +123,7 @@ describe('Types/_source/HierarchicalMemory', () => {
     describe('.copy()', () => {
         it('should copy record', () => {
             return source.copy(1).then((result) => {
-                assert.equal(result.getId(), 1);
+                assert.equal(result.getKey(), 1);
             });
         });
     });

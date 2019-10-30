@@ -55,7 +55,7 @@ export default interface ICrudPlus {
      *         keyProperty: 'code'
      *     });
      *     dataSource.copy('what-about-to-copy-me').then((copy) => {
-     *         console.log('The article has been copied successfully. The new id is: ' + copy.getId());
+     *         console.log('The article has been copied successfully. The new id is: ' + copy.getKey());
      *     }).catch((error) => {
      *         console.error('Can\'t copy the article', error);
      *     });

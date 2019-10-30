@@ -111,7 +111,7 @@ describe('Types/_source/Memory', () => {
             return source.create().then((model) => {
                 assert.instanceOf(model, Model);
                 if (model instanceof Model) {
-                   assert.isUndefined(model.getId());
+                   assert.isUndefined(model.getKey());
                 }
                 assert.isUndefined(model.get('LastName'));
             });
@@ -145,8 +145,8 @@ describe('Types/_source/Memory', () => {
                 return source.read(existsId).then((model) => {
                     assert.instanceOf(model, Model);
                     if (model instanceof Model) {
-                        assert.isTrue(model.getId() > 0);
-                        assert.strictEqual(model.getId(), existsId);
+                        assert.isTrue(model.getKey() > 0);
+                        assert.strictEqual(model.getKey(), existsId);
                     }
                     assert.strictEqual(model.get('LastName'), 'Баранов');
                 });
@@ -192,9 +192,9 @@ describe('Types/_source/Memory', () => {
             const testModel = (success, model, length) => {
                 assert.isTrue(!!success);
                 assert.isFalse(model.isChanged());
-                assert.isTrue(!!model.getId());
+                assert.isTrue(!!model.getKey());
                 assert.strictEqual(length, data.length);
-                return source.read(model.getId()).then((modelToo) => {
+                return source.read(model.getKey()).then((modelToo) => {
                    assert.strictEqual(model.get('LastName'), modelToo.get('LastName'));
                 });
             };
@@ -1103,7 +1103,7 @@ describe('Types/_source/Memory', () => {
                 it('should return the valid model', () => {
                     return source.read(existsId).then((model) => {
                         assert.instanceOf(model, Model);
-                        assert.strictEqual((model as Model).getId(), existsId);
+                        assert.strictEqual((model as Model).getKey(), existsId);
                     });
                 });
             });
@@ -1153,7 +1153,7 @@ describe('Types/_source/Memory', () => {
                 const testModel = (success, model, length) => {
                     assert.isTrue(!!success);
                     assert.strictEqual(length, recordset.getCount());
-                    return source.read(model.getId()).then((modelToo) => {
+                    return source.read(model.getKey()).then((modelToo) => {
                         assert.strictEqual(model.get('LastName'), modelToo.get('LastName'));
                     });
                 };

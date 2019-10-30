@@ -162,13 +162,13 @@ define([
 
             rs.each(function(record) {
                var children = hierarchy.getChildren(record, rs),
-                  expectChildren = expect[record.getId()],
+                  expectChildren = expect[record.getKey()],
                   j;
 
                assert.strictEqual(children.length, expectChildren.length);
 
                for (j = 0; j < children.length; j++) {
-                  assert.strictEqual(children[j].getId(), expectChildren[j]);
+                  assert.strictEqual(children[j].getKey(), expectChildren[j]);
                }
             });
          });
@@ -177,14 +177,14 @@ define([
             var expect = getExpectChildren();
 
             rs.each(function(record) {
-               var children = hierarchy.getChildren(record.getId(), rs),
-                  expectChildren = expect[record.getId()],
+               var children = hierarchy.getChildren(record.getKey(), rs),
+                  expectChildren = expect[record.getKey()],
                   j;
 
                assert.strictEqual(children.length, expectChildren.length);
 
                for (j = 0; j < children.length; j++) {
-                  assert.strictEqual(children[j].getId(), expectChildren[j]);
+                  assert.strictEqual(children[j].getKey(), expectChildren[j]);
                }
             });
          });
@@ -228,7 +228,7 @@ define([
                check = function(children) {
                   assert.strictEqual(children.length, expect.length);
                   for (var i = 0; i < children.length; i++) {
-                     assert.strictEqual(children[i].getId(), expect[i]);
+                     assert.strictEqual(children[i].getKey(), expect[i]);
                   }
                };
 
@@ -254,7 +254,7 @@ define([
 
          it('should work with the value', function() {
             rs.each(function(record, i) {
-               var parent = hierarchy.hasParent(record.getId(), rs);
+               var parent = hierarchy.hasParent(record.getKey(), rs);
                assert.strictEqual(parent, !!data[i].parent);
             });
          });
@@ -267,18 +267,18 @@ define([
                if (parent === null) {
                   assert.strictEqual(parent, data[i].parent);
                } else {
-                  assert.strictEqual(parent.getId(), data[i].parent);
+                  assert.strictEqual(parent.getKey(), data[i].parent);
                }
             });
          });
 
          it('should work with the value', function() {
             rs.each(function(record, i) {
-               var parent = hierarchy.getParent(record.getId(), rs);
+               var parent = hierarchy.getParent(record.getKey(), rs);
                if (parent === null) {
                   assert.strictEqual(parent, data[i].parent);
                } else {
-                  assert.strictEqual(parent.getId(), data[i].parent);
+                  assert.strictEqual(parent.getKey(), data[i].parent);
                }
             });
          });
