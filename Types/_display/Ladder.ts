@@ -18,8 +18,8 @@ type Converter = (val: any, item?: any) => string;
 function getObjectId(item: any): string {
     if (item.getInstanceId instanceof Function) {
         return item.getInstanceId();
-    } else if (item.getId instanceof Function) {
-        return item.getId();
+    } else if (item.getKey instanceof Function) {
+        return item.getKey();
     } else if (item.get instanceof Function) {
         return item.get('id');
     }

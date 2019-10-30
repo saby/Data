@@ -308,7 +308,7 @@ describe('Types/_display/Collection', () => {
             list.at(3).set('title', 1);
             const result = [];
             display.each((item) => {
-                result.push(item.getContents().getId());
+                result.push(item.getContents().getKey());
             });
             assert.deepEqual(result, sortedItems);
         });

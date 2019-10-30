@@ -949,9 +949,9 @@ describe('Types/_entity/Model', () => {
         });
     });
 
-    describe('.getId()', () => {
-        it('should return id', () => {
-            assert.strictEqual(model.getId(), modelData.id);
+    describe('.getKey()', () => {
+        it('should return key', () => {
+            assert.strictEqual(model.getKey(), modelData.id);
         });
 
         it('should detect keyProperty automatically', () => {
@@ -971,14 +971,14 @@ describe('Types/_entity/Model', () => {
                 adapter: new SbisAdapter()
             });
             assert.strictEqual(model.getKeyProperty(), '@Key');
-            assert.strictEqual(model.getId(), data.d[1]);
+            assert.strictEqual(model.getKey(), data.d[1]);
         });
 
         it('should return undefined for empty key property', () => {
             const newModel = new Model({
                 rawData: modelData
             });
-            assert.isUndefined(newModel.getId());
+            assert.isUndefined(newModel.getKey());
         });
     });
 
@@ -994,7 +994,7 @@ describe('Types/_entity/Model', () => {
                 rawData: modelData
             });
             newModel.setKeyProperty('id');
-            assert.strictEqual(newModel.getId(), modelData.id);
+            assert.strictEqual(newModel.getKey(), modelData.id);
         });
     });
 
@@ -1013,7 +1013,7 @@ describe('Types/_entity/Model', () => {
 
         it('should clone id property', () => {
             const clone = model.clone<Model>();
-            assert.strictEqual(model.getId(), clone.getId());
+            assert.strictEqual(model.getKey(), clone.getKey());
             assert.strictEqual(model.getKeyProperty(), clone.getKeyProperty());
         });
 
@@ -1042,7 +1042,7 @@ describe('Types/_entity/Model', () => {
                 }
             });
             newModel.merge(model);
-            assert.strictEqual(newModel.getId(), modelData.id);
+            assert.strictEqual(newModel.getKey(), modelData.id);
         });
 
         it('should do nothing with itself', () => {

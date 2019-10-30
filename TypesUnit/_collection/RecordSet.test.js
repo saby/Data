@@ -2005,8 +2005,8 @@ define([
          it('should get record by id after move', function() {
             rs.getRecordById(1);
             rs.move(0, 1);
-            assert.equal(rs.getRecordById(1).getId(), 1);
-            assert.equal(rs.getRecordById(2).getId(), 2);
+            assert.equal(rs.getRecordById(1).getKey(), 1);
+            assert.equal(rs.getRecordById(2).getKey(), 2);
          });
       });
 

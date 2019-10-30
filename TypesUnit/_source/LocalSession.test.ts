@@ -77,8 +77,8 @@ describe('Types/_source/LocalSession', () => {
                return source.read(existsId).then((model) => {
                     assert.instanceOf(model, Model);
                     if (model instanceof Model) {
-                        assert.isTrue(model.getId() > 0);
-                        assert.strictEqual(model.getId(), existsId);
+                        assert.isTrue(model.getKey() > 0);
+                        assert.strictEqual(model.getKey(), existsId);
                         assert.strictEqual(model.get('title'), 'Mars');
                     }
                 });
@@ -124,9 +124,9 @@ describe('Types/_source/LocalSession', () => {
             const testModel = (success, model, length) => {
                 assert.isTrue(!!success);
                 assert.isFalse(model.isChanged());
-                assert.isTrue(!!model.getId());
+                assert.isTrue(!!model.getKey());
                 assert.strictEqual(length, ls.getItem('k'));
-                return source.read(model.getId()).then((modelToo) => {
+                return source.read(model.getKey()).then((modelToo) => {
                     assert.strictEqual(model.get('title'), modelToo.get('title'));
                 });
             };
@@ -829,7 +829,7 @@ describe('Types/_source/LocalSession', () => {
                 it('should return the valid model', () => {
                     return source6.read(existsId).then((model) => {
                         assert.instanceOf(model, Model);
-                        assert.strictEqual(model.getId(), existsId);
+                        assert.strictEqual(model.getKey(), existsId);
                     });
                 });
             });
@@ -865,7 +865,7 @@ describe('Types/_source/LocalSession', () => {
                     assert.isTrue(!!success);
                     assert.strictEqual(length, ls6.getItem('k'));
 
-                    return source6.read(model.getId()).then((modelToo) => {
+                    return source6.read(model.getKey()).then((modelToo) => {
                         assert.strictEqual(model.get('Фамилия'), modelToo.get('Фамилия'));
                     });
                 };

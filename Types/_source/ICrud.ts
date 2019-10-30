@@ -11,7 +11,7 @@ import {ExtendPromise} from '../_declarations';
  * <pre>
  *     const dataSource = new CrudSource();
  *     dataSource.create().then((article) => {
- *         console.log(article.getId());
+ *         console.log(article.getKey());
  *     }).catch(console.error);
  * </pre>
  * Прочитаем статью:

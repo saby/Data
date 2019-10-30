@@ -903,7 +903,7 @@ export default class LocalSession extends mixin<
     * @example
     * <pre>
     *   solarSystem.copy('5').then((copy) => {
-    *      console.log('New id: ' + copy.getId());
+    *      console.log('New id: ' + copy.getKey());
     *   });
     * </pre>
     */

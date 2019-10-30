@@ -250,7 +250,7 @@ describe('Types/_source/SbisService', () => {
             it('should return an empty model', () => {
                 return service.create().then((model) => {
                     assert.isTrue(model instanceof Model);
-                    assert.isTrue(model.getId() > 0);
+                    assert.isTrue(model.getKey() > 0);
                     assert.strictEqual(model.get('LastName'), '');
                 });
             });
@@ -390,7 +390,7 @@ describe('Types/_source/SbisService', () => {
                 it('should return valid model', () => {
                     return service.read(SbisBusinessLogic.existsId).then((model) => {
                         assert.isTrue(model instanceof Model);
-                        assert.strictEqual(model.getId(), SbisBusinessLogic.existsId);
+                        assert.strictEqual(model.getKey(), SbisBusinessLogic.existsId);
                         assert.strictEqual(model.get('LastName'), 'Smith');
                     });
                 });
@@ -474,7 +474,7 @@ describe('Types/_source/SbisService', () => {
                 const testModel = (success, model) => {
                     assert.isTrue(success > 0);
                     assert.isFalse(model.isChanged());
-                    assert.isTrue(model.getId() > 0);
+                    assert.isTrue(model.getKey() > 0);
                 };
 
                 it('should create the model by 1st way', () => {
