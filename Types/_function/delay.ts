@@ -1,4 +1,10 @@
 const win = typeof window !== 'undefined' ? window : null;
+const getHiddenName = () => {
+    const hiddenPossibleNames = ['hidden', 'msHidden', 'webkitHidden'];
+    return typeof document !== 'undefined' &&
+        hiddenPossibleNames.filter((name) => typeof document[name] !== 'undefined')[0];
+};
+const hiddenName = getHiddenName();
 
 /**
  * Метод Вызывает функцию асинхронно, через requestAnimationFrame, или на крайний случай setTimeout
@@ -13,7 +19,7 @@ const win = typeof window !== 'undefined' ? window : null;
  * @author Мальцев А.А.
  */
 export default function delay(original: Function): void {
-    if (win && win.requestAnimationFrame) {
+    if (win && win.requestAnimationFrame && !(hiddenName && document[hiddenName])) {
         win.requestAnimationFrame(original as FrameRequestCallback);
     } else {
         setTimeout(original, 0);
