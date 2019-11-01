@@ -24,6 +24,7 @@ import {
 import {create, register} from '../di';
 import {mixin, logger} from '../util';
 import {isEqual} from '../object';
+import {IHashMap} from '../_declarations';
 
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
@@ -1420,7 +1421,8 @@ export default class RecordSet<T = Model> extends mixin<
         }
 
         return this._buildRecord(
-            normalizedRawData
+            normalizedRawData,
+            item instanceof Model ? item.getInstanceState() : null
         );
     }
 
@@ -1439,16 +1441,18 @@ export default class RecordSet<T = Model> extends mixin<
 
     /**
      * Создает новый экземпляр модели
-     * @param data Данные модели
+     * @param rawData Сырые данные записи
+     * @param instanceState Состояние записи
      * @protected
      */
-    protected _buildRecord(data: any): T {
+    protected _buildRecord(rawData: any, instanceState?: IHashMap<any>): T {
         const record = create<T>(this._$model, {
             owner: this,
             writable: this.writable,
             state: RECORD_STATE.UNCHANGED,
             adapter: this.getAdapter(),
-            rawData: data,
+            rawData,
+            instanceState,
             keyProperty: this._$keyProperty,
             formatController: this._$formatController
         });

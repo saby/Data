@@ -1,71 +1,54 @@
-export interface IFunctor {
-    readonly functor: Function;
+import Abstract from './Abstract';
+
+export interface ICompute {
     readonly properties: string[];
 }
 
 /**
- * Функтор, хранящий информацию о свойствах, от значения которых зависит результат вычислений.
- * Создадим и выполним функтор, вычисляющий 20% налог на заказ в магазине:
+ * A functor that holds data about properties on which calculation result is depends on.
+ * @example
+ * Let's define a functor which shows that function result is depends on 'amount' property:
  * <pre>
- *     requirejs(['Types/entity'], function(entity) {
- *         var getTax = new entity.functor.Compute(function(totals, percent) {
- *                 return totals.amount * percent / 100;
- *             }, ['amount']),
- *             tax;
+ *     import {functor} from 'Types/entity';
  *
- *         tax = getTax({
- *             count: 5,
- *             amount: 250
- *         }, 20);
- *         console.log(tax);//50
- *         console.log(getTax.properties);//['amount']
- *     });
+ *     const getTax = functor.Compute.create(
+ *         (totals, percent) => totals.amount * percent / 100,
+ *         ['amount']
+ *     );
+ *
+ *     const tax = getTax({
+ *         count: 5,
+ *         amount: 250
+ *     }, 20);
+ *     console.log(tax); // 50
+ *     console.log(getTax.properties); // ['amount']
  * </pre>
  * @class Types/_entity/functor/Compute
  * @public
  * @author Мальцев А.А.
  */
-class Compute implements IFunctor {
-   readonly functor: Function;
+export default class Compute<T> extends Abstract<T> implements ICompute {
    readonly properties: string[];
 
     /**
-     * Конструктор функтора.
-     * @param fn Функция, производящая вычисления
-     * @param properties Свойства, от которых зависит результат вычисления
+     * Creates the functor.
+     * @param fn Function to call
+     * @param properties Properties on which calculation result is depends on
      */
-    constructor(fn: Function, properties?: string[]) {
+    static create<T = Function>(fn: T, properties?: string[]): T & ICompute {
+        const result = Abstract.create.call(this, fn);
+
         properties = properties || [];
-        if (!(fn instanceof Function)) {
-            throw new TypeError('Argument "fn" be an instance of Function');
-        }
         if (!(properties instanceof Array)) {
-            throw new TypeError('Argument "properties" be an instance of Array');
+            throw new TypeError('Argument "properties" should be an instance of Array');
         }
 
-        Object.defineProperty(fn, 'functor', {
-            get(): Function {
-                return Compute;
-            }
-        });
-        Object.defineProperty(fn, 'properties', {
+        Object.defineProperty(result, 'properties', {
             get(): string[] {
                 return properties;
             }
         });
 
-        return fn as any;
-    }
-
-    static isFunctor(fn: any): boolean {
-        return fn && fn.functor === Compute;
+        return result;
     }
 }
-
-interface ICompute<T extends Function = Function> {
-    readonly prototype: Compute;
-    isFunctor: (fn: any) => boolean;
-    new<T>(fn: T, properties?: string[]): T;
-}
-
-export default Compute as ICompute;

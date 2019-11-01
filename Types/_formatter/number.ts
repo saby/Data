@@ -3,7 +3,7 @@ import 'i18n!Types/_formatter/number';
 
 const DEFAULT_LOCALE = 'en-US';
 
-let russianFormat = {
+const russianFormat = {
     patterns: {
         decimal: {
             positivePattern: '{number}',
@@ -26,7 +26,8 @@ let russianFormat = {
         }
     }
 };
-let englishFormat = {
+
+const englishFormat = {
     patterns: {
         decimal: {
             positivePattern: '{number}',
