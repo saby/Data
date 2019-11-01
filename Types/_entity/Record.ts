@@ -74,7 +74,7 @@ const CACHE_MODE_OBJECTS = protect('objects');
  */
 const CACHE_MODE_ALL = protect('all');
 
-type pairsTuple = [string, any, any];
+type pairsTuple = [string, any, any, boolean];
 
 export interface IOptions extends IObservableMixinOptions,
     IFormattableOptions,
@@ -413,7 +413,7 @@ export default class Record extends mixin<
         const errors = [];
 
         const changed = this._setPairs(
-            Object.keys(map).map((key) => [key, map[key], this.get(key)] as pairsTuple),
+            Object.keys(map).map((key) => [key, map[key], this.get(key), true] as pairsTuple),
             errors
         );
 
@@ -439,13 +439,13 @@ export default class Record extends mixin<
         let changed = null;
 
         pairs.forEach((item) => {
-            const [key, newValue, oldValue]: pairsTuple = item;
+            const [key, newValue, oldValue, saveInRawData]: pairsTuple = item;
             let value = newValue;
 
             // Check if value changed
             if (isEqualValues(value, oldValue)) {
                 // Update raw data by link if same Object has been set
-                if (typeof value === 'object') {
+                if (typeof value === 'object' && saveInRawData) {
                     this._setRawDataValue(key, value);
                 }
             } else {
@@ -455,10 +455,12 @@ export default class Record extends mixin<
                     this._removeChild(oldValue);
 
                     // Save value to rawData
-                    if (isPrimitive(value)) {
-                        value = this._setRawDataValue(key, value);
-                    } else {
-                        this._setRawDataValue(key, value);
+                    if (saveInRawData) {
+                        if (isPrimitive(value)) {
+                            value = this._setRawDataValue(key, value);
+                        } else {
+                            this._setRawDataValue(key, value);
+                        }
                     }
 
                     // Work with relations

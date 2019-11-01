@@ -1,74 +1,33 @@
-/* global define, describe, it, assert */
-define([
-   'Types/_entity/functor/Compute'
-], function(
-   Compute
-) {
-   'use strict';
-
-   Compute = Compute.default;
-
-   describe('Types/_entity/functor/Compute', function() {
-      describe('.constructor()', function() {
-         it('should throw TypeError on invalid arguments', function() {
-            assert.throws(function() {
-               new Compute();
-            }, TypeError);
-
-            assert.throws(function() {
-               new Compute([]);
-            }, TypeError);
-
-
-            assert.throws(function() {
-               new Compute({});
-            }, TypeError);
-
-            assert.throws(function() {
-               new Compute(function() {}, {});
-            }, TypeError);
-         });
-
-         it('should return a functor', function() {
-            var functor = new Compute(function() {});
-            assert.instanceOf(functor, Function);
-            assert.strictEqual(functor.functor, Compute);
-         });
-
-         it('should return a functor with given properties', function() {
-            var functor = new Compute(function() {}, ['foo', 'bar']);
-            assert.deepEqual(functor.properties, ['foo', 'bar']);
-         });
-
-         it('should call a functor', function() {
-            var given = {},
-               expect = {
-                  a: 'foo',
-                  b: 'bar'
-               },
-               result,
-               functor = new Compute(function(a, b) {
-                  given.a = a;
-                  given.b = b;
-                  return a + b;
-               });
-
-            result = functor('foo', 'bar');
-            assert.equal(result, 'foo' + 'bar');
-            assert.equal(given.a, expect.a);
-            assert.equal(given.b, expect.b);
-         });
-      });
-
-      describe('::isFunctor()', function() {
-         it('should return true for Functor', function() {
-            var functor = new Compute(function() {});
-            assert.isTrue(Compute.isFunctor(functor));
-         });
-
-         it('should return true for not a Functor', function() {
-            assert.isFalse(Compute.isFunctor(function() {}));
-         });
-      });
-   });
+define(["require", "exports", "chai", "Types/_entity/functor/Abstract", "Types/_entity/functor/Compute"], function (require, exports, chai_1, Abstract_1, Compute_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    describe('Types/_entity/functor/Compute', function () {
+        describe('::create()', function () {
+            it('should return Compute functor', function () {
+                var functor = Compute_1.default.create(function () { return undefined; });
+                chai_1.assert.isTrue(Compute_1.default.isFunctor(functor));
+            });
+            it('should return a functor with given properties', function () {
+                var functor = Compute_1.default.create(function () { return undefined; }, ['foo', 'bar']);
+                chai_1.assert.deepEqual(functor.properties, ['foo', 'bar']);
+            });
+            it('should throw TypeError on invalid arguments', function () {
+                var instance;
+                chai_1.assert.throws(function () {
+                    instance = Compute_1.default.create(function () { return undefined; }, {});
+                }, TypeError);
+                chai_1.assert.isUndefined(instance);
+            });
+        });
+        describe('::isFunctor()', function () {
+            it('should return true for Compute functor', function () {
+                var functor = Compute_1.default.create(function () { return undefined; });
+                chai_1.assert.isTrue(Compute_1.default.isFunctor(functor));
+            });
+            it('should return false for not Compute functor', function () {
+                var functor = Abstract_1.default.create(function () { return undefined; });
+                chai_1.assert.isFalse(Compute_1.default.isFunctor(functor));
+            });
+        });
+    });
 });
