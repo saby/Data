@@ -1,9 +1,11 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import Model from 'Types/_entity/Model';
+import Model, {IProperty} from 'Types/_entity/Model';
 import Compute from 'Types/_entity/functor/Compute';
+import Track from 'Types/_entity/functor/Track';
 import SbisAdapter from 'Types/_entity/adapter/Sbis';
 import RecordSet from 'Types/_collection/RecordSet';
+import {IHashMap} from 'Types/_declarations';
 import {extend} from 'Core/core-extend';
 
 interface IData {
@@ -15,14 +17,14 @@ interface IData {
     id: number;
 }
 
-interface IProperties {
-    calc: object;
-    calcRead: object;
-    calcWrite: object;
-    title: object;
-    sqMax: object;
-    internal: object;
-    date: object;
+interface IProperties extends IHashMap<IProperty> {
+    calc: IProperty;
+    calcRead: IProperty;
+    calcWrite: IProperty;
+    title: IProperty;
+    sqMax: IProperty;
+    internal: IProperty;
+    date: IProperty;
 }
 
 function getModelData(): IData {
@@ -98,6 +100,25 @@ describe('Types/_entity/Model', () => {
         modelData = undefined;
         modelProperties = undefined;
         model = undefined;
+    });
+
+    describe('.constructor', () => {
+        it('should set instance state via constructor', () => {
+            const model = new Model({
+                instanceState: {
+                    _foo: 'bar'
+                },
+                properties: {
+                    foo: {
+                        get(): string {
+                            return this._foo;
+                        }
+                    }
+                }
+            });
+
+            assert.equal(model.get('foo'), 'bar');
+        });
     });
 
     describe('.get()', () => {
@@ -250,6 +271,34 @@ describe('Types/_entity/Model', () => {
             model.set('calcWrite', 70);
             assert.strictEqual(model.get('calcWrite'), 7);
             assert.strictEqual(model.getRawData().calcWrite, 7);
+        });
+
+        it('should trigger "onPropertyChange" for tracking properties', () => {
+            const model = new Model({
+                properties: {
+                    foo: {
+                        get(): string {
+                            return this._foo;
+                        },
+                        set: Track.create(function(value: string): void {
+                            this._foo = value;
+                        })
+                    }
+                }
+            });
+
+            let changed;
+            const handler = (event, props) => {
+                changed = props;
+            };
+
+            model.subscribe('onPropertyChange', handler);
+            model.set('foo', 'bar');
+            model.unsubscribe('onPropertyChange', handler);
+
+            assert.deepEqual(changed, {
+                foo: 'bar'
+            });
         });
 
         it('should trigger only one event "onPropertyChange" if some propperty calls set() inside itself', () => {
@@ -627,7 +676,7 @@ describe('Types/_entity/Model', () => {
                 const model = new Model({
                     properties: {
                         foo: {
-                            get: new Compute(function(): string[] {
+                            get: Compute.create(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat(bar);
                             }, ['bar'])
@@ -659,7 +708,7 @@ describe('Types/_entity/Model', () => {
                 const model = new Model({
                     properties: {
                         foo: {
-                            get: new Compute(function(): string[] {
+                            get: Compute.create(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat(bar);
                             }, [])
@@ -688,7 +737,7 @@ describe('Types/_entity/Model', () => {
                 const model = new Model({
                     properties: {
                         foo: {
-                            get: new Compute(function(): string[] {
+                            get: Compute.create(function(): string[] {
                                 const bar = this.get('bar');
                                 return ['foo'].concat([bar.get('a'), bar.get('b')]);
                             }, ['bar.a'])
@@ -1250,6 +1299,28 @@ describe('Types/_entity/Model', () => {
             model.relationChanged({target: obj2}, ['field.obj']);
             assert.strictEqual(obj, model.get('obj'));
             assert.notEqual(obj2, model.get('obj2'));
+        });
+    });
+
+    describe('.getInstanceState', () => {
+        it('should return null by default', () => {
+            const model = new Model();
+            assert.isNull(model.getInstanceState());
+        });
+
+        it('should return object with tracking properties values', () => {
+            const model = new Model({
+                properties: {
+                    foo: {
+                        get: Track.create(function(): string {
+                            return this._foo = 'bar';
+                        }, '_foo')
+                    }
+                }
+            });
+
+            assert.equal(model.get('foo'), 'bar');
+            assert.deepEqual(model.getInstanceState(), {_foo: 'bar'});
         });
     });
 

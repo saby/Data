@@ -66,7 +66,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
 
         context('when enclosed model used', () => {
             class ModelA extends Model {
-                protected _$properties: object = {
+                protected _$properties: {} = {
                     propA: {
                         get: () => 'A'
                     }
@@ -74,7 +74,7 @@ describe('Types/_entity/adapter/RecordSet', () => {
             }
 
             class ModelB extends Model {
-                protected _$properties: object = {
+                protected _$properties: {} = {
                     propB: {
                         get: () => 'B'
                     }
