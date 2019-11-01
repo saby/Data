@@ -1,41 +1,40 @@
 import Record, {IOptions as IRecordOptions, ISerializableState as IRecordSerializableState} from './Record';
 import InstantiableMixin from './InstantiableMixin';
+import IStateful from './IStateful';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {IAdapter} from './adapter';
-import {Compute} from './functor';
+import {Compute, ICompute, Track, ITrack} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
 import {deprecateExtend, logger, mixin} from '../util';
 import {Map, Set} from '../shim';
+import {IHashMap} from '../_declarations';
 
 /**
  * Separator for path in object
  */
 const ROUTE_SEPARATOR = '.';
 
-interface IGetter extends Function {
-    get: (name: string) => any;
-    properties: string[];
+type PropertyGetter = (value?: any) => any;
+type PropertySetter = (value: any) => any;
+type PropertyDefault = (value?: any) => any;
+
+interface IPropertyGetter extends PropertyGetter, Partial<ICompute>, Partial<ITrack> {
 }
 
-interface ISetter extends Function {
-    set: (name: string, value: any) => any;
-    properties: string[];
+interface IPropertySetter extends PropertySetter, Partial<ICompute>, Partial<ITrack> {
 }
 
-interface IProperty {
-    get: IGetter;
-    set?: ISetter;
-    default?: (name: string) => any;
-}
-
-// tslint:disable-next-line:no-empty-interface
-interface IProperties<T> {
+export interface IProperty {
+    get?: IPropertyGetter;
+    set?: IPropertySetter;
+    def?: string | number | boolean | PropertyDefault;
 }
 
 interface IOptions extends IRecordOptions {
-   properties?: IProperties<IProperty>;
-   keyProperty?: string;
+    properties?: IHashMap<IProperty>;
+    instanceState?: IHashMap<any>;
+    keyProperty?: string;
 }
 
 interface ISerializableState extends IRecordSerializableState {
@@ -154,7 +153,7 @@ export default class Model extends mixin<
     Record, InstantiableMixin
 >(
    Record, InstantiableMixin
-) {
+) implements IStateful {
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
@@ -182,7 +181,7 @@ export default class Model extends mixin<
      *         name: sting
      *     }
      *
-     *     export default class User extends Model {
+     *     class User extends Model {
      *         protected _$properties: object = {
      *             id: {
      *                 get(value) {
@@ -240,7 +239,7 @@ export default class Model extends mixin<
      * <pre>
      *     import {Model} from 'Types/entity';
      *
-     *     export default class User extends {
+     *     class User extends Model {
      *         protected _$properties: Object = {
      *             displayName: {
      *                 get() {
@@ -259,14 +258,67 @@ export default class Model extends mixin<
      *     });
      *     console.log(user.get('displayName'));//Johnny a.k.a "Keanu" Mnemonic
      * </pre>
+     * Для лучшей производительности изменения в свойствах не отслеживаются. Если требуется генерировать события об изменении свойства, определите его через функтор Track:
+     * <pre>
+     *     import {Model, functor} from 'Types/entity';
+     *
+     *     class User extends Model {
+     *         protected _nickname: string;
+     *         protected _$properties: object = {
+     *             nickname: {
+     *                 get: function() {
+     *                     return this._nickname;
+     *                 }
+     *                 set: functor.Track.create(function(value: string) {
+     *                     this._nickname = value;
+     *                 })
+     *             }
+     *         }
+     *     }
+     *
+     *     const user = new User();
+     *     user.subscribe('onPropertyChange', (changed) => {
+     *         console.log('On change', changed);
+     *     });
+     *
+     *     user.set('nickname', 'YouWontKnow'); // Causes console log 'On change {nickname: "YouWontKnow"}'
+     * </pre>
+     * Если вы используете модель в рекордсете, то вы можете обеспечить передачу значений свойств, хранящихся на экземпляре модели, передав имя свойства в функтор Track:
+     * <pre>
+     *     import {Model, functor} from 'Types/entity';
+     *     import {RecordSet} from 'Types/collection';
+     *
+     *     class Avenger extends Model {
+     *         protected _nickname: string;
+     *         protected _$properties: object = {
+     *             nickname: {
+     *                 get: function() {
+     *                     return this._nickname;
+     *                 }
+     *                 set: functor.Track.create(function(value: string) {
+     *                     this._nickname = value;
+     *                 }, '_nickname')
+     *             }
+     *         }
+     *     }
+     *
+     *     const avengers = new RecordSet({model: Avenger});
+     *
+     *     const originalFury = new Avenger();
+     *     originalFury.set('nickname', 'Nick Fury');
+     *
+     *     const addedFury = avengers.add(originalFury);
+     *     console.log(originalFury === addedFury); // false
+     *     console.log(addedFury.get('nickname')); // 'Nick Fury'
+     * </pre>
      * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет сбрасываться кэш, хранящий результат предыдущего вычисления:
      * <pre>
      *     import {Model, functor} from 'Types/entity';
      *
-     *     export default class User extends {
+     *     class User extends Model {
      *         protected _$properties: object = {
      *             birthDay: {
-     *                 get: new functor.Compute(function() {
+     *                 get: functor.Compute.create(function() {
      *                     return this.get('facebookBirthDay') || this.get('linkedInBirthDay');
      *                 }, ['facebookBirthDay', 'linkedInBirthDay'])
      *             }
@@ -275,13 +327,13 @@ export default class Model extends mixin<
      *
      *     const user = new User();
      *     user.set('linkedInBirthDay', new Date(2010, 1, 2));
-     *     console.log(user.get('birthDay'));//Tue Feb 02 2010 00:00:00
+     *     console.log(user.get('birthDay')); // Tue Feb 02 2010 00:00:00
      *
      *     user.set('facebookBirthDay', new Date(2011, 3, 4));
-     *     console.log(user.get('birthDay'));//Mon Apr 04 2011 00:00:00
+     *     console.log(user.get('birthDay')); // Mon Apr 04 2011 00:00:00
      * </pre>
      */
-    protected _$properties: IProperties<IProperty>;
+    protected _$properties: IHashMap<IProperty>;
 
    /**
     * @cfg {String} Название свойства, содержащего первичный ключ
@@ -347,8 +399,11 @@ export default class Model extends mixin<
     constructor(options?: IOptions) {
         super(options);
 
-        // TODO: don't allow to inject properties through constructor
         this._propertiesInjected = options && 'properties' in options;
+
+        if (options && options.instanceState) {
+            this._setInstanceState(options.instanceState);
+        }
 
         // Support deprecated  option 'idProperty'
         if (!this._$keyProperty && options && (options as any).idProperty) {
@@ -446,6 +501,10 @@ export default class Model extends mixin<
                 const property = this._$properties && this._$properties[key];
                 if (property) {
                     if (property.set) {
+                        // Get old value for tracking property
+                        const isTracking = Track.isFunctor(property.set);
+                        const oldValue = isTracking ? this.get(key) : undefined;
+
                         // Remove cached value
                         if (this._fieldsCache.has(key)) {
                             this._removeChild(
@@ -454,8 +513,16 @@ export default class Model extends mixin<
                             this._fieldsCache.delete(key);
                         }
 
+                        // Calculate new value
                         value = this._processCalculatedValue(key, value, property, false);
-                        if (value === undefined) {
+                        const storeInRawData = value !== undefined;
+
+                        if (isTracking) {
+                            // Track value change by adding in pairs
+                            pairs.push([key, this.get(key), oldValue, storeInRawData]);
+                            return;
+                        } else if (!storeInRawData) {
+                            // Just continue if there is nothing to save in raw data
                             return;
                         }
                     } else if (property.get) {
@@ -464,7 +531,7 @@ export default class Model extends mixin<
                     }
                 }
 
-                pairs.push([key, value, Record.prototype.get.call(this, key)]);
+                pairs.push([key, value, Record.prototype.get.call(this, key), true]);
             } catch (err) {
                 // Collecting errors for every property
                 propertiesErrors.push(err);
@@ -474,6 +541,7 @@ export default class Model extends mixin<
         // Collect pairs of properties
         const pairsErrors = [];
         let changedProperties = super._setPairs(pairs, pairsErrors);
+
         if (isCalculating && changedProperties) {
             // Here is the set() that recursive calls from another set() so just accumulate the changes
             this._deepChangedProperties = this._deepChangedProperties || {};
@@ -554,6 +622,49 @@ export default class Model extends mixin<
     }
 
     // endregion
+
+    // region IStateful
+
+    readonly '[Types/_entity/IStateful]': boolean;
+
+    getInstanceState<T = IHashMap<any>>(): T {
+        if (!this._$properties) {
+            return null;
+        }
+
+        return Object.keys(this._$properties)
+            .map((propertyName) => {
+                const property = this._$properties[propertyName];
+                let name;
+                if (Track.isFunctor(property.get)) {
+                    name = property.get.propertyName;
+                }
+                if (!name && Track.isFunctor(property.set)) {
+                    name = property.set.propertyName;
+                }
+                return name;
+            })
+            .filter((name) => !!name)
+            .reduce((memo, name) => {
+                const value = this[name];
+                if (value !== undefined) {
+                    memo = memo || {};
+                    memo[name] = this[name];
+                }
+                return memo;
+            }, null);
+    }
+
+    protected _setInstanceState<T = IHashMap<any>>(state: T): void {
+        if (!state) {
+            return;
+        }
+        Object.keys(state).forEach((name) => {
+            this[name] = state[name];
+        });
+    }
+
+    // IStateful
 
     // region SerializableMixin
 
@@ -651,7 +762,7 @@ export default class Model extends mixin<
      *     console.log(user.getProperties()); // {id: {get: Function, set: Function}, group: {get: Function}}
      * </pre>
      */
-    getProperties(): IProperties<IProperty> {
+    getProperties(): IHashMap<IProperty> {
         return this._$properties;
     }
 
@@ -996,20 +1107,21 @@ export default class Model extends mixin<
 }
 
 Object.assign(Model.prototype, {
-   '[Types/_entity/Model]': true,
-   _moduleName: 'Types/entity:Model',
-   _instancePrefix: 'model-',
-   _$properties: null,
-   _$keyProperty: '',
-   _isDeleted: false,
-   _defaultPropertiesValues: null,
-   _propertiesDependency: null,
-   _propertiesDependencyGathering: '',
-   _calculatingProperties: null,
-   _deepChangedProperties: null,
-   getId: Model.prototype.getKey,
-   getIdProperty: Model.prototype.getKeyProperty,
-   setIdProperty: Model.prototype.setKeyProperty
+    '[Types/_entity/Model]': true,
+    '[Types/_entity/IStateful]': true,
+    _moduleName: 'Types/entity:Model',
+    _instancePrefix: 'model-',
+    _$properties: null,
+    _$keyProperty: '',
+    _isDeleted: false,
+    _defaultPropertiesValues: null,
+    _propertiesDependency: null,
+    _propertiesDependencyGathering: '',
+    _calculatingProperties: null,
+    _deepChangedProperties: null,
+    getId: Model.prototype.getKey,
+    getIdProperty: Model.prototype.getKeyProperty,
+    setIdProperty: Model.prototype.setKeyProperty
 });
 
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'

@@ -158,7 +158,7 @@ describe('Types/_display/Collection', () => {
 
         it('should add an important property if Compute functor for sort used', () => {
             const importantProps = ['bar'];
-            const functor = new ComputeFunctor(
+            const functor = ComputeFunctor.create(
                 (a, b) => a - b,
                 ['foo']
             );
@@ -176,7 +176,7 @@ describe('Types/_display/Collection', () => {
 
         it('should add an important property if Compute functor for group used', () => {
             const importantProps = ['bar'];
-            const functor = new ComputeFunctor(
+            const functor = ComputeFunctor.create(
                 () => 'banana',
                 ['foo']
             );
@@ -1123,7 +1123,7 @@ describe('Types/_display/Collection', () => {
 
         it('should add an important property if Compute functor used', () => {
             const importantProps = ['bar'];
-            const functor = new ComputeFunctor(
+            const functor = ComputeFunctor.create(
                 (a, b) => a - b,
                 ['foo']
             );
@@ -1139,7 +1139,7 @@ describe('Types/_display/Collection', () => {
 
         it('should remove an important property if Compute functor no longer used', () => {
             const importantProps = ['bar'];
-            const functor = new ComputeFunctor(
+            const functor = ComputeFunctor.create(
                 (a, b) => a - b,
                 ['foo']
             );
@@ -1324,7 +1324,7 @@ describe('Types/_display/Collection', () => {
 
         it('should add an important property if Compute functor used', () => {
             const importantProps = ['bar'];
-            const functor = new ComputeFunctor(() => {
+            const functor = ComputeFunctor.create(() => {
                 return 'banana';
             }, ['foo']);
             const display = new CollectionDisplay({

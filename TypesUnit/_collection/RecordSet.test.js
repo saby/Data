@@ -4,6 +4,7 @@ define([
    'Types/_collection/IObservable',
    'Types/_entity/Record',
    'Types/_entity/Model',
+   'Types/_entity/functor',
    'Types/_entity/format/fieldsFactory',
    'Types/_entity/adapter/Json',
    'Types/_entity/adapter/Sbis',
@@ -16,6 +17,7 @@ define([
    IBindCollection,
    Record,
    Model,
+   functor,
    fieldsFactory,
    JsonAdapter,
    SbisAdapter,
@@ -1769,6 +1771,23 @@ define([
             });
             rs.add(record);
             assert.strictEqual(record.getState(), Record.RecordState.DETACHED);
+         });
+
+         it('should keep foreign record instance state', function() {
+             var record = new Model({
+                 properties: {
+                     foo: {
+                         get: functor.Track.create(function() {
+                             return this._foo = 'bar';
+                         }, '_foo')
+                     }
+                 }
+             });
+
+             assert.equal(record.get('foo'), 'bar');
+
+             var result = rs.add(record, 0);
+             assert.equal(result._foo, 'bar');
          });
 
          it('should set the new record state to "Added"', function() {
