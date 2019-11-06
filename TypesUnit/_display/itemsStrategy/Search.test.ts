@@ -140,9 +140,9 @@ describe('Types/_display/itemsStrategy/Search', () => {
             strategy.items.forEach((item, index) => {
                 const contents = item.getContents();
                 assert.equal(
-                    contents instanceof Array ? '#' + contents.join(',') : contents,
+                    contents instanceof Array ? `#${contents.join(',')}` : contents,
                     expected[index],
-                    'at ' + index
+                    `at ${index}`
                 );
             });
 
@@ -167,16 +167,47 @@ describe('Types/_display/itemsStrategy/Search', () => {
             });
 
             const source = getSource(items);
-            const strategy = new Search({
-                source
-            });
+            const strategy = new Search({source});
 
             const result = strategy.items.map((item) => {
                 const contents = item.getContents();
-                return item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents;
+                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
             });
 
             assert.deepEqual(result, ['#A,AA,AAA']);
+        });
+
+        it('should add breadcrumbs before a leaf which has different parent than previous leaf', () => {
+            const items = [];
+            items[0] = new TreeItem({
+                contents: 'A',
+                node: true
+            });
+            items[1] = new TreeItem({
+                parent: items[0],
+                contents: 'B',
+                node: true
+            });
+            items[2] = new TreeItem({
+                parent: items[1],
+                contents: 'c',
+                node: false
+            });
+            items[3] = new TreeItem({
+                parent: items[0],
+                contents: 'd',
+                node: false
+            });
+
+            const source = getSource(items);
+            const strategy = new Search({source});
+
+            const result = strategy.items.map((item) => {
+                const contents = item.getContents();
+                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
+            });
+
+            assert.deepEqual(result, ['#A,B', 'c', '#A', 'd']);
         });
 
         it('should return valid items level for first item after breadcrumbs', () => {
@@ -207,7 +238,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
 
             const result = strategy.items.map((item) => {
                 const contents = item.getContents();
-                return (item instanceof BreadcrumbsItem ? '#' + contents.join(',') : contents) + ':' + item.getLevel();
+                return (item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
             });
 
             assert.deepEqual(result, ['#A,AA:0', 'AAa:1', 'b:0']);
