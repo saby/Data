@@ -2,8 +2,8 @@ import {assert} from 'chai';
 import * as sinon from 'sinon';
 import numberWords from 'Types/_formatter/numberWords';
 import * as i18n from 'Core/i18n';
-import * as enUS from 'json!Types/lang/en-US/en-US.json';
-import * as ruRU from 'json!Types/lang/ru-RU/ru-RU.json';
+import * as enUS from 'json!Types/lang/en/en.json';
+import * as ruRU from 'json!Types/lang/ru/ru.json';
 
 describe('Types/_formatter/numberWords', () => {
     const locales = ['en-US', 'ru-RU'];
