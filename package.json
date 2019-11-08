@@ -17,11 +17,8 @@
       "build:compile": "saby-typescript --compile",
       "start": "saby-units --server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-      "test:node": "saby-units --isolated --report",
-      "test:node-coverage": "saby-units --isolated --report --coverage",
-      "test:browser": "saby-units --browser --report",
-      "test:browser-coverage": "saby-units --browser --report --coverage",
-      "tslint": "tslint -q Types/**/*.ts"
+      "test:coverage": "saby-units --isolated --coverage",
+      "lint": "saby-typescript --lint -q Types/**/*.ts"
    },
    "saby-units": {
       "moduleType": "amd",
