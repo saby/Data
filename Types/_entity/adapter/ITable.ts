@@ -58,13 +58,13 @@ export default interface ITable {
      */
     move(source: number, target: number): void;
 
-   /**
-    * Объединяет две записи
-    * @param acceptor Позиция принимающей записи
-    * @param donor Позиция записи-донора
-    * @param keyProperty Название поля содержащего первичный ключ
-    */
-   merge(acceptor: number, donor: number, keyProperty: string): any;
+    /**
+     * Объединяет две записи
+     * @param acceptor Позиция принимающей записи
+     * @param donor Позиция записи-донора
+     * @param keyProperty Название поля содержащего первичный ключ
+     */
+    merge(acceptor: number, donor: number, keyProperty: string): any;
 
     /**
      * Копирует запись по позиции
@@ -98,7 +98,7 @@ export default interface ITable {
      * @param format Формат поля
      * @param [at] Позиция поля
      */
-    addField(format: Field, at: number): void;
+    addField(format: Field, at?: number): void;
 
     /**
      * Удаляет поле из таблицы по имени.

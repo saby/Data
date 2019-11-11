@@ -115,19 +115,19 @@ export default class RecordSetTable extends mixin<
         this._data.add(rec, target);
     }
 
-   merge(acceptor: number, donor: number, keyProperty: string): any {
-      if (!this._isValidData()) {
-         throw new TypeError('Passed data has invalid format');
-      }
+    merge(acceptor: number, donor: number, keyProperty: string): any {
+        if (!this._isValidData()) {
+            throw new TypeError('Passed data has invalid format');
+        }
 
-      const acceptorRecord = this._data.at(acceptor);
-      this._data.at(donor).each((name, value) => {
-         if (name !== keyProperty) {
-            acceptorRecord.set(name, value);
-         }
-      }, this);
-      this._data.removeAt(donor);
-   }
+        const acceptorRecord = this._data.at(acceptor);
+        this._data.at(donor).each((name, value) => {
+            if (name !== keyProperty) {
+                acceptorRecord.set(name, value);
+            }
+        }, this);
+        this._data.removeAt(donor);
+    }
 
     copy(index: number): Record {
         if (!this._isValidData()) {
@@ -150,7 +150,7 @@ export default class RecordSetTable extends mixin<
         }
     }
 
-    addField(format: Field, at: number): void {
+    addField(format: Field, at?: number): void {
         if (!this._isValidData()) {
             throw new TypeError('Passed data has invalid format');
         }
@@ -178,20 +178,20 @@ export default class RecordSetTable extends mixin<
 
     // region Protected methods
 
-   protected _buildData(sample: Record): void {
-      if (!this._data) {
-         const config = {} as IRecordSetOptions;
-         if (sample) {
-            if (sample.getAdapter) {
-               config.adapter = sample.getAdapter();
+    protected _buildData(sample: Record): void {
+        if (!this._data) {
+            const config = {} as IRecordSetOptions;
+            if (sample) {
+                if (sample.getAdapter) {
+                    config.adapter = sample.getAdapter();
+                }
+                if ((sample as any).getKeyProperty) {
+                    config.keyProperty = (sample as any).getKeyProperty();
+                }
             }
-            if ((sample as any).getKeyProperty) {
-               config.keyProperty = (sample as any).getKeyProperty();
-            }
-         }
-         this._data = create('Types/collection:RecordSet', config);
-      }
-   }
+            this._data = create('Types/collection:RecordSet', config);
+        }
+    }
 
     protected _isValidData(): boolean {
         return this._data && this._data['[Types/_collection/RecordSet]'];

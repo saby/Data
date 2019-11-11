@@ -1,12 +1,12 @@
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
-import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
+import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerator} from '../collection';
 import {create} from '../di';
 import {mixin} from '../util';
 
 /**
  * Массив соответствия индексов проекций и коллекций
  */
-const displaysToCollections: Array<IEnumerable<any> | any[]> = [];
+const displaysToCollections: Array<IEnumerableCollection<any> | any[]> = [];
 
 /**
  * Массив соответствия индексов проекций и их инстансов
@@ -24,7 +24,7 @@ export interface IEnumerable<T> extends IEnumerableCollection<T> {
 }
 
 export interface IOptions<S> {
-    collection?: IEnumerable<S> | S[];
+    collection?: IEnumerableCollection<S> | S[];
     keyProperty?: string;
 }
 
