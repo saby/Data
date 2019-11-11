@@ -548,7 +548,7 @@ export default abstract class FormattableMixin {
      *     recordset.addField(new format.MoneyField({name: 'amount', precision: 3}));
      * </pre>
      */
-    addField(format: Field, at: number): void {
+    addField(format: Field, at?: number): void {
         format = this._buildField(format);
         this._$format = this._getFormat(true);
         this._unlinkFormatOption();

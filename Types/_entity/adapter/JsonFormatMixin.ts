@@ -53,7 +53,7 @@ export default abstract class JsonFormatMixin {
         return format;
     }
 
-    addField(format: Field, at: number): void {
+    addField(format: Field, at?: number): void {
         if (!format || !(format instanceof Field)) {
             throw new TypeError(
                 `${this._moduleName}::addField(): format should be an instance of Types/entity:format.Field`

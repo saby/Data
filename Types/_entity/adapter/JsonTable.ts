@@ -60,7 +60,7 @@ export default class JsonTable extends mixin<
 
     // region JsonFormatMixin
 
-    addField(format: Field, at: number): void {
+    addField(format: Field, at?: number): void {
         super.addField(format, at);
 
         const name = format.getName();
@@ -152,17 +152,17 @@ export default class JsonTable extends mixin<
         }
     }
 
-   merge(acceptor: number, donor: number, keyProperty: string): void {
-      this._touchData();
+    merge(acceptor: number, donor: number, keyProperty: string): void {
+        this._touchData();
 
-      const first = this.at(acceptor);
-      const extention = this.at(donor);
-      const adapter = new JsonRecord(first);
-      const id = adapter.get(keyProperty);
-      merge(first, extention);
-      adapter.set(keyProperty, id);
-      this.remove(donor);
-   }
+        const first = this.at(acceptor);
+        const extention = this.at(donor);
+        const adapter = new JsonRecord(first);
+        const id = adapter.get(keyProperty);
+        merge(first, extention);
+        adapter.set(keyProperty, id);
+        this.remove(donor);
+    }
 
     copy(index: number): Data {
         this._touchData();

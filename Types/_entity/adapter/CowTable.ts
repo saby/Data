@@ -90,10 +90,10 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
         return (this._originalTable as ITable).move(source, target);
     }
 
-   merge(acceptor: number, donor: number, keyProperty: string): any {
-      this._copy();
-      return (this._originalTable as ITable).merge(acceptor, donor, keyProperty);
-   }
+    merge(acceptor: number, donor: number, keyProperty: string): any {
+        this._copy();
+        return (this._originalTable as ITable).merge(acceptor, donor, keyProperty);
+    }
 
     copy(index: number): any {
         this._copy();
@@ -113,7 +113,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
         return (this._originalTable as ITable).getSharedFormat(name);
     }
 
-    addField(format: Field, at: number): void {
+    addField(format: Field, at?: number): void {
         this._copy();
         return (this._originalTable as ITable).addField(format, at);
     }

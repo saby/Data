@@ -741,7 +741,7 @@ export default class RecordSet<T = Model> extends mixin<
         );
     }
 
-    addField(format: format.Field, at: number, value?: any): void {
+    addField(format: format.Field, at?: number, value?: any): void {
         format = this._buildField(format);
         FormattableMixin.prototype.addField.call(this, format, at);
 
