@@ -73,7 +73,7 @@ export default abstract class OptionsToPropertyMixin {
 
     /**
      * Конструктор объекта, принимающий набор опций в качестве первого аргумента
-     * @param {Object} [options] Значения опций
+     * @param [options] Значения опций
      */
     constructor(options?: IHashMap<any>) {
         if (options && typeof options === 'object') {
