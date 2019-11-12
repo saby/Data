@@ -14,6 +14,7 @@ export interface IOptions {
 /**
  * Миксин, позволяющий реализовать интерфейс {@link Types/_source/IData}.
  * @mixin Types/_source/DataMixin
+ * @implements Types/_source/IData
  * @public
  * @author Мальцев А.А.
  */

@@ -1,4 +1,3 @@
-import IData from './IData';
 import OptionsMixin, {IOptions as IOptionsOptions} from './OptionsMixin';
 import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
@@ -14,7 +13,6 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Base
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_source/IData
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_source/OptionsMixin
@@ -36,7 +34,7 @@ export default abstract class Base extends mixin<
     OptionsMixin,
     LazyMixin,
     DataMixin
-) implements IData {
+) {
     protected constructor(options?: IOptions) {
         options = {...(options || {})};
 
