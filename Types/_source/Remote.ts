@@ -177,8 +177,7 @@ function passMove(from: string | number, to: string, meta?: object): any[] {
  * @mixes Types/_source/DataCrudMixin
  * @mixes Types/_source/BindingMixin
  * @mixes Types/_source/EndpointMixin
- * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy
- * passing.merge passing.move
+ * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy passing.merge passing.move
  * @public
  * @author Мальцев А.А.
  */
@@ -453,49 +452,49 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
 
     _$passing: getMergeableProperty<IPassing>({
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link create}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#create}.
          * @name Types/_source/Remote#passing.create
          */
         create: passCreate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link read}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#read}.
          * @name Types/_source/Remote#passing.read
          */
         read: passRead,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link update}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#update}.
          * @name Types/_source/Remote#passing.update
          */
         update: passUpdate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link destroy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#destroy}.
          * @name Types/_source/Remote#passing.destroy
          */
         destroy: passDestroy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link query}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#query}.
          * @name Types/_source/Remote#passing.query
          */
         query: passQuery,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link copy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#copy}.
          * @name Types/_source/Remote#passing.copy
          */
         copy: passCopy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link merge}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#merge}.
          * @name Types/_source/Remote#passing.merge
          */
         merge: passMerge,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link move}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#move}.
          * @name Types/_source/Remote#passing.move
          */
         move: passMove
@@ -506,7 +505,7 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
          * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).
          * @name Types/_source/Remote#options.updateOnlyChanged
          * @remark
-         * Задавать опцию имеет смысл только если указано значение опции {@link keyProperty}, позволяющая отличить новые записи от уже существующих.
+         * Задавать опцию имеет смысл только если указано значение опции {@link Types/_source/Remote#keyProperty}, позволяющая отличить новые записи от уже существующих.
          */
         updateOnlyChanged: false,
 
