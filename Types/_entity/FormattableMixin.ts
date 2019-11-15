@@ -613,7 +613,6 @@ export default abstract class FormattableMixin {
     /**
      * Return raw data from adapter if it was initialized or original data injected via option.
      * @param [direct=false] Don't use adapter
-     * @protected
      */
     protected _getRawData(direct?: boolean): any {
         if (!direct && this._rawDataAdapter) {
@@ -624,7 +623,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Returns default adapter as it was supposed to be.
-     * @protected
      * @deprecated Method _getDefaultAdapter() is deprecated. Use 'adapter' option instead.
      */
     protected _getDefaultAdapter(): string {
@@ -633,7 +631,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Returns common adapter instance.
-     * @protected
      */
     protected _getAdapter(): IAdapter | IDecorator | IFormatController {
         if (
@@ -660,7 +657,6 @@ export default abstract class FormattableMixin {
 
     /**
      *
-     * @private
      */
     protected _getFormatController(): FormatController {
         if (!this._$formatController) {
@@ -672,7 +668,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Returns adapter instance for certain data kind.
-     * @protected
      */
     protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
         if (!this._rawDataAdapter) {
@@ -684,7 +679,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Creates adapter instance for certain data kind (table, record, decorator or meta data).
-     * @protected
      */
     protected _createRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
         throw new Error('Method must be implemented');
@@ -693,7 +687,6 @@ export default abstract class FormattableMixin {
     /**
      * Resets adapter instance for certain data kind.
      * @param [data] Raw data to deal with
-     * @protected
      */
     protected _resetRawDataAdapter(data?: any): void {
         if (data === undefined) {
@@ -711,7 +704,6 @@ export default abstract class FormattableMixin {
     /**
      * Check adapters compatibility.
      * @param foreign Foreign adapter that should be checked
-     * @protected
      */
     protected _checkAdapterCompatibility(foreign: IAdapter | IDecorator): void {
         let internal = this._getAdapter();
@@ -734,7 +726,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Returns list of field names taken from raw data adapter
-     * @protected
      */
     protected _getRawDataFields(): string[] {
         return this._rawDataFields || (this._rawDataFields = (this._getRawDataAdapter() as ITable).getFields());
@@ -743,7 +734,6 @@ export default abstract class FormattableMixin {
     /**
      * Adds field to the _rawDataFields
      * @param name Field name
-     * @protected
      */
     protected _addRawDataField(name: string): void {
         this._getRawDataFields().push(name);
@@ -751,7 +741,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Resets _rawDataFields
-     * @protected
      */
     protected _resetRawDataFields(): void {
         this._rawDataFields = null;
@@ -760,7 +749,6 @@ export default abstract class FormattableMixin {
     /**
      * Returns fields format
      * @param [build=false] Force format build if it was not created yet
-     * @protected
      */
     protected _getFormat(build?: boolean): format.Format {
         if (!this._format) {
@@ -779,7 +767,6 @@ export default abstract class FormattableMixin {
 
     /**
      * Clears fields format. It works only if format haven't been declared.
-     * @protected
      */
     protected _clearFormat(): void {
         if (this.hasDeclaredFormat()) {
@@ -791,28 +778,25 @@ export default abstract class FormattableMixin {
 
     /**
      * Clears _formatClone
-     * @protected
      */
     protected _clearFormatClone(): void {
         this._formatClone = null;
     }
 
-     /**
-      * Unlinks _$format with original value
-      * @protected
-      */
-     protected _unlinkFormatOption(): void {
-         if (!this._formatUnlinked && this._$format && this._$format['[Types/_collection/format/Format]']) {
-             this._format = (this._$format as format.Format) = (this._$format as format.Format).clone(true);
-             this._clearFormatClone();
-             this._formatUnlinked = true;
-         }
-     }
+    /**
+     * Unlinks _$format with original value
+     */
+    protected _unlinkFormatOption(): void {
+        if (!this._formatUnlinked && this._$format && this._$format['[Types/_collection/format/Format]']) {
+            this._format = (this._$format as format.Format) = (this._$format as format.Format).clone(true);
+            this._clearFormatClone();
+            this._formatUnlinked = true;
+        }
+    }
 
     /**
      * Alias for hasDeclaredFormat()
      * @deprecated
-     * @protected
      */
     protected _hasFormat(): boolean {
         return this.hasDeclaredFormat();
@@ -822,7 +806,6 @@ export default abstract class FormattableMixin {
      * Returns format of field with given name
      * @param name Field name
      * @param adapter Adapter instance
-     * @protected
      */
     protected _getFieldFormat(name: string, adapter: ITable | IRecord): Field | UniversalField {
         if (this.hasDeclaredFormat()) {
@@ -839,7 +822,6 @@ export default abstract class FormattableMixin {
     /**
      * Returns field type by its format.
      * @param format Field format
-     * @protected
      */
     protected _getFieldType(format: Field | UniversalField): string | Function {
         let Type = (format as Field).getType ? (format as Field).getType() : (format as UniversalField).type;
@@ -854,7 +836,6 @@ export default abstract class FormattableMixin {
     /**
      * Builds field format by its declaration
      * @param format Field declaration
-     * @protected
      */
     protected _buildField(format: Field | IFieldDeclaration): Field {
         if (
@@ -873,7 +854,6 @@ export default abstract class FormattableMixin {
      * Builds format by its declaration
      * @param format Fromat declaration (full or partial)
      * @param fullFormatCallback Callback which returns full format
-     * @protected
      */
     protected _buildFormat(
         format: FormatDescriptor,
