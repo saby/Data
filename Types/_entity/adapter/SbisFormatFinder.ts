@@ -132,7 +132,6 @@ class RecursiveIterator {
      * Обработчик узла.
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
-     * @private
      */
    protected _process(id: number, storage: Map<number, IFieldFormat[]>): IFieldFormat[] {
        //Получаем из стека послдений узел, чтобы обработь его.
