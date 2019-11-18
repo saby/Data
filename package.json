@@ -51,7 +51,6 @@
       "report-dir": "./artifacts/coverage"
    },
    "devDependencies": {
-      "@types/requirejs": "^2.1.31",
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-20.1000",
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-20.1000",
       "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-20.1000",
