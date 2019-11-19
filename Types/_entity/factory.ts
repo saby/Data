@@ -177,7 +177,7 @@ function serializeFlags(data: any): boolean[] {
  * Конвертирует список записей в рекордсет
  * @param list Список
  */
-function convertListToRecordSet(list: List<Record>): RecordSet {
+function convertListToRecordSet(list: List<Record>): RecordSet<Record> {
     let adapter = 'Types/entity:adapter.Json';
     const count = list.getCount();
     let record;
@@ -192,7 +192,7 @@ function convertListToRecordSet(list: List<Record>): RecordSet {
         }
     }
 
-    const rs = create<RecordSet>('Types/collection:RecordSet', {
+    const rs = create<RecordSet<Record>>('Types/collection:RecordSet', {
         adapter
     });
     for (let i = 0; i < count; i++) {

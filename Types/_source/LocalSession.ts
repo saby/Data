@@ -528,7 +528,7 @@ class Converter {
         if (data.length === 0) {
             return data;
         }
-        const rs = new RecordSet({
+        const rs = new RecordSet<Record>({
             adapter: this.adapter
         });
 
