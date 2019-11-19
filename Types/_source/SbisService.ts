@@ -164,7 +164,7 @@ function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
  * @param adapter
  * @param keyProperty
  */
-function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: string): RecordSet | null {
+function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: string): RecordSet<Record> | null {
     if (data === null) {
         return data;
     }
@@ -173,7 +173,7 @@ function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: strin
     }
 
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
-    const records = new RecordSetType({
+    const records = new RecordSetType<Record>({
         adapter,
         keyProperty
     });

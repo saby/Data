@@ -1,6 +1,6 @@
 /* tslint:disable:member-ordering */
 
-import {EnumeratorCallback} from './IEnumerable';
+import IEnumerable, {EnumeratorCallback} from './IEnumerable';
 import IObservable from './IObservable';
 import ObservableList from './ObservableList';
 import {IOptions as IListOptions} from './List';
@@ -47,7 +47,7 @@ interface ISerializableState extends IDefaultSerializableState, IFormattableSeri
 /**
  *
  */
-function checkNullId(value: any, keyProperty: string): void {
+function checkNullId<T extends Record>(value: T, keyProperty: string): void {
     if (developerMode && keyProperty) {
         if (value && value['[Types/_entity/Record]'] && value.get(keyProperty) === null) {
             logger.info('Types/_collection/RecordSet: Id propery must not be null');
@@ -71,36 +71,32 @@ function checkNullId(value: any, keyProperty: string): void {
  *
  * Создадим рекордсет, в котором в качестве сырых данных используется JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *     require(['Types/collection'], function (collection) {
- *         var characters = new collection.RecordSet({
- *             rawData: [{
- *                 id: 1,
- *                 firstName: 'Tom',
- *                 lastName: 'Sawyer'
- *             }, {
- *                 id: 2,
- *                 firstName: 'Huckleberry',
- *                 lastName: 'Finn'
- *             }]
- *         });
- *         characters.at(0).get('firstName');//'Tom'
- *         characters.at(1).get('firstName');//'Huckleberry'
+ *     import {RecordSet} from 'Types/collection';
+ *     const characters = new RecordSet({
+ *         rawData: [{
+ *             id: 1,
+ *             firstName: 'Tom',
+ *             lastName: 'Sawyer'
+ *         }, {
+ *             id: 2,
+ *             firstName: 'Huckleberry',
+ *             lastName: 'Finn'
+ *         }]
  *     });
+ *     characters.at(0).get('firstName'); // 'Tom'
+ *     characters.at(1).get('firstName'); // 'Huckleberry'
  * </pre>
  * Создадим рекордсет, в котором в качестве сырых данных используется ответ БЛ СБИС (адаптер для данных в таком формате укажем явно):
  * <pre>
- *     require([
- *         'Types/collection',
- *         'Types/source'
- *     ], function (collection, source) {
- *         var ds = new source.SbisService({endpoint: 'Employee'});
- *         ds.call('list', {department: 'designers'}).addCallback(function(response) {
- *             var designers = new collection.RecordSet({
- *                 rawData: response.getRawData(),
- *                 adapter: response.getAdapter()
- *             });
- *             console.log(designers.getCount());
+ *     import {RecordSet} from 'Types/collection';
+ *     import {SbisService} from 'Types/source';
+ *     const ds = new SbisService({endpoint: 'Employee'});
+ *     ds.call('list', {department: 'designers'}).then((response) => {
+ *         const designers = new RecordSet({
+ *             rawData: response.getRawData(),
+ *             adapter: response.getAdapter()
  *         });
+ *         console.log(designers.getCount());
  *     });
  * </pre>
  * @class Types/_collection/RecordSet
@@ -113,7 +109,7 @@ function checkNullId(value: any, keyProperty: string): void {
  * @author Мальцев А.А.
  * @public
  */
-export default class RecordSet<T = Model> extends mixin<
+export default class RecordSet<T extends Record = Model> extends mixin<
     ObservableList<any>,
     FormattableMixin,
     InstantiableMixin
@@ -140,7 +136,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Внедрим конструктор пользовательской модели:
      * <pre>
-     *     //App/Models/User.js
+     *     // App/Models/User.js
      *     import {Model} from 'Types/entity';
      *     export default class User extends Model {
      *         identify(login: string, password: string): boolean {
@@ -148,7 +144,7 @@ export default class RecordSet<T = Model> extends mixin<
      *         }
      *     }
      *
-     *     //App/Models/UsersList.js
+     *     // App/Models/UsersList.js
      *     import User from './User';
      *     import {RecordSet} from 'Types/collection';
      *     const users = new RecordSet({
@@ -172,19 +168,18 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Создадим рекордсет, получим запись по первичному ключу:
      * <pre>
-     *     require(['Types/collection'], function (collection) {
-     *         var users = new collection.RecordSet({
-     *             keyProperty: 'id'
-     *             rawData: [{
-     *                 id: 134,
-     *                 login: 'editor'
-     *             }, {
-     *                 id: 257,
-     *                 login: 'shell'
-     *             }]
-     *         });
-     *         users.getRecordById(257).get('login');//'shell'
+     *     import {RecordSet} from 'Types/collection';
+     *     const users = new RecordSet({
+     *         keyProperty: 'id'
+     *         rawData: [{
+     *             id: 134,
+     *             login: 'editor'
+     *         }, {
+     *             id: 257,
+     *             login: 'shell'
+     *         }]
      *     });
+     *     users.getRecordById(257).get('login'); // 'shell'
      * </pre>
      */
     protected _$keyProperty: string;
@@ -206,22 +201,21 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Создадим рекордсет c "хлебными крошками":
      * <pre>
-     *     require(['Types/_collection/RecordSet'], function (RecordSet) {
-     *         var rs = new RecordSet({
-     *             metaData: {
-     *                 crumbs: [{
-     *                     id: 1,
-     *                     name: 'Home'
-     *                 }, {
-     *                     id: 2,
-     *                     name: 'Catalogue'
-     *                 }]
-     *             },
-     *         });
-     *
-     *         var crumbs = rs.getMetaData().crumbs;
-     *         console.log(crumbs[0].name);//'Home'
+     *     import {RecordSet} from 'Types/collection';
+     *     const rs = new RecordSet({
+     *         metaData: {
+     *             crumbs: [{
+     *                  id: 1,
+     *                  name: 'Home'
+     *             }, {
+     *                 id: 2,
+     *                 name: 'Catalogue'
+     *             }]
+     *         }
      *     });
+     *
+     *     const crumbs = rs.getMetaData().crumbs;
+     *     console.log(crumbs[0].name); // 'Home'
      * </pre>
      */
     protected _$metaData: any;
@@ -232,19 +226,18 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Создадим рекордсет с метаданным, поле created которых имеет тип Date
      * <pre>
-     *     require(['Types/collection'], function(collection) {
-     *         var events = new collection.RecordSet({
-     *             metaData: {
-     *                 created: '2001-09-11'
-     *             },
-     *             metaFormat: [{
-     *                 name: 'created',
-     *                 type: Date
-     *             }]
-     *         });
-     *
-     *         console.log(events.getMetaData().created instanceof Date);//true
+     *     import {RecordSet} from 'Types/collection';
+     *     const events = new RecordSet({
+     *         metaData: {
+     *             created: '2001-09-11'
+     *         },
+     *         metaFormat: [{
+     *             name: 'created',
+     *             type: Date
+     *         }]
      *     });
+     *
+     *     console.log(events.getMetaData().created instanceof Date); // true
      * </pre>
      */
     protected _$metaFormat: any;
@@ -317,35 +310,33 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Получим сначала все, а затем - измененные записи:
      * <pre>
-     *     require(['Types/_entity/Record'], function(Record) {
-     *         var fruits = new RecordSet({
-     *                 rawData: [
-     *                     {name: 'Apple'},
-     *                     {name: 'Banana'},
-     *                     {name: 'Orange'},
-     *                     {name: 'Strawberry'}
-     *                 ]
-     *             }),
-     *             fruit,
-     *             enumerator;
+     *     import {RecordSet} from 'Types/collection';
      *
-     *         fruits.at(0).set('name', 'Pineapple');
-     *         fruits.at(2).set('name', 'Grapefruit');
-     *
-     *         enumerator = fruits.getEnumerator();
-     *         while(enumerator.moveNext()) {
-     *             fruit = enumerator.getCurrent();
-     *             console.log(fruit.get('name'));
-     *         }
-     *         //output: 'Pineapple', 'Banana', 'Grapefruit', 'Strawberry'
-     *
-     *         enumerator = fruits.getEnumerator(Record.RecordState.CHANGED);
-     *         while(enumerator.moveNext()) {
-     *             fruit = enumerator.getCurrent();
-     *             console.log(fruit.get('name'));
-     *         }
-     *         //output: 'Pineapple', 'Grapefruit'
+     *     const fruits = new RecordSet({
+     *         rawData: [
+     *             {name: 'Apple'},
+     *             {name: 'Banana'},
+     *             {name: 'Orange'},
+     *             {name: 'Strawberry'}
+     *         ]
      *     });
+     *
+     *     fruits.at(0).set('name', 'Pineapple');
+     *     fruits.at(2).set('name', 'Grapefruit');
+     *
+     *     const enumerator1 = fruits.getEnumerator();
+     *     while(enumerator1.moveNext()) {
+     *         const fruit = enumerator1.getCurrent();
+     *         console.log(fruit.get('name'));
+     *     }
+     *     // output: 'Pineapple', 'Banana', 'Grapefruit', 'Strawberry'
+     *
+     *     const enumerator2 = fruits.getEnumerator(Record.RecordState.CHANGED);
+     *     while(enumerator2.moveNext()) {
+     *         const fruit = enumerator2.getCurrent();
+     *         console.log(fruit.get('name'));
+     *     }
+     *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
     getEnumerator(state?: string): Arraywise<T> {
@@ -368,32 +359,30 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Получим сначала все, а затем - измененные записи:
      * <pre>
-     *     require([
-     *         'Types/collection',
-     *         'Types/entity'
-     *     ], function(collection, entity) {
-     *         var fruits = new collection.RecordSet({
-     *             rawData: [
-     *                 {name: 'Apple'},
-     *                 {name: 'Banana'},
-     *                 {name: 'Orange'},
-     *                 {name: 'Strawberry'}
-     *             ]
-     *         });
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         fruits.at(0).set('name', 'Pineapple');
-     *         fruits.at(2).set('name', 'Grapefruit');
-     *
-     *         fruits.each(function(fruit) {
-     *             console.log(fruit.get('name'));
-     *         });
-     *         //output: 'Pineapple', 'Banana', 'Grapefruit', 'Strawberry'
-     *
-     *         fruits.each(function(fruit) {
-     *             console.log(fruit.get('name'));
-     *         }, entity.Record.RecordState.CHANGED);
-     *         //output: 'Pineapple', 'Grapefruit'
+     *     const fruits = new RecordSet({
+     *         rawData: [
+     *             {name: 'Apple'},
+     *             {name: 'Banana'},
+     *             {name: 'Orange'},
+     *             {name: 'Strawberry'}
+     *         ]
      *     });
+     *
+     *     fruits.at(0).set('name', 'Pineapple');
+     *     fruits.at(2).set('name', 'Grapefruit');
+     *
+     *     fruits.each((fruit) => {
+     *         console.log(fruit.get('name'));
+     *     });
+     *     // output: 'Pineapple', 'Banana', 'Grapefruit', 'Strawberry'
+     *
+     *     fruits.each((fruit) => {
+     *         console.log(fruit.get('name'));
+     *     }, Record.RecordState.CHANGED);
+     *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
     each(callback: EnumeratorCallback<T>, state?: any, context?: object): void {
@@ -455,22 +444,23 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Добавим запись в рекордсет:
      * <pre>
-     *     require(['Types/collection', 'Types/entity'], function(collection, entity) {
-     *         var rs = new collection.RecordSet();
-     *         var source = new entity.Record({
-     *             rawData: {foo: 'bar'}
-     *         });
-     *         var result = rs.add(source);
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         console.log(result === source);//false
-     *         console.log(result.get('foo') === source.get('foo'));//true
-     *
-     *         console.log(source.getOwner() === rs);//false
-     *         console.log(result.getOwner() === rs);//true
+     *     const rs = new RecordSet();
+     *     const source = new Record({
+     *         rawData: {foo: 'bar'}
      *     });
+     *     const result = rs.add(source);
+     *
+     *     console.log(result === source); // false
+     *     console.log(result.get('foo') === source.get('foo')); // true
+     *
+     *     console.log(source.getOwner() === rs); // false
+     *     console.log(result.getOwner() === rs); // true
      * </pre>
      */
-    add(item: any, at?: number): T {
+    add(item: T, at?: number): T {
         item = this._normalizeItems([item], RECORD_STATE.ADDED)[0];
         (this._getRawDataAdapter() as adapter.ITable).add(item.getRawData(true), at);
         super.add(item, at);
@@ -511,35 +501,36 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Заменим вторую запись:
      * <pre>
-     *     require(['Types/collection', 'Types/entity'], function(collection, entity) {
-     *         var rs = new collection.RecordSet({
-     *             rawData: [{
-     *                 id: 1,
-     *                 title: 'Water'
-     *             }, {
-     *                 id: 2,
-     *                 title: 'Ice'
-     *             }]
-     *         });
-     *         var source = new entity.Record({
-     *             rawData: {
-     *                 id: 3,
-     *                 title: 'Snow'
-     *             }
-     *         });
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         rs.replace(source, 1);
-     *         var result = rs.at(1);
-     *
-     *         console.log(result === source);//false
-     *         console.log(result.get('title') === source.get('title'));//true
-     *
-     *         console.log(source.getOwner() === rs);//false
-     *         console.log(result.getOwner() === rs);//true
+     *     const rs = new RecordSet({
+     *         rawData: [{
+     *             id: 1,
+     *             title: 'Water'
+     *         }, {
+     *             id: 2,
+     *             title: 'Ice'
+     *         }]
      *     });
+     *     const source = new Record({
+     *         rawData: {
+     *             id: 3,
+     *             title: 'Snow'
+     *         }
+     *     });
+     *
+     *     rs.replace(source, 1);
+     *     const result = rs.at(1);
+     *
+     *     console.log(result === source); // false
+     *     console.log(result.get('title') === source.get('title')); // true
+     *
+     *     console.log(source.getOwner() === rs); // false
+     *     console.log(result.getOwner() === rs); // true
      * </pre>
      */
-    replace(item: any, at: number): T {
+    replace(item: T, at: number): T {
         item = this._normalizeItems([item], RECORD_STATE.CHANGED)[0];
         (this._getRawDataAdapter() as adapter.ITable).replace(item.getRawData(true), at);
         const oldItem = this._$items[at];
@@ -560,11 +551,37 @@ export default class RecordSet<T = Model> extends mixin<
     /**
      * Заменяет записи рекордсета копиями записей другой коллекции.
      * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-     * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для замены
-     * @return {Array.<Types/_entity/Record>} Добавленные записи
+     * @param [items] Коллекция с записями для замены
+     * @return Добавленные записи
      * @see Types/_collection/ObservableList#assign
+     * @example
+     * Установим записи из одного рекорсета в другой:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *
+     *     const rsA = new RecordSet({rawData: [{
+     *         title: 'Foo'
+     *     }]});
+     *     const rsB = new RecordSet();
+     *     rsB.assign(rsA);
+     *
+     *     console.log(rsB.at(0).get('title'); // 'Foo'
+     * </pre>
+     * Заменим записи рекорсета массивом записей:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
+     *
+     *     const rs = new RecordSet();
+     *     const foo = new Record({rawData: {
+     *         title: 'Foo'
+     *     }});
+     *     rs.assign([foo]]);
+     *
+     *     console.log(rs.at(0).get('title'); // 'Foo'
+     * </pre>
      */
-    assign(items: any): T[] {
+    assign(items: IEnumerable<T> | T[]): T[] {
         if (items === this) {
             return [];
         }
@@ -605,11 +622,45 @@ export default class RecordSet<T = Model> extends mixin<
     /**
      * Добавляет копии записей другой коллекции в конец рекордсета.
      * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-     * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
+     * @param [items] Коллекция с записями для добавления
      * @return Добавленные записи
      * @see Types/_collection/ObservableList#append
+     * @example
+     * Добавим записи из одного рекорсета в другой:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *
+     *     const rsA = new RecordSet({rawData: [{
+     *         title: 'Foo'
+     *     }]});
+     *     const rsB = new RecordSet({rawData: [{
+     *         title: 'Bar'
+     *     }]});
+     *     rsB.append(rsA);
+     *
+     *     console.log(rsB.getCount(); // 2
+     *     console.log(rsB.at(0).get('title'); // 'Foo'
+     *     console.log(rsB.at(1).get('title'); // 'Bar'
+     * </pre>
+     * Добавим записи рекорсета из массива записей:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
+     *
+     *     const rs = new RecordSet({rawData: [{
+     *         title: 'Foo'
+     *     }]});
+     *     const bar = new Record({rawData: {
+     *         title: 'Bar'
+     *     }});
+     *     rs.append([foo]]);
+     *
+     *     console.log(rsB.getCount(); // 2
+     *     console.log(rsB.at(0).get('title'); // 'Foo'
+     *     console.log(rsB.at(1).get('title'); // 'Bar'
+     * </pre>
      */
-    append(items: any): T[] {
+    append(items: IEnumerable<T> | T[]): T[] {
         let itemsArray = this._itemsToArray(items);
         itemsArray = this._normalizeItems(itemsArray, RECORD_STATE.ADDED, items instanceof RecordSet);
         itemsArray = this._addItemsToRawData(itemsArray);
@@ -622,11 +673,45 @@ export default class RecordSet<T = Model> extends mixin<
      * Добавляет копии записей другой коллекции в начало рекордсета.
      * Если формат созданных копий не совпадает с форматом рекордсета, то он будет приведен к нему принудительно:
      * лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
-     * @param {Types/_collection/IEnumerable.<Types/_entity/Record>|Array.<Types/_entity/Record>} [items] Коллекция с записями для добавления
-     * @return {Array.<Types/_entity/Record>} Добавленные записи
+     * @param [items] Коллекция с записями для добавления
+     * @return Добавленные записи
      * @see Types/_collection/ObservableList#prepend
+     * @example
+     * Добавим записи из одного рекорсета в другой:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *
+     *     const rsA = new RecordSet({rawData: [{
+     *         title: 'Foo'
+     *     }]});
+     *     const rsB = new RecordSet({rawData: [{
+     *         title: 'Bar'
+     *     }]});
+     *     rsB.prepend(rsA);
+     *
+     *     console.log(rsB.getCount(); // 2
+     *     console.log(rsB.at(0).get('title'); // 'Bar'
+     *     console.log(rsB.at(1).get('title'); // 'Foo'
+     * </pre>
+     * Добавим записи рекорсета из массива записей:
+     * <pre>
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
+     *
+     *     const rs = new RecordSet({rawData: [{
+     *         title: 'Foo'
+     *     }]});
+     *     const bar = new Record({rawData: {
+     *         title: 'Bar'
+     *     }});
+     *     rs.prepend([foo]]);
+     *
+     *     console.log(rsB.getCount(); // 2
+     *     console.log(rsB.at(0).get('title'); // 'Bar'
+     *     console.log(rsB.at(1).get('title'); // 'Foo'
+     * </pre>
      */
-    prepend(items: any): T[] {
+    prepend(items: IEnumerable<T> | T[]): T[] {
         let itemsArray = this._itemsToArray(items);
         itemsArray = this._normalizeItems(itemsArray, RECORD_STATE.ADDED, items instanceof RecordSet);
         itemsArray = this._addItemsToRawData(itemsArray, 0);
@@ -898,19 +983,23 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Получим конструктор записепй, внедренный в рекордсет в виде названия зарегистрированной зависимости:
      * <pre>
-     *     var User = Model.extend({});
+     *     class User extends Model {
+     *     }
      *     Di.register('model.user', User);
-     *     //...
-     *     var users = new RecordSet({
+     *
+     *     // ...
+     *     const users = new RecordSet({
      *         model: 'model.user'
      *     });
-     *     users.getModel() === 'model.user';//true
+     *     users.getModel() === 'model.user'; // true
      * </pre>
      * Получим конструктор записепй, внедренный в рекордсет в виде класса:
      * <pre>
-     *     var User = Model.extend({});
-     *     //...
-     *     var users = new RecordSet({
+     *     class User extends Model {
+     *     }
+     *
+     *     // ...
+     *     const users = new RecordSet({
      *         model: User
      *     });
      *     users.getModel() === User;//true
@@ -930,66 +1019,66 @@ export default class RecordSet<T = Model> extends mixin<
      * </ul>
      * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей (будут вызваны acceptChanges всех владельцев).
      * @example
-     * Подтвердим измененную запись:
+     * Подтвердим изменение записи:
      * <pre>
-     *     require(['Types/collection', 'Types/entity'], function(collection, entity) {
-     *         var fruits = new collection.RecordSet({
-     *             rawData: [
-     *                 {name: 'Apple'},
-     *                 {name: 'Banana'}
-     *             ]
-     *         });
-     *         var RecordState = entity.Record.RecordState;
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         var apple = fruits.at(0);
-     *         apple.set('name', 'Pineapple');
-     *         apple.getState() === RecordState.CHANGED;//true
-     *
-     *         fruits.acceptChanges();
-     *         apple.getState() === RecordState.UNCHANGED;//true
+     *     const fruits = new RecordSet({
+     *         rawData: [
+     *             {name: 'Apple'},
+     *             {name: 'Banana'}
+     *         ]
      *     });
+     *
+     *     const apple = fruits.at(0);
+     *     apple.set('name', 'Pineapple');
+     *     apple.getState() === Record.RecordState.CHANGED;//true
+     *
+     *     fruits.acceptChanges();
+     *     apple.getState() === Record.RecordState.UNCHANGED;//true
      * </pre>
-     * Подтвердим добавленную запись:
+     * Подтвердим добавленние записи:
      * <pre>
-     *     require(['Types/collection', 'Types/entity'], function(collection, entity) {
-     *         var fruits = new collection.RecordSet({
-     *             rawData: [
-     *                 {name: 'Apple'}
-     *             ]
-     *         });
-     *         var RecordState = entity.Record.RecordState;
-     *         var banana = new entity.Record({
-     *             rawData: {name: 'Banana'}
-     *         });
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         fruits.add(banana);
-     *         banana.getState() === RecordState.ADDED;//true
-     *
-     *         fruits.acceptChanges();
-     *         banana.getState() === RecordState.UNCHANGED;//true
+     *     const fruits = new RecordSet({
+     *         rawData: [
+     *             {name: 'Apple'}
+     *         ]
      *     });
+     *     const banana = new Record({
+     *         rawData: {name: 'Banana'}
+     *     });
+     *
+     *     fruits.add(banana);
+     *     banana.getState() === Record.RecordState.ADDED; // true
+     *
+     *     fruits.acceptChanges();
+     *     banana.getState() === Record.RecordState.UNCHANGED; // true
      * </pre>
-     * Подтвердим удаленную запись:
+     * Подтвердим удаленние записи:
      * <pre>
-     *     require(['Types/collection', 'Types/entity'], function(collection, entity) {
-     *         var fruits = new collection.RecordSet({
-     *             rawData: [
-     *                 {name: 'Apple'},
-     *                 {name: 'Banana'}
-     *             ]
-     *         });
-     *         var RecordState = entity.Record.RecordState;
+     *     import {RecordSet} from 'Types/collection';
+     *     import {Record} from 'Types/entity';
      *
-     *         var apple = fruits.at(0);
-     *         apple.setState(RecordState.DELETED);
-     *         fruits.getCount();//2
-     *         fruits.at(0).get('name');//'Apple'
-     *
-     *         fruits.acceptChanges();
-     *         apple.getState() === RecordState.DETACHED;//true
-     *         fruits.getCount();//1
-     *         fruits.at(0).get('name');//'Banana'
+     *     const fruits = new RecordSet({
+     *         rawData: [
+     *             {name: 'Apple'},
+     *             {name: 'Banana'}
+     *         ]
      *     });
+     *
+     *     const apple = fruits.at(0);
+     *     apple.setState(Record.RecordState.DELETED);
+     *     fruits.getCount(); // 2
+     *     fruits.at(0).get('name'); // 'Apple'
+     *
+     *     fruits.acceptChanges();
+     *     apple.getState() === Record.RecordState.DETACHED; // true
+     *     fruits.getCount(); // 1
+     *     fruits.at(0).get('name'); // 'Banana'
      * </pre>
      */
     acceptChanges(spread?: boolean): void {
@@ -1035,7 +1124,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Получим название свойства, содержащего первичный ключ:
      * <pre>
-     *     var users = new RecordSet({
+     *     const users = new RecordSet({
      *         keyProperty: 'id'
      *     });
      *     users.getKeyProperty();//'id'
@@ -1053,7 +1142,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Установим название свойства, содержащего первичный ключ:
      * <pre>
-     *     var users = new RecordSet({
+     *     const users = new RecordSet({
      *         rawData: [{
      *             id: 134,
      *             login: 'editor',
@@ -1088,7 +1177,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @example
      * Создадим рекордсет, получим запись по первичному ключу:
      * <pre>
-     *     var users = new RecordSet({
+     *     const users = new RecordSet({
      *         keyProperty: 'id'
      *         rawData: [{
      *             id: 134,
@@ -1431,7 +1520,7 @@ export default class RecordSet<T = Model> extends mixin<
      * @param item Запись
      * @protected
      */
-    protected _checkItem(item: any): void {
+    protected _checkItem(item: T): void {
         if (!item || !item['[Types/_entity/Record]']) {
             throw new TypeError('Item should be an instance of Types/entity:Record');
         }

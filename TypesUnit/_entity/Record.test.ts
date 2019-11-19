@@ -286,7 +286,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should inherit the field format from the recordset format', () => {
-            const rs = new RecordSet({
+            const rs = new RecordSet<Record>({
                 format: [{
                     name: 'created',
                     type: 'date',
@@ -1352,7 +1352,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should inherit from the recordset format', () => {
-            const rs = new RecordSet({
+            const rs = new RecordSet<Record>({
                 format: [{
                     name: 'date',
                     type: 'date',
@@ -1429,7 +1429,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should throw an error if the record has an owner', () => {
-            const rs = new RecordSet();
+            const rs = new RecordSet<Record>();
             rs.add(new Record());
 
             const record = rs.at(0);
@@ -1581,7 +1581,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should throw an error if the record has an owner', () => {
-            const rs = new RecordSet();
+            const rs = new RecordSet<Record>();
             rs.add(new Record({
                 rawData: {a: 1}
             }));
@@ -1680,7 +1680,7 @@ describe('Types/_entity/Record', () => {
             const originalRecord = new Record({
                 adapter: new SbisAdapter()
             });
-            const rs = new RecordSet({
+            const rs = new RecordSet<Record>({
                 adapter: new SbisAdapter()
             });
 
