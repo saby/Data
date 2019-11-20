@@ -120,10 +120,10 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 ) implements IObservableObject, IProducible {
     /**
      * @typedef {Object} MergeOptions
-     * @property {Boolean} [add=true] Добавлять новые записи.
-     * @property {Boolean} [remove=true] Удалять отсутствующие записи.
-     * @property {Boolean} [replace=true] Заменять одинаковые записи.
-     * @property {Boolean} [inject=false] Заменять данные одинаковых записей.
+     * @property {Boolean} [add=true] Добавлять записи с новыми ключами.
+     * @property {Boolean} [remove=true] Удалять записи с отсутствующими ключами.
+     * @property {Boolean} [replace=true] Заменять записи с одинаковыми ключами.
+     * @property {Boolean} [inject=false] Заменять данные записей с одинаковыми ключами.
      */
 
     /**
@@ -1333,7 +1333,9 @@ export default class RecordSet<T extends Record = Model> extends mixin<
             add: true,
             remove: true,
             replace: true,
-            inject: false, ...(options || {})};
+            inject: false,
+            ...(options || {})
+        };
 
         const count = recordSet.getCount();
         const keyProperty = this._$keyProperty;
@@ -1390,6 +1392,11 @@ export default class RecordSet<T extends Record = Model> extends mixin<
         }
 
         if (toInject.length) {
+            this._normalizeItems(
+                toInject.map((data) => data[0])
+            ).forEach((item, i) => {
+                toInject[i][0] = item;
+            });
             for (let i = 0; i < toInject.length; i++) {
                 record = this.at(toInject[i][1]);
                 record.setRawData(toInject[i][0].getRawData());
@@ -1441,7 +1448,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     }
 
     /**
-     * Normalizes given records by producing their copies with itsown format
+     * Normalizes given records by producing their copies with recordset's format
      * @param items Records to normalize
      * @param {RecordState} [state] State of produced records
      * @param [itsRecordSet] Items are produced from recordset
