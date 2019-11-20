@@ -2238,6 +2238,33 @@ define([
             assert.strictEqual(rs1.getRecordById(2), record);
             assert.equal(rs1.getRecordById(2).get('name'), 'Foo');
          });
+
+          it('should normalize raw data on inject', function() {
+              var rs1 = new RecordSet({
+                  rawData: [{
+                      id: 1,
+                      title: 'foo'
+                  }, {
+                      id: 2,
+                      title: 'bar'
+                  }],
+                  keyProperty: 'id'
+              });
+              var rs2 =  new RecordSet({
+                  rawData: [{
+                      id: 1,
+                      name: 'Foo1',
+                      title: 'foo1'
+                  }],
+                  keyProperty: 'id'
+              });
+
+              rs1.merge(rs2, {inject: true});
+              assert.deepEqual(rs1.at(0).getRawData(), {
+                  id: 1,
+                  title: 'foo1'
+              });
+          });
       });
 
       describe('.toJSON()', function() {
