@@ -298,6 +298,43 @@ describe('Types/_display/itemsStrategy/Search', () => {
             });
         });
 
+        it('should return breadcrumbs with leaves', () => {
+            items = [];
+            items[0] = new TreeItem({
+                contents: 'A',
+                node: true
+            });
+            const leaf = items[1] = new TreeItem({
+                parent: items[0],
+                contents: 'b'
+            });
+            items[2] = new TreeItem({
+                parent: leaf,
+                contents: 'C',
+                node: true
+            });
+            items[3] = new TreeItem({
+                parent: items[2],
+                contents: 'd'
+            });
+            items[4] = new TreeItem({
+                parent: leaf,
+                contents: 'e'
+            });
+
+            source = getSource(items);
+            strategy = new Search({
+                source
+            });
+
+            const result = strategy.items.map((item) => {
+                const contents: unknown = item.getContents();
+                return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
+            });
+
+            assert.deepEqual(result, ['#A:0', 'b:1', '#A,b,C:0', 'd:1', '#A,b:0', 'e:1']);
+        });
+
         it('should return the same instances for second call', () => {
             const items = strategy.items.slice();
 
@@ -384,10 +421,11 @@ describe('Types/_display/itemsStrategy/Search', () => {
             const at = 1;
 
             // AA + AAA
+            const sourceRemoveCount = 2;
             const removeCount = 2;
-            const count = source.items.length;
             const expected = [
                 '#A',
+                '#A,AA,AAA',
                 'AAAa',
                 'AAAb',
                 '#A,AA,AAB',
@@ -400,10 +438,13 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 'e'
             ];
 
+            const sourceCount = source.count;
             strategy.splice(at, removeCount, []);
 
-            assert.strictEqual(strategy.count, count - removeCount);
+            assert.strictEqual(source.count, sourceCount - sourceRemoveCount);
+
             assert.strictEqual(strategy.count, expected.length);
+
             strategy.items.forEach((item, index) => {
                 const contents = item.getContents();
                 assert.equal(
