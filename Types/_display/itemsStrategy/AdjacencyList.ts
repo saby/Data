@@ -329,7 +329,6 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         }
 
         source.splice(start, deleteCount, added);
-
         const items = this._getItems();
         let itemsOrder = this._getItemsOrder();
         const sourceItems = this._getSourceItems();
