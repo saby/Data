@@ -601,6 +601,35 @@ describe('Types/_display/itemsStrategy/AdjacencyList', () => {
             assert.strictEqual(strategy.count, expected.length);
         });
 
+        it('should keep old instances after inserting an item in clone', () => {
+            const items = [
+                {id: 1, pid: 0},
+                {id: 2, pid: 0},
+                {id: 3, pid: 0}
+            ];
+            const source = getSource(items, 0);
+            const strategy = new AdjacencyList({
+                source,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+            const newItem = {id: 11, pid: 1};
+            const position = 1;
+            const expected = [...strategy.items];
+
+            // Reset _sourceItems by cloning
+            const strategyClone = (AdjacencyList as any).fromJSON(strategy.toJSON());
+
+            strategyClone.splice(position, 0, [newItem]);
+            expected.splice(position, 0, strategyClone.at(position));
+
+            const result = strategyClone.items;
+            expected.forEach((item, index) => {
+               assert.strictEqual(item, result[index]);
+            });
+            assert.deepEqual(result.length, expected.length);
+        });
+
         it('should push item after latest source item', () => {
             const items = [
                 {id: 1, pid: 0},
