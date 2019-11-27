@@ -56,7 +56,7 @@ export {default as IObservableObject} from './_entity/IObservableObject';
 export {default as IProducible} from './_entity/IProducible';
 export {default as IVersionable} from './_entity/IVersionable';
 export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
-export {default as Model} from './_entity/Model';
+export {default as Model, IProperty as IModelProperty} from './_entity/Model';
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReactiveObject} from './_entity/ReactiveObject';

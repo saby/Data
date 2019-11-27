@@ -15,25 +15,25 @@ import {IHashMap} from '../_declarations';
  */
 const ROUTE_SEPARATOR = '.';
 
-type PropertyGetter = (value?: any) => any;
-type PropertySetter = (value: any) => any;
-type PropertyDefault = (value?: any) => any;
+type PropertyGetter<T, U> = (this: T, value?: U) => U;
+type PropertySetter<T, U> = (this: T, value: U) => U;
+type PropertyDefault<T, U> = (this: T, value?: U) => U;
 
-interface IPropertyGetter extends PropertyGetter, Partial<ICompute>, Partial<ITrack> {
+interface IPropertyGetter<T, U> extends PropertyGetter<T, U>, Partial<ICompute>, Partial<ITrack> {
 }
 
-interface IPropertySetter extends PropertySetter, Partial<ICompute>, Partial<ITrack> {
+interface IPropertySetter<T, U> extends PropertySetter<T, U>, Partial<ICompute>, Partial<ITrack> {
 }
 
-export interface IProperty {
-    get?: IPropertyGetter;
-    set?: IPropertySetter;
-    def?: string | number | boolean | PropertyDefault;
+export interface IProperty<T = Model, U = any> {
+    get?: IPropertyGetter<T, U>;
+    set?: IPropertySetter<T, U>;
+    def?: string | number | boolean | PropertyDefault<T, U>;
 }
 
 interface IOptions extends IRecordOptions {
     properties?: IHashMap<IProperty>;
-    instanceState?: IHashMap<any>;
+    instanceState?: IHashMap<unknown>;
     keyProperty?: string;
 }
 
@@ -174,7 +174,8 @@ export default class Model extends mixin<
      *     <li>guid (только чтение, значение по умолчанию генерируется динамически)</li>
      * </ul>
      * <pre>
-     *     import {Model} from 'Types/entity';
+     *     import {Model, IModelProperty} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     interface IGroup {
      *         id: sting
@@ -182,28 +183,28 @@ export default class Model extends mixin<
      *     }
      *
      *     class User extends Model {
-     *         protected _$properties: object = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             id: {
-     *                 get(value) {
+     *                 get(value: string): string {
      *                     return '№' + value;
      *                 },
-     *                 set(value) {
+     *                 set(value: string): string {
      *                     return (value + '')[0] === '№' ? value.substr(1) : value;
      *                 }
      *             },
      *             group: {
-     *                 get() {
+     *                 get(): IGroup {
      *                     return this._group;
      *                 },
-     *                 set(value) {
+     *                 set(value: IGroup): void {
      *                     this._group = value;
      *                 }
      *             },
      *             guid: {
-     *                 def() {
+     *                 def(): number {
      *                     return Math.random() * 999999999999999;
      *                 },
-     *                 get(value) {
+     *                 get(value: number): number {
      *                     return value;
      *                 }
      *             }
@@ -237,10 +238,11 @@ export default class Model extends mixin<
      * </pre>
      * Создадим модель пользователя со свойством displayName, которое вычисляется с использованием значений других свойств:
      * <pre>
-     *     import {Model} from 'Types/entity';
+     *     import {Model, IModelProperty} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class User extends Model {
-     *         protected _$properties: Object = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             displayName: {
      *                 get() {
      *                    return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
@@ -260,13 +262,14 @@ export default class Model extends mixin<
      * </pre>
      * Для лучшей производительности изменения в свойствах не отслеживаются. Если требуется генерировать события об изменении свойства, определите его через функтор Track:
      * <pre>
-     *     import {Model, functor} from 'Types/entity';
+     *     import {Model, IModelProperty, functor} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class User extends Model {
      *         protected _nickname: string;
-     *         protected _$properties: object = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             nickname: {
-     *                 get: function() {
+     *                 get: function(): string {
      *                     return this._nickname;
      *                 }
      *                 set: functor.Track.create(function(value: string) {
@@ -285,14 +288,15 @@ export default class Model extends mixin<
      * </pre>
      * Если вы используете модель в рекордсете, то вы можете обеспечить передачу значений свойств, хранящихся на экземпляре модели, передав имя свойства в функтор Track:
      * <pre>
-     *     import {Model, functor} from 'Types/entity';
+     *     import {Model, IModelProperty, functor} from 'Types/entity';
      *     import {RecordSet} from 'Types/collection';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class Avenger extends Model {
      *         protected _nickname: string;
-     *         protected _$properties: object = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             nickname: {
-     *                 get: function() {
+     *                 get: function(): string {
      *                     return this._nickname;
      *                 }
      *                 set: functor.Track.create(function(value: string) {
@@ -313,12 +317,13 @@ export default class Model extends mixin<
      * </pre>
      * Можно явно указать список свойств, от которых зависит другое свойство. В этом случае для свойств-объектов будет сбрасываться кэш, хранящий результат предыдущего вычисления:
      * <pre>
-     *     import {Model, functor} from 'Types/entity';
+     *     import {Model, IModelProperty, functor} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class User extends Model {
-     *         protected _$properties: object = {
+     *         protected _$properties: IHashMap<IModelProperty> = {
      *             birthDay: {
-     *                 get: functor.Compute.create(function() {
+     *                 get: functor.Compute.create(function(): Date {
      *                     return this.get('facebookBirthDay') || this.get('linkedInBirthDay');
      *                 }, ['facebookBirthDay', 'linkedInBirthDay'])
      *             }
@@ -735,26 +740,27 @@ export default class Model extends mixin<
      * @example
      * Получим описание свойств модели:
      * <pre>
-     *     import {Model} from 'Types/entity';
+     *     import {Model, IModelProperty} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class User extends Model {
-     *         protected _$properties = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             id: {
-     *                 get() {
+     *                 get(): number {
      *                     return this._id;
      *                 },
-     *                 set(value) {
+     *                 set(value: number): void {
      *                     this._id = value;
      *                 }
      *             },
      *             group: {
-     *                 get() {
+     *                 get(): number {
      *                     return this._group;
      *                 }
      *             }
-     *         },
-     *         protected _id: 0
-     *         protected _group: null
+     *         };
+     *         protected _id: number = 0;
+     *         protected _group: number = null
      *     }
      *
      *     const user = new User();
@@ -773,25 +779,26 @@ export default class Model extends mixin<
      * @example
      * Получим дефолтное значение свойства id:
      * <pre>
-     *     import {Model} from 'Types/entity';
+     *     import {Model, IModelProperty} from 'Types/entity';
+     *     import {IHashMap} from 'Types/declarations';
      *
      *     class User extends Model {
-     *         protected _$properties = {
+     *         protected _$properties: IHashMap<IModelProperty<User>> = {
      *             id: {
-     *                 get() {
+     *                 get(): number {
      *                     this._id;
      *                 },
-     *                 def(value) {
+     *                 def(): number {
      *                     return Date.now();
      *                 }
      *             }
-     *         },
-     *         protected _id: 0
+     *         };
+     *         protected _id: number = 0;
      *     }
      *
      *     const user = new User();
      *     console.log(user.getDefault('id')); // 1466419984715
-     *     setTimeout(function(){
+     *     setTimeout(() => {
      *         console.log(user.getDefault('id')); // still 1466419984715
      *     }, 1000);
      * </pre>
