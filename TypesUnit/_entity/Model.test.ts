@@ -27,6 +27,14 @@ interface IProperties extends IHashMap<IProperty> {
     date: IProperty;
 }
 
+interface IFooModel extends Model {
+    _foo: string;
+}
+
+interface IBarModel extends Model {
+    _bar: string;
+}
+
 function getModelData(): IData {
     return {
         max: 10,
@@ -39,6 +47,10 @@ function getModelData(): IData {
 }
 
 function getModelProperties(sqMaxVal: number = 33): IProperties {
+    interface ITesteeModel extends Model {
+        _internal: string;
+    }
+
     return {
         calc: {
             def: 1,
@@ -64,10 +76,10 @@ function getModelProperties(sqMaxVal: number = 33): IProperties {
             }
         },
         internal: {
-            get(): string {
+            get(this: ITesteeModel): string {
                 return this.hasOwnProperty('_internal') ? this._internal : 'internalDefault';
             },
-            set(value: string): void {
+            set(this: ITesteeModel, value: string): void {
                 this._internal = value;
             }
         },
@@ -110,7 +122,7 @@ describe('Types/_entity/Model', () => {
                 },
                 properties: {
                     foo: {
-                        get(): string {
+                        get(this: IFooModel): string {
                             return this._foo;
                         }
                     }
@@ -284,7 +296,7 @@ describe('Types/_entity/Model', () => {
                             this._foo = value;
                         })
                     }
-                }
+                } as IHashMap<IProperty<IFooModel>>
             });
 
             let changed;
@@ -411,7 +423,7 @@ describe('Types/_entity/Model', () => {
                             this._bar = value;
                         }
                     }
-                }
+                } as IHashMap<IProperty<IBarModel>>
             });
             assert.throws(() => {
                 model.set({
@@ -446,7 +458,7 @@ describe('Types/_entity/Model', () => {
                             throw new Error('oops baz!');
                         }
                     }
-                }
+                } as IHashMap<IProperty<IBarModel>>
             });
 
             assert.throws(() => {
@@ -528,7 +540,9 @@ describe('Types/_entity/Model', () => {
                             this._p1 = value;
                         }
                     }
-                }
+                } as IHashMap<IProperty<Model & {
+                    _p1: string;
+                }>>
             });
 
             // Get twice checks valid state
@@ -594,7 +608,9 @@ describe('Types/_entity/Model', () => {
                             this._id = value.toString();
                         }
                     }
-                }
+                } as IHashMap<IProperty<Model & {
+                    _id: string;
+                }>>
             });
 
             model.set('id', [1, 2, 3]);
@@ -625,7 +641,7 @@ describe('Types/_entity/Model', () => {
             const model = new Model({
                 properties: {
                     foo: {
-                        get(): string {
+                        get(): string | number {
                             return this._foo === undefined ? 1 : this._foo;
                         },
                         set(value: string): string {
@@ -637,7 +653,7 @@ describe('Types/_entity/Model', () => {
                             return this.get('foo');
                         }
                     }
-                }
+                } as IHashMap<IProperty<IFooModel>>
             });
 
             assert.strictEqual(model.get('bar'), 1);
@@ -682,14 +698,16 @@ describe('Types/_entity/Model', () => {
                             }, ['bar'])
                         },
                         bar: {
-                            get(): string {
+                            get(): string[] {
                                 return this._bar || ['bar'];
                             },
                             set(value: string): void {
                                 this._bar = [value];
                             }
                         }
-                    }
+                    } as IHashMap<IProperty<Model & {
+                        _bar: string[];
+                    }>>
                 });
 
                 const fooA = model.get('foo');
@@ -714,14 +732,16 @@ describe('Types/_entity/Model', () => {
                             }, [])
                         },
                         bar: {
-                            get(): string {
+                            get(): string[] {
                                 return this._bar || ['bar'];
                             },
                             set(value: string): void {
                                 this._bar = [value];
                             }
                         }
-                    }
+                    } as IHashMap<IProperty<Model & {
+                        _bar: string[];
+                    }>>
                 });
 
                 const fooA = model.get('foo');
@@ -1316,7 +1336,7 @@ describe('Types/_entity/Model', () => {
                             return this._foo = 'bar';
                         }, '_foo')
                     }
-                }
+                } as IHashMap<IProperty<IFooModel>>
             });
 
             assert.equal(model.get('foo'), 'bar');
@@ -1357,11 +1377,13 @@ describe('Types/_entity/Model', () => {
                         get(): object {
                             return this._record || (this._record = new Model());
                         },
-                        set(value: string): void {
+                        set(value: object): void {
                             this._record = value;
                         }
                     }
-                }
+                } as IHashMap<IProperty<Model & {
+                    _record: object;
+                }>>
             });
             const given = {
                 properties: undefined
@@ -1388,11 +1410,13 @@ describe('Types/_entity/Model', () => {
                         get(): object {
                             return this._record || (this._record = new Model());
                         },
-                        set(value: string): void {
+                        set(value: object): void {
                             this._record = value;
                         }
                     }
-                }
+                } as IHashMap<IProperty<Model & {
+                    _record: object;
+                }>>
             });
             const given = {
                 properties: undefined
