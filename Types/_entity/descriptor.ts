@@ -157,8 +157,8 @@ type RequiredValidator<T> = () => ChainedValidator<T>;
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
- * console.log(descriptor(String).oneOf('foo', 'bar')('foo')); // 'foo'
- * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
+ * console.log(descriptor(String).oneOf(['foo', 'bar'])('foo')); // 'foo'
+ * console.log(descriptor(String).oneOf(['foo', 'bar'])('baz')); // TypeError
  * </pre>
  */
 function oneOf<T>(values: T[]): ChainedValidator<T> {
