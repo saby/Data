@@ -227,8 +227,10 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         treeItemToDecorator.set(item, decoratedItem);
                     }
                     resultItem = decoratedItem as unknown as T;
+
+                    // Treat only resolved breadcrumbs as previous
+                    prevBreadCrumbs = currentBreadcrumbs;
                 }
-                prevBreadCrumbs = currentBreadcrumbs;
             }
 
             sortedItems.push(resultItem);
