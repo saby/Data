@@ -8,10 +8,10 @@ import {enumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Arraywise<T> extends Abstract<T> {
-    protected _source: any[];
+export default class Arraywise<T, U = number> extends Abstract<T, U> {
+    protected _source: T[];
 
-    constructor(source: any[]) {
+    constructor(source: T[]) {
         if (!(source instanceof Array)) {
             throw new TypeError('Source should be an instance of Array');
         }
@@ -20,11 +20,11 @@ export default class Arraywise<T> extends Abstract<T> {
 
     // region IEnumerable
 
-    getEnumerator(): enumerator.Arraywise<T> {
+    getEnumerator(): enumerator.Arraywise<T, U> {
         return new enumerator.Arraywise(this._source);
     }
 
-    each(callback: (item: any, index: number) => void, context?: object): void {
+    each(callback: (item: T, index: U) => void, context?: object): void {
         for (let i = 0, count = this._source.length; i < count; i++) {
             callback.call(
                 context || this,

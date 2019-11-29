@@ -4,7 +4,9 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEnumerator<T> {
+import {EnumeratorIndex} from './IEnumerable';
+
+export default interface IEnumerator<T, U = EnumeratorIndex> {
     readonly '[Types/_collection/IEnumerator]': boolean;
 
     /**
@@ -42,7 +44,7 @@ export default interface IEnumerator<T> {
      *     enumerator.getCurrentIndex();//0
      * </pre>
      */
-    getCurrentIndex(): any;
+    getCurrentIndex(): U;
 
     /**
      * Перемещает указатель на следующий элемент

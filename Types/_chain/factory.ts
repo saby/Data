@@ -75,7 +75,7 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * @public
  * @author Мальцев А.А.
  */
-export default function factory<T>(source: Abstract<T> | IEnumerable<T> | T[] | IHashMap<T>): Abstract<T> {
+export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U> | T[] | IHashMap<T>): Abstract<T, U> {
     if (source instanceof Abstract) {
         return source;
     } else if (source && source['[Types/_collection/IEnumerable]']) {
