@@ -298,7 +298,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
             });
         });
 
-        it('should return breadcrumbs with leaves', () => {
+        it('shouldn\'t return breadcrumbs with leaves', () => {
             items = [];
             items[0] = new TreeItem({
                 contents: 'A',
@@ -321,6 +321,10 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 parent: leaf,
                 contents: 'e'
             });
+            items[5] = new TreeItem({
+                parent: items[2],
+                contents: 'f'
+            });
 
             source = getSource(items);
             strategy = new Search({
@@ -332,7 +336,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
             });
 
-            assert.deepEqual(result, ['#A:0', 'b:1', '#A,b,C:0', 'd:1', 'e:2']);
+            assert.deepEqual(result, ['#A:0', 'b:1', '#A,b,C:0', 'd:1', 'e:2', 'f:1']);
         });
 
         it('should return the same instances for second call', () => {
