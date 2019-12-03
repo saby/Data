@@ -102,6 +102,7 @@ describe('Types/_formatter/date', () => {
                 stubEnabled.returns(true);
                 stubGetLang.returns(locale);
             });
+
             afterEach(() => {
                 stubEnabled.restore();
                 stubGetLang.restore();
