@@ -6,6 +6,8 @@
  * @includes numberRoman Types/_formatter/numberRoman
  * @includes numberWords Types/_formatter/numberWords
  * @includes number Types/_formatter/number
+ * @includes period Types/_formatter/period
+ * @includes retrospect Types/_formatter/retrospect
  * @public
  * @author Мальцев А.А.
  */
@@ -19,3 +21,5 @@ export {default as jsonReviver} from './_formatter/jsonReviver';
 export {default as numberRoman} from './_formatter/numberRoman';
 export {default as numberWords} from './_formatter/numberWords';
 export {default as number} from './_formatter/number';
+export {default as period, Type as PeriodType} from './_formatter/period';
+export {default as retrospect, Type as RetrospectType} from './_formatter/retrospect';
