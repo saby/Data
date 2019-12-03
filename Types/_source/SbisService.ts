@@ -25,6 +25,11 @@ enum PoitionNavigationOrder {
 }
 
 /**
+ * Separator for BL object name and method name
+ */
+const BL_OBJECT_SEPARATOR = '.';
+
+/**
  * Separator for Identity type
  */
 const COMPLEX_ID_SEPARATOR = ',';
@@ -79,6 +84,14 @@ export interface IMoveMeta {
 interface IOldMoveMeta {
     before: string;
     hierField: string;
+}
+
+/**
+ * Returns BL object name and its method name joined by separator.
+ * If method name already contains the separator then returns it unchanged.
+ */
+function buildBlMethodName(objectName: string, methodName: string): string {
+    return methodName.indexOf(BL_OBJECT_SEPARATOR) > -1 ? methodName : objectName + BL_OBJECT_SEPARATOR + methodName;
 }
 
 /**
@@ -143,7 +156,9 @@ function callDestroyWithComplexId(
     meta: object
 ): ExtendPromise<any> {
     return instance._callProvider(
-        instance._$endpoint.contract === name ? instance._$binding.destroy :  name + '.' + instance._$binding.destroy,
+        instance._$endpoint.contract === name
+            ? instance._$binding.destroy
+            :  buildBlMethodName(name, instance._$binding.destroy),
         instance._$passing.destroy.call(instance, ids, meta)
     );
 }
@@ -505,8 +520,8 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
         ObjectId: from,
         DestinationId: to,
         Order: meta.position,
-        ReadMethod: meta.objectName + '.' + this._$binding.read,
-        UpdateMethod: meta.objectName + '.' + this._$binding.update
+        ReadMethod: meta.objectName + BL_OBJECT_SEPARATOR + this._$binding.read,
+        UpdateMethod: meta.objectName + BL_OBJECT_SEPARATOR + this._$binding.update
     };
 }
 
@@ -538,7 +553,7 @@ function oldMove(
     params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, instance._$endpoint.contract);
 
     return instance._callProvider(
-        instance._$endpoint.moveContract + '.' + moveMethod,
+        instance._$endpoint.moveContract + BL_OBJECT_SEPARATOR + moveMethod,
         params
     );
 }
@@ -939,9 +954,7 @@ export default class SbisService extends Rpc {
             if (groups.hasOwnProperty(name)) {
                 meta.objectName = name;
                 const def = this._callProvider(
-                    this._$binding.move.indexOf('.') > -1 ?
-                        this._$binding.move :
-                        this._$endpoint.moveContract + '.' + this._$binding.move,
+                    buildBlMethodName(this._$endpoint.moveContract, this._$binding.move),
                     this._$passing.move.call(this, groups[name], target, meta)
                 );
                 if (groupsCount === 1) {

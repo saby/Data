@@ -49,6 +49,9 @@ describe('Types/_source/SbisService', () => {
 
                 switch (this._cfg.endpoint.contract) {
                     case 'USP':
+                    case 'Foo1':
+                    case 'Foo2':
+                    case 'Foo3':
                     case 'Goods':
                         switch (method) {
                             case 'Создать':
@@ -97,6 +100,9 @@ describe('Types/_source/SbisService', () => {
                                 }
                                 break;
 
+                            case 'Foo1.Delete':
+                            case 'Foo2.Delete':
+                            case 'Foo3.Delete':
                             case 'Goods.Удалить':
                             case 'Удалить':
                                 if (args.ИдО === existsId ||
@@ -682,6 +688,23 @@ describe('Types/_source/SbisService', () => {
                     assert.equal(args.ИдО, anId);
                     assert.equal(success[0], SbisBusinessLogic.existsId);
                     assert.equal(success[1], anId);
+                });
+            });
+
+            it('should delete records with composite key and object name in binding', () => {
+                service = new SbisService({
+                    endpoint: 'Foo1',
+                    binding: {
+                        destroy: 'Foo2.Delete'
+                    }
+                });
+                return service.destroy([SbisBusinessLogic.existsId + ',Foo3']).then((success) => {
+                    const method = SbisBusinessLogic.lastRequest.method;
+                    const args = SbisBusinessLogic.lastRequest.args;
+
+                    assert.equal(method, 'Foo2.Delete');
+                    assert.equal(args.ИдО, SbisBusinessLogic.existsId);
+                    assert.equal(success[0], SbisBusinessLogic.existsId);
                 });
             });
 
