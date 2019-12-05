@@ -176,7 +176,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             itsNew: boolean;
         }
 
-        function getBreadCrumbsFor(item: T): IBreadCrumbsReference {
+        function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             let itsNew = false;
             if (item && item.isNode && item.isNode() && item !== root) {
@@ -195,12 +195,12 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             return {breadCrumbs, itsNew};
         }
 
-        function addBreadCrumbsChain(breadCrumbs: BreadcrumbsItem<S>): void {
-            breadcrumbsToData.set(breadCrumbs, {
+        function addBreadCrumbsItself(reference: IBreadCrumbsReference): void {
+            breadcrumbsToData.set(reference.breadCrumbs, {
                 position: sortedItems.length,
                 members: 0
             });
-            sortedItems.push(breadCrumbs);
+            sortedItems.push(reference.breadCrumbs);
         }
 
         function addBreadCrumbsMember(reference: IBreadCrumbsReference, item: T): void {
@@ -240,8 +240,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
                     // Add completed breadcrumbs to show even empty
                     if (isLastBreadcrumb) {
-                        prevBreadCrumbs = getBreadCrumbsFor(item).breadCrumbs;
-                        addBreadCrumbsChain(prevBreadCrumbs);
+                        const breadcrumbsReference = getBreadCrumbsReference(item);
+                        prevBreadCrumbs = breadcrumbsReference.breadCrumbs;
+                        addBreadCrumbsItself(breadcrumbsReference);
                     }
 
                     // Finish here for any node
@@ -249,12 +250,12 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                 }
 
                 // Get breadcrumbs by leaf's parent
-                const breadcrumbsReference = getBreadCrumbsFor(item.getParent() as T);
+                const breadcrumbsReference = getBreadCrumbsReference(item.getParent() as T);
                 const currentBreadcrumbs = breadcrumbsReference.breadCrumbs;
                 if (currentBreadcrumbs) {
                     // Add actual breadcrumbs if it has been changed and it's not a repeat
                     if (currentBreadcrumbs !== prevBreadCrumbs && breadcrumbsReference.itsNew) {
-                        addBreadCrumbsChain(currentBreadcrumbs);
+                        addBreadCrumbsItself(breadcrumbsReference);
                     }
 
                     // This is a leaf outside breadcrumbs so set the current breadcrumbs as its parent.
