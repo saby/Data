@@ -167,6 +167,8 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * });
      * </pre>
      */
+    value(): T[];
+    value<S>(factory?: Function, ...optional: any[]): S;
     value<S>(factory?: Function, ...optional: any[]): T[] | S {
         if (factory instanceof Function) {
             const args = [this, ...optional];
@@ -333,7 +335,10 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
      * </pre>
      */
-    zip<S1>(...args: [S1[]]): Zipped<[T, S1], T, S1> {
+    zip<S1>(arg1: S1[]): Zipped<[T, S1], T, S1>;
+    zip<S1, S2>(arg1: S1[], arg2: S2[]): Zipped<[T, S1, S2], T, S1>;
+    zip<S1, S2, S3>(arg1: S1[], arg2: S2[], arg3: S3[]): Zipped<[T, S1, S2, S3], T, S1>;
+    zip<S, R>(...args: S[][]): Zipped<R, T, S> {
         const Next = resolve<any>('Types/chain:Zipped');
         return new Next(
             this,
@@ -389,7 +394,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * })).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
      * </pre>
      */
-    pluck(propertyName: string): Mapped<T> {
+    pluck<S>(propertyName: string): Mapped<S> {
         return this.map((item) => object.getPropertyValue(item, propertyName));
     }
 
@@ -475,7 +480,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * ]).group('kind', 'title').toObject();//{fruit: ['Apple', 'Cherry', 'Pear'], vegetable: ['Cucumber', 'Potato']}
      * </pre>
      */
-    group<S>(key: string|((item: T) => string), value: string|((item: T) => S)): Grouped<T> {
+    group<S>(key: string|((item: T) => string), value: string|((item: T) => S)): Grouped<S> {
         const Next = resolve<any>('Types/chain:Grouped');
         return new Next(
             this,
@@ -513,6 +518,8 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
     * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
     * </pre>
     */
+    count(): number;
+    count(by?: string |((item: T) => string | number | boolean)): Counted<T>;
     count(by?: string |((item: T) => string | number | boolean)): Counted<T> | number {
         if (by === undefined) {
             return this.reduce((memo) => memo + 1, 0);
@@ -683,6 +690,8 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([1, 2, 3, 4, 5]).first(3).value();//[1, 2, 3]
      * </pre>
      */
+    first(): T;
+    first(n?: number): Sliced<T>;
     first(n?: number): Sliced<T> | T {
         if (n === undefined) {
             const enumerator = this.getEnumerator();
@@ -708,6 +717,8 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([1, 2, 3, 4, 5]).last(3).value();//[3, 4, 5]
      * </pre>
      */
+    last(): T;
+    last(n?: number): Reversed<T, U>;
     last(n?: number): Reversed<T, U> | T {
         if (n === undefined) {
             return this.reverse().first() as T;
