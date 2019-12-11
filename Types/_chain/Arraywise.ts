@@ -8,7 +8,7 @@ import {enumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Arraywise<T, U = number> extends Abstract<T, U> {
+export default class Arraywise<T> extends Abstract<T, number> {
     protected _source: T[];
 
     constructor(source: T[]) {
@@ -20,11 +20,11 @@ export default class Arraywise<T, U = number> extends Abstract<T, U> {
 
     // region IEnumerable
 
-    getEnumerator(): enumerator.Arraywise<T, U> {
+    getEnumerator(): enumerator.Arraywise<T> {
         return new enumerator.Arraywise(this._source);
     }
 
-    each(callback: (item: T, index: U) => void, context?: object): void {
+    each(callback: (item: T, index: number) => void, context?: object): void {
         for (let i = 0, count = this._source.length; i < count; i++) {
             callback.call(
                 context || this,

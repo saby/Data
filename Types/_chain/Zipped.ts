@@ -1,6 +1,5 @@
 import Abstract from './Abstract';
 import ZippedEnumerator from './ZippedEnumerator';
-import {IEnumerable} from '../collection';
 
 /**
  * Объединяющее звено цепочки.
@@ -9,18 +8,18 @@ import {IEnumerable} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Zipped<T> extends Abstract<T> {
+export default class Zipped<TResult, TSource1, TSource2> extends Abstract<TResult> {
     /**
      * Коллекции для объединения
      */
-    protected _items: Array<T[] | IEnumerable<T>>;
+    protected _items: TSource2[];
 
     /**
      * Конструктор объединяющего звена цепочки.
      * @param source Предыдущее звено.
      * @param items Коллекции для объединения.
      */
-    constructor(source: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
+    constructor(source: Abstract<TSource1>, items: TSource2[]) {
         super(source);
         this._items = items;
     }
@@ -32,9 +31,9 @@ export default class Zipped<T> extends Abstract<T> {
 
     // region IEnumerable
 
-    getEnumerator(): ZippedEnumerator<T> {
-        return new ZippedEnumerator(
-            this._previous,
+    getEnumerator(): ZippedEnumerator<TResult, TSource1, TSource2> {
+        return new ZippedEnumerator<TResult, TSource1, TSource2>(
+            this._previous as unknown as Abstract<TSource1>,
             this._items
         );
     }

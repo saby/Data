@@ -9,7 +9,7 @@ import SortedEnumerator from './SortedEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sorted<T> extends Abstract<T> {
+export default class Sorted<T, U> extends Abstract<T, U> {
     /**
      * Функция сравнения
      */
@@ -20,7 +20,7 @@ export default class Sorted<T> extends Abstract<T> {
      * @param source Предыдущее звено.
      * @param [compareFunction] Функция сравнения
      */
-    constructor(source: Abstract<T>, compareFunction?: CompareFunction) {
+    constructor(source: Abstract<T, U>, compareFunction?: CompareFunction) {
         super(source);
         this._compareFunction = compareFunction;
     }
@@ -32,7 +32,7 @@ export default class Sorted<T> extends Abstract<T> {
 
     // region IEnumerable
 
-    getEnumerator(): SortedEnumerator<T> {
+    getEnumerator(): SortedEnumerator<T, U> {
         return new SortedEnumerator(
             this._previous,
             this._compareFunction

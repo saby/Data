@@ -167,7 +167,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * });
      * </pre>
      */
-    value(factory?: Function, ...optional: any[]): any {
+    value<S>(factory?: Function, ...optional: any[]): T[] | S {
         if (factory instanceof Function) {
             const args = [this, ...optional];
             return factory(...args);
@@ -249,7 +249,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([1, 2, 3, 4, 5]).reduce((memo, item) => memo + item);//15
      * </pre>
      */
-    reduce(callback: ReduceFunc<T, U>, initialValue?: any): any {
+    reduce<S = T>(callback: ReduceFunc<T, U>, initialValue?: S | T): S {
         let result = initialValue;
         let skipFirst = arguments.length < 2;
 
@@ -262,7 +262,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
             result = callback(result, item, index);
         });
 
-        return result;
+        return result as S;
     }
 
     /**
@@ -279,7 +279,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([2, 5, 2, 100]).reduceRight((memo, item) => item / memo);//5
      * </pre>
      */
-    reduceRight(callback: ReduceFunc<T, U>, initialValue?: any): any {
+    reduceRight<S = T>(callback: ReduceFunc<T, U>, initialValue?: S | T): S {
         if (arguments.length < 2) {
             return this.reverse().reduce(callback);
         }
@@ -308,7 +308,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * ).value();//[Record({id: 1, name: 'SpongeBob SquarePants'}), Record({id: 2, name: 'Patrick Star'})]
      * </pre>
      */
-    map(callback: (item: T, index: U) => any, thisArg?: object): Mapped<T> {
+    map<S>(callback: (item: T, index: U) => S, thisArg?: object): Mapped<S> {
         const Next = resolve<any>('Types/chain:Mapped');
         return new Next(
             this,
@@ -333,7 +333,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
      * </pre>
      */
-    zip(...args: any[]): Zipped<T> {
+    zip<S1>(...args: [S1[]]): Zipped<[T, S1], T, S1> {
         const Next = resolve<any>('Types/chain:Zipped');
         return new Next(
             this,
@@ -356,10 +356,10 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * );//{login: 'root', password: '123', email: 'root@localhost'}
      * </pre>
      */
-    zipObject(values: any[]): object {
+    zipObject<S1>(values: S1[]): IObject<S1> {
         const result = Object.create(null);
         this.zip(values).each((item) => {
-            const [key, value]: [any, any] = item;
+            const [key, value]: [T, S1] = item;
             result[key] = value;
         });
         return result;
@@ -475,7 +475,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * ]).group('kind', 'title').toObject();//{fruit: ['Apple', 'Cherry', 'Pear'], vegetable: ['Cucumber', 'Potato']}
      * </pre>
      */
-    group(key: string|((item: T) => string), value: string|((item: T) => any)): Grouped<T> {
+    group<S>(key: string|((item: T) => string), value: string|((item: T) => S)): Grouped<T> {
         const Next = resolve<any>('Types/chain:Grouped');
         return new Next(
             this,
@@ -683,7 +683,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([1, 2, 3, 4, 5]).first(3).value();//[1, 2, 3]
      * </pre>
      */
-    first(n?: number): Sliced<T> | any {
+    first(n?: number): Sliced<T> | T {
         if (n === undefined) {
             const enumerator = this.getEnumerator();
             return enumerator.moveNext() ? enumerator.getCurrent() : undefined;
@@ -708,12 +708,14 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory([1, 2, 3, 4, 5]).last(3).value();//[3, 4, 5]
      * </pre>
      */
-    last(n?: number): Reversed<T> | any {
+    last(n?: number): Reversed<T, U> | T {
         if (n === undefined) {
             return this.reverse().first() as T;
         }
 
-        return this.reverse().first(n).reverse();
+        return (
+            this.reverse().first(n) as Sliced<T>
+        ).reverse() as unknown as Reversed<T, U>;
     }
 
     // endregion
@@ -729,7 +731,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory(['one', 'two', 'three']).reverse().value();//['three', 'two', 'one']
      * </pre>
      */
-    reverse(): Reversed<T> {
+    reverse(): Reversed<T, U> {
         const Next = resolve<any>('Types/chain:Reversed');
         return new Next(this);
     }
@@ -748,7 +750,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
     *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
-   sort(compareFunction?: CompareFunction): Sorted<T> {
+   sort(compareFunction?: CompareFunction): Sorted<T, U> {
       const Next = resolve<any>('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }

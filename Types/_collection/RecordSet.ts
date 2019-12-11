@@ -1508,7 +1508,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
             const normalizedAdapter = this.getAdapter().forRecord(null, this._getRawData());
             const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
             format.each((field, index) => {
-                normalizedAdapter.addField(field, index);
+                normalizedAdapter.addField(field, index as number);
                 const name = field.getName();
                 normalizedAdapter.set(name, itemAdapter.get(name));
             });

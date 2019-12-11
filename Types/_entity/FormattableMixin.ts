@@ -153,7 +153,7 @@ export default abstract class FormattableMixin {
     *       }, {
     *          id: 3,
     *          firstName: '-',
-    *          lastName: 'T-800',
+    *          lastName: 'TResult-800',
     *          part: 'A human-like robot from the future'
     *       }]
     *    });

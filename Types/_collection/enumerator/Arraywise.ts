@@ -14,11 +14,11 @@ type ResolveFunc<T> = (index: number) => T;
  * @public
  * @author Мальцев А.А.
  */
-export default class Arraywise<T, U = number> extends mixin<
+export default class Arraywise<T> extends mixin<
     IndexedEnumeratorMixin<any>
 >(
     IndexedEnumeratorMixin
-) implements IEnumerator<T, U> {
+) implements IEnumerator<T, number> {
     /**
      * Array to traverse
      */
@@ -67,8 +67,8 @@ export default class Arraywise<T, U = number> extends mixin<
         return this._resolver ? this._resolver(this._index) : this._items[this._index];
     }
 
-    getCurrentIndex(): U {
-        return this._index as unknown as U;
+    getCurrentIndex(): number {
+        return this._index;
     }
 
     moveNext(): boolean {

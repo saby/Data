@@ -1,5 +1,6 @@
-import Abstract from './Abstract';
+import Abstract, {IObject} from './Abstract';
 import {enumerator} from '../collection';
+import {IHashMap} from '../_declarations';
 
 /**
  * Цепочка по объекту.
@@ -8,10 +9,10 @@ import {enumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Objectwise<T> extends Abstract<T> {
-    protected _source: object;
+export default class Objectwise<T> extends Abstract<T, string> {
+    protected _source: IHashMap<T>;
 
-    constructor(source: object) {
+    constructor(source: IHashMap<T>) {
         if (!(source instanceof Object)) {
             throw new TypeError('Source should be an instance of Object');
         }
@@ -24,7 +25,7 @@ export default class Objectwise<T> extends Abstract<T> {
         return new enumerator.Objectwise(this._source);
     }
 
-    each(callback: (item: any, index: number) => void, context?: Object): void {
+    each(callback: (item: T, index: string) => void, context?: Object): void {
         const keys = Object.keys(this._source);
         const count = keys.length;
         let key;
@@ -39,12 +40,12 @@ export default class Objectwise<T> extends Abstract<T> {
         }
     }
 
-    value(factory?: Function): Object {
+    value<S = IObject<T>>(factory?: Function, ...optional: any[]): S {
         if (factory instanceof Function) {
-            return super.value(factory);
+            return super.value(factory) as S;
         }
 
-        return this.toObject();
+        return this.toObject() as unknown as S;
     }
 
     // endregion

@@ -52,7 +52,7 @@ const charMap = {
     П: 'P',
     Р: 'R',
     С: 'S',
-    Т: 'T',
+    Т: 'TResult',
     У: 'U',
     Ф: 'F',
     Х: 'H',

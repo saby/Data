@@ -1,35 +1,35 @@
-import {IEnumerable, IEnumerator} from '../collection';
+import {IEnumerator} from '../collection';
 import Abstract from './Abstract';
 
 /**
  * Объединяющий энумератор
  * @author Мальцев А.А.
  */
-export default class ZippedEnumerator<T> implements IEnumerator<T> {
+export default class ZippedEnumerator<TResult, TSource1, TSource2> implements IEnumerator<TResult, number> {
     readonly '[Types/_collection/IEnumerator]': boolean = true;
-    private previous: Abstract<T>;
-    private items: Array<T[]|IEnumerable<T>>;
-    private current: any;
+    private previous: Abstract<TSource1>;
+    private items: TSource2[];
+    private current: TResult;
     private index: number;
-    private enumerator: IEnumerator<T>;
-    private itemsEnumerators: Array<IEnumerator<T>>;
+    private enumerator: IEnumerator<TSource1>;
+    private itemsEnumerators: Array<IEnumerator<TSource2>>;
 
     /**
      * Конструктор объединяющего энумератора.
      * @param previous Предыдущее звено.
      * @param items Коллекции для объединения.
      */
-    constructor(previous: Abstract<T>, items: Array<T[] | IEnumerable<T>>) {
+    constructor(previous: Abstract<TSource1>, items: TSource2[]) {
         this.previous = previous;
         this.items = items;
         this.reset();
     }
 
-    getCurrent(): any {
+    getCurrent(): TResult {
         return this.current;
     }
 
-    getCurrentIndex(): any {
+    getCurrentIndex(): number {
         return this.index;
     }
 

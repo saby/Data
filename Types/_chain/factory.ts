@@ -81,9 +81,9 @@ export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U>
     } else if (source && source['[Types/_collection/IEnumerable]']) {
         return new Enumerable(source);
     } else if (source instanceof Array) {
-        return new Arraywise(source);
+        return new Arraywise(source) as unknown as Abstract<T, U>;
     } else if (source instanceof Object) {
-        return new Objectwise(source);
+        return new Objectwise(source as IHashMap<T>) as unknown as Abstract<T, U>;
     }
     throw new TypeError(`Unsupported source type "${source}": only Array or Object are supported.`);
 }

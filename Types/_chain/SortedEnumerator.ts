@@ -7,7 +7,7 @@ import Abstract from './Abstract';
  * Сортирующий энумератор
  * @author Мальцев А.А.
  */
-export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
+export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
     private compareFunction: CompareFunction;
 
     /**
@@ -16,7 +16,7 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
      * @param [compareFunction] Функция сравнения.
      * @protected
      */
-    constructor(previous: Abstract<T>, compareFunction?: CompareFunction) {
+    constructor(previous: Abstract<T, U>, compareFunction?: CompareFunction) {
         super(previous);
         this.compareFunction = compareFunction || SortedEnumerator.defaultCompare;
     }
@@ -27,9 +27,9 @@ export default class SortedEnumerator<T> extends IndexedEnumerator<T> {
             this._items = super._getItems()
                 .map(([index, item]) => new SortWrapper(item, index))
                 .sort(this.compareFunction)
-                .map((item, index) => {
-                    const result = [
-                        shouldSaveIndices ? SortWrapper.indexOf(item) : index,
+                .map((item, index): [U, T] => {
+                    const result: [U, T] = [
+                        shouldSaveIndices ? SortWrapper.indexOf(item) : index as unknown as U,
                         SortWrapper.valueOf(item)
                     ];
                     SortWrapper.clear(item);

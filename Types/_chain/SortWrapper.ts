@@ -6,37 +6,37 @@ import { protect } from '../util';
  * @param {*} index Индекс элемента коллекции.
  * @protected
  */
-export default class SortWrapper {
+export default class SortWrapper<T, U> {
     static indexKey: string | Symbol;
-    private item: any;
-    private index: number;
+    private item: T;
+    private index: U;
 
-    constructor(item: any, index: number) {
+    constructor(item: T, index: U) {
         if (item instanceof Object) {
             item[SortWrapper.indexKey as string] = index;
-            return item;
+            return item as unknown as SortWrapper<T, U>;
         }
         this.item = item;
         this.index = index;
     }
 
-    valueOf(): any {
+    valueOf(): T {
         return this.item;
     }
 
-    indexOf(): number {
+    indexOf(): U {
         return this.index;
     }
 
-    static valueOf(item: any): any {
+    static valueOf<T, U>(item: SortWrapper<T, U>): T {
         return item instanceof SortWrapper ? item.valueOf() : item;
     }
 
-    static indexOf(item: any): number {
+    static indexOf<T, U>(item: SortWrapper<T, U>): U {
         return item instanceof SortWrapper ? item.indexOf() : item[SortWrapper.indexKey as string];
     }
 
-    static clear(item: any): void {
+    static clear<T>(item: T): void {
         if (!(item instanceof SortWrapper)) {
             delete item[SortWrapper.indexKey as string];
         }
