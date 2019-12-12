@@ -62,7 +62,7 @@ export interface IOptionsOption extends IRemoteOptionsOption {
 /**
  * Constructor options
  */
-interface IOptions extends IRemoteOptions {
+export interface IOptions extends IRemoteOptions {
     endpoint?: IEndpoint | string;
     binding?: IBinding;
     orderProperty?: string;

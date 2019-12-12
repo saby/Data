@@ -49,4 +49,4 @@ export {
 } from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
-export {default as SbisService} from './_source/SbisService';
+export {default as SbisService, IOptions as ISbisServiceOptions} from './_source/SbisService';
