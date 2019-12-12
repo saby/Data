@@ -11,9 +11,9 @@ import 'Types/display';
 
 interface IData {
     id: number;
-    pid: number;
+    pid?: number;
     node?: boolean;
-    title: string;
+    title?: string;
 }
 
 describe('Types/_display/Tree', () => {
@@ -96,7 +96,7 @@ describe('Types/_display/Tree', () => {
         });
     }
 
-    function getTree<T = List<IData>>(items: any): Tree<T> {
+    function getTree(items: List<IData>): Tree<IData> {
         return new Tree({
             collection: items || getItems(),
             root: {
@@ -624,6 +624,21 @@ describe('Types/_display/Tree', () => {
                 index++;
             });
             assert.equal(index, expect.length);
+        });
+
+        it('should mind not only TreeItems in path to root', () => {
+            const tree = getTree(new List());
+            const parent: any = {
+                getContents: () => {
+                    return {id: 1};
+                }
+            };
+            const item = new TreeItem({
+                contents: {id: 2},
+                parent
+            });
+
+            assert.strictEqual(tree.getItemUid(item), '2');
         });
     });
 

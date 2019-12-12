@@ -851,7 +851,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return itemToUid.get(item);
         }
 
-        let uid = this._exctractItemId(item);
+        let uid = this._extractItemId(item);
         uid = this._searchItemUid(item, uid);
 
         itemToUid.set(item, uid);
@@ -1940,7 +1940,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Рассчитывает идентификатор элемента коллекции.
      */
-    protected _exctractItemId(item: T): string {
+    protected _extractItemId(item: T): string {
         const contents = item.getContents();
         let uid;
         if (contents['[Types/_entity/Model]']) {
