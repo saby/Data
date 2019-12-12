@@ -77,7 +77,7 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  */
 export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U>): Abstract<T, U>;
 export default function factory<T>(source: T[]): Abstract<T, number>;
-export default function factory<T>(source: IHashMap<T>): Abstract<T, string>;
+export default function factory<T>(source: IHashMap<T> | object): Abstract<T, string>;
 export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U> | T[] | IHashMap<T>): Abstract<T, U> {
     if (source instanceof Abstract) {
         return source;
