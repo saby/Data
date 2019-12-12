@@ -210,7 +210,7 @@ function not<T>(values: T[]): ChainedValidator<T> {
 type notValidator<T> = (values: T[]) => ChainedValidator<T>;
 
 /**
- * Returns validator for Array<TResult> restriction.
+ * Returns validator for Array<T> restriction.
  * @function
  * @name Types/_entity/descriptor#arrayOf
  * @param type Type descriptor

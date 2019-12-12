@@ -180,7 +180,7 @@ export default class DataSet extends mixin<
      *         }, {
      *             id: 3,
      *             firstName: '-',
-     *             lastName: 'TResult-800',
+     *             lastName: 'T-800',
      *             role: 'Terminator'
      *         }]
      *     });
