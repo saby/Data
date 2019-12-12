@@ -1,12 +1,13 @@
 import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
 import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerator} from '../collection';
+import {EnumeratorIndex} from '../_collection/IEnumerable';
 import {create} from '../di';
 import {mixin} from '../util';
 
 /**
  * Массив соответствия индексов проекций и коллекций
  */
-const displaysToCollections: Array<IEnumerableCollection<any> | any[]> = [];
+const displaysToCollections: Array<IEnumerableCollection<any, any> | any[]> = [];
 
 /**
  * Массив соответствия индексов проекций и их инстансов
@@ -18,9 +19,9 @@ const displaysToInstances: Array<Abstract<any, any>> = [];
  */
 const displaysCounter: number[] = [];
 
-export interface IEnumerable<T> extends IEnumerableCollection<T> {
-    getEnumerator(localize?: boolean): IEnumerator<T>;
-    each(callback: EnumeratorCallback<T>, context?: object, localize?: boolean): void;
+export interface IEnumerable<T, U = EnumeratorIndex> extends IEnumerableCollection<T, U> {
+    getEnumerator(localize?: boolean): IEnumerator<T, U>;
+    each(callback: EnumeratorCallback<T, U>, context?: object, localize?: boolean): void;
 }
 
 export interface IOptions<S> {
@@ -70,11 +71,11 @@ export default abstract class Abstract<S, T> extends mixin<
      * @param [single=false] Возвращать singleton для каждой collection
      * @static
      */
-    static getDefaultDisplay<S, T, U extends Abstract<S, T> = Abstract<S, T>>(
+    static getDefaultDisplay<S, T, TCollection extends Abstract<S, T> = Abstract<S, T>>(
         collection: IEnumerable<S> | S[],
         options?: IOptions<S>,
         single?: boolean
-    ): U {
+    ): TCollection {
         if (arguments.length === 2 && (typeof options !== 'object')) {
             single = options;
             options = {};

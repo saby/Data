@@ -145,11 +145,11 @@ export default class HierarchicalMemory extends mixin<
         return this._source.read(key, meta);
     }
 
-    update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
         return this._source.update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
         return this._source.destroy(keys, meta);
     }
 
@@ -218,7 +218,7 @@ export default class HierarchicalMemory extends mixin<
         return this._source.merge(from, to);
     }
 
-    copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+    copy(key: string | number, meta?: object): ExtendPromise<Record> {
         return this._source.copy(key, meta);
     }
 

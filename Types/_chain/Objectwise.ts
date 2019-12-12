@@ -25,7 +25,7 @@ export default class Objectwise<T> extends Abstract<T, string> {
         return new enumerator.Objectwise(this._source);
     }
 
-    each(callback: (item: T, index: string) => void, context?: Object): void {
+    each(callback: (item: T, index: string) => void, context?: object): void {
         const keys = Object.keys(this._source);
         const count = keys.length;
         let key;

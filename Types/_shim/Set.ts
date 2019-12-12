@@ -54,7 +54,7 @@ export class SetPolyfill <T> {
         throw new Error('Method is not supported');
     }
 
-    forEach(callbackFn: Function, thisArg?: Object): void {
+    forEach(callbackFn: Function, thisArg?: object): void {
         // FIXME: now not in insertion order
         const hash = this._hash;
         for (const key in hash) {

@@ -385,7 +385,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
-    each(callback: EnumeratorCallback<T>, state?: any, context?: object): void {
+    each(callback: EnumeratorCallback<T, number>, state?: any, context?: object): void {
         if (state instanceof Object) {
             context = state;
             state = undefined;

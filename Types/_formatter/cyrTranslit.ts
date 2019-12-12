@@ -53,7 +53,7 @@ const charMap = {
     Р: 'R',
     С: 'S',
     Т: 'TResult',
-    У: 'U',
+    У: 'TCollection',
     Ф: 'F',
     Х: 'H',
     Ц: 'TS',

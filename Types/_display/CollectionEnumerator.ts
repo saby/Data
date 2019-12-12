@@ -20,7 +20,7 @@ export default class CollectionEnumerator<T> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     IndexedEnumeratorMixin
-) implements IEnumerator<T> {
+) implements IEnumerator<T, number> {
     protected readonly _moduleName: string;
 
     get items(): T[] {

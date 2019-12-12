@@ -11,7 +11,7 @@ export default class MappedEnumerator<T> implements IEnumerator<T> {
     readonly '[Types/_collection/IEnumerator]': boolean = true;
     private previous: any;
     private callback: MapFunc;
-    private callbackContext: Object;
+    private callbackContext: object;
     private enumerator: IEnumerator<T>;
     private current: any;
 

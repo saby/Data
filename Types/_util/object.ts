@@ -14,27 +14,27 @@ function getPropertyMethodName(property: string, prefix: string): string {
 
 /**
  * Возвращает значение свойства объекта
- * @param object Объект.
+ * @param obj Объект.
  * @param property Название свойства.
  */
-function getPropertyValue<T>(object: Object | IObject, property: string): T {
-    if (!object  || typeof object !== 'object') {
+function getPropertyValue<T>(obj: Object | IObject, property: string): T {
+    if (!obj  || typeof obj !== 'object') {
         return undefined;
     }
 
     const checkedProperty = property || '';
 
-    if (checkedProperty in object) {
-        return object[checkedProperty];
+    if (checkedProperty in obj) {
+        return obj[checkedProperty];
     }
 
-    if (object['[Types/_entity/IObject]']) {
-        return (object as IObject).get(checkedProperty);
+    if (obj['[Types/_entity/IObject]']) {
+        return (obj as IObject).get(checkedProperty);
     }
 
     const getter = getPropertyMethodName(checkedProperty, 'get');
-    if (typeof object[getter] === 'function' && !object[getter].deprecated) {
-        return object[getter]();
+    if (typeof obj[getter] === 'function' && !obj[getter].deprecated) {
+        return obj[getter]();
     }
 
     return undefined;
@@ -42,30 +42,30 @@ function getPropertyValue<T>(object: Object | IObject, property: string): T {
 
 /**
  * Устанавливает значение свойства объекта
- * @param object Объект.
+ * @param obj Объект.
  * @param property Название свойства.
  * @param value Значение свойства.
  */
-function setPropertyValue<T>(object: Object | IObject, property: string, value: T): void {
-    if (!object  || typeof object !== 'object') {
+function setPropertyValue<T>(obj: Object | IObject, property: string, value: T): void {
+    if (!obj  || typeof obj !== 'object') {
         throw new TypeError('Argument object should be an instance of Object');
     }
 
     const checkedProperty = property || '';
 
-    if (checkedProperty in object) {
-        object[checkedProperty] = value;
+    if (checkedProperty in obj) {
+        obj[checkedProperty] = value;
         return;
     }
 
-    if (object['[Types/_entity/IObject]'] && (object as IObject).has(checkedProperty)) {
-        (object as IObject).set(checkedProperty, value);
+    if (obj['[Types/_entity/IObject]'] && (obj as IObject).has(checkedProperty)) {
+        (obj as IObject).set(checkedProperty, value);
         return;
     }
 
     const setter = getPropertyMethodName(checkedProperty, 'set');
-    if (typeof object[setter] === 'function' && !object[setter].deprecated) {
-        object[setter](value);
+    if (typeof obj[setter] === 'function' && !obj[setter].deprecated) {
+        obj[setter](value);
         return;
     }
 

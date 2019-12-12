@@ -13,7 +13,7 @@ export default class UniquelyEnumerator<T> implements IEnumerator<T> {
     private idExtractor: ExtractFunc;
     private enumerator: IEnumerator<T>;
     private objectsHash: any[];
-    private keysHash: Object;
+    private keysHash: object;
 
     /**
      * Конструктор энумератора уникальных элементов.

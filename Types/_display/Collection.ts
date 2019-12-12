@@ -34,7 +34,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
 
-export type SourceCollection<T> = T[] | ISourceCollection<T>;
+export type SourceCollection<T, U> = T[] | ISourceCollection<T>;
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
@@ -285,7 +285,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     Abstract,
     SerializableMixin,
     EventRaisingMixin
-) implements IEnumerable<T>, IList<T> {
+) implements IEnumerable<T, number>, IList<T> {
     /**
      * Возвращать локализованные значения
      */
@@ -704,7 +704,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     });
      * </pre>
      */
-    each(callback: EnumeratorCallback<T>, context?: object): void {
+    each(callback: EnumeratorCallback<T, number>, context?: object): void {
         const enumerator = this.getEnumerator();
         let index;
         while (enumerator.moveNext()) {

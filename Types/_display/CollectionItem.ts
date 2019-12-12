@@ -10,6 +10,7 @@ import {ISerializableState as IDefaultSerializableState} from '../entity';
 import {IList} from '../collection';
 import {register} from '../di';
 import {mixin} from '../util';
+import {EnumeratorIndex} from "../_collection/IEnumerable";
 
 export interface IOptions<T> {
     contents?: T;
@@ -17,7 +18,7 @@ export interface IOptions<T> {
     owner?: Collection<T>;
 }
 
-export interface ISerializableState<T> extends IDefaultSerializableState {
+export interface ISerializableState<T, U = EnumeratorIndex> extends IDefaultSerializableState {
     $options: IOptions<T>;
     ci: number;
     iid: string;
