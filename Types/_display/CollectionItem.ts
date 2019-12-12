@@ -7,10 +7,9 @@ import {
 } from '../entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
-import {IList} from '../collection';
+import {IList, EnumeratorIndex} from '../collection';
 import {register} from '../di';
 import {mixin} from '../util';
-import {EnumeratorIndex} from "../_collection/IEnumerable";
 
 export interface IOptions<T> {
     contents?: T;

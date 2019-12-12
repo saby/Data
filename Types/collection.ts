@@ -35,7 +35,7 @@ export {format};
 export {default as Flags} from './_collection/Flags';
 export {default as IEnum} from './_collection/IEnum';
 export {default as IFlags, IValue as IFlagsValue} from './_collection/IFlags';
-export {default as IEnumerable, EnumeratorCallback} from './_collection/IEnumerable';
+export {default as IEnumerable, EnumeratorIndex, EnumeratorCallback} from './_collection/IEnumerable';
 export {default as IEnumerator} from './_collection/IEnumerator';
 export {default as IList} from './_collection/IList';
 export {default as IndexedEnumeratorMixin} from './_collection/IndexedEnumeratorMixin';
