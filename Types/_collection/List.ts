@@ -90,7 +90,7 @@ export default class List<T> extends mixin<
     ReadWriteMixin,
     VersionableMixin
 ) implements
-   IEnumerable<T>,
+   IEnumerable<T, number>,
    IList<T>,
    IIndexedCollection,
    IEquatable {
@@ -143,7 +143,7 @@ export default class List<T> extends mixin<
         return new Arraywise(this._$items);
     }
 
-    each(callback: EnumeratorCallback<T>, context?: object): void {
+    each(callback: EnumeratorCallback<T, number>, context?: object): void {
         // It's faster than use getEnumerator()
         for (let i = 0, count = this.getCount(); i < count; i++) {
             callback.call(
@@ -155,7 +155,7 @@ export default class List<T> extends mixin<
         }
     }
 
-    forEach: (callback: EnumeratorCallback<T>, context?: object) => void;
+    forEach: (callback: EnumeratorCallback<T, number>, context?: object) => void;
 
     // endregion
 

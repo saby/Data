@@ -75,15 +75,18 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * @public
  * @author Мальцев А.А.
  */
-export default function factory<T>(source: Abstract<T> | IEnumerable<T> | T[] | IHashMap<T>): Abstract<T> {
+export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U>): Abstract<T, U>;
+export default function factory<T>(source: T[]): Abstract<T, number>;
+export default function factory<T>(source: IHashMap<T> | object): Abstract<T, string>;
+export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U> | T[] | IHashMap<T>): Abstract<T, U> {
     if (source instanceof Abstract) {
         return source;
     } else if (source && source['[Types/_collection/IEnumerable]']) {
         return new Enumerable(source);
     } else if (source instanceof Array) {
-        return new Arraywise(source);
+        return new Arraywise(source) as unknown as Abstract<T, U>;
     } else if (source instanceof Object) {
-        return new Objectwise(source);
+        return new Objectwise(source as IHashMap<T>) as unknown as Abstract<T, U>;
     }
     throw new TypeError(`Unsupported source type "${source}": only Array or Object are supported.`);
 }

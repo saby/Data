@@ -7,7 +7,7 @@ import {
 } from '../entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from '../entity';
-import {IList} from '../collection';
+import {IList, EnumeratorIndex} from '../collection';
 import {register} from '../di';
 import {mixin} from '../util';
 
@@ -17,7 +17,7 @@ export interface IOptions<T> {
     owner?: Collection<T>;
 }
 
-export interface ISerializableState<T> extends IDefaultSerializableState {
+export interface ISerializableState<T, U = EnumeratorIndex> extends IDefaultSerializableState {
     $options: IOptions<T>;
     ci: number;
     iid: string;

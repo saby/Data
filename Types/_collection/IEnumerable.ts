@@ -1,6 +1,7 @@
 import IEnumerator from './IEnumerator';
 
-export type EnumeratorCallback<T> = (item: T, index: number) => void;
+export type EnumeratorIndex = number | string;
+export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => void;
 
 /**
  * Interface of collection which provides their members through simple iteration one by one.
@@ -8,7 +9,7 @@ export type EnumeratorCallback<T> = (item: T, index: number) => void;
  * @public
  * @author Мальцев А.А.
  */
-export default interface IEnumerable<T> {
+export default interface IEnumerable<T, U = EnumeratorIndex> {
     readonly '[Types/_collection/IEnumerable]': boolean;
 
     /**
@@ -28,7 +29,7 @@ export default interface IEnumerable<T> {
      *     //1, 2, 3
      * </pre>
      */
-    getEnumerator(): IEnumerator<T>;
+    getEnumerator(): IEnumerator<T, U>;
 
     /**
      * Перебирает все элементы коллекции, начиная с первого. Цикл проходит полное количество итераций, его невозможно прервать досрочно.
@@ -52,5 +53,5 @@ export default interface IEnumerable<T> {
      *     //1, 2, 3
      * </pre>
      */
-    each(callback: EnumeratorCallback<T>, context?: object): void;
+    each(callback: EnumeratorCallback<T, U>, context?: object): void;
 }

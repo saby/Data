@@ -18,7 +18,7 @@ export default class Arraywise<T> extends mixin<
     IndexedEnumeratorMixin<any>
 >(
     IndexedEnumeratorMixin
-) implements IEnumerator<T> {
+) implements IEnumerator<T, number> {
     /**
      * Array to traverse
      */

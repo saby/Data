@@ -45,7 +45,7 @@ export default class Enum<T> extends mixin<
 
     protected _childChanged: (data: any) => void;
 
-    constructor(options?: Object) {
+    constructor(options?: object) {
         super(options);
         SerializableMixin.call(this);
         this._publish('onChange');
@@ -123,7 +123,7 @@ export default class Enum<T> extends mixin<
 
     // region IEquatable
 
-    isEqual(to: Object): boolean {
+    isEqual(to: object): boolean {
         if (!(to instanceof Enum)) {
             return false;
         }

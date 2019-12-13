@@ -80,13 +80,14 @@ describe('Types/_chain/Arraywise', () => {
         });
 
         it('should return type from given factory', () => {
-            const Type = function(items: any): void {
-                this.items = items;
-            };
+            class Type<T> {
+                constructor(public items: T) {
+                }
+            }
             const factory = (items) => {
                 return new Type(items);
             };
-            const result = chain.value(factory);
+            const result = chain.value<Type<Arraywise<string>>>(factory);
 
             assert.instanceOf(result, Type);
             assert.instanceOf(result.items, Arraywise);

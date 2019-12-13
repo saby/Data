@@ -1,4 +1,4 @@
-import Abstract from './Abstract';
+import Abstract, {IObject} from './Abstract';
 import {IEnumerator} from '../collection';
 
 /**
@@ -8,7 +8,7 @@ import {IEnumerator} from '../collection';
  * @public
  * @author Мальцев А.А.
  */
-export default class Enumerable<T> extends Abstract<T> {
+export default class Enumerable<T, U> extends Abstract<T, U> {
     constructor(source: any) {
         if (!source || !source['[Types/_collection/IEnumerable]']) {
             throw new TypeError('Source must implement Types/collection:IEnumerable');
@@ -18,11 +18,11 @@ export default class Enumerable<T> extends Abstract<T> {
 
     // region IEnumerable
 
-    getEnumerator(): IEnumerator<T> {
+    getEnumerator(): IEnumerator<T, U> {
         return this._source.getEnumerator();
     }
 
-    each(callback: (item: any, index: number) => void, context?: object): void {
+    each(callback: (item: T, index: U) => void, context?: object): void {
         return this._source.each(callback, context);
     }
 
@@ -30,11 +30,11 @@ export default class Enumerable<T> extends Abstract<T> {
 
     // region IObject
 
-    toObject(): object {
+    toObject(): IObject<T> {
         if (this._source['[Types/_entity/IObject]']) {
             const result = {};
             this.each((key, value) => {
-                result[key] = value;
+                result[key as unknown as string] = value;
             });
             return result;
         }

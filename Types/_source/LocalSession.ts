@@ -770,7 +770,7 @@ export default class LocalSession extends mixin<
      *    });
      * </pre>
      */
-    update(data: Record | RecordSet, meta?: Object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
         const updateRecord = (record) => {
             let key;
             const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
@@ -818,7 +818,7 @@ export default class LocalSession extends mixin<
      *    });
      * </pre>
      */
-    destroy(keys: any | any[], meta?: Object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
        const isExistKeys = this.rawManager.existKeys(keys);
        if (!isExistKeys) {
            return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
@@ -907,7 +907,7 @@ export default class LocalSession extends mixin<
     *   });
     * </pre>
     */
-   copy(key: string | number, meta?: Object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: object): ExtendPromise<Record> {
       const myId = this.rawManager.reserveId();
       const from = this.rawManager.get(key as string);
       if (from === null) {

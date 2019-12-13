@@ -52,7 +52,7 @@ export default abstract class Dictionary<T> extends mixin<
      */
     protected _type: string;
 
-    constructor(options?: Object) {
+    constructor(options?: object) {
         super();
         OptionsToPropertyMixin.call(this, options);
         ObservableMixin.call(this, options);
@@ -81,7 +81,7 @@ export default abstract class Dictionary<T> extends mixin<
         return enumerator;
     }
 
-    each(callback: EnumeratorCallback<T>, context?: Object, localize?: boolean): void {
+    each(callback: EnumeratorCallback<T>, context?: object, localize?: boolean): void {
         context = context || this;
         const enumerator = this.getEnumerator(localize);
         while (enumerator.moveNext()) {

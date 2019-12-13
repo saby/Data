@@ -89,7 +89,7 @@ export default class Enum<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         if (index > -1) {
             while (enumerator.moveNext()) {
                 if (i === index) {
-                    return enumerator.getCurrentIndex();
+                    return enumerator.getCurrentIndex() as number;
                 }
                 i++;
             }

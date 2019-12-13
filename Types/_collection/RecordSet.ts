@@ -385,7 +385,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
-    each(callback: EnumeratorCallback<T>, state?: any, context?: object): void {
+    each(callback: EnumeratorCallback<T, number>, state?: any, context?: object): void {
         if (state instanceof Object) {
             context = state;
             state = undefined;
@@ -1508,7 +1508,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
             const normalizedAdapter = this.getAdapter().forRecord(null, this._getRawData());
             const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
             format.each((field, index) => {
-                normalizedAdapter.addField(field, index);
+                normalizedAdapter.addField(field, index as number);
                 const name = field.getName();
                 normalizedAdapter.set(name, itemAdapter.get(name));
             });

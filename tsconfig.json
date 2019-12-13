@@ -8,7 +8,6 @@
     "Application/**/*.ts",
     "Browser/**/*.ts",
     "Env/**/*.ts",
-    "test/**/*.ts",
     "Types/**/*.ts",
     "TypesUnit/**/*.ts",
     "I18n/**/*.ts",

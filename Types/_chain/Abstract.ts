@@ -4,6 +4,7 @@ import {object} from '../util';
 import {resolve} from '../di';
 import {CompareFunction} from '../_declarations';
 import IEnumerator from '../_collection/IEnumerator';
+import {EnumeratorIndex} from '../_collection/IEnumerable';
 import Zipped from './Zipped';
 import Mapped from './Mapped';
 import Concatenated from './Concatenated';
@@ -16,8 +17,12 @@ import Sliced from './Sliced';
 import Reversed from './Reversed';
 import Sorted from './Sorted';
 
-type PropertyMapFunc = (item: any, property: string|number) => any;
-type ReduceFunc = (memo: any, item: any, index: number) => any;
+export interface IObject<T> {
+    [key: string]: T;
+}
+
+type PropertyMapFunc<T, U> = (item: T, property: U) => any;
+type ReduceFunc<T, U> = (memo: any, item: T, index: U) => any;
 
 /**
  * Абстрактная цепочка.
@@ -28,11 +33,11 @@ type ReduceFunc = (memo: any, item: any, index: number) => any;
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Abstract<T> extends DestroyableMixin implements IEnumerable<T> {
+export default abstract class Abstract<T, U = EnumeratorIndex> extends DestroyableMixin implements IEnumerable<T, U> {
     /**
      * Первый элемент цепочки
      */
-    get start(): Abstract<T> {
+    get start(): Abstract<T, U> {
         return this._previous ? this._previous.start : this;
     }
 
@@ -51,17 +56,17 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     /**
      * Предыдущий элемент цепочки
      */
-    protected _previous: Abstract<T>;
+    protected _previous: Abstract<T, U>;
 
     /**
      * Конструктор цепочки
      * @param source Данные, обрабатываемые цепочкой
      */
-    constructor(source: Abstract<T> | any) {
+    constructor(source: Abstract<T, U> | any) {
         super();
 
         if (source['[Types/_chain/Abstract]']) {
-            this._previous = source as Abstract<T>;
+            this._previous = source as Abstract<T, U>;
             this._source = this._previous._source;
         } else {
             this._source = source;
@@ -78,7 +83,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
     readonly '[Types/_collection/IEnumerable]': boolean = true;
 
-    getEnumerator(): IEnumerator<T> {
+    getEnumerator(): IEnumerator<T, U> {
         throw new Error('Not implemented');
     }
 
@@ -96,7 +101,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * //'key: foo, value: Foo', 'key: bar, value: Bar'
      * </pre>
      */
-    each(callback: (item: any, index: number) => void, context?: object): void {
+    each(callback: (item: T, index: U) => void, context?: object): void {
         const enumerator = this.getEnumerator();
         while (enumerator.moveNext()) {
             callback.call(
@@ -162,7 +167,9 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * });
      * </pre>
      */
-    value(factory?: Function, ...optional: any[]): any {
+    value(): T[];
+    value<S>(factory?: Function, ...optional: any[]): S;
+    value<S>(factory?: Function, ...optional: any[]): T[] | S {
         if (factory instanceof Function) {
             const args = [this, ...optional];
             return factory(...args);
@@ -195,7 +202,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * })).toArray();//[{id: 1, name: 'SpongeBob SquarePants'}, {id: 2, name: 'Patrick Star'}]
      * </pre>
      */
-    toArray(): any[] {
+    toArray(): T[] {
         const result = [];
         this.each((item) => {
             result.push(item);
@@ -222,11 +229,11 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory(record).toObject();//{id: 1, title: 'New One'}
      * </pre>
      */
-    toObject(): object {
-        const result = {};
+    toObject(): IObject<T> {
+        const result: IObject<T> = {};
         const enumerator = this.getEnumerator();
         while (enumerator.moveNext()) {
-            result[enumerator.getCurrentIndex()] = enumerator.getCurrent();
+            result[enumerator.getCurrentIndex() as unknown as string] = enumerator.getCurrent();
         }
         return result;
     }
@@ -244,7 +251,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([1, 2, 3, 4, 5]).reduce((memo, item) => memo + item);//15
      * </pre>
      */
-    reduce(callback: ReduceFunc, initialValue?: any): any {
+    reduce<S = T>(callback: ReduceFunc<T, U>, initialValue?: S | T): S {
         let result = initialValue;
         let skipFirst = arguments.length < 2;
 
@@ -257,7 +264,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
             result = callback(result, item, index);
         });
 
-        return result;
+        return result as S;
     }
 
     /**
@@ -274,7 +281,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([2, 5, 2, 100]).reduceRight((memo, item) => item / memo);//5
      * </pre>
      */
-    reduceRight(callback: ReduceFunc, initialValue?: any): any {
+    reduceRight<S = T>(callback: ReduceFunc<T, U>, initialValue?: S | T): S {
         if (arguments.length < 2) {
             return this.reverse().reduce(callback);
         }
@@ -303,7 +310,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * ).value();//[Record({id: 1, name: 'SpongeBob SquarePants'}), Record({id: 2, name: 'Patrick Star'})]
      * </pre>
      */
-    map(callback: (item: any, index: number) => any, thisArg?: object): Mapped<T> {
+    map<S>(callback: (item: T, index: U) => S, thisArg?: object): Mapped<S> {
         const Next = resolve<any>('Types/chain:Mapped');
         return new Next(
             this,
@@ -328,7 +335,10 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * ).value();//[[1, 'one', true], [2, 'two', true], [3, 'three', false]]
      * </pre>
      */
-    zip(...args: any[]): Zipped<T> {
+    zip<S1>(arg1: S1[]): Zipped<[T, S1], T, S1>;
+    zip<S1, S2>(arg1: S1[], arg2: S2[]): Zipped<[T, S1, S2], T, S1>;
+    zip<S1, S2, S3>(arg1: S1[], arg2: S2[], arg3: S3[]): Zipped<[T, S1, S2, S3], T, S1>;
+    zip<S, R>(...args: S[][]): Zipped<R, T, S> {
         const Next = resolve<any>('Types/chain:Zipped');
         return new Next(
             this,
@@ -351,10 +361,10 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * );//{login: 'root', password: '123', email: 'root@localhost'}
      * </pre>
      */
-    zipObject(values: any[]): object {
+    zipObject<S1>(values: S1[]): IObject<S1> {
         const result = Object.create(null);
         this.zip(values).each((item) => {
-            const [key, value]: [any, any] = item;
+            const [key, value]: [T, S1] = item;
             result[key] = value;
         });
         return result;
@@ -384,7 +394,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * })).pluck('name').value();//['SpongeBob SquarePants', 'Patrick Star']
      * </pre>
      */
-    pluck(propertyName: string): Mapped<T> {
+    pluck<S>(propertyName: string): Mapped<S> {
         return this.map((item) => object.getPropertyValue(item, propertyName));
     }
 
@@ -426,7 +436,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([1, 2]).concat([3, 4], [5]).value();//[1, 2, 3, 4, 5]
      * </pre>
      */
-    concat(...args: Array<T[]|IEnumerable<T>>): Concatenated<T> {
+    concat(...args: Array<T[]|IEnumerable<T, U>>): Concatenated<T> {
         const Next = resolve<any>('Types/chain:Concatenated');
         return new Next(this, args);
     }
@@ -470,7 +480,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * ]).group('kind', 'title').toObject();//{fruit: ['Apple', 'Cherry', 'Pear'], vegetable: ['Cucumber', 'Potato']}
      * </pre>
      */
-    group(key: string|((item: any) => string), value: string|((item: any) => any)): Grouped<T> {
+    group<S>(key: string|((item: T) => string), value: string|((item: T) => S)): Grouped<S> {
         const Next = resolve<any>('Types/chain:Grouped');
         return new Next(
             this,
@@ -508,7 +518,9 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     * ]).count('kind').toObject();//{fruit: 3, vegetable: 2}
     * </pre>
     */
-    count(by?: string |((item: any) => string | number | boolean)): Counted<T> | number {
+    count(): number;
+    count(by?: string |((item: T) => string | number | boolean)): Counted<T>;
+    count(by?: string |((item: T) => string | number | boolean)): Counted<T> | number {
         if (by === undefined) {
             return this.reduce((memo) => memo + 1, 0);
         }
@@ -566,7 +578,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * ).value();//[{title: 'Apple', kind: 'fruit'}, {title: 'Cucumber', kind: 'vegetable'}]
      * </pre>
      */
-    uniq(idExtractor?: (item: any) => string|number): Uniquely<T> {
+    uniq(idExtractor?: (item: T) => string | number): Uniquely<T> {
         const Next = resolve<any>('Types/chain:Uniquely');
         return new Next(this, idExtractor);
     }
@@ -581,7 +593,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([1, 2, 3]).union([0, 1, 2, 3, 4, 5]).value();//[1, 2, 3, 0, 4, 5]
      * </pre>
      */
-    union(...args: Array<T[]|IEnumerable<T>>): Uniquely<T> {
+    union(...args: Array<T[]|IEnumerable<T, U>>): Uniquely<T> {
         return this
             .concat(...args)
             .uniq();
@@ -604,7 +616,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      *     .value();//[2, 4]
      * </pre>
      */
-    filter(callback: (item: any, index: number) => boolean, thisArg?: object): Filtered<T> {
+    filter(callback: (item: T, index: U) => boolean, thisArg?: object): Filtered<T> {
         const Next = resolve<any>('Types/chain:Filtered');
         return new Next(
             this,
@@ -626,7 +638,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      *     .value();//[1, 5]
      * </pre>
      */
-    reject(callback: (item: any, index: number) => boolean, thisArg?: object): Filtered<T> {
+    reject(callback: (item: T, index: U) => boolean, thisArg?: object): Filtered<T> {
         return this.filter((...args) => !callback.apply(thisArg, args));
     }
 
@@ -678,7 +690,9 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([1, 2, 3, 4, 5]).first(3).value();//[1, 2, 3]
      * </pre>
      */
-    first(n?: number): Sliced<T> | any {
+    first(): T;
+    first(n?: number): Sliced<T>;
+    first(n?: number): Sliced<T> | T {
         if (n === undefined) {
             const enumerator = this.getEnumerator();
             return enumerator.moveNext() ? enumerator.getCurrent() : undefined;
@@ -703,12 +717,16 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory([1, 2, 3, 4, 5]).last(3).value();//[3, 4, 5]
      * </pre>
      */
-    last(n?: number): Reversed<T> | any {
+    last(): T;
+    last(n?: number): Reversed<T, U>;
+    last(n?: number): Reversed<T, U> | T {
         if (n === undefined) {
             return this.reverse().first() as T;
         }
 
-        return this.reverse().first(n).reverse();
+        return (
+            this.reverse().first(n) as Sliced<T>
+        ).reverse() as unknown as Reversed<T, U>;
     }
 
     // endregion
@@ -724,7 +742,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
      * factory(['one', 'two', 'three']).reverse().value();//['three', 'two', 'one']
      * </pre>
      */
-    reverse(): Reversed<T> {
+    reverse(): Reversed<T, U> {
         const Next = resolve<any>('Types/chain:Reversed');
         return new Next(this);
     }
@@ -743,7 +761,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
     *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
-   sort(compareFunction?: CompareFunction): Sorted<T> {
+   sort(compareFunction?: CompareFunction): Sorted<T, U> {
       const Next = resolve<any>('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }
@@ -752,7 +770,7 @@ export default abstract class Abstract<T> extends DestroyableMixin implements IE
 
     // region Static methods
 
-    static propertyMapper(name: string|PropertyMapFunc): PropertyMapFunc {
+    static propertyMapper<T, U = EnumeratorIndex>(name: string|PropertyMapFunc<T, U>): PropertyMapFunc<T, U> {
         if (typeof name === 'function') {
             return name;
         }

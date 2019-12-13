@@ -8,10 +8,10 @@ import ReversedEnumerator from './ReversedEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Reversed<T> extends Abstract<T> {
+export default class Reversed<T, U> extends Abstract<T, U> {
     // IEnumerable
 
-    getEnumerator(): ReversedEnumerator<T> {
+    getEnumerator(): ReversedEnumerator<T, U> {
         return new ReversedEnumerator(
             this._previous
         );

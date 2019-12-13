@@ -7,7 +7,7 @@ import IEnumerator from '../IEnumerator';
  * @public
  * @author Мальцев А.А.
  */
-export default class Objectwise<T> implements IEnumerator<T> {
+export default class Objectwise<T> implements IEnumerator<T, string> {
     /**
      * Объект
      */

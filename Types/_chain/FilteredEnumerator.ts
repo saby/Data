@@ -12,7 +12,7 @@ export default class FilteredEnumerator<T> implements IEnumerator<T> {
     readonly '[Types/_collection/IEnumerator]': boolean = true;
     private previous: Abstract<T>;
     private callback: CallbackFunc;
-    private callbackContext: Object;
+    private callbackContext: object;
     private enumerator: IEnumerator<T>;
 
     /**
