@@ -27,6 +27,11 @@ describe('Types/_object/isEqual', () => {
         assert.isFalse(isEqual(0, true));
     });
 
+    it('should return true for NaNs', () => {
+        assert.isTrue(isEqual(NaN, NaN));
+        assert.isTrue(isEqual({a: NaN}, {a: NaN}));
+    });
+
     it('should return true for strings', () => {
         assert.isTrue(isEqual('', ''));
         assert.isTrue(isEqual('a', 'a'));
