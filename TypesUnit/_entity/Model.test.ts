@@ -1069,25 +1069,25 @@ describe('Types/_entity/Model', () => {
 
     describe('.clone()', () => {
         it('should clone properties definition', () => {
-            const clone = model.clone<Model>();
+            const clone = model.clone();
             assert.notEqual(model.getProperties(), clone.getProperties());
             assert.deepEqual(model.getProperties(), clone.getProperties());
         });
 
         it('should have another instance id', () => {
             const id = model.getInstanceId();
-            const clone = model.clone<Model>();
+            const clone = model.clone();
             assert.notEqual(clone.getInstanceId(), id);
         });
 
         it('should clone id property', () => {
-            const clone = model.clone<Model>();
+            const clone = model.clone();
             assert.strictEqual(model.getKey(), clone.getKey());
             assert.strictEqual(model.getKeyProperty(), clone.getKeyProperty());
         });
 
         it('should give equal fields for not an Object', () => {
-            const clone = model.clone<Model>();
+            const clone = model.clone();
             model.each((name, value: any) => {
                 if (!(value instanceof Object)) {
                     assert.strictEqual(value, clone.get(name));
