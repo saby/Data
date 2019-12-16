@@ -616,7 +616,7 @@ export default class Record extends mixin<
 
     // region Types/_entity/ICloneable
 
-    clone: <T = Record>(shallow?: boolean) => T;
+    clone: <T = this>(shallow?: boolean) => T;
 
     // endregion
 

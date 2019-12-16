@@ -134,7 +134,7 @@ export default class RecordSetTable extends mixin<
             throw new TypeError('Passed data has invalid format');
         }
 
-        const clone = this._data.at(index).clone<Record>();
+        const clone = this._data.at(index).clone();
         this.add(clone, 1 + index);
         return clone;
     }
