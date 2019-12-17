@@ -187,6 +187,14 @@ describe('Types/_entity/adapter/RecordSetRecord', () => {
         });
     });
 
+    describe('.getTableData()', () => {
+        it('should return data passed to the constructor', () => {
+            const tableData = new RecordSet();
+            const localAdapter = new RecordSetRecordAdapter(data, tableData);
+            assert.strictEqual(localAdapter.getTableData(), tableData);
+        });
+    });
+
     describe('.getFields()', () => {
         it('should return fields list', () => {
             assert.deepEqual(

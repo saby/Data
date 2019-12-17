@@ -63,23 +63,23 @@ export default interface IData {
 
     setListModule(listModule: Function | string): void;
 
-   /**
-    * Возвращает название свойства записи, содержащего первичный ключ
-    * @return {String}
-    * @see keyProperty
-    * @see Types/_entity/Model#keyProperty
-    * @example
-    * Получим название свойства записи, содержащего первичный ключ:
-    * <pre>
-    *     import {Memory} from 'Types/source';
-    *
-    *     const dataSource = new Memory({
-    *         keyProperty: 'id'
-    *     });
-    *     console.log(dataSource.getKeyProperty()); // 'id'
-    * </pre>
-    */
-   getKeyProperty(): string;
+    /**
+     * Возвращает название свойства записи, содержащего первичный ключ
+     * @return {String}
+     * @see keyProperty
+     * @see Types/_entity/Model#keyProperty
+     * @example
+     * Получим название свойства записи, содержащего первичный ключ:
+     * <pre>
+     *     import {Memory} from 'Types/source';
+     *
+     *     const dataSource = new Memory({
+     *         keyProperty: 'id'
+     *     });
+     *     console.log(dataSource.getKeyProperty()); // 'id'
+     * </pre>
+     */
+    getKeyProperty(): string;
 
     setKeyProperty(name: string): void;
 }
