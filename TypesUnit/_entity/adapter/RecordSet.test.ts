@@ -64,6 +64,19 @@ describe('Types/_entity/adapter/RecordSet', () => {
             );
         });
 
+        it('should pass data reference to the record adapter as table data', () => {
+            const items = new RecordSet();
+            adapter.dataReference = items;
+
+            const item = new Record();
+            const itemAdapter = adapter.forRecord(item);
+
+            assert.strictEqual(
+                itemAdapter.getTableData(),
+                items
+            );
+        });
+
         context('when enclosed model used', () => {
             class ModelA extends Model {
                 protected _$properties: {} = {
@@ -203,6 +216,17 @@ describe('Types/_entity/adapter/RecordSet', () => {
             assert.throws(() => {
                 adapter.setProperty(data, 'some', 'value');
             });
+        });
+    });
+
+    describe('.dataReference', () => {
+        it('should return undefined by default', () => {
+            assert.isUndefined(adapter.dataReference);
+        });
+
+        it('should keep given reference', () => {
+            adapter.dataReference = data;
+            assert.strictEqual(adapter.dataReference, data);
         });
     });
 });
