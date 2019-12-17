@@ -146,6 +146,14 @@ export default class RecordSetRecord extends mixin<
 
     // endregion
 
+    // region Public methods
+
+    getTableData(): RecordSet {
+        return this._tableData;
+    }
+
+    // endregion
+
     // region Protected methods
 
     protected _touchData(): void {

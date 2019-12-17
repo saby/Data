@@ -2,11 +2,13 @@ import {assert} from 'chai';
 import Local, {IOptions} from 'Types/_source/Local';
 import {Join as QueryJoin} from 'Types/_source/Query';
 import JsonTable from 'Types/_entity/adapter/JsonTable';
+import RecordSetAdapter from 'Types/_entity/adapter/RecordSet';
+import IDataHolder from 'Types/_entity/adapter/IDataHolder';
 import ITable from 'Types/_entity/adapter/ITable';
 import {ExtendDate, IExtendDateConstructor} from 'Types/_declarations';
 
 class TestLocal extends Local {
-   constructor(options?: IOptions) {
+   constructor(options?: IOptions, protected tableData?: unknown) {
       super(options);
    }
 
@@ -19,7 +21,7 @@ class TestLocal extends Local {
    }
 
    protected _getTableAdapter(): ITable {
-      return new JsonTable();
+      return new JsonTable(this.tableData as any);
    }
 }
 
@@ -67,6 +69,17 @@ describe('Types/_source/Local', () => {
                     (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME
                 );
             });
+        });
+    });
+
+    describe('.getAdapter()', () => {
+        it('should return an adapter with data reference if IDataHolder is supported', () => {
+            const tableData = {};
+            const adapter = new RecordSetAdapter();
+            const localSource = new TestLocal({adapter}, tableData);
+            const returnedAdapter = localSource.getAdapter() as unknown as IDataHolder<unknown>;
+
+            assert.strictEqual(returnedAdapter.dataReference, tableData);
         });
     });
 });
