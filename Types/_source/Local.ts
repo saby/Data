@@ -62,7 +62,7 @@ export interface IOptions extends IBaseOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class Local extends mixin<
+export default abstract class Local<TData = unknown> extends mixin<
     Base,
     DataCrudMixin
 >(
@@ -144,6 +144,11 @@ export default abstract class Local extends mixin<
      * Индекс для быстрого поиска записи по ключу
      */
     protected _index: IHashMap<number>;
+
+    /**
+     * Data holder setup is in progress
+     */
+    protected _settingUpDataHolder: boolean;
 
     /**
      * Data which source work with
@@ -335,6 +340,22 @@ export default abstract class Local extends mixin<
         }
 
         return this._reorderMove(sourceItems, targetItem, meta);
+    }
+
+    // endregion
+
+    // region Types/_source/DataMixin
+
+    getAdapter(): adapter.IAdapter {
+        super.getAdapter();
+
+        if (this._$adapter['Types/_entity/adapter/IDataHolder'] && !this._settingUpDataHolder) {
+            this._settingUpDataHolder = true;
+            (this._$adapter as unknown as adapter.IDataHolder<TData>).dataReference = this.data;
+            this._settingUpDataHolder = false;
+        }
+
+        return this._$adapter as adapter.IAdapter;
     }
 
     // endregion

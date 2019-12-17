@@ -5,6 +5,7 @@
  * @includes Cow Types/_entity/adapter/Cow
  * @includes Json Types/_entity/adapter/Json
  * @includes IAdapter Types/_entity/adapter/IAdapter
+ * @includes IDataHolder Types/_entity/adapter/IDataHolder
  * @includes IDecorator Types/_entity/adapter/IDecorator
  * @includes IMetaData Types/_entity/adapter/IMetaData
  * @includes IRecord Types/_entity/adapter/IRecord
@@ -18,6 +19,7 @@ export {default as Abstract} from './adapter/Abstract';
 export {default as Cow} from './adapter/Cow';
 export {default as Json} from './adapter/Json';
 export {default as IAdapter} from './adapter/IAdapter';
+export {default as IDataHolder} from './adapter/IDataHolder';
 export {default as IDecorator} from './adapter/IDecorator';
 export {default as IMetaData} from './adapter/IMetaData';
 export {default as IRecord} from './adapter/IRecord';
