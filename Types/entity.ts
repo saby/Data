@@ -40,6 +40,8 @@ import * as format from './_entity/format';
 export {format};
 export {
     default as FormattableMixin,
+    AdapterDescriptor,
+    FormatDescriptor,
     IOptions as IFormattableOptions,
     ISerializableState as IFormattableSerializableState
 } from './_entity/FormattableMixin';
@@ -60,11 +62,15 @@ export {default as Model, IProperty as IModelProperty} from './_entity/Model';
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReactiveObject} from './_entity/ReactiveObject';
-export {default as ReadWriteMixin} from './_entity/ReadWriteMixin';
+export {default as ReadWriteMixin, IOptions as IReadWriteMixinOptions} from './_entity/ReadWriteMixin';
 export {default as Record} from './_entity/Record';
 import * as relation from './_entity/relation';
 export {relation};
-export {default as SerializableMixin, IState as ISerializableState} from './_entity/SerializableMixin';
+export {
+    default as SerializableMixin,
+    ISignature as ISerializableSignature,
+    IState as ISerializableState
+} from './_entity/SerializableMixin';
 export {default as Time} from './_entity/Time';
 export {default as TimeInterval} from './_entity/TimeInterval';
 export {

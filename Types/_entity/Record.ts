@@ -15,7 +15,8 @@ import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin, {IOptions as IReadWriteMixinOptions} from './ReadWriteMixin';
 import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
-    IOptions as IFormattableOptions
+    IOptions as IFormattableOptions,
+    AdapterDescriptor
 } from './FormattableMixin';
 import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import TheDate from './Date';
@@ -1444,7 +1445,7 @@ export default class Record extends mixin<
      * @param [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
      * @static
      */
-    static fromObject(data: any, adapter?: IAdapter | string): Record | null {
+    static fromObject(data: any, adapter?: AdapterDescriptor): Record | null {
         if (data === null) {
             return data;
         }

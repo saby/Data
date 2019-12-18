@@ -1,6 +1,7 @@
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
+import {ISerializableSignature, SerializableMixin} from '../entity';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {mixin} from '../util';
@@ -311,7 +312,15 @@ export default class ObservableList<T> extends mixin<
         return this._eventRaising && this.hasEventHandlers('onCollectionItemChange');
     }
 
-    // endregion Protected methods
+    // endregion
+
+    // region SerializableMixin
+
+    static fromJSON<T = SerializableMixin, K = any>(data: ISerializableSignature<K>): T {
+        return List.fromJSON.call(this, data);
+    }
+
+    // endregion
 }
 
 Object.assign(ObservableList.prototype, {

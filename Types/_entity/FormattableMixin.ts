@@ -9,10 +9,11 @@ import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
-type FormatDescriptor = format.Format | FormatDeclaration;
+export type FormatDescriptor = format.Format | FormatDeclaration;
+export type AdapterDescriptor = IAdapter | string;
 
 export interface IOptions {
-   adapter?: IAdapter | string;
+   adapter?: AdapterDescriptor;
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;
@@ -172,13 +173,13 @@ export default abstract class FormattableMixin {
     protected _$cow: boolean;
 
    /**
-    * @cfg {String|Types/_entity/adapter/IAdapter} Adapter that provides access to raw data of certain format. By default raw data in {@link Types/_entity/adapter/Json} format are supported.
+    * @cfg {String|Types/_entity/adapter/IAdapter} AdapterDescriptor that provides access to raw data of certain format. By default raw data in {@link Types/_entity/adapter/Json} format are supported.
     * @name Types/_entity/FormattableMixin#adapter
     * @see getAdapter
     * @see Types/_entity/adapter/Json
     * @see Types/di
     * @remark
-    * Adapter should be defined to deal with certain  {@link rawData raw data} format.
+    * AdapterDescriptor should be defined to deal with certain  {@link rawData raw data} format.
     * @example
     * Let's create record with adapter for data format of Saby application server:
     * <pre>
@@ -372,7 +373,7 @@ export default abstract class FormattableMixin {
     protected _formatUnlinked: boolean;
 
     /**
-     * Adapter instance to deal with raw data
+     * AdapterDescriptor instance to deal with raw data
      */
     protected _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
 
