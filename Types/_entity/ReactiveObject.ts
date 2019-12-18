@@ -62,6 +62,7 @@ import {Map} from '../shim';
  * console.log(instance.email); // 'foo@bar.org'
  * console.log(instance.domain); // 'bar.org'
  * </pre>
+ * @class Types/_entity/ReactiveObject
  * @extends Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.
