@@ -137,9 +137,9 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * </pre>
      * Получим рекордсет из персонажей женского пола, отсортированных по имени:
      * <pre>
-     * import {factory} from 'Types/chain';
+     * import {factory as chain} from 'Types/chain';
      * import {RecordSet, factory} from 'Types/collection';
-     * factory(new RecordSet({rawData: [
+     * chain(new RecordSet({rawData: [
      *     {name: 'Philip J. Fry', gender: 'M'},
      *     {name: 'Turanga Leela', gender: 'F'},
      *     {name: 'Professor Farnsworth', gender: 'M'},
@@ -153,12 +153,12 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * </pre>
      * Получим рекордсет с адаптером для БЛ СБИС:
      * <pre>
-     * import {factory} from 'Types/chain';
+     * import {factory as chain} from 'Types/chain';
      * import {SbisService} from 'Types/source';
      * import {factory} from 'Types/collection';
      * const dataSource = new SbisService({endpoint: 'Employee'});
      * dataSource.query().addCallback((response) => {
-     *     const items = factory(response.getAll())
+     *     const items = chain(response.getAll())
      *         .first(10)
      *         .value(factory.recordSet, {
      *             adapter: response.getAdapter()
