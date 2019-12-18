@@ -27,7 +27,7 @@ export default interface IProvider {
      * @param {String} name Имя метода
      * @param {Object} [args] Аргументы метода (передаются по ссылке, можно модифицировать, но при этом следует учитывать, что изменяется оригинальный объект)
      * @example
-     * Добавляем в фильтр выборки поле enabled со значением true:
+     * Добавляем в фильтр выборки поле 'active' со значением true:
      * <pre>
      *     import {SbisService} from 'Types/source';
      *
