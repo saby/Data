@@ -9,10 +9,11 @@ import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
-type FormatDescriptor = format.Format | FormatDeclaration;
+export type FormatDescriptor = format.Format | FormatDeclaration;
+export type AdapterDescriptor = IAdapter | string;
 
 export interface IOptions {
-   adapter?: IAdapter | string;
+   adapter?: AdapterDescriptor;
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;

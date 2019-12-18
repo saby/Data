@@ -1,4 +1,11 @@
-import {DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, Model, adapter} from '../entity';
+import {
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    SerializableMixin,
+    AdapterDescriptor,
+    Model,
+    adapter
+} from '../entity';
 import {create, register} from '../di';
 import {mixin} from '../util';
 import {RecordSet} from '../collection';
@@ -6,7 +13,7 @@ import {RecordSet} from '../collection';
 type TypeDeclaration = Function | string;
 
 export interface IOptions {
-    adapter?: adapter.IAdapter | string;
+    adapter?: AdapterDescriptor;
     itemsProperty?: string;
     keyProperty?: string;
     listModule?: TypeDeclaration;
@@ -152,7 +159,7 @@ export default class DataSet extends mixin<
      * @see Types/_entity/adapter/IAdapter
      * @see Types/di
      */
-    protected _$adapter: adapter.IAdapter | string;
+    protected _$adapter: AdapterDescriptor;
 
     /**
      * @cfg {*} Данные в "сыром" виде

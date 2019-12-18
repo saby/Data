@@ -226,7 +226,7 @@ class SbisFormatFinder {
     *
     * @param {IRecordFormat | ITableFormat} data - Сырые данные, представлены в формате JSON объекта.
     */
-   constructor(data: IRecordFormat | ITableFormat) {
+   constructor(data?: IRecordFormat | ITableFormat) {
       this._cache = new Map();
       this._data = data;
    }

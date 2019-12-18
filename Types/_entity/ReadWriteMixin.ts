@@ -34,7 +34,7 @@ export default abstract class ReadWriteMixin {
         return this[$writable];
     }
 
-    constructor(options?: any) {
+    constructor(options?: IOptions) {
         if (this._options && hasOwnProperty.call(this._options, 'writable')) {
             this[$writable] = this._options.writable;
         }

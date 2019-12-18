@@ -13,10 +13,12 @@ import {
     IObservableObject,
     IProducible,
     InstantiableMixin,
+    ISerializableSignature,
     ISerializableState as IDefaultSerializableState,
     IFormattableSerializableState,
     factory,
     format,
+    FormatDescriptor,
     Record,
     Model,
     adapter
@@ -34,6 +36,8 @@ interface IOptions extends IListOptions<Model>, IFormattableOptions {
     model?: Function | string;
     keyProperty?: string;
     meta?: any;
+    metaFormat?: FormatDescriptor;
+    metaData?: any;
 }
 
 interface ISerializableOptions extends IOptions, IFormattableOptions {
@@ -240,7 +244,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     console.log(events.getMetaData().created instanceof Date); // true
      * </pre>
      */
-    protected _$metaFormat: any;
+    protected _$metaFormat: FormatDescriptor;
 
     /**
      * Модель по умолчанию
@@ -826,7 +830,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
         );
     }
 
-    addField(format: format.Field, at?: number, value?: any): void {
+    addField(format: format.Field | format.IFieldDeclaration, at?: number, value?: any): void {
         format = this._buildField(format);
         FormattableMixin.prototype.addField.call(this, format, at);
 
@@ -890,7 +894,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
     readonly '[Types/_entity/IProducible]': boolean;
 
-    static produceInstance(data: any, options: IOptions): RecordSet {
+    static produceInstance(data: any, options?: IOptions): RecordSet {
         const instanceOptions: any = {
             rawData: data
         };
@@ -1592,6 +1596,10 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     // endregion
 
     // region Statics
+
+    static fromJSON<T = RecordSet, K = any>(data: ISerializableSignature<K>): T {
+        return ObservableList.fromJSON.call(this, data);
+    }
 
     /**
      * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.

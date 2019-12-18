@@ -11,6 +11,7 @@ import {
     Model,
     OptionsToPropertyMixin,
     ReadWriteMixin,
+    AdapterDescriptor,
     adapter as adapters
 } from '../entity';
 import {RecordSet} from '../collection';
@@ -428,10 +429,10 @@ class RawManager {
 }
 
 class ModelManager {
-    adapter: adapters.IAdapter | string;
+    adapter: AdapterDescriptor;
     keyProperty: string;
 
-    constructor(adapter: adapters.IAdapter | string, keyProperty: string) {
+    constructor(adapter: AdapterDescriptor, keyProperty: string) {
         this.adapter = adapter;
         this.keyProperty = keyProperty;
     }
@@ -480,11 +481,11 @@ class ModelManager {
 }
 
 class Converter {
-    adapter: adapters.IAdapter | string;
+    adapter: AdapterDescriptor;
     keyProperty: string;
     modelManager: ModelManager;
 
-    constructor(adapter: adapters.IAdapter | string, keyProperty: string, modelManager: ModelManager) {
+    constructor(adapter: AdapterDescriptor, keyProperty: string, modelManager: ModelManager) {
         this.adapter = adapter;
         this.keyProperty = keyProperty;
         this.modelManager = modelManager;

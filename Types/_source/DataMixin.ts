@@ -1,6 +1,6 @@
 import IData from './IData';
 import DataSet, {IOptions as IDataSetOptions} from './DataSet';
-import {ReadWriteMixin, adapter, Model} from '../entity';
+import {ReadWriteMixin, AdapterDescriptor, adapter, Model} from '../entity';
 import {create} from '../di';
 
 export interface IOptions {
@@ -45,7 +45,7 @@ export default abstract class DataMixin implements IData {
      *     });
      * </pre>
      */
-    protected _$adapter: adapter.IAdapter | string;
+    protected _$adapter: AdapterDescriptor;
 
     /**
      * @cfg {String|Function} Конструктор записей, порождаемых источником данных.

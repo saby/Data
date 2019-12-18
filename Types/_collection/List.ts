@@ -5,22 +5,24 @@ import IIndexedCollection from './IIndexedCollection';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
-   CloneableMixin,
-   DestroyableMixin,
-   IEquatable,
-   ISerializableState,
-   ManyToManyMixin,
-   ObservableMixin,
-   OptionsToPropertyMixin,
-   ReadWriteMixin,
-   relation,
-   SerializableMixin,
-   VersionableMixin
+    CloneableMixin,
+    DestroyableMixin,
+    IEquatable,
+    ISerializableState,
+    ManyToManyMixin,
+    ObservableMixin,
+    OptionsToPropertyMixin,
+    ReadWriteMixin,
+    IReadWriteMixinOptions,
+    relation,
+    SerializableMixin,
+    ISerializableSignature,
+    VersionableMixin
 } from '../entity';
 import {register} from '../di';
 import {deprecateExtend, mixin, object} from '../util';
 
-export interface IOptions<T> {
+export interface IOptions<T> extends IReadWriteMixinOptions {
     items?: T[];
 }
 
@@ -340,6 +342,10 @@ export default class List<T> extends mixin<
     // endregion
 
     // region SerializableMixin
+
+    static fromJSON<T = SerializableMixin, K = any>(data: ISerializableSignature<K>): T {
+        return SerializableMixin.fromJSON.call(this, data);
+    }
 
     _getSerializableState(state: ISerializableState<IOptions<T>>): ISerializableState<IOptions<T>> {
         return SerializableMixin.prototype._getSerializableState.call(this, state);
