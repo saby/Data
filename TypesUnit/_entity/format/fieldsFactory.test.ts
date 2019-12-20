@@ -73,6 +73,15 @@ describe('Types/_entity/format/FieldsFactory', () => {
         assert.instanceOf(field, BooleanField);
     });
 
+    it('should create nullable boolean', () => {
+        const field = fieldsFactory({
+            name: 'foo',
+            type: 'boolean',
+            nullable: false
+        });
+        assert.isFalse(field.isNullable());
+    });
+
     it('should create integer', () => {
         const field = fieldsFactory({
             name: 'foo',
