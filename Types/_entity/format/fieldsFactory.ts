@@ -30,6 +30,7 @@ export interface IShortDeclaration {
     type: string | Function;
     defaultValue?: any;
     kind?: string;
+    nullable?: boolean;
     precision?: number;
     large?: boolean;
     withoutTimeZone?: boolean;
