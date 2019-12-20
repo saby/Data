@@ -23,13 +23,13 @@ export default abstract class Field extends mixin<
 >(
    DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
 ) implements IEquatable {
-   /**
-    * @cfg {String} Имя поля
-    * @name Types/_entity/format/Field#name
-    * @see getName
-    * @see setName
-    */
-   _$name: string;
+    /**
+     * @cfg {String} Имя поля
+     * @name Types/_entity/format/Field#name
+     * @see getName
+     * @see setName
+     */
+    _$name: string;
 
     /**
      * @cfg {String|Function} Модуль, который является конструктором значения поля
@@ -85,6 +85,14 @@ export default abstract class Field extends mixin<
             this.getName() === to.getName() &&
             isEqual(this.getDefaultValue(), to.getDefaultValue()) &&
             this.isNullable() === to.isNullable();
+    }
+
+    // endregion
+
+    // region Types/_entity/CloneableMixin
+
+    clone<T = this>(shallow?: boolean): T {
+        return super.clone(shallow);
     }
 
     // endregion
