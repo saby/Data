@@ -373,7 +373,7 @@ describe('Types/_display/itemsStrategy/Search', () => {
                 return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
             });
 
-            assert.deepEqual(result, ['#A:0', 'b:1', 'e:1', '#A,b,C:0', 'f:1', 'd:1']);
+            assert.deepEqual(result, ['#A:0', 'b:1', 'e:1', '#A,b,C:0', 'd:1', 'f:1']);
         });
 
         it('should return the same instances for second call', () => {
