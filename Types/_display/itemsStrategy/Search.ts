@@ -167,18 +167,31 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             itsNew: boolean;
         }
 
+        function getNearestNode(item: T): T {
+            if (!item || !item.isNode) {
+                return;
+            }
+
+            if (item.isNode()) {
+                return item;
+            }
+
+            return getNearestNode(item.getParent() as T);
+        }
+
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             let itsNew = false;
-            if (item && item.isNode && item.isNode() && item !== root) {
-                breadCrumbs = treeItemToBreadcrumbs.get(item);
+            const nearestNode = getNearestNode(item);
+            if (nearestNode && nearestNode !== root) {
+                breadCrumbs = treeItemToBreadcrumbs.get(nearestNode);
                 if (!breadCrumbs) {
                     breadCrumbs = new BreadcrumbsItem<S>({
                         contents: null,
                         owner: display,
-                        last: item
+                        last: nearestNode
                     });
-                    treeItemToBreadcrumbs.set(item, breadCrumbs);
+                    treeItemToBreadcrumbs.set(nearestNode, breadCrumbs);
                     itsNew = true;
                 }
             }
