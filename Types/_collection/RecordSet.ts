@@ -580,7 +580,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const foo = new Record({rawData: {
      *         title: 'Foo'
      *     }});
-     *     rs.assign([foo]]);
+     *     rs.assign([foo]);
      *
      *     console.log(rs.at(0).get('title'); // 'Foo'
      * </pre>
@@ -657,7 +657,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const bar = new Record({rawData: {
      *         title: 'Bar'
      *     }});
-     *     rs.append([foo]]);
+     *     rs.append([foo]);
      *
      *     console.log(rsB.getCount(); // 2
      *     console.log(rsB.at(0).get('title'); // 'Foo'
@@ -708,7 +708,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const bar = new Record({rawData: {
      *         title: 'Bar'
      *     }});
-     *     rs.prepend([foo]]);
+     *     rs.prepend([foo]);
      *
      *     console.log(rsB.getCount(); // 2
      *     console.log(rsB.at(0).get('title'); // 'Bar'
