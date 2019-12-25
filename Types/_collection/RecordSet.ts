@@ -580,7 +580,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const foo = new Record({rawData: {
      *         title: 'Foo'
      *     }});
-     *     rs.assign([foo]]);
+     *     rs.assign([foo]);
      *
      *     console.log(rs.at(0).get('title'); // 'Foo'
      * </pre>
@@ -657,11 +657,11 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const bar = new Record({rawData: {
      *         title: 'Bar'
      *     }});
-     *     rs.append([foo]]);
+     *     rs.append([bar]);
      *
-     *     console.log(rsB.getCount(); // 2
-     *     console.log(rsB.at(0).get('title'); // 'Foo'
-     *     console.log(rsB.at(1).get('title'); // 'Bar'
+     *     console.log(rs.getCount(); // 2
+     *     console.log(rs.at(0).get('title'); // 'Foo'
+     *     console.log(rs.at(1).get('title'); // 'Bar'
      * </pre>
      */
     append(items: IEnumerable<T> | T[]): T[] {
@@ -708,11 +708,11 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     const bar = new Record({rawData: {
      *         title: 'Bar'
      *     }});
-     *     rs.prepend([foo]]);
+     *     rs.prepend([bar]);
      *
-     *     console.log(rsB.getCount(); // 2
-     *     console.log(rsB.at(0).get('title'); // 'Bar'
-     *     console.log(rsB.at(1).get('title'); // 'Foo'
+     *     console.log(rs.getCount(); // 2
+     *     console.log(rs.at(0).get('title'); // 'Bar'
+     *     console.log(rs.at(1).get('title'); // 'Foo'
      * </pre>
      */
     prepend(items: IEnumerable<T> | T[]): T[] {
