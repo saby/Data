@@ -452,49 +452,49 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
 
     _$passing: getMergeableProperty<IPassing>({
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#create}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/create/}.
          * @name Types/_source/Remote#passing.create
          */
         create: passCreate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#read}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/read/}.
          * @name Types/_source/Remote#passing.read
          */
         read: passRead,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#update}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/update/}.
          * @name Types/_source/Remote#passing.update
          */
         update: passUpdate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#destroy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/destroy/}.
          * @name Types/_source/Remote#passing.destroy
          */
         destroy: passDestroy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#query}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/query/}.
          * @name Types/_source/Remote#passing.query
          */
         query: passQuery,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#copy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/copy/}.
          * @name Types/_source/Remote#passing.copy
          */
         copy: passCopy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#merge}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/merge/}.
          * @name Types/_source/Remote#passing.merge
          */
         merge: passMerge,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/Remote#move}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link ../../../methods/move/}.
          * @name Types/_source/Remote#passing.move
          */
         move: passMove
