@@ -15,7 +15,12 @@ import {adapter, Record, ObservableMixin, IObservableMixinOptions, getMergeableP
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
-import {ExtendPromise} from '../_declarations';
+
+interface IExtendedPromise<T> extends Promise<T> {
+    addCallback: (callback: Function) => IExtendedPromise<T>;
+    addErrback: (callback: Function) => IExtendedPromise<T>;
+    addCallbacks: (callback: Function, errback: Function) => IExtendedPromise<T>;
+}
 
 // tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
@@ -256,7 +261,7 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): ExtendPromise<Record> {
+    create(meta?: object): Promise<Record> {
         return this._callProvider(
             this._$binding.create,
             this._$passing.create.call(this, meta)
@@ -267,7 +272,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    read(key: any, meta?: object): ExtendPromise<Record> {
+    read(key: any, meta?: object): Promise<Record> {
         return this._callProvider(
             this._$binding.read,
             this._$passing.read.call(this, key, meta)
@@ -278,7 +283,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         return this._callProvider(
             this._$binding.update,
             this._$passing.update.call(this, data, meta)
@@ -288,14 +293,14 @@ export default abstract class Remote extends mixin<
     }
 
     // @ts-ignore
-    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
         return this._callProvider(
             this._$binding.destroy,
             this._$passing.destroy.call(this, keys, meta)
         );
     }
 
-    query(query?: Query): ExtendPromise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         return this._callProvider(
             this._$binding.query,
             this._$passing.query.call(this, query)
@@ -312,14 +317,14 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): ExtendPromise<any> {
+    merge(from: string | number, to: string | number): Promise<any> {
         return this._callProvider(
             this._$binding.merge,
             this._$passing.merge.call(this, from, to)
         );
     }
 
-    copy(key: string | number, meta?: object): ExtendPromise<Record> {
+    copy(key: string | number, meta?: object): Promise<Record> {
         return this._callProvider(
             this._$binding.copy,
             this._$passing.copy.call(this, key, meta)
@@ -328,7 +333,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    move(items: string | number | Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
+    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<any> {
         return this._callProvider(
             this._$binding.move,
             this._$passing.move.call(this, items, target, meta)
@@ -380,7 +385,7 @@ export default abstract class Remote extends mixin<
      * @return Асинхронный результат операции
      * @protected
      */
-    protected _callProvider(name: string, args: object): ExtendPromise<any> {
+    protected _callProvider(name: string, args: object): IExtendedPromise<any> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -394,7 +399,7 @@ export default abstract class Remote extends mixin<
         );
 
         if (this._$options.debug) {
-            result.addErrback((error) => {
+            result.catch((error) => {
                 if (error instanceof DeferredCanceledError) {
                     logger.info(this._moduleName, `calling of remote service "${name}" has been cancelled.`);
                 } else {
@@ -404,7 +409,7 @@ export default abstract class Remote extends mixin<
             });
         }
 
-        return result;
+        return result as IExtendedPromise<any>;
     }
 
     /**

@@ -1,5 +1,4 @@
 import DataSet from './DataSet';
-import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего {@link https://en.wikipedia.org/wiki/Remote_procedure_call RPC}.
@@ -41,5 +40,5 @@ export default interface IRpc {
      *     }).catch(console.error);
      * </pre>
      */
-    call(command: string, data?: object): ExtendPromise<DataSet>;
+    call(command: string, data?: object): Promise<DataSet>;
 }

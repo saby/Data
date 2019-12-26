@@ -1,5 +1,3 @@
-import {ExtendPromise} from '../../_declarations';
-
 /**
  * Интерфейс абстрактного провайдера
  * @interface Types/_source/provider/IAbstract
@@ -11,9 +9,9 @@ export default interface IAbstract {
 
     /**
      * Вызывает удаленный сервис
-     * @param {String} name Имя сервиса
-     * @param {Object|Array} [args] Аргументы вызова
-     * @return {Promise} Асинхронный результат операции
+     * @param name Имя сервиса
+     * @param [args] Аргументы вызова
+     * @return Асинхронный результат операции
      */
-    call(name: string, args: string[] | Object): ExtendPromise<any>;
+    call(name: string, args: string[] | Object): Promise<any>;
 }

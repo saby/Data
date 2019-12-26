@@ -1,5 +1,4 @@
 import {Record} from '../entity';
-import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
@@ -40,7 +39,7 @@ export default interface ICrudPlus {
      *     });
      * </pre>
      */
-    merge(from: string | number, to: string | number): ExtendPromise<null>;
+    merge(from: string | number, to: string | number): Promise<null>;
 
     /**
      * Создает копию записи
@@ -61,7 +60,7 @@ export default interface ICrudPlus {
      *     });
      * </pre>
      */
-    copy(key: string | number, meta?: object): ExtendPromise<Record>;
+    copy(key: string | number, meta?: object): Promise<Record>;
 
     /**
      * Производит перемещение записи.
@@ -70,5 +69,5 @@ export default interface ICrudPlus {
      * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
      */
-    move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<null>;
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<null>;
 }

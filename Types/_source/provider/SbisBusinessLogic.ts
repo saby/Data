@@ -1,7 +1,6 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
-import {ExtendPromise} from '../../_declarations';
 import {RPCJSON} from 'Browser/Transport';
 
 interface IEndPoint {
@@ -67,7 +66,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-    call(name: string, args?: any[] | object): ExtendPromise<any> {
+    call(name: string, args?: any[] | object): Promise<any> {
         name = name + '';
         args = args || {};
 

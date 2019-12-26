@@ -18,7 +18,6 @@ import {RecordSet} from '../collection';
 import {create, register} from '../di';
 import {mixin, object} from '../util';
 import {merge} from '../object';
-import {ExtendPromise} from '../_declarations';
 import {LocalStorage} from 'Browser/Storage';
 import Deferred = require('Core/Deferred');
 
@@ -721,12 +720,12 @@ export default class LocalSession extends mixin<
      *    });
      * </pre>
      */
-    create(meta?: object): ExtendPromise<Record> {
+    create(meta?: object): Promise<Record> {
        const item = itemToObject(meta, this._$adapter);
        if (item[this.getKeyProperty()] === undefined) {
            this.rawManager.reserveId();
        }
-       return Deferred.success(this.modelManager.get(item)) as ExtendPromise<any>;
+       return Deferred.success(this.modelManager.get(item)) as Promise<any>;
     }
 
     /**
@@ -741,12 +740,12 @@ export default class LocalSession extends mixin<
      *     });
      * </pre>
      */
-    read(key: any, meta?: object): ExtendPromise<Record> {
+    read(key: any, meta?: object): Promise<Record> {
         const data = this.rawManager.get(key);
         if (data) {
-            return Deferred.success(this.modelManager.get(data)) as ExtendPromise<any>;
+            return Deferred.success(this.modelManager.get(data)) as Promise<any>;
         }
-        return Deferred.fail('Record with key "' + key + '" does not exist') as ExtendPromise<any>;
+        return Deferred.fail('Record with key "' + key + '" does not exist') as Promise<any>;
     }
 
     /**
@@ -771,7 +770,7 @@ export default class LocalSession extends mixin<
      *    });
      * </pre>
      */
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         const updateRecord = (record) => {
             let key;
             const keyProperty = record.getKeyProperty ? record.getKeyProperty() : this.getKeyProperty();
@@ -803,7 +802,7 @@ export default class LocalSession extends mixin<
             keys.push(updateRecord(data));
         }
 
-        return Deferred.success(keys) as ExtendPromise<any>;
+        return Deferred.success(keys) as Promise<any>;
     }
 
     /**
@@ -819,13 +818,13 @@ export default class LocalSession extends mixin<
      *    });
      * </pre>
      */
-    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
        const isExistKeys = this.rawManager.existKeys(keys);
        if (!isExistKeys) {
-           return Deferred.fail('Not all keys exist') as ExtendPromise<any>;
+           return Deferred.fail('Not all keys exist') as Promise<any>;
        }
        this.rawManager.remove(keys);
-       return Deferred.success(true) as ExtendPromise<any>;
+       return Deferred.success(true) as Promise<any>;
     }
 
     /**
@@ -841,7 +840,7 @@ export default class LocalSession extends mixin<
      *   });
      * </pre>
      */
-    query(query?: Query): ExtendPromise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         if (query === void 0) {
             query = new Query();
         }
@@ -863,7 +862,7 @@ export default class LocalSession extends mixin<
             meta: {
                 total: data.length
             }
-        })) as ExtendPromise<any>;
+        })) as Promise<any>;
     }
 
     // endregion
@@ -884,16 +883,16 @@ export default class LocalSession extends mixin<
     *  });
     * </pre>
     */
-   merge(from: string | number, to: string | number): ExtendPromise<any> {
+   merge(from: string | number, to: string | number): Promise<any> {
       const fromData = this.rawManager.get(from as string);
       const toData = this.rawManager.get(to as string);
       if (fromData === null || toData === null) {
-         return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists') as ExtendPromise<any>;
+         return Deferred.fail('Record with key ' + from + ' or ' + to + ' isn\'t exists') as Promise<any>;
       }
       const data = merge(fromData, toData);
       this.rawManager.set(from as string, data);
       this.rawManager.remove(to as string);
-      return Deferred.success(true) as ExtendPromise<any>;
+      return Deferred.success(true) as Promise<any>;
    }
 
    /**
@@ -908,15 +907,15 @@ export default class LocalSession extends mixin<
     *   });
     * </pre>
     */
-   copy(key: string | number, meta?: object): ExtendPromise<Record> {
+   copy(key: string | number, meta?: object): Promise<Record> {
       const myId = this.rawManager.reserveId();
       const from = this.rawManager.get(key as string);
       if (from === null) {
-         return Deferred.fail('Record with key ' + from + ' isn\'t exists') as ExtendPromise<any>;
+         return Deferred.fail('Record with key ' + from + ' isn\'t exists') as Promise<any>;
       }
       const to = merge({}, from);
       this.rawManager.set(myId, to);
-      return Deferred.success(this.modelManager.get(to)) as ExtendPromise<any>;
+      return Deferred.success(this.modelManager.get(to)) as Promise<any>;
    }
 
    /**
@@ -933,7 +932,7 @@ export default class LocalSession extends mixin<
     * });
     * </pre>
     */
-   move(items: string | number | Array<string | number>, target: string | number, meta?: any): ExtendPromise<any> {
+   move(items: string | number | Array<string | number>, target: string | number, meta?: any): Promise<any> {
       const keys = this.rawManager.getKeys();
       const sourceItems = [];
       if (!(items instanceof Array)) {
@@ -947,9 +946,9 @@ export default class LocalSession extends mixin<
          sourceItems.push(id);
       });
       if (meta.position === 'on') {
-         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys)) as ExtendPromise<any>;
+         return Deferred.success(this._hierarchyMove(sourceItems, target, meta, keys)) as Promise<any>;
       }
-      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta)) as ExtendPromise<any>;
+      return Deferred.success(this.rawManager.move(sourceItems, target as string, meta)) as Promise<any>;
    }
 
     // endregion
@@ -1010,7 +1009,7 @@ export default class LocalSession extends mixin<
         };
         for (let i = 0; i < adapter.getCount(); i++) {
             const meta = adapter.at(i);
-            this.create(meta).addCallback(handler);
+            this.create(meta).then(handler);
         }
     }
 
