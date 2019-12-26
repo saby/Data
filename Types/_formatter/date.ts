@@ -7,11 +7,19 @@ interface IDateFormatOptions {
     separator?: string;
 }
 
+type Format = (date: Date, format: string) => string;
+
 let tokensRegex;
 const tokens = {};
 const locale = locales.current;
+const AM_PM_BOUNDARY = 12;
 const MINUTES_IN_HOUR = 60;
+const SECONDS_IN_MINUTE = 60;
 const DECIMAL_BASE = 10;
+const DECIMAL_POINT = '.';
+const PARTS_SPACER = ' ';
+const MATCH_DAY_NUMBER = /^DD\.|\.DD/;
+const MATCH_HOURS = /HH/;
 
 /**
  * Adds lead zeroes to the Number
@@ -33,14 +41,19 @@ function withLeadZeroes(value: number, count: number): string {
  * Returns hour in 12-hours format
  */
 function getTwelveHours(date: Date): number {
-    return date.getHours() % 12 || 12;
+    return date.getHours() % AM_PM_BOUNDARY || AM_PM_BOUNDARY;
+}
+
+function getTotalHours(date: Date): number {
+    const seconds = Math.floor(date.getTime() / 1000);
+    return  Math.floor(seconds / (SECONDS_IN_MINUTE * MINUTES_IN_HOUR));
 }
 
 /**
  * Returns localized am/pm mark
  */
 function getAmPm(date: Date): string {
-    return date.getHours() >= 12 ? locale.config.pm : locale.config.am;
+    return date.getHours() >= AM_PM_BOUNDARY ? locale.config.pm : locale.config.am;
 }
 
 /**
@@ -252,6 +265,7 @@ addToken('h', getTwelveHours);
 addToken('hh', getTwelveHours, {lead: 2});
 addToken('H', 'getHours');
 addToken('HH', 'getHours', {lead: 2});
+addToken('HHH', getTotalHours);
 addToken('a', getAmPm);
 
 // Date tokens
@@ -322,6 +336,24 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>SHORT_TIME: краткое время, "HH:mm" для "Ru-ru".</li>
  * </ul>
  *
+ * <h2>Доступные константы (следует использовать для вывода дат {@link http://axure.tensor.ru/standarts/v7/поле_ввода__версия_3_1_.html по стандарту полей ввода} с учетом локализации).</h2>
+ * <ul>
+ *     <li>FULL_YEAR: полный год, "YYYY" для "Ru-ru";</li>
+ *     <li>DIGITAL_MONTH_FULL_YEAR: цифровой формат месяца с полным годом "MM.YYYY" для "Ru-ru".</li>
+ *     <li>FULL_TIME_FRACTION: полное время с миллисекундами, "HH:mm:ss.SSS" для "Ru-ru";</li>
+ *     <li>FULL_DATE_SHORT_TIME: комбинированный формат полной даты и краткого времени:, "DD.MM.YY HH:mm" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_TIME: комбинированный формат полной даты и полного времени:, "DD.MM.YY HH:mm:ss" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_TIME_FRACTION: комбинированный формат полной даты и полного времени с миллисекундами:, "DD.MM.YY HH:mm:ss.SSS" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_YEAR_SHORT_TIME: комбинированный формат полной даты с полным годом и краткого времени:, "DD.MM.YYYY HH:mm" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_YEAR_FULL_TIME: комбинированный формат полной даты с полным годом и полного времени:, "DD.MM.YYYY HH:mm:ss" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_YEAR_FULL_TIME_FRACTION: комбинированный формат полной даты с полным годом и полного времени с миллисекундами:, "DD.MM.YYYY HH:mm:ss.SSS" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_SHORT_TIME: комбинированный формат краткой даты и краткого времени:, "DD.MM HH:mm" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_FULL_TIME: комбинированный формат краткой даты и полного времени:, "DD.MM HH:mm:ss" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_FULL_TIME_FRACTION: комбинированный формат краткой даты и полного времени с миллисекундами:, "DD.MM HH:mm:ss.SSS" для "Ru-ru";</li>
+ *     <li>DURATION_SHORT_TIME: продолжительность в кратком формате времени:, "HHH:mm" для "Ru-ru";</li>
+ *     <li>DURATION_FULL_TIME: продолжительность в полном формате времени:, "HHH:mm:SS" для "Ru-ru";</li>
+ * </ul>
+ *
  * <h2>Примеры использования констант.</h2>
  *
  * Выведем полную дату:
@@ -348,6 +380,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>hh: часы в 12-часовом формате с лидирующим нулем;</li>
  *     <li>H: часы в 24-часовом формате;</li>
  *     <li>HH: часы в 24-часовом формате с лидирующим нулем;</li>
+ *     <li>HHH: число часов в абсолиютном фомрате (0-∞);</li>
  *     <li>a: интервал суток либо до полудня (ante meridiem), либо после полудня (post meridiem) в текущей локали;</li>
  *     <li>SSS: дробная часть секунд (миллисекунды).</li>
  * </ul>
@@ -412,12 +445,19 @@ function format(date: Date, format: string): string {
     });
 }
 
-type Format = (date: Date, format: string) => string;
-
 /**
  * Constants with predefined formats
  */
 class Constants {
+    get DIGITAL_MONTH_FULL_YEAR(): string {
+        return this.FULL_DATE_FULL_YEAR.replace(MATCH_DAY_NUMBER, '');
+    }
+    get DURATION_SHORT_TIME(): string {
+        return this.SHORT_TIME.replace(MATCH_HOURS, 'HHH');
+    }
+    get DURATION_FULL_TIME(): string {
+        return this.FULL_TIME.replace(MATCH_HOURS, 'HHH');
+    }
     get FULL_DATE_DOW(): string {
         return locale.config.fullDateDayOfWeekFormat;
     }
@@ -439,8 +479,26 @@ class Constants {
     get FULL_DATE_SHORT_MONTH_FULL_YEAR(): string {
          return locale.config.fullDateShortMonthFullYearFormat;
     }
+    get FULL_DATE_SHORT_TIME(): string {
+        return this.FULL_DATE + PARTS_SPACER + this.SHORT_TIME;
+    }
+    get FULL_DATE_FULL_TIME(): string {
+        return this.FULL_DATE + PARTS_SPACER + this.FULL_TIME;
+    }
+    get FULL_DATE_FULL_TIME_FRACTION(): string {
+        return this.FULL_DATE + PARTS_SPACER + this.FULL_TIME_FRACTION;
+    }
+    get FULL_DATE_FULL_YEAR_SHORT_TIME(): string {
+        return this.FULL_DATE_FULL_YEAR + PARTS_SPACER + this.SHORT_TIME;
+    }
+    get FULL_DATE_FULL_YEAR_FULL_TIME(): string {
+        return this.FULL_DATE_FULL_YEAR + PARTS_SPACER + this.FULL_TIME;
+    }
+    get FULL_DATE_FULL_YEAR_FULL_TIME_FRACTION(): string {
+        return this.FULL_DATE_FULL_YEAR + PARTS_SPACER + this.FULL_TIME_FRACTION;
+    }
     get FULL_DATETIME(): string {
-         return locale.config.fullDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
+         return locale.config.fullDateShortMonthFormat + PARTS_SPACER + locale.config.shortTimeFormat;
     }
     get FULL_HALF_YEAR(): string {
          return locale.config.fullHalfYearFormat;
@@ -451,8 +509,14 @@ class Constants {
     get FULL_QUATER(): string {
          return locale.config.fullQuarterFormat;
     }
+    get FULL_YEAR(): string {
+        return 'YYYY';
+    }
     get FULL_TIME(): string {
          return locale.config.fullTimeFormat;
+    }
+    get FULL_TIME_FRACTION(): string {
+        return this.FULL_TIME + DECIMAL_POINT + 'SSS';
     }
     get SHORT_DATE_DOW(): string {
          return locale.config.shortDateDayOfWeekFormat;
@@ -466,8 +530,17 @@ class Constants {
     get SHORT_DATE_SHORT_MONTH(): string {
          return locale.config.shortDateShortMonthFormat;
     }
+    get SHORT_DATE_SHORT_TIME(): string {
+        return this.SHORT_DATE + PARTS_SPACER + this.SHORT_TIME;
+    }
+    get SHORT_DATE_FULL_TIME(): string {
+        return this.SHORT_DATE + PARTS_SPACER + this.FULL_TIME;
+    }
+    get SHORT_DATE_FULL_TIME_FRACTION(): string {
+        return this.SHORT_DATE + PARTS_SPACER + this.FULL_TIME_FRACTION;
+    }
     get SHORT_DATETIME(): string {
-         return locale.config.shortDateShortMonthFormat + ' ' + locale.config.shortTimeFormat;
+         return locale.config.shortDateShortMonthFormat + PARTS_SPACER + locale.config.shortTimeFormat;
     }
     get SHORT_HALF_YEAR(): string {
          return locale.config.shortHalfYearFormat;
