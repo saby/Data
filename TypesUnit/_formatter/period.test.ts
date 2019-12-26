@@ -33,6 +33,7 @@ describe('Types/_formatter/period', () => {
     const anotherDay = new Date(2018, 1, 7);
 
     const expectedList: testingTuple[] = [
+        [commonStart, anotherYear, Type.Digital, '02.02.18-08.10.19'],
         [commonStart, anotherYear, Type.FullDate, '02 February\'18-08 October\'19'],
         [commonStart, anotherYear, Type.ShortDate, '02 Feb\'18-08 Oct\'19'],
         [commonStart, anotherYear, Type.FullDate, '02 February\'18-08 October\'19'],
@@ -47,6 +48,7 @@ describe('Types/_formatter/period', () => {
         [commonStart, anotherYear, Type.ShortHalfYear, 'I hy \'18-II hy \'19'],
         [commonStart, anotherYear, Type.Year, '2018-2019'],
 
+        [commonStart, anotherMonth, Type.Digital, '02.02.18-08.10.18'],
         [commonStart, anotherMonth, Type.FullDate, '02 February\'18-08 October\'18'],
         [commonStart, anotherMonth, Type.ShortDate, '02 Feb-08 Oct\'18'],
         [commonStart, anotherMonth, Type.FullDate, '02 February\'18-08 October\'18'],
@@ -60,6 +62,7 @@ describe('Types/_formatter/period', () => {
         [commonStart, anotherMonth, Type.FullHalfYear, 'I half year \'18-II half year \'18'],
         [commonStart, anotherMonth, Type.ShortHalfYear, 'I hy \'18-II hy \'18'],
 
+        [commonStart, anotherDay, Type.Digital, '02.02.18-07.02.18'],
         [commonStart, anotherDay, Type.FullDate, '02 February\'18-07 February\'18'],
         [commonStart, anotherDay, Type.ShortDate, '02-07 Feb\'18'],
         [commonStart, anotherDay, Type.FullDate, '02 February\'18-07 February\'18'],
@@ -79,5 +82,11 @@ describe('Types/_formatter/period', () => {
             const given = period(start, finish, type);
             assert.strictEqual(given, expected);
         });
+    });
+
+    it('should throw TypeError for Auto type', () => {
+        assert.throws(() => {
+            period(new Date(), new Date(), Type.Auto);
+        }, TypeError);
     });
 });
