@@ -5,6 +5,18 @@ import * as locales from 'Core/helpers/i18n/locales';
 import * as i18n from 'Core/i18n';
 
 describe('Types/_formatter/date', () => {
+    function setLocale(locale: string): () => void {
+        const stubEnabled = sinon.stub(i18n, 'isEnabled');
+        const stubGetLang = sinon.stub(i18n, 'getLang');
+        stubEnabled.returns(true);
+        stubGetLang.returns(locale);
+
+        return () => {
+            stubEnabled.restore();
+            stubGetLang.restore();
+        };
+    }
+
     const check = (date, pattern, expected) => {
         return () => {
             const given = format(date, pattern);
@@ -27,6 +39,7 @@ describe('Types/_formatter/date', () => {
         h: '3',
         H: '3',
         HH: '03',
+        HHH: '342768',
         'h:m:s': '3:4:5',
         'hh:mm:ss': '03:04:05',
         D: '7',
@@ -93,21 +106,14 @@ describe('Types/_formatter/date', () => {
 
     Object.keys(localized).forEach((locale) => {
         context('for locale"' + locale + '"', () => {
-            let stubEnabled;
-            let stubGetLang;
+            let undo;
 
             beforeEach(() => {
-                stubEnabled = sinon.stub(i18n, 'isEnabled');
-                stubGetLang = sinon.stub(i18n, 'getLang');
-                stubEnabled.returns(true);
-                stubGetLang.returns(locale);
+                undo = setLocale(locale);
             });
 
             afterEach(() => {
-                stubEnabled.restore();
-                stubGetLang.restore();
-                stubEnabled = undefined;
-                stubGetLang = undefined;
+                undo();
             });
 
             const data = localized[locale];
@@ -243,46 +249,73 @@ describe('Types/_formatter/date', () => {
     });
 
     context('constants', () => {
-        const map = {
-            FULL_DATE_DOW: 'fullDateDayOfWeekFormat',
-            FULL_DATE: 'fullDateFormat',
-            FULL_DATE_FULL_MONTH: 'fullDateFullMonthFormat',
-            FULL_DATE_FULL_MONTH_FULL_YEAR: 'fullDateFullMonthFullYearFormat',
-            FULL_DATE_FULL_YEAR: 'fullDateFullYearFormat',
-            FULL_DATE_SHORT_MONTH: 'fullDateShortMonthFormat',
-            FULL_DATE_SHORT_MONTH_FULL_YEAR: 'fullDateShortMonthFullYearFormat',
-            FULL_HALF_YEAR: 'fullHalfYearFormat',
-            FULL_MONTH: 'fullMonthFormat',
-            FULL_QUATER: 'fullQuarterFormat',
-            FULL_TIME: 'fullTimeFormat',
-            SHORT_DATE_DOW: 'shortDateDayOfWeekFormat',
-            SHORT_DATE: 'shortDateFormat',
-            SHORT_DATE_FULL_MONTH: 'shortDateFullMonthFormat',
-            SHORT_DATE_SHORT_MONTH: 'shortDateShortMonthFormat',
-            SHORT_HALF_YEAR: 'shortHalfYearFormat',
-            SHORT_MONTH: 'shortMonthFormat',
-            SHORT_QUATER: 'shortQuarterFormat',
-            SHORT_TIME: 'shortTimeFormat'
-        };
+        context('if there is special constant in locale config', () => {
+            const map = {
+                FULL_DATE_DOW: 'fullDateDayOfWeekFormat',
+                FULL_DATE: 'fullDateFormat',
+                FULL_DATE_FULL_MONTH: 'fullDateFullMonthFormat',
+                FULL_DATE_FULL_MONTH_FULL_YEAR: 'fullDateFullMonthFullYearFormat',
+                FULL_DATE_FULL_YEAR: 'fullDateFullYearFormat',
+                FULL_DATE_SHORT_MONTH: 'fullDateShortMonthFormat',
+                FULL_DATE_SHORT_MONTH_FULL_YEAR: 'fullDateShortMonthFullYearFormat',
+                FULL_HALF_YEAR: 'fullHalfYearFormat',
+                FULL_MONTH: 'fullMonthFormat',
+                FULL_QUATER: 'fullQuarterFormat',
+                FULL_TIME: 'fullTimeFormat',
+                SHORT_DATE_DOW: 'shortDateDayOfWeekFormat',
+                SHORT_DATE: 'shortDateFormat',
+                SHORT_DATE_FULL_MONTH: 'shortDateFullMonthFormat',
+                SHORT_DATE_SHORT_MONTH: 'shortDateShortMonthFormat',
+                SHORT_HALF_YEAR: 'shortHalfYearFormat',
+                SHORT_MONTH: 'shortMonthFormat',
+                SHORT_QUATER: 'shortQuarterFormat',
+                SHORT_TIME: 'shortTimeFormat'
+            };
 
-        Object.keys(map).forEach((constant) => {
-            it(constant, () => {
-                assert.strictEqual(format[constant], locales.current.config[map[constant]]);
+            Object.keys(map).forEach((constant) => {
+                const expected = locales.current.config[map[constant]];
+                it(`Should return ${expected} for ${constant}`, () => {
+                    assert.strictEqual(format[constant], expected);
+                });
             });
         });
 
-        it('SHORT_DATETIME', () => {
-            assert.strictEqual(
-                format.SHORT_DATETIME,
-                locales.current.config.shortDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat
-            );
-        });
+        context('if there is no special constant in locale config', () => {
+            let undo;
 
-        it('FULL_DATETIME', () => {
-            assert.strictEqual(
-                format.FULL_DATETIME,
-                locales.current.config.fullDateShortMonthFormat + ' ' + locales.current.config.shortTimeFormat)
-            ;
+            before(() => {
+                undo = setLocale('en-US');
+            });
+
+            after(() => {
+                undo();
+            });
+
+            const map = {
+                DIGITAL_MONTH_FULL_YEAR: 'MM.YYYY',
+                DURATION_FULL_TIME: 'HHH:mm:ss',
+                DURATION_SHORT_TIME: 'HHH:mm',
+                FULL_DATETIME: 'DD MMM\'YY HH:mm',
+                FULL_TIME_FRACTION: 'HH:mm:ss.SSS',
+                FULL_DATE_FULL_TIME: 'DD.MM.YY HH:mm:ss',
+                FULL_DATE_FULL_TIME_FRACTION: 'DD.MM.YY HH:mm:ss.SSS',
+                FULL_DATE_FULL_YEAR_SHORT_TIME: 'DD.MM.YYYY HH:mm',
+                FULL_DATE_FULL_YEAR_FULL_TIME: 'DD.MM.YYYY HH:mm:ss',
+                FULL_DATE_FULL_YEAR_FULL_TIME_FRACTION: 'DD.MM.YYYY HH:mm:ss.SSS',
+                FULL_DATE_SHORT_TIME: 'DD.MM.YY HH:mm',
+                FULL_YEAR: 'YYYY',
+                SHORT_DATE_SHORT_TIME: 'DD.MM HH:mm',
+                SHORT_DATE_FULL_TIME: 'DD.MM HH:mm:ss',
+                SHORT_DATE_FULL_TIME_FRACTION: 'DD.MM HH:mm:ss.SSS',
+                SHORT_DATETIME: 'DD MMM HH:mm'
+            };
+
+            Object.keys(map).forEach((name) => {
+                const expected = map[name];
+                it(`should return ${expected} for ${name}`, () => {
+                    assert.strictEqual(format[name], expected);
+                });
+            });
         });
     });
 });
