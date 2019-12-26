@@ -1,6 +1,8 @@
 import dateFormat from './date';
 
 export enum Type {
+    Auto,
+    Digital,
     FullDate,
     ShortDate,
     FullMonth,
@@ -22,6 +24,11 @@ function generalPeriod(start: Date, finish: Date, format: string): string {
     } else {
         return `${startLabel}${SEPARATOR}${finishLabel}`;
     }
+}
+
+function digitalPeriod(start: Date, finish: Date): string {
+    const format = dateFormat.FULL_DATE;
+    return `${dateFormat(start, format)}${SEPARATOR}${dateFormat(finish, format)}`;
 }
 
 function datesPeriod(start: Date, finish: Date, type: Type): string {
@@ -127,13 +134,23 @@ function yearsPeriod(start: Date, finish: Date): string {
  * @public
  * @author Мальцев А.А.
  */
-export default function period(start: Date, finish: Date, type: Type = Type.FullDate): string {
+export default function period(start: Date, finish: Date, type: Type = Type.Auto): string {
     // Check arguments
     if (!(start instanceof Date)) {
         throw new TypeError('Argument "start" should be an instance of Date');
     }
     if (!(finish instanceof Date)) {
         throw new TypeError('Argument "finish" should be an instance of Date');
+    }
+
+    // Auto detection
+    if (type === Type.Auto) {
+        throw new TypeError('Automatic period format is under construction');
+    }
+
+    // Digital period
+    if (type === Type.Digital) {
+        return digitalPeriod(start, finish);
     }
 
     // Dates period
