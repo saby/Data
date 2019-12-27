@@ -1,9 +1,9 @@
-import {logger} from '../util';
+import {resolve} from '../di';
 
 const DataRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 let unresolvedInstances = [];
 let unresolvedInstancesId = [];
-const instanceStorage = {};
+let instanceStorage = {};
 
 function resolveInstances(): void {
     let Module;
@@ -15,23 +15,19 @@ function resolveInstances(): void {
         if (instanceStorage[item.value.id]) {
             instance = instanceStorage[item.value.id];
         } else if (item.value.module) {
-            try {
-                name = item.value.module;
-                Module = require(name);
-                if (!Module) {
-                    throw new Error(`The module "${name}" is not loaded yet.`);
-                }
-                if (!Module.prototype) {
-                    throw new Error(`The module "${name}" is not a constructor.`);
-                }
-                if (typeof Module.fromJSON !== 'function') {
-                    throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
-                }
-                instance = Module.fromJSON(item.value);
-            } catch (e) {
-                logger.error('Serializer', 'Can\'t create an instance of "' + name + '". ' + e.toString());
-                instance = null;
+            name = item.value.module;
+            Module = resolve(name);
+            if (!Module) {
+                throw new Error(`The module "${name}" is not loaded yet.`);
             }
+            if (!Module.prototype) {
+                throw new Error(`The module "${name}" is not a constructor.`);
+            }
+            if (typeof Module.fromJSON !== 'function') {
+                throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
+            }
+            instance = Module.fromJSON(item.value);
+
             instanceStorage[item.value.id] = instance;
         }
 
@@ -83,6 +79,12 @@ export default function jsonReviver(name: string | number, value: any): any {
         resolveInstances();
         unresolvedInstances = [];
         unresolvedInstancesId = [];
+        instanceStorage = {};
+
+        // In this case result hasn't been assigned and should be resolved from this
+        if (result === value) {
+            result = this[name];
+        }
     }
 
     return result;
