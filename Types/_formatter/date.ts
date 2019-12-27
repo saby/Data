@@ -311,7 +311,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  * <h2>Возвращает</h2>
  * {String} Дата в указанном формате.
  *
- * <h2>Доступные константы (следует использовать для вывода дат {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации).</h2>
+ * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации.</h2>
  * <ul>
  *     <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
  *     <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
@@ -336,7 +336,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>SHORT_TIME: краткое время, "HH:mm" для "Ru-ru".</li>
  * </ul>
  *
- * <h2>Доступные константы (следует использовать для вывода дат {@link http://axure.tensor.ru/standarts/v7/поле_ввода__версия_3_1_.html по стандарту полей ввода} с учетом локализации).</h2>
+ * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/standarts/v7/поле_ввода__версия_3_1_.html по стандарту полей ввода} с учетом локализации.</h2>
  * <ul>
  *     <li>FULL_YEAR: полный год, "YYYY" для "Ru-ru";</li>
  *     <li>DIGITAL_MONTH_FULL_YEAR: цифровой формат месяца с полным годом "MM.YYYY" для "Ru-ru".</li>
@@ -352,6 +352,12 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>SHORT_DATE_FULL_TIME_FRACTION: комбинированный формат краткой даты и полного времени с миллисекундами:, "DD.MM HH:mm:ss.SSS" для "Ru-ru";</li>
  *     <li>DURATION_SHORT_TIME: продолжительность в кратком формате времени:, "HHH:mm" для "Ru-ru";</li>
  *     <li>DURATION_FULL_TIME: продолжительность в полном формате времени:, "HHH:mm:SS" для "Ru-ru";</li>
+ * </ul>
+ *
+ * <h2>Доступные константы для вывода дат по стандарту {https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}.</h2>
+ * <ul>
+ *     <li>ISO_DATETIME: полный год — "YYYY-MM-DDTHH:mm:ss[.SSS]ZZ";</li>
+ *     <li>ISO_DATETIME_SQL: полный год — "YYYY-MM-DD HH:mm:ss[.SSS]ZZ";</li>
  * </ul>
  *
  * <h2>Примеры использования констант.</h2>
@@ -517,6 +523,12 @@ class Constants {
     }
     get FULL_TIME_FRACTION(): string {
         return this.FULL_TIME + DECIMAL_POINT + 'SSS';
+    }
+    get ISO_DATETIME(): string {
+        return 'YYYY-MM-DDTHH:mm:ss.SSSZZ';
+    }
+    get ISO_DATETIME_SQL(): string {
+        return 'YYYY-MM-DD HH:mm:ss.SSSZZ';
     }
     get SHORT_DATE_DOW(): string {
          return locale.config.shortDateDayOfWeekFormat;
