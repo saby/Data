@@ -354,10 +354,10 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>DURATION_FULL_TIME: продолжительность в полном формате времени:, "HHH:mm:SS" для "Ru-ru";</li>
  * </ul>
  *
- * <h2>Доступные константы для вывода дат по стандарту {https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}.</h2>
+ * <h2>Доступные константы для вывода дат по стандарту {@link https://en.wikipedia.org/wiki/ISO_8601 ISO 8601}.</h2>
  * <ul>
- *     <li>ISO_DATETIME: полный год — "YYYY-MM-DDTHH:mm:ss[.SSS]ZZ";</li>
- *     <li>ISO_DATETIME_SQL: полный год — "YYYY-MM-DD HH:mm:ss[.SSS]ZZ";</li>
+ *     <li>ISO_DATETIME: полные дата и время — "YYYY-MM-DDTHH:mm:ss[.SSS]ZZ";</li>
+ *     <li>ISO_DATETIME_SQL: полные дата и время, совместимые со {@link https://en.wikipedia.org/wiki/ISO_8601#cite_note-30 стандартами SQL} — "YYYY-MM-DD HH:mm:ss[.SSS]ZZ";</li>
  * </ul>
  *
  * <h2>Примеры использования констант.</h2>
