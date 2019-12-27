@@ -20,11 +20,6 @@ interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
 }
 
-interface IBreadcrumbsData {
-    position: number;
-    members: number;
-}
-
 /**
  * Strategy-decorator which supposed to join expanded nodes into one element.
  * @class Types/_display/ItemsStrategy/Search
@@ -83,11 +78,11 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     }
 
     get items(): T[] {
-        return this._getItems();
+        return this._getItems() as T[];
     }
 
     at(index: number): T {
-        return this._getItems()[index];
+        return this._getItems()[index] as T;
     }
 
     splice(start: number, deleteCount: number, added?: S[]): T[] {
@@ -139,7 +134,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      * Returns elements of display
      * @protected
      */
-    protected _getItems(): T[] {
+    protected _getItems(): Array<T | BreadcrumbsItem<S>> {
         return Search.sortItems<S, T>(this.source.items, {
             treeItemToDecorator: this._treeItemToDecorator,
             treeItemToBreadcrumbs: this._treeItemToBreadcrumbs,
@@ -156,9 +151,12 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      * @param items Display items
      * @param options Options
      */
-    static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
+    static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(
+        items: T[],
+        options: ISortOptions<S, T>
+    ): Array<T | BreadcrumbsItem<S>> {
         const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
-        const breadcrumbsToData = new Map<BreadcrumbsItem<S>, IBreadcrumbsData>();
+        const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
         const root = display && display.getRoot();
         const sortedItems = [];
 
@@ -167,18 +165,31 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             itsNew: boolean;
         }
 
+        function getNearestNode(item: T): T {
+            if (!item || !item.isNode) {
+                return;
+            }
+
+            if (item.isNode()) {
+                return item;
+            }
+
+            return getNearestNode(item.getParent() as T);
+        }
+
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             let itsNew = false;
-            if (item && item.isNode && item.isNode() && item !== root) {
-                breadCrumbs = treeItemToBreadcrumbs.get(item);
+            const nearestNode = getNearestNode(item);
+            if (nearestNode && nearestNode !== root) {
+                breadCrumbs = treeItemToBreadcrumbs.get(nearestNode);
                 if (!breadCrumbs) {
                     breadCrumbs = new BreadcrumbsItem<S>({
                         contents: null,
                         owner: display,
-                        last: item
+                        last: nearestNode
                     });
-                    treeItemToBreadcrumbs.set(item, breadCrumbs);
+                    treeItemToBreadcrumbs.set(nearestNode, breadCrumbs);
                     itsNew = true;
                 }
             }
@@ -187,30 +198,17 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         }
 
         function addBreadCrumbsItself(reference: IBreadCrumbsReference): void {
-            breadcrumbsToData.set(reference.breadCrumbs, {
-                position: sortedItems.length,
-                members: 0
-            });
+            breadcrumbsToData.set(reference.breadCrumbs, []);
             sortedItems.push(reference.breadCrumbs);
         }
 
         function addBreadCrumbsMember(reference: IBreadCrumbsReference, item: T): void {
             const data = breadcrumbsToData.get(reference.breadCrumbs);
-            let index;
-
             if (data) {
-                data.members++;
-                if (!reference.itsNew) {
-                    index = data.position + data.members;
-                }
-            }
-
-            if (index === undefined) {
-                sortedItems.push(item);
+                data.push(item);
             } else {
-                sortedItems.splice(index, 0, item);
+                sortedItems.push(item);
             }
-
         }
 
         let prevBreadCrumbs;
@@ -275,6 +273,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             sortedItems.push(resultItem);
         });
 
+        // Clean it up from time to time
         if (Date.now() - lastTimeForget > FORGET_TIMEOUT) {
             lastTimeForget = Date.now();
 
@@ -297,7 +296,21 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             breadcrumbsToDelete.forEach((key) => treeItemToBreadcrumbs.delete(key));
         }
 
-        return sortedItems;
+        // Expand breadcrumbs into flat array
+        const resultItems: Array<T | BreadcrumbsItem<S>> = [];
+        sortedItems.forEach((item) => {
+            if (item instanceof BreadcrumbsItem) {
+                resultItems.push(item);
+                const data = breadcrumbsToData.get(item);
+                if (data) {
+                    resultItems.push(...data);
+                }
+            } else {
+                resultItems.push(item);
+            }
+        });
+
+        return resultItems;
     }
 
     // endregion
