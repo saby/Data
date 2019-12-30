@@ -15,7 +15,6 @@ import {RecordSet} from '../collection';
 import {adapter, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
-import {ExtendPromise} from '../_declarations';
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 enum PoitionNavigationOrder {
@@ -154,7 +153,7 @@ function callDestroyWithComplexId(
     ids: string[],
     name: string,
     meta: object
-): ExtendPromise<any> {
+): Promise<any> {
     return instance._callProvider(
         instance._$endpoint.contract === name
             ? instance._$binding.destroy
@@ -536,7 +535,7 @@ function oldMove(
     instance: SbisService | any,
     from: string | Array<string | number>,
     to: string, meta: IOldMoveMeta
-): ExtendPromise<any> {
+): Promise<any> {
     logger.info(
         instance._moduleName,
         'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.'
@@ -866,7 +865,7 @@ export default class SbisService extends Rpc {
      *    });
      * </pre>
      */
-    create(meta?: object): ExtendPromise<Record> {
+    create(meta?: object): Promise<Record> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
@@ -876,7 +875,7 @@ export default class SbisService extends Rpc {
         });
     }
 
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
             return this._loadAdditionalDependencies((ready) => {
                 this._connectAdditionalDependencies(
@@ -894,7 +893,7 @@ export default class SbisService extends Rpc {
         return super.update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
         if (!(keys instanceof Array)) {
             return callDestroyWithComplexId(
                 this,
@@ -920,7 +919,7 @@ export default class SbisService extends Rpc {
         return pd.done().getResult();
     }
 
-   query(query?: Query): ExtendPromise<DataSet> {
+   query(query?: Query): Promise<DataSet> {
       query = object.clonePlain(query, true);
       return this._loadAdditionalDependencies((ready) => {
          this._connectAdditionalDependencies(
@@ -934,7 +933,7 @@ export default class SbisService extends Rpc {
 
     // region ICrudPlus
 
-    move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): ExtendPromise<any> {
+    move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): Promise<any> {
         meta = meta || {};
         if (this._$binding.moveBefore) {
             // TODO: поддерживаем старый способ с двумя методами

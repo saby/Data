@@ -13,7 +13,6 @@ import {
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
-import {ExtendPromise} from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
@@ -137,27 +136,27 @@ export default class HierarchicalMemory extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): ExtendPromise<Record> {
+    create(meta?: object): Promise<Record> {
         return this._source.create(meta);
     }
 
-    read(key: any, meta?: object): ExtendPromise<Record> {
+    read(key: any, meta?: object): Promise<Record> {
         return this._source.read(key, meta);
     }
 
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         return this._source.update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
         return this._source.destroy(keys, meta);
     }
 
-    query(query?: Query): ExtendPromise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         const result = new Deferred();
 
         require(['Types/collection'], (collection) => {
-            this._source.query(query).addCallbacks((response) => {
+            this._source.query(query).then((response) => {
                 if (this._$parentProperty) {
                     const hierarchy = new relation.Hierarchy({
                         keyProperty: this._keyProperty,
@@ -188,7 +187,7 @@ export default class HierarchicalMemory extends mixin<
                     }
 
                     // Store breadcrumbs as 'path' in meta data
-                    const data =  response.getRawData(true);
+                    const data = response.getRawData();
                     if (data) {
                         const metaData =  data.meta || {};
                         metaData.path = breadcrumbs;
@@ -198,14 +197,14 @@ export default class HierarchicalMemory extends mixin<
                 }
 
                 result.callback(response);
-            }, (err) => {
+            }).catch((err) => {
                 result.errback(err);
             });
         }, (err) => {
             result.errback(err);
         });
 
-        return result as ExtendPromise<DataSet>;
+        return result as Promise<DataSet>;
     }
 
     // endregion
@@ -214,15 +213,15 @@ export default class HierarchicalMemory extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): ExtendPromise<any> {
+    merge(from: string | number, to: string | number): Promise<any> {
         return this._source.merge(from, to);
     }
 
-    copy(key: string | number, meta?: object): ExtendPromise<Record> {
+    copy(key: string | number, meta?: object): Promise<Record> {
         return this._source.copy(key, meta);
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<any> {
         return this._source.move(items, target, meta);
     }
 

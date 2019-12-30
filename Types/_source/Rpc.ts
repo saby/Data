@@ -1,7 +1,6 @@
 import Remote from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
-import {ExtendPromise} from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 /**
@@ -20,7 +19,7 @@ export default abstract class Rpc extends Remote implements IRpc {
 
     readonly '[Types/_source/IRpc]': boolean = true;
 
-    call(command: string, data?: object): ExtendPromise<DataSet> {
+    call(command: string, data?: object): Promise<DataSet> {
         return this._callProvider(command, data).addCallback(Deferred.skipLogExecutionTime(
             (data) => this._loadAdditionalDependencies().addCallback(Deferred.skipLogExecutionTime(
                 () => this._wrapToDataSet(data)

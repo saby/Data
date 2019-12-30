@@ -13,7 +13,6 @@ import {
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
-import {ExtendPromise} from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 interface IData {
@@ -254,28 +253,28 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): ExtendPromise<Record> {
+    create(meta?: object): Promise<Record> {
         return (this._$target as ICrud).create(meta);
     }
 
-   read(key: any, meta?: object): ExtendPromise<Record> {
+   read(key: any, meta?: object): Promise<Record> {
       if (this._validators.read(this._$data.read, this._done)) {
-         return Deferred.success(this._$data.read) as ExtendPromise<Record>;
+         return Deferred.success(this._$data.read) as Promise<Record>;
       }
       return (this._$target as ICrud).read(key, meta);
    }
 
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         return (this._$target as ICrud).update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: object): ExtendPromise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
         return (this._$target as ICrud).destroy(keys, meta);
     }
 
-    query(query?: Query): ExtendPromise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         if (this._validators.query(this._$data.query, this._done)) {
-            return Deferred.success(this._$data.query) as ExtendPromise<DataSet>;
+            return Deferred.success(this._$data.query) as Promise<DataSet>;
         }
         return (this._$target as ICrud).query(query);
     }
@@ -286,18 +285,18 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): ExtendPromise<any> {
+    merge(from: string | number, to: string | number): Promise<any> {
         return (this._$target as ICrudPlus).merge(from, to);
     }
 
-    copy(key: string | number, meta?: object): ExtendPromise<Record> {
+    copy(key: string | number, meta?: object): Promise<Record> {
         if (this._validators.copy(this._$data.copy, this._done)) {
-            return Deferred.success(this._$data.copy) as ExtendPromise<Record>;
+            return Deferred.success(this._$data.copy) as Promise<Record>;
         }
         return (this._$target as ICrudPlus).copy(key, meta);
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): ExtendPromise<any> {
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<any> {
         return (this._$target as ICrudPlus).move(items, target, meta);
     }
 

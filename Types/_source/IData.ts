@@ -12,7 +12,6 @@ export default interface IData {
 
     /**
      * Возвращает адаптер для работы с данными.
-     * @return {Types/_entity/adapter/IAdapter}
      * @see adapter
      * @see Types/_entity/adapter/IAdapter
      * @example
@@ -29,7 +28,6 @@ export default interface IData {
 
     /**
      * Возвращает конструктор записей, порождаемых источником данных.
-     * @return {String|Function}
      * @see model
      * @see Types/_entity/Model
      * @see Types/di
@@ -48,7 +46,6 @@ export default interface IData {
 
     /**
      * Возвращает конструктор рекордсетов, порождаемых источником данных.
-     * @return {String|Function}
      * @see listModule
      * @example
      * Получим конструктор рекордсетов, используемый по умолчанию:
@@ -65,7 +62,6 @@ export default interface IData {
 
     /**
      * Возвращает название свойства записи, содержащего первичный ключ
-     * @return {String}
      * @see keyProperty
      * @see Types/_entity/Model#keyProperty
      * @example

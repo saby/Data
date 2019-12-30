@@ -2,7 +2,6 @@ import Query from './Query';
 import DataSet from './DataSet';
 import {Record} from '../entity';
 import {RecordSet} from '../collection';
-import {ExtendPromise} from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающиего контракт {@link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
@@ -81,7 +80,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    create(meta?: object): ExtendPromise<Record>;
+    create(meta?: object): Promise<Record>;
 
     /**
      * Читает запись из источника данных
@@ -115,7 +114,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    read(key: number | string, meta?: object): ExtendPromise<Record>;
+    read(key: number | string, meta?: object): Promise<Record>;
 
     /**
      * Обновляет запись в источнике данных
@@ -172,7 +171,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    update(data: Record | RecordSet, meta?: object): ExtendPromise<null>;
+    update(data: Record | RecordSet, meta?: object): Promise<null>;
 
     /**
      * Удаляет запись из источника данных
@@ -205,7 +204,7 @@ export default interface ICrud {
      *      });
      * </pre>
      */
-    destroy(keys: number | string | number[] | string[], meta?: object): ExtendPromise<null>;
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null>;
 
     /**
      * Выполняет запрос на выборку
@@ -258,5 +257,5 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    query(query?: Query): ExtendPromise<DataSet>;
+    query(query?: Query): Promise<DataSet>;
 }
