@@ -28,6 +28,10 @@ export interface IRpcTransportOptions {
 
 export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRpcTransport;
 
+// TODO: get rid of this: SbisFile/Source/Provider/Abstract.ts(56,15): error TS2416: Property '_$transport' in type
+// 'SourceProviderBase' is not assignable to the same property in base type 'SbisBusinessLogic'.
+type ISbisFileSourceProviderAbstractTransport = (...args: any[]) => any;
+
 // Default timeout to produce a call (in seconds)
 const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5 : 0;
 
@@ -113,7 +117,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
     /**
      * @cfg {Function} Конструктор сетевого транспорта
      */
-    protected _$transport: IRpcTransportConstructor = RPCJSON;
+    protected _$transport: IRpcTransportConstructor | ISbisFileSourceProviderAbstractTransport = RPCJSON;
 
     /**
      * Разделитель пространств имен
@@ -135,7 +139,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
     }
 
     call(name: string, args?: any[] | object): ExtendPromise<any> {
-        const Transport = this._$transport;
+        const Transport = this._$transport as IRpcTransportConstructor;
         const endpoint = this.getEndpoint();
 
         let methodName = name + '';
