@@ -1,4 +1,4 @@
-import {ILinkSignature, ISpecialSignature} from './jsonReplacer';
+import {ISignature, ILinkSignature} from './jsonReplacer';
 import {resolve} from '../di';
 import {ISerializableSignature} from '../entity';
 
@@ -8,8 +8,6 @@ interface ISerializedLink {
     scope: object;
     value: ILinkSignature;
 }
-
-export type ISignature = ISerializableSignature | ILinkSignature | ISpecialSignature;
 
 const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 
