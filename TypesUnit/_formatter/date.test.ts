@@ -304,6 +304,8 @@ describe('Types/_formatter/date', () => {
                 FULL_DATE_FULL_YEAR_FULL_TIME_FRACTION: 'DD.MM.YYYY HH:mm:ss.SSS',
                 FULL_DATE_SHORT_TIME: 'DD.MM.YY HH:mm',
                 FULL_YEAR: 'YYYY',
+                ISO_DATETIME: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
+                ISO_DATETIME_SQL: 'YYYY-MM-DD HH:mm:ss.SSSZZ',
                 SHORT_DATE_SHORT_TIME: 'DD.MM HH:mm',
                 SHORT_DATE_FULL_TIME: 'DD.MM HH:mm:ss',
                 SHORT_DATE_FULL_TIME_FRACTION: 'DD.MM HH:mm:ss.SSS',
