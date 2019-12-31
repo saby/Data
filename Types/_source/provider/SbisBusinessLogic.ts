@@ -70,7 +70,7 @@ function getTimedOutResponse<T>(
         });
     } else {
         setTimeout(() => {
-            if ((origin as Deferred<T>).isReady()) {
+            if (!(origin as Deferred<T>).isReady()) {
                 (origin as Deferred<T>).errback(timeoutError);
             }
         }, timeoutMs);
