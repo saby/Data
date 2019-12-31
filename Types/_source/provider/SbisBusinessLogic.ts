@@ -1,7 +1,6 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
-import {ExtendPromise} from '../../_declarations';
 import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
 import Deferred = require('Core/Deferred');
@@ -134,7 +133,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-    call(name: string, args?: any[] | object): ExtendPromise<any> {
+    call(name: string, args?: any[] | object): Promise<any> {
         const Transport = this._$transport as IRpcTransportConstructor;
         const endpoint = this.getEndpoint();
 
