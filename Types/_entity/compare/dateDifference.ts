@@ -43,7 +43,7 @@ function getYearDifference(dateA: Date, dateB: Date): number {
  *     import {compare} from 'Types/entity';
  *     const dateA = new Date(2019, 11, 31);
  *     const dateB = new Date(2020, 0, 1);
- *     console.log(compare.dateDifference(dateA, dateB, compare.DateUnits.Days)); // 1
+ *     console.log(compare.dateDifference(dateA, dateB, compare.DateUnits.Day)); // 1
  * </pre>
  *
  * @class
