@@ -1,5 +1,5 @@
 /**
- * Comparation library.
+ * Comparison library.
  * @library Types/_entity/compare
  * @includes dateDifference Types/_entity/compare/dateDifference
  * @includes DateUnits Types/_entity/compare/dateDifference#Units
