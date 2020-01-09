@@ -2,6 +2,7 @@
  * Library that provides various kinds of entities.
  * @library Types/entity
  * @includes adapter Types/_entity/adapter
+ * @includes compare Types/_entity/compare
  * @includes Date Types/_entity/Date
  * @includes DateTime Types/_entity/DateTime
  * @includes descriptor Types/_entity/descriptor
@@ -31,6 +32,8 @@
 import * as adapter from './_entity/adapter';
 export {adapter};
 export {default as CloneableMixin} from './_entity/CloneableMixin';
+import * as compare from './_entity/compare';
+export {compare};
 export {default as Date} from './_entity/Date';
 export {default as DateTime} from './_entity/DateTime';
 export {default as descriptor} from './_entity/descriptor';
