@@ -2,7 +2,7 @@ import {assert} from 'chai';
 import * as sinon from 'sinon';
 import format from 'Types/_formatter/date';
 import * as locales from 'Core/helpers/i18n/locales';
-import * as i18n from 'Core/i18n';
+import i18n = require('Core/i18n');
 
 describe('Types/_formatter/date', () => {
     function setLocale(locale: string): () => void {
