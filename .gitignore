@@ -30,6 +30,7 @@
 /TypesUnit/_collection/RecordSet.test.js
 /TypesUnit/_display/**/*.js
 /TypesUnit/_entity/adapter/**/*.test.js
+/TypesUnit/_entity/compare/**/*.test.js
 /TypesUnit/_entity/Date.test.js
 /TypesUnit/_entity/DateTime.test.js
 /TypesUnit/_entity/format/**/*.js
