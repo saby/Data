@@ -1,5 +1,6 @@
 import enumerableComparator, {ISession} from './enumerableComparator';
 import {IList} from '../collection';
+import {ChangeAction} from './IObservable';
 
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния
@@ -53,28 +54,28 @@ export default class EventRaisingMixin {
      * @example
      * Сгенерируем событие о перемещении элемента c позиции 1 на позицию 3:
      * <pre>
-     *     requirejs(['Types/collection'], function(collection) {
-     *         var list = new collection.ObservableList({
-     *             items: ['one', 'two', 'three', 'four', 'five']
-     *         });
+     *     import {ObservableList, IObservable} from 'Types/collection';
      *
-     *        list.subscribe('onCollectionChange', (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
-     *            action === collection.IObservable.ACTION_MOVE;//true
+     *     const list = new ObservableList({
+     *         items: ['one', 'two', 'three', 'four', 'five']
+     *     });
      *
-     *            oldItems[0] === 'two';//true
-     *            oldItems[0] === item;//true
-     *            oldItemsIndex === 1;//true
+     *     list.subscribe('onCollectionChange', (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+     *         console.log(action === IObservable.ACTION_MOVE); // true
      *
-     *            newItems[0] === 'two';//true
-     *            newItems[0] === item;//true
-     *            newItemsIndex === 3;//true
-     *        });
+     *         console.log(oldItems[0] === 'two'); // true
+     *         console.log(oldItems[0] === item); // true
+     *         console.log(oldItemsIndex === 1); // true
      *
-     *        list.setEventRaising(false, true);
-     *        var item = list.removeAt(1);
-     *        list.add(item, 3);
-     *        list.setEventRaising(true, true);
-     *    });
+     *         console.log(newItems[0] === 'two'); // true
+     *         console.log(newItems[0] === item); // true
+     *         console.log(newItemsIndex === 3); // true
+     *     });
+     *
+     *     list.setEventRaising(false, true);
+     *     const item = list.removeAt(1);
+     *     list.add(item, 3);
+     *     list.setEventRaising(true, true);
      * </pre>
      */
     setEventRaising(enabled: boolean, analyze?: boolean): void {
@@ -106,7 +107,6 @@ export default class EventRaisingMixin {
 
     /**
      * Возвращает признак, включена ли генерация событий об изменении проекции
-     * @return {Boolean}
      */
     isEventRaising(): boolean {
         return this._eventRaising;
@@ -180,7 +180,7 @@ export default class EventRaisingMixin {
      * @protected
      */
     protected _notifyCollectionChange(
-        action: string,
+        action: ChangeAction,
         newItems: any[],
         newItemsIndex: number,
         oldItems: any[],

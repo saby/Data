@@ -1,6 +1,6 @@
 import IEnumerable, {EnumeratorCallback} from './IEnumerable';
 import IList from './IList';
-import IObservable from './IObservable';
+import IObservable, {ChangeAction} from './IObservable';
 import IIndexedCollection from './IIndexedCollection';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
@@ -10,7 +10,6 @@ import {
     IEquatable,
     ISerializableState,
     ManyToManyMixin,
-    ObservableMixin,
     OptionsToPropertyMixin,
     ReadWriteMixin,
     IReadWriteMixinOptions,
@@ -43,7 +42,9 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
  * </ul>
  * Создадим рекордсет, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
- *     var characters = new List({
+ *     import {List} from 'Types/collection';
+ *
+ *     const characters = new List({
  *         items: [{
  *             id: 1,
  *             firstName: 'Tom',
@@ -54,8 +55,8 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
  *             lastName: 'Finn'
  *         }]
  *     });
- *     characters.at(0).firstName;//'Tom'
- *     characters.at(1).firstName;//'Huckleberry'
+ *     console.log(characters.at(0).firstName); // 'Tom'
+ *     console.log(characters.at(1).firstName); // 'Huckleberry'
  * </pre>
  * @class Types/_collection/List
  * @mixes Types/_entity/DestroyableMixin
@@ -64,7 +65,6 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
  * @implements Types/_collection/IIndexedCollection
  * @implements Types/_entity/IEquatable
  * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @mixes Types/_entity/ManyToManyMixin
@@ -76,7 +76,6 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
 export default class List<T> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
-    ObservableMixin,
     SerializableMixin,
     CloneableMixin,
     ManyToManyMixin,
@@ -85,7 +84,6 @@ export default class List<T> extends mixin<
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    ObservableMixin,
     SerializableMixin,
     CloneableMixin,
     ManyToManyMixin,
@@ -139,7 +137,6 @@ export default class List<T> extends mixin<
     /**
      * Возвращает энумератор для перебора элементов списка.
      * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
-     * @return {Types/_collection/ArrayEnumerator}
      */
     getEnumerator(): Arraywise<T> {
         return new Arraywise(this._$items);
@@ -400,12 +397,12 @@ export default class List<T> extends mixin<
 
     /**
      * Переиндексирует список
-     * @param {Types/_collection/IObservable/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+     * @param [action] Действие, приведшее к изменению.
      * @param [start=0] С какой позиции переиндексировать
      * @param [count=0] Число переиндексируемых элементов
      * @protected
      */
-    protected _reindex(action?: string, start?: number, count?: number): void {
+    protected _reindex(action?: ChangeAction, start?: number, count?: number): void {
         if (!this._indexer) {
             return;
         }
@@ -441,10 +438,10 @@ export default class List<T> extends mixin<
      * Вызывает метод splice
      * @param items Коллекция с элементами для замены
      * @param start Индекс в массиве, с которого начинать добавление.
-     * @param {Types/_collection/IObservable/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+     * @param action Действие, приведшее к изменению.
      * @protected
      */
-    protected _splice(items: T[], start: number, action: string): T[] {
+    protected _splice(items: T[], start: number, action: ChangeAction): T[] {
         items = this._itemsToArray(items);
         this._$items.splice(start, 0, ...items);
         this._reindex(action, start, items.length);
