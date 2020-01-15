@@ -11,6 +11,8 @@ import {ChangeAction} from './IObservable';
 export default class EventRaisingMixin {
     '[Types/_entity/EventRaisingMixin]': boolean;
 
+    protected _moduleName: string;
+
     /**
      * @event После изменения режима генерации событий
      * @name Types/_collection/EventRaisingMixin#onEventRaisingChange
@@ -32,6 +34,11 @@ export default class EventRaisingMixin {
      * Состояние коллекции до выключения генерации событий
      */
     protected _beforeRaiseOff: ISession;
+
+    /**
+     * Сообщение для режима блокировки изменений
+     */
+    protected _blockChangesMessage: string;
 
     constructor() {
         this._publish('onEventRaisingChange');
@@ -191,6 +198,14 @@ export default class EventRaisingMixin {
             return;
         }
 
+        // Block from recursive changes in some cases
+        if (this._blockChangesMessage) {
+            throw new Error(this._blockChangesMessage);
+        }
+        if (action === ChangeAction.ACTION_RESET) {
+            this._blockChangesMessage = `The instance of '${this._moduleName}' is blocked from changes because reset action is already in progress.`;
+        }
+
         this._notify(
             'onCollectionChange',
             action,
@@ -199,6 +214,8 @@ export default class EventRaisingMixin {
             oldItems,
             oldItemsIndex
         );
+
+        this._blockChangesMessage = '';
     }
 
     /**
@@ -262,5 +279,6 @@ Object.assign(EventRaisingMixin.prototype, {
     '[Types/_entity/EventRaisingMixin]': true,
     _eventRaising: true,
     _sessionItemContentsGetter: '',
-    _beforeRaiseOff: null
+    _beforeRaiseOff: null,
+    _blockChangesMessage: ''
 });

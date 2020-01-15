@@ -162,7 +162,7 @@ export default class List<T> extends mixin<
 
     readonly '[Types/_collection/IList]': boolean;
 
-    assign(items: T[]): void {
+    assign(items: IEnumerable<T> | T[]): void {
         for (let i = 0, count = this._$items.length; i < count; i++) {
             this._removeChild(this._$items[i]);
         }
@@ -176,7 +176,7 @@ export default class List<T> extends mixin<
         this._childChanged(items);
     }
 
-    append(items: T[]): void {
+    append(items: IEnumerable<T> | T[]): void {
         items = this._splice(items, this.getCount(), IObservable.ACTION_ADD);
 
         for (let i = 0, count = items.length; i < count; i++) {
@@ -185,7 +185,7 @@ export default class List<T> extends mixin<
         this._childChanged(items);
     }
 
-    prepend(items: T[]): void {
+    prepend(items: IEnumerable<T> | T[]): void {
         items = this._splice(items, 0, IObservable.ACTION_ADD);
 
         for (let i = 0, count = items.length; i < count; i++) {
@@ -441,7 +441,7 @@ export default class List<T> extends mixin<
      * @param action Действие, приведшее к изменению.
      * @protected
      */
-    protected _splice(items: T[], start: number, action: ChangeAction): T[] {
+    protected _splice(items: IEnumerable<T> | T[], start: number, action: ChangeAction): T[] {
         items = this._itemsToArray(items);
         this._$items.splice(start, 0, ...items);
         this._reindex(action, start, items.length);
@@ -453,7 +453,7 @@ export default class List<T> extends mixin<
      * Приводит переденные элементы к массиву
      * @protected
      */
-    protected _itemsToArray(items: any): T[] {
+    protected _itemsToArray(items: IEnumerable<T> | T[]): T[] {
         if (items instanceof Array) {
             return items;
         } else if (items && items['[Types/_collection/IEnumerable]']) {

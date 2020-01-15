@@ -1,3 +1,4 @@
+import IEnumerable from './IEnumerable';
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
@@ -65,7 +66,7 @@ export default class ObservableList<T> extends mixin<
 
     // region List
 
-    assign(items: T[]): void {
+    assign(items: IEnumerable<T> | T[]): void {
         const oldItems = this._itemsSlice();
         const eventsWasRaised = this._eventRaising;
 
@@ -84,7 +85,7 @@ export default class ObservableList<T> extends mixin<
         }
     }
 
-    append(items: T[]): void {
+    append(items: IEnumerable<T> | T[]): void {
         const eventsWasRaised = this._eventRaising;
 
         this._eventRaising = false;
@@ -101,7 +102,7 @@ export default class ObservableList<T> extends mixin<
         );
     }
 
-    prepend(items: T[]): void {
+    prepend(items: IEnumerable<T> | T[]): void {
         const eventsWasRaised = this._eventRaising;
 
         this._eventRaising = false;

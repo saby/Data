@@ -51,25 +51,25 @@ describe('Types/_collection/ObservableList', () => {
     beforeEach(() => {
         items = [{
             id: 1,
-            lastName: 'Иванов'
+            lastName: 'One'
         }, {
             id: 2,
-            lastName: 'Петров'
+            lastName: 'Two'
         }, {
             id: 3,
-            lastName: 'Сидоров'
+            lastName: 'Three'
         }, {
             id: 4,
-            lastName: 'Пухов'
+            lastName: 'Four'
         }, {
             id: 5,
-            lastName: 'Молодцов'
+            lastName: 'Five'
         }, {
             id: 6,
-            lastName: 'Годолцов'
+            lastName: 'Six'
         }, {
             id: 7,
-            lastName: 'Арбузнов'
+            lastName: 'Seven'
         }];
     });
 
@@ -78,7 +78,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.append()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -86,8 +86,16 @@ describe('Types/_collection/ObservableList', () => {
             const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_ADD, concatItems, items.length, [], 0
+                        action,
+                        newItems,
+                        newItemsIndex,
+                        oldItems,
+                        oldItemsIndex,
+                        IBindCollection.ACTION_ADD,
+                        concatItems,
+                        items.length,
+                        [],
+                        0
                     );
                     done();
                 } catch (err) {
@@ -106,7 +114,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.prepend', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -135,7 +143,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.assign()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -183,7 +191,7 @@ describe('Types/_collection/ObservableList', () => {
             list.destroy();
         });
 
-        it('should dont trigger an event if empty replaced with empty', () => {
+        it('shouldn\'t trigger onCollectionChange if empty replaced with empty', () => {
             const list = new ObservableList();
             let triggered = false;
             const handler = () => {
@@ -196,10 +204,27 @@ describe('Types/_collection/ObservableList', () => {
 
             assert.isFalse(triggered);
         });
+
+        it('should throw an error on attempt to change instance within onCollectionChange handler', () => {
+            const list = new ObservableList();
+            let triggered = false;
+            const handler = () => {
+                assert.throws(() => {
+                    list.add(2);
+                }, 'blocked from changes');
+                triggered = true;
+            };
+            list.subscribe('onCollectionChange', handler);
+            list.assign([1]);
+            list.unsubscribe('onCollectionChange', handler);
+            list.destroy();
+
+            assert.isTrue(triggered);
+        });
     });
 
     describe('.clear()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -226,7 +251,7 @@ describe('Types/_collection/ObservableList', () => {
 
     describe('.add()', () => {
         context('when append', () => {
-            it('should trigger an event with valid arguments', (done) => {
+            it('should trigger onCollectionChange with valid arguments', (done) => {
                 const list = new ObservableList({
                     items: items.slice()
                 });
@@ -267,7 +292,7 @@ describe('Types/_collection/ObservableList', () => {
         });
 
         context('when prepend', () => {
-            it('should trigger an event with valid arguments', (done) => {
+            it('should trigger onCollectionChange with valid arguments', (done) => {
                 const list = new ObservableList({
                     items: items.slice()
                 });
@@ -305,7 +330,7 @@ describe('Types/_collection/ObservableList', () => {
         });
 
         context('when insert', () => {
-            it('should trigger an event with valid arguments', (done) => {
+            it('should trigger onCollectionChange with valid arguments', (done) => {
                 const list = new ObservableList({
                     items: items.slice()
                 });
@@ -349,7 +374,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.removeAt()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({items});
             let andDone = false;
             let oldItem;
@@ -387,7 +412,7 @@ describe('Types/_collection/ObservableList', () => {
             list.destroy();
         });
 
-        it("shouldn't trigger an event with change item", (done) => {
+        it("shouldn't trigger onCollectionChange with change item", (done) => {
             const list = new ObservableList({
                 items: []
             });
@@ -407,7 +432,7 @@ describe('Types/_collection/ObservableList', () => {
             done();
         });
 
-        it('should trigger an event with change item and list had changed yet', (done) => {
+        it('should trigger onCollectionChange with change item and list had changed yet', (done) => {
             const list = new ObservableList({items});
             let at;
             const handler = (event, action, newItems, newItemsIndex, oldItems) => {
@@ -425,7 +450,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.replace()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -469,7 +494,7 @@ describe('Types/_collection/ObservableList', () => {
             list.destroy();
         });
 
-        it('should don\'t trigger an event if replace with itself', () => {
+        it('should don\'t trigger onCollectionChange if replace with itself', () => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -490,7 +515,7 @@ describe('Types/_collection/ObservableList', () => {
     });
 
     describe('.move()', () => {
-        it('should trigger an event with valid arguments', (done) => {
+        it('should trigger onCollectionChange with valid arguments', (done) => {
             const list = new ObservableList({
                 items: items.slice()
             });
@@ -530,7 +555,7 @@ describe('Types/_collection/ObservableList', () => {
             list.destroy();
         });
 
-        it('should don\'t trigger an event for equal positions', () => {
+        it('should don\'t trigger onCollectionChange for equal positions', () => {
             const list = new ObservableList({
                 items: items.slice()
             });
