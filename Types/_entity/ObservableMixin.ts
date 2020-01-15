@@ -64,9 +64,9 @@ export default abstract class ObservableMixin {
      * @example
      * Подпишемся на событие OnSomethingChanged:
      * <pre>
-     *     var instance = new Entity();
-     *     instance.subscribe('OnSomethingChanged', function(event, eventArg1) {
-     *         //do something
+     *     const instance = new Entity();
+     *     instance.subscribe('onSomethingHappened', (event, eventArg1) => {
+     *         // Do something
      *     });
      * </pre>
      */
@@ -99,12 +99,12 @@ export default abstract class ObservableMixin {
      * @example
      * Подпишемся на событие OnSomethingChanged и обработаем его только один раз:
      * <pre>
-     *     var instance = new Entity(),
-     *         handler = function(event, eventArg1) {
-     *             instance.unsubscribe(handler);
-     *             //do something
-     *         };
-     *     instance.subscribe('OnSomethingChanged', handler);
+     *     const instance = new Entity();
+     *     const handler = (event, eventArg1) => {
+     *         instance.unsubscribe(handler);
+     *         // Do something
+     *     };
+     *     instance.subscribe('onSomethingHappened', handler);
      * </pre>
      */
     unsubscribe(event: string, handler: Function, ctx?: object): void {
@@ -122,7 +122,7 @@ export default abstract class ObservableMixin {
      * @example
      * Посмотрим, сколько подписчиков у события OnSomethingChanged
      * <pre>
-     *     var handlersCount = instance.getEventHandlers().length;
+     *     const handlersCount = instance.getEventHandlers().length;
      * </pre>
      */
     getEventHandlers(event: string): Function[] {
@@ -135,7 +135,7 @@ export default abstract class ObservableMixin {
      * @example
      * Посмотрим, есть ли подписчики у события OnSomethingChanged
      * <pre>
-     *     var hasHandlers = instance.hasEventHandlers();
+     *     const hasHandlers = instance.hasEventHandlers();
      * </pre>
      */
     hasEventHandlers(event: string): boolean {
