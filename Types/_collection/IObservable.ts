@@ -1,6 +1,5 @@
 import {Object as EventObject} from 'Env/Event';
 
-
 export enum ChangeAction {
     ACTION_ADD = 'a',
     ACTION_REMOVE = 'rm',

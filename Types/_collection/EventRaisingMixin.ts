@@ -203,7 +203,7 @@ export default class EventRaisingMixin {
             throw new Error(this._blockChangesMessage);
         }
         if (action === ChangeAction.ACTION_RESET) {
-            this._blockChangesMessage = `The instance of '${this._moduleName}' is blocked from changes because reset action is already in progress.`;
+            this._blockChangesMessage = `The instance of '${this._moduleName}' is blocked from changes because reset action is in progress.`;
         }
 
         this._notify(
