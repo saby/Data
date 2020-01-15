@@ -457,49 +457,49 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
 
     _$passing: getMergeableProperty<IPassing>({
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrud.create}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrud#create}.
          * @name Types/_source/Remote#passing.create
          */
         create: passCreate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrud.read}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrud#read}.
          * @name Types/_source/Remote#passing.read
          */
         read: passRead,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrud.update}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrud#update}.
          * @name Types/_source/Remote#passing.update
          */
         update: passUpdate,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrud.destroy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrud#destroy}.
          * @name Types/_source/Remote#passing.destroy
          */
         destroy: passDestroy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrud.query}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrud#query}.
          * @name Types/_source/Remote#passing.query
          */
         query: passQuery,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrudPlus.copy}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrudPlus#copy}.
          * @name Types/_source/Remote#passing.copy
          */
         copy: passCopy,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrudPlus.merge}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrudPlus#merge}.
          * @name Types/_source/Remote#passing.merge
          */
         merge: passMerge,
 
         /**
-         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/_source/ICrudPlus.move}.
+         * @cfg {Function} Метод подготовки аргументов при вызове {@link Types/source:ICrudPlus#move}.
          * @name Types/_source/Remote#passing.move
          */
         move: passMove
