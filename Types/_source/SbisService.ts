@@ -519,8 +519,8 @@ function passMove(from: string | number, to: string | number, meta?: IMoveMeta):
         ObjectId: from,
         DestinationId: to,
         Order: meta.position,
-        ReadMethod: meta.objectName + BL_OBJECT_SEPARATOR + this._$binding.read,
-        UpdateMethod: meta.objectName + BL_OBJECT_SEPARATOR + this._$binding.update
+        ReadMethod: buildBlMethodName(meta.objectName, this._$binding.read),
+        UpdateMethod: buildBlMethodName(meta.objectName, this._$binding.update)
     };
 }
 
