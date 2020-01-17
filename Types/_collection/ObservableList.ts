@@ -1,7 +1,8 @@
+import IEnumerable from './IEnumerable';
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
-import {ISerializableSignature, SerializableMixin} from '../entity';
+import {ISerializableSignature, ObservableMixin, SerializableMixin} from '../entity';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {mixin} from '../util';
@@ -12,38 +13,38 @@ const arraySlice = Array.prototype.slice;
  * Список, в котором можно отслеживать изменения.
  * @remark
  * <pre>
- *     define(['Types/collection'], function(collection) {
- *         var list = new collection.ObservableList({
- *             items: [1, 2, 3]
- *         });
+ *     import {ObservableList, IObservable} from 'Types/collection';
  *
- *         list.subscribe('onCollectionChange', function(
- *             eventObject, action, newItems, newItemsIndex,
- *             oldItems, oldItemsIndex
- *         ) {
- *             if (action == collection.IObservable.ACTION_REMOVE) {
- *                 console.log(oldItems);//[1]
- *                 console.log(oldItemsIndex);//0
- *             }
- *         });
- *
- *         list.removeAt(0);
+ *     const list = new ObservableList({
+ *         items: [1, 2, 3]
  *     });
+ *
+ *     list.subscribe('onCollectionChange', (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+ *         if (action == IObservable.ACTION_REMOVE) {
+ *             console.log(oldItems); // [1]
+ *             console.log(oldItemsIndex); // 0
+ *         }
+ *     });
+ *
+ *     list.removeAt(0);
  * </pre>
  * @class Types/_collection/ObservableList
  * @extends Types/_collection/List
  * @implements Types/_collection/IObservable
  * @implements Types/_entity/relation/IReceiver
+ * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
 export default class ObservableList<T> extends mixin<
     List<any>,
+    ObservableMixin,
     EventRaisingMixin
 >(
     List,
     IObservable,
+    ObservableMixin,
     EventRaisingMixin
 ) implements IReceiver {
     /**
@@ -65,7 +66,7 @@ export default class ObservableList<T> extends mixin<
 
     // region List
 
-    assign(items: T[]): void {
+    assign(items: IEnumerable<T> | T[]): void {
         const oldItems = this._itemsSlice();
         const eventsWasRaised = this._eventRaising;
 
@@ -84,7 +85,7 @@ export default class ObservableList<T> extends mixin<
         }
     }
 
-    append(items: T[]): void {
+    append(items: IEnumerable<T> | T[]): void {
         const eventsWasRaised = this._eventRaising;
 
         this._eventRaising = false;
@@ -101,7 +102,7 @@ export default class ObservableList<T> extends mixin<
         );
     }
 
-    prepend(items: T[]): void {
+    prepend(items: IEnumerable<T> | T[]): void {
         const eventsWasRaised = this._eventRaising;
 
         this._eventRaising = false;
@@ -203,7 +204,7 @@ export default class ObservableList<T> extends mixin<
 
         if (index > -1) {
             this._reindex(
-                '',
+                undefined,
                 index,
                 1
             );
