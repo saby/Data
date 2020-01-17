@@ -100,6 +100,18 @@ describe('Types/_source/PrefetchProxy', () => {
         });
     });
 
+    describe('.getData()', () => {
+        it('should return value from "data" option', () => {
+            const data = {
+                create: {foo: 1} as any,
+                read: {bar: 2} as any
+            }
+            const source = new PrefetchProxy({data, target});
+
+            assert.deepEqual(source.getData(), data);
+        });
+    });
+
     describe('.getOriginal()', () => {
         it('should return value from "target" option', () => {
             const source = new PrefetchProxy({

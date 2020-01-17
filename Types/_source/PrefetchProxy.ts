@@ -137,9 +137,10 @@ export default class PrefetchProxy extends mixin<
     protected _$target: ITarget = null;
 
     /**
-     * @cfg {Object} Prefetched data for methods which means reading.
+     * @cfg {Object} Prefetched data for methods which provide reading operations
      * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
      * @name Types/_source/PrefetchProxy#data
+     * @see getData
      */
     protected _$data: IData = {
 
@@ -220,7 +221,7 @@ export default class PrefetchProxy extends mixin<
     protected _validators: IValidators = defaultValidators;
 
     /**
-     * The state of read prefetched data
+     * The state of reading prefetched data
      */
     protected _done: IDone = {};
 
@@ -237,6 +238,14 @@ export default class PrefetchProxy extends mixin<
         if (!this._$target) {
             throw new ReferenceError('Option "target" is required.');
         }
+    }
+
+    /**
+     * Returns data for methods which provide reading operations.
+     * @see data
+     */
+    getData(): IData {
+        return {...this._$data};
     }
 
     // region IDecorator
