@@ -266,12 +266,12 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrud).create(meta);
     }
 
-   read(key: any, meta?: object): Promise<Record> {
-      if (this._validators.read(this._$data.read, this._done)) {
-         return Deferred.success(this._$data.read) as Promise<Record>;
-      }
-      return (this._$target as ICrud).read(key, meta);
-   }
+    read(key: any, meta?: object): Promise<Record> {
+        if (this._validators.read(this._$data.read, this._done)) {
+            return Deferred.success(this._$data.read) as Promise<Record>;
+        }
+        return (this._$target as ICrud).read(key, meta);
+    }
 
     update(data: Record | RecordSet, meta?: object): Promise<null> {
         return (this._$target as ICrud).update(data, meta);

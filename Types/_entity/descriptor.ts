@@ -1,15 +1,15 @@
 import {IHashMap} from '../_declarations';
 
-type Descriptor = string | Function;
+type Descriptor = string | Function | null | object;
 
 type ValidationResult<T> = T | TypeError;
 type ValidateFunc<T> = (value: T) => ValidationResult<T>;
 
 interface IChained<T> {
-    required?: RequiredValidator<T>;
-    oneOf?: oneOfValidator<T>;
-    not?: notValidator<T>;
-    arrayOf?: arrayOfValidator<T>;
+    required: RequiredValidator<T>;
+    oneOf: oneOfValidator<T>;
+    not: notValidator<T>;
+    arrayOf: arrayOfValidator<T>;
 }
 
 type ChainedValidator<T> = ValidateFunc<T> & IChained<T>;
@@ -43,7 +43,7 @@ function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
 
     return function validateCompoisiteFor(value: T): ValidationResult<T> {
         let hasSuitable = false;
-        const errors = [];
+        const errors: Error[] = [];
 
         for (let index = 0; index < validators.length; index++) {
             const validator = validators[index];
