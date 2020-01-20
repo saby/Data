@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import numberWords from 'Types/_formatter/numberWords';
-import * as i18n from 'Core/i18n';
+import i18n = require('Core/i18n');
 import * as enUS from 'json!Types/lang/en/en.json';
 import * as ruRU from 'json!Types/lang/ru/ru.json';
 
