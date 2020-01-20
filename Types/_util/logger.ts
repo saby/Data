@@ -5,37 +5,20 @@ const SELF_STACK_DEPTH = 2;
 
 const stackPoints = {};
 
-/**
- * Logger
- * @public
- * @author Мальцев А.А.
- */
-const logger = {
+export interface ILogger {
     /**
      * Пишет в лог сообщение
      * @param tag Метка
      * @param message Сообщение
      */
-    log(tag: string, message?: string): void {
-        if (arguments.length === 1) {
-            message = tag;
-            tag = 'Log';
-        }
-        IoC.resolve('ILogger').log(tag, message || '');
-    },
+    log(tag: string, message?: string): void;
 
     /**
      * Пишет в лог сообщение об ошибке
      * @param tag Метка
      * @param message Сообщение
      */
-    error(tag: string, message?: string | Error): void {
-        if (arguments.length === 1) {
-            message = tag;
-            tag = 'Critical';
-        }
-        IoC.resolve('ILogger').error(tag, message || '');
-    },
+    error(tag: string, message?: string | Error): void;
 
     /**
      * Пишет в лог информационное сообщение
@@ -43,13 +26,7 @@ const logger = {
      * @param message Сообщение
      * @static
      */
-    info(tag: string, message?: string): void {
-        if (arguments.length === 1) {
-            message = tag;
-            tag = 'Warning';
-        }
-        IoC.resolve('ILogger').warn(tag, message || '');
-    },
+    info(tag: string, message?: string): void;
 
     /**
      * Пишет в лог предупреждение с указанием файла, спровоцировавшего это предупреждение.
@@ -58,6 +35,38 @@ const logger = {
      * @param [offset=0] Смещение по стеку
      * @param [level=info] Уровень логирования
      */
+    stack(message: string, offset?: number, level?: string): void;
+}
+
+class Logger implements ILogger {
+    log(tag: string, message?: string): void {
+        if (arguments.length === 1) {
+            message = tag;
+            tag = 'Log';
+        }
+        IoC.resolve('ILogger').log(tag, message || '');
+    }
+
+    error(tag: string, message?: string | Error): void {
+        if (arguments.length === 1) {
+            message = tag;
+            tag = 'Critical';
+        }
+        if (message instanceof Error) {
+            IoC.resolve('ILogger').error(tag, message.message, message);
+        } else {
+            IoC.resolve('ILogger').error(tag, message || '');
+        }
+    }
+
+    info(tag: string, message?: string): void {
+        if (arguments.length === 1) {
+            message = tag;
+            tag = 'Warning';
+        }
+        IoC.resolve('ILogger').warn(tag, message || '');
+    }
+
     stack(message: string, offset?: number, level?: string): void {
         offset = offset || 0;
         level = level || 'info';
@@ -85,6 +94,13 @@ const logger = {
 
         IoC.resolve('ILogger')[level](error.message, callStack);
     }
-};
+}
+
+/**
+ * Logger
+ * @public
+ * @author Мальцев А.А.
+ */
+const logger = new Logger();
 
 export default logger;
