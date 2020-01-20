@@ -1446,7 +1446,7 @@ describe('Types/_source/SbisService', () => {
                 position: 'before'
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
-                const etalon = {
+                const expected = {
                     IndexNumber: 'ПорНомер',
                     HierarchyName: 'parent',
                     ObjectName: 'USP',
@@ -1456,11 +1456,11 @@ describe('Types/_source/SbisService', () => {
                     ReadMethod: 'USP.Прочитать',
                     UpdateMethod: 'USP.Записать'
                 };
-                assert.deepEqual(etalon, args);
+                assert.deepEqual(args, expected);
             });
         });
 
-        it('should call move method when binding has contract', () => {
+        it('should call move method when binding.move has contract', () => {
             const service = new SbisService({
                 endpoint: 'Goods',
                 binding: {
@@ -1473,7 +1473,7 @@ describe('Types/_source/SbisService', () => {
                 position: 'before'
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
-                const etalon = {
+                const expected = {
                     IndexNumber: 'ПорНомер',
                     HierarchyName: 'parent',
                     ObjectName: 'Goods',
@@ -1483,7 +1483,35 @@ describe('Types/_source/SbisService', () => {
                     ReadMethod: 'Goods.Прочитать',
                     UpdateMethod: 'Goods.Записать'
                 };
-                assert.deepEqual(etalon, args);
+                assert.deepEqual(args, expected);
+            });
+        });
+
+        it('should call move method when binding.read or binding.update have contract', () => {
+            const service = new SbisService({
+                endpoint: 'Goods',
+                binding: {
+                    read: 'Product.get',
+                    update: 'Product.put'
+                }
+            });
+
+            return service.move([1], 2, {
+                parentProperty: 'parent',
+                position: 'before'
+            }).then(() => {
+                const args = SbisBusinessLogic.lastRequest.args;
+                const expected = {
+                    IndexNumber: 'ПорНомер',
+                    HierarchyName: 'parent',
+                    ObjectName: 'Goods',
+                    ObjectId: ['1'],
+                    DestinationId: '2',
+                    Order: 'before',
+                    ReadMethod: 'Product.get',
+                    UpdateMethod: 'Product.put'
+                };
+                assert.deepEqual(args, expected);
             });
         });
 
@@ -1493,7 +1521,7 @@ describe('Types/_source/SbisService', () => {
                 position: 'before'
             }).then(() => {
                 const args = SbisBusinessLogic.lastRequest.args;
-                const etalon = {
+                const expected = {
                     IndexNumber: 'ПорНомер',
                     HierarchyName: 'parent',
                     ObjectName: 'Item',
@@ -1503,7 +1531,7 @@ describe('Types/_source/SbisService', () => {
                     ReadMethod: 'Item.Прочитать',
                     UpdateMethod: 'Item.Записать'
                 };
-                assert.deepEqual(etalon, args);
+                assert.deepEqual(args, expected);
             });
         });
 
