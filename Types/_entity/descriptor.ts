@@ -1,6 +1,6 @@
 import {IHashMap} from '../_declarations';
 
-type Descriptor = string | Function;
+type Descriptor = string | Function | object;
 
 type ValidationResult<T> = T | TypeError;
 type ValidateFunc<T> = (value: T) => ValidationResult<T>;
