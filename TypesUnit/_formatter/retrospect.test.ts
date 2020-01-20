@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import retrospect, {Type} from 'Types/_formatter/retrospect';
-import * as i18n from 'Core/i18n';
+import i18n = require('Core/i18n');
 
 describe('Types/_formatter/retrospect', () => {
     let stubEnabled;

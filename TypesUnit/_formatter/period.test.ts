@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import period, {Type} from 'Types/_formatter/period';
-import * as i18n from 'Core/i18n';
+import i18n = require('Core/i18n');
 
 type testingTuple = [Date, Date, Type, string];
 
