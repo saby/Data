@@ -1,6 +1,7 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {register} from '../../di';
+import {logger as defaultLogger, ILogger} from '../../util';
 import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
 import Deferred = require('Core/Deferred');
@@ -13,6 +14,7 @@ interface IEndPoint {
 interface IOptions {
     endpoint?: IEndPoint;
     callTimeout?: number;
+    logger?: ILogger;
     transport?: IRpcTransportConstructor;
 }
 
@@ -30,47 +32,53 @@ export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRp
 // Default timeout to produce a call (in seconds)
 const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5 : 0;
 
+function throwError(err: Error, logger: ILogger): void {
+    logger.error('Types/_source/provider/SbisBusinessLogic', err);
+}
+
 /**
  * Returns promise which rejecting with error if origin doesn't return any result during specified timeout.
  * @param origin Origin promise
  * @param timeout Timeout to wait
  * @param methodName Called method name
  * @param address Called address
+ * @param logger Logger instance
  */
 function getTimedOutResponse<T>(
     origin: Promise<T> | Deferred<T>,
     timeout: number,
     methodName: string,
-    address: string
+    address: string,
+    logger: ILogger
 ): Promise<T> {
     let result = origin;
     const itsPromise = !(origin as Deferred<T>).isReady;
     const timeoutMs = 1000 * timeout;
     const timeoutError = new Error(
-        `Timeout of ${timeout} seconds has expired earlier than call for method '${methodName}' at '${address}' has returned any results.`
+        `Timeout of ${timeout} seconds had expired before the method '${methodName}' at '${address}' returned any results`
     );
 
     if (itsPromise) {
         result = new Promise((resolve, reject) => {
-            let originHasResult = false;
+            let gotTheResult = false;
             origin.then((response) => {
-                originHasResult = true;
+                gotTheResult = true;
                 resolve(response);
             }).catch((err) => {
-                originHasResult = true;
+                gotTheResult = true;
                 reject(err);
             });
 
             setTimeout(() => {
-                if (!originHasResult) {
-                    reject(timeoutError);
+                if (!gotTheResult) {
+                    throwError(timeoutError, logger);
                 }
             }, timeoutMs);
         });
     } else {
         setTimeout(() => {
             if (!(origin as Deferred<T>).isReady()) {
-                (origin as Deferred<T>).errback(timeoutError);
+                throwError(timeoutError, logger);
             }
         }, timeoutMs);
     }
@@ -88,6 +96,8 @@ function getTimedOutResponse<T>(
  */
 export default class SbisBusinessLogic extends OptionsToPropertyMixin implements IAbstract {
     readonly '[Types/_source/provider/IAbstract]': boolean = true;
+
+    protected _$logger: ILogger = defaultLogger;
 
     protected _$callTimeout: number = DEFAULT_CALL_TIMEOUT;
 
@@ -119,10 +129,10 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
      */
     protected _nameSpaceSeparator: string;
 
-   constructor(options?: IOptions) {
-      super();
-      OptionsToPropertyMixin.call(this, options);
-   }
+    constructor(options?: IOptions) {
+        super();
+        OptionsToPropertyMixin.call(this, options);
+    }
 
     /**
      * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям БЛ
@@ -148,7 +158,13 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         }).callMethod(methodName, args || {}) as any;
 
         if (result && this._$callTimeout) {
-            result = getTimedOutResponse(result, this._$callTimeout, methodName, endpoint.address);
+            result = getTimedOutResponse(
+                result,
+                this._$callTimeout,
+                methodName,
+                endpoint.address,
+                this._$logger
+            );
         }
 
         return result;

@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import SbisBusinessLogic from 'Types/_source/provider/SbisBusinessLogic';
+import {ILogger} from 'Types/_util/logger';
 
 class TransportMock {
     protected resolver: Promise<unknown> = Promise.resolve(null);
@@ -18,10 +19,40 @@ class TransportMock {
     static lastArgs: any;
 }
 
-class UnresolvedMock extends TransportMock {
-    protected resolver: Promise<unknown> = new Promise<unknown>(() => {
-        // Never resolve
+class DelayedMock extends TransportMock {
+    protected resolver: Promise<unknown> = new Promise<unknown>((resolve) => {
+        setTimeout(resolve, 50);
     });
+}
+
+class LoggerMock implements ILogger {
+    lastType: string;
+    lastTag: string;
+    lastMessage: string | Error;
+
+    log(tag: string, message?: string): void {
+        this.lastType = 'log';
+        this.lastTag = tag;
+        this.lastMessage = message;
+    }
+
+    error(tag: string, message?: string | Error): void {
+        this.lastType = 'error';
+        this.lastTag = tag;
+        this.lastMessage = message;
+    }
+
+    info(tag: string, message?: string): void {
+        this.lastType = 'info';
+        this.lastTag = tag;
+        this.lastMessage = message;
+    }
+
+    stack(message: string, offset?: number, level?: string): void {
+        this.lastType = 'stack';
+        this.lastTag = '';
+        this.lastMessage = message;
+    }
 }
 
 describe('Types/_source/provider/SbisBusinessLogic', () => {
@@ -77,15 +108,21 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
           assert.equal(TransportMock.lastMethod, 'boo.bar');
        });
 
-       it('should return error on expired timeout', () => {
+       it('should log an error on expired timeout', () => {
+           const logger = new LoggerMock();
            const bl = new SbisBusinessLogic({
                callTimeout: -1,
-               transport: UnresolvedMock
+               logger,
+               transport: DelayedMock
            });
+
            return bl.call('foo.bar').then(() => {
-               throw new Error('Shouldn\'t get here');
-           }).catch((err) => {
-              assert.isTrue(err.message.includes('has expired earlier than call'));
+               assert.equal(logger.lastType, 'error');
+               assert.equal(logger.lastTag, 'Types/_source/provider/SbisBusinessLogic');
+               assert.equal(
+                   (logger.lastMessage as Error).message,
+                   'Timeout of -1 seconds had expired before the method \'foo.bar\' at \'undefined\' returned any results'
+               );
            });
        });
     });
