@@ -2,6 +2,11 @@ import {assert} from 'chai';
 import parse from 'Types/_entity/dateParser';
 
 describe('Types/_entity/dateParser', () => {
+    it('should return zero-like date from empty string', () => {
+        const date = parse('', '');
+        assert.equal(date.getTime(), 0);
+    });
+
     it('should parse a year from YYYY', () => {
         const date = parse('2019', 'YYYY');
         assert.equal(date.getFullYear(), 2019);
