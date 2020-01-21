@@ -17,8 +17,6 @@ function mixin(Base: Function): IDateTimeConstructor {
  * @author Мальцев А.А.
  */
 export default class DateTime extends mixin(SerializableMixin) {
-    protected _serializationFormat: string;
-
     protected get _proto(): object {
         return DateTime.prototype;
     }
