@@ -7,6 +7,14 @@ describe('Types/_entity/Date', () => {
             const instance = new TheDate();
             assert.instanceOf(instance, TheDate);
         });
+
+        it('should create instance with zero time', () => {
+            const instance = new TheDate();
+            assert.strictEqual(instance.getHours(), 0);
+            assert.strictEqual(instance.getMinutes(), 0);
+            assert.strictEqual(instance.getSeconds(), 0);
+            assert.strictEqual(instance.getMilliseconds(), 0);
+        });
     });
 
     describe('.toJSON()', () => {

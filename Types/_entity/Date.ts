@@ -17,6 +17,16 @@ export default class Date extends DateTime {
          return Date.prototype;
     }
 
+    constructor(...args: Array<number | string>) {
+        const instance = super(...args) as unknown as Date;
+        instance.setHours(0);
+        instance.setMinutes(0);
+        instance.setSeconds(0);
+        instance.setMilliseconds(0);
+
+        return instance;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): IDefaultSerializableState {
