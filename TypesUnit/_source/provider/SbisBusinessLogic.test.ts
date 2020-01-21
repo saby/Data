@@ -120,7 +120,7 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
                assert.equal(logger.lastType, 'info');
                assert.equal(logger.lastTag, 'Types/_source/provider/SbisBusinessLogic');
                assert.equal(
-                   (logger.lastMessage as Error).message,
+                   logger.lastMessage,
                    'Timeout of -1 seconds had expired before the method \'foo.bar\' at \'undefined\' returned any results'
                );
            });
