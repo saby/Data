@@ -117,7 +117,7 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
            });
 
            return bl.call('foo.bar').then(() => {
-               assert.equal(logger.lastType, 'error');
+               assert.equal(logger.lastType, 'info');
                assert.equal(logger.lastTag, 'Types/_source/provider/SbisBusinessLogic');
                assert.equal(
                    (logger.lastMessage as Error).message,
