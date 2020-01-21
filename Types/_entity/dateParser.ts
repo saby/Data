@@ -78,7 +78,7 @@ export default function parse(str: string, format: string): Date {
     const validStr = String(str);
     const validFormat = String(format);
     const matcher = getTokensRegex();
-    const result = new Date(0, 0, 0, 0, 0, 0);
+    const result = new Date(0);
 
     let match;
     matcher.lastIndex = 0;
