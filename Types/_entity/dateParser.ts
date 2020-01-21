@@ -1,7 +1,3 @@
-interface IDateFormatOptions {
-    separator?: string;
-}
-
 let tokensRegex;
 const tokens = {};
 
@@ -41,10 +37,9 @@ function getTokensRegex(): RegExp {
  * Adds token to match
  * @param token Token
  * @param handler Token handler (for String is the method name in Date.prototype)
- * @param [options] Options to pass to the handler
  */
-function addToken(token: string, handler: string|Function, options: IDateFormatOptions = {}): void {
-    tokens[token] = [handler, options];
+function addToken(token: string, handler: string|Function): void {
+    tokens[token] = handler;
     tokensRegex = null;
 }
 
@@ -53,16 +48,15 @@ function addToken(token: string, handler: string|Function, options: IDateFormatO
  * @param date Date to being affected
  * @param value Value to apply
  * @param handler Token handler (for String is the method name in Date.prototype)
- * @param [options] Options to pass to the handler
  */
-function applyToken(date: Date, value: string, handler: string|Function, options: IDateFormatOptions): void {
+function applyToken(date: Date, value: string, handler: string|Function): void {
     if (typeof handler === 'string') {
         handler = (
             (method) => (date) => date[method](value)
         )(handler);
     }
 
-    handler(date, value, options);
+    handler(date, value);
 }
 
 // Date tokens
@@ -71,19 +65,34 @@ addToken('MM', setHumanMonth);
 addToken('YY', setShortYear);
 addToken('YYYY', 'setFullYear');
 
+/**
+ * Parses date from string by given format.
+ * @function
+ * @name Types/_entity/dateParser
+ * @param str Date in a string representation
+ * @param format Date format
+ * @private
+ * @author Мальцев А.А.
+ */
 export default function parse(str: string, format: string): Date {
-    const date = new Date(0, 0, 0, 0, 0, 0);
-
     const validStr = String(str);
+    const validFormat = String(format);
+    const matcher = getTokensRegex();
+    const result = new Date(0, 0, 0, 0, 0, 0);
 
-    String(format).replace(getTokensRegex(), (token: string, p1: string, offset: number): string => {
+    let match;
+    matcher.lastIndex = 0;
+    while ((match = matcher.exec(validFormat)) !== null) {
+        const token = match[0];
+
         // Check if to be escaped
         if (token[0] === '[' && token[token.length - 1] === ']') {
-            return;
+            continue;
         }
-        const value = validStr.substr(offset, token.length);
-        applyToken(date, value, tokens[token][0], tokens[token][1]);
-    });
+        const value = validStr.substr(match.index, token.length);
+        applyToken(result, value, tokens[token]);
 
-    return date;
+    }
+
+    return result;
 }

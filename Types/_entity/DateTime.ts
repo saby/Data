@@ -17,6 +17,8 @@ function mixin(Base: Function): IDateTimeConstructor {
  * @author Мальцев А.А.
  */
 export default class DateTime extends mixin(SerializableMixin) {
+    protected _serializationFormat: string;
+
     protected get _proto(): object {
         return DateTime.prototype;
     }
@@ -88,6 +90,7 @@ function Interlayer(): void {/*Just carrier*/}
 Interlayer.prototype = {...Object.getPrototypeOf(DateTime.prototype)};
 Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
+
 Object.assign(DateTime.prototype, {
    _moduleName: 'Types/entity:DateTime'
 });

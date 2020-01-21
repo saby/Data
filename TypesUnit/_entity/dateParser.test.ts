@@ -13,8 +13,8 @@ describe('Types/_entity/dateParser', () => {
     });
 
     it('should parse a month from MM', () => {
-        const date = parse('02', 'MM');
-        assert.equal(date.getMonth(), 1);
+        const date = parse('03', 'MM');
+        assert.equal(date.getMonth(), 2);
     });
 
     it('should parse a date from DD', () => {
