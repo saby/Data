@@ -88,6 +88,7 @@ function Interlayer(): void {/*Just carrier*/}
 Interlayer.prototype = {...Object.getPrototypeOf(DateTime.prototype)};
 Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
+
 Object.assign(DateTime.prototype, {
    _moduleName: 'Types/entity:DateTime'
 });
