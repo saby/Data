@@ -33,7 +33,7 @@ export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRp
 const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5 : 0;
 
 function throwError(err: Error, logger: ILogger): void {
-    logger.error('Types/_source/provider/SbisBusinessLogic', err);
+    logger.info('Types/_source/provider/SbisBusinessLogic', err.message);
 }
 
 /**
