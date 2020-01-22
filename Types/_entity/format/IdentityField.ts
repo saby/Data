@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для идентификатора.
@@ -46,3 +47,5 @@ Object.assign(IdentityField.prototype, {
     _separator: ',',
     _$defaultValue: [null]
 });
+
+register('Types/entity:format.IdentityField', IdentityField, {instantiate: false});

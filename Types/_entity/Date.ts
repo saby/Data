@@ -1,4 +1,5 @@
 import DateTime from './DateTime';
+import {register} from '../di';
 
 /**
  * Date type
@@ -11,3 +12,9 @@ export default class Date extends DateTime {
           return Date.prototype;
      }
 }
+
+Object.assign(Date.prototype, {
+    _moduleName: 'Types/entity:Date'
+});
+
+register('Types/entity:Date', Date, {instantiate: false});

@@ -1,5 +1,6 @@
 import Field from './Field';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
+import {register} from '../../di';
 
 /**
  * Формат поля для времени.
@@ -35,3 +36,5 @@ Object.assign(TimeField.prototype, {
     _moduleName: 'Types/entity:format.TimeField',
     _typeName: 'Time'
 });
+
+register('Types/entity:format.TimeField', TimeField, {instantiate: false});

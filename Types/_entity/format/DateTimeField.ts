@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для даты и времени.
@@ -43,3 +44,5 @@ Object.assign(DateTimeField.prototype, {
     _typeName: 'DateTime',
     _$withoutTimeZone: false
 });
+
+register('Types/entity:format.DateTimeField', DateTimeField, {instantiate: false});

@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля временной интервал.
@@ -25,3 +26,5 @@ Object.assign(TimeIntervalField.prototype, {
     _typeName: 'TimeInterval',
     _$defaultValue: 0
 });
+
+register('Types/entity:format.TimeIntervalField', TimeIntervalField, {instantiate: false});

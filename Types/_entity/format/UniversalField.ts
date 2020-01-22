@@ -1,4 +1,5 @@
 import {IHashMap} from '../../_declarations';
+import {register} from '../../di';
 
 type Dictionary = string[] | IHashMap<string>;
 
@@ -70,3 +71,5 @@ Object.assign(UniversalField.prototype, {
     nullable: false,
     meta: null
 });
+
+register('Types/entity:format.UniversalField', UniversalField, {instantiate: false});

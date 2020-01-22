@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля иерархии
@@ -41,3 +42,5 @@ Object.assign(HierarchyField.prototype, {
     _typeName: 'Hierarchy',
     _$kind: ''
 });
+
+register('Types/entity:format.HierarchyField', HierarchyField, {instantiate: false});

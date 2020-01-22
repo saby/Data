@@ -1,4 +1,5 @@
 import DictionaryField from './DictionaryField';
+import {register} from '../../di';
 
 /**
  * Формат перечисляемого поля.
@@ -24,3 +25,5 @@ Object.assign(EnumField.prototype, {
     _moduleName: 'Types/entity:format.EnumField',
     _typeName: 'Enum'
 });
+
+register('Types/entity:format.EnumField', EnumField, {instantiate: false});

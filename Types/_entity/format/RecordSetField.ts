@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для рекордсета.
@@ -23,3 +24,5 @@ Object.assign(RecordSetField.prototype, {
     _moduleName: 'Types/entity:format.RecordSetField',
     _typeName: 'RecordSet'
 });
+
+register('Types/entity:format.RecordSetField', RecordSetField, {instantiate: false});

@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля "Связь".
@@ -25,3 +26,5 @@ Object.assign(LinkField.prototype, {
     _typeName: 'Link',
     _$defaultValue: 0
 });
+
+register('Types/entity:format.LinkField', LinkField, {instantiate: false});

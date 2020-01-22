@@ -1,4 +1,5 @@
 import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from './SerializableMixin';
+import {register} from '../di';
 
 interface IDateTimeConstructor {
     new(): Date & SerializableMixin;
@@ -88,6 +89,9 @@ function Interlayer(): void {/*Just carrier*/}
 Interlayer.prototype = {...Object.getPrototypeOf(DateTime.prototype)};
 Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
+
 Object.assign(DateTime.prototype, {
    _moduleName: 'Types/entity:DateTime'
 });
+
+register('Types/entity:DateTime', DateTime, {instantiate: false});
