@@ -1,4 +1,5 @@
 import DictionaryField from './DictionaryField';
+import {register} from '../../di';
 
 /**
  * Формат поля флагов.
@@ -24,3 +25,5 @@ Object.assign(FlagsField.prototype, {
     _moduleName: 'Types/entity:format.FlagsField',
     _typeName: 'Flags'
 });
+
+register('Types/entity:format.FlagsField', FlagsField, {instantiate: false});

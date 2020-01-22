@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат логического поля.
@@ -23,3 +24,5 @@ Object.assign(BooleanField.prototype, {
     _moduleName: 'Types/entity:format.BooleanField',
     _typeName: 'Boolean'
 });
+
+register('Types/entity:format.BooleanField', BooleanField, {instantiate: false});

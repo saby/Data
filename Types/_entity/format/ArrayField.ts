@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для массива значений.
@@ -44,3 +45,5 @@ Object.assign(ArrayField.prototype, {
     _typeName: 'Array',
     _$kind: ''
 });
+
+register('Types/entity:format.ArrayField', ArrayField, {instantiate: false});

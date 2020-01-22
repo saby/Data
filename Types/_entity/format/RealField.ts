@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат вещественного поля.
@@ -61,3 +62,5 @@ Object.assign(RealField.prototype, {
     _$defaultValue: 0,
     _$precision: DEFAULT_PRECISION
 });
+
+register('Types/entity:format.RealField', RealField, {instantiate: false});

@@ -1,4 +1,5 @@
 import RealField from './RealField';
+import {register} from '../../di';
 
 /**
  * Формат денежного поля.
@@ -47,3 +48,5 @@ Object.assign(MoneyField.prototype, {
     _$precision: DEFAULT_PRECISION,
     _$large: false
 });
+
+register('Types/entity:format.MoneyField', MoneyField, {instantiate: false});

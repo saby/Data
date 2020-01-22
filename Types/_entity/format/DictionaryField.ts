@@ -1,5 +1,6 @@
 import Field from './Field';
 import {IHashMap} from '../../_declarations';
+import {register} from '../../di';
 
 type Dictionary = string[] | IHashMap<string>;
 
@@ -54,3 +55,5 @@ Object.assign(DictionaryField.prototype, {
     _$dictionary: null,
     _$localeDictionary: null
 });
+
+register('Types/entity:format.DictionaryField', DictionaryField, {instantiate: false});

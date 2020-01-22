@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для строки в формате XML.
@@ -25,3 +26,5 @@ Object.assign(XmlField.prototype, {
     _typeName: 'Xml',
     _$defaultValue: ''
 });
+
+register('Types/entity:format.XmlField', XmlField, {instantiate: false});
