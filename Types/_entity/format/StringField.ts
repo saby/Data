@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для строк.
@@ -23,3 +24,5 @@ Object.assign(StringField.prototype, {
     _moduleName: 'Types/entity:format.StringField',
     _typeName: 'String'
 });
+
+register('Types/entity:format.StringField', StringField, {instantiate: false});

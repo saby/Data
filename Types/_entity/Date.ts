@@ -2,6 +2,7 @@ import DateTime from './DateTime';
 import parseDate from './dateParser';
 import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
 import {date as formatDate} from '../formatter';
+import {register} from '../di';
 
 const ISO_PREFIX = 'ISO:';
 const ISO_FORMAT = 'YYYY-MM-DD';
@@ -46,3 +47,9 @@ export default class Date extends DateTime {
 
     // endregion
 }
+
+Object.assign(Date.prototype, {
+    _moduleName: 'Types/entity:Date'
+});
+
+register('Types/entity:Date', Date, {instantiate: false});

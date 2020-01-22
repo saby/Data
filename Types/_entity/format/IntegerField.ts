@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат целочисленного поля.
@@ -25,3 +26,5 @@ Object.assign(IntegerField.prototype, {
     _typeName: 'Integer',
     _$defaultValue: 0
 });
+
+register('Types/entity:format.IntegerField', IntegerField, {instantiate: false});

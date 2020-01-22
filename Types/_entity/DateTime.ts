@@ -1,4 +1,5 @@
 import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from './SerializableMixin';
+import {register} from '../di';
 
 interface IDateTimeConstructor {
     new(): Date & SerializableMixin;
@@ -92,3 +93,5 @@ Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
 Object.assign(DateTime.prototype, {
    _moduleName: 'Types/entity:DateTime'
 });
+
+register('Types/entity:DateTime', DateTime, {instantiate: false});

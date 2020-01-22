@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат двоичного поля.
@@ -23,3 +24,5 @@ Object.assign(BinaryField.prototype, {
     _moduleName: 'Types/entity:format.BinaryField',
     _typeName: 'Binary'
 });
+
+register('Types/entity:format.BinaryField', BinaryField, {instantiate: false});

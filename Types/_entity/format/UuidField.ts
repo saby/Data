@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля UUID.
@@ -23,3 +24,5 @@ Object.assign(UuidField.prototype, {
     _moduleName: 'Types/entity:format.UuidField',
     _typeName: 'Uuid'
 });
+
+register('Types/entity:format.UuidField', UuidField, {instantiate: false});
