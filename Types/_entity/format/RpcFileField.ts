@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля файл-RPC.
@@ -23,3 +24,5 @@ Object.assign(RpcFileField.prototype, {
     _moduleName: 'Types/entity:format.RpcFileField',
     _typeName: 'RpcFile'
 });
+
+register('Types/entity:format.RpcFileField', RpcFileField, {instantiate: false});

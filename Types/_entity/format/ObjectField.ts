@@ -1,4 +1,5 @@
 import Field from './Field';
+import {register} from '../../di';
 
 /**
  * Формат поля для JSON-объекта.
@@ -23,3 +24,5 @@ Object.assign(ObjectField.prototype, {
     _moduleName: 'Types/entity:format.ObjectField',
     _typeName: 'Object'
 });
+
+register('Types/entity:format.ObjectField', ObjectField, {instantiate: false});

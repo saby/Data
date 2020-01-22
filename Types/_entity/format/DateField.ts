@@ -1,5 +1,6 @@
 import Field from './Field';
 import {dateToSql, TO_SQL_MODE} from '../../formatter';
+import {register} from '../../di';
 
 /**
  * Формат поля для даты.
@@ -34,3 +35,5 @@ Object.assign(DateField.prototype, {
     _moduleName: 'Types/entity:format.DateField',
     _typeName: 'Date'
 });
+
+register('Types/entity:format.DateField', DateField, {instantiate: false});

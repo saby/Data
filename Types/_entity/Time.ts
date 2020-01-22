@@ -1,4 +1,5 @@
 import DateTime from './DateTime';
+import {register} from '../di';
 
 /**
  * Time type
@@ -11,3 +12,9 @@ export default class Time extends DateTime {
         return Time.prototype;
     }
 }
+
+Object.assign(Time.prototype, {
+    _moduleName: 'Types/entity:Time'
+});
+
+register('Types/entity:Time', Time, {instantiate: false});
