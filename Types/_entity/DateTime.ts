@@ -1,3 +1,4 @@
+
 import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from './SerializableMixin';
 
 interface IDateTimeConstructor {
