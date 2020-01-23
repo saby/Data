@@ -180,7 +180,6 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
-            let itsNew = false;
             const last = getNearestNode(item);
             if (last && last !== root) {
                 breadCrumbs = treeItemToBreadcrumbs.get(last);
@@ -188,12 +187,13 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                     breadCrumbs = new BreadcrumbsItem<S>({
                         contents: null,
                         last,
-                        owner: display,
+                        owner: display
                     });
                     treeItemToBreadcrumbs.set(last, breadCrumbs);
-                    itsNew = true;
                 }
             }
+
+            const itsNew = !breadcrumbsToData.has(breadCrumbs);
 
             return {breadCrumbs, last, itsNew};
         }
@@ -277,7 +277,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             sortedItems.push(resultItem);
         });
 
-        // Clean it up from time to time
+        // Clean unused instances up from time to time
         if (Date.now() - lastTimeForget > FORGET_TIMEOUT) {
             lastTimeForget = Date.now();
 
