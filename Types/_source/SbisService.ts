@@ -590,51 +590,39 @@ function oldMove(
  *         keyProperty: '@Employee'
  *     });
  * </pre>
- * <b>Пример 4</b>. Создадим новую статью:
+ * <b>Пример 4</b>. Выполним основные операции CRUD-контракта объекта 'Article':
  * <pre>
- *     import {SbisService} from 'Types/source';
+ *     import {SbisService, Query} from 'Types/source';
+ *     import {Model} from 'Types/entity';
+ *
+ *     function onError(err: Error): void {
+ *         console.error(err);
+ *     }
+ *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
- *         keyProperty: 'Id'
+ *         keyProperty: 'id'
  *     });
  *
+ *     // Создадим новую статью
  *     dataSource.create().then((article) => {
  *         const id = article.getKey();
- *     }.then((error) => {
- *         console.error(error);
- *     });
- * </pre>
- * <b>Пример 5</b>. Прочитаем статью:
- * <pre>
- *     import {SbisService} from 'Types/source';
- *     const dataSource = new SbisService({
- *         endpoint: 'Article',
- *         keyProperty: 'Id'
- *     });
+ *     }).catch(onError);
  *
+ *     // Прочитаем статью
  *     dataSource.read('article-1').then((article) => {
  *         const title = article.get('title');
- *     }.then((error) => {
- *         console.error(error);
- *     });
- * </pre>
- * <b>Пример 6</b>. Сохраним статью:
- * <pre>
- *     import {SbisService} from 'Types/source';
- *     import {Model, adapter} from 'Types/entity';
- *     const dataSource = new SbisService({
- *         endpoint: 'Article',
- *         keyProperty: 'Id'
- *     });
+ *     }).catch(onError);
+ *
+ *     // Обновим статью
  *     const article = new Model({
- *         adapter: new adapter.Sbis(),
+ *         adapter: dataSource.getAdapter(),
  *         format: [
  *             {name: 'id', type: 'integer'},
  *             {name: 'title', type: 'string'}
  *         ],
  *         keyProperty: 'id'
  *     });
- *
  *     article.set({
  *         id: 'article-1',
  *         title: 'Article 1'
@@ -642,40 +630,86 @@ function oldMove(
  *
  *     dataSource.update(article).then(() => {
  *         console.log('Article updated!');
- *     }.then((error) => {
- *         console.error(error);
- *     });
- * </pre>
- * <b>Пример 7</b>. Удалим статью:
- * <pre>
- *     import {SbisService} from 'Types/source';
- *     const dataSource = new SbisService({
- *         endpoint: 'Article',
- *         keyProperty: 'Id'
- *     });
+ *     }).catch(onError);
  *
+ *     // Удалим статью
  *     dataSource.destroy('article-1').then(() => {
  *         console.log('Article deleted!');
- *     }.then((error) => {
- *         console.error(error);
- *     });
- * </pre>
- * <b>Пример 8</b>. Прочитаем первые сто статей:
- * <pre>
- *     import {SbisService, Query} from 'Types/source';
- *     const dataSource = new SbisService({
- *         endpoint: 'Article'
- *     });
+ *     }).catch(onError);
  *
+ *     // Прочитаем первые сто статей
  *     const query = new Query();
  *     query.limit(100);
  *
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`Articles count: ${articles.getCount()}`);
- *     }.then((error) => {
- *         console.error(error);
+ *     }).catch(onError);
+ * </pre>
+ * <b>Пример 5</b>. Выберем статьи, используя навигацию по курсору:
+ * <pre>
+ *     import {SbisService, Query, QueryNavigationType} from 'Types/source';
+ *
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article',
+ *         keyProperty: 'id',
+ *         options: {
+ *             navigationType: QueryNavigationType.POSITION
+ *         }
  *     });
+ *
+ *     const query = new Query();
+ *     // Set cursor position by value of field 'PublicationDate'
+ *     query.where({
+ *         'PublicationDate>=': new Date(2020, 0, 1)
+ *     });
+ *     query.limit(100);
+ *
+ *     dataSource.query(query).then((response) => {
+ *         const articles = response.getAll();
+ *         console.log('Articles released on the 1st of January 2020 and later');
+ *         // Do something with articles
+ *     }).catch(onError);
+ * </pre>
+ * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
+ * <pre>
+ *     import {SbisService, Query, QueryNavigationType, queryAndExpr, queryOrExpr} from 'Types/source';
+ *
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article',
+ *         keyProperty: 'articleId',
+ *         options: {
+ *             navigationType: QueryNavigationType.POSITION
+ *         }
+ *     });
+ *
+ *     const sections = {
+ *         movies: 456,
+ *         cartoons: 457,
+ *         comics: 458,
+ *         literature: 459,
+ *         art: 460
+ *     };
+ *
+ *     const query = new Query();
+ *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
+ *     query.where(queryAndExpr({
+ *         visible: true,
+ *         'commentsCount>': 0
+ *     }, queryOrExpr(
+ *         {articleId: sections.movies, 'PublicationDate>=': new Date(2020, 0, 10)}]
+ *         {articleId: sections.comics, 'PublicationDate>=': new Date(2020, 0, 12)}]
+ *     }));
+ *     query.limit(100);
+ *
+ *     dataSource.query(query).then((response) => {
+ *         const articles = response.getAll();
+ *         console.log(`
+ *             Articles with comments from sections "Movies" (published on the 10th of January 2020 and later)
+ *             and "Comics" (published on the 12th of January 2020 and later).
+ *         `);
+ *         // Do something with articles
+ *     }).catch(onError);
  * </pre>
  * @class Types/_source/SbisService
  * @extends Types/_source/Rpc
