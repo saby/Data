@@ -580,18 +580,31 @@ export default class Query implements ICloneable {
      * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its ordering number.
      * @param expression Rules for filtering data
      * @example
-     * Let's select landed flights to Moscow "Sheremetyevo" airport from New York or Los Angeles:
+     * Let's select landed flights to Moscow "Sheremetyevo" (SVO) airport from New York or Los Angeles:
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
      *         .select('*')
      *         .from('AirportsSchedule')
      *         .where({
-     *             iata: 'SVO',
-     *             direction: 'Arrivals',
+     *             to: 'SVO',
      *             state: 'Landed',
      *             fromCity: ['New York', 'Los Angeles']
      *         });
+     * </pre>
+     * Let's select arriving flights to Moscow "Sheremetyevo" (SVO) from New York "JFK" with "Delta" (DL) airline or from Paris "CDG" with "Air France" (AF) airline:
+     * <pre>
+     *     import {Query, queryAndExpr, queryOrExpr} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('AirportsSchedule')
+     *         .where(queryAndExpr({
+     *             to: 'SVO',
+     *             state: 'Scheduled'
+     *         }, queryOrExpr(
+     *             {from: 'JFK', airliner: 'DL'},
+     *             {from: 'CDG', airliner: 'AF'}
+     *         )));
      * </pre>
      * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
      * <pre>
