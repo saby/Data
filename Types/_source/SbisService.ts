@@ -673,7 +673,7 @@ function oldMove(
  * </pre>
  * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
  * <pre>
- *     import {SbisService, Query, QueryNavigationType, queryAndExpr, queryOrExpr} from 'Types/source';
+ *     import {SbisService, Query, QueryNavigationType, queryAndExpr, sbisPositionExpr} from 'Types/source';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
@@ -696,9 +696,9 @@ function oldMove(
  *     query.where(queryAndExpr({
  *         visible: true,
  *         'commentsCount>': 0
- *     }, queryOrExpr(
- *         {articleId: sections.movies, 'PublicationDate>=': new Date(2020, 0, 10)}]
- *         {articleId: sections.comics, 'PublicationDate>=': new Date(2020, 0, 12)}]
+ *     }, sbisPositionExpr(
+ *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
+ *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
  *     }));
  *     query.limit(100);
  *
