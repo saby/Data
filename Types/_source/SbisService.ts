@@ -694,8 +694,7 @@ function oldMove(
  *     const query = new Query();
  *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
  *     query.where(queryAndExpr({
- *         visible: true,
- *         'commentsCount>': 0
+ *         visible: true
  *     }, sbisPositionExpr(
  *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
  *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
@@ -705,7 +704,7 @@ function oldMove(
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`
- *             Articles with comments from sections "Movies" (published on the 10th of January 2020 and later)
+ *             Visible articles from sections "Movies" (published on the 10th of January 2020 and later)
  *             and "Comics" (published on the 12th of January 2020 and later).
  *         `);
  *         // Do something with articles
