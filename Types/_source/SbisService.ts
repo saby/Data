@@ -699,7 +699,7 @@ function oldMove(
  *     }, sbisPositionExpr(
  *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
  *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
- *     }));
+ *     )));
  *     query.limit(100);
  *
  *     dataSource.query(query).then((response) => {
