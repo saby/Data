@@ -10,6 +10,16 @@ import Query, {
 import Record from 'Types/_entity/Record';
 import {IHashMap} from 'Types/_declarations';
 
+interface IAtoG {
+    a?: number;
+    b?: number;
+    c?: number;
+    d?: number;
+    e?: number;
+    f?: number;
+    g?: number;
+}
+
 describe('Types/_source/Query', () => {
     let query: Query;
 
@@ -61,8 +71,8 @@ describe('Types/_source/Query', () => {
 
             const clone = query.clone();
             assert.instanceOf(clone.getMeta(), Record);
-            assert.notEqual(clone.getMeta(), rec);
-            assert.isTrue(clone.getMeta().isEqual(rec));
+            assert.notEqual(clone.getMeta<Record>(), rec);
+            assert.isTrue(clone.getMeta<Record>().isEqual(rec));
         });
     });
 
@@ -368,11 +378,11 @@ describe('Types/_source/Query.Order', () => {
 });
 
 describe('Types/_source/Query.playExpression()', () => {
-    function playToStack<T>(expr: WhereExpression<T>): Array<T | string> {
+    function playToStack<T>(expr: WhereExpression<T>): Array<string | object> {
         const stack = [];
         playExpression(
             expr,
-            (item) => stack.push(item),
+            (key, value) => stack.push([key, value]),
             (type) => stack.push('>' + type),
             (type) => stack.push('<' + type)
         );
@@ -383,9 +393,10 @@ describe('Types/_source/Query.playExpression()', () => {
         const stack = playToStack({a: 1, b: 2});
         assert.deepEqual(stack, [
             '>and',
-            {a: 1},
-            {b: 2},
-            '<and']);
+            ['a', 1],
+            ['b', 2],
+            '<and'
+        ]);
     });
 
     it('should play an array within an object as or-expression', () => {
@@ -397,12 +408,12 @@ describe('Types/_source/Query.playExpression()', () => {
 
         assert.deepEqual(stack, [
             '>and',
-            {a: 1},
+            ['a', 1],
             '>or',
-            {b: 2},
-            {b: 3},
+            ['b', 2],
+            ['b', 3],
             '<or',
-            {c: 4},
+            ['c', 4],
             '<and'
         ]);
     });
@@ -416,10 +427,10 @@ describe('Types/_source/Query.playExpression()', () => {
 
         assert.deepEqual(stack, [
             '>and',
-            {a: 1},
-            {b: 2},
-            {c: 3},
-            {d: 4},
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+            ['d', 4],
             '<and'
         ]);
     });
@@ -433,9 +444,9 @@ describe('Types/_source/Query.playExpression()', () => {
 
         assert.deepEqual(stack, [
             '>or',
-            {a: 1},
-            {b: 2},
-            {c: 3},
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
             '<or'
         ]);
     });
@@ -449,18 +460,18 @@ describe('Types/_source/Query.playExpression()', () => {
 
         assert.deepEqual(stack, [
             '>or',
-            {a: 1},
+            ['a', 1],
             '>and',
-            {b: 2},
-            {c: 3},
+            ['b', 2],
+            ['c', 3],
             '<and',
-            {d: 4},
+            ['d', 4],
             '<or'
         ]);
     });
 
     it('should play mixture of expressions', () => {
-        const stack = playToStack(new AndExpression([
+        const stack = playToStack(new AndExpression<IAtoG>([
             {a: 1, b: 2},
             new OrExpression([
                 {c: 3, d: 4},
@@ -471,19 +482,19 @@ describe('Types/_source/Query.playExpression()', () => {
 
         assert.deepEqual(stack, [
             '>and',
-            {a: 1},
-            {b: 2},
+            ['a', 1],
+            ['b', 2],
             '>or',
             '>and',
-            {c: 3},
-            {d: 4},
+            ['c', 3],
+            ['d', 4],
             '<and',
             '>and',
-            {e: 5},
-            {f: 6},
+            ['e', 5],
+            ['f', 6],
             '<and',
             '<or',
-            {g: 7},
+            ['g', 7],
             '<and'
         ]);
     });

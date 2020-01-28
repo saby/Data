@@ -8,13 +8,20 @@ import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
-import Query, {NavigationType, ExpandMode} from './Query';
+import Query, {
+    ExpandMode,
+    PartialExpression,
+    playExpression,
+    NavigationType,
+    WhereExpression
+} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
 import {AdapterDescriptor, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
+import {IHashMap} from '../declarations';
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 enum PoitionNavigationOrder {
@@ -37,6 +44,13 @@ const COMPLEX_ID_SEPARATOR = ',';
  * Regexp for Identity type detection
  */
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
+
+const EXPRESSION_TEMPLATE = /(.+)([<>]=?|~)$/;
+
+interface ICursor {
+    position: object | object[];
+    order: string;
+}
 
 export interface IEndpoint extends IProviderEndpoint {
     moveContract?: string;
@@ -83,6 +97,16 @@ export interface IMoveMeta {
 interface IOldMoveMeta {
     before: string;
     hierField: string;
+}
+
+type PositionDeclaration = [string | number, IHashMap<unknown>];
+
+export class PositionExpression<T = PositionDeclaration> extends PartialExpression<T> {
+    readonly type: string = 'sbisPosition';
+}
+
+export function positionExpression<T>(...conditions: PositionDeclaration[]): PositionExpression<T> {
+    return new PositionExpression(conditions as unknown as T[]);
 }
 
 /**
@@ -142,32 +166,15 @@ function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): o
 }
 
 /**
- * Calls destroy method for some BL-Object
- * @param instance Instance
- * @param ids BL objects ids to delete
- * @param name BL object name
- * @param meta Meta data
- */
-function callDestroyWithComplexId(
-    instance: SbisService | any,
-    ids: string[],
-    name: string,
-    meta: object
-): Promise<any> {
-    return instance._callProvider(
-        instance._$endpoint.contract === name
-            ? instance._$binding.destroy
-            :  buildBlMethodName(name, instance._$binding.destroy),
-        instance._$passing.destroy.call(instance, ids, meta)
-    );
-}
-
-/**
  * Builds Record from plain object
  * @param data Record data as JSON
  * @param adapter
  */
 function buildRecord(data: any, adapter: AdapterDescriptor): Record | null {
+    if (data && DataMixin.isModelInstance(data)) {
+        return data;
+    }
+
     const RecordType = resolve<typeof Record>('Types/entity:Record');
     return RecordType.fromObject(data, adapter);
 }
@@ -178,7 +185,7 @@ function buildRecord(data: any, adapter: AdapterDescriptor): Record | null {
  * @param adapter
  * @param keyProperty
  */
-function buildRecordSet(data: any, adapter: AdapterDescriptor, keyProperty: string): RecordSet<Record> | null {
+function buildRecordSet(data: any, adapter: AdapterDescriptor, keyProperty?: string): RecordSet<Record> | null {
     if (data === null) {
         return data;
     }
@@ -226,6 +233,111 @@ function getSortingParams(query: Query): string[] | null {
 }
 
 /**
+ * Converts expression to the plain object
+ * @param expr Expression to convert
+ */
+function expressionToObject<T>(expr: WhereExpression<T>): object {
+    const result = {};
+    let currentType: string = '';
+    let processingPosition = false;
+
+    playExpression(expr, (key, value) => {
+        if (processingPosition) {
+            return;
+        }
+
+        if (currentType === 'or') {
+            result[key] = result[key] || [];
+            result[key].push(value);
+        } else {
+            result[key] = value;
+        }
+    }, (type) => {
+        currentType = type;
+        if (type === 'sbisPosition') {
+            processingPosition = true;
+        }
+    }, (type, returnType) => {
+        currentType = returnType;
+        if (type === 'sbisPosition') {
+            processingPosition = false;
+        }
+    });
+
+    return result;
+}
+
+/**
+ * Applies string expression and its value to given cursor
+ * @param expr Expression to apply
+ * @param value Value of expression
+ * @param cursor Cursor to affect
+ */
+function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): void {
+    const parts = expr.match(EXPRESSION_TEMPLATE);
+
+    // Check next if there's no operand
+    if (!parts) {
+        return;
+    }
+
+    // Skip undefined values
+    if (value !== undefined) {
+        const field = parts[1];
+        const operand = parts[2];
+
+        // Add field value to position if it's not null because nulls used only for defining an order.
+        if (value !== null) {
+            if (!cursor.position) {
+                cursor.position = {};
+            }
+            cursor.position[field] = value;
+        }
+
+        // We can use only one kind of order so take it from the first operand
+        if (!cursor.order) {
+            switch (operand) {
+                case '~':
+                    cursor.order = PoitionNavigationOrder.both;
+                    break;
+
+                case '<':
+                case '<=':
+                    cursor.order = PoitionNavigationOrder.before;
+                    break;
+            }
+        }
+    }
+}
+
+/**
+ * Applies conditions to given cursor
+ * @param conditions Conditions to apply
+ * @param cursor Cursor to affect
+ * @param adapter Adapter to use in records
+ */
+function applyMultiplePosition(conditions: PositionDeclaration[], cursor: ICursor, adapter: AdapterDescriptor): void {
+    cursor.position = [];
+
+    conditions.forEach(([conditionKey, conditionFilter]) => {
+        const conditionCursor: ICursor = {
+            position: null,
+            order: ''
+        };
+        Object.keys(conditionFilter).forEach((filterKey) => {
+            applyExpressionAndValue(filterKey, conditionFilter[filterKey], conditionCursor);
+        });
+
+        (cursor.position as object[]).push({
+            id: conditionKey,
+            nav:  buildRecord(conditionCursor.position, adapter)
+        });
+
+        cursor.order = cursor.order || conditionCursor.order;
+    });
+}
+
+/**
  * Returns navigation parameters
  */
 function getNavigationParams(query: Query, options: IOptionsOption, adapter: AdapterDescriptor): object | null {
@@ -257,57 +369,39 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
         case NavigationType.Position:
             if (!withoutLimit) {
                 const where = query.getWhere();
-                const pattern = /(.+)([<>]=?|~)$/;
-                let position = null;
-                let order;
+                const cursor = {
+                    position: null,
+                    order: ''
+                };
+                let processingPosition = false;
 
-                Object.keys(where).forEach((expr) => {
-                    const parts = expr.match(pattern);
-
-                    // Check next if there's no operand
-                    if (!parts) {
+                playExpression(where, (expr, value) => {
+                    if (processingPosition) {
                         return;
                     }
 
-                    const value = where[expr];
-
-                    // Skip undefined values
-                    if (value !== undefined) {
-                        const field = parts[1];
-                        const operand = parts[2];
-
-                        // Add field value to position if it's not null because nulls used only for defining an order.
-                        if (value !== null) {
-                            if (!position) {
-                                position = {};
-                            }
-                            position[field] = value;
-                        }
-
-                        // We can use only one kind of order so take it from the first operand
-                        if (!order) {
-                            switch (operand) {
-                                case '~':
-                                    order = PoitionNavigationOrder.both;
-                                    break;
-
-                                case '<':
-                                case '<=':
-                                    order = PoitionNavigationOrder.before;
-                                    break;
-                            }
-                        }
-                    }
+                    applyExpressionAndValue(expr, value, cursor);
 
                     // Also delete property with operand in query (by link)
                     delete where[expr];
+                }, (type, conditions) => {
+                    if (type === 'sbisPosition') {
+                        processingPosition = true;
+                        applyMultiplePosition(conditions, cursor, adapter);
+                    }
+                }, (type) => {
+                    if (type === 'sbisPosition') {
+                        processingPosition = false;
+                    }
                 });
 
                 params = {
                     HasMore: more,
                     Limit: limit,
-                    Order: order || PoitionNavigationOrder.after,
-                    Position: buildRecord(position, adapter)
+                    Order: cursor.order || PoitionNavigationOrder.after,
+                    Position: cursor.position instanceof Array
+                        ? buildRecordSet(cursor.position, adapter)
+                        : buildRecord(cursor.position, adapter)
                 };
             }
             break;
@@ -331,7 +425,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
 function getFilterParams(query: Query): object | null {
     let params = null;
     if (query) {
-        params = query.getWhere();
+        params = expressionToObject(query.getWhere());
 
         const meta = query.getMeta();
         if (meta) {
@@ -558,6 +652,26 @@ function oldMove(
 }
 
 /**
+ * Calls destroy method for some BL-Object
+ * @param ids BL objects ids to delete
+ * @param name BL object name
+ * @param meta Meta data
+ */
+function callDestroyWithComplexId(
+    this: SbisService,
+    ids: string[],
+    name: string,
+    meta: object
+): Promise<any> {
+    return this._callProvider(
+        this._$endpoint.contract === name
+            ? this._$binding.destroy
+            :  buildBlMethodName(name, this._$binding.destroy),
+        this._$passing.destroy.call(this, ids, meta)
+    );
+}
+
+/**
  * Класс источника данных на сервисах бизнес-логики СБИС.
  * @remark
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
@@ -673,7 +787,7 @@ function oldMove(
  * </pre>
  * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
  * <pre>
- *     import {SbisService, Query, QueryNavigationType, queryAndExpression, sbisPositionExpression} from 'Types/source';
+ *     import {SbisService, Query, QueryNavigationType, queryAndExpression, sbisServicePositionExpression} from 'Types/source';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
@@ -695,7 +809,7 @@ function oldMove(
  *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
  *     query.where(queryAndExpression({
  *         visible: true
- *     }, sbisPositionExpression(
+ *     }, sbisServicePositionExpression(
  *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
  *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
  *     )));
@@ -928,7 +1042,7 @@ export default class SbisService extends Rpc {
 
     destroy(keys: any | any[], meta?: object): Promise<null> {
         if (!(keys instanceof Array)) {
-            return callDestroyWithComplexId(
+            return callDestroyWithComplexId.call(
                 this,
                 [getKeyByComplexId(keys)],
                 getNameByComplexId(keys, this._$endpoint.contract),
@@ -941,7 +1055,7 @@ export default class SbisService extends Rpc {
         const pd = new ParallelDeferred();
         for (const name in groups) {
             if (groups.hasOwnProperty(name)) {
-                pd.push(callDestroyWithComplexId(
+                pd.push(callDestroyWithComplexId.call(
                     this,
                     groups[name],
                     name,

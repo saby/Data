@@ -14,23 +14,29 @@ export enum NavigationType {
     Position = 'Position'
 }
 
-export interface IMeta extends IHashMap<any> {
+export interface IMeta extends IHashMap<unknown> {
     expand?: ExpandMode;
     navigationType?: NavigationType;
 }
 
 export type FilterFunction<T> = (item: T, index: number) => boolean;
-export type FilterExpression<T> = IHashMap<unknown> | FilterFunction<T>;
+export type FilterExpression = IHashMap<unknown> | FilterFunction<unknown>;
 
-export abstract class PartialExpression<T> {
+export abstract class PartialExpression<T = FilterExpression> {
     readonly type: string;
-    constructor(readonly conditions: Array<FilterExpression<T> | PartialExpression<T>>) {
+    constructor(readonly conditions: Array<T | PartialExpression<T>>) {
     }
 }
 
 export type SelectExpression = IHashMap<string> | string[] | string;
-export type WhereExpression<T> = FilterExpression<T> | PartialExpression<T>;
+export type WhereExpression<T> = FilterExpression | PartialExpression<T>;
 export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
+
+type AtomDeclaration = unknown;
+
+export class AtomExpression<T = AtomDeclaration> extends PartialExpression<T> {
+    readonly type: string = 'atom';
+}
 
 export class AndExpression<T> extends PartialExpression<T> {
     readonly type: string = 'and';
@@ -40,15 +46,11 @@ export class OrExpression<T> extends PartialExpression<T> {
     readonly type: string = 'or';
 }
 
-export class AtomExpression<T> extends PartialExpression<T> {
-    readonly type: string = 'atom';
-}
-
-export function andExpression<T>(...conditions: Array<FilterExpression<T>>): AndExpression<T> {
+export function andExpression<T>(...conditions: Array<T | PartialExpression<T>>): AndExpression<T> {
     return new AndExpression(conditions);
 }
 
-export function orExpression<T>(...conditions: Array<FilterExpression<T>>): OrExpression<T> {
+export function orExpression<T>(...conditions: Array<T | PartialExpression<T>>): OrExpression<T> {
     return new OrExpression(conditions);
 }
 
@@ -56,23 +58,25 @@ function playExpressionInner<T>(
     expression: PartialExpression<T>,
     onAtomAppears: Function,
     onGroupBegins: Function,
-    onGroupEnds: Function
+    onGroupEnds: Function,
+    stack: Array<PartialExpression<unknown>>
 ): void {
     if (expression.conditions.length === 0) {
         return;
     }
 
     if (expression instanceof AtomExpression) {
-        onAtomAppears(expression.conditions[0]);
+        onAtomAppears(expression.conditions[0], expression.conditions[1], expression.type);
     } else {
         // If there is no atom that means there is a group
-        onGroupBegins(expression.type);
+        stack.push(expression);
+        onGroupBegins(expression.type, expression.conditions);
 
         // Play each condition
         expression.conditions.forEach((condition) => {
             // If condition is an expression just play it
             if (condition instanceof PartialExpression) {
-                return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds);
+                return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds, stack);
             }
 
             const keys = Object.keys(condition);
@@ -84,7 +88,8 @@ function playExpressionInner<T>(
                     new AndExpression([condition]),
                     onAtomAppears,
                     onGroupBegins,
-                    onGroupEnds
+                    onGroupEnds,
+                    stack
                 );
             }
 
@@ -98,7 +103,8 @@ function playExpressionInner<T>(
                         value,
                         onAtomAppears,
                         onGroupBegins,
-                        onGroupEnds
+                        onGroupEnds,
+                        stack
                     );
                 }
 
@@ -106,25 +112,28 @@ function playExpressionInner<T>(
                 if (value instanceof Array) {
                     return playExpressionInner(
                         new OrExpression(
-                            value.map((subValue) => new AtomExpression([{[key]: subValue}]))
+                            value.map((subValue) => new AtomExpression([key, subValue]))
                         ),
                         onAtomAppears,
                         onGroupBegins,
-                        onGroupEnds
+                        onGroupEnds,
+                        stack
                     );
                 }
 
                 // All another values are just atoms
                 playExpressionInner(
-                    new AtomExpression([{[key]: value}]),
+                    new AtomExpression([key, value]),
                     onAtomAppears,
                     onGroupBegins,
-                    onGroupEnds
+                    onGroupEnds,
+                    stack
                 );
             });
         });
 
-        onGroupEnds(expression.type);
+        stack.pop();
+        onGroupEnds(expression.type, stack.length && stack[stack.length - 1].type);
     }
 }
 
@@ -142,10 +151,11 @@ export function playExpression<T>(
     onGroupEnds: Function
 ): void {
     playExpressionInner(
-        expression instanceof PartialExpression ? expression : andExpression(expression),
+        expression instanceof PartialExpression ? expression : andExpression(expression as unknown as T),
         onAtomAppears,
         onGroupBegins,
-        onGroupEnds
+        onGroupEnds,
+        []
     );
 }
 
@@ -155,7 +165,7 @@ export function playExpression<T>(
  */
 function duplicate<T>(data: T): T {
     if (data['[Types/_entity/ICloneable]']) {
-        return (data as any).clone();
+        return (data as unknown as ICloneable).clone();
     }
     if (data && typeof data === 'object') {
         return {...data};
@@ -413,7 +423,7 @@ export class Order extends OptionsToPropertyMixin {
  * @public
  * @author Мальцев А.А.
  */
-export default class Query<T = any> implements ICloneable {
+export default class Query<T = unknown> implements ICloneable {
     /**
      * Field names to select
      */
@@ -462,15 +472,15 @@ export default class Query<T = any> implements ICloneable {
     /**
      * Additional metadata to send to the data source
      */
-    protected _meta: IMeta = {};
+    protected _meta: unknown | IMeta = {};
 
     // region ICloneable
 
     readonly '[Types/_entity/ICloneable]': boolean;
 
-    clone<T = this>(): T {
+    clone<U = this>(): U {
         // TODO: deeper clone?
-        const clone = new Query();
+        const clone = new Query<T>();
         clone._select = duplicate(this._select);
         clone._from = this._from;
         clone._as = this._as;
@@ -482,7 +492,7 @@ export default class Query<T = any> implements ICloneable {
         clone._limit = this._limit;
         clone._meta = duplicate(this._meta);
 
-        return clone as any;
+        return clone as unknown as U;
     }
 
     // endregion
@@ -1020,8 +1030,8 @@ export default class Query<T = any> implements ICloneable {
      *     console.log(query.getMeta()); // {navigationType: 'Offset'}
      * </pre>
      */
-    getMeta(): IMeta {
-        return this._meta;
+    getMeta<U = IMeta>(): U {
+        return this._meta as U;
     }
 
     /**
@@ -1039,8 +1049,8 @@ export default class Query<T = any> implements ICloneable {
      *         .meta({navigationType: QueryNavigationType.Offset});
      * </pre>
      */
-    meta(data: IMeta): this {
-        data = data || {};
+    meta<U = IMeta>(data: U): this {
+        data = data || ({} as unknown as U);
         if (typeof data !== 'object') {
             throw new TypeError('Invalid argument "data"');
         }
