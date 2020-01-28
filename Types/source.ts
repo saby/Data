@@ -37,15 +37,17 @@ export {default as PrefetchProxy} from './_source/PrefetchProxy';
 import * as provider from './_source/provider';
 export {provider};
 export {
+    andExpression as queryAndExpression,
     default as Query,
+    ExpandMode as QueryExpandMode,
     Join as QueryJoin,
-    Where as QueryWhere,
+    IMeta as IQueryMeta,
+    NavigationType as QueryNavigationType,
     Order as QueryOrder,
     OrderSelector as QueryOrderSelector,
-    Expression as QueryExpression,
-    NavigationType as QueryNavigationType,
-    ExpandMode as QueryExpandMode,
-    IMeta as IQueryMeta
+    orExpression as queryOrExpression,
+    SelectExpression as QuerySelectExpression,
+    WhereExpression as QueryWhereExpression
 } from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';

@@ -1,10 +1,6 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {IHashMap} from '../_declarations';
 
-export type Where<T = any> = IHashMap<T> | ((item: T, index: number) => boolean);
-export type Expression = IHashMap<string> | string[] | string;
-export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
-
 export enum ExpandMode {
     None,
     Nodes,
@@ -21,6 +17,136 @@ export enum NavigationType {
 export interface IMeta extends IHashMap<any> {
     expand?: ExpandMode;
     navigationType?: NavigationType;
+}
+
+export type FilterFunction<T> = (item: T, index: number) => boolean;
+export type FilterExpression<T> = IHashMap<unknown> | FilterFunction<T>;
+
+export abstract class PartialExpression<T> {
+    readonly type: string;
+    constructor(readonly conditions: Array<FilterExpression<T> | PartialExpression<T>>) {
+    }
+}
+
+export type SelectExpression = IHashMap<string> | string[] | string;
+export type WhereExpression<T> = FilterExpression<T> | PartialExpression<T>;
+export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
+
+export class AndExpression<T> extends PartialExpression<T> {
+    readonly type: string = 'and';
+}
+
+export class OrExpression<T> extends PartialExpression<T> {
+    readonly type: string = 'or';
+}
+
+export class AtomExpression<T> extends PartialExpression<T> {
+    readonly type: string = 'atom';
+}
+
+export function andExpression<T>(...conditions: Array<FilterExpression<T>>): AndExpression<T> {
+    return new AndExpression(conditions);
+}
+
+export function orExpression<T>(...conditions: Array<FilterExpression<T>>): OrExpression<T> {
+    return new OrExpression(conditions);
+}
+
+function playExpressionInner<T>(
+    expression: PartialExpression<T>,
+    onAtomAppears: Function,
+    onGroupBegins: Function,
+    onGroupEnds: Function
+): void {
+    if (expression.conditions.length === 0) {
+        return;
+    }
+
+    if (expression instanceof AtomExpression) {
+        onAtomAppears(expression.conditions[0]);
+    } else {
+        // If there is no atom that means there is a group
+        onGroupBegins(expression.type);
+
+        // Play each condition
+        expression.conditions.forEach((condition) => {
+            // If condition is an expression just play it
+            if (condition instanceof PartialExpression) {
+                return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds);
+            }
+
+            const keys = Object.keys(condition);
+
+            // If condition is an object with several keys and it's the part of or-expression that means that it's
+            // actually the new where-expression
+            if (expression.type === 'or' && keys.length > 1) {
+                return playExpressionInner(
+                    new AndExpression([condition]),
+                    onAtomAppears,
+                    onGroupBegins,
+                    onGroupEnds
+                );
+            }
+
+            // If condition is an object just take a look on each part of it
+            keys.forEach((key) => {
+                const value = condition[key];
+
+                // If part is an expression just play it
+                if (value instanceof PartialExpression) {
+                    return playExpressionInner(
+                        value,
+                        onAtomAppears,
+                        onGroupBegins,
+                        onGroupEnds
+                    );
+                }
+
+                // If part is an array that means that it's actually the new or-expression
+                if (value instanceof Array) {
+                    return playExpressionInner(
+                        new OrExpression(
+                            value.map((subValue) => new AtomExpression([{[key]: subValue}]))
+                        ),
+                        onAtomAppears,
+                        onGroupBegins,
+                        onGroupEnds
+                    );
+                }
+
+                // All another values are just atoms
+                playExpressionInner(
+                    new AtomExpression([{[key]: value}]),
+                    onAtomAppears,
+                    onGroupBegins,
+                    onGroupEnds
+                );
+            });
+        });
+
+        onGroupEnds(expression.type);
+    }
+}
+
+/**
+ * Plays expression by calling given callbacks for each part of it
+ * @param expression Expression to play
+ * @param onAtomAppears In atom value appears
+ * @param onGroupBegins On group of atom value begins
+ * @param onGroupEnds On group of atom value ends
+ */
+export function playExpression<T>(
+    expression: WhereExpression<T>,
+    onAtomAppears: Function,
+    onGroupBegins: Function,
+    onGroupEnds: Function
+): void {
+    playExpressionInner(
+        expression instanceof PartialExpression ? expression : andExpression(expression),
+        onAtomAppears,
+        onGroupBegins,
+        onGroupEnds
+    );
 }
 
 /**
@@ -41,7 +167,7 @@ function duplicate<T>(data: T): T {
  * Parses expression from fields set
  * @param expression Expression with fields set
  */
-function parseSelectExpression(expression: Expression): IHashMap<string> {
+function parseSelectExpression(expression: SelectExpression): IHashMap<string> {
     if (typeof expression === 'string') {
         expression = expression.split(/[ ,]/);
     }
@@ -287,7 +413,7 @@ export class Order extends OptionsToPropertyMixin {
  * @public
  * @author Мальцев А.А.
  */
-export default class Query implements ICloneable {
+export default class Query<T = any> implements ICloneable {
     /**
      * Field names to select
      */
@@ -311,7 +437,7 @@ export default class Query implements ICloneable {
     /**
      * Rules for filtering data
      */
-    protected _where: Where = {};
+    protected _where: WhereExpression<T> = {};
 
     /**
      * Rules for grouping data
@@ -415,7 +541,7 @@ export default class Query implements ICloneable {
      *         .from('Orders');
      * </pre>
      */
-    select(expression: Expression): this {
+    select(expression: SelectExpression): this {
         this._select = parseSelectExpression(expression);
 
         return this;
@@ -526,7 +652,7 @@ export default class Query implements ICloneable {
      *         );
      * </pre>
      */
-    join(name: string | string[], on: IHashMap<string>, expression: Expression, inner?: boolean): this {
+    join(name: string | string[], on: IHashMap<string>, expression: SelectExpression, inner?: boolean): this {
         if (typeof name === 'string') {
             name = name.split(' ');
         }
@@ -570,7 +696,7 @@ export default class Query implements ICloneable {
      *         .limit(100);
      * </pre>
      */
-    getWhere(): Where {
+    getWhere(): WhereExpression<T> {
         return this._where;
     }
 
@@ -592,18 +718,18 @@ export default class Query implements ICloneable {
      *             fromCity: ['New York', 'Los Angeles']
      *         });
      * </pre>
-     * Let's select arriving flights to Moscow "Sheremetyevo" (SVO) from New York "JFK" with "Delta" (DL) airline or from Paris "CDG" with "Air France" (AF) airline:
+     * Let's select flights arriving to Moscow "Sheremetyevo" (SVO) from New York "JFK" with "Delta" (DL) airline or from Paris "CDG" with "Air France" (AF) airline:
      * <pre>
-     *     import {Query, queryAndExpr, queryOrExpr} from 'Types/source';
+     *     import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
      *     const query = new Query()
      *         .select('*')
      *         .from('AirportsSchedule')
-     *         .where(queryAndExpr({
+     *         .where(queryAndExpression({
      *             to: 'SVO',
      *             state: 'Scheduled'
-     *         }, queryOrExpr(
-     *             {from: 'JFK', airliner: 'DL'},
-     *             {from: 'CDG', airliner: 'AF'}
+     *         }, queryOrExpression(
+     *             {from: 'JFK', airline: 'DL'},
+     *             {from: 'CDG', airline: 'AF'}
      *         )));
      * </pre>
      * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
@@ -619,7 +745,7 @@ export default class Query implements ICloneable {
      *         .limit(100);
      * </pre>
      */
-    where(expression: Where): this {
+    where(expression: WhereExpression<T>): this {
         expression = expression || {};
         const type = typeof expression;
         if (type !== 'object' && type !== 'function') {

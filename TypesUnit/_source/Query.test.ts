@@ -1,5 +1,12 @@
 import {assert} from 'chai';
-import Query, {Join, Order} from 'Types/_source/Query';
+import Query, {
+    AndExpression,
+    Join,
+    Order,
+    OrExpression,
+    playExpression,
+    WhereExpression
+} from 'Types/_source/Query';
 import Record from 'Types/_entity/Record';
 import {IHashMap} from 'Types/_declarations';
 
@@ -357,5 +364,127 @@ describe('Types/_source/Query.Order', () => {
             });
             assert.isTrue(orderWithOption.getNullPolicy());
         });
+    });
+});
+
+describe('Types/_source/Query.playExpression()', () => {
+    function playToStack<T>(expr: WhereExpression<T>): Array<T | string> {
+        const stack = [];
+        playExpression(
+            expr,
+            (item) => stack.push(item),
+            (type) => stack.push('>' + type),
+            (type) => stack.push('<' + type)
+        );
+        return stack;
+    }
+
+    it('should play an object as and-expression', () => {
+        const stack = playToStack({a: 1, b: 2});
+        assert.deepEqual(stack, [
+            '>and',
+            {a: 1},
+            {b: 2},
+            '<and']);
+    });
+
+    it('should play an array within an object as or-expression', () => {
+        const stack = playToStack({
+            a: 1,
+            b: [2, 3],
+            c: 4
+        });
+
+        assert.deepEqual(stack, [
+            '>and',
+            {a: 1},
+            '>or',
+            {b: 2},
+            {b: 3},
+            '<or',
+            {c: 4},
+            '<and'
+        ]);
+    });
+
+    it('should play and-expression', () => {
+        const stack = playToStack(new AndExpression([
+            {a: 1, b: 2},
+            {c: 3},
+            {d: 4}
+        ]));
+
+        assert.deepEqual(stack, [
+            '>and',
+            {a: 1},
+            {b: 2},
+            {c: 3},
+            {d: 4},
+            '<and'
+        ]);
+    });
+
+    it('should play or-expression', () => {
+        const stack = playToStack(new OrExpression([
+            {a: 1},
+            {b: 2},
+            {c: 3}
+        ]));
+
+        assert.deepEqual(stack, [
+            '>or',
+            {a: 1},
+            {b: 2},
+            {c: 3},
+            '<or'
+        ]);
+    });
+
+    it('should play and-expression within or-expression', () => {
+        const stack = playToStack(new OrExpression([
+            {a: 1},
+            {b: 2, c: 3},
+            {d: 4}
+        ]));
+
+        assert.deepEqual(stack, [
+            '>or',
+            {a: 1},
+            '>and',
+            {b: 2},
+            {c: 3},
+            '<and',
+            {d: 4},
+            '<or'
+        ]);
+    });
+
+    it('should play mixture of expressions', () => {
+        const stack = playToStack(new AndExpression([
+            {a: 1, b: 2},
+            new OrExpression([
+                {c: 3, d: 4},
+                {e: 5, f: 6}
+            ]),
+            {g: 7}
+        ]));
+
+        assert.deepEqual(stack, [
+            '>and',
+            {a: 1},
+            {b: 2},
+            '>or',
+            '>and',
+            {c: 3},
+            {d: 4},
+            '<and',
+            '>and',
+            {e: 5},
+            {f: 6},
+            '<and',
+            '<or',
+            {g: 7},
+            '<and'
+        ]);
     });
 });

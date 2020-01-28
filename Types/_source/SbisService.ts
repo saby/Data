@@ -12,7 +12,7 @@ import Query, {NavigationType, ExpandMode} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
-import {adapter, getMergeableProperty, Record} from '../entity';
+import {AdapterDescriptor, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import ParallelDeferred = require('Core/ParallelDeferred');
@@ -167,7 +167,7 @@ function callDestroyWithComplexId(
  * @param data Record data as JSON
  * @param adapter
  */
-function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
+function buildRecord(data: any, adapter: AdapterDescriptor): Record | null {
     const RecordType = resolve<typeof Record>('Types/entity:Record');
     return RecordType.fromObject(data, adapter);
 }
@@ -178,7 +178,7 @@ function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
  * @param adapter
  * @param keyProperty
  */
-function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: string): RecordSet<Record> | null {
+function buildRecordSet(data: any, adapter: AdapterDescriptor, keyProperty: string): RecordSet<Record> | null {
     if (data === null) {
         return data;
     }
@@ -228,7 +228,7 @@ function getSortingParams(query: Query): string[] | null {
 /**
  * Returns navigation parameters
  */
-function getNavigationParams(query: Query, options: IOptionsOption, adapter: adapter.IAdapter): object | null {
+function getNavigationParams(query: Query, options: IOptionsOption, adapter: AdapterDescriptor): object | null {
     if (!query) {
         return null;
     }
@@ -395,7 +395,7 @@ function getAdditionalParams(query: Query): any[] {
 /**
  * Returns data to send in create()
  */
-function passCreate(meta?: any): object {
+function passCreate(this: SbisService, meta?: any): object {
     if (!DataMixin.isModelInstance(meta)) {
         meta = {...meta || {}};
         if (!('ВызовИзБраузера' in meta)) {
@@ -413,7 +413,7 @@ function passCreate(meta?: any): object {
 /**
  * Returns data to send in read()
  */
-function passRead(key: string | number, meta?: object): object {
+function passRead(this: SbisService, key: string | number, meta?: object): object {
     const args: any = {
         ИдО: key,
         ИмяМетода: this._$binding.format || null
@@ -427,7 +427,7 @@ function passRead(key: string | number, meta?: object): object {
 /**
  * Returns data to send in update()
  */
-function passUpdate(data: Record | RecordSet, meta?: object): object {
+function passUpdate(this: SbisService, data: Record | RecordSet, meta?: object): object {
     const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
     const args: any = {};
     const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
@@ -457,7 +457,7 @@ function passUpdateBatch(items: RecordSet, meta?: object): object {
 /**
  * Returns data to send in destroy()
  */
-function passDestroy(keys: string | string[], meta?: object): object {
+function passDestroy(this: SbisService, keys: string | string[], meta?: object): object {
     const args: any = {
         ИдО: keys
     };
@@ -470,7 +470,7 @@ function passDestroy(keys: string | string[], meta?: object): object {
 /**
  * Returns data to send in query()
  */
-function passQuery(query?: Query): object {
+function passQuery(this: SbisService, query?: Query): object {
     const nav = getNavigationParams(query, this._$options, this._$adapter);
     const filter = getFilterParams(query);
     const sort = getSortingParams(query);
@@ -487,7 +487,7 @@ function passQuery(query?: Query): object {
 /**
  * Returns data to send in copy()
  */
-function passCopy(key: string | number, meta?: object): object {
+function passCopy(this: SbisService, key: string | number, meta?: object): object {
     const args: any = {
         ИдО: key,
         ИмяМетода: this._$binding.format
@@ -501,7 +501,7 @@ function passCopy(key: string | number, meta?: object): object {
 /**
  * Returns data to send in merge()
  */
-function passMerge(from: string | number, to: string | number): object {
+function passMerge(this: SbisService, from: string | number, to: string | number): object {
     return {
         ИдО: from,
         ИдОУд: to
@@ -511,7 +511,7 @@ function passMerge(from: string | number, to: string | number): object {
 /**
  * Returns data to send in move()
  */
-function passMove(from: string | number, to: string | number, meta?: IMoveMeta): object {
+function passMove(this: SbisService, from: string | number, to: string | number, meta?: IMoveMeta): object {
     return {
         IndexNumber: this._$orderProperty,
         HierarchyName: meta.parentProperty || null,
@@ -673,7 +673,7 @@ function oldMove(
  * </pre>
  * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
  * <pre>
- *     import {SbisService, Query, QueryNavigationType, queryAndExpr, sbisPositionExpr} from 'Types/source';
+ *     import {SbisService, Query, QueryNavigationType, queryAndExpression, sbisPositionExpression} from 'Types/source';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
@@ -693,9 +693,9 @@ function oldMove(
  *
  *     const query = new Query();
  *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
- *     query.where(queryAndExpr({
+ *     query.where(queryAndExpression({
  *         visible: true
- *     }, sbisPositionExpr(
+ *     }, sbisPositionExpression(
  *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
  *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
  *     )));
