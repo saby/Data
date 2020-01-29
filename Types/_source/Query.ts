@@ -20,7 +20,7 @@ export interface IMeta extends IHashMap<unknown> {
 }
 
 export type FilterFunction<T> = (item: T, index: number) => boolean;
-export type FilterExpression = IHashMap<unknown> | FilterFunction<unknown>;
+export type FilterExpression = IHashMap<unknown> | object | FilterFunction<unknown>;
 
 export abstract class PartialExpression<T = FilterExpression> {
     readonly type: string;

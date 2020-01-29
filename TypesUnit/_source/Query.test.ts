@@ -168,7 +168,7 @@ describe('Types/_source/Query', () => {
 
     describe('.where()', () => {
         it('should set expression as object', () => {
-            const where  = {id: 10};
+            const where: object = {id: 10};
             query.where(where);
             assert.strictEqual(query.getWhere(), where);
         });
