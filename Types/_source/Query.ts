@@ -20,7 +20,7 @@ export interface IMeta extends IHashMap<unknown> {
 }
 
 export type FilterFunction<T> = (item: T, index: number) => boolean;
-export type FilterExpression = IHashMap<unknown> | object | FilterFunction<unknown>;
+export type FilterExpression = IHashMap<unknown> | FilterFunction<unknown>;
 
 export abstract class PartialExpression<T = FilterExpression> {
     readonly type: string;
@@ -764,14 +764,14 @@ export default class Query<T = unknown> implements ICloneable {
      *         .limit(100);
      * </pre>
      */
-    where(expression: WhereExpression<T>): this {
+    where(expression: WhereExpression<T> | object): this {
         expression = expression || {};
         const type = typeof expression;
         if (type !== 'object' && type !== 'function') {
             throw new TypeError('Invalid argument "expression"');
         }
 
-        this._where = expression;
+        this._where = expression as WhereExpression<T>;
 
         return this;
     }
