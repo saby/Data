@@ -87,7 +87,7 @@ function playExpressionInner<T>(
                 return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds, stack);
             }
 
-            // Otherwise is an object
+            // Otherwise it's an object
             const keys = Object.keys(condition);
 
             // If condition is an object with several keys and it's the part of or-expression that means that it's
