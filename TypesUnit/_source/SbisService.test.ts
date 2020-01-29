@@ -845,7 +845,8 @@ describe('Types/_source/SbisService', () => {
                         rs: new RecordSet({
                             adapter: 'Types/entity:adapter.Sbis',
                             rawData: rsData
-                        })
+                        }),
+                        silent: [],
                     })
                     .orderBy({
                         id: false,
@@ -884,9 +885,14 @@ describe('Types/_source/SbisService', () => {
                     assert.deepEqual(args.Фильтр.d[5].d, rsData.d);
                     assert.deepEqual(args.Фильтр.d[5].s, rsData.s);
 
-                    assert.strictEqual(args.Фильтр.s[6].n, 'title');
-                    assert.strictEqual(args.Фильтр.s[6].t, 'Строка');
-                    assert.strictEqual(args.Фильтр.d[6], 'abc*');
+                    assert.strictEqual(args.Фильтр.s[6].n, 'silent');
+                    assert.strictEqual(args.Фильтр.s[6].t.n, 'Массив');
+                    assert.strictEqual(args.Фильтр.s[6].t.t, 'Строка');
+                    assert.deepEqual(args.Фильтр.d[6], []);
+
+                    assert.strictEqual(args.Фильтр.s[7].n, 'title');
+                    assert.strictEqual(args.Фильтр.s[7].t, 'Строка');
+                    assert.strictEqual(args.Фильтр.d[7], 'abc*');
 
                     assert.strictEqual(args.Сортировка.d[0][1], 'id');
                     assert.isFalse(args.Сортировка.d[0][2]);

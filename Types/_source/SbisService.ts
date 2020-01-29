@@ -252,7 +252,9 @@ function expressionToObject<T>(expr: WhereExpression<T>): object {
 
         if (currentType === 'or') {
             result[key] = result[key] || [];
-            result[key].push(value);
+            if (value !== undefined) {
+                result[key].push(value);
+            }
         } else {
             result[key] = value;
         }
