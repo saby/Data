@@ -68,10 +68,6 @@ function playExpressionInner<T>(
     onGroupEnds: GroupEndCallback,
     stack: Array<PartialExpression<unknown>>
 ): void {
-    if (expression.conditions.length === 0) {
-        return;
-    }
-
     if (expression instanceof AtomExpression) {
         // Notify about atom
         onAtomAppears(expression.conditions[0], expression.conditions[1], expression.type);
@@ -121,7 +117,9 @@ function playExpressionInner<T>(
                 if (value instanceof Array) {
                     return playExpressionInner(
                         new OrExpression(
-                            value.map((subValue) => new AtomExpression([key, subValue]))
+                            value.length
+                                ? value.map((subValue) => new AtomExpression([key, subValue]))
+                                : [new AtomExpression([key, undefined])]
                         ),
                         onAtomAppears,
                         onGroupBegins,
