@@ -3,7 +3,7 @@ import ICrudPlus from './ICrudPlus';
 import Base, {IOptions as IBaseOptions} from './Base';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
-import Query, {IMeta, Join, Order} from './Query';
+import Query, {IMeta, Join, Order, PartialExpression, WhereExpression} from './Query';
 import DataSet from './DataSet';
 import {adapter, Model, Record} from '../entity';
 import {RecordSet} from '../collection';
@@ -453,9 +453,15 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @param meta Query metadata
      * @protected
      */
-    protected _applyWhere(data: any, where?: object | Function, meta?: IMeta): any {
+    protected _applyWhere(data: any, where?: WhereExpression<unknown>, meta?: IMeta): any {
         // TODO: support for IMeta.expand values
+
         where = where || {};
+
+        if (where instanceof PartialExpression) {
+            throw new TypeError('Filtering by PartialExpression instance is not supported.');
+        }
+
         if (!this._$filter && typeof where === 'object' && !Object.keys(where).length) {
             return data;
         }
