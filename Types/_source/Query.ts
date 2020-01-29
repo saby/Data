@@ -87,10 +87,11 @@ function playExpressionInner<T>(
                 return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds, stack);
             }
 
+            // Otherwise is an object
             const keys = Object.keys(condition);
 
             // If condition is an object with several keys and it's the part of or-expression that means that it's
-            // actually the new where-expression
+            // actually the new and-expression
             if (expression.type === 'or' && keys.length > 1) {
                 return playExpressionInner(
                     new AndExpression([condition]),
