@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import Local, {IOptions} from 'Types/_source/Local';
-import Query, {andExpression, Join as QueryJoin} from 'Types/_source/Query';
+import {Join as QueryJoin} from 'Types/_source/Query';
 import JsonTable from 'Types/_entity/adapter/JsonTable';
 import RecordSetAdapter from 'Types/_entity/adapter/RecordSet';
 import IDataHolder from 'Types/_entity/adapter/IDataHolder';
@@ -69,16 +69,6 @@ describe('Types/_source/Local', () => {
                     (Date as IExtendDateConstructor).SQL_SERIALIZE_MODE_TIME
                 );
             });
-        });
-    });
-
-    describe('.query()', () => {
-        it('should throw error if andExpression() has been used', () => {
-            const query = new Query();
-            query.where(andExpression());
-            assert.throws(() => {
-                source.query(query);
-            }, 'Filtering by PartialExpression instance is not supported.');
         });
     });
 

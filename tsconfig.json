@@ -2,7 +2,7 @@
   "extends": "./node_modules/saby-typescript/configs/es5.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "types" : ["mocha", "requirejs"]
+    "types" : ["chai", "mocha", "requirejs", "sinon"]
   },
   "include": [
     "Application/**/*.ts",

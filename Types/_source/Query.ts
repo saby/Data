@@ -1,6 +1,10 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {IHashMap} from '../_declarations';
 
+export type Where<T = any> = IHashMap<T> | ((item: T, index: number) => boolean);
+export type Expression = IHashMap<string> | string[] | string;
+export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
+
 export enum ExpandMode {
     None,
     Nodes,
@@ -14,156 +18,9 @@ export enum NavigationType {
     Position = 'Position'
 }
 
-export interface IMeta extends IHashMap<unknown> {
+export interface IMeta extends IHashMap<any> {
     expand?: ExpandMode;
     navigationType?: NavigationType;
-}
-
-export type FilterFunction<T> = (item: T, index: number) => boolean;
-export type FilterExpression = IHashMap<unknown> | FilterFunction<unknown>;
-
-export abstract class PartialExpression<T = FilterExpression> {
-    readonly type: string;
-    constructor(readonly conditions: Array<T | PartialExpression<T>>) {
-    }
-}
-
-export type SelectExpression = IHashMap<string> | string[] | string;
-export type WhereExpression<T> = FilterExpression | PartialExpression<T>;
-export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
-
-type AtomDeclaration = [string, any];
-
-class AtomExpression<T = AtomDeclaration> extends PartialExpression<T> {
-    readonly type: string = 'atom';
-    constructor(readonly conditions: AtomDeclaration) {
-        super(conditions);
-    }
-}
-
-class AndExpression<T> extends PartialExpression<T> {
-    readonly type: string = 'and';
-}
-
-class OrExpression<T> extends PartialExpression<T> {
-    readonly type: string = 'or';
-}
-
-export function andExpression<T>(...conditions: Array<T | PartialExpression<T>>): AndExpression<T> {
-    return new AndExpression(conditions);
-}
-
-export function orExpression<T>(...conditions: Array<T | PartialExpression<T>>): OrExpression<T> {
-    return new OrExpression(conditions);
-}
-
-type AtomAppearCallback<T = unknown> = (key: string, value: T, type: string) => void;
-type GroupBeginCallback<T> = (type: string, conditions: Array<T | PartialExpression<T>>) => void;
-type GroupEndCallback = (type: string, restoreType: string) => void;
-
-function playExpressionInner<T>(
-    expression: PartialExpression<T>,
-    onAtomAppears: AtomAppearCallback,
-    onGroupBegins: GroupBeginCallback<T>,
-    onGroupEnds: GroupEndCallback,
-    stack: Array<PartialExpression<unknown>>
-): void {
-    if (expression instanceof AtomExpression) {
-        // Notify about atom
-        onAtomAppears(expression.conditions[0], expression.conditions[1], expression.type);
-    } else {
-        // If there is no atom that means there is a group
-        stack.push(expression);
-        onGroupBegins(expression.type, expression.conditions);
-
-        // Play each condition
-        expression.conditions.forEach((condition) => {
-            // If condition is an expression just play it
-            if (condition instanceof PartialExpression) {
-                return playExpressionInner(condition, onAtomAppears, onGroupBegins, onGroupEnds, stack);
-            }
-
-            // Otherwise it's an object
-            const keys = Object.keys(condition);
-
-            // If condition is an object with several keys and it's the part of or-expression that means that it's
-            // actually the new and-expression
-            if (expression.type === 'or' && keys.length > 1) {
-                return playExpressionInner(
-                    new AndExpression([condition]),
-                    onAtomAppears,
-                    onGroupBegins,
-                    onGroupEnds,
-                    stack
-                );
-            }
-
-            // If condition is an object just take a look on each part of it
-            keys.forEach((key) => {
-                const value = condition[key];
-
-                // If part is an expression just play it
-                if (value instanceof PartialExpression) {
-                    return playExpressionInner(
-                        value,
-                        onAtomAppears,
-                        onGroupBegins,
-                        onGroupEnds,
-                        stack
-                    );
-                }
-
-                // If part is an array that means that it's actually the new or-expression
-                if (value instanceof Array) {
-                    return playExpressionInner(
-                        new OrExpression(
-                            value.length
-                                ? value.map((subValue) => new AtomExpression([key, subValue]))
-                                : [new AtomExpression([key, undefined])]
-                        ),
-                        onAtomAppears,
-                        onGroupBegins,
-                        onGroupEnds,
-                        stack
-                    );
-                }
-
-                // All another values are just atoms
-                playExpressionInner(
-                    new AtomExpression([key, value]),
-                    onAtomAppears,
-                    onGroupBegins,
-                    onGroupEnds,
-                    stack
-                );
-            });
-        });
-
-        stack.pop();
-        onGroupEnds(expression.type, stack.length && stack[stack.length - 1].type);
-    }
-}
-
-/**
- * Plays expression by calling given callbacks for each part of it
- * @param expression Expression to play
- * @param onAtomAppears In atom value appears
- * @param onGroupBegins On group of atom value begins
- * @param onGroupEnds On group of atom value ends
- */
-export function playExpression<T>(
-    expression: WhereExpression<T>,
-    onAtomAppears: AtomAppearCallback,
-    onGroupBegins: GroupBeginCallback<T>,
-    onGroupEnds: GroupEndCallback
-): void {
-    playExpressionInner(
-        expression instanceof PartialExpression ? expression : andExpression(expression as unknown as T),
-        onAtomAppears,
-        onGroupBegins,
-        onGroupEnds,
-        []
-    );
 }
 
 /**
@@ -172,7 +29,7 @@ export function playExpression<T>(
  */
 function duplicate<T>(data: T): T {
     if (data['[Types/_entity/ICloneable]']) {
-        return (data as unknown as ICloneable).clone();
+        return (data as any).clone();
     }
     if (data && typeof data === 'object') {
         return {...data};
@@ -184,7 +41,7 @@ function duplicate<T>(data: T): T {
  * Parses expression from fields set
  * @param expression Expression with fields set
  */
-function parseSelectExpression(expression: SelectExpression): IHashMap<string> {
+function parseSelectExpression(expression: Expression): IHashMap<string> {
     if (typeof expression === 'string') {
         expression = expression.split(/[ ,]/);
     }
@@ -430,7 +287,7 @@ export class Order extends OptionsToPropertyMixin {
  * @public
  * @author Мальцев А.А.
  */
-export default class Query<T = unknown> implements ICloneable {
+export default class Query implements ICloneable {
     /**
      * Field names to select
      */
@@ -454,7 +311,7 @@ export default class Query<T = unknown> implements ICloneable {
     /**
      * Rules for filtering data
      */
-    protected _where: WhereExpression<T> = {};
+    protected _where: Where = {};
 
     /**
      * Rules for grouping data
@@ -479,15 +336,15 @@ export default class Query<T = unknown> implements ICloneable {
     /**
      * Additional metadata to send to the data source
      */
-    protected _meta: unknown | IMeta = {};
+    protected _meta: IMeta = {};
 
     // region ICloneable
 
     readonly '[Types/_entity/ICloneable]': boolean;
 
-    clone<U = this>(): U {
+    clone<T = this>(): T {
         // TODO: deeper clone?
-        const clone = new Query<T>();
+        const clone = new Query();
         clone._select = duplicate(this._select);
         clone._from = this._from;
         clone._as = this._as;
@@ -499,7 +356,7 @@ export default class Query<T = unknown> implements ICloneable {
         clone._limit = this._limit;
         clone._meta = duplicate(this._meta);
 
-        return clone as unknown as U;
+        return clone as any;
     }
 
     // endregion
@@ -558,7 +415,7 @@ export default class Query<T = unknown> implements ICloneable {
      *         .from('Orders');
      * </pre>
      */
-    select(expression: SelectExpression): this {
+    select(expression: Expression): this {
         this._select = parseSelectExpression(expression);
 
         return this;
@@ -669,7 +526,7 @@ export default class Query<T = unknown> implements ICloneable {
      *         );
      * </pre>
      */
-    join(name: string | string[], on: IHashMap<string>, expression: SelectExpression, inner?: boolean): this {
+    join(name: string | string[], on: IHashMap<string>, expression: Expression, inner?: boolean): this {
         if (typeof name === 'string') {
             name = name.split(' ');
         }
@@ -713,7 +570,7 @@ export default class Query<T = unknown> implements ICloneable {
      *         .limit(100);
      * </pre>
      */
-    getWhere(): WhereExpression<T> {
+    getWhere(): Where {
         return this._where;
     }
 
@@ -723,31 +580,18 @@ export default class Query<T = unknown> implements ICloneable {
      * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its ordering number.
      * @param expression Rules for filtering data
      * @example
-     * Let's select landed flights to Moscow "Sheremetyevo" (SVO) airport from New York or Los Angeles:
+     * Let's select landed flights to Moscow "Sheremetyevo" airport from New York or Los Angeles:
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
      *         .select('*')
      *         .from('AirportsSchedule')
      *         .where({
-     *             to: 'SVO',
+     *             iata: 'SVO',
+     *             direction: 'Arrivals',
      *             state: 'Landed',
      *             fromCity: ['New York', 'Los Angeles']
      *         });
-     * </pre>
-     * Let's select flights arriving to Moscow "Sheremetyevo" (SVO) from New York "JFK" with "Delta" (DL) airline or from Paris "CDG" with "Air France" (AF) airline:
-     * <pre>
-     *     import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
-     *     const query = new Query()
-     *         .select('*')
-     *         .from('AirportsSchedule')
-     *         .where(queryAndExpression({
-     *             to: 'SVO',
-     *             state: 'Scheduled'
-     *         }, queryOrExpression(
-     *             {from: 'JFK', airline: 'DL'},
-     *             {from: 'CDG', airline: 'AF'}
-     *         )));
      * </pre>
      * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
      * <pre>
@@ -762,14 +606,14 @@ export default class Query<T = unknown> implements ICloneable {
      *         .limit(100);
      * </pre>
      */
-    where(expression: WhereExpression<T> | object): this {
+    where(expression: Where): this {
         expression = expression || {};
         const type = typeof expression;
         if (type !== 'object' && type !== 'function') {
             throw new TypeError('Invalid argument "expression"');
         }
 
-        this._where = expression as WhereExpression<T>;
+        this._where = expression;
 
         return this;
     }
@@ -1037,8 +881,8 @@ export default class Query<T = unknown> implements ICloneable {
      *     console.log(query.getMeta()); // {navigationType: 'Offset'}
      * </pre>
      */
-    getMeta<U = IMeta>(): U {
-        return this._meta as U;
+    getMeta(): IMeta {
+        return this._meta;
     }
 
     /**
@@ -1056,8 +900,8 @@ export default class Query<T = unknown> implements ICloneable {
      *         .meta({navigationType: QueryNavigationType.Offset});
      * </pre>
      */
-    meta<U = IMeta>(data: U): this {
-        data = data || ({} as unknown as U);
+    meta(data: IMeta): this {
+        data = data || {};
         if (typeof data !== 'object') {
             throw new TypeError('Invalid argument "data"');
         }

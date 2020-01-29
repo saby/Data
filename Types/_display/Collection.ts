@@ -2907,7 +2907,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     diff.push(internalItem);
                 }
             } else if (!isMoved && internalItemIndex === -1) {
-                // Changed item doesn't change the position and not presented in the diff.
+                // Changed item don't change the position and not presented in the diff.
                 // We should notify about item change with the diff.
                 diff.push(internalItem);
             }

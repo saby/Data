@@ -1,7 +1,6 @@
 import IData from './IData';
 import DataSet, {IOptions as IDataSetOptions} from './DataSet';
-import {ReadWriteMixin, AdapterDescriptor, adapter, Record, Model} from '../entity';
-import {RecordSet} from '../collection';
+import {ReadWriteMixin, AdapterDescriptor, adapter, Model} from '../entity';
 import {create} from '../di';
 
 export interface IOptions {
@@ -306,7 +305,7 @@ export default abstract class DataMixin implements IData {
      * console.log(Base.isModelInstance(instance)); // true
      * </pre>
      */
-    static isModelInstance(instance: any): instance is Record {
+    static isModelInstance(instance: any): boolean {
         return instance &&
             instance['[Types/_entity/IObject]'] &&
             instance['[Types/_entity/FormattableMixin]'];
@@ -324,7 +323,7 @@ export default abstract class DataMixin implements IData {
      * console.log(Base.isRecordSetInstance(instance)); // true
      * </pre>
      */
-    static isRecordSetInstance(instance: any): instance is RecordSet {
+    static isRecordSetInstance(instance: any): boolean {
         return instance &&
             instance['[Types/_collection/IList]'] &&
             instance['[Types/_entity/FormattableMixin]'];

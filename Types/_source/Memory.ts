@@ -1,11 +1,10 @@
 import Local, {IOptions as ILocalOptions} from './Local';
 import DataSet from './DataSet';
-import Query, {IMeta, Join, WhereExpression} from './Query';
+import Query, {IMeta, Join} from './Query';
 import {adapter} from '../entity';
 import {register} from '../di';
 import {protect, object} from '../util';
 import {Map} from '../shim';
-import {IHashMap} from '../_declarations';
 
 /**
  * Protected 'cachedAdapter' property symbol
@@ -203,10 +202,10 @@ export default class Memory extends Local {
         return data;
     }
 
-    protected _applyWhere(data: any, where?: WhereExpression<unknown>, meta?: IMeta): any {
+    protected _applyWhere(data: any, where?: any | Function, meta?: IMeta): any {
         // FIXME: get rid of this SBIS-specified
         if (where && typeof where === 'object') {
-            where = {...where} as IHashMap<string>;
+            where = {...where};
             delete where.Разворот;
             delete where.ВидДерева;
             delete where.usePages;
