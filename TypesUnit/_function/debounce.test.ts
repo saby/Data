@@ -1,27 +1,18 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
 import debounce from 'Types/_function/debounce';
 
 describe('Types/_formatter/debounce', () => {
     let stubTimeout;
     let stubClear;
-    const global = (function(): any {
-        // tslint:disable-next-line:ban-comma-operator
-        return this || (0, eval)('this');
-    })();
-
+    const global = (function () { return this || (0, eval)('this'); })();
     beforeEach(() => {
         stubTimeout = sinon.stub(global, 'setTimeout').callsFake((callback) => callback());
-        stubClear = sinon.stub(global, 'clearTimeout').callsFake(() => {
-           // void
-        });
+        stubClear = sinon.stub(global, 'clearTimeout').callsFake(() => {})
     });
-
     afterEach(() => {
         stubTimeout.restore();
         stubClear.restore();
     });
-
     it('should call method with given arguments later', () => {
         let given;
         const decorator = debounce((...args) => given = args, 10, true);

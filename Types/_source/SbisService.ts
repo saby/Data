@@ -8,20 +8,13 @@ import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
-import Query, {
-    ExpandMode,
-    PartialExpression,
-    playExpression,
-    NavigationType,
-    WhereExpression
-} from './Query';
+import Query, {NavigationType, ExpandMode} from './Query';
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
-import {AdapterDescriptor, getMergeableProperty, Record} from '../entity';
+import {adapter, getMergeableProperty, Record} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
-import {IHashMap} from '../declarations';
 import ParallelDeferred = require('Core/ParallelDeferred');
 
 enum PoitionNavigationOrder {
@@ -44,15 +37,6 @@ const COMPLEX_ID_SEPARATOR = ',';
  * Regexp for Identity type detection
  */
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
-
-const EXPRESSION_TEMPLATE = /(.+)([<>]=?|~)$/;
-
-type EntityId = string | number;
-
-interface ICursor {
-    position: object | object[];
-    order: string;
-}
 
 export interface IEndpoint extends IProviderEndpoint {
     moveContract?: string;
@@ -101,16 +85,6 @@ interface IOldMoveMeta {
     hierField: string;
 }
 
-type PositionDeclaration = [EntityId, IHashMap<unknown>];
-
-export class PositionExpression<T = PositionDeclaration> extends PartialExpression<T> {
-    readonly type: string = 'sbisPosition';
-}
-
-export function positionExpression<T>(...conditions: PositionDeclaration[]): PositionExpression<T> {
-    return new PositionExpression(conditions as unknown as T[]);
-}
-
 /**
  * Returns BL object name and its method name joined by separator.
  * If method name already contains the separator then returns it unchanged.
@@ -122,7 +96,7 @@ function buildBlMethodName(objectName: string, methodName: string): string {
 /**
  * Returns key of the BL Object from its complex id
  */
-function getKeyByComplexId(id: EntityId): string {
+function getKeyByComplexId(id: string | number): string {
     id = String(id || '');
     if (id.match(COMPLEX_ID_MATCH)) {
         return id.split(COMPLEX_ID_SEPARATOR)[0];
@@ -133,7 +107,7 @@ function getKeyByComplexId(id: EntityId): string {
 /**
  * Returns name of the BL Object from its complex id
  */
-function getNameByComplexId(id: EntityId, defaults: string): string {
+function getNameByComplexId(id: string | number, defaults: string): string {
     id = String(id || '');
     if (id.match(COMPLEX_ID_MATCH)) {
         return id.split(COMPLEX_ID_SEPARATOR)[1];
@@ -155,7 +129,7 @@ function createComplexId(id: string, defaults: string): string[] {
 /**
  * Joins BL objects into groups be its names
  */
-function getGroupsByComplexIds(ids: EntityId[], defaults: string): object {
+function getGroupsByComplexIds(ids: Array<string | number>, defaults: string): object {
     const groups = {};
     let name;
     for (let i = 0, len = ids.length; i < len; i++) {
@@ -168,15 +142,32 @@ function getGroupsByComplexIds(ids: EntityId[], defaults: string): object {
 }
 
 /**
+ * Calls destroy method for some BL-Object
+ * @param instance Instance
+ * @param ids BL objects ids to delete
+ * @param name BL object name
+ * @param meta Meta data
+ */
+function callDestroyWithComplexId(
+    instance: SbisService | any,
+    ids: string[],
+    name: string,
+    meta: object
+): Promise<any> {
+    return instance._callProvider(
+        instance._$endpoint.contract === name
+            ? instance._$binding.destroy
+            :  buildBlMethodName(name, instance._$binding.destroy),
+        instance._$passing.destroy.call(instance, ids, meta)
+    );
+}
+
+/**
  * Builds Record from plain object
  * @param data Record data as JSON
  * @param adapter
  */
-function buildRecord(data: unknown, adapter: AdapterDescriptor): Record | null {
-    if (data && DataMixin.isModelInstance(data)) {
-        return data as Record;
-    }
-
+function buildRecord(data: any, adapter: adapter.IAdapter): Record | null {
     const RecordType = resolve<typeof Record>('Types/entity:Record');
     return RecordType.fromObject(data, adapter);
 }
@@ -187,12 +178,12 @@ function buildRecord(data: unknown, adapter: AdapterDescriptor): Record | null {
  * @param adapter
  * @param keyProperty
  */
-function buildRecordSet(data: unknown, adapter: AdapterDescriptor, keyProperty?: string): RecordSet<Record> | null {
+function buildRecordSet(data: any, adapter: adapter.IAdapter, keyProperty: string): RecordSet<Record> | null {
     if (data === null) {
         return data;
     }
     if (data && DataMixin.isRecordSetInstance(data)) {
-        return data as RecordSet<Record>;
+        return data;
     }
 
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
@@ -200,12 +191,10 @@ function buildRecordSet(data: unknown, adapter: AdapterDescriptor, keyProperty?:
         adapter,
         keyProperty
     });
+    const count = data.length || 0;
 
-    if (data instanceof Array) {
-        const count = data.length;
-        for (let i = 0; i < count; i++) {
-            records.add(buildRecord(data[i], adapter));
-        }
+    for (let i = 0; i < count; i++) {
+        records.add(buildRecord(data[i], adapter));
     }
 
     return records;
@@ -237,117 +226,9 @@ function getSortingParams(query: Query): string[] | null {
 }
 
 /**
- * Converts expression to the plain object
- * @param expr Expression to convert
- */
-function expressionToObject<T>(expr: WhereExpression<T>): object {
-    const result = {};
-    let currentType: string = '';
-    let processingPosition = false;
-
-    playExpression(expr, (key, value) => {
-        if (processingPosition) {
-            return;
-        }
-
-        if (currentType === 'or') {
-            result[key] = result[key] || [];
-            if (value !== undefined) {
-                result[key].push(value);
-            }
-        } else {
-            result[key] = value;
-        }
-    }, (type) => {
-        currentType = type;
-        if (type === 'sbisPosition') {
-            processingPosition = true;
-        }
-    }, (type, restoreType) => {
-        currentType = restoreType;
-        if (type === 'sbisPosition') {
-            processingPosition = false;
-        }
-    });
-
-    return result;
-}
-
-/**
- * Applies string expression and its value to given cursor
- * @param expr Expression to apply
- * @param value Value of expression
- * @param cursor Cursor to affect
- */
-function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): void {
-    // Skip undefined values
-    if (value === undefined) {
-        return;
-    }
-    const parts = expr.match(EXPRESSION_TEMPLATE);
-
-    // Check next if there's no operand
-    if (!parts) {
-        return;
-    }
-
-    const field = parts[1];
-    const operand = parts[2];
-
-    // Add field value to position if it's not null because nulls used only for defining an order.
-    if (value !== null) {
-        if (!cursor.position) {
-            cursor.position = {};
-        }
-        cursor.position[field] = value;
-    }
-
-    // We can use only one kind of order so take it from the first operand
-    if (!cursor.order) {
-        switch (operand) {
-            case '~':
-                cursor.order = PoitionNavigationOrder.both;
-                break;
-
-            case '<':
-            case '<=':
-                cursor.order = PoitionNavigationOrder.before;
-                break;
-        }
-    }
-}
-
-/**
- * Applies multiple positions to given cursor
- * @param conditions Conditions of positions to apply
- * @param cursor Cursor to affect
- * @param adapter Adapter to use in records
- */
-function applyMultiplePosition(conditions: PositionDeclaration[], cursor: ICursor, adapter: AdapterDescriptor): void {
-    cursor.position = [];
-
-    conditions.forEach(([conditionKey, conditionFilter]) => {
-        const conditionCursor: ICursor = {
-            position: null,
-            order: ''
-        };
-        Object.keys(conditionFilter).forEach((filterKey) => {
-            applyExpressionAndValue(filterKey, conditionFilter[filterKey], conditionCursor);
-        });
-
-        (cursor.position as object[]).push({
-            id: conditionKey,
-            nav:  buildRecord(conditionCursor.position, adapter)
-        });
-
-        cursor.order = cursor.order || conditionCursor.order;
-    });
-}
-
-/**
  * Returns navigation parameters
  */
-function getNavigationParams(query: Query, options: IOptionsOption, adapter: AdapterDescriptor): object | null {
+function getNavigationParams(query: Query, options: IOptionsOption, adapter: adapter.IAdapter): object | null {
     if (!query) {
         return null;
     }
@@ -376,39 +257,57 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
         case NavigationType.Position:
             if (!withoutLimit) {
                 const where = query.getWhere();
-                const cursor = {
-                    position: null,
-                    order: ''
-                };
-                let processingPosition = false;
+                const pattern = /(.+)([<>]=?|~)$/;
+                let position = null;
+                let order;
 
-                playExpression(where, (expr, value) => {
-                    if (processingPosition) {
+                Object.keys(where).forEach((expr) => {
+                    const parts = expr.match(pattern);
+
+                    // Check next if there's no operand
+                    if (!parts) {
                         return;
                     }
 
-                    applyExpressionAndValue(expr, value, cursor);
+                    const value = where[expr];
+
+                    // Skip undefined values
+                    if (value !== undefined) {
+                        const field = parts[1];
+                        const operand = parts[2];
+
+                        // Add field value to position if it's not null because nulls used only for defining an order.
+                        if (value !== null) {
+                            if (!position) {
+                                position = {};
+                            }
+                            position[field] = value;
+                        }
+
+                        // We can use only one kind of order so take it from the first operand
+                        if (!order) {
+                            switch (operand) {
+                                case '~':
+                                    order = PoitionNavigationOrder.both;
+                                    break;
+
+                                case '<':
+                                case '<=':
+                                    order = PoitionNavigationOrder.before;
+                                    break;
+                            }
+                        }
+                    }
 
                     // Also delete property with operand in query (by link)
                     delete where[expr];
-                }, (type, conditions) => {
-                    if (type === 'sbisPosition') {
-                        processingPosition = true;
-                        applyMultiplePosition(conditions as PositionDeclaration[], cursor, adapter);
-                    }
-                }, (type) => {
-                    if (type === 'sbisPosition') {
-                        processingPosition = false;
-                    }
                 });
 
                 params = {
                     HasMore: more,
                     Limit: limit,
-                    Order: cursor.order || PoitionNavigationOrder.after,
-                    Position: cursor.position instanceof Array
-                        ? buildRecordSet(cursor.position, adapter)
-                        : buildRecord(cursor.position, adapter)
+                    Order: order || PoitionNavigationOrder.after,
+                    Position: buildRecord(position, adapter)
                 };
             }
             break;
@@ -432,7 +331,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
 function getFilterParams(query: Query): object | null {
     let params = null;
     if (query) {
-        params = expressionToObject(query.getWhere());
+        params = query.getWhere();
 
         const meta = query.getMeta();
         if (meta) {
@@ -459,13 +358,11 @@ function getFilterParams(query: Query): object | null {
     return params;
 }
 
-type AdditionalParams = string[] | IHashMap<unknown>;
-
 /**
- * Returns additional parameters
+ * Returns additional paramters
  */
-function getAdditionalParams(query: Query): AdditionalParams {
-    let additional: AdditionalParams = [];
+function getAdditionalParams(query: Query): any[] {
+    let additional: any = [];
     if (query) {
         additional = query.getSelect();
         if (additional && DataMixin.isModelInstance(additional)) {
@@ -495,19 +392,10 @@ function getAdditionalParams(query: Query): AdditionalParams {
     return additional;
 }
 
-interface ICreateMeta extends IHashMap<unknown> {
-    ВызовИзБраузера?: boolean;
-}
-
-interface ICreateResult {
-    Фильтр: Record;
-    ИмяМетода: string | null;
-}
-
 /**
  * Returns data to send in create()
  */
-function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResult {
+function passCreate(meta?: any): object {
     if (!DataMixin.isModelInstance(meta)) {
         meta = {...meta || {}};
         if (!('ВызовИзБраузера' in meta)) {
@@ -522,17 +410,11 @@ function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResu
     };
 }
 
-interface IReadResult {
-    ИдО: EntityId;
-    ИмяМетода: string | null;
-    ДопПоля?: IHashMap<unknown>;
-}
-
 /**
  * Returns data to send in read()
  */
-function passRead(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): IReadResult {
-    const args: IReadResult = {
+function passRead(key: string | number, meta?: object): object {
+    const args: any = {
         ИдО: key,
         ИмяМетода: this._$binding.format || null
     };
@@ -542,18 +424,12 @@ function passRead(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): I
     return args;
 }
 
-interface IUpdateResult {
-    Запись?: Record;
-    Записи?: Record;
-    ДопПоля?: IHashMap<unknown>;
-}
-
 /**
  * Returns data to send in update()
  */
-function passUpdate(this: SbisService, data: Record | RecordSet, meta?: IHashMap<unknown>): IUpdateResult {
+function passUpdate(data: Record | RecordSet, meta?: object): object {
     const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
-    const args: IUpdateResult = {};
+    const args: any = {};
     const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
     args[recordArg] = superArgs[0];
@@ -565,16 +441,10 @@ function passUpdate(this: SbisService, data: Record | RecordSet, meta?: IHashMap
     return args;
 }
 
-interface IUpdateBatchResult {
-    changed: RecordSet;
-    added: RecordSet;
-    removed: RecordSet;
-}
-
 /**
  * Returns data to send in update() if updateBatch uses
  */
-function passUpdateBatch(items: RecordSet, meta?: IHashMap<unknown>): IUpdateBatchResult {
+function passUpdateBatch(items: RecordSet, meta?: object): object {
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
     const patch = RecordSetType.patch(items);
     return {
@@ -584,16 +454,11 @@ function passUpdateBatch(items: RecordSet, meta?: IHashMap<unknown>): IUpdateBat
     };
 }
 
-interface IDestroyResult {
-    ИдО: string | string[];
-    ДопПоля?: IHashMap<unknown>;
-}
-
 /**
  * Returns data to send in destroy()
  */
-function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap<unknown>): IDestroyResult {
-    const args: IDestroyResult = {
+function passDestroy(keys: string | string[], meta?: object): object {
+    const args: any = {
         ИдО: keys
     };
     if (meta && Object.keys(meta).length) {
@@ -602,17 +467,10 @@ function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap
     return args;
 }
 
-interface IQueryResult {
-    Фильтр: Record;
-    Сортировка: RecordSet<Record>;
-    Навигация: Record;
-    ДопПоля: AdditionalParams;
-}
-
 /**
  * Returns data to send in query()
  */
-function passQuery(this: SbisService, query?: Query): IQueryResult {
+function passQuery(query?: Query): object {
     const nav = getNavigationParams(query, this._$options, this._$adapter);
     const filter = getFilterParams(query);
     const sort = getSortingParams(query);
@@ -626,17 +484,11 @@ function passQuery(this: SbisService, query?: Query): IQueryResult {
     };
 }
 
-interface ICopyResult {
-    ИдО: EntityId;
-    ИмяМетода: string;
-    ДопПоля?: AdditionalParams;
-}
-
 /**
  * Returns data to send in copy()
  */
-function passCopy(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): ICopyResult {
-    const args: ICopyResult = {
+function passCopy(key: string | number, meta?: object): object {
+    const args: any = {
         ИдО: key,
         ИмяМетода: this._$binding.format
     };
@@ -646,36 +498,20 @@ function passCopy(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): I
     return args;
 }
 
-interface IMergeResult {
-    ИдО: EntityId;
-    ИдОУд: EntityId;
-}
-
 /**
  * Returns data to send in merge()
  */
-function passMerge(this: SbisService, from: EntityId, to: EntityId): IMergeResult {
+function passMerge(from: string | number, to: string | number): object {
     return {
         ИдО: from,
         ИдОУд: to
     };
 }
 
-interface IMoveResult {
-    IndexNumber: string;
-    HierarchyName: string;
-    ObjectName: string;
-    ObjectId: EntityId;
-    DestinationId: EntityId;
-    Order: string;
-    ReadMethod: string;
-    UpdateMethod: string;
-}
-
 /**
  * Returns data to send in move()
  */
-function passMove(this: SbisService, from: EntityId, to: EntityId, meta?: IMoveMeta): IMoveResult {
+function passMove(from: string | number, to: string | number, meta?: IMoveMeta): object {
     return {
         IndexNumber: this._$orderProperty,
         HierarchyName: meta.parentProperty || null,
@@ -690,53 +526,34 @@ function passMove(this: SbisService, from: EntityId, to: EntityId, meta?: IMoveM
 
 /**
  * Calls move method in old style
+ * @param instance
  * @param from Record to move
  * @param to Record to move to
  * @param meta Meta data
  */
 function oldMove(
-    this: SbisService,
-    from: EntityId | EntityId[],
+    instance: SbisService | any,
+    from: string | Array<string | number>,
     to: string, meta: IOldMoveMeta
-): Promise<unknown> {
+): Promise<any> {
     logger.info(
-        this._moduleName,
+        instance._moduleName,
         'Move elements through moveAfter and moveBefore methods have been deprecated, please use just move instead.'
     );
 
-    const moveMethod = meta.before ? this._$binding.moveBefore : this._$binding.moveAfter;
+    const moveMethod = meta.before ? instance._$binding.moveBefore : instance._$binding.moveAfter;
     const params = {
-        ПорядковыйНомер: this._$orderProperty,
+        ПорядковыйНомер: instance._$orderProperty,
         Иерархия: meta.hierField || null,
-        Объект: this._$endpoint.moveContract,
-        ИдО: createComplexId(from as string, this._$endpoint.contract)
+        Объект: instance._$endpoint.moveContract,
+        ИдО: createComplexId(from as string, instance._$endpoint.contract)
     };
 
-    params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, this._$endpoint.contract);
+    params[meta.before ? 'ИдОДо' : 'ИдОПосле'] = createComplexId(to, instance._$endpoint.contract);
 
-    return this._callProvider(
-        this._$endpoint.moveContract + BL_OBJECT_SEPARATOR + moveMethod,
+    return instance._callProvider(
+        instance._$endpoint.moveContract + BL_OBJECT_SEPARATOR + moveMethod,
         params
-    );
-}
-
-/**
- * Calls destroy method for some BL-Object
- * @param ids BL objects ids to delete
- * @param name BL object name
- * @param meta Meta data
- */
-function callDestroyWithComplexId(
-    this: SbisService,
-    ids: string[],
-    name: string,
-    meta: object
-): Promise<unknown> {
-    return this._callProvider(
-        this._$endpoint.contract === name
-            ? this._$binding.destroy
-            :  buildBlMethodName(name, this._$binding.destroy),
-        this._$passing.destroy.call(this, ids, meta)
     );
 }
 
@@ -773,39 +590,51 @@ function callDestroyWithComplexId(
  *         keyProperty: '@Employee'
  *     });
  * </pre>
- * <b>Пример 4</b>. Выполним основные операции CRUD-контракта объекта 'Article':
+ * <b>Пример 4</b>. Создадим новую статью:
  * <pre>
- *     import {SbisService, Query} from 'Types/source';
- *     import {Model} from 'Types/entity';
- *
- *     function onError(err: Error): void {
- *         console.error(err);
- *     }
- *
+ *     import {SbisService} from 'Types/source';
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
- *         keyProperty: 'id'
+ *         keyProperty: 'Id'
  *     });
  *
- *     // Создадим новую статью
  *     dataSource.create().then((article) => {
  *         const id = article.getKey();
- *     }).catch(onError);
+ *     }.then((error) => {
+ *         console.error(error);
+ *     });
+ * </pre>
+ * <b>Пример 5</b>. Прочитаем статью:
+ * <pre>
+ *     import {SbisService} from 'Types/source';
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article',
+ *         keyProperty: 'Id'
+ *     });
  *
- *     // Прочитаем статью
  *     dataSource.read('article-1').then((article) => {
  *         const title = article.get('title');
- *     }).catch(onError);
- *
- *     // Обновим статью
+ *     }.then((error) => {
+ *         console.error(error);
+ *     });
+ * </pre>
+ * <b>Пример 6</b>. Сохраним статью:
+ * <pre>
+ *     import {SbisService} from 'Types/source';
+ *     import {Model, adapter} from 'Types/entity';
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article',
+ *         keyProperty: 'Id'
+ *     });
  *     const article = new Model({
- *         adapter: dataSource.getAdapter(),
+ *         adapter: new adapter.Sbis(),
  *         format: [
  *             {name: 'id', type: 'integer'},
  *             {name: 'title', type: 'string'}
  *         ],
  *         keyProperty: 'id'
  *     });
+ *
  *     article.set({
  *         id: 'article-1',
  *         title: 'Article 1'
@@ -813,85 +642,40 @@ function callDestroyWithComplexId(
  *
  *     dataSource.update(article).then(() => {
  *         console.log('Article updated!');
- *     }).catch(onError);
+ *     }.then((error) => {
+ *         console.error(error);
+ *     });
+ * </pre>
+ * <b>Пример 7</b>. Удалим статью:
+ * <pre>
+ *     import {SbisService} from 'Types/source';
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article',
+ *         keyProperty: 'Id'
+ *     });
  *
- *     // Удалим статью
  *     dataSource.destroy('article-1').then(() => {
  *         console.log('Article deleted!');
- *     }).catch(onError);
+ *     }.then((error) => {
+ *         console.error(error);
+ *     });
+ * </pre>
+ * <b>Пример 8</b>. Прочитаем первые сто статей:
+ * <pre>
+ *     import {SbisService, Query} from 'Types/source';
+ *     const dataSource = new SbisService({
+ *         endpoint: 'Article'
+ *     });
  *
- *     // Прочитаем первые сто статей
  *     const query = new Query();
  *     query.limit(100);
  *
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`Articles count: ${articles.getCount()}`);
- *     }).catch(onError);
- * </pre>
- * <b>Пример 5</b>. Выберем статьи, используя навигацию по курсору:
- * <pre>
- *     import {SbisService, Query, QueryNavigationType} from 'Types/source';
- *
- *     const dataSource = new SbisService({
- *         endpoint: 'Article',
- *         keyProperty: 'id',
- *         options: {
- *             navigationType: QueryNavigationType.POSITION
- *         }
+ *     }.then((error) => {
+ *         console.error(error);
  *     });
- *
- *     const query = new Query();
- *     // Set cursor position by value of field 'PublicationDate'
- *     query.where({
- *         'PublicationDate>=': new Date(2020, 0, 1)
- *     });
- *     query.limit(100);
- *
- *     dataSource.query(query).then((response) => {
- *         const articles = response.getAll();
- *         console.log('Articles released on the 1st of January 2020 or later');
- *         // Do something with articles
- *     }).catch(onError);
- * </pre>
- * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
- * <pre>
- *     import {SbisService, Query, QueryNavigationType, queryAndExpression, sbisServicePositionExpression} from 'Types/source';
- *
- *     const dataSource = new SbisService({
- *         endpoint: 'Article',
- *         keyProperty: 'articleId',
- *         options: {
- *             navigationType: QueryNavigationType.POSITION
- *         }
- *     });
- *
- *     const sections = {
- *         movies: 456,
- *         cartoons: 457,
- *         comics: 458,
- *         literature: 459,
- *         art: 460
- *     };
- *
- *     const query = new Query();
- *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
- *     query.where(queryAndExpression({
- *         visible: true
- *     }, sbisServicePositionExpression(
- *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
- *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
- *     )));
- *     query.limit(100);
- *
- *     dataSource.query(query).then((response) => {
- *         const articles = response.getAll();
- *         console.log(`
- *             Visible articles from sections "Movies" (published on the 10th of January 2020 or later)
- *             and "Comics" (published on the 12th of January 2020 or later).
- *         `);
- *         // Do something with articles
- *     }).catch(onError);
  * </pre>
  * @class Types/_source/SbisService
  * @extends Types/_source/Rpc
@@ -1081,7 +865,7 @@ export default class SbisService extends Rpc {
      *    });
      * </pre>
      */
-    create(meta?: IHashMap<unknown>): Promise<Record> {
+    create(meta?: object): Promise<Record> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
@@ -1091,7 +875,7 @@ export default class SbisService extends Rpc {
         });
     }
 
-    update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
             return this._loadAdditionalDependencies((ready) => {
                 this._connectAdditionalDependencies(
@@ -1109,9 +893,9 @@ export default class SbisService extends Rpc {
         return super.update(data, meta);
     }
 
-    destroy(keys: EntityId | EntityId[], meta?: IHashMap<unknown>): Promise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<null> {
         if (!(keys instanceof Array)) {
-            return callDestroyWithComplexId.call(
+            return callDestroyWithComplexId(
                 this,
                 [getKeyByComplexId(keys)],
                 getNameByComplexId(keys, this._$endpoint.contract),
@@ -1124,7 +908,7 @@ export default class SbisService extends Rpc {
         const pd = new ParallelDeferred();
         for (const name in groups) {
             if (groups.hasOwnProperty(name)) {
-                pd.push(callDestroyWithComplexId.call(
+                pd.push(callDestroyWithComplexId(
                     this,
                     groups[name],
                     name,
@@ -1149,11 +933,11 @@ export default class SbisService extends Rpc {
 
     // region ICrudPlus
 
-    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<unknown> {
+    move(items: Array<string | number>, target: string | number, meta?: IMoveMeta): Promise<any> {
         meta = meta || {};
         if (this._$binding.moveBefore) {
             // TODO: поддерживаем старый способ с двумя методами
-            return oldMove.call(this, items, target as string, meta as IOldMoveMeta);
+            return oldMove(this, items, target as string, meta as IOldMoveMeta);
         }
 
         // На БЛ не могут принять массив сложных идентификаторов,

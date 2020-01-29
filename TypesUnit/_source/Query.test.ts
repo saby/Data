@@ -1,24 +1,7 @@
 import {assert} from 'chai';
-import Query, {
-    andExpression,
-    Join,
-    Order,
-    orExpression,
-    playExpression,
-    WhereExpression
-} from 'Types/_source/Query';
+import Query, {Join, Order} from 'Types/_source/Query';
 import Record from 'Types/_entity/Record';
 import {IHashMap} from 'Types/_declarations';
-
-interface IAtoG {
-    a?: number;
-    b?: number;
-    c?: number;
-    d?: number;
-    e?: number;
-    f?: number;
-    g?: number;
-}
 
 describe('Types/_source/Query', () => {
     let query: Query;
@@ -71,8 +54,8 @@ describe('Types/_source/Query', () => {
 
             const clone = query.clone();
             assert.instanceOf(clone.getMeta(), Record);
-            assert.notEqual(clone.getMeta<Record>(), rec);
-            assert.isTrue(clone.getMeta<Record>().isEqual(rec));
+            assert.notEqual(clone.getMeta(), rec);
+            assert.isTrue(clone.getMeta().isEqual(rec));
         });
     });
 
@@ -168,7 +151,7 @@ describe('Types/_source/Query', () => {
 
     describe('.where()', () => {
         it('should set expression as object', () => {
-            const where: object = {id: 10};
+            const where  = {id: 10};
             query.where(where);
             assert.strictEqual(query.getWhere(), where);
         });
@@ -374,128 +357,5 @@ describe('Types/_source/Query.Order', () => {
             });
             assert.isTrue(orderWithOption.getNullPolicy());
         });
-    });
-});
-
-describe('Types/_source/Query.playExpression()', () => {
-    function playToStack<T>(expr: WhereExpression<T>): Array<string | object> {
-        const stack = [];
-        playExpression(
-            expr,
-            (key, value) => stack.push([key, value]),
-            (type) => stack.push('>' + type),
-            (type) => stack.push('<' + type)
-        );
-        return stack;
-    }
-
-    it('should play an object as and-expression', () => {
-        const stack = playToStack({a: 1, b: 2});
-        assert.deepEqual(stack, [
-            '>and',
-            ['a', 1],
-            ['b', 2],
-            '<and'
-        ]);
-    });
-
-    it('should play an array within an object as or-expression', () => {
-        const stack = playToStack({
-            a: 1,
-            b: [2, 3],
-            c: 4
-        });
-
-        assert.deepEqual(stack, [
-            '>and',
-            ['a', 1],
-            '>or',
-            ['b', 2],
-            ['b', 3],
-            '<or',
-            ['c', 4],
-            '<and'
-        ]);
-    });
-
-    it('should play and-expression', () => {
-        const stack = playToStack(andExpression(
-            {a: 1, b: 2},
-            {c: 3},
-            {d: 4}
-        ));
-
-        assert.deepEqual(stack, [
-            '>and',
-            ['a', 1],
-            ['b', 2],
-            ['c', 3],
-            ['d', 4],
-            '<and'
-        ]);
-    });
-
-    it('should play or-expression', () => {
-        const stack = playToStack(orExpression(
-            {a: 1},
-            {b: 2},
-            {c: 3}
-        ));
-
-        assert.deepEqual(stack, [
-            '>or',
-            ['a', 1],
-            ['b', 2],
-            ['c', 3],
-            '<or'
-        ]);
-    });
-
-    it('should play and-expression within or-expression', () => {
-        const stack = playToStack(orExpression(
-            {a: 1},
-            {b: 2, c: 3},
-            {d: 4}
-        ));
-
-        assert.deepEqual(stack, [
-            '>or',
-            ['a', 1],
-            '>and',
-            ['b', 2],
-            ['c', 3],
-            '<and',
-            ['d', 4],
-            '<or'
-        ]);
-    });
-
-    it('should play mixture of expressions', () => {
-        const stack = playToStack(andExpression<IAtoG>(
-            {a: 1, b: 2},
-            orExpression(
-                {c: 3, d: 4},
-                {e: 5, f: 6}
-            ),
-            {g: 7}
-        ));
-
-        assert.deepEqual(stack, [
-            '>and',
-            ['a', 1],
-            ['b', 2],
-            '>or',
-            '>and',
-            ['c', 3],
-            ['d', 4],
-            '<and',
-            '>and',
-            ['e', 5],
-            ['f', 6],
-            '<and',
-            '<or',
-            ['g', 7],
-            '<and'
-        ]);
     });
 });
