@@ -1,9 +1,9 @@
 import {assert} from 'chai';
 import Query, {
-    AndExpression,
+    andExpression,
     Join,
     Order,
-    OrExpression,
+    orExpression,
     playExpression,
     WhereExpression
 } from 'Types/_source/Query';
@@ -419,11 +419,11 @@ describe('Types/_source/Query.playExpression()', () => {
     });
 
     it('should play and-expression', () => {
-        const stack = playToStack(new AndExpression([
+        const stack = playToStack(andExpression(
             {a: 1, b: 2},
             {c: 3},
             {d: 4}
-        ]));
+        ));
 
         assert.deepEqual(stack, [
             '>and',
@@ -436,11 +436,11 @@ describe('Types/_source/Query.playExpression()', () => {
     });
 
     it('should play or-expression', () => {
-        const stack = playToStack(new OrExpression([
+        const stack = playToStack(orExpression(
             {a: 1},
             {b: 2},
             {c: 3}
-        ]));
+        ));
 
         assert.deepEqual(stack, [
             '>or',
@@ -452,11 +452,11 @@ describe('Types/_source/Query.playExpression()', () => {
     });
 
     it('should play and-expression within or-expression', () => {
-        const stack = playToStack(new OrExpression([
+        const stack = playToStack(orExpression(
             {a: 1},
             {b: 2, c: 3},
             {d: 4}
-        ]));
+        ));
 
         assert.deepEqual(stack, [
             '>or',
@@ -471,14 +471,14 @@ describe('Types/_source/Query.playExpression()', () => {
     });
 
     it('should play mixture of expressions', () => {
-        const stack = playToStack(new AndExpression<IAtoG>([
+        const stack = playToStack(andExpression<IAtoG>(
             {a: 1, b: 2},
-            new OrExpression([
+            orExpression(
                 {c: 3, d: 4},
                 {e: 5, f: 6}
-            ]),
+            ),
             {g: 7}
-        ]));
+        ));
 
         assert.deepEqual(stack, [
             '>and',

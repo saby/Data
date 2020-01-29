@@ -32,17 +32,20 @@ export type SelectExpression = IHashMap<string> | string[] | string;
 export type WhereExpression<T> = FilterExpression | PartialExpression<T>;
 export type OrderSelector = string | IHashMap<boolean> | Array<IHashMap<boolean>> | Array<[string, boolean, boolean]>;
 
-type AtomDeclaration = unknown;
+type AtomDeclaration = [string, any];
 
-export class AtomExpression<T = AtomDeclaration> extends PartialExpression<T> {
+class AtomExpression<T = AtomDeclaration> extends PartialExpression<T> {
     readonly type: string = 'atom';
+    constructor(readonly conditions: AtomDeclaration) {
+        super(conditions);
+    }
 }
 
-export class AndExpression<T> extends PartialExpression<T> {
+class AndExpression<T> extends PartialExpression<T> {
     readonly type: string = 'and';
 }
 
-export class OrExpression<T> extends PartialExpression<T> {
+class OrExpression<T> extends PartialExpression<T> {
     readonly type: string = 'or';
 }
 
@@ -54,11 +57,15 @@ export function orExpression<T>(...conditions: Array<T | PartialExpression<T>>):
     return new OrExpression(conditions);
 }
 
+type AtomAppearCallback<T = unknown> = (key: string, value: T, type: string) => void;
+type GroupBeginCallback<T> = (type: string, conditions: Array<T | PartialExpression<T>>) => void;
+type GroupEndCallback = (type: string, restoreType: string) => void;
+
 function playExpressionInner<T>(
     expression: PartialExpression<T>,
-    onAtomAppears: Function,
-    onGroupBegins: Function,
-    onGroupEnds: Function,
+    onAtomAppears: AtomAppearCallback,
+    onGroupBegins: GroupBeginCallback<T>,
+    onGroupEnds: GroupEndCallback,
     stack: Array<PartialExpression<unknown>>
 ): void {
     if (expression.conditions.length === 0) {
@@ -66,6 +73,7 @@ function playExpressionInner<T>(
     }
 
     if (expression instanceof AtomExpression) {
+        // Notify about atom
         onAtomAppears(expression.conditions[0], expression.conditions[1], expression.type);
     } else {
         // If there is no atom that means there is a group
@@ -146,9 +154,9 @@ function playExpressionInner<T>(
  */
 export function playExpression<T>(
     expression: WhereExpression<T>,
-    onAtomAppears: Function,
-    onGroupBegins: Function,
-    onGroupEnds: Function
+    onAtomAppears: AtomAppearCallback,
+    onGroupBegins: GroupBeginCallback<T>,
+    onGroupEnds: GroupEndCallback
 ): void {
     playExpressionInner(
         expression instanceof PartialExpression ? expression : andExpression(expression as unknown as T),
