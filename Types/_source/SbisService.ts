@@ -274,6 +274,10 @@ function expressionToObject<T>(expr: WhereExpression<T>): object {
  * @param cursor Cursor to affect
  */
 function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): void {
+    // Skip undefined values
+    if (value === undefined) {
+        return;
+    }
     const parts = expr.match(EXPRESSION_TEMPLATE);
 
     // Check next if there's no operand
@@ -281,38 +285,35 @@ function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor):
         return;
     }
 
-    // Skip undefined values
-    if (value !== undefined) {
-        const field = parts[1];
-        const operand = parts[2];
+    const field = parts[1];
+    const operand = parts[2];
 
-        // Add field value to position if it's not null because nulls used only for defining an order.
-        if (value !== null) {
-            if (!cursor.position) {
-                cursor.position = {};
-            }
-            cursor.position[field] = value;
+    // Add field value to position if it's not null because nulls used only for defining an order.
+    if (value !== null) {
+        if (!cursor.position) {
+            cursor.position = {};
         }
+        cursor.position[field] = value;
+    }
 
-        // We can use only one kind of order so take it from the first operand
-        if (!cursor.order) {
-            switch (operand) {
-                case '~':
-                    cursor.order = PoitionNavigationOrder.both;
-                    break;
+    // We can use only one kind of order so take it from the first operand
+    if (!cursor.order) {
+        switch (operand) {
+            case '~':
+                cursor.order = PoitionNavigationOrder.both;
+                break;
 
-                case '<':
-                case '<=':
-                    cursor.order = PoitionNavigationOrder.before;
-                    break;
-            }
+            case '<':
+            case '<=':
+                cursor.order = PoitionNavigationOrder.before;
+                break;
         }
     }
 }
 
 /**
- * Applies conditions to given cursor
- * @param conditions Conditions to apply
+ * Applies multiple positions to given cursor
+ * @param conditions Conditions of positions to apply
  * @param cursor Cursor to affect
  * @param adapter Adapter to use in records
  */
@@ -781,7 +782,7 @@ function callDestroyWithComplexId(
  *
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
- *         console.log('Articles released on the 1st of January 2020 and later');
+ *         console.log('Articles released on the 1st of January 2020 or later');
  *         // Do something with articles
  *     }).catch(onError);
  * </pre>
@@ -818,8 +819,8 @@ function callDestroyWithComplexId(
  *     dataSource.query(query).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`
- *             Visible articles from sections "Movies" (published on the 10th of January 2020 and later)
- *             and "Comics" (published on the 12th of January 2020 and later).
+ *             Visible articles from sections "Movies" (published on the 10th of January 2020 or later)
+ *             and "Comics" (published on the 12th of January 2020 or later).
  *         `);
  *         // Do something with articles
  *     }).catch(onError);
