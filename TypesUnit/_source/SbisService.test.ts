@@ -1,8 +1,16 @@
 import {assert} from 'chai';
 import * as di from 'Types/di';
-import SbisService, {IBinding} from 'Types/_source/SbisService';
+import SbisService, {
+    IBinding,
+    positionExpression
+} from 'Types/_source/SbisService';
 import DataSet from 'Types/_source/DataSet';
-import Query, {NavigationType, ExpandMode} from 'Types/_source/Query';
+import Query, {
+    andExpression,
+    orExpression,
+    ExpandMode,
+    NavigationType
+} from 'Types/_source/Query';
 import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
 import List from 'Types/_collection/List';
@@ -14,6 +22,12 @@ import 'Types/_entity/adapter/Sbis';
 // tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
+
+interface IAtoC {
+    a?: number;
+    b?: number;
+    c?: number;
+}
 
 describe('Types/_source/SbisService', () => {
     const provider = 'Types/source:provider.SbisBusinessLogic';
@@ -843,36 +857,36 @@ describe('Types/_source/SbisService', () => {
                 return service.query(query).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
-                    assert.strictEqual(args.Фильтр.d[1], 5);
-                    assert.strictEqual(args.Фильтр.s[1].n, 'id');
-                    assert.strictEqual(args.Фильтр.s[1].t, 'Число целое');
-
-                    assert.isTrue(args.Фильтр.d[0]);
                     assert.strictEqual(args.Фильтр.s[0].n, 'enabled');
                     assert.strictEqual(args.Фильтр.s[0].t, 'Логическое');
+                    assert.isTrue(args.Фильтр.d[0]);
 
-                    assert.strictEqual(args.Фильтр.d[6], 'abc*');
-                    assert.strictEqual(args.Фильтр.s[6].n, 'title');
-                    assert.strictEqual(args.Фильтр.s[6].t, 'Строка');
+                    assert.strictEqual(args.Фильтр.s[1].n, 'id');
+                    assert.strictEqual(args.Фильтр.s[1].t, 'Число целое');
+                    assert.strictEqual(args.Фильтр.d[1], 5);
 
-                    assert.deepEqual(args.Фильтр.d[3], [1, 2, 3]);
+                    assert.strictEqual(args.Фильтр.s[2].n, 'obj');
+                    assert.strictEqual(args.Фильтр.s[2].t, 'JSON-объект');
+                    assert.deepEqual(args.Фильтр.d[2], {a: 1, b: 2});
+
                     assert.strictEqual(args.Фильтр.s[3].n, 'path');
                     assert.strictEqual(args.Фильтр.s[3].t.n, 'Массив');
                     assert.strictEqual(args.Фильтр.s[3].t.t, 'Число целое');
+                    assert.deepEqual(args.Фильтр.d[3], [1, 2, 3]);
 
-                    assert.deepEqual(args.Фильтр.d[2], {a: 1, b: 2});
-                    assert.strictEqual(args.Фильтр.s[2].n, 'obj');
-                    assert.strictEqual(args.Фильтр.s[2].t, 'JSON-объект');
-
-                    assert.deepEqual(args.Фильтр.d[4].d, recData.d);
-                    assert.deepEqual(args.Фильтр.d[4].s, recData.s);
                     assert.strictEqual(args.Фильтр.s[4].n, 'rec');
                     assert.strictEqual(args.Фильтр.s[4].t, 'Запись');
+                    assert.deepEqual(args.Фильтр.d[4].d, recData.d);
+                    assert.deepEqual(args.Фильтр.d[4].s, recData.s);
 
-                    assert.deepEqual(args.Фильтр.d[5].d, rsData.d);
-                    assert.deepEqual(args.Фильтр.d[5].s, rsData.s);
                     assert.strictEqual(args.Фильтр.s[5].n, 'rs');
                     assert.strictEqual(args.Фильтр.s[5].t, 'Выборка');
+                    assert.deepEqual(args.Фильтр.d[5].d, rsData.d);
+                    assert.deepEqual(args.Фильтр.d[5].s, rsData.s);
+
+                    assert.strictEqual(args.Фильтр.s[6].n, 'title');
+                    assert.strictEqual(args.Фильтр.s[6].t, 'Строка');
+                    assert.strictEqual(args.Фильтр.d[6], 'abc*');
 
                     assert.strictEqual(args.Сортировка.d[0][1], 'id');
                     assert.isFalse(args.Сортировка.d[0][2]);
@@ -886,16 +900,50 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Сортировка.s[1].n, 'n');
                     assert.strictEqual(args.Сортировка.s[2].n, 'o');
 
-                    assert.strictEqual(args.Навигация.d[2], 3);
-                    assert.strictEqual(args.Навигация.s[2].n, 'Страница');
-
-                    assert.strictEqual(args.Навигация.d[1], 33);
-                    assert.strictEqual(args.Навигация.s[1].n, 'РазмерСтраницы');
-
-                    assert.isTrue(args.Навигация.d[0]);
                     assert.strictEqual(args.Навигация.s[0].n, 'ЕстьЕще');
+                    assert.isTrue(args.Навигация.d[0]);
+
+                    assert.strictEqual(args.Навигация.s[1].n, 'РазмерСтраницы');
+                    assert.strictEqual(args.Навигация.d[1], 33);
+
+                    assert.strictEqual(args.Навигация.s[2].n, 'Страница');
+                    assert.strictEqual(args.Навигация.d[2], 3);
 
                     assert.strictEqual(args.ДопПоля.length, 0);
+                });
+            });
+
+            it('should generate request with andExpression()', () => {
+                const query = new Query();
+                query.where(andExpression({a: 1}));
+
+                return service.query(query).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+                    assert.strictEqual(args.Фильтр.s.length, 1);
+                    assert.strictEqual(args.Фильтр.s[0].n, 'a');
+                    assert.strictEqual(args.Фильтр.d[0], 1);
+                });
+            });
+
+            it('should generate request with andExpression() and orExpression()', () => {
+                const query = new Query();
+                query.where(andExpression<IAtoC>(
+                    {a: 1},
+                    orExpression({b: 2}, {c: 3})
+                ));
+
+                return service.query(query).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+                    assert.strictEqual(args.Фильтр.s.length, 3);
+
+                    assert.strictEqual(args.Фильтр.s[0].n, 'a');
+                    assert.strictEqual(args.Фильтр.d[0], 1);
+
+                    assert.strictEqual(args.Фильтр.s[1].n, 'b');
+                    assert.deepEqual(args.Фильтр.d[1], [2]);
+
+                    assert.strictEqual(args.Фильтр.s[2].n, 'c');
+                    assert.deepEqual(args.Фильтр.d[2], [3]);
                 });
             });
 
@@ -1314,6 +1362,61 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[2], 'both');
 
                     assert.strictEqual(args.Фильтр.d.length, 0);
+                });
+            });
+
+            it('should generate request with andExpression() and positionExpression()', () => {
+                const service = new SbisService({
+                    endpoint: 'USP',
+                    options: {
+                        navigationType: SbisService.NAVIGATION_TYPE.POSITION
+                    }
+                });
+
+                const query = new Query();
+                query.where(andExpression(
+                    {a: 1},
+                    positionExpression(
+                        [2, {'b>': 3}],
+                        [4, {'с<': 5}]
+                    )
+                )).limit(10);
+
+                return service.query(query).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+
+                    assert.strictEqual(args.Фильтр.s.length, 1);
+
+                    assert.strictEqual(args.Фильтр.s[0].n, 'a');
+                    assert.strictEqual(args.Фильтр.d[0], 1);
+
+                    assert.strictEqual(args.Навигация.s[2].n, 'Order');
+                    assert.strictEqual(args.Навигация.d[2], 'before');
+
+                    assert.strictEqual(args.Навигация.s[3].n, 'Position');
+                    const navigation = args.Навигация.d[3];
+
+                    assert.strictEqual(navigation.s.length, 2);
+                    assert.strictEqual(navigation.s[0].n, 'id');
+                    assert.strictEqual(navigation.s[1].n, 'nav');
+
+                    assert.strictEqual(navigation.d.length, 2);
+                    assert.deepEqual(navigation.d[0], [2, {
+                        _type: 'record',
+                        d: [3],
+                        s: [{
+                            n: 'b',
+                            t: 'Число целое'
+                        }]
+                    }]);
+                    assert.deepEqual(navigation.d[1], [4, {
+                        _type: 'record',
+                        d: [5],
+                        s: [{
+                            n: 'с',
+                            t: 'Число целое'
+                        }]
+                    }]);
                 });
             });
 
