@@ -838,6 +838,8 @@ describe('Types/_source/SbisService', () => {
                         title: 'abc*',
                         path: [1, 2, 3],
                         obj: {a: 1, b: 2},
+                        emptyArray: [],
+                        emptyObject: {},
                         rec: new Model({
                             adapter: 'Types/entity:adapter.Sbis',
                             rawData: recData
@@ -845,8 +847,7 @@ describe('Types/_source/SbisService', () => {
                         rs: new RecordSet({
                             adapter: 'Types/entity:adapter.Sbis',
                             rawData: rsData
-                        }),
-                        silent: [],
+                        })
                     })
                     .orderBy({
                         id: false,
@@ -858,41 +859,45 @@ describe('Types/_source/SbisService', () => {
                 return service.query(query).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
-                    assert.strictEqual(args.Фильтр.s[0].n, 'enabled');
-                    assert.strictEqual(args.Фильтр.s[0].t, 'Логическое');
-                    assert.isTrue(args.Фильтр.d[0]);
+                    assert.strictEqual(args.Фильтр.s[0].n, 'emptyArray');
+                    assert.strictEqual(args.Фильтр.s[0].t.n, 'Массив');
+                    assert.strictEqual(args.Фильтр.s[0].t.t, 'Строка');
+                    assert.deepEqual(args.Фильтр.d[0], []);
 
-                    assert.strictEqual(args.Фильтр.s[1].n, 'id');
-                    assert.strictEqual(args.Фильтр.s[1].t, 'Число целое');
-                    assert.strictEqual(args.Фильтр.d[1], 5);
+                    assert.strictEqual(args.Фильтр.s[1].n, 'emptyObject');
+                    assert.strictEqual(args.Фильтр.s[1].t, 'JSON-объект');
+                    assert.deepEqual(args.Фильтр.d[1], {});
 
-                    assert.strictEqual(args.Фильтр.s[2].n, 'obj');
-                    assert.strictEqual(args.Фильтр.s[2].t, 'JSON-объект');
-                    assert.deepEqual(args.Фильтр.d[2], {a: 1, b: 2});
+                    assert.strictEqual(args.Фильтр.s[2].n, 'enabled');
+                    assert.strictEqual(args.Фильтр.s[2].t, 'Логическое');
+                    assert.isTrue(args.Фильтр.d[2]);
 
-                    assert.strictEqual(args.Фильтр.s[3].n, 'path');
-                    assert.strictEqual(args.Фильтр.s[3].t.n, 'Массив');
-                    assert.strictEqual(args.Фильтр.s[3].t.t, 'Число целое');
-                    assert.deepEqual(args.Фильтр.d[3], [1, 2, 3]);
+                    assert.strictEqual(args.Фильтр.s[3].n, 'id');
+                    assert.strictEqual(args.Фильтр.s[3].t, 'Число целое');
+                    assert.strictEqual(args.Фильтр.d[3], 5);
 
-                    assert.strictEqual(args.Фильтр.s[4].n, 'rec');
-                    assert.strictEqual(args.Фильтр.s[4].t, 'Запись');
-                    assert.deepEqual(args.Фильтр.d[4].d, recData.d);
-                    assert.deepEqual(args.Фильтр.d[4].s, recData.s);
+                    assert.strictEqual(args.Фильтр.s[4].n, 'obj');
+                    assert.strictEqual(args.Фильтр.s[4].t, 'JSON-объект');
+                    assert.deepEqual(args.Фильтр.d[4], {a: 1, b: 2});
 
-                    assert.strictEqual(args.Фильтр.s[5].n, 'rs');
-                    assert.strictEqual(args.Фильтр.s[5].t, 'Выборка');
-                    assert.deepEqual(args.Фильтр.d[5].d, rsData.d);
-                    assert.deepEqual(args.Фильтр.d[5].s, rsData.s);
+                    assert.strictEqual(args.Фильтр.s[5].n, 'path');
+                    assert.strictEqual(args.Фильтр.s[5].t.n, 'Массив');
+                    assert.strictEqual(args.Фильтр.s[5].t.t, 'Число целое');
+                    assert.deepEqual(args.Фильтр.d[5], [1, 2, 3]);
 
-                    assert.strictEqual(args.Фильтр.s[6].n, 'silent');
-                    assert.strictEqual(args.Фильтр.s[6].t.n, 'Массив');
-                    assert.strictEqual(args.Фильтр.s[6].t.t, 'Строка');
-                    assert.deepEqual(args.Фильтр.d[6], []);
+                    assert.strictEqual(args.Фильтр.s[6].n, 'rec');
+                    assert.strictEqual(args.Фильтр.s[6].t, 'Запись');
+                    assert.deepEqual(args.Фильтр.d[6].d, recData.d);
+                    assert.deepEqual(args.Фильтр.d[6].s, recData.s);
 
-                    assert.strictEqual(args.Фильтр.s[7].n, 'title');
-                    assert.strictEqual(args.Фильтр.s[7].t, 'Строка');
-                    assert.strictEqual(args.Фильтр.d[7], 'abc*');
+                    assert.strictEqual(args.Фильтр.s[7].n, 'rs');
+                    assert.strictEqual(args.Фильтр.s[7].t, 'Выборка');
+                    assert.deepEqual(args.Фильтр.d[7].d, rsData.d);
+                    assert.deepEqual(args.Фильтр.d[7].s, rsData.s);
+
+                    assert.strictEqual(args.Фильтр.s[8].n, 'title');
+                    assert.strictEqual(args.Фильтр.s[8].t, 'Строка');
+                    assert.strictEqual(args.Фильтр.d[8], 'abc*');
 
                     assert.strictEqual(args.Сортировка.d[0][1], 'id');
                     assert.isFalse(args.Сортировка.d[0][2]);
