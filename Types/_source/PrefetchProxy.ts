@@ -318,6 +318,13 @@ export default class PrefetchProxy extends mixin<
         throw new TypeError('Option "target" should be an instance of Types/_source/OptionsMixin');
     }
 
+    /**
+     * Number of items in RecordSet.
+     */
+    getCount(): number {
+        return (this._$data.query as any as RecordSet).getCount();
+    }
+
     // endregion
 
     // region SerializableMixin
