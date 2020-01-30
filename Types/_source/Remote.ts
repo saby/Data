@@ -84,7 +84,7 @@ function passRead(key: string, meta?: object): any[] {
  * @param data Обновляемая запись или рекордсет
  * @param [meta] Дополнительные мета данные
  */
-function passUpdate(data: Record | RecordSet, meta?: object): any[] {
+function passUpdate(this: Remote, data: Record | RecordSet, meta?: object): any[] {
     if (this._$options.updateOnlyChanged) {
         const keyProperty = this._getValidKeyProperty(data);
         if (!isEmpty(keyProperty)) {

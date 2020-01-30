@@ -13,11 +13,14 @@
  * @includes Memory Types/_source/Memory
  * @includes PrefetchProxy Types/_source/PrefetchProxy
  * @includes Query Types/_source/Query
- * @includes QueryJoin Types/_source/Query.Join
- * @includes QueryOrder Types/_source/Query.Order
+ * @includes queryAndExpression Types/_source/Query#andExpression
+ * @includes queryOrExpression Types/_source/Query#orExpression
+ * @includes QueryJoin Types/_source/Query#Join
+ * @includes QueryOrder Types/_source/Query#Order
  * @includes Remote Types/_source/Remote
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
+ * @includes sbisServicePositionExpression Types/_source/SbisService#positionExpression
  * @public
  * @author Мальцев А.А.
  */
@@ -37,16 +40,22 @@ export {default as PrefetchProxy} from './_source/PrefetchProxy';
 import * as provider from './_source/provider';
 export {provider};
 export {
+    andExpression as queryAndExpression,
     default as Query,
+    ExpandMode as QueryExpandMode,
     Join as QueryJoin,
-    Where as QueryWhere,
+    IMeta as IQueryMeta,
+    NavigationType as QueryNavigationType,
     Order as QueryOrder,
     OrderSelector as QueryOrderSelector,
-    Expression as QueryExpression,
-    NavigationType as QueryNavigationType,
-    ExpandMode as QueryExpandMode,
-    IMeta as IQueryMeta
+    orExpression as queryOrExpression,
+    SelectExpression as QuerySelectExpression,
+    WhereExpression as QueryWhereExpression
 } from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
-export {default as SbisService, IOptions as ISbisServiceOptions} from './_source/SbisService';
+export {
+    default as SbisService,
+    positionExpression as sbisServicePositionExpression,
+    IOptions as ISbisServiceOptions
+} from './_source/SbisService';
