@@ -278,17 +278,18 @@ function expressionToObject<T>(expr: WhereExpression<T>): object {
  * @param expr Expression to apply
  * @param value Value of expression
  * @param cursor Cursor to affect
+ * @return True if argument expr contains expression
  */
-function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): void {
+function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): boolean {
     // Skip undefined values
     if (value === undefined) {
-        return;
+        return false;
     }
     const parts = expr.match(EXPRESSION_TEMPLATE);
 
     // Check next if there's no operand
     if (!parts) {
-        return;
+        return false;
     }
 
     const field = parts[1];
@@ -315,6 +316,8 @@ function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor):
                 break;
         }
     }
+
+    return true;
 }
 
 /**
@@ -387,10 +390,11 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
                         return;
                     }
 
-                    applyExpressionAndValue(expr, value, cursor);
+                    if (applyExpressionAndValue(expr, value, cursor)) {
+                        // Also delete property with operand in query (by link)
+                        delete where[expr];
+                    }
 
-                    // Also delete property with operand in query (by link)
-                    delete where[expr];
                 }, (type, conditions) => {
                     if (type === 'sbisPosition') {
                         processingPosition = true;

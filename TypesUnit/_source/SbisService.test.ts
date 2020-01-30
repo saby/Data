@@ -1376,6 +1376,37 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
+            it('should generate request with position navigation and mixed conditions', () => {
+                const service = new SbisService({
+                    endpoint: 'USP'
+                });
+                const query = new Query()
+                    .meta({navigationType: NavigationType.Position})
+                    .where({
+                        parentId: 10,
+                        'id>=': 50
+                    })
+                    .limit(5);
+
+                return service.query(query).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+
+                    assert.strictEqual(args.Навигация.s[2].n, 'Order');
+                    assert.strictEqual(args.Навигация.d[2], 'after');
+
+                    assert.strictEqual(args.Навигация.s[3].n, 'Position');
+                    assert.strictEqual(args.Навигация.s[3].t, 'Запись');
+                    assert.strictEqual(args.Навигация.d[3].s.length, 1);
+                    assert.strictEqual(args.Навигация.d[3].s[0].n, 'id');
+                    assert.strictEqual(args.Навигация.d[3].d.length, 1);
+                    assert.strictEqual(args.Навигация.d[3].d[0], 50);
+
+                    assert.strictEqual(args.Фильтр.s.length, 1);
+                    assert.strictEqual(args.Фильтр.s[0].n, 'parentId');
+                    assert.strictEqual(args.Фильтр.d[0], 10);
+                });
+            });
+
             it('should generate request with andExpression() and positionExpression()', () => {
                 const service = new SbisService({
                     endpoint: 'USP',
