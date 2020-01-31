@@ -1,3 +1,4 @@
+// Just test
 import * as chain from './Types/chain';
 import * as collection from './Types/collection';
 import * as di from './Types/di';
