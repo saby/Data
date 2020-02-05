@@ -108,11 +108,12 @@ describe('Types/_shim/Map:MapPolyfill', () => {
         it('should invoke callback for each entry', () => {
             const map = new MapPolyfill();
             const baz = {};
-            const expect = [['foo', 'a'], ['bar', 'b'], [baz, 'c']];
+            const expect = [['foo', 'a'], ['bar', 'b'], [baz, 'c'], ['@key', 'f']];
 
             map.set('foo', 'a');
             map.set('bar', 'b');
             map.set(baz, 'c');
+            map.set('@key', 'f');
 
             let index = 0;
             map.forEach((item, key) => {
