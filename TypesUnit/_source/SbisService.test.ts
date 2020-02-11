@@ -612,10 +612,13 @@ describe('Types/_source/SbisService', () => {
                 const service = new SbisService({
                     endpoint: 'Goods'
                 });
+
                 const binding = service.getBinding() as IBinding;
-                let record;
+                binding.updateBatch = 'Sync';
+                service.setBinding(binding);
+
                 const addRecord = (data) => {
-                    record = new Model({
+                    const record = new Model({
                         format: rs.getFormat(),
                         adapter: rs.getAdapter()
                     });
@@ -623,15 +626,12 @@ describe('Types/_source/SbisService', () => {
                     rs.add(record);
                 };
 
-                binding.updateBatch = 'Sync';
-                service.setBinding(binding);
-
                 addRecord({id: 1, name: 'sample1'});
                 addRecord({id: 2, name: 'sample2'});
                 addRecord({id: 3, name: 'sample3'});
                 rs.acceptChanges();
-                addRecord({id: 4, name: 'sample4'});
 
+                addRecord({id: 4, name: 'sample4'});
                 rs.at(0).set('name', 'foo');
                 rs.at(1).setState(RecordState.DELETED);
 

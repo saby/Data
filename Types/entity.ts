@@ -66,7 +66,7 @@ export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReactiveObject} from './_entity/ReactiveObject';
 export {default as ReadWriteMixin, IOptions as IReadWriteMixinOptions} from './_entity/ReadWriteMixin';
-export {default as Record} from './_entity/Record';
+export {default as Record, State as RecordState} from './_entity/Record';
 import * as relation from './_entity/relation';
 export {relation};
 export {

@@ -11,6 +11,7 @@ const defaultAdapter = 'Types/entity:adapter.Json';
 
 export type FormatDescriptor = format.Format | FormatDeclaration;
 export type AdapterDescriptor = IAdapter | string;
+type GenericAdapter = ITable | IRecord | IDecorator | IMetaData;
 
 export interface IOptions {
    adapter?: AdapterDescriptor;
@@ -60,9 +61,9 @@ function buildFormatFromObject(partialFormat: object, rawDataFormat: format.Form
 /**
  * Builds format by raw data.
  */
-function buildFormatByRawData(): format.Format {
+function buildFormatByRawData(this: FormattableMixin): format.Format {
     const format = create<format.Format>('Types/collection:format.Format');
-    const adapter = this._getRawDataAdapter();
+    const adapter = this._getRawDataAdapter() as ITable;
     const fields = this._getRawDataFields();
     const count = fields.length;
 
@@ -76,34 +77,6 @@ function buildFormatByRawData(): format.Format {
 }
 
 /**
- * Builds raw data by declared format
- */
-function buildRawData(): void {
-    if (this.hasDeclaredFormat()) {
-        let adapter = this._getRawDataAdapter();
-        const fields = adapter.getFields();
-
-        if (adapter['[Types/_entity/adapter/IDecorator]']) {
-            adapter = adapter.getOriginal();
-        }
-        // TODO: solve the problem of data normalization
-        if (adapter._touchData) {
-            adapter._touchData();
-        }
-
-        this._getFormat().each((fieldFormat) => {
-            try {
-                if (fields.indexOf(fieldFormat.getName()) === -1) {
-                    adapter.addField(fieldFormat);
-                }
-            } catch (e) {
-                logger.info(this._moduleName + '::constructor(): can\'t add raw data field (' + e.message + ')');
-            }
-        });
-    }
-}
-
-/**
  * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as adapter.
  * @mixin Types/_entity/FormattableMixin
  * @public
@@ -112,7 +85,9 @@ function buildRawData(): void {
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': boolean;
 
-   protected _$formatController: FormatController;
+    protected _moduleName: string;
+
+    protected _$formatController: FormatController;
 
    /**
     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
@@ -375,7 +350,7 @@ export default abstract class FormattableMixin {
     /**
      * Adapter instance to deal with raw data
      */
-    protected _rawDataAdapter: ITable | IRecord | IDecorator | IMetaData;
+    protected _rawDataAdapter: GenericAdapter;
 
     /**
      * List of field names taken from raw data adapter
@@ -393,8 +368,6 @@ export default abstract class FormattableMixin {
         if (!this._$format && this._options && this._options.format) {
             this._$format = this._options.format;
         }
-
-        buildRawData.call(this);
     }
 
     // region SerializableMixin
@@ -452,7 +425,6 @@ export default abstract class FormattableMixin {
         this._resetRawDataAdapter(data);
         this._resetRawDataFields();
         this._clearFormatClone();
-        buildRawData.call(this);
     }
 
     /**
@@ -528,7 +500,7 @@ export default abstract class FormattableMixin {
      * Adds field to the format.
      * @remark
      * If field with given name already exists it throws an exception.
-     * @param {Types/_entity/format/Field|Types/_entity/format/fieldsFactory/FieldDeclaration.typedef} format Field format.
+     * @param format Field format.
      * @param [at] Field position. If omitted or defined as -1 then would be added at the end.
      * @see format
      * @see removeField
@@ -553,8 +525,9 @@ export default abstract class FormattableMixin {
         format = this._buildField(format);
         this._$format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.add(format, at);
+
         (this._getRawDataAdapter() as ITable).addField(format, at);
+        this._$format.add(format, at);
         this._resetRawDataFields();
         this._clearFormatClone();
     }
@@ -577,8 +550,9 @@ export default abstract class FormattableMixin {
     removeField(name: string): void {
         this._$format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.removeField(name);
+
         (this._getRawDataAdapter() as ITable).removeField(name);
+        this._$format.removeField(name);
         this._resetRawDataFields();
         this._clearFormatClone();
     }
@@ -601,8 +575,9 @@ export default abstract class FormattableMixin {
     removeFieldAt(at: number): void {
         this._$format = this._getFormat(true);
         this._unlinkFormatOption();
-        this._$format.removeAt(at);
+
         (this._getRawDataAdapter() as ITable).removeFieldAt(at);
+        this._$format.removeAt(at);
         this._resetRawDataFields();
         this._clearFormatClone();
     }
@@ -612,13 +587,19 @@ export default abstract class FormattableMixin {
     // region Protected methods
 
     /**
-     * Return raw data from adapter if it was initialized or original data injected via option.
-     * @param [direct=false] Don't use adapter
+     * Returns raw data from adapter.
      */
-    protected _getRawData(direct?: boolean): any {
-        if (!direct && this._rawDataAdapter) {
-            return (this._rawDataAdapter as ITable | IRecord).getData();
-        }
+    protected _getRawData(): any {
+        const shouldUseAdapter = this._rawDataAdapter || this.hasDeclaredFormat();
+        return shouldUseAdapter
+            ? (this._getRawDataAdapter() as (IRecord | ITable)).getData()
+            : this._getRawDataFromOption();
+    }
+
+    /**
+     * Returns original data injected via option.
+     */
+    protected _getRawDataFromOption(): any {
         return typeof this._$rawData === 'function' ? this._$rawData() : this._$rawData;
     }
 
@@ -661,7 +642,7 @@ export default abstract class FormattableMixin {
      */
     protected _getFormatController(): FormatController {
         if (!this._$formatController) {
-            this._$formatController = new FormatController(this._getRawData(true));
+            this._$formatController = new FormatController(this._getRawDataFromOption());
         }
 
         return this._$formatController;
@@ -670,9 +651,10 @@ export default abstract class FormattableMixin {
     /**
      * Returns adapter instance for certain data kind.
      */
-    protected _getRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
+    protected _getRawDataAdapter(): GenericAdapter {
         if (!this._rawDataAdapter) {
             this._rawDataAdapter = this._createRawDataAdapter();
+            this._initRawDataAdapter(this._rawDataAdapter);
         }
 
         return this._rawDataAdapter;
@@ -681,8 +663,38 @@ export default abstract class FormattableMixin {
     /**
      * Creates adapter instance for certain data kind (table, record, decorator or meta data).
      */
-    protected _createRawDataAdapter(): ITable | IRecord | IDecorator | IMetaData {
+    protected _createRawDataAdapter(): GenericAdapter {
         throw new Error('Method must be implemented');
+    }
+
+    /**
+     * Initializes adapter instance.
+     */
+    protected _initRawDataAdapter(adapter: GenericAdapter): void {
+        // Sync raw data fields with declared format if necessary
+        if (this.hasDeclaredFormat()) {
+            // Unwrap decorated adapter
+            if (adapter['[Types/_entity/adapter/IDecorator]']) {
+                adapter = (adapter as IDecorator).getOriginal() as ITable | IRecord;
+            }
+
+            // TODO: cope with the problem of data normalization
+            if ((adapter as any)._touchData) {
+                (adapter as any)._touchData();
+            }
+
+            // Add fields from format which don't exists in raw data
+            const fields = (adapter as IRecord & ITable).getFields();
+            this._getFormat().each((fieldFormat) => {
+                try {
+                    if (fields.indexOf(fieldFormat.getName()) === -1) {
+                        (adapter as ITable | IRecord).addField(fieldFormat);
+                    }
+                } catch (err) {
+                    logger.info(`${this._moduleName}::constructor(): can't add raw data field (${err.message})`);
+                }
+            });
+        }
     }
 
     /**
@@ -885,15 +897,16 @@ export default abstract class FormattableMixin {
 }
 
 Object.assign(FormattableMixin.prototype, {
-   '[Types/_entity/FormattableMixin]': true,
-   _$rawData: null,
-   _$cow: false,
-   _$adapter: defaultAdapter,
-   _$format: null,
-   _format: null,
-   _formatClone: null,
-   _rawDataAdapter: null,
-   _rawDataFields: null,
-   _$formatController: null,
-   hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
+    '[Types/_entity/FormattableMixin]': true,
+    _moduleName: 'Types/entity:FormattableMixin',
+    _$rawData: null,
+    _$cow: false,
+    _$adapter: defaultAdapter,
+    _$format: null,
+    _format: null,
+    _formatClone: null,
+    _rawDataAdapter: null,
+    _rawDataFields: null,
+    _$formatController: null,
+    hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });
