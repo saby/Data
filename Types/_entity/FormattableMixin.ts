@@ -590,7 +590,10 @@ export default abstract class FormattableMixin {
      * Returns raw data from adapter.
      */
     protected _getRawData(): any {
-        return (this._getRawDataAdapter() as (IRecord | ITable)).getData();
+        const shouldUseAdapter = this._rawDataAdapter || this.hasDeclaredFormat();
+        return shouldUseAdapter
+            ? (this._getRawDataAdapter() as (IRecord | ITable)).getData()
+            : this._getRawDataFromOption();
     }
 
     /**
