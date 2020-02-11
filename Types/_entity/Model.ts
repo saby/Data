@@ -430,10 +430,6 @@ export default class Model extends mixin<
                 this._$keyProperty = this._options.idProperty;
             }
         }
-
-        if (!this._$keyProperty) {
-            this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
-        }
    }
 
     destroy(): void {
@@ -592,8 +588,8 @@ export default class Model extends mixin<
 
     /**
      * Перебирает все свойства модели (включая имеющиеся в "сырых" данных)
-     * @param {Function(String, *)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
-     * @param {Object} [context] Контекст вызова callback.
+     * @param callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
+     * @param [context] Контекст вызова callback.
      * @example
      * Смотри пример {@link Types/_entity/Record#each для записи}:
      */
@@ -774,8 +770,7 @@ export default class Model extends mixin<
 
     /**
      * Возвращает значение свойства по умолчанию
-     * @param {String} name Название свойства
-     * @return {*}
+     * @param name Название свойства
      * @example
      * Получим дефолтное значение свойства id:
      * <pre>
@@ -824,7 +819,7 @@ export default class Model extends mixin<
 
     /**
      * Объединяет модель с данными другой модели
-     * @param {Types/_entity/Model} model Модель, с которой будет произведено объединение
+     * @param model Модель, с которой будет произведено объединение
      * @example
      * Объединим модели пользователя и группы пользователей:
      * <pre>
@@ -868,83 +863,89 @@ export default class Model extends mixin<
         }
     }
 
-   /**
-    * Возвращает значение первичного ключа модели
-    * @return {*}
-    * @see keyProperty
-    * @see getKeyProperty
-    * @see setKeyProperty
-    * @example
-    * Получим значение первичного ключа статьи:
-    * <pre>
-    *    var article = new Model({
-    *       keyProperty: 'id',
-    *       rawData: {
-    *          id: 1,
-    *          title: 'How to make a Model'
-    *       }
-    *    });
-    *    article.getKey(); // 1
-    * </pre>
-    */
-   getKey(): any {
-      const keyProperty = this.getKeyProperty();
-      if (!keyProperty) {
-         logger.info(this._moduleName + '::getKey(): keyProperty is not defined');
-         return undefined;
-      }
-      return this.get(keyProperty);
-   }
+    /**
+     * Возвращает значение первичного ключа модели
+     * @return {*}
+     * @see keyProperty
+     * @see getKeyProperty
+     * @see setKeyProperty
+     * @example
+     * Получим значение первичного ключа статьи:
+     * <pre>
+     *    var article = new Model({
+     *       keyProperty: 'id',
+     *       rawData: {
+     *          id: 1,
+     *          title: 'How to make a Model'
+     *       }
+     *    });
+     *    article.getKey(); // 1
+     * </pre>
+     */
+    getKey(): any {
+       const keyProperty = this.getKeyProperty();
+       if (!keyProperty) {
+          logger.info(this._moduleName + '::getKey(): keyProperty is not defined');
+          return undefined;
+       }
+       return this.get(keyProperty);
+    }
 
-   /**
-    * Возвращает название свойства, в котором хранится первичный ключ модели
-    * @return {String}
-    * @see keyProperty
-    * @see setKeyProperty
-    * @see getKey
-    * @example
-    * Получим название свойства первичного ключа:
-    * <pre>
-    *    var article = new Model({
-    *       keyProperty: 'id',
-    *       rawData: {
-    *          id: 1,
-    *          title: 'How to make a Model'
-    *       }
-    *    });
-    *    article.getKeyProperty();//'id'
-    * </pre>
-    */
-   getKeyProperty(): string {
-      return this._$keyProperty;
-   }
+    /**
+     * Возвращает название свойства, в котором хранится первичный ключ модели
+     * @return {String}
+     * @see keyProperty
+     * @see setKeyProperty
+     * @see getKey
+     * @example
+     * Получим название свойства первичного ключа:
+     * <pre>
+     *    var article = new Model({
+     *       keyProperty: 'id',
+     *       rawData: {
+     *          id: 1,
+     *          title: 'How to make a Model'
+     *       }
+     *    });
+     *    article.getKeyProperty();//'id'
+     * </pre>
+     */
+     getKeyProperty(): string {
+         if (!this._$keyProperty) {
+             this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(this._getRawData()) || '';
+         }
+         return this._$keyProperty;
+     }
 
-   /**
-    * Устанавливает название свойства, в котором хранится первичный ключ модели
-    * @param {String} keyProperty Название свойства для первичного ключа модели.
-    * @see keyProperty
-    * @see getKeyProperty
-    * @see getKey
-    * @example
-    * Зададим название свойства первичного ключа:
-    * <pre>
-    *    var article = new Model({
-    *       rawData: {
-    *          id: 1,
-    *          title: 'How to make a Model'
-    *       }
-    *    });
-    *    article.setKeyProperty('id');
-    *    article.getKey(); // 1
-    * </pre>
-    */
-   setKeyProperty(keyProperty: string): void {
-      if (keyProperty && !this.has(keyProperty)) {
-         logger.info(this._moduleName + '::setKeyProperty(): property "' + keyProperty + '" is not defined');
-         return;
-      }
-      this._$keyProperty = keyProperty;
-   }
+    /**
+     * Устанавливает название свойства, в котором хранится первичный ключ модели
+     * @param name Название свойства для первичного ключа модели.
+     * @see keyProperty
+     * @see getKeyProperty
+     * @see getKey
+     * @example
+     * Зададим название свойства первичного ключа:
+     * <pre>
+     *    var article = new Model({
+     *       rawData: {
+     *          id: 1,
+     *          title: 'How to make a Model'
+     *       }
+     *    });
+     *    article.setKeyProperty('id');
+     *    article.getKey(); // 1
+     * </pre>
+     */
+    setKeyProperty(name: string): void {
+        if (this._$keyProperty === name) {
+            return;
+        }
+        if (name && !this.has(name)) {
+            logger.info(this._moduleName + '::setKeyProperty(): property "' + name + '" is not defined');
+            return;
+        }
+        this._$keyProperty = name;
+    }
 
     // endregion
 

@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import Record from 'Types/_entity/Record';
+import {FormatDescriptor} from 'Types/_entity/FormattableMixin';
 import ObservableList from 'Types/_collection/ObservableList';
 import RecordSet from 'Types/_collection/RecordSet';
 import Format from 'Types/_collection/format/Format';
@@ -75,6 +76,24 @@ function getRecord(data?: IData): Record {
 }
 
 describe('Types/_entity/Record', () => {
+    const getFormatDeclaration = () => {
+        return [{
+            name: 'id',
+            type: 'integer'
+        }, {
+            name: 'title',
+            type: 'string'
+        }, {
+            name: 'descr',
+            type: 'string',
+            defaultValue: '-'
+        }, {
+            name: 'main',
+            type: 'boolean',
+            defaultValue: true
+        }];
+    };
+
     let recordData: IData;
     let record: Record;
 
@@ -89,60 +108,6 @@ describe('Types/_entity/Record', () => {
     });
 
     describe('.constructor()', () => {
-        const getFormatDeclaration = () => {
-            return [{
-                name: 'id',
-                type: 'integer'
-            }, {
-                name: 'title',
-                type: 'string'
-            }, {
-                name: 'descr',
-                type: 'string',
-                defaultValue: '-'
-            }, {
-                name: 'main',
-                type: 'boolean',
-                defaultValue: true
-            }];
-        };
-
-        it('should add the default values from injected format to the raw data', () => {
-            const record = new Record({
-                format: getFormatDeclaration()
-            });
-            const data = record.getRawData();
-
-            assert.strictEqual(data.id, 0);
-            assert.strictEqual(data.title, null);
-            assert.strictEqual(data.descr, '-');
-            assert.strictEqual(data.main, true);
-        });
-
-        it('should add the default values from inherited format to the raw data', () => {
-            class SubRecord extends Record {
-                // Just subclass
-            }
-
-            const record = new SubRecord({
-                format: getFormatDeclaration()
-            });
-            const data = record.getRawData();
-
-            assert.strictEqual(data.id, 0);
-            assert.strictEqual(data.title, null);
-            assert.strictEqual(data.descr, '-');
-            assert.strictEqual(data.main, true);
-        });
-
-        it('should ignore option "format" value if "owner" passed', () => {
-            const record = new Record({
-                format: getFormatDeclaration(),
-                owner: new RecordSet()
-            });
-            assert.isNull(record.getRawData());
-        });
-
         it('should throw TypeError if option "owner" value is not a RecordSet', () => {
             let result;
             assert.throws(() => {
@@ -1136,6 +1101,56 @@ describe('Types/_entity/Record', () => {
             assert.strictEqual(recordData, record.getRawData(true));
         });
 
+        it('should return data with default values from subclass\' own format', () => {
+            class SubRecord extends Record {
+                _$format: FormatDescriptor = getFormatDeclaration();
+            }
+
+            const record = new SubRecord();
+            const data = record.getRawData();
+
+            assert.strictEqual(data.id, 0);
+            assert.strictEqual(data.title, null);
+            assert.strictEqual(data.descr, '-');
+            assert.strictEqual(data.main, true);
+        });
+
+        it('should return data with default values from injected format', () => {
+            const record = new Record({
+                format: getFormatDeclaration()
+            });
+            const data = record.getRawData();
+
+            assert.strictEqual(data.id, 0);
+            assert.strictEqual(data.title, null);
+            assert.strictEqual(data.descr, '-');
+            assert.strictEqual(data.main, true);
+        });
+
+        it('should return data with default values from subclass', () => {
+            class SubRecord extends Record {
+                // Just subclass
+            }
+
+            const record = new SubRecord({
+                format: getFormatDeclaration()
+            });
+            const data = record.getRawData();
+
+            assert.strictEqual(data.id, 0);
+            assert.strictEqual(data.title, null);
+            assert.strictEqual(data.descr, '-');
+            assert.strictEqual(data.main, true);
+        });
+
+        it('should ignore option "format" value if "owner" passed', () => {
+            const record = new Record({
+                format: getFormatDeclaration(),
+                owner: new RecordSet()
+            });
+            assert.isNull(record.getRawData());
+        });
+
         it('should change raw data if Enum property changed', () => {
             const record = new Record({
                 rawData: {
@@ -2114,9 +2129,8 @@ describe('Types/_entity/Record', () => {
 
     describe('.toJSON()', () => {
         it('should serialize a Record', () => {
-            const json = record.toJSON();
             const options = (record as any)._getOptions();
-            delete options.owner;
+            const json = record.toJSON();
 
             assert.strictEqual(json.module, 'Types/entity:Record');
             assert.isNumber(json.id);
@@ -2129,13 +2143,10 @@ describe('Types/_entity/Record', () => {
             const record = new Record({
                 format: [{name: 'id', type: 'integer'}]
             });
+            const format = record.getFormat();
             const json = record.toJSON();
 
-            assert.isTrue(
-                record.getFormat().isEqual(
-                    json.state.$options.format
-                )
-            );
+            assert.isTrue(format.isEqual(json.state.$options.format));
         });
 
         it('should set subclass\'s module name from prototype', () => {

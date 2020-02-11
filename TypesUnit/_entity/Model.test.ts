@@ -1463,9 +1463,8 @@ describe('Types/_entity/Model', () => {
 
     describe('.toJSON()', () => {
         it('should serialize a model', () => {
-            const json = model.toJSON();
             const options = (model as any)._getOptions();
-            delete options.owner;
+            const json = model.toJSON();
 
             assert.strictEqual(json.module, 'Types/entity:Model');
             assert.isNumber(json.id);

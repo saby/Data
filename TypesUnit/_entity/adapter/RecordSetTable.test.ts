@@ -270,7 +270,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
     });
 
     describe('.move()', () => {
-        it('should move Smith instead Green', () => {
+        it('should place Smith after Green', () => {
             adapter.move(0, 2);
             assert.strictEqual(
                 'Green',
@@ -286,7 +286,7 @@ describe('Types/_entity/adapter/RecordSetTable', () => {
             );
         });
 
-        it('should move Geller instead Smith', () => {
+        it('should place Geller after Smith', () => {
             adapter.move(2, 0);
             assert.strictEqual(
                 'Geller',
