@@ -91,7 +91,8 @@ Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
 
 Object.assign(DateTime.prototype, {
-   _moduleName: 'Types/entity:DateTime'
+    '[Types/_entity/DateTime]': true,
+    _moduleName: 'Types/entity:DateTime'
 });
 
 register('Types/entity:DateTime', DateTime, {instantiate: false});

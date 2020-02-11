@@ -4,7 +4,6 @@ import IObject from './IObject';
 import IObservableObject from './IObservableObject';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
-import DateTime from './DateTime';
 import DestroyableMixin from './DestroyableMixin';
 import factory from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
@@ -19,8 +18,6 @@ import FormattableMixin, {
     AdapterDescriptor
 } from './FormattableMixin';
 import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
-import TheDate from './Date';
-import Time from './Time';
 import {IReceiver} from './relation';
 import {IAdapter, IRecord, ITable} from './adapter';
 import {Field, IFieldDeclaration, UniversalField} from './format';
@@ -141,13 +138,13 @@ function getValueType(value: any): string | IFieldDeclaration {
             } else if (value && value['[Types/_collection/RecordSet]']) {
                 return 'recordset';
             } else if (value instanceof Date) {
-                if (value instanceof TheDate) {
+                if (value['[Types/_entity/Date]']) {
                      return 'date';
                 }
-                if (value instanceof Time) {
+                if (value['[Types/_entity/Time]']) {
                      return 'time';
                 }
-                if (value instanceof DateTime) {
+                if (value['[Types/_entity/DateTime]']) {
                      return 'datetime';
                 }
                 if (value.hasOwnProperty('_serializeMode')) {
