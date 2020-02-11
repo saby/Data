@@ -10,16 +10,17 @@ import Indexer from './Indexer';
 import {
     FormattableMixin,
     IFormattableOptions,
+    IFormattableSerializableState,
     IObservableObject,
     IProducible,
     InstantiableMixin,
     ISerializableSignature,
     ISerializableState as IDefaultSerializableState,
-    IFormattableSerializableState,
     factory,
     format,
     FormatDescriptor,
     Record,
+    RecordState,
     Model,
     adapter
 } from '../entity';
@@ -284,12 +285,8 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
         FormattableMixin.call(this, options);
 
-        if (!this._$keyProperty) {
-            this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
-        }
-
         if (this._$rawData) {
-            this._assignRawData(this._getRawData(true), true);
+            this._assignRawData(this._getRawDataFromOption(), true);
             this._initByRawData();
         }
 
@@ -309,8 +306,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     /**
      * Возвращает энумератор для перебора записей рекордсета.
      * Пример использования можно посмотреть в модуле {@link Types/_collection/IEnumerable}.
-     * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
-     * @return {Types/_collection/ArrayEnumerator.<Types/_entity/Record>}
+     * @param [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
      * @example
      * Получим сначала все, а затем - измененные записи:
      * <pre>
@@ -343,7 +339,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
-    getEnumerator(state?: string): Arraywise<T> {
+    getEnumerator(state?: RecordState): Arraywise<T> {
         const enumerator = new Arraywise<T>(this._$items);
 
         enumerator.setResolver((index) => this.at(index));
@@ -357,9 +353,9 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
     /**
      * Перебирает записи рекордсета.
-     * @param {Function(Types/_entity/Record, Number)} callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
-     * @param {Types/_entity/Record/RecordState.typedef} [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
-     * @param {Object} [context] Контекст вызова callback
+     * @param callback Функция обратного вызова, аргументами будут переданы запись и ее позиция.
+     * @param [state] Состояние записей, которые требуется перебрать (по умолчанию перебираются все записи)
+     * @param [context] Контекст вызова callback
      * @example
      * Получим сначала все, а затем - измененные записи:
      * <pre>
@@ -389,7 +385,9 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     // output: 'Pineapple', 'Grapefruit'
      * </pre>
      */
-    each(callback: EnumeratorCallback<T, number>, state?: any, context?: object): void {
+    each(callback: EnumeratorCallback<T, number>, context?: object): void;
+    each(callback: EnumeratorCallback<T, number>, state?: RecordState, context?: object): void;
+    each(callback: EnumeratorCallback<T, number>, state?: RecordState | object, context?: object): void {
         if (state instanceof Object) {
             context = state;
             state = undefined;
@@ -441,9 +439,9 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно:
      * лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
      * При недопустимом at генерируется исключение.
-     * @param {Types/_entity/Record} item Запись, из которой будут извлечены сырые данные.
-     * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
-     * @return {Types/_entity/Record} Добавленная запись.
+     * @param item Запись, из которой будут извлечены сырые данные.
+     * @param [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
+     * @return Добавленная запись.
      * @see Types/_collection/ObservableList#add
      * @example
      * Добавим запись в рекордсет:
@@ -482,14 +480,14 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     }
 
     removeAt(index: number): T {
-        (this._getRawDataAdapter() as adapter.ITable).remove(index);
-
         const item = this._$items[index];
-        const result = super.removeAt(index);
 
         if (item) {
             item.detach();
         }
+
+        (this._getRawDataAdapter() as adapter.ITable).remove(index);
+        const result = super.removeAt(index);
 
         return result;
     }
@@ -498,9 +496,9 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      * Заменяет запись в указанной позиции через создание новой записи, в качестве сырых данных для которой будут взяты сырые данные аргумента item.
      * Если формат созданной записи не совпадает с форматом рекордсета, то он будет приведен к нему принудительно: лишние поля будут отброшены, недостающие - проинициализированы значениями по умолчанию.
      * При недопустимом at генерируется исключение.
-     * @param {Types/_entity/Record} item Заменяющая запись, из которой будут извлечены сырые данные.
-     * @param {Number} at Позиция, в которой будет произведена замена
-     * @return {Array.<Types/_entity/Record>} Добавленная запись
+     * @param item Заменяющая запись, из которой будут извлечены сырые данные.
+     * @param at Позиция, в которой будет произведена замена
+     * @return Добавленная запись
      * @see Types/_collection/ObservableList#replace
      * @example
      * Заменим вторую запись:
@@ -863,7 +861,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
     protected _createRawDataAdapter(): adapter.ITable {
         return (this._getAdapter() as adapter.IAdapter).forTable(
-            this._getRawData(true)
+            this._getRawDataFromOption()
         );
     }
 
@@ -1021,7 +1019,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *     <li>Deleted - удаляются из рекордсета, а их state становится Detached;</li>
      *     <li>остальные не меняются.</li>
      * </ul>
-     * @param {Boolean} [spread=false] Распространять изменения по иерархии родителей (будут вызваны acceptChanges всех владельцев).
+     * @param [spread=false] Распространять изменения по иерархии родителей (будут вызваны acceptChanges всех владельцев).
      * @example
      * Подтвердим изменение записи:
      * <pre>
@@ -1135,12 +1133,15 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      * </pre>
      */
     getKeyProperty(): string {
+        if (!this._$keyProperty) {
+            this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
+        }
         return this._$keyProperty;
     }
 
     /**
      * Устанавливает название свойства записи, содержащего первичный ключ
-     * @param {String} name
+     * @param name
      * @see getKeyProperty
      * @see keyProperty
      * @example
@@ -1176,8 +1177,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     /**
      * Возвращает запись по ключу.
      * Если записи с таким ключом нет - возвращает undefined.
-     * @param {String|Number} id Значение первичного ключа.
-     * @return {Types/_entity/Record}
+     * @param id Значение первичного ключа.
      * @example
      * Создадим рекордсет, получим запись по первичному ключу:
      * <pre>
@@ -1196,7 +1196,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      */
     getRecordById(id: string | number): T {
         return this.at(
-            this.getIndexByValue(this._$keyProperty, id)
+            this.getIndexByValue(this.getKeyProperty(), id)
         );
     }
 
@@ -1219,7 +1219,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
                 {
                     format,
                     adapter: this._getAdapter(),
-                    keyProperty: this._$keyProperty
+                    keyProperty: this.getKeyProperty()
                 }
             );
         };
@@ -1289,7 +1289,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      *   <li>results - строка итогов, возвращается как {@link Types/_entity/Record}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
      *   <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
      * </ul>
-     * @param {Object} meta Метаданные.
+     * @param meta Метаданные.
      * @see metaData
      * @see getMetaData
      */
@@ -1318,7 +1318,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
     /**
      * Объединяет два рекордсета.
-     * @param {Types/_collection/RecordSet} recordSet Рекордсет, с которым объединить
+     * @param recordSet Рекордсет, с которым объединить
      * @param {MergeOptions} options Опции операций
      * @see assign
      * @see append
@@ -1342,7 +1342,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
         };
 
         const count = recordSet.getCount();
-        const keyProperty = this._$keyProperty;
+        const keyProperty = this.getKeyProperty();
         const existsIdMap = {};
         const newIdMap = {};
         const toAdd = [];
@@ -1454,11 +1454,11 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     /**
      * Normalizes given records by producing their copies with recordset's format
      * @param items Records to normalize
-     * @param {RecordState} [state] State of produced records
+     * @param [state] State of produced records
      * @param [itsRecordSet] Items are produced from recordset
      * @protected
      */
-    protected _normalizeItems(items: T[], state?: string, itsRecordSet?: boolean): T[] {
+    protected _normalizeItems(items: T[], state?: RecordState, itsRecordSet?: boolean): T[] {
         const formatDefined = this.hasDeclaredFormat();
         const result = [];
         let isEqualFormat;
@@ -1553,7 +1553,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
             adapter: this.getAdapter(),
             rawData,
             instanceState,
-            keyProperty: this._$keyProperty,
+            keyProperty: this.getKeyProperty(),
             formatController: this._$formatController
         });
 
