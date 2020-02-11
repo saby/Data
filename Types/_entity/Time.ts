@@ -14,6 +14,7 @@ export default class Time extends DateTime {
 }
 
 Object.assign(Time.prototype, {
+    '[Types/_entity/Time]': true,
     _moduleName: 'Types/entity:Time'
 });
 
