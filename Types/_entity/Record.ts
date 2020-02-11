@@ -48,10 +48,12 @@ const $changedFields = protect('changedFields');
 /**
  * Возможные состояния записи
  */
-type State = 'Added' | 'Deleted' | 'Changed' | 'Unchanged' | 'Detached';
+export type State = 'Added' | 'Deleted' | 'Changed' | 'Unchanged' | 'Detached';
+
 interface IStatesHash {
     [key: string]: State;
 }
+
 const STATES: IStatesHash = {
     ADDED: 'Added',
     DELETED: 'Deleted',
@@ -548,8 +550,8 @@ export default class Record extends mixin<
 
     /**
      * Перебирает все поля записи
-     * @param {Function(String, *)} callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
-     * @param {Object} [context] Контекст вызова callback.
+     * @param callback Ф-я обратного вызова для каждого поля. Первым аргументом придет название поля, вторым - его значение.
+     * @param [context] Контекст вызова callback.
      * @example
      * Переберем все поля записи:
      * <pre>
@@ -854,7 +856,7 @@ export default class Record extends mixin<
      * @protected
      */
     protected _createRawDataAdapter(): IRecord {
-        return (this._getAdapter() as IAdapter).forRecord(this._getRawData(true));
+        return (this._getAdapter() as IAdapter).forRecord(this._getRawDataFromOption());
     }
 
     /**
@@ -878,8 +880,7 @@ export default class Record extends mixin<
     /**
      * Возвращает признак, что поле с указанным именем было изменено.
      * Если name не передано, то проверяет, что изменено хотя бы одно поле.
-     * @param {String} [name] Имя поля
-     * @return {Boolean}
+     * @param [name] Имя поля
      * @example
      * Проверим изменилось ли поле title:
      * <pre>
@@ -942,6 +943,9 @@ export default class Record extends mixin<
      * Отвязывает запись от рекордсета: сбрасывает ссылку на владельца и устанавливает состояние detached.
      */
     detach(): void {
+        // Enforce to create and init raw data adapter because the instance is now detached from the recordset
+        this._getRawDataAdapter();
+
         this._$owner = null;
         this.setState(STATES.DETACHED);
     }
@@ -973,7 +977,7 @@ export default class Record extends mixin<
 
     /**
      * Устанавливает текущее состояние записи.
-     * @param {RecordState} state Новое состояние записи.
+     * @param state Новое состояние записи.
      * @see state
      * @see getState
      * @example
