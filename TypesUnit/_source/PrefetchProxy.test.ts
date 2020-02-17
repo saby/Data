@@ -120,6 +120,14 @@ describe('Types/_source/PrefetchProxy', () => {
 
             assert.strictEqual(source.getOriginal(), target);
         });
+
+        it('should unwrap the chain of IDecorator instances', () => {
+            const source = new PrefetchProxy({
+                target: new PrefetchProxy({target})
+            });
+
+            assert.strictEqual(source.getOriginal(), target);
+        });
     });
 
     describe('.create()', () => {
