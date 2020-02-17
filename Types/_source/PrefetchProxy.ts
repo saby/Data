@@ -253,7 +253,8 @@ export default class PrefetchProxy extends mixin<
     readonly '[Types/_source/IDecorator]': boolean = true;
 
     getOriginal<T = ITarget>(): T {
-        return this._$target as any;
+        const original = this._$target as any;
+        return original['[Types/_source/IDecorator]'] ? original.getOriginal() : original;
     }
 
     // endregion
