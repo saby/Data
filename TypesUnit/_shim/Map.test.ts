@@ -108,12 +108,13 @@ describe('Types/_shim/Map:MapPolyfill', () => {
         it('should invoke callback for each entry', () => {
             const map = new MapPolyfill();
             const baz = {};
-            const expect = [['foo', 'a'], ['bar', 'b'], [baz, 'c'], ['@key', 'f']];
+            const expect = [['foo', 'a'], ['bar', 'b'], [baz, 'c'], ['@key', 'd'], [null, 'e']];
 
             map.set('foo', 'a');
             map.set('bar', 'b');
             map.set(baz, 'c');
-            map.set('@key', 'f');
+            map.set('@key', 'd');
+            map.set(null, 'e');
 
             let index = 0;
             map.forEach((item, key) => {
@@ -157,6 +158,11 @@ describe('Types/_shim/Map:MapPolyfill', () => {
 
         it('should return undefined if Object is not exists', () => {
             assert.isUndefined(map.get({} as any));
+        });
+
+        it('should return an entry value', () => {
+            map.set(null, 'bar');
+            assert.strictEqual(map.get(null), 'bar');
         });
     });
 
