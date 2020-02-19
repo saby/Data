@@ -13,20 +13,23 @@ interface IIndices {
  */
 function getInsertPosition(items: number[], value: number): number {
     const count = items.length;
-    let distance = count;
-    let position = Math.floor(distance / 2);
-    let having;
-    while (distance > 0 && position < count) {
-        having = items[position];
-        distance = Math.floor(distance / 2);
-        if (having > value) {
-            position -= distance;
+    let begin = 0;
+    let end = count;
+    let delta: number;
+    while ((delta = end - begin) > 0) {
+        let position = begin + Math.floor(delta / 2);
+        let given = items[position];
+        if (given === value) {
+            return position;
+        }
+        if (given > value) {
+            end = position;
         } else {
-            position += Math.max(distance, 1);
+            begin = Math.max(position, begin + 1);
         }
     }
 
-    return position;
+    return begin;
 }
 
 /**

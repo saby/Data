@@ -181,17 +181,46 @@ describe('Types/_collection/Indexer', () => {
     });
 
     describe('.updateIndex()', () => {
-        it('should update indices', () => {
+        it('should update index', () => {
             const pos = 1;
             const oldV = items[pos].id;
             const newV = 100;
 
+            assert.strictEqual(indexer.getIndexByValue('id', oldV), pos);
+
             items[pos].id = newV;
+            indexer.updateIndex(pos, 1);
 
-            const indices = indexer.getIndicesByValue('id', newV);
-            assert.strictEqual(indices[0], pos);
+            assert.strictEqual(indexer.getIndexByValue('id', newV), pos);
+        });
 
-            assert.strictEqual(indexer.getIndicesByValue('id', oldV).length, 0);
+        it('should update index after partial remove', () => {
+            const items = [
+                {id: 1},
+                {id: 1},
+                {id: 1},
+                {id: 1},
+                {id: 1},
+                {id: 1},
+                {id: 1},
+                {id: 1}
+            ];
+
+            const indexer = new Indexer(
+                items,
+                (arr) => arr.length,
+                (arr, at) => arr[at],
+                (item, property) => item[property]
+            );
+
+            assert.deepEqual(indexer.getIndicesByValue('id', 1), [0, 1, 2, 3, 4, 5, 6, 7]);
+
+            const start = 4;
+            const count = 2;
+            indexer.removeFromIndex(start, count);
+            indexer.updateIndex(start, count);
+
+            assert.deepEqual(indexer.getIndicesByValue('id', 1), [0, 1, 2, 3, 4, 5, 6, 7]);
         });
     });
 
