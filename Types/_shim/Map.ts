@@ -18,7 +18,8 @@ export class MapPolyfill<K, V> {
 
     static _getUnhashedKey(key: string): string {
         const strKey = String(key);
-        return strKey.slice(strKey.indexOf('@')+1);
+        const unhashedKey = strKey.slice(strKey.indexOf('@')+1);
+        return unhashedKey === 'null' ? null : unhashedKey;
     }
 
     clear(): void {
@@ -51,7 +52,7 @@ export class MapPolyfill<K, V> {
         // FIXME: now not in insertion order
         const hash = this._hash;
         for (const key in hash) {
-            if (hash.hasOwnProperty(key) ) {
+            if (hash.hasOwnProperty(key)) {
                 const value = hash[key];
                 let ukey: any = MapPolyfill._getUnhashedKey(key);
                 if (this._isObjectKey(ukey)) {
