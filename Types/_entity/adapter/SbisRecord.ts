@@ -108,6 +108,10 @@ export default class SbisRecord extends mixin<
     }
 
     protected _removeD(at: number): void {
+        if (this._formatController) {
+            this._formatController.scanFormats(this._data.d[at]);
+        }
+
         this._data.d.splice(at, 1);
     }
 

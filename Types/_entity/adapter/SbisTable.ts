@@ -98,6 +98,11 @@ export default class SbisTable extends mixin<
     remove(at: number): void {
         this._touchData();
         this._checkRowIndex(at);
+
+        if (this._formatController) {
+            this._formatController.scanFormats(this._data.d[at]);
+        }
+
         this._data.d.splice(at, 1);
     }
 
@@ -274,6 +279,10 @@ export default class SbisTable extends mixin<
     }
 
     protected _removeD(at: number): void {
+        if (this._formatController && this._data.d.length !== 0) {
+            this._formatController.scanFormats(this._data.d[0][at]);
+        }
+
         this._data.d.forEach((item) => {
             item.splice(at, 1);
         });

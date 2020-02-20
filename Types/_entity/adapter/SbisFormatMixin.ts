@@ -23,6 +23,7 @@ import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
 import FormatController from '../adapter/SbisFormatFinder';
 import IFormatController from '../adapter/IFormatController';
+import ISerializedData from './ISerializedData';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -114,14 +115,16 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatContro
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class SbisFormatMixin implements IFormatController {
-   readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+export default abstract class SbisFormatMixin implements IFormatController, ISerializedData {
+    readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
-   readonly '[Types/_entity/format/IFormatController]': boolean;
+    readonly '[Types/_entity/format/IFormatController]': boolean;
 
-   protected _formatController: FormatController;
+    readonly '[Types/_entity/adapter/ISerializedData]': boolean;
 
-   protected _moduleName: string;
+    protected _formatController: FormatController;
+
+    protected _moduleName: string;
 
     /**
      * Сырые данные
@@ -180,7 +183,28 @@ export default abstract class SbisFormatMixin implements IFormatController {
         }
     }
 
-   // endregion
+    // endregion
+
+    // region ISerializedData
+
+    getSerializedData(): string {
+        const format = {};
+
+        return JSON.stringify(this._data, (key, value) => {
+            if (typeof value === 'object' && value.f !== undefined && format[value.f] === undefined) {
+                if (value.s === undefined) {
+                    format[value.f] = this._formatController.getFormat(value.f);
+                    value.s = format[value.f];
+                } else {
+                    format[value.f] = value.s;
+                }
+            }
+
+            return value;
+        });
+    }
+
+    // endregion
 
     // region Public methods
 
@@ -591,12 +615,13 @@ export default abstract class SbisFormatMixin implements IFormatController {
 }
 
 Object.assign(SbisFormatMixin.prototype, {
-   '[Types/_entity/adapter/SbisFormatMixin]': true,
-   '[Types/_entity/format/IFormatController]': true,
-   _data: null,
-   _fieldIndices: null,
-   _format: null,
-   _sharedFieldFormat: null,
-   _sharedFieldMeta: null,
-   _formatController: null
+    '[Types/_entity/adapter/SbisFormatMixin]': true,
+    '[Types/_entity/format/IFormatController]': true,
+    '[Types/_entity/adapter/ISerializedData]': true,
+    _data: null,
+    _fieldIndices: null,
+    _format: null,
+    _sharedFieldFormat: null,
+    _sharedFieldMeta: null,
+    _formatController: null
 });

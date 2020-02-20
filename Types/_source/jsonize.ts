@@ -1,6 +1,12 @@
 import {Date as TheDate, Time, DateTime} from 'Types/entity';
 import {dateToSql, TO_SQL_MODE} from 'Types/formatter';
 import {ExtendDate, IExtendDateConstructor} from '../_declarations';
+import ISerializedData from '../_entity/adapter/ISerializedData';
+import FormattableMixin from '../_entity/FormattableMixin';
+
+interface ISerializableObject {
+    getRawData?: (shared?: boolean) => object;
+}
 
 interface ISerializableObject {
     getRawData?: (shared?: boolean) => object;
@@ -29,6 +35,14 @@ function jsonizePlainObject(obj: object): object {
 }
 
 function jsonizeObject(obj: ISerializableObject | Date | ExtendDate): object | string {
+    if (typeof (obj as FormattableMixin).getAdapter !== 'undefined') {
+        const adapter = (obj as FormattableMixin).getAdapter();
+
+        if (adapter['[Types/_entity/adapter/ISerializedData]']) {
+            return jsonize((adapter as unknown as ISerializedData).getSerializedData());
+        }
+    }
+
     if (typeof (obj as ISerializableObject).getRawData === 'function') {
         // Deal with Types/_entity/FormattableMixin and Types/_source/DataSet
         return jsonize((obj as ISerializableObject).getRawData(true));
