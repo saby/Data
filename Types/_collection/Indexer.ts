@@ -12,18 +12,16 @@ interface IIndices {
  * @param value Вставляемое значение
  */
 function getInsertPosition(items: number[], value: number): number {
-    const count = items.length;
     let begin = 0;
-    let end = count;
+    let end = items.length;
     let delta: number;
     while ((delta = end - begin) > 0) {
-        let position = begin + Math.floor(delta / 2);
-        let given = items[position];
+        const position = begin + Math.floor(delta / 2);
+        const given = items[position];
         if (given === value) {
             return position;
-        }
-        if (given > value) {
-            end = position;
+        } else if (given > value) {
+            end = Math.min(position, end - 1);
         } else {
             begin = Math.max(position, begin + 1);
         }
