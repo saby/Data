@@ -1,24 +1,33 @@
+interface IIndex {
+    [key: string]: number[];
+}
+
+interface IIndices {
+    [key: string]: IIndex;
+}
+
 /**
- * Ищет позицию вставки значения в массив методом деления пополам.
+ * Ищет позицию вставки значения в отсортированный массив методом деления пополам.
  * @param items Массив, значения котрого отсортированы по возрастанию.
  * @param value Вставляемое значение
  */
-function getPosition(items: any[], value: number): number {
-    const count = items.length;
-    let distance = count;
-    let position = Math.floor(distance / 2);
-    let having;
-    while (distance > 0 && position < count) {
-        having = items[position];
-        distance = Math.floor(distance / 2);
-        if (having > value) {
-            position -= distance;
+function getInsertPosition(items: number[], value: number): number {
+    let begin = 0;
+    let end = items.length;
+    let delta: number;
+    while ((delta = end - begin) > 0) {
+        const position = begin + Math.floor(delta / 2);
+        const given = items[position];
+        if (given === value) {
+            return position;
+        } else if (given > value) {
+            end = Math.min(position, end - 1);
         } else {
-            position += Math.max(distance, 1);
+            begin = Math.max(position, begin + 1);
         }
     }
 
-    return position;
+    return begin;
 }
 
 /**
@@ -51,7 +60,7 @@ export default class Indexer<T> {
     /**
      * Индексы, распределенные по полям
      */
-    _indices: object;
+    _indices: IIndices;
 
     /**
      * Конструктор
@@ -193,7 +202,7 @@ export default class Indexer<T> {
      * @param property Название свойства.
      * @protected
      */
-    protected _getIndex(property: string): any[] {
+    protected _getIndex(property: string): IIndex {
         if (!property) {
             return undefined;
         }
@@ -265,7 +274,7 @@ export default class Indexer<T> {
             }
             positions = index[value];
             positions.splice(
-                getPosition(positions, i),
+                getInsertPosition(positions, i),
                 0,
                 i
             );
