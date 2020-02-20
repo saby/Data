@@ -27,6 +27,7 @@
 
 # Temporarily: for compiled tests
 /TypesUnit/_chain/**/*.js
+/TypesUnit/_collection/Indexer.test.js
 /TypesUnit/_collection/ObservableList.test.js
 /TypesUnit/_collection/RecordSet.test.js
 /TypesUnit/_display/**/*.js
