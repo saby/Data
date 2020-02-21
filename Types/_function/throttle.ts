@@ -13,7 +13,7 @@
  *          После выполнения также генерируется задержка.</li>
  * </ol>
  *
- * Антиподом throttle является функция {@link Types/_function/debounce}
+ * Противоположностью throttle является функция {@link Types/_function/debounce}
  *
  * <h2>Параметры функции</h2>
  * <ul>
