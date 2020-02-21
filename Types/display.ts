@@ -9,8 +9,12 @@
  * @includes Search Types/_display/Search
  * @includes Tree Types/_display/Tree
  * @public
+ * @deprecated
  * @author Мальцев А.А.
  */
+
+import {logger} from './util';
+logger.info('Types/display', 'Module is deprecated since 20.2000 and will be removed in 20.3000.');
 
 export {default as Abstract} from './_display/Abstract';
 export {default as Collection} from './_display/Collection';
