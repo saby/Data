@@ -2,6 +2,7 @@
  * Library that provides various kinds of entities.
  * @library Types/entity
  * @includes adapter Types/_entity/adapter
+ * @includes CancelablePromise Types/_entity/CancelablePromise
  * @includes compare Types/_entity/compare
  * @includes Date Types/_entity/Date
  * @includes DateTime Types/_entity/DateTime
@@ -31,6 +32,10 @@
 
 import * as adapter from './_entity/adapter';
 export {adapter};
+export {
+    default as CancelablePromise,
+    PromiseCanceledError
+} from './_entity/CancelablePromise';
 export {default as CloneableMixin} from './_entity/CloneableMixin';
 import * as compare from './_entity/compare';
 export {compare};
