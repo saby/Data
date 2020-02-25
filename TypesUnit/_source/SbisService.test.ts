@@ -11,6 +11,7 @@ import Query, {
     ExpandMode,
     NavigationType
 } from 'Types/_source/Query';
+import Record from 'Types/_entity/Record';
 import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
 import List from 'Types/_collection/List';
@@ -989,6 +990,18 @@ describe('Types/_source/SbisService', () => {
                     const args = SbisBusinessLogic.lastRequest.args;
                     assert.strictEqual(args.Фильтр.s.length, 0);
                     assert.strictEqual(args.Фильтр.d.length, 0);
+                });
+            });
+
+            it('should generate request with filter given as Record instance', () => {
+                const query = new Query();
+                const where = new Record({
+                    rawData: {foo: 'bar'}
+                });
+                query.where(where);
+                return service.query(query).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+                    assert.deepEqual(args.Фильтр, {foo: 'bar'});
                 });
             });
 
