@@ -1946,7 +1946,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (contents['[Types/_entity/Model]']) {
             uid = (contents as any).getKey();
         } else if (this._$keyProperty) {
-            uid = object.getPropertyValue(contents, this._$keyProperty);
+            uid = object.getPropertyValue(contents as unknown, this._$keyProperty as never);
         } else {
             throw new Error('Option "keyProperty" must be defined to extract item unique id.');
         }

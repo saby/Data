@@ -42,11 +42,11 @@ export default class RecordSet<TData extends CollectionRecordSet = CollectionRec
     }
 
     getProperty(data: object, property: string): any {
-        return object.getPropertyValue(data, property);
+        return object.getPropertyValue(data, property as never);
     }
 
     setProperty(data: object, property: string, value: any): void {
-        return object.setPropertyValue(data, property, value);
+        return object.setPropertyValue(data, property as never, value as never);
     }
 
     getKeyField(data: any): string {

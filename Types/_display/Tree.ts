@@ -449,11 +449,11 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 invertLogic = !invertLogic;
             }
 
-            const hasChildren = object.getPropertyValue<boolean>(options.contents, hasChildrenProperty);
+            const hasChildren = object.getPropertyValue(options.contents, hasChildrenProperty) as unknown as boolean;
             options.hasChildren = invertLogic ? !hasChildren : hasChildren;
 
             if (!('node' in options)) {
-                options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
+                options.node = object.getPropertyValue(options.contents, this._$nodeProperty) as unknown as boolean;
             }
 
             return parent.call(this, options);
