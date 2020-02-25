@@ -436,7 +436,13 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
 function getFilterParams(query: Query): object | null {
     let params = null;
     if (query) {
-        params = expressionToObject(query.getWhere());
+        const whereExpr = query.getWhere();
+        // Pass records and models 'as is'
+        if (DataMixin.isModelInstance(whereExpr)) {
+            params = whereExpr;
+        } else {
+            params = expressionToObject(whereExpr);
+        }
 
         const meta = query.getMeta();
         if (meta) {
