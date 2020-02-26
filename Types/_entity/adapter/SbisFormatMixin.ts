@@ -195,16 +195,21 @@ export default abstract class SbisFormatMixin implements IFormatController {
                     get: function(): FormatController {
                         return this._formatController;
                     }.bind(this)
+                },
+                getDataFormatJson: {
+                    enumerable: false,
+                    value: this.getDataFormatJson
                 }
             });
-
              */
 
-            (data as any).toJSON = function() {
-                this.getDataFormatJson(data, {});
+            const getDataFormatJson = this.getDataFormatJson.bind(this);
 
-                return data;
-            }.bind(this);
+            (data as any).toJSON = function() {
+                getDataFormatJson(this, {});
+
+                return this;
+            };
         }
 
         return data;
