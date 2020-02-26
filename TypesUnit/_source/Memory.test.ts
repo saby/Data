@@ -474,7 +474,7 @@ describe('Types/_source/Memory', () => {
             });
 
             return source.query().then((ds) => {
-                assert.deepEqual(ds.getRawData().items.s, artifact);
+                assert.deepEqual((ds.getRawData().items as typeof data).s, artifact);
             });
         });
 
@@ -492,7 +492,7 @@ describe('Types/_source/Memory', () => {
 
             query.where({foo: 2});
             return source.query(query).then((ds) => {
-                assert.deepEqual(ds.getRawData().items.s, artifact);
+                assert.deepEqual((ds.getRawData().items as typeof data).s, artifact);
             });
         });
 

@@ -2,6 +2,7 @@ import ICrud from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IDecorator from './IDecorator';
 import Memory, {IOptions as IMemoryOptions} from './Memory';
+import {IQueryRawData} from './Local';
 import Query from './Query';
 import DataSet from './DataSet';
 import {
@@ -188,7 +189,7 @@ export default class HierarchicalMemory extends mixin<
                     }
 
                     // Store breadcrumbs as 'path' in meta data
-                    const data = response.getRawData();
+                    const data = response.getRawData() as IQueryRawData;
                     if (data) {
                         const metaData =  data.meta || {};
                         metaData.path = breadcrumbs;

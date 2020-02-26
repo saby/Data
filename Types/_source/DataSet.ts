@@ -4,23 +4,28 @@ import {
     SerializableMixin,
     AdapterDescriptor,
     Model,
-    adapter
+    adapter,
+    IObject
 } from '../entity';
 import {create, register} from '../di';
 import {mixin} from '../util';
-import {RecordSet} from '../collection';
+import {IList, RecordSet} from '../collection';
 
 type TypeDeclaration = Function | string;
 
-export interface IOptions {
+export interface IOptions<T = unknown> {
     adapter?: AdapterDescriptor;
     itemsProperty?: string;
     keyProperty?: string;
     listModule?: TypeDeclaration;
     metaProperty?: string;
     model?: TypeDeclaration;
-    rawData?: any;
+    rawData?: T;
     writable?: boolean;
+}
+
+interface IRawDataWithTotal {
+    total: number | boolean;
 }
 
 /**
@@ -142,7 +147,7 @@ export interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default class DataSet extends mixin<
+export default class DataSet<TRawData extends unknown = unknown> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin
@@ -197,7 +202,7 @@ export default class DataSet extends mixin<
      *     console.log(characters.at(0).get('lastName')); // Connor
      * </pre>
      */
-    protected _$rawData: any;
+    protected _$rawData: TRawData;
 
     /**
      * @cfg {String|Function} Конструктор записей, порождаемых набором данных. По умолчанию {@link Types/_entity/Model}.
@@ -315,7 +320,7 @@ export default class DataSet extends mixin<
         this._$writable = !!value;
     }
 
-    constructor(options?: IOptions) {
+    constructor(options?: IOptions<TRawData>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
@@ -564,24 +569,24 @@ export default class DataSet extends mixin<
      *     console.log(topics.at(0).get('title')); // 'Marvel Comics'
      * </pre>
      */
-    getAll(property?: string): RecordSet {
+    getAll<T extends IList<unknown> = RecordSet>(property?: string): T {
         this._checkAdapter();
         if (property === undefined) {
             property = this._$itemsProperty;
         }
 
-        const items = this._getListInstance(
+        const items = this._getListInstance<T | RecordSet>(
             this._getDataProperty(property)
         );
 
-        if (this._$metaProperty && items.getMetaData instanceof Function) {
-            let itemsMetaData = items.getMetaData();
+        if (this._$metaProperty && (items as RecordSet).getMetaData instanceof Function) {
+            let itemsMetaData = (items as RecordSet).getMetaData();
             let metaData = this.getMetaData();
             let someInMetaData = Object.keys(metaData).length > 0;
 
             // FIXME: don't use deprecated 'total' property from raw data
-            if (!someInMetaData && this._$rawData && this._$rawData.total) {
-                metaData = {total: this._$rawData.total};
+            if (!someInMetaData && this._$rawData && (this._$rawData as IRawDataWithTotal).total) {
+                metaData = {total: (this._$rawData as IRawDataWithTotal).total};
                 someInMetaData = true;
             }
 
@@ -590,14 +595,14 @@ export default class DataSet extends mixin<
 
                 // FIXME: don't use 'more' anymore
                 if (!itemsMetaData.hasOwnProperty('more') && metaData.hasOwnProperty('total')) {
-                    itemsMetaData.more = (<any> metaData).total;
+                    itemsMetaData.more = (metaData as any).total;
                 }
 
-                items.setMetaData(itemsMetaData);
+                (items as RecordSet).setMetaData(itemsMetaData);
             }
         }
 
-        return items;
+        return items as T;
     }
 
     /**
@@ -645,7 +650,7 @@ export default class DataSet extends mixin<
      *     console.log(topic.get('title')); // 'Marvel Comics'
      * </pre>
      */
-    getRow(property?: string): Model {
+    getRow<T extends IObject = Model>(property?: string): T {
         this._checkAdapter();
         if (property === undefined) {
             property = this._$itemsProperty;
@@ -700,11 +705,11 @@ export default class DataSet extends mixin<
      *     console.log(stat.getScalar('closed')); // 123
      * </pre>
      */
-    getScalar(property?: string): string | number | boolean {
+    getScalar<T = string | number | boolean>(property?: string): T {
         if (property === undefined) {
             property = this._$itemsProperty;
         }
-        return this._getDataProperty(property);
+        return this._getDataProperty<T>(property);
     }
 
     /**
@@ -722,7 +727,7 @@ export default class DataSet extends mixin<
      * @see metaProperty
      */
     getMetaData<T = object>(): T {
-        return this._$metaProperty && this._getDataProperty(this._$metaProperty) || {};
+        return this._$metaProperty && this._getDataProperty<T>(this._$metaProperty) || ({} as T);
     }
 
     /**
@@ -774,8 +779,8 @@ export default class DataSet extends mixin<
      *     console.log(data.getProperty('article')); // {id: 1, title: 'C++ Beginners Tutorial'}
      * </pre>
      */
-    getProperty(property?: string): any {
-        return this._getDataProperty(property);
+    getProperty<T = any>(property?: string): T {
+        return this._getDataProperty<T>(property);
     }
 
     /**
@@ -798,7 +803,7 @@ export default class DataSet extends mixin<
      *     console.log(data.getRawData()); // {id: 1, title: 'C++ Beginners Tutorial'}
      * </pre>
      */
-    getRawData(): any {
+    getRawData(): TRawData {
         return this._$rawData;
     }
 
@@ -820,7 +825,7 @@ export default class DataSet extends mixin<
      *     console.log(data.getRow().get('title')); // 'C++ Beginners Tutorial'
      * </pre>
      */
-    setRawData(rawData: any): void {
+    setRawData(rawData: TRawData): void {
         this._$rawData = rawData;
     }
 
@@ -833,7 +838,7 @@ export default class DataSet extends mixin<
      * @param property Свойство
      * @protected
      */
-    protected _getDataProperty(property: string): any {
+    protected _getDataProperty<T>(property: string): T {
         this._checkAdapter();
         return property
             ? this.getAdapter().getProperty(this._$rawData, property)
@@ -845,11 +850,11 @@ export default class DataSet extends mixin<
      * @param rawData Данные модели
      * @protected
      */
-    protected _getModelInstance(rawData: any): Model {
+    protected _getModelInstance<T extends IObject>(rawData: unknown): T {
         if (!this._$model) {
             throw new Error('Model is not defined');
         }
-        return create<Model>(this._$model, {
+        return create<T>(this._$model, {
             writable: this._$writable,
             rawData,
             adapter: this._$adapter,
@@ -862,8 +867,8 @@ export default class DataSet extends mixin<
      * @param rawData Данные рекордсета
      * @protected
      */
-    protected _getListInstance(rawData: any): RecordSet {
-        return create<RecordSet>(this._$listModule, {
+    protected _getListInstance<T extends IList<unknown>>(rawData: unknown): T {
+        return create<T>(this._$listModule, {
             writable: this._$writable,
             rawData,
             adapter: this._$adapter,
