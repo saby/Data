@@ -1,18 +1,14 @@
 import {constants} from 'Env/Env';
 
-/**
- * Формат даты, используемый в SQL
- */
+// Date format which is preferred in SQL
 const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2})[:-]*([0-9]{2})*$/;
 
 /**
- * Создает дату из строки даты в формате SQL. Если строка содержит информацию о времени, то оно будет приведено к
- * местному.
+ * Creates Date instance from a string in SQL format. In case when those string has an information about time zone the result date will be converted to the local time zone.
  * @function
  * @name Types/_formatter/dateFromSql
- * @param dateTime Дата и/или время в формате SQL
- * @param defaultTimeZone Использовать указанная временную зону (смещение относительно часового пояса UTC в
- * минутах), если в строке временная зона не задана.
+ * @param dateTime Date and/or time in SQL format
+ * @param defaultTimeZone Use given time zone to convert given date to (contains offset from UTC in minutes). Uses in case when given date doesn't contain information about time zone.
  * @public
  * @author Мальцев А.А.
  */
