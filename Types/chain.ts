@@ -1,7 +1,8 @@
 /**
- * Library that provides chained lazy calculations over various kinds of collections
+ * Library that provides chained lazy calculations over various kinds of collections.
  * @library Types/chain
  * @includes factory Types/_chain/factory
+ * @includes Abstract Types/_chain/Abstract
  * @public
  * @author Мальцев А.А.
  */

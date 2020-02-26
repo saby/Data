@@ -278,8 +278,9 @@ function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
 
 /**
  * Creates type descriptor which checks given value type.
- *
- * You can set the type restriction:
+ * @remark
+ * You can set:
+ * - type restriction:
  * <pre>
  * import {descriptor} from 'Types/entity';
  *
