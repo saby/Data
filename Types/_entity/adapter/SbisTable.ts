@@ -89,10 +89,10 @@ export default class SbisTable extends mixin<
     }
 
     at(index: number): ITableFormat {
-        return this._isValidData() && this._data.d[index] ? {
+        return this._isValidData() && this._data.d[index] ? this.replaceToJSON({
             d: this._data.d[index],
             s: this._data.s
-        } : undefined;
+        }) : undefined;
     }
 
     remove(at: number): void {

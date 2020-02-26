@@ -786,9 +786,8 @@ describe('Types/_entity/adapter/SbisTable', () => {
 
         it('serialize data chunk from data table', () => {
             adapter.setFormatController(new SbisFormatFinder(data));
-            adapter.remove(0);
-            const serializedData = adapter.getSerializedData();
-            assert.equal(serializedData, '{"f":0,"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}],"d":[[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],[2,{"f":1,"d":["Hyundai","ix35"]}]],"_type":"recordset"}');
+            const chunkData = adapter.at(1);
+            assert.equal(JSON.stringify(chunkData), '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}');
         });
     });
 });

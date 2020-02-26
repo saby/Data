@@ -23,7 +23,6 @@ import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
 import FormatController from '../adapter/SbisFormatFinder';
 import IFormatController from '../adapter/IFormatController';
-import ISerializedData from './ISerializedData';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -115,7 +114,7 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatContro
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class SbisFormatMixin implements IFormatController, ISerializedData {
+export default abstract class SbisFormatMixin implements IFormatController {
     readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
     readonly '[Types/_entity/format/IFormatController]': boolean;
@@ -187,21 +186,51 @@ export default abstract class SbisFormatMixin implements IFormatController, ISer
 
     // region ISerializedData
 
-    getSerializedData(): string {
-        const format = {};
+    replaceToJSON<T>(data: T): T {
+        if (data && typeof data === 'object') {
+            /*
+            Object.defineProperties(data, {
+                _formatController: {
+                    enumerable: false,
+                    get: function(): FormatController {
+                        return this._formatController;
+                    }.bind(this)
+                }
+            });
 
-        return JSON.stringify(this._data, (key, value) => {
-            if (typeof value === 'object' && value.f !== undefined && format[value.f] === undefined) {
-                if (value.s === undefined) {
-                    format[value.f] = this._formatController.getFormat(value.f);
-                    value.s = format[value.f];
+             */
+
+            (data as any).toJSON = function() {
+                this.getDataFormatJson(data, {});
+
+                return data;
+            }.bind(this);
+        }
+
+        return data;
+    }
+
+    getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
+        if (Array.isArray(data)) {
+            for (const item of data) {
+                this.getDataFormatJson(item, formats);
+            }
+        } else if (data && typeof data === 'object') {
+            const record = (data as IRecordFormat);
+
+            if (record.f && !formats[record.f]) {
+                if (!record.s) {
+                    record.s = this._formatController.getFormat(record.f);
+                    formats[record.f] = record.s;
                 } else {
-                    format[value.f] = value.s;
+                    formats[record.f] = record.s;
                 }
             }
 
-            return value;
-        });
+            if (record.d) {
+                this.getDataFormatJson(record.d, formats);
+            }
+        }
     }
 
     // endregion
