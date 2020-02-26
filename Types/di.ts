@@ -180,8 +180,11 @@ export function isInstantiable(alias: string): boolean {
  *     });
  * </pre>
  */
-export function create<T>(alias: string | Function | object, options?: IHashMap<any>): T {
-    const result = resolve<T>(alias, options);
+export function create<TResult, TOptions = IHashMap<any>>(
+    alias: string | Function | object,
+    options?: TOptions
+): TResult {
+    const result = resolve<TResult>(alias, options);
     if (typeof result === 'function') {
         return resolve(result, options);
     }
@@ -217,7 +220,10 @@ export function create<T>(alias: string | Function | object, options?: IHashMap<
  *     });
  * </pre>
  */
-export function resolve<T>(alias: string | Function | object, options?: IHashMap<any>): T {
+export function resolve<TResult, TOptions = IHashMap<any>>(
+    alias: string | Function | object,
+    options?: TOptions
+): TResult {
     const aliasType = typeof alias;
     let Factory;
     let config: IOptions;
