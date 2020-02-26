@@ -779,7 +779,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
             return (item) => item;
         }
 
-        return (item) => object.getPropertyValue(item, name);
+        return (item: unknown) => object.getPropertyValue(item, name);
     }
 
     // endregion

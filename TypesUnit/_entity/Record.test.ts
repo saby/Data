@@ -69,7 +69,7 @@ function getRecordFormat(): FormatDeclaration {
     ];
 }
 
-function getRecord(data?: IData): Record {
+function getRecord(data?: IData): Record<IData> {
     return new Record({
         rawData: data || getRecordData()
     });
@@ -95,7 +95,7 @@ describe('Types/_entity/Record', () => {
     };
 
     let recordData: IData;
-    let record: Record;
+    let record: Record<IData>;
 
     beforeEach(() => {
         recordData = getRecordData();
@@ -134,8 +134,17 @@ describe('Types/_entity/Record', () => {
 
     describe('.destroy()', () => {
         it('should destroy only instances of Types/_entity/DestroyableMixin', () => {
-            const root = new Record();
-            const foo = {
+            interface IDestroyableMock {
+                readonly destroyed: boolean;
+                destroy(): void;
+            }
+            interface IRecord {
+                foo: IDestroyableMock;
+                bar: Record<unknown>;
+            }
+
+            const root = new Record<IRecord>();
+            const foo: IDestroyableMock = {
                 destroyed: false,
                 destroy: () => {
                     this.destroyed = true;
@@ -177,6 +186,7 @@ describe('Types/_entity/Record', () => {
 
     describe('.get()', () => {
         it('should return a value from the raw data', () => {
+            record.get('title').substr(0);
             assert.strictEqual(record.get('max'), recordData.max);
             assert.strictEqual(record.get('title'), recordData.title);
             assert.strictEqual(record.get('id'), recordData.id);
@@ -192,7 +202,7 @@ describe('Types/_entity/Record', () => {
                 }
             }
 
-            const record = new Record({
+            const record = new Record<{foo: MyNumber}>({
                 format: [
                     {name: 'foo', type: MyNumber}
                 ],
@@ -203,11 +213,11 @@ describe('Types/_entity/Record', () => {
 
             const value = record.get('foo');
             assert.instanceOf(value, MyNumber);
-            assert.equal(value, 1000);
+            assert.equal(Number(value), 1000);
         });
 
         it('should return a single instance for Object', () => {
-            const record = new Record({
+            const record = new Record<{rec: Record<unknown>}>({
                 adapter: new SbisAdapter(),
                 rawData: getRecordSbisData()
             });
@@ -220,7 +230,7 @@ describe('Types/_entity/Record', () => {
 
         it('should return cached field value', () => {
             const values = [1, 2, 3];
-            const model = new Record({
+            const model = new Record<{foo: number}>({
                 cacheMode: Record.CACHE_MODE_ALL,
                 rawData: {
                     get foo(): number {
@@ -449,6 +459,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should return the same instance of Object', () => {
+            const record = new Record<{obj: object}>();
             const obj = {};
             record.set('obj', obj);
             assert.strictEqual(record.get('obj'), obj);
@@ -553,6 +564,8 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should trigger onPropertyChange one by one', () => {
+            const record = new Record();
+
             const expect = ['f1', 'f2', 'f3'];
             const order = [];
             record.subscribe('onPropertyChange', (e, properties) => {
@@ -594,6 +607,7 @@ describe('Types/_entity/Record', () => {
                 firedCount++;
             };
 
+            const record = new Record();
             record.set('instance', instance);
             record.subscribe('onPropertyChange', handler);
             record.set('instance', instance);
@@ -1401,7 +1415,7 @@ describe('Types/_entity/Record', () => {
 
             assert.strictEqual(record.getFormat().at(index).getName(), fieldName);
             assert.strictEqual(record.getFormat().at(index).getDefaultValue(), fieldDefault);
-            assert.strictEqual(record.get(fieldName), fieldDefault);
+            assert.strictEqual(record.get(fieldName as any), fieldDefault);
             assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
         });
 
@@ -1417,7 +1431,7 @@ describe('Types/_entity/Record', () => {
 
             assert.strictEqual(record.getFormat().at(index).getName(), fieldName);
             assert.strictEqual(record.getFormat().at(index).getDefaultValue(), fieldDefault);
-            assert.strictEqual(record.get(fieldName), fieldDefault);
+            assert.strictEqual(record.get(fieldName as any), fieldDefault);
             assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
         });
 
@@ -1426,7 +1440,7 @@ describe('Types/_entity/Record', () => {
             const fieldValue = 'root';
             record.addField({name: fieldName, type: 'string', defaultValue: 'user'}, 0, fieldValue);
 
-            assert.strictEqual(record.get(fieldName), fieldValue);
+            assert.strictEqual(record.get(fieldName as any), fieldValue);
             assert.strictEqual(record.getRawData()[fieldName], fieldValue);
         });
 
@@ -1457,7 +1471,7 @@ describe('Types/_entity/Record', () => {
             const fieldName = 'rec';
             record.addField({name: fieldName, type: 'record'});
 
-            assert.isNull(record.get(fieldName));
+            assert.isNull(record.get(fieldName as any));
             assert.isNull(record.getRawData()[fieldName]);
         });
 
@@ -1469,7 +1483,7 @@ describe('Types/_entity/Record', () => {
                 new Record({rawData: {a: 1}})
             );
 
-            assert.strictEqual(record.get(fieldName).get('a'), 1);
+            assert.strictEqual(record.get(fieldName as any).get('a'), 1);
             assert.strictEqual(record.getRawData()[fieldName].a, 1);
         });
 
@@ -1477,7 +1491,7 @@ describe('Types/_entity/Record', () => {
             const fieldName = 'rs';
             record.addField({name: fieldName, type: 'recordset'});
 
-            assert.isNull(record.get(fieldName));
+            assert.isNull(record.get(fieldName as any));
             assert.isNull(record.getRawData()[fieldName]);
         });
 
@@ -1489,7 +1503,7 @@ describe('Types/_entity/Record', () => {
                 new RecordSet({rawData: [{a: 1}]})
             );
 
-            assert.strictEqual(record.get(fieldName).at(0).get('a'), 1);
+            assert.strictEqual(record.get(fieldName as any).at(0).get('a'), 1);
             assert.strictEqual(record.getRawData()[fieldName][0].a, 1);
         });
 
@@ -1619,7 +1633,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should remove field from changed', () => {
-            record = new Record();
+            const record = new Record();
             record.set('foo', 'bar');
 
             assert.isTrue(record.isChanged('foo'));
@@ -1728,7 +1742,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should remove field from changed', () => {
-            record = new Record({
+            const record = new Record({
                 format: {foo: String},
                 adapter: new SbisAdapter()
             });
@@ -1797,7 +1811,7 @@ describe('Types/_entity/Record', () => {
         });
 
         it('should return true after set a new field', () => {
-            record.set('aaa', 321);
+            record.set('aaa' as any, 321);
             assert.isTrue(record.isChanged('aaa'));
             assert.isTrue(record.isChanged());
         });
@@ -1958,7 +1972,7 @@ describe('Types/_entity/Record', () => {
             assert.strictEqual(record.isChanged(), cloneA.isChanged());
             assert.isFalse(cloneA.isChanged());
 
-            record.set('a', 1);
+            record.set('a' as any, 1);
             const cloneB = record.clone();
             assert.strictEqual(record.isChanged('a'), cloneB.isChanged('a'));
             assert.isTrue(cloneB.isChanged('a'));
