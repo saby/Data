@@ -4,7 +4,7 @@
  * @author Мальцев А.А.
  */
 
-import { IObject, ICloneable } from '../entity';
+import {IObject, ICloneable} from '../entity';
 import {Set} from '../shim';
 import Serializer = require('Core/Serializer');
 
@@ -17,15 +17,15 @@ function getPropertyMethodName(property: string, prefix: string): string {
  * @param obj Объект.
  * @param property Название свойства.
  */
-function getPropertyValue<T, K extends keyof T>(obj: T | IObject<T>, property: K): T[K] {
+function getPropertyValue<T>(obj: unknown | IObject, property: string): T {
     if (!obj  || typeof obj !== 'object') {
         return undefined;
     }
 
-    const checkedProperty = property || '' as K;
+    const checkedProperty = property || '';
 
     if (checkedProperty in obj) {
-        return (obj as T)[checkedProperty];
+        return obj[checkedProperty];
     }
 
     if (obj['[Types/_entity/IObject]']) {
@@ -46,15 +46,15 @@ function getPropertyValue<T, K extends keyof T>(obj: T | IObject<T>, property: K
  * @param property Название свойства.
  * @param value Значение свойства.
  */
-function setPropertyValue<T, K extends keyof T>(obj: T | IObject<T>, property: K, value: T[K]): void {
+function setPropertyValue<T>(obj: unknown | IObject, property: string, value: T): void {
     if (!obj  || typeof obj !== 'object') {
         throw new TypeError('Argument object should be an instance of Object');
     }
 
-    const checkedProperty = property || '' as K;
+    const checkedProperty = property || '';
 
     if (checkedProperty in obj) {
-        (obj as T)[checkedProperty] = value;
+        obj[checkedProperty] = value;
         return;
     }
 

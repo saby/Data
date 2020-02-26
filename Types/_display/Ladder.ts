@@ -529,8 +529,8 @@ export default class Ladder<S, T extends CollectionItem<S> = CollectionItem<S>> 
         const collectionItems = this._collectionItems;
         const prev = (byOriginal ? collection.at(idx - 1) : collectionItems[idx - 1]).getContents();
         const curr = (byOriginal ? collection.at(idx) : collectionItems[idx]).getContents();
-        let prevVal = object.getPropertyValue(prev as unknown, columnName as never) as any;
-        let currVal = object.getPropertyValue(curr as unknown, columnName as never) as any;
+        let prevVal = object.getPropertyValue(prev, columnName);
+        let currVal = object.getPropertyValue(curr, columnName);
 
         if (this._converters && this._converters.hasOwnProperty(columnName)) {
             prevVal = this._converters[columnName](prevVal, prev);

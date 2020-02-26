@@ -205,7 +205,7 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
             item = this._getItemAt(collection, path[level]);
             level++;
             if (level < path.length) {
-                collection = object.getPropertyValue(item as unknown, childrenProperty as never);
+                collection = object.getPropertyValue(item, childrenProperty);
             }
         }
         return item;

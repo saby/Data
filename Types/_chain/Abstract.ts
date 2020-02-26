@@ -395,7 +395,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * </pre>
      */
     pluck<S>(propertyName: string): Mapped<S> {
-        return this.map((item) => object.getPropertyValue(item as unknown, propertyName as never));
+        return this.map((item) => object.getPropertyValue(item, propertyName));
     }
 
     /**
@@ -670,7 +670,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
     where(properties: object): Filtered<T> {
         const keys = Object.keys(properties);
         return this.filter((item) => keys.reduce(
-            (prev, key) => prev && object.getPropertyValue(item as unknown, key as never) === properties[key],
+            (prev, key) => prev && object.getPropertyValue(item, key) === properties[key],
             true
         ));
     }
@@ -779,7 +779,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
             return (item) => item;
         }
 
-        return (item: unknown) => object.getPropertyValue(item, name as never);
+        return (item: unknown) => object.getPropertyValue(item, name);
     }
 
     // endregion
