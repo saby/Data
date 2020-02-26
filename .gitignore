@@ -32,6 +32,7 @@
 /TypesUnit/_collection/RecordSet.test.js
 /TypesUnit/_display/**/*.js
 /TypesUnit/_entity/adapter/**/*.test.js
+/TypesUnit/_entity/CancelablePromise.test.js
 /TypesUnit/_entity/compare/**/*.test.js
 /TypesUnit/_entity/Date.test.js
 /TypesUnit/_entity/dateParser.test.js
