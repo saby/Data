@@ -1,14 +1,7 @@
-/**
- * @typedef {String} SerializeMode
- * @variant MODE_DATETIME Дата в время
- * @variant MODE_DATE Дата
- * @variant MODE_TIME Время
- */
-
 import dateFormatter from './date';
 import {IHashMap} from '../_declarations';
 
-type SerializationMode = 'time' | 'date' | 'datetime';
+export type SerializationMode = 'time' | 'date' | 'datetime';
 
 const MODE: IHashMap<SerializationMode> = {
     TIME: 'time',
