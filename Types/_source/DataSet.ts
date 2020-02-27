@@ -5,22 +5,30 @@ import {
     AdapterDescriptor,
     Model,
     adapter,
-    IObject
+    IObject,
+    IObjectConstructor
 } from '../entity';
 import {create, register} from '../di';
 import {mixin} from '../util';
-import {IList, RecordSet} from '../collection';
+import {IList, IListConstructor, RecordSet} from '../collection';
 
-type TypeDeclaration = Function | string;
+type ModelDeclaration<T> = IObjectConstructor<T> | string;
+type ListDeclaration<T> = IListConstructor<T> | string;
 
-export interface IOptions<T = unknown> {
+export interface IOptions<
+    TData = any,
+    TRawData = any,
+    TItemsProperty extends keyof TRawData = keyof TRawData,
+    TMetaProperty extends keyof TRawData = keyof TRawData,
+    TKeyProperty extends keyof TData = keyof TData
+> {
     adapter?: AdapterDescriptor;
-    itemsProperty?: string;
-    keyProperty?: string;
-    listModule?: TypeDeclaration;
-    metaProperty?: string;
-    model?: TypeDeclaration;
-    rawData?: T;
+    itemsProperty?: TItemsProperty;
+    keyProperty?: TKeyProperty;
+    listModule?: ListDeclaration<IObject<TData>>;
+    metaProperty?: TMetaProperty;
+    model?: ModelDeclaration<TData>;
+    rawData?: TRawData;
     writable?: boolean;
 }
 
@@ -147,7 +155,15 @@ interface IRawDataWithTotal {
  * @public
  * @author Мальцев А.А.
  */
-export default class DataSet<TRawData extends unknown = unknown> extends mixin<
+export default class DataSet<
+    TData = any,
+    TRow extends IObject<TData> = Model<TData>,
+    TList extends IList<IObject<TData>> = RecordSet<Model<TData>>,
+    TKeyProperty extends keyof TData = keyof TData,
+    TRawData extends unknown = any,
+    TItemsProperty extends keyof TRawData = keyof TRawData,
+    TMetaProperty extends keyof TRawData = keyof TRawData
+> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin
@@ -221,7 +237,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     });
      * </pre>
      */
-    protected _$model: TypeDeclaration;
+    protected _$model: ModelDeclaration<TData>;
 
     /**
      * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию
@@ -241,7 +257,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     });
      * </pre>
      */
-    protected _$listModule: TypeDeclaration;
+    protected _$listModule: ListDeclaration<IObject<TData>>;
 
     /**
      * @cfg {String} Название свойства записи, содержащего первичный ключ.
@@ -258,7 +274,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     });
      * </pre>
      */
-    protected _$keyProperty: string;
+    protected _$keyProperty: TKeyProperty;
 
     /**
      * @cfg {String} Название свойства сырых данных, в котором находится основная выборка
@@ -291,14 +307,14 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(orders.at(0).get('id')); // 1
      * </pre>
      */
-    protected _$itemsProperty: string;
+    protected _$itemsProperty: TItemsProperty;
 
     /**
      * @cfg {String} Свойство данных, в которых находятся мета-данные выборки
      * @name Types/_source/DataSet#metaProperty
      * @see getMetaProperty
      */
-    protected _$metaProperty: string;
+    protected _$metaProperty: TMetaProperty;
 
     /**
      * @cfg {Boolean} Можно модифицировать. Признак передается объектам, которые инстанциирует DataSet.
@@ -320,7 +336,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
         this._$writable = !!value;
     }
 
-    constructor(options?: IOptions<TRawData>) {
+    constructor(options?: IOptions<TData, TRawData, TItemsProperty, TMetaProperty, TKeyProperty>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
@@ -370,7 +386,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(data.getModel()); // 'Types/entity:Model'
      * </pre>
      */
-    getModel(): TypeDeclaration {
+    getModel(): ModelDeclaration<TData> {
         return this._$model;
     }
 
@@ -391,7 +407,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     data.setModel(User);
      * </pre>
      */
-    setModel(model: TypeDeclaration): void {
+    setModel(model: ModelDeclaration<TData>): void {
         this._$model = model;
     }
 
@@ -409,7 +425,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(data.getListModule()); // 'Types/collection:RecordSet'
      * </pre>
      */
-    getListModule(): TypeDeclaration {
+    getListModule(): ListDeclaration<IObject<TData>> {
         return this._$listModule;
     }
 
@@ -429,7 +445,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     data.setListModule(Users);
      * </pre>
      */
-    setListModule(listModule: TypeDeclaration): void {
+    setListModule(listModule: ListDeclaration<IObject<TData>>): void {
         this._$listModule = listModule;
     }
 
@@ -449,7 +465,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(data.getKeyProperty()); // 'id'
      * </pre>
      */
-    getKeyProperty(): string {
+    getKeyProperty(): TKeyProperty {
         return this._$keyProperty;
     }
 
@@ -468,7 +484,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     data.setKeyProperty('id');
      * </pre>
      */
-    setKeyProperty(name: string): void {
+    setKeyProperty(name: TKeyProperty): void {
         this._$keyProperty = name;
     }
 
@@ -488,7 +504,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(data.getItemsProperty()); // 'items'
      * </pre>
      */
-    getItemsProperty(): string {
+    getItemsProperty(): TItemsProperty {
         return this._$itemsProperty;
     }
 
@@ -506,7 +522,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     data.setItemsProperty('items');
      * </pre>
      */
-    setItemsProperty(name: string): void {
+    setItemsProperty(name: TItemsProperty): void {
         this._$itemsProperty = name;
     }
 
@@ -569,19 +585,19 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(topics.at(0).get('title')); // 'Marvel Comics'
      * </pre>
      */
-    getAll<T extends IList<unknown> = RecordSet>(property?: string): T {
+    getAll(property?: TItemsProperty): TList {
         this._checkAdapter();
         if (property === undefined) {
             property = this._$itemsProperty;
         }
 
-        const items = this._getListInstance<T | RecordSet>(
+        const items = this._getListInstance<TList | RecordSet>(
             this._getDataProperty(property)
         );
 
         if (this._$metaProperty && (items as RecordSet).getMetaData instanceof Function) {
             let itemsMetaData = (items as RecordSet).getMetaData();
-            let metaData = this.getMetaData();
+            let metaData = this.getMetaData() as unknown;
             let someInMetaData = Object.keys(metaData).length > 0;
 
             // FIXME: don't use deprecated 'total' property from raw data
@@ -591,7 +607,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
             }
 
             if (someInMetaData) {
-                itemsMetaData = {...(itemsMetaData || {}), ...metaData};
+                itemsMetaData = {...(itemsMetaData || {}), ...(metaData as object)};
 
                 // FIXME: don't use 'more' anymore
                 if (!itemsMetaData.hasOwnProperty('more') && metaData.hasOwnProperty('total')) {
@@ -602,7 +618,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
             }
         }
 
-        return items as T;
+        return items as TList;
     }
 
     /**
@@ -650,10 +666,10 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(topic.get('title')); // 'Marvel Comics'
      * </pre>
      */
-    getRow<T extends IObject = Model>(property?: string): T {
+    getRow<K extends keyof TRawData>(property?: K): TRow {
         this._checkAdapter();
         if (property === undefined) {
-            property = this._$itemsProperty;
+            property = this._$itemsProperty as unknown as K;
         }
 
         // FIXME: don't use hardcoded signature for type detection
@@ -705,11 +721,11 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(stat.getScalar('closed')); // 123
      * </pre>
      */
-    getScalar<T = string | number | boolean>(property?: string): T {
+    getScalar<K extends keyof TRawData>(property?: K): TRawData[K] {
         if (property === undefined) {
-            property = this._$itemsProperty;
+            property = this._$itemsProperty as unknown as K;
         }
-        return this._getDataProperty<T>(property);
+        return this._getDataProperty<K>(property);
     }
 
     /**
@@ -717,7 +733,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      * @return {String}
      * @see metaProperty
      */
-    getMetaProperty(): string {
+    getMetaProperty(): TMetaProperty {
         return this._$metaProperty;
     }
 
@@ -726,8 +742,8 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      * @return {Object}
      * @see metaProperty
      */
-    getMetaData<T = object>(): T {
-        return this._$metaProperty && this._getDataProperty<T>(this._$metaProperty) || ({} as T);
+    getMetaData(): TRawData[TMetaProperty] {
+        return this._$metaProperty && this._getDataProperty(this._$metaProperty) || ({} as TRawData[TMetaProperty]);
     }
 
     /**
@@ -754,7 +770,7 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      * </pre>
      */
     hasProperty(property?: string): boolean {
-        return property ? this._getDataProperty(property) !== undefined : false;
+        return property ? this._getDataProperty(property as never) !== undefined : false;
     }
 
     /**
@@ -779,8 +795,10 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      *     console.log(data.getProperty('article')); // {id: 1, title: 'C++ Beginners Tutorial'}
      * </pre>
      */
-    getProperty<T = any>(property?: string): T {
-        return this._getDataProperty<T>(property);
+    getProperty(): TRawData;
+    getProperty<K extends keyof TRawData>(property?: K): TRawData[K];
+    getProperty<K extends keyof TRawData>(property?: K): TRawData[K] {
+        return this._getDataProperty<K>(property);
     }
 
     /**
@@ -838,10 +856,10 @@ export default class DataSet<TRawData extends unknown = unknown> extends mixin<
      * @param property Свойство
      * @protected
      */
-    protected _getDataProperty<T>(property: string): T {
+    protected _getDataProperty<K extends keyof TRawData>(property: K): TRawData[K] {
         this._checkAdapter();
         return property
-            ? this.getAdapter().getProperty(this._$rawData, property)
+            ? this.getAdapter().getProperty(this._$rawData, property as string)
             : this._$rawData;
     }
 

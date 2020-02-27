@@ -27,13 +27,13 @@ function inheritStatic<T>(Base: T, Sub: Function): void {
 /**
  * Puts mixins into given class
  */
-export function applyMixins<M>(Sub: Function, ...mixins: M[]): void {
+export function applyMixins(Sub: Function, ...mixins: Function[]): void {
     // FIXME: to fix behaviour of Core/core-instance::instanceOfMixin()
     if (mixins.length && !Sub.prototype._mixins) {
         Sub.prototype._mixins = [];
     }
 
-    mixins.forEach((mixin: M) => {
+    mixins.forEach((mixin: Function) => {
         const isClass = typeof mixin === 'function';
         const proto = isClass ? (mixin as any).prototype : mixin;
 

@@ -84,3 +84,5 @@ export default interface IObject<T = any> {
      */
     has(name: string): boolean;
 }
+
+export type IObjectConstructor<T = any> = new() => IObject<T>;

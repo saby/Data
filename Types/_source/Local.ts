@@ -255,7 +255,15 @@ export default abstract class Local<TData = unknown> extends mixin<
         return Deferred.success(true) as Promise<any>;
     }
 
-    query(query?: Query): Promise<DataSet<IQueryRawData>> {
+    query(query?: Query): Promise<DataSet<
+        any,
+        Model<any>,
+        RecordSet<Model<any>>,
+        '',
+        IQueryRawData,
+        'items',
+        'meta'
+    >> {
         let items = this._applyFrom(query ? query.getFrom() : undefined);
         const adapter = this.getAdapter();
         let total;

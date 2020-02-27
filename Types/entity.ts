@@ -61,7 +61,7 @@ export {default as ICloneable} from './_entity/ICloneable';
 export {default as IEquatable} from './_entity/IEquatable';
 export {default as IInstantiable} from './_entity/IInstantiable';
 export {default as InstantiableMixin} from './_entity/InstantiableMixin';
-export {default as IObject} from './_entity/IObject';
+export {default as IObject, IObjectConstructor} from './_entity/IObject';
 export {default as IObservableObject} from './_entity/IObservableObject';
 export {default as IProducible} from './_entity/IProducible';
 export {default as IVersionable} from './_entity/IVersionable';

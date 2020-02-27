@@ -1344,7 +1344,7 @@ describe('Types/_source/Memory', () => {
             it('should keep property total', () => {
                 return source.query(new Query().limit(2)).then((ds) => {
                     assert.instanceOf(ds, DataSet);
-                    assert.strictEqual(ds.getMetaData<{total: number}>().total, recordset.getCount());
+                    assert.strictEqual(ds.getMetaData().total, recordset.getCount());
                 });
             });
 
