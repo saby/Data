@@ -188,28 +188,18 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     replaceToJSON<T>(data: T): T {
         if (data && typeof data === 'object') {
-            /*
-            Object.defineProperties(data, {
-                _formatController: {
-                    enumerable: false,
-                    get: function(): FormatController {
-                        return this._formatController;
-                    }.bind(this)
-                },
-                getDataFormatJson: {
-                    enumerable: false,
-                    value: this.getDataFormatJson
-                }
-            });
-             */
-
             const getDataFormatJson = this.getDataFormatJson.bind(this);
 
-            (data as any).toJSON = function() {
-                getDataFormatJson(this, {});
+            Object.defineProperties(data, {
+                toJSON: {
+                    enumerable: false,
+                    value: function() {
+                        getDataFormatJson(this, {});
 
-                return this;
-            };
+                        return this;
+                    }
+                }
+            });
         }
 
         return data;
