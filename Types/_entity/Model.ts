@@ -149,7 +149,7 @@ interface ISerializableState extends IRecordSerializableState {
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
  */
-export default class Model extends mixin<
+export default class Model<T = any> extends mixin<
     Record, InstantiableMixin
 >(
    Record, InstantiableMixin
@@ -443,14 +443,15 @@ export default class Model extends mixin<
 
     // region IObject
 
-    get(name: string): any {
-        this._pushDependency(name);
+    // @ts-ignore
+    get<K extends keyof T>(name: K): T[K] {
+        this._pushDependency(name as string);
 
-        if (this._fieldsCache.has(name)) {
-            return this._fieldsCache.get(name);
+        if (this._fieldsCache.has(name as string)) {
+            return this._fieldsCache.get(name as string);
         }
 
-        const property = this._$properties && this._$properties[name];
+        const property = this._$properties && this._$properties[name as string];
 
         const superValue = super.get(name);
         if (!property) {
@@ -458,33 +459,35 @@ export default class Model extends mixin<
         }
 
         let preValue = superValue;
-        if ('def' in property && !this._getRawDataAdapter().has(name)) {
-            preValue = this.getDefault(name);
+        if ('def' in property && !this._getRawDataAdapter().has(name as string)) {
+            preValue = this.getDefault(name as string);
         }
 
         if (!property.get) {
             return preValue;
         }
 
-        const value = this._processCalculatedValue(name, preValue, property, true);
+        const value = this._processCalculatedValue(name as string, preValue, property, true);
 
         if (value !== superValue) {
             this._removeChild(superValue);
-            this._addChild(value, this._getRelationNameForField(name));
+            this._addChild(value, this._getRelationNameForField(name as string));
         }
 
         if (this._isFieldValueCacheable(value)) {
-            this._fieldsCache.set(name, value);
-        } else if (this._fieldsCache.has(name)) {
-            this._fieldsCache.delete(name);
+            this._fieldsCache.set(name as string, value);
+        } else if (this._fieldsCache.has(name as string)) {
+            this._fieldsCache.delete(name as string);
         }
 
         return value;
     }
 
-    set(name: string | object, value?: any): void {
+    set<K extends keyof T>(name: K, value: T[K]): void;
+    set(name: Partial<T>): void;
+    set<K extends keyof T>(name: K | Partial<T>, value?: T[K]): void {
         if (!this._$properties) {
-            super.set(name, value);
+            super.set(name as K, value);
             return;
         }
 
@@ -504,7 +507,7 @@ export default class Model extends mixin<
                     if (property.set) {
                         // Get old value for tracking property
                         const isTracking = Track.isFunctor(property.set);
-                        const oldValue = isTracking ? this.get(key) : undefined;
+                        const oldValue = isTracking ? this.get(key as K) : undefined;
 
                         // Remove cached value
                         if (this._fieldsCache.has(key)) {
@@ -520,7 +523,7 @@ export default class Model extends mixin<
 
                         if (isTracking) {
                             // Track value change by adding in pairs
-                            pairs.push([key, this.get(key), oldValue, storeInRawData]);
+                            pairs.push([key, this.get(key as K), oldValue, storeInRawData]);
                             return;
                         } else if (!storeInRawData) {
                             // Just continue if there is nothing to save in raw data
@@ -559,7 +562,7 @@ export default class Model extends mixin<
         // It's top level set() so notify changes if have some
         if (!isCalculating && changedProperties) {
             const changed = Object.keys(changedProperties).reduce((memo, key) => {
-                memo[key] = this.get(key);
+                memo[key] = this.get(key as K);
                 return memo;
             }, {});
             this._notifyChange(changed);
@@ -882,13 +885,13 @@ export default class Model extends mixin<
      *    article.getKey(); // 1
      * </pre>
      */
-    getKey(): any {
+    getKey<K extends keyof T = any>(): T[K] {
        const keyProperty = this.getKeyProperty();
        if (!keyProperty) {
           logger.info(this._moduleName + '::getKey(): keyProperty is not defined');
           return undefined;
        }
-       return this.get(keyProperty);
+       return this.get(keyProperty as K);
     }
 
     /**

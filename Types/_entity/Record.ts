@@ -248,7 +248,7 @@ function getValueType(value: any): string | IFieldDeclaration {
  * @public
  * @author Мальцев А.А.
  */
-export default class Record extends mixin<
+export default class Record<T = any> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     ObservableMixin,
@@ -269,7 +269,7 @@ export default class Record extends mixin<
     FormattableMixin,
     VersionableMixin
 ) implements
-    IObject,
+    IObject<T>,
     IObservableObject,
     IProducible,
     IEquatable,
@@ -356,11 +356,11 @@ export default class Record extends mixin<
      */
     protected _$cloneChanged: boolean;
 
-   /**
-    * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
-    * @name Types/_entity/Record#owner
-    */
-   protected _$owner: RecordSet;
+    /**
+     * @cfg {Types/_collection/RecordSet} Рекордсет, которому принадлежит запись
+     * @name Types/_entity/Record#owner
+     */
+    protected _$owner: RecordSet;
 
     constructor(options?: IOptions) {
         if (options && options.owner && !options.owner['[Types/_collection/RecordSet]']) {
@@ -390,30 +390,32 @@ export default class Record extends mixin<
 
     readonly '[Types/_entity/IObject]': boolean;
 
-    get(name: string): any {
+    get<K extends keyof T>(name: K): T[K] {
         const cache = this._fieldsCache;
-        if (cache.has(name)) {
-            return cache.get(name);
+        if (cache.has(name as string)) {
+            return cache.get(name as string);
         }
 
-        const value = this._getRawDataValue(name);
+        const value = this._getRawDataValue(name as string);
         if (this._isFieldValueCacheable(value)) {
-            this._addChild(value, this._getRelationNameForField(name));
-            cache.set(name, value);
+            this._addChild(value, this._getRelationNameForField(name as string));
+            cache.set(name as string, value);
             if (this._haveToClone(value)) {
-                this._fieldsClone.set(name, value.clone());
+                this._fieldsClone.set(name as string, value.clone());
             }
         }
 
         return value;
     }
 
-    set(name: string | object, value?: any): void {
+    set<K extends keyof T>(name: K, value: T[K]): void;
+    set(name: Partial<T>): void;
+    set<K extends keyof T>(name: K | Partial<T>, value?: T[K]): void {
         const map = this._getHashMap(name, value);
         const errors = [];
 
         const changed = this._setPairs(
-            Object.keys(map).map((key) => [key, map[key], this.get(key), true] as pairsTuple),
+            Object.keys(map).map((key) => [key, map[key], this.get(key as K), true] as pairsTuple),
             errors
         );
 
@@ -779,7 +781,7 @@ export default class Record extends mixin<
 
         const name = format.getName();
         if (value !== undefined) {
-            this.set(name, value);
+            this.set(name as keyof T, value);
         } else {
              this._notifyChange({
                   [name]: format.getDefaultValue()
@@ -1235,7 +1237,7 @@ export default class Record extends mixin<
      * @param [value] Значение поля
      * @protected
      */
-    protected _getHashMap(name: string | object, value?: any): string | object {
+    protected _getHashMap<K extends keyof T>(name: K | Partial<T>, value?: T[K]): Partial<T> {
         let map = name;
         if (!(map instanceof Object)) {
             map = {};

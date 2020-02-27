@@ -5,7 +5,7 @@
  * @public
  * @author Мальцев А.А.
  */
-export default interface IObject {
+export default interface IObject<T = any> {
     readonly '[Types/_entity/IObject]': boolean;
 
     /**
@@ -34,7 +34,7 @@ export default interface IObject {
      *     character.get('mother');//undefined
      * </pre>
      */
-    get(name: string): any;
+    get<K extends keyof T>(name: K): T[K];
 
     /**
      * Устанавливает значение свойства.
@@ -57,7 +57,7 @@ export default interface IObject {
      *     });
      * </pre>
      */
-    set(name: string, value: any): void;
+    set<K extends keyof T>(name: K, value: T[K]): void;
 
     /**
      * Проверяет наличие свойства у объекта.

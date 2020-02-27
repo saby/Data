@@ -2708,7 +2708,7 @@ describe('Types/_collection/RecordSet', () => {
 
         it('should change version when inner model has been changed', () => {
             const version = rs.getVersion();
-            rs.at(0).set('name');
+            rs.at(0).set('name', 'foo');
             assert.notEqual(rs.getVersion(), version);
         });
 
