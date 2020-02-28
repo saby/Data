@@ -6,10 +6,6 @@ interface ISerializableObject {
     getRawData?: (shared?: boolean) => object;
 }
 
-interface ISerializableObject {
-    getRawData?: (shared?: boolean) => object;
-}
-
 function jsonizePlainObject(obj: object): object {
     const result = {};
 
