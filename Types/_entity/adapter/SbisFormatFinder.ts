@@ -113,14 +113,14 @@ class RecursiveIterator {
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
      */
-   next(id: number, storage: Map<number, IFieldFormat[]>): IResultGenerator {
+   next(storage: Map<number, IFieldFormat[]>, id?: number): IResultGenerator {
       while (true) {
          if (this.stackNodes.processableId < 0) {
              // id обрабтываемого узла меньше 0, значит дерево обработано.
             return {value: undefined, done: true};
          }
 
-         const result = this._process(id, storage);
+         const result = this._process(storage, id);
 
          if (result) {
             return {value: result, done: false};
@@ -133,7 +133,7 @@ class RecursiveIterator {
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
      */
-   protected _process(id: number, storage: Map<number, IFieldFormat[]>): IFieldFormat[] {
+   protected _process(storage: Map<number, IFieldFormat[]>, id?: number): IFieldFormat[] {
        //Получаем из стека послдений узел, чтобы обработь его.
       const node = this.stackNodes.currentNode;
 
@@ -155,7 +155,7 @@ class RecursiveIterator {
                   data: item.value
                });
 
-               const result = this._process(id, storage);
+               const result = this._process(storage, id);
 
                if (result) {
                   return result;
@@ -185,7 +185,7 @@ class RecursiveIterator {
             });
 
             node.completed = true;
-            result = this._process(id, storage);
+            result = this._process(storage, id);
          }
 
          if (result) {
@@ -241,10 +241,10 @@ class SbisFormatFinder {
       }
 
       if (!this._generator) {
-         this._generator = new RecursiveIterator( this._data);
+         this._generator = new RecursiveIterator(this._data);
       }
 
-      const result = this._generator.next(id, this._cache);
+      const result = this._generator.next(this._cache, id);
 
       if (result.done) {
          throw new ReferenceError("Couldn't find format by id");
@@ -252,6 +252,14 @@ class SbisFormatFinder {
 
       return result.value;
    }
+
+    scanFormats(data) {
+        if (typeof data === 'object') {
+            const generator = new RecursiveIterator(data);
+
+            generator.next(this._cache);
+        }
+    }
 }
 
 export default SbisFormatFinder;
