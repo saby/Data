@@ -31,6 +31,14 @@ describe('Types/_formatter/number', () => {
                 const value = 1234.5;
                 assert.equal(expect[locale], number(value));
             });
+
+            it('should drop the fractional part', () => {
+                assert.equal('4', number(4.5, {maximumFractionDigits:0}));
+            });
+
+            it('should set one sign in the fractional part', () => {
+                assert.equal('4.5', number(4.512, {maximumFractionDigits:1}));
+            });
         });
     });
 });
