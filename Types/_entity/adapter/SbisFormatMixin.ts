@@ -119,8 +119,6 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     readonly '[Types/_entity/format/IFormatController]': boolean;
 
-    readonly '[Types/_entity/adapter/ISerializedData]': boolean;
-
     protected _formatController: FormatController;
 
     protected _moduleName: string;
@@ -184,7 +182,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     // endregion
 
-    // region ISerializedData
+    // region toJSON
 
     replaceToJSON<T>(data: T): T {
         if (data && typeof data === 'object') {
@@ -205,7 +203,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return data;
     }
 
-    getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
+    protected getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
         if (Array.isArray(data)) {
             for (const item of data) {
                 this.getDataFormatJson(item, formats);
@@ -640,7 +638,6 @@ export default abstract class SbisFormatMixin implements IFormatController {
 Object.assign(SbisFormatMixin.prototype, {
     '[Types/_entity/adapter/SbisFormatMixin]': true,
     '[Types/_entity/format/IFormatController]': true,
-    '[Types/_entity/adapter/ISerializedData]': true,
     _data: null,
     _fieldIndices: null,
     _format: null,
