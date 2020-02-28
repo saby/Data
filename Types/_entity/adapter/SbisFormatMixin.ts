@@ -214,12 +214,11 @@ export default abstract class SbisFormatMixin implements IFormatController {
             const record = (data as IRecordFormat);
 
             if (record.f && !formats[record.f]) {
-                if (!record.s) {
+                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
                     record.s = this._formatController.getFormat(record.f);
-                    formats[record.f] = record.s;
-                } else {
-                    formats[record.f] = record.s;
                 }
+
+                formats[record.f] = record.s;
             }
 
             if (record.d) {
