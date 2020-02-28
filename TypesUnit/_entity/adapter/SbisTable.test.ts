@@ -5,7 +5,7 @@ import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
 import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
-import SbisFormatFinder from "../../../Types/_entity/adapter/SbisFormatFinder";
+import SbisFormatFinder from '../../../Types/_entity/adapter/SbisFormatFinder';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
