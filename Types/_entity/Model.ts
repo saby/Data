@@ -241,7 +241,7 @@ export default class Model extends mixin<
      *     import {Model} from 'Types/entity';
      *
      *     export default class User extends {
-     *         protected _$properties: Object = {
+     *         protected _$properties: object = {
      *             displayName: {
      *                 get() {
      *                    return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
