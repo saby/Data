@@ -23,12 +23,12 @@ class Memoize {
     }
 
     clear(original: Function, ...args: any[]): void {
-        if (storage.has(this)) {
+        if (storage.has(original)) {
             const cache = storage.get(original);
             const key = JSON.stringify(args);
-            const keyIndex = cache.indexOf(key);
-            if (keyIndex > -1) {
-                storage.set(this, cache.splice(keyIndex, 1));
+
+            if (cache.hasOwnProperty(key)) {
+                delete cache[key];
             }
         }
     }
