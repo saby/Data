@@ -316,3 +316,5 @@ export default interface IList<T> {
      */
     getCount(): number;
 }
+
+export type IListConstructor<T = any> = new() => IList<T>;

@@ -89,12 +89,7 @@ export default class List<T> extends mixin<
     ManyToManyMixin,
     ReadWriteMixin,
     VersionableMixin
-) implements
-   IEnumerable<T, number>,
-   IList<T>,
-   IIndexedCollection,
-   IEquatable {
-
+) implements IEnumerable<T, number>, IList<T>, IIndexedCollection, IEquatable {
     /**
      * @cfg {Array.<*>} Элементы списка
      * @name Types/_collection/List#items
@@ -111,7 +106,7 @@ export default class List<T> extends mixin<
             throw new TypeError('Option "items" should be an instance of Array');
         }
 
-        super(options);
+        super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
         ReadWriteMixin.call(this, options);

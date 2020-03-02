@@ -258,7 +258,7 @@ export default abstract class Local<TData = unknown> extends mixin<
     query(query?: Query): Promise<DataSet<
         any,
         Model<any>,
-        RecordSet<Model<any>>,
+        RecordSet<any, Model<any>>,
         '',
         IQueryRawData,
         'items',

@@ -4,7 +4,37 @@ import Model from 'Types/_entity/Model';
 import JsonAdapter from 'Types/_entity/adapter/Json';
 import RecordSet from 'Types/_collection/RecordSet';
 import * as coreExtend from 'Core/core-extend';
-import {Record} from "../../Types/entity";
+
+interface IBook {
+    id: number;
+    title: string;
+    author: string;
+    published: Date;
+}
+const ds1 = new DataSet<IBook, Model<IBook>, RecordSet<IBook>>({
+    rawData: {
+        items: [{
+            id: 1,
+            title: 'The Hitchhiker\'s Guide to the Galaxy'
+        }]
+    },
+    itemsProperty: 'items',
+    keyProperty: 'a'
+});
+
+const bookA = ds1.getRow();
+const titleA = bookA.get('trr');
+
+const bookB = new Model<IBook>();
+const titleB = bookB.get('trr');
+
+const books = ds1.getAll();
+const book = books.at(0);
+const bookKey = book.getKey();
+const title = book.get('trr');
+book.set('aaa', 1);
+
+const some = titleA + titleB;
 
 describe('Types/_source/DataSet', () => {
     let list;
@@ -64,10 +94,8 @@ describe('Types/_source/DataSet', () => {
     describe('.getModel()', () => {
         it('should return a given model', () => {
             const ds = new DataSet({
-                model: Record,
-                listModule: RecordSet
+                model: Model
             });
-            ds.setModel(Record);
             assert.strictEqual(ds.getModel(), Model);
         });
 

@@ -3,31 +3,30 @@ import {
     OptionsToPropertyMixin,
     SerializableMixin,
     AdapterDescriptor,
+    Record,
     Model,
-    adapter,
-    IObject,
-    IObjectConstructor
+    adapter
 } from '../entity';
 import {create, register} from '../di';
 import {mixin} from '../util';
-import {IList, IListConstructor, RecordSet} from '../collection';
+import {IList, List, RecordSet} from '../collection';
 
-type ModelDeclaration<T> = IObjectConstructor<T> | string;
-type ListDeclaration<T> = IListConstructor<T> | string;
+type ModelConstructor<T> = new() => Record<T>;
+type ListConstructor<T> = new() => List<T>;
 
 export interface IOptions<
-    TData = any,
-    TRawData = any,
-    TItemsProperty extends keyof TRawData = keyof TRawData,
-    TMetaProperty extends keyof TRawData = keyof TRawData,
-    TKeyProperty extends keyof TData = keyof TData
+    TData,
+    TRawData,
+    TItemsProperty extends keyof TRawData,
+    TMetaProperty extends keyof TRawData,
+    TKeyProperty extends keyof TData
 > {
     adapter?: AdapterDescriptor;
     itemsProperty?: TItemsProperty;
     keyProperty?: TKeyProperty;
-    listModule?: ListDeclaration<IObject<TData>>;
+    listModule?: ListConstructor<Record<TData>> | string;
     metaProperty?: TMetaProperty;
-    model?: ModelDeclaration<TData>;
+    model?: ModelConstructor<TData> | string;
     rawData?: TRawData;
     writable?: boolean;
 }
@@ -156,11 +155,11 @@ interface IRawDataWithTotal {
  * @author Мальцев А.А.
  */
 export default class DataSet<
-    TData = any,
-    TRow extends IObject<TData> = Model<TData>,
-    TList extends IList<IObject<TData>> = RecordSet<Model<TData>>,
+    TData = unknown,
+    TRow extends Record<TData> = Model<TData>,
+    TList extends RecordSet<TData, Record<TData>> = RecordSet<TData, Model<TData>>,
     TKeyProperty extends keyof TData = keyof TData,
-    TRawData extends unknown = any,
+    TRawData extends unknown = unknown,
     TItemsProperty extends keyof TRawData = keyof TRawData,
     TMetaProperty extends keyof TRawData = keyof TRawData
 > extends mixin<
@@ -237,7 +236,7 @@ export default class DataSet<
      *     });
      * </pre>
      */
-    protected _$model: ModelDeclaration<TData>;
+    protected _$model: ModelConstructor<TData> | string;
 
     /**
      * @cfg {String|Function} Конструктор рекордсетов, порождаемых набором данных. По умолчанию
@@ -257,7 +256,7 @@ export default class DataSet<
      *     });
      * </pre>
      */
-    protected _$listModule: ListDeclaration<IObject<TData>>;
+    protected _$listModule: ListConstructor<Record<TData>> | string;
 
     /**
      * @cfg {String} Название свойства записи, содержащего первичный ключ.
@@ -386,7 +385,7 @@ export default class DataSet<
      *     console.log(data.getModel()); // 'Types/entity:Model'
      * </pre>
      */
-    getModel(): ModelDeclaration<TData> {
+    getModel(): ModelConstructor<TData> | string {
         return this._$model;
     }
 
@@ -407,7 +406,7 @@ export default class DataSet<
      *     data.setModel(User);
      * </pre>
      */
-    setModel(model: ModelDeclaration<TData>): void {
+    setModel(model: ModelConstructor<TData> | string): void {
         this._$model = model;
     }
 
@@ -425,7 +424,7 @@ export default class DataSet<
      *     console.log(data.getListModule()); // 'Types/collection:RecordSet'
      * </pre>
      */
-    getListModule(): ListDeclaration<IObject<TData>> {
+    getListModule(): ListConstructor<Record<TData>> | string {
         return this._$listModule;
     }
 
@@ -445,7 +444,7 @@ export default class DataSet<
      *     data.setListModule(Users);
      * </pre>
      */
-    setListModule(listModule: ListDeclaration<IObject<TData>>): void {
+    setListModule(listModule: ListConstructor<Record<TData>> | string): void {
         this._$listModule = listModule;
     }
 
@@ -601,8 +600,8 @@ export default class DataSet<
             let someInMetaData = Object.keys(metaData).length > 0;
 
             // FIXME: don't use deprecated 'total' property from raw data
-            if (!someInMetaData && this._$rawData && (this._$rawData as IRawDataWithTotal).total) {
-                metaData = {total: (this._$rawData as IRawDataWithTotal).total};
+            if (!someInMetaData && this._$rawData && (this._$rawData as unknown as IRawDataWithTotal).total) {
+                metaData = {total: (this._$rawData as unknown as IRawDataWithTotal).total};
                 someInMetaData = true;
             }
 
@@ -797,7 +796,7 @@ export default class DataSet<
      */
     getProperty(): TRawData;
     getProperty<K extends keyof TRawData>(property?: K): TRawData[K];
-    getProperty<K extends keyof TRawData>(property?: K): TRawData[K] {
+    getProperty<K extends keyof TRawData>(property?: K): TRawData[K] | TRawData {
         return this._getDataProperty<K>(property);
     }
 
@@ -868,7 +867,7 @@ export default class DataSet<
      * @param rawData Данные модели
      * @protected
      */
-    protected _getModelInstance<T extends IObject>(rawData: unknown): T {
+    protected _getModelInstance<T extends Record>(rawData: unknown): T {
         if (!this._$model) {
             throw new Error('Model is not defined');
         }

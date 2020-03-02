@@ -25,7 +25,7 @@ import {
     adapter
 } from '../entity';
 import {create, register} from '../di';
-import {mixin, logger} from '../util';
+import {logger, applyMixins} from '../util';
 import {isEqual} from '../object';
 import {IHashMap} from '../_declarations';
 
@@ -33,7 +33,7 @@ const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
 
-interface IOptions extends IListOptions<Model>, IFormattableOptions {
+interface IOptions<T> extends IListOptions<T>, IFormattableOptions {
     model?: Function | string;
     keyProperty?: string;
     meta?: any;
@@ -41,7 +41,7 @@ interface IOptions extends IListOptions<Model>, IFormattableOptions {
     metaData?: any;
 }
 
-interface ISerializableOptions extends IOptions, IFormattableOptions {
+interface ISerializableOptions extends IOptions<any>, IFormattableOptions {
 }
 
 interface ISerializableState extends IDefaultSerializableState, IFormattableSerializableState {
@@ -114,15 +114,7 @@ function checkNullId<T extends Record>(value: T, keyProperty: string): void {
  * @author Мальцев А.А.
  * @public
  */
-export default class RecordSet<T extends Record = Model> extends mixin<
-    ObservableList<any>,
-    FormattableMixin,
-    InstantiableMixin
->(
-    ObservableList,
-    FormattableMixin,
-    InstantiableMixin
-) implements IObservableObject, IProducible {
+class RecordSet<TData = any, T extends Record<TData> = Model<TData>> extends ObservableList<T> implements IObservableObject, IProducible {
     /**
      * @typedef {Object} MergeOptions
      * @property {Boolean} [add=true] Добавлять записи с новыми ключами.
@@ -257,7 +249,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
      */
     protected _metaData: any;
 
-    constructor(options?: IOptions) {
+    constructor(options?: IOptions<T>) {
         if (options) {
             if ('items' in options) {
                 logger.stack('Types/_collection/RecordSet: option "items" give no effect, use "rawData" instead', 1);
@@ -836,7 +828,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
         if (value !== undefined) {
             const name = format.getName();
-            this.each((record) => {
+            this.each((record: Record<unknown>) => {
                 if (record instanceof Record) {
                     record.set(name, value);
                 }
@@ -892,7 +884,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
     readonly '[Types/_entity/IProducible]': boolean;
 
-    static produceInstance(data: any, options?: IOptions): RecordSet {
+    static produceInstance<T extends Record = Model>(data: any, options?: IOptions<T>): RecordSet<T> {
         const instanceOptions: any = {
             rawData: data
         };
@@ -943,7 +935,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     // region ICloneable
 
     clone<U = this>(shallow?: boolean): U {
-        const clone = super.clone<RecordSet>(shallow);
+        const clone = super.clone<RecordSet<TData, T>>(shallow);
         if (shallow) {
             clone._$items = this._$items.slice();
         }
@@ -1225,7 +1217,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
         };
 
         // Build metadata format if it comes from option
-        const metaFormat = this._$metaFormat ? super._buildFormat(this._$metaFormat) : null;
+        const metaFormat = this._$metaFormat ? this._buildFormat(this._$metaFormat) : null;
         let metaData = {};
 
         if (this._$metaData) {
@@ -1352,7 +1344,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
         let id;
         let index;
 
-        this.each((record, index) => {
+        this.each((record: Record<unknown>, index) => {
             if (record instanceof Record) {
                 existsIdMap[record.get(keyProperty)] = index;
             }
@@ -1413,7 +1405,7 @@ export default class RecordSet<T extends Record = Model> extends mixin<
 
         if (options.remove) {
             const toRemove = [];
-            this.each((record, index) => {
+            this.each((record: Record<unknown>, index) => {
                 if (record instanceof Record && !newIdMap.hasOwnProperty(record.get(keyProperty))) {
                     toRemove.push(index);
                 }
@@ -1653,6 +1645,10 @@ export default class RecordSet<T extends Record = Model> extends mixin<
     // endregion
 }
 
+applyMixins(RecordSet, FormattableMixin, InstantiableMixin);
+// tslint:disable-next-line:interface-name
+interface RecordSet<TData = any, T extends Record<TData> = Model<TData>> extends ObservableList<T>, FormattableMixin, InstantiableMixin {}
+
 Object.assign(RecordSet.prototype, {
     '[Types/_collection/RecordSet]': true,
     '[Types/_entity/IObservableObject]': true,
@@ -1671,5 +1667,7 @@ Object.assign(RecordSet.prototype, {
 
 // Aliases
 RecordSet.prototype.forEach = RecordSet.prototype.each;
+
+export default RecordSet;
 
 register('Types/collection:RecordSet', RecordSet, {instantiate: false});

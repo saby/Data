@@ -69,13 +69,13 @@ export default abstract class ReadWriteMixin {
         }
     }
 
-    protected _publish(): void {
+    protected _publish(...events: string[]): void {
         if (this[$writable]) {
             return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
         }
     }
 
-    protected _notify(): void {
+    protected _notify(event: string, ...args: any[]): void {
         if (this[$writable]) {
             return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
         }
