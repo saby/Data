@@ -25,6 +25,16 @@ function jsonizePlainObject(obj: object): object {
         }
         result[key] = newValue;
     }
+
+    if (obj.hasOwnProperty('toJSON') && (obj as any).toJSON !== (result as any).toJSON) {
+        Object.defineProperties(result, {
+            toJSON: {
+                enumerable: false,
+                value: (obj as any).toJSON
+            }
+        });
+    }
+
     return hasChanges ? result : obj;
 }
 

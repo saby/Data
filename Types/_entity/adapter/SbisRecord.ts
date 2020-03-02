@@ -70,7 +70,7 @@ export default class SbisRecord extends mixin<
     get(name: string): any {
         const index = this._getFieldIndex(name);
         return index >= 0
-            ? this._cast(this._data.s[index], this._data.d[index])
+            ? this.replaceToJSON(this._cast(this._data.s[index], this._data.d[index]))
             : undefined;
     }
 
@@ -108,6 +108,10 @@ export default class SbisRecord extends mixin<
     }
 
     protected _removeD(at: number): void {
+        if (this._formatController) {
+            this._formatController.scanFormats(this._data.d[at]);
+        }
+
         this._data.d.splice(at, 1);
     }
 

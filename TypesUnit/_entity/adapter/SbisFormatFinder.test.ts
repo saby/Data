@@ -84,4 +84,14 @@ describe('Types/_entity/format/FormatController', () => {
             sbisFormatFinder.getFormat(2);
         }, ReferenceError);
     });
+
+    it('.scanFormats()', () => {
+        sbisFormatFinder.scanFormats(rawData);
+
+        assert.isTrue((sbisFormatFinder as any)._cache.has(0));
+        assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+
+        assert.isTrue((sbisFormatFinder as any)._cache.has(1));
+        assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+    });
 });

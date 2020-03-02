@@ -115,13 +115,13 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatContro
  * @author Мальцев А.А.
  */
 export default abstract class SbisFormatMixin implements IFormatController {
-   readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+    readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
 
-   readonly '[Types/_entity/format/IFormatController]': boolean;
+    readonly '[Types/_entity/format/IFormatController]': boolean;
 
-   protected _formatController: FormatController;
+    protected _formatController: FormatController;
 
-   protected _moduleName: string;
+    protected _moduleName: string;
 
     /**
      * Сырые данные
@@ -180,7 +180,52 @@ export default abstract class SbisFormatMixin implements IFormatController {
         }
     }
 
-   // endregion
+    // endregion
+
+    // region toJSON
+
+    replaceToJSON<T>(data: T): T {
+        if (data && typeof data === 'object') {
+            const getDataFormatJson = this.getDataFormatJson.bind(this);
+
+            Object.defineProperties(data, {
+                toJSON: {
+                    enumerable: false,
+                    value: function() {
+                        getDataFormatJson(this, {});
+
+                        return this;
+                    }
+                }
+            });
+        }
+
+        return data;
+    }
+
+    protected getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
+        if (Array.isArray(data)) {
+            for (const item of data) {
+                this.getDataFormatJson(item, formats);
+            }
+        } else if (data && typeof data === 'object') {
+            const record = (data as IRecordFormat);
+
+            if (record.f && !formats[record.f]) {
+                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
+                    record.s = this._formatController.getFormat(record.f);
+                }
+
+                formats[record.f] = record.s;
+            }
+
+            if (record.d) {
+                this.getDataFormatJson(record.d, formats);
+            }
+        }
+    }
+
+    // endregion
 
     // region Public methods
 
@@ -591,12 +636,12 @@ export default abstract class SbisFormatMixin implements IFormatController {
 }
 
 Object.assign(SbisFormatMixin.prototype, {
-   '[Types/_entity/adapter/SbisFormatMixin]': true,
-   '[Types/_entity/format/IFormatController]': true,
-   _data: null,
-   _fieldIndices: null,
-   _format: null,
-   _sharedFieldFormat: null,
-   _sharedFieldMeta: null,
-   _formatController: null
+    '[Types/_entity/adapter/SbisFormatMixin]': true,
+    '[Types/_entity/format/IFormatController]': true,
+    _data: null,
+    _fieldIndices: null,
+    _format: null,
+    _sharedFieldFormat: null,
+    _sharedFieldMeta: null,
+    _formatController: null
 });

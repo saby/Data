@@ -5,6 +5,7 @@ import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
 import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
+import SbisFormatFinder from '../../../Types/_entity/adapter/SbisFormatFinder';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
@@ -746,6 +747,47 @@ describe('Types/_entity/adapter/SbisTable', () => {
             assert.throws(() => {
                 adapter.removeFieldAt(9);
             });
+        });
+    });
+
+    describe('support compression data', () => {
+        const data = {
+            f: 0,
+            s: [
+                {n: 'id', t: 'Число целое'},
+                {n: 'data', t: 'Запись'}
+            ],
+            d: [
+                [0, {
+                    f: 1,
+                    s: [
+                        {n: 'model', t: 'строка'},
+                        {n: 'brand', t: 'строка'}
+                    ],
+                    d: [
+                        'Ford', 'Focus2'
+                    ]
+                }],
+                [1, {
+                    f: 1,
+                    d: [
+                        'AUDI', 'Q5'
+                    ]
+                }],
+                [2, {
+                    f: 1,
+                    d: [
+                        'Hyundai', 'ix35'
+                    ]
+                }]
+            ]
+        };
+        const adapter = new SbisTable(data);
+
+        it('serialize data chunk from data table', () => {
+            adapter.setFormatController(new SbisFormatFinder(data));
+            const chunkData = adapter.at(1);
+            assert.equal(JSON.stringify(chunkData), '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}');
         });
     });
 });
