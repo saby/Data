@@ -271,8 +271,8 @@ export default abstract class DataMixin implements IData {
     protected _wrapToDataSet(data: any): DataSet {
         return this._getDataSetInstance({
             rawData: data,
-            itemsProperty: this._dataSetItemsProperty,
-            metaProperty: this._dataSetMetaProperty
+            itemsProperty: this._dataSetItemsProperty as never,
+            metaProperty: this._dataSetMetaProperty as never
         });
     }
 

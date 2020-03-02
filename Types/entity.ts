@@ -64,6 +64,7 @@ export {default as InstantiableMixin} from './_entity/InstantiableMixin';
 export {default as IObject, IObjectConstructor} from './_entity/IObject';
 export {default as IObservableObject} from './_entity/IObservableObject';
 export {default as IProducible} from './_entity/IProducible';
+export {default as ISerializable} from './_entity/ISerializable';
 export {default as IVersionable} from './_entity/IVersionable';
 export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
 export {default as Model, IProperty as IModelProperty} from './_entity/Model';

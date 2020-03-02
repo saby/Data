@@ -320,6 +320,7 @@ class ObservableList<T> extends List<T> implements IReceiver {
 }
 
 applyMixins(ObservableList, ObservableMixin, IObservable, EventRaisingMixin);
+
 // tslint:disable-next-line:interface-name
 interface ObservableList<T> extends List<T>, ObservableMixin, EventRaisingMixin, IReceiver {}
 

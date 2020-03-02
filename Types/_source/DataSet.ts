@@ -16,13 +16,16 @@ type ListConstructor<T> = new() => List<T>;
 
 export interface IOptions<
     TData = unknown,
-    TRawData = unknown
+    TRawData = unknown,
+    TItemsProperty = keyof TRawData,
+    TMetaProperty = keyof TRawData,
+    TKeyProperty = keyof TData
 > {
     adapter?: AdapterDescriptor;
-    itemsProperty?: keyof TRawData;
-    keyProperty?: keyof TData;
+    itemsProperty?: TItemsProperty;
+    keyProperty?: TKeyProperty;
     listModule?: ListConstructor<Record<TData>> | string;
-    metaProperty?: keyof TRawData;
+    metaProperty?: TMetaProperty;
     model?: ModelConstructor<TData> | string;
     rawData?: TRawData;
     writable?: boolean;
@@ -155,7 +158,10 @@ export default class DataSet<
     TData = any,
     TRow extends Record<TData> = Model<TData>,
     TList extends RecordSet<TData, Record<TData>> = RecordSet<TData, Model<TData>>,
-    TRawData = any
+    TKeyProperty extends keyof TData = keyof TData,
+    TRawData = any,
+    TItemsProperty extends keyof TRawData = keyof TRawData,
+    TMetaProperty extends keyof TRawData = keyof TRawData
 > extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
@@ -267,7 +273,7 @@ export default class DataSet<
      *     });
      * </pre>
      */
-    protected _$keyProperty: keyof TData;
+    protected _$keyProperty: TKeyProperty;
 
     /**
      * @cfg {String} Название свойства сырых данных, в котором находится основная выборка
@@ -300,14 +306,14 @@ export default class DataSet<
      *     console.log(orders.at(0).get('id')); // 1
      * </pre>
      */
-    protected _$itemsProperty: keyof TRawData;
+    protected _$itemsProperty: TItemsProperty;
 
     /**
      * @cfg {String} Свойство данных, в которых находятся мета-данные выборки
      * @name Types/_source/DataSet#metaProperty
      * @see getMetaProperty
      */
-    protected _$metaProperty: keyof TRawData;
+    protected _$metaProperty: TMetaProperty;
 
     /**
      * @cfg {Boolean} Можно модифицировать. Признак передается объектам, которые инстанциирует DataSet.
@@ -329,7 +335,7 @@ export default class DataSet<
         this._$writable = !!value;
     }
 
-    constructor(options?: IOptions<TData, TRawData>) {
+    constructor(options?: IOptions<TData, TRawData, TItemsProperty, TMetaProperty, TKeyProperty>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
@@ -458,7 +464,7 @@ export default class DataSet<
      *     console.log(data.getKeyProperty()); // 'id'
      * </pre>
      */
-    getKeyProperty(): keyof TData {
+    getKeyProperty(): TKeyProperty {
         return this._$keyProperty;
     }
 
@@ -477,7 +483,7 @@ export default class DataSet<
      *     data.setKeyProperty('id');
      * </pre>
      */
-    setKeyProperty(name: keyof TData): void {
+    setKeyProperty(name: TKeyProperty): void {
         this._$keyProperty = name;
     }
 
@@ -497,7 +503,7 @@ export default class DataSet<
      *     console.log(data.getItemsProperty()); // 'items'
      * </pre>
      */
-    getItemsProperty(): keyof TRawData {
+    getItemsProperty(): TItemsProperty {
         return this._$itemsProperty;
     }
 
@@ -515,7 +521,7 @@ export default class DataSet<
      *     data.setItemsProperty('items');
      * </pre>
      */
-    setItemsProperty(name: keyof TRawData): void {
+    setItemsProperty(name: TItemsProperty): void {
         this._$itemsProperty = name;
     }
 
@@ -578,10 +584,10 @@ export default class DataSet<
      *     console.log(topics.at(0).get('title')); // 'Marvel Comics'
      * </pre>
      */
-    getAll<K extends keyof TRawData>(property?: K): TList {
+    getAll(property?: TItemsProperty): TList {
         this._checkAdapter();
         if (property === undefined) {
-            property = this._$itemsProperty as K;
+            property = this._$itemsProperty;
         }
 
         const items = this._getListInstance<TList | RecordSet>(
@@ -726,7 +732,7 @@ export default class DataSet<
      * @return {String}
      * @see metaProperty
      */
-    getMetaProperty(): keyof TRawData {
+    getMetaProperty(): TMetaProperty {
         return this._$metaProperty;
     }
 
@@ -735,8 +741,8 @@ export default class DataSet<
      * @return {Object}
      * @see metaProperty
      */
-    getMetaData(): TRawData[keyof TRawData] {
-        return this._$metaProperty && this._getDataProperty(this._$metaProperty) || ({} as TRawData[keyof TRawData]);
+    getMetaData(): TRawData[TMetaProperty] {
+        return this._$metaProperty && this._getDataProperty(this._$metaProperty) || ({} as TRawData[TMetaProperty]);
     }
 
     /**

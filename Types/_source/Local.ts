@@ -51,7 +51,7 @@ export interface IOptions extends IBaseOptions {
 }
 
 export interface IQueryRawData {
-    items: unknown;
+    items: any;
     meta?: {
         total?: number;
         path?: unknown;
@@ -259,6 +259,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         any,
         Model<any>,
         RecordSet<any, Model<any>>,
+        any,
         IQueryRawData
     >> {
         let items = this._applyFrom(query ? query.getFrom() : undefined);

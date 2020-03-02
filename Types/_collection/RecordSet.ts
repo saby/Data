@@ -114,7 +114,10 @@ function checkNullId<T extends Record>(value: T, keyProperty: string): void {
  * @author Мальцев А.А.
  * @public
  */
-class RecordSet<TData = any, T extends Record<TData> = Model<TData>> extends ObservableList<T> implements IObservableObject, IProducible {
+class RecordSet<
+    TData = any,
+    T extends Record<TData> = Model<TData>
+> extends ObservableList<T> implements IObservableObject, IProducible {
     /**
      * @typedef {Object} MergeOptions
      * @property {Boolean} [add=true] Добавлять записи с новыми ключами.
@@ -1646,8 +1649,12 @@ class RecordSet<TData = any, T extends Record<TData> = Model<TData>> extends Obs
 }
 
 applyMixins(RecordSet, FormattableMixin, InstantiableMixin);
+
 // tslint:disable-next-line:interface-name
-interface RecordSet<TData = any, T extends Record<TData> = Model<TData>> extends ObservableList<T>, FormattableMixin, InstantiableMixin {}
+interface RecordSet<
+    TData = any,
+    T extends Record<TData> = Model<TData>
+> extends ObservableList<T>, FormattableMixin, InstantiableMixin {}
 
 Object.assign(RecordSet.prototype, {
     '[Types/_collection/RecordSet]': true,
