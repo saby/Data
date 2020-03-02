@@ -93,7 +93,7 @@ function formatNumberToString(numberFormat: IFormat, x: number): string {
         x,
         numberFormat.minimumIntegerDigits || 1,
         numberFormat.minimumFractionDigits || 0,
-        numberFormat.maximumFractionDigits || DEFAULT_MAXIMUM_FRACTION_DIGITS
+        numberFormat.maximumFractionDigits
     );
 }
 
@@ -250,7 +250,7 @@ function toRawPrecision(x: number, minPrecision: number, maxPrecision: number): 
 function toRawFixed(x: number, minInteger: number, minFraction: number, maxFraction: number): string {
     // 1. Let f be maxFraction.
     const n = Math.pow(10, maxFraction) * x; // diverging...
-    let result = (n === 0 ? '0' : n.toFixed(0)); // divering...
+    let result = (n === 0 ? '0' : String(Math.floor(n))); // divering...
 
     // this diversion is needed to take into consideration big numbers, e.g.:
     // 1.2344501e+37 -> 12344501000000000000000000000000000000
@@ -297,7 +297,7 @@ function getNumberFormat(options: IFormat): IFormat {
         useGrouping: true,
         minimumIntegerDigits: 0,
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+        maximumFractionDigits: DEFAULT_MAXIMUM_FRACTION_DIGITS
     }, ...options || {}};
 }
 
