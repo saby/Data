@@ -259,10 +259,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         any,
         Model<any>,
         RecordSet<any, Model<any>>,
-        '',
-        IQueryRawData,
-        'items',
-        'meta'
+        IQueryRawData
     >> {
         let items = this._applyFrom(query ? query.getFrom() : undefined);
         const adapter = this.getAdapter();

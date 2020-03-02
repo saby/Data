@@ -33,6 +33,7 @@ export function applyMixins(Sub: Function, ...mixins: Function[]): void {
         Sub.prototype._mixins = [];
     }
 
+    const ownProperties = {};
     mixins.forEach((mixin: Function) => {
         const isClass = typeof mixin === 'function';
         const proto = isClass ? (mixin as any).prototype : mixin;
@@ -42,7 +43,12 @@ export function applyMixins(Sub: Function, ...mixins: Function[]): void {
         }
 
         const inject = (name) => {
-            Object.defineProperty(Sub.prototype, name, Object.getOwnPropertyDescriptor(proto, name));
+            if (!(name in ownProperties)) {
+                ownProperties[name] = Sub.prototype.hasOwnProperty(name);
+            }
+            if (!ownProperties[name]) {
+                Object.defineProperty(Sub.prototype, name, Object.getOwnPropertyDescriptor(proto, name));
+            }
         };
 
         Object.getOwnPropertyNames(proto).forEach(inject);
