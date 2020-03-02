@@ -37,7 +37,12 @@ describe('Types/_formatter/number', () => {
             });
 
             it('should set one sign in the fractional part', () => {
-                assert.equal('4.5', number(4.512, {maximumFractionDigits:1}));
+                const expect = {
+                    'en-US': '4.5',
+                    'ru-RU': '4,5',
+                    'foo-BAR': '4.5'
+                };
+                assert.equal(expect[locale], number(4.512, {maximumFractionDigits:1}));
             });
         });
     });
