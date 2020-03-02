@@ -6,6 +6,40 @@ interface IResultGenerator {
     done: boolean;
 }
 
+interface IIteratorResult {
+    value: undefined | unknown;
+    done: boolean;
+}
+
+class IteratorArray {
+    currentIndex: number = -1;
+    _data: unknown[];
+
+    constructor(data) {
+        this._data = data;
+    }
+
+    next(): IIteratorResult {
+        this.currentIndex += 1;
+
+        if (this.isDone()) {
+            return {
+                value: undefined,
+                done: true
+            };
+        } else {
+            return {
+                value: this._data[this.currentIndex],
+                done: false
+            };
+        }
+    }
+
+    protected isDone(): boolean {
+        return this.currentIndex === this._data.length;
+    }
+}
+
 //TODO Использовать только после полного перехода на стандарт es6.
 /**
  * Функция генератор. Ищит в данных формат по индефикатору.
@@ -139,7 +173,7 @@ class RecursiveIterator {
 
       if (node.data instanceof Array) {
          if (!node.iterator) {
-            node.iterator = node.data[Symbol.iterator]();
+             node.iterator = this.getIterator(node.data);
          }
 
          while (true) {
@@ -201,6 +235,15 @@ class RecursiveIterator {
       this.stackNodes.pop();
       return undefined;
    }
+
+   protected getIterator(data) {
+       return RecursiveIterator.doesEnvSupportIterator() ? data[Symbol.iterator]() : new IteratorArray(data);
+   }
+
+   static doesEnvSupportIterator(): boolean {
+       return typeof Symbol !== 'undefined' && Symbol.iterator !== undefined;
+   }
+
 }
 
 /**
@@ -262,4 +305,5 @@ class SbisFormatFinder {
     }
 }
 
+export {RecursiveIterator};
 export default SbisFormatFinder;
