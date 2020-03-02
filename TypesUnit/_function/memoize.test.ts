@@ -14,4 +14,13 @@ describe('Types/_formatter/memoize', () => {
         assert.equal(decorator(), 2);
         assert.equal(decorator(1), 3);
     });
+
+    it('should clear memoize for function and arguments', () => {
+        let value = 1;
+        const origin = () => ++value;
+        const decorator = memoize(origin);
+        decorator(1);
+        memoize.clear(origin, 1);
+        assert.equal(decorator(1), 3);
+    });
 });
