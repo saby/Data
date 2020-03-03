@@ -464,8 +464,8 @@ export default class DataSet<
      *     console.log(data.getKeyProperty()); // 'id'
      * </pre>
      */
-    getKeyProperty(): TKeyProperty {
-        return this._$keyProperty;
+    getKeyProperty(): string {
+        return this._$keyProperty as string;
     }
 
     /**
@@ -503,8 +503,8 @@ export default class DataSet<
      *     console.log(data.getItemsProperty()); // 'items'
      * </pre>
      */
-    getItemsProperty(): TItemsProperty {
-        return this._$itemsProperty;
+    getItemsProperty(): string {
+        return this._$itemsProperty as string;
     }
 
     /**
