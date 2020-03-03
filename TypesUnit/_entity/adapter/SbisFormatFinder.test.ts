@@ -1,5 +1,7 @@
 import {assert} from 'chai';
+import * as sinon from 'sinon';
 import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
+import {RecursiveIterator} from 'Types/_entity/adapter/SbisFormatFinder';
 
 const format0 = [{
     n: '@Родитель',
@@ -60,38 +62,88 @@ describe('Types/_entity/format/FormatController', () => {
         sbisFormatFinder = undefined;
     });
 
-    describe('cache', () => {
-        it('has id with value 0, but not 1', () => {
-            sbisFormatFinder.getFormat(0);
-            assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
-            assert.isFalse((sbisFormatFinder as any)._cache.has(1));
+    describe('native Iterator', () => {
+        describe('cache', () => {
+            it('has id with value 0, but not 1', () => {
+                sbisFormatFinder.getFormat(0);
+                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+                assert.isFalse((sbisFormatFinder as any)._cache.has(1));
+            });
+
+            it('has all id', () => {
+                assert.throws(() => {
+                    sbisFormatFinder.getFormat();
+                }, ReferenceError);
+                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+                assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+            });
         });
 
-        it('has all id', () => {
+        it('.getFormat()', () => {
+            assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
+            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
+            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
             assert.throws(() => {
-                sbisFormatFinder.getFormat();
+                sbisFormatFinder.getFormat(2);
             }, ReferenceError);
+        });
+
+        it('.scanFormats()', () => {
+            sbisFormatFinder.scanFormats(rawData);
+
+            assert.isTrue((sbisFormatFinder as any)._cache.has(0));
             assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+
+            assert.isTrue((sbisFormatFinder as any)._cache.has(1));
             assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
         });
     });
 
-    it('.getFormat()', () => {
-        assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
-        assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
-        assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
-        assert.throws(() => {
-            sbisFormatFinder.getFormat(2);
-        }, ReferenceError);
-    });
+    describe('ours Iterator', () => {
+        var stubDoesEnvSupportIterator;
+        beforeEach(() => {
+            stubDoesEnvSupportIterator = sinon.stub(RecursiveIterator, 'doesEnvSupportIterator');
+            stubDoesEnvSupportIterator.returns(false);
+        });
 
-    it('.scanFormats()', () => {
-        sbisFormatFinder.scanFormats(rawData);
+        afterEach(() => {
+            stubDoesEnvSupportIterator.restore();
+            stubDoesEnvSupportIterator = undefined;
+        });
 
-        assert.isTrue((sbisFormatFinder as any)._cache.has(0));
-        assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+        describe('cache', () => {
+            it('has id with value 0, but not 1', () => {
+                sbisFormatFinder.getFormat(0);
+                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+                assert.isFalse((sbisFormatFinder as any)._cache.has(1));
+            });
 
-        assert.isTrue((sbisFormatFinder as any)._cache.has(1));
-        assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+            it('has all id', () => {
+                assert.throws(() => {
+                    sbisFormatFinder.getFormat();
+                }, ReferenceError);
+                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+                assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+            });
+        });
+
+        it('.getFormat()', () => {
+            assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
+            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
+            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
+            assert.throws(() => {
+                sbisFormatFinder.getFormat(2);
+            }, ReferenceError);
+        });
+
+        it('.scanFormats()', () => {
+            sbisFormatFinder.scanFormats(rawData);
+
+            assert.isTrue((sbisFormatFinder as any)._cache.has(0));
+            assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+
+            assert.isTrue((sbisFormatFinder as any)._cache.has(1));
+            assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+        });
     });
 });
