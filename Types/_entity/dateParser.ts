@@ -7,7 +7,7 @@ const tokens = {};
 function setHumanMonth(date: Date, value: string): void {
     const month = Number(value) - 1;
     date.setMonth(month);
-    // If timezone between old and new months is different the result might seen wrong, but probably it's just a
+    // If time zone between old and new months is different the result might seen wrong, but probably it's just a
     // time zone correction effect.
     if (date.getMonth() !== month) {
         date.setMonth(month);
