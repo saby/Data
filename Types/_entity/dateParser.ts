@@ -4,8 +4,14 @@ const tokens = {};
 /**
  * Sets month from human-friendly value
  */
-function setHumanMonth(date: Date, value: string): number {
-    return date.setMonth(Number(value) - 1);
+function setHumanMonth(date: Date, value: string): void {
+    const month = Number(value) - 1;
+    date.setMonth(month);
+    // If time zones between old and new month are different the result might seen wrong but probably it's just a time
+    // zone correction effect.
+    if (date.getMonth() !== month) {
+        date.setMonth(month);
+    }
 }
 
 /**
