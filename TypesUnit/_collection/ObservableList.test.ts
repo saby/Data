@@ -171,7 +171,7 @@ describe('Types/_collection/ObservableList', () => {
         });
 
         it('should trigger onCollectionItemChange with changed item after several assigns', (done) => {
-            const list = new ObservableList();
+            const list = new ObservableList<Record>();
             const items = [new Record(), new Record(), new Record()];
             let firesToBeDone = 3;
             const handler = () => {

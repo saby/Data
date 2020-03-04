@@ -154,14 +154,14 @@ describe('Types/_source/DataSet', () => {
             const ds = new DataSet({
                 rawData: {some: {prop: [1, 2]}}
             });
-            assert.equal(ds.getAll('some.prop').getCount(), 2);
+            assert.equal(ds.getAll('some.prop' as never).getCount(), 2);
         });
 
         it('should return an empty recordset from undefined property', () => {
             const ds = new DataSet({
                 rawData: {}
             });
-            assert.equal(ds.getAll('some.prop').getCount(), 0);
+            assert.equal(ds.getAll('some.prop' as never).getCount(), 0);
         });
 
         it('should return recordset with metadata from given property', () => {
@@ -236,15 +236,15 @@ describe('Types/_source/DataSet', () => {
             const ds = new DataSet({
                 rawData: {some: {prop: {a: 1, b: 2}}}
             });
-            assert.equal(ds.getRow('some.prop').get('a'), 1);
-            assert.equal(ds.getRow('some.prop').get('b'), 2);
+            assert.equal(ds.getRow('some.prop' as never).get('a'), 1);
+            assert.equal(ds.getRow('some.prop' as never).get('b'), 2);
         });
 
         it('should return an empty recordset from undefined property', () => {
             const ds = new DataSet({
                 rawData: {}
             });
-            assert.instanceOf(ds.getRow('some.prop'), Model);
+            assert.instanceOf(ds.getRow('some.prop' as never), Model);
         });
 
         it('should return a first item of recordset', () => {
@@ -291,15 +291,15 @@ describe('Types/_source/DataSet', () => {
                     }
                 }
             });
-            assert.equal(ds.getScalar('some.propA'), 'a');
-            assert.equal(ds.getScalar('some.propB'), 'b');
+            assert.equal(ds.getScalar('some.propA' as never), 'a');
+            assert.equal(ds.getScalar('some.propB' as never), 'b');
         });
 
         it('should return undefined from undefined property', () => {
             const ds = new DataSet({
                 rawData: {}
             });
-            assert.isUndefined(ds.getScalar('some.prop'));
+            assert.isUndefined(ds.getScalar('some.prop' as never));
         });
     });
 
@@ -332,9 +332,9 @@ describe('Types/_source/DataSet', () => {
                 rawData: data
             });
             assert.strictEqual(ds.getProperty('a'), data.a);
-            assert.strictEqual(ds.getProperty('a.b'), data.a.b);
-            assert.strictEqual(ds.getProperty('a.b.c'), data.a.b.c);
-            assert.strictEqual(ds.getProperty(''), data);
+            assert.strictEqual(ds.getProperty('a.b' as never), data.a.b);
+            assert.strictEqual(ds.getProperty('a.b.c' as never), data.a.b.c);
+            assert.strictEqual(ds.getProperty('' as never), data);
             assert.strictEqual(ds.getProperty(), data);
         });
 
@@ -342,9 +342,9 @@ describe('Types/_source/DataSet', () => {
             const ds = new DataSet({
                 rawData: {a: {b: {c: {}}}}
             });
-            assert.isUndefined(ds.getProperty('e'));
-            assert.isUndefined(ds.getProperty('a.e'));
-            assert.isUndefined(ds.getProperty('a.b.e'));
+            assert.isUndefined(ds.getProperty('e' as never));
+            assert.isUndefined(ds.getProperty('a.e' as never));
+            assert.isUndefined(ds.getProperty('a.b.e' as never));
         });
     });
 

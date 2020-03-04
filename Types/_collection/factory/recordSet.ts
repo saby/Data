@@ -15,7 +15,7 @@ interface IOptions {
  * @public
  * @author Мальцев А.А.
  */
-export default function recordSet(items: IEnumerable<Record>, options?: IOptions): RecordSet<Record> {
+export default function recordSet(items: IEnumerable<Record>, options?: IOptions): RecordSet<unknown, Record> {
     if (!items || !(items['[Types/_collection/IEnumerable]'])) {
         throw new TypeError('Argument "items" should implement Types/collection:IEnumerable');
     }
@@ -23,7 +23,7 @@ export default function recordSet(items: IEnumerable<Record>, options?: IOptions
     options = options || {};
     delete options.rawData;
 
-    const result = create<RecordSet<Record>>('Types/collection:RecordSet', options);
+    const result = create<RecordSet<unknown, Record>>('Types/collection:RecordSet', options);
     items.each((item) => {
         result.add(item);
     });

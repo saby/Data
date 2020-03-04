@@ -48,7 +48,7 @@ export default class RecordSetTable extends mixin<
     /**
      * Список
      */
-    protected _data: RecordSet<Record>;
+    protected _data: RecordSet<unknown, Record>;
 
     /**
      * Конструктор

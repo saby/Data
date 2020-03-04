@@ -1,17 +1,17 @@
 import enumerableComparator, {ISession} from './enumerableComparator';
-import {IList} from '../collection';
 import {ChangeAction} from './IObservable';
+import {IList} from '../collection';
+import {ISerializable, ObservableMixin} from 'entity';
 
 /**
- * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния
+ * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния.
+ * Работает соместно с {@link Types/_entity/ObservableMixin}.
  * @mixin Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
-export default class EventRaisingMixin {
+class EventRaisingMixin {
     '[Types/_entity/EventRaisingMixin]': boolean;
-
-    protected _moduleName: string;
 
     /**
      * @event После изменения режима генерации событий
@@ -43,14 +43,6 @@ export default class EventRaisingMixin {
     constructor() {
         this._publish('onEventRaisingChange');
     }
-
-    // region ObservableMixin
-
-    hasEventHandlers: (event: string) => boolean;
-    protected _publish: (...events: string[]) => void;
-    protected _notify: (event: string, ...args: any[]) => void;
-
-    // endregion
 
     // region Public methods
 
@@ -203,7 +195,7 @@ export default class EventRaisingMixin {
             throw new Error(this._blockChangesMessage);
         }
         if (action === ChangeAction.ACTION_RESET) {
-            this._blockChangesMessage = `The instance of '${this._moduleName}' is blocked from changes because reset action is in progress.`;
+            this._blockChangesMessage = `The instance of '${(this as unknown as ISerializable)._moduleName}' is blocked from changes because reset action is in progress.`;
         }
 
         this._notify(
@@ -274,6 +266,11 @@ export default class EventRaisingMixin {
 
     // endregion Protected methods
 }
+
+// tslint:disable-next-line:interface-name no-empty-interface
+interface EventRaisingMixin extends ObservableMixin {}
+
+export default EventRaisingMixin;
 
 Object.assign(EventRaisingMixin.prototype, {
     '[Types/_entity/EventRaisingMixin]': true,

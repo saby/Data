@@ -2,10 +2,14 @@ import IEnumerable from './IEnumerable';
 import IObservable from './IObservable';
 import List, {IOptions as IListOptions} from './List';
 import EventRaisingMixin from './EventRaisingMixin';
-import {ISerializableSignature, ObservableMixin, SerializableMixin} from '../entity';
+import {
+    ISerializableSignature,
+    ObservableMixin,
+    SerializableMixin
+} from '../entity';
 import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
-import {mixin} from '../util';
+import {applyMixins} from '../util';
 
 const arraySlice = Array.prototype.slice;
 
@@ -37,16 +41,7 @@ const arraySlice = Array.prototype.slice;
  * @public
  * @author Мальцев А.А.
  */
-export default class ObservableList<T> extends mixin<
-    List<any>,
-    ObservableMixin,
-    EventRaisingMixin
->(
-    List,
-    IObservable,
-    ObservableMixin,
-    EventRaisingMixin
-) implements IReceiver {
+class ObservableList<T> extends List<T> implements IReceiver {
     /**
      * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
      */
@@ -324,11 +319,18 @@ export default class ObservableList<T> extends mixin<
     // endregion
 }
 
+applyMixins(ObservableList, ObservableMixin, IObservable, EventRaisingMixin);
+
+// tslint:disable-next-line:interface-name
+interface ObservableList<T> extends List<T>, ObservableMixin, EventRaisingMixin, IReceiver {}
+
 Object.assign(ObservableList.prototype, {
     '[Types/_collection/ObservableList]': true,
     '[Types/_entity/relation/IReceiver]': true,
     _moduleName: 'Types/collection:ObservableList',
     _resetChangesCount: 100
 });
+
+export default ObservableList;
 
 register('Types/collection:ObservableList', ObservableList, {instantiate: false});

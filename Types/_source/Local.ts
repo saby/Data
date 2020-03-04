@@ -50,6 +50,14 @@ export interface IOptions extends IBaseOptions {
     filter?: FilterFunction;
 }
 
+export interface IQueryRawData {
+    items: any;
+    meta?: {
+        total?: number;
+        path?: unknown;
+    };
+}
+
 /**
  * Источник данных, работающий локально.
  * @remark
@@ -174,14 +182,14 @@ export default abstract class Local<TData = unknown> extends mixin<
         });
     }
 
-   read(key: any, meta?: object): Promise<Record> {
-      const data = this._getRecordByKey(key);
-      if (data) {
-         return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
-      } else {
-         return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<any>;
-      }
-   }
+    read(key: any, meta?: object): Promise<Record> {
+       const data = this._getRecordByKey(key);
+       if (data) {
+          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
+       } else {
+          return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<any>;
+       }
+    }
 
     update(data: Record | RecordSet, meta?: object): Promise<null> {
         const updateRecord = (record) => {

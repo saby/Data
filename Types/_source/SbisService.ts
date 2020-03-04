@@ -18,7 +18,7 @@ import Query, {
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
-import {AdapterDescriptor, getMergeableProperty, Record} from '../entity';
+import {AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {IHashMap} from '../declarations';
@@ -187,16 +187,20 @@ function buildRecord(data: unknown, adapter: AdapterDescriptor): Record | null {
  * @param adapter
  * @param keyProperty
  */
-function buildRecordSet(data: unknown, adapter: AdapterDescriptor, keyProperty?: string): RecordSet<Record> | null {
+function buildRecordSet<T = unknown>(
+    data: T | RecordSet<T, Model<T>>,
+    adapter: AdapterDescriptor,
+    keyProperty?: string
+): RecordSet<T, Model<T>> | null {
     if (data === null) {
-        return data;
+        return null;
     }
     if (data && DataMixin.isRecordSetInstance(data)) {
-        return data as RecordSet<Record>;
+        return data;
     }
 
     const RecordSetType = resolve<typeof RecordSet>('Types/collection:RecordSet');
-    const records = new RecordSetType<Record>({
+    const records = new RecordSetType<T, Model<T>>({
         adapter,
         keyProperty
     });
@@ -204,7 +208,7 @@ function buildRecordSet(data: unknown, adapter: AdapterDescriptor, keyProperty?:
     if (data instanceof Array) {
         const count = data.length;
         for (let i = 0; i < count; i++) {
-            records.add(buildRecord(data[i], adapter));
+            records.add(buildRecord(data[i], adapter) as unknown as Model<T>);
         }
     }
 
@@ -614,7 +618,7 @@ function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap
 
 interface IQueryResult {
     Фильтр: Record;
-    Сортировка: RecordSet<Record>;
+    Сортировка: RecordSet<unknown, Model<unknown>>;
     Навигация: Record;
     ДопПоля: AdditionalParams;
 }

@@ -695,7 +695,7 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         it('should set the field value for record with different format the use SBIS adapter', () => {
-            const rs = new RecordSet<Record>({
+            const rs = new RecordSet<unknown, Record>({
                 rawData: getSbisItems(),
                 adapter: 'Types/entity:adapter.Sbis'
             });
@@ -722,7 +722,7 @@ describe('Types/_collection/RecordSet', () => {
 
         it('should add the field and set it value for the added record use SBIS adapter', () => {
             const keyProperty = 'id';
-            const rs = new RecordSet<Record>({
+            const rs = new RecordSet<unknown, Record>({
                 rawData: getSbisItems(),
                 adapter: 'Types/entity:adapter.Sbis',
                 keyProperty
@@ -977,7 +977,7 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         it('should take format from first record to clear recordSet', () => {
-            const rs = new RecordSet<Record>({
+            const rs = new RecordSet<unknown, Record>({
                 rawData: [{id: 1, name: 'John'}]
             });
             const recs = [new Record({
@@ -1369,7 +1369,7 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         it('should take adapter from the first record of assigning Array', () => {
-            const rs = new RecordSet<Record>({
+            const rs = new RecordSet<unknown, Record>({
                 adapter: new JsonAdapter()
             });
             const arr = [new Record({adapter: 'Types/entity:adapter.Sbis'})];
@@ -2732,7 +2732,7 @@ describe('Types/_collection/RecordSet', () => {
     });
 
     describe('.patch()', () => {
-        function addRecord(rs: RecordSet<Record>, data: object): void {
+        function addRecord(rs: RecordSet<unknown, Record>, data: object): void {
             const record = new Record({
                 format: rs.getFormat(),
                 adapter: rs.getAdapter()

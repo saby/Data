@@ -1,5 +1,6 @@
 import {Field, fieldsFactory, UniversalField, IFieldDeclaration, FormatDeclaration} from './format';
 import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData} from './adapter';
+import ISerializable from './ISerializable';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
@@ -76,6 +77,14 @@ function buildFormatByRawData(this: FormattableMixin): format.Format {
     return format;
 }
 
+interface IDeprecated {
+    /**
+     * Old-fashioned options, bad stuff
+     * @deprecated
+     */
+    _options: any;
+}
+
 /**
  * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as adapter.
  * @mixin Types/_entity/FormattableMixin
@@ -84,8 +93,6 @@ function buildFormatByRawData(this: FormattableMixin): format.Format {
  */
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': boolean;
-
-    protected _moduleName: string;
 
     protected _$formatController: FormatController;
 
@@ -357,16 +364,13 @@ export default abstract class FormattableMixin {
      */
     protected _rawDataFields: string[];
 
-    /**
-     * Old-fashioned options, bad stuff
-     * @deprecated
-     */
-    protected _options: any;
-
     constructor() {
         // FIXME: get rid of _options
-        if (!this._$format && this._options && this._options.format) {
-            this._$format = this._options.format;
+        if (!this._$format &&
+            (this as unknown as IDeprecated)._options &&
+            (this as unknown as IDeprecated)._options.format
+        ) {
+            this._$format = (this as unknown as IDeprecated)._options.format;
         }
     }
 
@@ -691,7 +695,7 @@ export default abstract class FormattableMixin {
                         (adapter as ITable | IRecord).addField(fieldFormat);
                     }
                 } catch (err) {
-                    logger.info(`${this._moduleName}::constructor(): can't add raw data field (${err.message})`);
+                    logger.info(`${(this as unknown as ISerializable)._moduleName}::constructor(): can't add raw data field (${err.message})`);
                 }
             });
         }

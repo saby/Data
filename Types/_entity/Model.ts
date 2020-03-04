@@ -6,7 +6,7 @@ import {IAdapter} from './adapter';
 import {Compute, ICompute, Track, ITrack} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
-import {deprecateExtend, logger, mixin} from '../util';
+import {applyMixins, deprecateExtend, logger} from '../util';
 import {Map, Set} from '../shim';
 import {IHashMap} from '../_declarations';
 
@@ -149,11 +149,7 @@ interface ISerializableState extends IRecordSerializableState {
  * @ignoreMethods getDefault
  * @author Мальцев А.А.
  */
-export default class Model<T = any> extends mixin<
-    Record, InstantiableMixin
->(
-   Record, InstantiableMixin
-) implements IStateful {
+class Model<T = any> extends Record<T> implements IStateful {
    /**
     * @typedef {Object} Property
     * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных).
@@ -359,7 +355,7 @@ export default class Model<T = any> extends mixin<
     *    article.getKey(); // 1
     * </pre>
     */
-   protected _$keyProperty: string;
+    protected _$keyProperty: string;
 
     /**
      * The model is deleted in data source which it's taken from
@@ -443,7 +439,6 @@ export default class Model<T = any> extends mixin<
 
     // region IObject
 
-    // @ts-ignore
     get<K extends keyof T>(name: K): T[K] {
         this._pushDependency(name as string);
 
@@ -1117,6 +1112,10 @@ export default class Model<T = any> extends mixin<
     // endregion
 }
 
+applyMixins(Model, InstantiableMixin);
+// tslint:disable-next-line:interface-name
+interface Model<T = any> extends Record<T>, InstantiableMixin, IStateful {}
+
 Object.assign(Model.prototype, {
     '[Types/_entity/Model]': true,
     '[Types/_entity/IStateful]': true,
@@ -1134,6 +1133,8 @@ Object.assign(Model.prototype, {
     getIdProperty: Model.prototype.getKeyProperty,
     setIdProperty: Model.prototype.setKeyProperty
 });
+
+export default Model;
 
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
 // @ts-ignore

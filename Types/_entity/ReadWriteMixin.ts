@@ -69,18 +69,6 @@ export default abstract class ReadWriteMixin {
         }
     }
 
-    protected _publish(): void {
-        if (this[$writable]) {
-            return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
-        }
-    }
-
-    protected _notify(): void {
-        if (this[$writable]) {
-            return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
-        }
-    }
-
     // endregion
 
     // region OptionsToPropertyMixin
@@ -93,11 +81,27 @@ export default abstract class ReadWriteMixin {
          return options;
     }
 
-     // endregion
+    // endregion
 }
 
 Object.assign(ReadWriteMixin.prototype, {
-    '[Types/_entity/ReadWriteMixin]': true
+    '[Types/_entity/ReadWriteMixin]': true,
+
+    // region ObservableMixin
+
+    _publish(...events: string[]): void {
+        if (this[$writable]) {
+            return (ObservableMixin.prototype as any)._publish.apply(this, arguments);
+        }
+    },
+
+    _notify(event: string, ...args: any[]): any {
+        if (this[$writable]) {
+            return (ObservableMixin.prototype as any)._notify.apply(this, arguments);
+        }
+    }
+
+    // endregion
 });
 
 const IS_BROWSER = typeof window !== 'undefined';
