@@ -54,32 +54,41 @@ function getTimedOutResponse<T>(
     let result = origin;
     const itsPromise = !(origin as Deferred<T>).isReady;
     const timeoutMs = 1000 * timeout;
-    const timeoutError = new Error(
+    let timeoutError = new Error(
         `Timeout of ${timeout} seconds had expired before the method '${methodName}' at '${address}' returned any results`
     );
+    let timeoutHandler: number;
+
+    // Clear links to timeout and error instance in purpose of disappearing in memory allocation tree.
+    const unallocate = () => {
+        if (timeoutHandler) {
+            clearTimeout(timeoutHandler);
+            timeoutHandler = undefined;
+        }
+        timeoutError = undefined;
+    };
 
     if (itsPromise) {
         result = new Promise((resolve, reject) => {
-            let gotTheResult = false;
             origin.then((response) => {
-                gotTheResult = true;
+                unallocate();
                 resolve(response);
             }).catch((err) => {
-                gotTheResult = true;
+                unallocate();
                 reject(err);
             });
 
-            setTimeout(() => {
-                if (!gotTheResult) {
-                    throwError(timeoutError, logger);
-                }
+            timeoutHandler = setTimeout(() => {
+                throwError(timeoutError, logger);
+                unallocate();
             }, timeoutMs);
         });
     } else {
-        setTimeout(() => {
+        timeoutHandler = setTimeout(() => {
             if (!(origin as Deferred<T>).isReady()) {
                 throwError(timeoutError, logger);
             }
+            unallocate();
         }, timeoutMs);
     }
 
