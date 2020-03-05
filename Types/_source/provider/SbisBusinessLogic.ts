@@ -68,8 +68,13 @@ function getTimedOutResponse<T>(
         timeoutError = undefined;
     };
 
+    timeoutHandler = setTimeout(() => {
+        throwError(timeoutError, logger);
+        unallocate();
+    }, timeoutMs);
+
     if (itsPromise) {
-        result = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             origin.then((response) => {
                 unallocate();
                 resolve(response);
@@ -77,20 +82,16 @@ function getTimedOutResponse<T>(
                 unallocate();
                 reject(err);
             });
-
-            timeoutHandler = setTimeout(() => {
-                throwError(timeoutError, logger);
-                unallocate();
-            }, timeoutMs);
         });
-    } else {
-        timeoutHandler = setTimeout(() => {
-            if (!(origin as Deferred<T>).isReady()) {
-                throwError(timeoutError, logger);
-            }
-            unallocate();
-        }, timeoutMs);
     }
+
+    (origin as Deferred<T>).addCallbacks((result) => {
+        unallocate();
+        return result;
+    }, (err) => {
+        unallocate();
+        return err;
+    });
 
     return result;
 }
