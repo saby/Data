@@ -51,7 +51,6 @@ function getTimedOutResponse<T>(
     address: string,
     logger: ILogger
 ): Promise<T> {
-    let result = origin;
     const itsPromise = !(origin as Deferred<T>).isReady;
     const timeoutMs = 1000 * timeout;
     let timeoutError = new Error(
@@ -93,7 +92,7 @@ function getTimedOutResponse<T>(
         return err;
     });
 
-    return result;
+    return origin;
 }
 
 /**
