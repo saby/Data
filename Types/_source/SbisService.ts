@@ -1095,7 +1095,7 @@ export default class SbisService extends Rpc {
      *    });
      * </pre>
      */
-    create(meta?: IHashMap<unknown>): Promise<Record> {
+    create(meta?: IHashMap<unknown>): Promise<Model> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
@@ -1149,21 +1149,21 @@ export default class SbisService extends Rpc {
         return pd.done().getResult();
     }
 
-   query(query?: Query): Promise<DataSet> {
-      query = object.clonePlain(query, true);
-      return this._loadAdditionalDependencies((ready) => {
-         this._connectAdditionalDependencies(
-            super.query(query) as any,
-            ready
-         );
-      });
-   }
+    query(query?: Query): Promise<DataSet> {
+       query = object.clonePlain(query, true);
+       return this._loadAdditionalDependencies((ready) => {
+          this._connectAdditionalDependencies(
+             super.query(query) as any,
+             ready
+          );
+       });
+    }
 
     // endregion
 
     // region ICrudPlus
 
-    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<unknown> {
+    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<null> {
         meta = meta || {};
         if (this._$binding.moveBefore) {
             // TODO: поддерживаем старый способ с двумя методами

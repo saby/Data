@@ -5,7 +5,7 @@ import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import Query, {IMeta, Join, Order, PartialExpression, WhereExpression} from './Query';
 import DataSet from './DataSet';
-import {adapter, Model, Record} from '../entity';
+import {adapter, Record, Model} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 import {IHashMap} from '../_declarations';
@@ -17,6 +17,24 @@ const MOVE_POSITION = {
     before: 'before',
     after: 'after'
 };
+
+interface IMovePosition {
+    before?: boolean;
+    parentProperty?: string;
+    position?: string;
+}
+
+export interface IQueryRawData {
+    items: any;
+    meta?: {
+        total?: number;
+        path?: unknown;
+    };
+}
+
+export interface IOptions extends IBaseOptions {
+    filter?: FilterFunction;
+}
 
 function compareValues(given: any, expect: any, operator: string): boolean {
     // If array expected, use "given in expect" logic
@@ -45,18 +63,6 @@ function compareValues(given: any, expect: any, operator: string): boolean {
 }
 
 type FilterFunction = (item: adapter.IRecord, query: object) => boolean;
-
-export interface IOptions extends IBaseOptions {
-    filter?: FilterFunction;
-}
-
-export interface IQueryRawData {
-    items: any;
-    meta?: {
-        total?: number;
-        path?: unknown;
-    };
-}
 
 /**
  * Источник данных, работающий локально.
@@ -175,21 +181,21 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): Promise<Record> {
+    create(meta?: object): Promise<Model> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies().addCallback(() => {
             return this._prepareCreateResult(meta);
         });
     }
 
-    read(key: any, meta?: object): Promise<Record> {
-       const data = this._getRecordByKey(key);
-       if (data) {
-          return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
-       } else {
-          return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<any>;
-       }
-    }
+   read(key: number | string, meta?: object): Promise<Model> {
+      const data = this._getRecordByKey(key);
+      if (data) {
+         return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
+      } else {
+         return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<null>;
+      }
+   }
 
     update(data: Record | RecordSet, meta?: object): Promise<null> {
         const updateRecord = (record) => {
@@ -230,7 +236,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         );
     }
 
-    destroy(keys: any | any[], meta?: object): Promise<null> {
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
         const destroyByKey = (key) => {
             const index = this._getIndexByKey(key);
             if (index !== -1) {
@@ -242,17 +248,14 @@ export default abstract class Local<TData = unknown> extends mixin<
             }
         };
 
-        if (!(keys instanceof Array)) {
-            keys = [keys];
-        }
-
-        for (let i = 0, len = keys.length; i < len; i++) {
-            if (!destroyByKey(keys[i])) {
-                return Deferred.fail(`Record with key "${keys[i]}" does not exist`) as Promise<any>;
+        const keysArray = keys instanceof Array ? keys : [keys];
+        for (let i = 0, len = keysArray.length; i < len; i++) {
+            if (!destroyByKey(keysArray[i])) {
+                return Deferred.fail(`Record with key "${keysArray[i]}" does not exist`) as Promise<null>;
             }
         }
 
-        return Deferred.success(true) as Promise<any>;
+        return Deferred.success(true) as Promise<null>;
     }
 
     query(query?: Query): Promise<DataSet> {
@@ -286,11 +289,11 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<any> {
+    merge(from: string | number, to: string | number): Promise<null> {
        const indexOne = this._getIndexByKey(from);
        const indexTwo = this._getIndexByKey(to);
        if (indexOne === -1 || indexTwo === -1) {
-          return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`) as Promise<any>;
+          return Deferred.fail(`Record with key "${from}" or "${to}" does not exist`) as Promise<null>;
        } else {
           this._getTableAdapter().merge(
              indexOne,
@@ -298,14 +301,14 @@ export default abstract class Local<TData = unknown> extends mixin<
              this.getKeyProperty()
           );
           this._reIndex();
-          return Deferred.success(true) as Promise<any>;
+          return Deferred.success(true) as Promise<null>;
        }
     }
 
-    copy(key: string | number, meta?: object): Promise<Record> {
+    copy(key: string | number, meta?: object): Promise<Model> {
        const index = this._getIndexByKey(key);
        if (index === -1) {
-          return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<any>;
+          return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<null>;
        } else {
           const copy = this._getTableAdapter().copy(index);
           this._reIndex();
@@ -315,7 +318,7 @@ export default abstract class Local<TData = unknown> extends mixin<
        }
     }
 
-    move(items: string | number | Array<string | number>, target: string | number, meta?: any): Promise<any> {
+    move(items: string | number | Array<string | number>, target: string | number, meta?: IMovePosition): Promise<any> {
         meta = meta || {};
         const sourceItems = [];
         if (!(items instanceof Array)) {
@@ -339,7 +342,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             targetPosition = this._getIndexByKey(target);
             targetItem = adapter.forRecord(tableAdapter.at(targetPosition));
             if (targetPosition === -1) {
-                return Deferred.fail('Can\'t find target position') as Promise<any>;
+                return Deferred.fail('Can\'t find target position') as Promise<null>;
             }
         }
 
@@ -409,7 +412,7 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @param key Значение ключа
      * @protected
      */
-    protected _getRecordByKey(key: string): adapter.IRecord {
+    protected _getRecordByKey(key: number | string): adapter.IRecord {
         return this._getTableAdapter().at(
             this._getIndexByKey(key)
         );

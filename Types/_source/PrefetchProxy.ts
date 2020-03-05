@@ -9,6 +9,7 @@ import {
     OptionsToPropertyMixin,
     SerializableMixin,
     Record,
+    Model,
     ISerializableState
 } from '../entity';
 import {RecordSet} from '../collection';
@@ -16,9 +17,9 @@ import {mixin} from '../util';
 import Deferred = require('Core/Deferred');
 
 interface IData {
-    read?: Record;
+    read?: Model;
     query?: DataSet;
-    copy?: Record;
+    copy?: Model;
 }
 
 interface IDone {
@@ -253,7 +254,7 @@ export default class PrefetchProxy extends mixin<
     readonly '[Types/_source/IDecorator]': boolean = true;
 
     getOriginal<T = ITarget>(): T {
-        const original = this._$target as any;
+        const original = this._$target as unknown as T;
         return original['[Types/_source/IDecorator]'] ? original.getOriginal() : original;
     }
 
@@ -263,28 +264,28 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): Promise<Record> {
-        return (this._$target as ICrud).create(meta);
+    create(meta?: object): Promise<Model> {
+        return (this._$target as ICrud).create(meta) as Promise<Model>;
     }
 
-    read(key: any, meta?: object): Promise<Record> {
+    read(key: number | string, meta?: object): Promise<Model> {
         if (this._validators.read(this._$data.read, this._done)) {
-            return Deferred.success(this._$data.read) as Promise<Record>;
+            return Deferred.success(this._$data.read);
         }
-        return (this._$target as ICrud).read(key, meta);
+        return (this._$target as ICrud).read(key, meta) as Promise<Model>;
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<null> {
         return (this._$target as ICrud).update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: object): Promise<null> {
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
         return (this._$target as ICrud).destroy(keys, meta);
     }
 
     query(query?: Query): Promise<DataSet> {
         if (this._validators.query(this._$data.query, this._done)) {
-            return Deferred.success(this._$data.query) as Promise<DataSet>;
+            return Deferred.success(this._$data.query);
         }
         return (this._$target as ICrud).query(query);
     }
@@ -295,18 +296,18 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<any> {
+    merge(from: string | number, to: string | number): Promise<null> {
         return (this._$target as ICrudPlus).merge(from, to);
     }
 
-    copy(key: string | number, meta?: object): Promise<Record> {
+    copy(key: string | number, meta?: object): Promise<Model> {
         if (this._validators.copy(this._$data.copy, this._done)) {
-            return Deferred.success(this._$data.copy) as Promise<Record>;
+            return Deferred.success(this._$data.copy);
         }
-        return (this._$target as ICrudPlus).copy(key, meta);
+        return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<any> {
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<null> {
         return (this._$target as ICrudPlus).move(items, target, meta);
     }
 
@@ -315,15 +316,15 @@ export default class PrefetchProxy extends mixin<
     // region OptionsMixin
 
     getOptions(): object {
-        if (this._$target && (this._$target as any as OptionsMixin).getOptions) {
-            return (this._$target as any as OptionsMixin).getOptions();
+        if (this._$target && (this._$target as unknown as OptionsMixin).getOptions) {
+            return (this._$target as unknown as OptionsMixin).getOptions();
         }
         return {};
     }
 
     setOptions(options: object): void {
-        if (this._$target && (this._$target as any as OptionsMixin).setOptions) {
-            return (this._$target as any as OptionsMixin).setOptions(options);
+        if (this._$target && (this._$target as unknown as OptionsMixin).setOptions) {
+            return (this._$target as unknown as OptionsMixin).setOptions(options);
         }
         throw new TypeError('Option "target" should be an instance of Types/_source/OptionsMixin');
     }
