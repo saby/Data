@@ -173,7 +173,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): Promise<Model> {
+    create(meta?: object): Promise<Model | Record> {
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies().addCallback(() => {
             return this._prepareCreateResult(meta);
