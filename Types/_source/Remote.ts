@@ -11,7 +11,7 @@ import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
 import jsonize from './jsonize';
 import {IAbstract} from './provider';
-import {adapter, Record, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
+import {adapter, Record, Model, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
@@ -261,7 +261,7 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrud]': boolean = true;
 
-    create(meta?: object): Promise<Record> {
+    create(meta?: object): Promise<Model> {
         return this._callProvider(
             this._$binding.create,
             this._$passing.create.call(this, meta)
@@ -272,7 +272,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    read(key: any, meta?: object): Promise<Record> {
+    read(key: number | string, meta?: object): Promise<Model> {
         return this._callProvider(
             this._$binding.read,
             this._$passing.read.call(this, key, meta)
@@ -293,7 +293,7 @@ export default abstract class Remote extends mixin<
     }
 
     // @ts-ignore
-    destroy(keys: any | any[], meta?: object): Promise<null> {
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
         return this._callProvider(
             this._$binding.destroy,
             this._$passing.destroy.call(this, keys, meta)
@@ -317,14 +317,14 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<any> {
+    merge(from: string | number, to: string | number): Promise<null> {
         return this._callProvider(
             this._$binding.merge,
             this._$passing.merge.call(this, from, to)
         );
     }
 
-    copy(key: string | number, meta?: object): Promise<Record> {
+    copy(key: string | number, meta?: object): Promise<Model> {
         return this._callProvider(
             this._$binding.copy,
             this._$passing.copy.call(this, key, meta)
@@ -333,7 +333,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<any> {
+    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<null> {
         return this._callProvider(
             this._$binding.move,
             this._$passing.move.call(this, items, target, meta)
