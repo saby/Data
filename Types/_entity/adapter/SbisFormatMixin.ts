@@ -185,7 +185,8 @@ export default abstract class SbisFormatMixin implements IFormatController {
     // region toJSON
 
     replaceToJSON<T>(data: T): T {
-        if (data && typeof data === 'object') {
+        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
+
             const getDataFormatJson = this.getDataFormatJson.bind(this);
 
             Object.defineProperties(data, {
