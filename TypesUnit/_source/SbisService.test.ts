@@ -1184,7 +1184,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and null position and "after" order', () => {
+            it('should generate request with position navigation and null position and "forward" order', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1204,7 +1204,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[1], limit);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'after');
+                    assert.strictEqual(args.Навигация.d[2], 'forward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Строка');
@@ -1212,7 +1212,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and null position and "before" order', () => {
+            it('should generate request with position navigation and null position and "backward" order', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1232,7 +1232,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[1], limit);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'before');
+                    assert.strictEqual(args.Навигация.d[2], 'backward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Строка');
@@ -1261,7 +1261,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[1], limit);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'after');
+                    assert.strictEqual(args.Навигация.d[2], 'forward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Строка');
@@ -1269,7 +1269,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and "after" order as default', () => {
+            it('should generate request with position navigation and "forward" order as default', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1290,7 +1290,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[1], limit);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'after');
+                    assert.strictEqual(args.Навигация.d[2], 'forward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Строка');
@@ -1300,7 +1300,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and "after" order', () => {
+            it('should generate request with position navigation and "forward" order', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1323,7 +1323,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Навигация.d[1], limit);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'after');
+                    assert.strictEqual(args.Навигация.d[2], 'forward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Запись');
@@ -1336,7 +1336,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and "before" order', () => {
+            it('should generate request with position navigation and "backward" order', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1353,7 +1353,7 @@ describe('Types/_source/SbisService', () => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'before');
+                    assert.strictEqual(args.Навигация.d[2], 'backward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Запись');
@@ -1366,7 +1366,7 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with position navigation and "both" order', () => {
+            it('should generate request with position navigation and "bothways" order', () => {
                 const service = new SbisService({
                     endpoint: 'USP'
                 });
@@ -1383,7 +1383,7 @@ describe('Types/_source/SbisService', () => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'both');
+                    assert.strictEqual(args.Навигация.d[2], 'bothways');
 
                     assert.strictEqual(args.Фильтр.d.length, 0);
                 });
@@ -1405,7 +1405,7 @@ describe('Types/_source/SbisService', () => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'after');
+                    assert.strictEqual(args.Навигация.d[2], 'forward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     assert.strictEqual(args.Навигация.s[3].t, 'Запись');
@@ -1446,7 +1446,7 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(args.Фильтр.d[0], 1);
 
                     assert.strictEqual(args.Навигация.s[2].n, 'Order');
-                    assert.strictEqual(args.Навигация.d[2], 'before');
+                    assert.strictEqual(args.Навигация.d[2], 'backward');
 
                     assert.strictEqual(args.Навигация.s[3].n, 'Position');
                     const navigation = args.Навигация.d[3];
