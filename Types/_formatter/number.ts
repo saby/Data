@@ -342,9 +342,9 @@ function getNumberFormat(options: IFormat): IFormat {
  * <h2>Example</h2>
  * <pre>
  *     import {number as formatNumber} from 'Types/formatter';
- *     formatNumber(12325.13) // return '12,325.13' for en-US locale and '12 325.13' for ru-RU
+ *     formatNumber(12325.13) // return '12,325.13' for en-US locale and '12 325,13' for ru-RU
  * </pre>
- * More info https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
+ * See more info at {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat MDN}.
  * @class
  * @name Types/_formatter/number
  * @public
