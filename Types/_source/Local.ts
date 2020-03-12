@@ -185,13 +185,13 @@ export default abstract class Local<TData = unknown> extends mixin<
         meta = object.clonePlain(meta, true);
         return this._loadAdditionalDependencies().addCallback(() => {
             return this._prepareCreateResult(meta);
-        });
+        }) as Promise<Model | Record>;
     }
 
    read(key: number | string, meta?: object): Promise<Model> {
       const data = this._getRecordByKey(key);
       if (data) {
-         return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data));
+         return this._loadAdditionalDependencies().addCallback(() => this._prepareReadResult(data)) as Promise<Model>;
       } else {
          return Deferred.fail(`Record with key "${key}" does not exist`) as Promise<null>;
       }
@@ -233,7 +233,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
         return this._loadAdditionalDependencies().addCallback(
             () => this._prepareUpdateResult(data, keys)
-        );
+        ) as Promise<null>;
     }
 
     destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
@@ -280,7 +280,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             meta: {
                 total
             }
-        }, query));
+        }, query)) as Promise<DataSet>;
     }
 
     // endregion
@@ -314,7 +314,7 @@ export default abstract class Local<TData = unknown> extends mixin<
           this._reIndex();
           return this._loadAdditionalDependencies().addCallback(
              () => this._prepareReadResult(copy)
-          );
+          ) as Promise<Model>;
        }
     }
 
