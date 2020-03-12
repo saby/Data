@@ -24,12 +24,6 @@ import {logger, object} from '../util';
 import {IHashMap} from '../declarations';
 import ParallelDeferred = require('Core/ParallelDeferred');
 
-enum PoitionNavigationOrder {
-    before = 'before',
-    after = 'after',
-    both = 'both'
-}
-
 /**
  * Separator for BL object name and method name
  */
@@ -49,9 +43,15 @@ const EXPRESSION_TEMPLATE = /(.+)([<>]=?|~)$/;
 
 type EntityId = string | number;
 
+enum CursorDirection {
+    backward = 'backward',
+    forward = 'forward',
+    bothways = 'bothways'
+}
+
 interface ICursor {
     position: object | object[];
-    order: string;
+    direction: CursorDirection;
 }
 
 export interface IEndpoint extends IProviderEndpoint {
@@ -308,15 +308,15 @@ function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor):
     }
 
     // We can use only one kind of order so take it from the first operand
-    if (!cursor.order) {
+    if (!cursor.direction) {
         switch (operand) {
             case '~':
-                cursor.order = PoitionNavigationOrder.both;
+                cursor.direction = CursorDirection.bothways;
                 break;
 
             case '<':
             case '<=':
-                cursor.order = PoitionNavigationOrder.before;
+                cursor.direction = CursorDirection.backward;
                 break;
         }
     }
@@ -336,7 +336,7 @@ function applyMultiplePosition(conditions: PositionDeclaration[], cursor: ICurso
     conditions.forEach(([conditionKey, conditionFilter]) => {
         const conditionCursor: ICursor = {
             position: null,
-            order: ''
+            direction: null
         };
         Object.keys(conditionFilter).forEach((filterKey) => {
             applyExpressionAndValue(filterKey, conditionFilter[filterKey], conditionCursor);
@@ -347,7 +347,7 @@ function applyMultiplePosition(conditions: PositionDeclaration[], cursor: ICurso
             nav:  buildRecord(conditionCursor.position, adapter)
         });
 
-        cursor.order = cursor.order || conditionCursor.order;
+        cursor.direction = cursor.direction || conditionCursor.direction;
     });
 }
 
@@ -383,9 +383,9 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
         case NavigationType.Position:
             if (!withoutLimit) {
                 const where = query.getWhere();
-                const cursor = {
+                const cursor: ICursor = {
                     position: null,
-                    order: ''
+                    direction: null
                 };
                 let processingPosition = false;
 
@@ -413,7 +413,7 @@ function getNavigationParams(query: Query, options: IOptionsOption, adapter: Ada
                 params = {
                     HasMore: more,
                     Limit: limit,
-                    Order: cursor.order || PoitionNavigationOrder.after,
+                    Direction: cursor.direction || CursorDirection.forward,
                     Position: cursor.position instanceof Array
                         ? buildRecordSet(cursor.position, adapter)
                         : buildRecord(cursor.position, adapter)
