@@ -12,7 +12,7 @@ interface IChained<T> {
     arrayOf: arrayOfValidator<T>;
 }
 
-type ChainedValidator<T> = ValidateFunc<T> & IChained<T>;
+export type DescriptorValidator<T> = ValidateFunc<T> & IChained<T>;
 
 /**
  * Normalizes type name.
@@ -134,7 +134,7 @@ function validate<T>(type: Descriptor): ValidateFunc<T> {
  * console.log(descriptor(Number).required()()); // TypeError
  * </pre>
  */
-function required<T>(): ChainedValidator<T> {
+function required<T>(): DescriptorValidator<T> {
     const prev: ValidateFunc<T> = this;
 
     return chain(function isRequired(value: T): ValidationResult<T> {
@@ -145,7 +145,7 @@ function required<T>(): ChainedValidator<T> {
     });
 }
 
-type RequiredValidator<T> = () => ChainedValidator<T>;
+type RequiredValidator<T> = () => DescriptorValidator<T>;
 
 /**
  * Returns validator for "One of" restriction.
@@ -161,7 +161,7 @@ type RequiredValidator<T> = () => ChainedValidator<T>;
  * console.log(descriptor(String).oneOf(['foo', 'bar'])('baz')); // TypeError
  * </pre>
  */
-function oneOf<T>(values: T[]): ChainedValidator<T> {
+function oneOf<T>(values: T[]): DescriptorValidator<T> {
     if (!(values instanceof Array)) {
         throw new TypeError('Argument values should be an instance of Array');
     }
@@ -176,7 +176,7 @@ function oneOf<T>(values: T[]): ChainedValidator<T> {
     });
 }
 
-type oneOfValidator<T> = (values: T[]) => ChainedValidator<T>;
+type oneOfValidator<T> = (values: T[]) => DescriptorValidator<T>;
 
 /**
  * Returns validator for "Not" restriction.
@@ -192,7 +192,7 @@ type oneOfValidator<T> = (values: T[]) => ChainedValidator<T>;
  * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
  * </pre>
  */
-function not<T>(values: T[]): ChainedValidator<T> {
+function not<T>(values: T[]): DescriptorValidator<T> {
     if (!(values instanceof Array)) {
         throw new TypeError('Argument values should be an instance of Array');
     }
@@ -207,7 +207,7 @@ function not<T>(values: T[]): ChainedValidator<T> {
     });
 }
 
-type notValidator<T> = (values: T[]) => ChainedValidator<T>;
+type notValidator<T> = (values: T[]) => DescriptorValidator<T>;
 
 /**
  * Returns validator for Array<T> restriction.
@@ -223,7 +223,7 @@ type notValidator<T> = (values: T[]) => ChainedValidator<T>;
  * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
  * </pre>
  */
-function arrayOf<T>(type: Descriptor): ChainedValidator<T> {
+function arrayOf<T>(type: Descriptor): DescriptorValidator<T> {
     const prev: ValidateFunc<T> = this;
     const validator = validate(type);
 
@@ -245,13 +245,13 @@ function arrayOf<T>(type: Descriptor): ChainedValidator<T> {
     });
 }
 
-type arrayOfValidator<T> = (type: Descriptor) => ChainedValidator<T>;
+type arrayOfValidator<T> = (type: Descriptor) => DescriptorValidator<T>;
 
 /**
  * Creates chain element with all available validators.
  * @param parent Previous chain element
  */
-function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
+function chain<T>(parent: ValidateFunc<T>): DescriptorValidator<T> {
     const wrapper = (...args) => parent.apply(this, args);
 
     Object.defineProperties(wrapper, {
@@ -273,7 +273,7 @@ function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
         }
     });
 
-    return wrapper as ChainedValidator<T>;
+    return wrapper as DescriptorValidator<T>;
 }
 
 /**
@@ -340,7 +340,7 @@ function chain<T>(parent: ValidateFunc<T>): ChainedValidator<T> {
  * @public
  * @author Мальцев А.А.
  */
-export default function descriptor<T = any>(...types: Descriptor[]): ChainedValidator<T> {
+export default function descriptor<T = any>(...types: Descriptor[]): DescriptorValidator<T> {
     if (types.length === 0) {
         throw new TypeError('You should specify one type descriptor at least');
     }

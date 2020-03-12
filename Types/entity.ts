@@ -41,7 +41,7 @@ import * as compare from './_entity/compare';
 export {compare};
 export {default as Date} from './_entity/Date';
 export {default as DateTime} from './_entity/DateTime';
-export {default as descriptor} from './_entity/descriptor';
+export {default as descriptor, DescriptorValidator} from './_entity/descriptor';
 export {default as DestroyableMixin} from './_entity/DestroyableMixin';
 export {default as factory} from './_entity/factory';
 import * as format from './_entity/format';
