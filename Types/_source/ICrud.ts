@@ -171,7 +171,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    update(data: Record | RecordSet, meta?: object): Promise<null>;
+    update(data: Record | RecordSet, meta?: object): Promise<void | number | string>;
 
     /**
      * Удаляет запись из источника данных
@@ -204,7 +204,7 @@ export default interface ICrud {
      *      });
      * </pre>
      */
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null>;
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void>;
 
     /**
      * Выполняет запрос на выборку

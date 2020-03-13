@@ -283,7 +283,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<void | number | string> {
         return this._callProvider(
             this._$binding.update,
             this._$passing.update.call(this, data, meta)
@@ -293,7 +293,7 @@ export default abstract class Remote extends mixin<
     }
 
     // @ts-ignore
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.destroy,
             this._$passing.destroy.call(this, keys, meta)
@@ -317,7 +317,7 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<null> {
+    merge(from: string | number, to: string | number): Promise<void> {
         return this._callProvider(
             this._$binding.merge,
             this._$passing.merge.call(this, from, to)
@@ -333,7 +333,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<null> {
+    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.move,
             this._$passing.move.call(this, items, target, meta)

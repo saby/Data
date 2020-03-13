@@ -204,7 +204,7 @@ export default class Memory extends Local {
     }
 
     protected _applyWhere(data: any, where?: WhereExpression<unknown>, meta?: IMeta): any {
-        // FIXME: get rid of this SBIS-specified
+        // FIXME: get rid of this SBIS specific stuff
         if (where && typeof where === 'object') {
             where = {...where} as IHashMap<string>;
             delete where.Разворот;

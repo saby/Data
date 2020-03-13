@@ -1105,7 +1105,7 @@ export default class SbisService extends Rpc {
         });
     }
 
-    update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<null> {
+    update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void | EntityId> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
             return this._loadAdditionalDependencies((ready) => {
                 this._connectAdditionalDependencies(
@@ -1123,7 +1123,7 @@ export default class SbisService extends Rpc {
         return super.update(data, meta);
     }
 
-    destroy(keys: EntityId | EntityId[], meta?: IHashMap<unknown>): Promise<null> {
+    destroy(keys: EntityId | EntityId[], meta?: IHashMap<unknown>): Promise<void> {
         if (!(keys instanceof Array)) {
             return callDestroyWithComplexId.call(
                 this,
@@ -1163,7 +1163,7 @@ export default class SbisService extends Rpc {
 
     // region ICrudPlus
 
-    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<null> {
+    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<void> {
         meta = meta || {};
         if (this._$binding.moveBefore) {
             // TODO: поддерживаем старый способ с двумя методами

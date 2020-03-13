@@ -226,7 +226,7 @@ describe('Types/_source/Memory', () => {
                     keyProperty: 'Id'
                 });
 
-                return source.update(model).then((id) => {
+                return source.update(model).then((id: number) => {
                     assert.equal(model.get('Id'), id);
                     return source.read(id).then((readModel) => {
                         assert.equal(readModel.get('Id'), id);
@@ -309,8 +309,8 @@ describe('Types/_source/Memory', () => {
     describe('.destroy()', () => {
         context('when the model is exists', () => {
             it('should return success', () => {
-                return source.destroy(existsId).then((success) => {
-                    assert.isTrue(!!success);
+                return source.destroy(existsId).then(() => {
+                    assert.isOk('fine');
                 });
             });
 
@@ -1203,8 +1203,8 @@ describe('Types/_source/Memory', () => {
         describe('.destroy()', () => {
             context('when the model is exists', () => {
                 it('should return success', () => {
-                    return source.destroy(existsId).then((success) => {
-                        assert.isTrue(!!success);
+                    return source.destroy(existsId).then(() => {
+                        assert.isOk('fine');
                     });
                 });
 
