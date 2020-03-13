@@ -858,7 +858,7 @@ export default class Record<T = any> extends mixin<
         return (this._getAdapter() as IAdapter).forRecord(
             this._getRawDataFromOption(),
             undefined,
-            this.getFormatController()
+            this._getFormatController()
         );
     }
 
@@ -1302,7 +1302,7 @@ export default class Record<T = any> extends mixin<
             {
                 format,
                 adapter: this._getAdapter(),
-                formatController: this.getFormatController()
+                formatController: this._getFormatController()
             }
         );
     }

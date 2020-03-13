@@ -637,7 +637,7 @@ export default abstract class FormattableMixin {
         return this._$adapter as IAdapter;
     }
 
-    protected getFormatController() {
+    protected _getFormatController(): FormatController {
         if (!this._$formatController) {
             this._$formatController = new FormatController(this._getRawDataFromOption());
         }

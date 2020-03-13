@@ -912,7 +912,7 @@ class Model<T = any> extends Record<T> implements IStateful {
          if (!this._$keyProperty) {
              this._$keyProperty = (this._getAdapter() as IAdapter).getKeyField(
                  this._getRawData(),
-                 this.getFormatController()
+                 this._getFormatController()
              ) || '';
          }
          return this._$keyProperty;

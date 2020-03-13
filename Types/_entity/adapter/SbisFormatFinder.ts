@@ -296,7 +296,7 @@ class SbisFormatFinder {
       return result.value;
    }
 
-    scanFormats(data) {
+    scanFormats(data: any): void {
         if (typeof data === 'object') {
             const generator = new RecursiveIterator(data);
 
@@ -304,7 +304,7 @@ class SbisFormatFinder {
         }
     }
 
-    recoverData(data) {
+    recoverData(data: any): any {
         if (Array.isArray(data)) {
             for (const item of data) {
                 this.recoverData(item);

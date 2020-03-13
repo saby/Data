@@ -185,7 +185,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         }
     }
 
-    protected _recoverData(data: any, useLocaleController?: boolean) {
+    protected _recoverData(data: any, useLocaleController?: boolean): any {
         if (data && typeof data === 'object') {
             const formatController = useLocaleController ? this._formatController : new FormatController(data);
             return formatController.recoverData(data);
