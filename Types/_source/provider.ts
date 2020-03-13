@@ -11,4 +11,8 @@
 export {default as IAbstract} from './provider/IAbstract';
 export {default as IChannel} from './provider/IChannel';
 export {default as INotify} from './provider/INotify';
-export {default as SbisBusinessLogic} from './provider/SbisBusinessLogic';
+export {
+    default as SbisBusinessLogic,
+    IEndPoint as ISbisBusinessLogicEndPoint,
+    IOptions as ISbisBusinessLogicOptions
+} from './provider/SbisBusinessLogic';
