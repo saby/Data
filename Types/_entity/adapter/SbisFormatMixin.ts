@@ -155,7 +155,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return '';
     }
 
-    constructor(data: IRecordFormat | ITableFormat) {
+    constructor(data: IRecordFormat | ITableFormat, formatController: FormatController) {
         if (data) {
             if (Object.getPrototypeOf(data) !== Object.prototype) {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
@@ -165,6 +165,10 @@ export default abstract class SbisFormatMixin implements IFormatController {
                     `Argument 'data' has '${data._type}' type signature but '${this.type}' is expected.`
                 );
             }
+
+            if (typeof data === 'object') {
+                this._setFormatController(data, formatController);
+            }
         }
 
         this._data = data;
@@ -173,21 +177,31 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     // region IFormatController
 
-    setFormatController(controller: FormatController): void {
-        this._formatController = controller;
-        if (this._data && this._data.s === undefined) {
-            defineCalculatedFormat(this._data, this._formatController);
+    _setFormatController(data: IRecordFormat | ITableFormat, controller?: FormatController): void {
+        this._formatController = controller || new FormatController(data);
+
+        if (data && data.s === undefined) {
+            defineCalculatedFormat(data, this._formatController);
         }
+    }
+
+    protected _recoverData(data: any, useLocaleController?: boolean) {
+        if (data && typeof data === 'object') {
+            const formatController = useLocaleController ? this._formatController : new FormatController(data);
+            return formatController.recoverData(data);
+        }
+
+        return data;
     }
 
     // endregion
 
     // region toJSON
 
-    replaceToJSON<T>(data: T): T {
+    protected _replaceToJSON<T>(data: T): T {
         if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
 
-            const getDataFormatJson = this.getDataFormatJson.bind(this);
+            const getDataFormatJson = this._getDataFormatJson.bind(this);
 
             Object.defineProperties(data, {
                 toJSON: {
@@ -204,15 +218,15 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return data;
     }
 
-    protected getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
+    protected _getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
         if (Array.isArray(data)) {
             for (const item of data) {
-                this.getDataFormatJson(item, formats);
+                this._getDataFormatJson(item, formats);
             }
         } else if (data && typeof data === 'object') {
             const record = (data as IRecordFormat);
 
-            if (record.f && !formats[record.f]) {
+            if (record.f !== undefined && !formats[record.f]) {
                 if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
                     record.s = this._formatController.getFormat(record.f);
                 }
@@ -221,7 +235,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
             }
 
             if (record.d) {
-                this.getDataFormatJson(record.d, formats);
+                this._getDataFormatJson(record.d, formats);
             }
         }
     }
@@ -344,6 +358,10 @@ export default abstract class SbisFormatMixin implements IFormatController {
            data.s = [];
         }
         data._type = dataType;
+
+        if (!this._formatController) {
+            this._setFormatController(data);
+        }
 
         return data;
     }

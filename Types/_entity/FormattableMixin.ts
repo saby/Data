@@ -634,17 +634,10 @@ export default abstract class FormattableMixin {
             this._$adapter = new CowAdapter(this._$adapter as IAdapter);
         }
 
-        if (this._$adapter['[Types/_entity/format/IFormatController]']) {
-            (this._$adapter as IFormatController).setFormatController(this._getFormatController());
-        }
-
         return this._$adapter as IAdapter;
     }
 
-    /**
-     *
-     */
-    protected _getFormatController(): FormatController {
+    protected getFormatController() {
         if (!this._$formatController) {
             this._$formatController = new FormatController(this._getRawDataFromOption());
         }

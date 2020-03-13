@@ -89,7 +89,7 @@ describe('Types/_entity/adapter/Sbis', () => {
                 f: 0
             };
 
-            adapter.setFormatController(new SbisFormatFinder({
+            const formatController = new SbisFormatFinder({
                 d: [
                 ],
                 f: 0,
@@ -97,9 +97,9 @@ describe('Types/_entity/adapter/Sbis', () => {
                     {n: 'id', t: 'Число целое'},
                     {n: '@lastname', t: 'Строка'}
                 ]
-            }));
+            });
 
-            assert.equal(adapter.getKeyField(data), '@lastname');
+            assert.equal(adapter.getKeyField(data, formatController), '@lastname');
         });
 
         it('should return first field', () => {

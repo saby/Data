@@ -3,6 +3,7 @@ import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
 import SbisFormatMixin, {IFieldFormat, IRecordFormat} from './SbisFormatMixin';
 import {mixin} from '../../util';
+import FormatController from './SbisFormatFinder';
 
 /**
  * Адаптер для записи таблицы данных в формате СБиС.
@@ -53,10 +54,11 @@ export default class SbisRecord extends mixin<
     /**
      * Конструктор
      * @param data Сырые данные
+     * @param formatController контроллер форматов для сырых данных
      */
-    constructor(data?: IRecordFormat) {
+    constructor(data?: IRecordFormat, formatController?: FormatController) {
         super(data);
-        SbisFormatMixin.call(this, data);
+        SbisFormatMixin.call(this, data, formatController);
     }
 
     // region IRecord
@@ -70,7 +72,7 @@ export default class SbisRecord extends mixin<
     get(name: string): any {
         const index = this._getFieldIndex(name);
         return index >= 0
-            ? this.replaceToJSON(this._cast(this._data.s[index], this._data.d[index]))
+            ? this._replaceToJSON(this._cast(this._data.s[index], this._data.d[index]))
             : undefined;
     }
 
@@ -79,6 +81,13 @@ export default class SbisRecord extends mixin<
         if (index < 0) {
             throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
         }
+
+        if (this._data.d[index]) {
+            this._formatController.scanFormats(this._data.d[index]);
+        }
+
+        value = this._recoverData(value);
+
         this._data.d[index] = this._uncast(this._data.s[index], value);
     }
 
@@ -104,6 +113,8 @@ export default class SbisRecord extends mixin<
     // region SbisFormatMixin
 
     protected _buildD(at: number, value: any): void {
+        value = this._recoverData(value);
+
         this._data.d.splice(at, 0, value);
     }
 

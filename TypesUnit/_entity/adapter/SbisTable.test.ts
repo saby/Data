@@ -5,7 +5,6 @@ import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
 import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
-import SbisFormatFinder from '../../../Types/_entity/adapter/SbisFormatFinder';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
@@ -793,7 +792,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         });
 
         it('serialize data chunk from data table', () => {
-            adapter.setFormatController(new SbisFormatFinder(data));
+            adapter._setFormatController(data);
             const chunkData = adapter.at(1);
             assert.equal(JSON.stringify(chunkData), '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}');
         });
@@ -802,10 +801,36 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const obj = {};
 
             try {
-                adapter.replaceToJSON(adapter.replaceToJSON(obj));
+                adapter._replaceToJSON(adapter._replaceToJSON(obj));
             } catch (err) {
                 assert.fail(err);
             }
+        });
+
+        it('recover added compression data', () => {
+            adapter.add({
+                f: 0,
+                d: [3, {
+                    f: 15,
+                    s: [
+                        {n: 'model', t: 'строка'},
+                        {n: 'brand', t: 'строка'}
+                    ],
+                    d: [
+                        'KIA', 'Mohave'
+                    ]
+                }],
+                s: [
+                    {n: 'id', t: 'Число целое'},
+                    {n: 'data', t: 'Запись'}
+                ]
+            });
+
+            assert.strictEqual(adapter._data.d[3][1].f, undefined);
+            assert.deepEqual(adapter._data.d[3][1].s,  [
+                {n: 'model', t: 'строка'},
+                {n: 'brand', t: 'строка'}
+            ]);
         });
     });
 });

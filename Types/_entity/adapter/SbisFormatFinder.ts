@@ -303,6 +303,32 @@ class SbisFormatFinder {
             generator.next(this._cache);
         }
     }
+
+    recoverData(data) {
+        if (Array.isArray(data)) {
+            for (const item of data) {
+                this.recoverData(item);
+            }
+        } else if (data && typeof data === 'object') {
+            const record = (data as IRecordFormat);
+
+            if (record.f !== undefined) {
+                const format = this.getFormat(record.f);
+
+                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
+                    record.s = format;
+                }
+
+                delete record.f;
+            }
+
+            if (record.d) {
+                this.recoverData(record.d);
+            }
+        }
+
+        return data;
+    }
 }
 
 export {RecursiveIterator};

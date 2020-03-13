@@ -5,7 +5,8 @@ export default interface IFormatController {
 
    /**
     *
+    * @param data
     * @param controller
     */
-   setFormatController(controller: SbisFormatFinder): void;
+   _setFormatController(data: unknown, controller?: SbisFormatFinder): void;
 }

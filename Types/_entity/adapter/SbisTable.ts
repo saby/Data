@@ -2,6 +2,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IMetaData from './IMetaData';
 import ICloneable from '../ICloneable';
+import FormatController from './SbisFormatFinder';
 import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import {fieldsFactory} from '../format';
@@ -55,10 +56,11 @@ export default class SbisTable extends mixin<
     /**
      * Конструктор
      * @param data Сырые данные
+     * @param formatController контроллер форматов для сырых данных
      */
-    constructor(data?: ITableFormat) {
+    constructor(data?: ITableFormat, formatController?: FormatController) {
         super(data);
-        SbisFormatMixin.call(this, data);
+        SbisFormatMixin.call(this, data, formatController);
     }
 
     // region ITable
@@ -81,15 +83,15 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
 
         if (at === undefined) {
-            this._data.d.push(record.d);
+            this._data.d.push(this._recoverData(record.d));
         } else {
             this._checkRowIndex(at, true);
-            this._data.d.splice(at, 0, record.d);
+            this._data.d.splice(at, 0,this._recoverData(record.d));
         }
     }
 
     at(index: number): ITableFormat {
-        return this._isValidData() && this._data.d[index] ? this.replaceToJSON({
+        return this._isValidData() && this._data.d[index] ? this._replaceToJSON({
             d: this._data.d[index],
             s: this._data.s
         }) : undefined;
@@ -114,7 +116,11 @@ export default class SbisTable extends mixin<
         }
         record.s = this._data.s;
         this._checkFormat(record, '::replace()');
-        this._data.d[at] = record.d;
+
+        this._formatController.scanFormats(this._data.d[at]);
+
+        const useLocaleController = this._data.d[at] === record.d;
+        this._data.d[at] = this._recoverData(record.d, useLocaleController);
     }
 
     move(source: number, target: number): void {
@@ -273,6 +279,8 @@ export default class SbisTable extends mixin<
     getData: () => ITableFormat;
 
     protected _buildD(at: number, value: any): void {
+        value = this._recoverData(value);
+
         this._data.d.forEach((item) => {
             item.splice(at, 0, value);
         });

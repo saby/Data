@@ -5,7 +5,6 @@ import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
 import {register} from '../../di';
-import IFormatController from '../adapter/IFormatController';
 
 /**
  * Адаптер для данных в формате СБиС.
@@ -17,40 +16,23 @@ import IFormatController from '../adapter/IFormatController';
  * @public
  * @author Мальцев А.А.
  */
-export default class Sbis extends Abstract implements IFormatController {
-   protected _formatController: FormatController;
-
-   readonly '[Types/_entity/format/IFormatController]': boolean;
-
-   forTable(data?: ITableFormat): SbisTable {
-      const table =  new SbisTable(data);
-      table.setFormatController(this._formatController);
-
-      return table;
+export default class Sbis extends Abstract {
+   forTable(data?: ITableFormat, formatController?: FormatController): SbisTable {
+       return new SbisTable(data, formatController);
    }
 
-   forRecord(data?: IRecordFormat): SbisRecord {
-      const record = new SbisRecord(data);
-      record.setFormatController(this._formatController);
-
-      return record;
+   forRecord(data?: IRecordFormat, tableData?:any, formatController?: FormatController): SbisRecord {
+       return new SbisRecord(data, formatController);
    }
 
-   // region IFormatController
-
-   setFormatController(controller: FormatController): void {
-      this._formatController = controller;
-   }
-
-   // endregion
-
-    getKeyField(data: ITableFormat): string {
+    getKeyField(data: ITableFormat, formatController?: FormatController): string {
         // TODO: primary key field index can be defined in this._data.k. and can be -1
         let index;
         let s;
+        const formatFinder = formatController || new FormatController(data);
 
         if (data) {
-            s = data.s || (typeof data.f === 'number' ? this._formatController.getFormat(data.f) : undefined);
+            s = data.s || (typeof data.f === 'number' ? formatFinder.getFormat(data.f) : undefined);
 
             if (s) {
                 for (let i = 0, l = s.length; i < l; i++) {
@@ -75,8 +57,6 @@ export default class Sbis extends Abstract implements IFormatController {
 
 Object.assign(Sbis.prototype, {
    '[Types/_entity/adapter/Sbis]': true,
-   '[Types/_entity/format/IFormatController]': true,
-   _formatController: null,
    _moduleName: 'Types/entity:adapter.Sbis'
 });
 
