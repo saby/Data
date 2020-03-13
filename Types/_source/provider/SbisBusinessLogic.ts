@@ -6,12 +6,12 @@ import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
 import Deferred = require('Core/Deferred');
 
-interface IEndPoint {
+export interface IEndPoint {
     contract?: string;
     address?: string;
 }
 
-interface IOptions {
+export interface IOptions {
     endpoint?: IEndPoint;
     callTimeout?: number;
     logger?: ILogger;
