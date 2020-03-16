@@ -9,6 +9,7 @@ import {adapter, Record, Model} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 import {IHashMap} from '../_declarations';
+import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 
 const MOVE_POSITION = {
@@ -255,7 +256,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             }
         }
 
-        return Promise.resolve();
+        return Deferred.success(undefined);
     }
 
     query(query?: Query): Promise<DataSet> {
