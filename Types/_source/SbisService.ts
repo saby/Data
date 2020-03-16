@@ -22,7 +22,6 @@ import {AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity'
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {IHashMap} from '../declarations';
-import ParallelDeferred = require('Core/ParallelDeferred');
 
 /**
  * Separator for BL object name and method name
@@ -735,26 +734,6 @@ function oldMove(
 }
 
 /**
- * Calls destroy method for some BL-Object
- * @param ids BL objects ids to delete
- * @param name BL object name
- * @param meta Meta data
- */
-function callDestroyWithComplexId(
-    this: SbisService,
-    ids: string[],
-    name: string,
-    meta: object
-): Promise<unknown> {
-    return this._callProvider(
-        this._$endpoint.contract === name
-            ? this._$binding.destroy
-            :  buildBlMethodName(name, this._$binding.destroy),
-        this._$passing.destroy.call(this, ids, meta)
-    );
-}
-
-/**
  * Класс источника данных на сервисах бизнес-логики СБИС.
  * @remark
  * <b>Пример 1</b>. Создадим источник данных для объекта БЛ:
@@ -1124,9 +1103,27 @@ export default class SbisService extends Rpc {
     }
 
     destroy(keys: EntityId | EntityId[], meta?: IHashMap<unknown>): Promise<void> {
+        /**
+         * Calls destroy method for some BL-Object
+         * @param ids BL objects ids
+         * @param name BL object name
+         * @param meta Meta data
+         */
+        const callDestroyWithComplexId = (
+            ids: string[],
+            name: string,
+            meta: object
+        ): Promise<void> => {
+            return this._callProvider(
+                this._$endpoint.contract === name
+                    ? this._$binding.destroy
+                    :  buildBlMethodName(name, this._$binding.destroy),
+                this._$passing.destroy.call(this, ids, meta)
+            );
+        };
+
         if (!(keys instanceof Array)) {
-            return callDestroyWithComplexId.call(
-                this,
+            return callDestroyWithComplexId(
                 [getKeyByComplexId(keys)],
                 getNameByComplexId(keys, this._$endpoint.contract),
                 meta
@@ -1135,18 +1132,11 @@ export default class SbisService extends Rpc {
 
         // В ключе может содержаться ссылка на объект БЛ - сгруппируем ключи по соответствующим им объектам
         const groups = getGroupsByComplexIds(keys, this._$endpoint.contract);
-        const pd = new ParallelDeferred();
-        for (const name in groups) {
-            if (groups.hasOwnProperty(name)) {
-                pd.push(callDestroyWithComplexId.call(
-                    this,
-                    groups[name],
-                    name,
-                    meta
-                ));
-            }
-        }
-        return pd.done().getResult();
+        return Promise.all(Object.keys(groups).map((name) => callDestroyWithComplexId(
+            groups[name],
+            name,
+            meta
+        ))) as unknown as Promise<void>;
     }
 
     query(query?: Query): Promise<DataSet> {
@@ -1170,32 +1160,20 @@ export default class SbisService extends Rpc {
             return oldMove.call(this, items, target as string, meta as IOldMoveMeta);
         }
 
-        // На БЛ не могут принять массив сложных идентификаторов,
-        // поэтому надо сгуппировать идентификаторы по объекту и для каждой группы позвать метод
-        const groups = getGroupsByComplexIds(items, this._$endpoint.contract);
-        const groupsCount = Object.keys(groups).length;
-        const pd = new ParallelDeferred();
         if (target !== null) {
             target = getKeyByComplexId(target);
         }
 
-        for (const name in groups) {
-            if (groups.hasOwnProperty(name)) {
-                meta.objectName = name;
-                const def = this._callProvider(
-                    buildBlMethodName(this._$endpoint.moveContract, this._$binding.move),
-                    this._$passing.move.call(this, groups[name], target, meta)
-                );
-                if (groupsCount === 1) {
-                    // TODO: нужно доработать ParallelDeferred что бы он возвращал оригинал ошибки:
-                    // https://online.sbis.ru/opendoc.html?guid=ecb592a4-bc06-463f-a3a0-90527f397ac2
-                    return def;
-                }
-                pd.push(def);
-            }
-        }
-
-        return pd.done().getResult();
+        // На БЛ не могут принять массив сложных идентификаторов,
+        // поэтому надо сгуппировать идентификаторы по объекту и для каждой группы позвать метод
+        const groups = getGroupsByComplexIds(items, this._$endpoint.contract);
+        return  Promise.all(Object.keys(groups).map((name) => {
+            meta.objectName = name;
+            return this._callProvider(
+                buildBlMethodName(this._$endpoint.moveContract, this._$binding.move),
+                this._$passing.move.call(this, groups[name], target, meta)
+            );
+        })) as unknown as Promise<void>;
     }
 
     // endregion
