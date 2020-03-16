@@ -3,6 +3,8 @@ import DataSet from './DataSet';
 import {Record} from '../entity';
 import {RecordSet} from '../collection';
 
+export type EntityKey = number | string;
+
 /**
  * Интерфейс источника данных, поддерживающиего контракт {@link https://en.wikipedia.org/wiki/Create,_read,_update_and_delete CRUD}, применяемый к объекту предметной области.
  * @remark
@@ -114,7 +116,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    read(key: number | string, meta?: object): Promise<Record>;
+    read(key: EntityKey, meta?: object): Promise<Record>;
 
     /**
      * Обновляет запись в источнике данных
@@ -204,7 +206,7 @@ export default interface ICrud {
      *      });
      * </pre>
      */
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void>;
+    destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void>;
 
     /**
      * Выполняет запрос на выборку

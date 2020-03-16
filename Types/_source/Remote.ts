@@ -1,5 +1,5 @@
 import Base, {IOptions as IBaseOptions} from './Base';
-import ICrud from './ICrud';
+import ICrud, {EntityKey} from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IProvider from './IProvider';
 import DataMixin from './DataMixin';
@@ -34,13 +34,13 @@ export enum NavigationTypes {
 
 export interface IPassing {
     create?: (meta?: object) => object;
-    read?: (key: string | number, meta?: object) => object;
+    read?: (key: EntityKey, meta?: object) => object;
     update?: (data: Record | RecordSet, meta?: object) => object;
     destroy?: (keys: string | string[], meta?: object) => object;
     query?: (query: Query) => object;
-    copy?: (key: string | number, meta?: object) => object;
-    merge?: (from: string | number, to: string | number) => object;
-    move?: (from: string | number, to: string | number, meta?: object) => object;
+    copy?: (key: EntityKey, meta?: object) => object;
+    merge?: (from: EntityKey, to: EntityKey) => object;
+    move?: (from: EntityKey, to: EntityKey, meta?: object) => object;
 }
 
 export interface IOptionsOption extends IOptionsMixinOption {
@@ -165,7 +165,7 @@ function passMerge(from: string, to: string): string[] {
  * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
  * @param [meta] Дополнительные мета данные.
  */
-function passMove(from: string | number, to: string, meta?: object): any[] {
+function passMove(from: EntityKey, to: string, meta?: object): any[] {
     return [from, to, meta];
 }
 
@@ -272,7 +272,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    read(key: number | string, meta?: object): Promise<Model> {
+    read(key: EntityKey, meta?: object): Promise<Model> {
         return this._callProvider(
             this._$binding.read,
             this._$passing.read.call(this, key, meta)
@@ -293,7 +293,7 @@ export default abstract class Remote extends mixin<
     }
 
     // @ts-ignore
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
+    destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.destroy,
             this._$passing.destroy.call(this, keys, meta)
@@ -317,14 +317,14 @@ export default abstract class Remote extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<void> {
+    merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
         return this._callProvider(
             this._$binding.merge,
-            this._$passing.merge.call(this, from, to)
+            this._$passing.merge.call(this, target, merged)
         );
     }
 
-    copy(key: string | number, meta?: object): Promise<Model> {
+    copy(key: EntityKey, meta?: object): Promise<Model> {
         return this._callProvider(
             this._$binding.copy,
             this._$passing.copy.call(this, key, meta)
@@ -333,7 +333,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    move(items: string | number | Array<string | number>, target: string | number, meta?: object): Promise<void> {
+    move(items: EntityKey | EntityKey[], target: EntityKey, meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.move,
             this._$passing.move.call(this, items, target, meta)

@@ -4,6 +4,7 @@ import {
     IOptionsOption as IRemoteOptionsOption,
     IPassing as IRemotePassing
 } from './Remote';
+import {EntityKey} from './ICrud';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
@@ -39,8 +40,6 @@ const COMPLEX_ID_SEPARATOR = ',';
 const COMPLEX_ID_MATCH = /^[0-9]+,[А-яA-z0-9]+$/;
 
 const EXPRESSION_TEMPLATE = /(.+)([<>]=?|~)$/;
-
-type EntityId = string | number;
 
 enum CursorDirection {
     backward = 'backward',
@@ -100,7 +99,7 @@ interface IOldMoveMeta {
     hierField: string;
 }
 
-type PositionDeclaration = [EntityId, IHashMap<unknown>];
+type PositionDeclaration = [EntityKey, IHashMap<unknown>];
 
 export class PositionExpression<T = PositionDeclaration> extends PartialExpression<T> {
     readonly type: string = 'sbisPosition';
@@ -121,7 +120,7 @@ function buildBlMethodName(objectName: string, methodName: string): string {
 /**
  * Returns key of the BL Object from its complex id
  */
-function getKeyByComplexId(id: EntityId): string {
+function getKeyByComplexId(id: EntityKey): string {
     id = String(id || '');
     if (id.match(COMPLEX_ID_MATCH)) {
         return id.split(COMPLEX_ID_SEPARATOR)[0];
@@ -132,7 +131,7 @@ function getKeyByComplexId(id: EntityId): string {
 /**
  * Returns name of the BL Object from its complex id
  */
-function getNameByComplexId(id: EntityId, defaults: string): string {
+function getNameByComplexId(id: EntityKey, defaults: string): string {
     id = String(id || '');
     if (id.match(COMPLEX_ID_MATCH)) {
         return id.split(COMPLEX_ID_SEPARATOR)[1];
@@ -154,7 +153,7 @@ function createComplexId(id: string, defaults: string): string[] {
 /**
  * Joins BL objects into groups be its names
  */
-function getGroupsByComplexIds(ids: EntityId[], defaults: string): object {
+function getGroupsByComplexIds(ids: EntityKey[], defaults: string): object {
     const groups = {};
     let name;
     for (let i = 0, len = ids.length; i < len; i++) {
@@ -536,7 +535,7 @@ function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResu
 }
 
 interface IReadResult {
-    ИдО: EntityId;
+    ИдО: EntityKey;
     ИмяМетода: string | null;
     ДопПоля?: IHashMap<unknown>;
 }
@@ -544,7 +543,7 @@ interface IReadResult {
 /**
  * Returns data to send in read()
  */
-function passRead(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): IReadResult {
+function passRead(this: SbisService, key: EntityKey, meta?: IHashMap<unknown>): IReadResult {
     const args: IReadResult = {
         ИдО: key,
         ИмяМетода: this._$binding.format || null
@@ -640,7 +639,7 @@ function passQuery(this: SbisService, query?: Query): IQueryResult {
 }
 
 interface ICopyResult {
-    ИдО: EntityId;
+    ИдО: EntityKey;
     ИмяМетода: string;
     ДопПоля?: AdditionalParams;
 }
@@ -648,7 +647,7 @@ interface ICopyResult {
 /**
  * Returns data to send in copy()
  */
-function passCopy(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): ICopyResult {
+function passCopy(this: SbisService, key: EntityKey, meta?: IHashMap<unknown>): ICopyResult {
     const args: ICopyResult = {
         ИдО: key,
         ИмяМетода: this._$binding.format
@@ -660,17 +659,17 @@ function passCopy(this: SbisService, key: EntityId, meta?: IHashMap<unknown>): I
 }
 
 interface IMergeResult {
-    ИдО: EntityId;
-    ИдОУд: EntityId;
+    ИдО: EntityKey;
+    ИдОУд: EntityKey | EntityKey[];
 }
 
 /**
  * Returns data to send in merge()
  */
-function passMerge(this: SbisService, from: EntityId, to: EntityId): IMergeResult {
+function passMerge(this: SbisService, target: EntityKey, merged: EntityKey | EntityKey[]): IMergeResult {
     return {
-        ИдО: from,
-        ИдОУд: to
+        ИдО: target,
+        ИдОУд: merged
     };
 }
 
@@ -678,8 +677,8 @@ interface IMoveResult {
     IndexNumber: string;
     HierarchyName: string;
     ObjectName: string;
-    ObjectId: EntityId;
-    DestinationId: EntityId;
+    ObjectId: EntityKey;
+    DestinationId: EntityKey;
     Order: string;
     ReadMethod: string;
     UpdateMethod: string;
@@ -688,7 +687,7 @@ interface IMoveResult {
 /**
  * Returns data to send in move()
  */
-function passMove(this: SbisService, from: EntityId, to: EntityId, meta?: IMoveMeta): IMoveResult {
+function passMove(this: SbisService, from: EntityKey, to: EntityKey, meta?: IMoveMeta): IMoveResult {
     return {
         IndexNumber: this._$orderProperty,
         HierarchyName: meta.parentProperty || null,
@@ -709,7 +708,7 @@ function passMove(this: SbisService, from: EntityId, to: EntityId, meta?: IMoveM
  */
 function oldMove(
     this: SbisService,
-    from: EntityId | EntityId[],
+    from: EntityKey | EntityKey[],
     to: string, meta: IOldMoveMeta
 ): Promise<unknown> {
     logger.info(
@@ -1102,7 +1101,7 @@ export default class SbisService extends Rpc {
         return super.update(data, meta);
     }
 
-    destroy(keys: EntityId | EntityId[], meta?: IHashMap<unknown>): Promise<void> {
+    destroy(keys: EntityKey | EntityKey[], meta?: IHashMap<unknown>): Promise<void> {
         /**
          * Calls destroy method for some BL-Object
          * @param ids BL objects ids
@@ -1153,7 +1152,7 @@ export default class SbisService extends Rpc {
 
     // region ICrudPlus
 
-    move(items: EntityId[], target: EntityId, meta?: IMoveMeta): Promise<void> {
+    move(items: EntityKey[], target: EntityKey, meta?: IMoveMeta): Promise<void> {
         meta = meta || {};
         if (this._$binding.moveBefore) {
             // TODO: поддерживаем старый способ с двумя методами

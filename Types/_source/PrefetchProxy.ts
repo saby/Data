@@ -1,4 +1,4 @@
-import ICrud from './ICrud';
+import ICrud, {EntityKey} from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IDecorator from './IDecorator';
 import OptionsMixin from './OptionsMixin';
@@ -270,7 +270,7 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrud).create(meta) as Promise<Model>;
     }
 
-    read(key: number | string, meta?: object): Promise<Model> {
+    read(key: EntityKey, meta?: object): Promise<Model> {
         if (this._validators.read(this._$data.read, this._done)) {
             return Promise.resolve(this._$data.read);
         }
@@ -281,7 +281,7 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrud).update(data, meta);
     }
 
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
+    destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
         return (this._$target as ICrud).destroy(keys, meta);
     }
 
@@ -298,18 +298,18 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<void> {
-        return (this._$target as ICrudPlus).merge(from, to);
+    merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
+        return (this._$target as ICrudPlus).merge(target, merged);
     }
 
-    copy(key: string | number, meta?: object): Promise<Model> {
+    copy(key: EntityKey, meta?: object): Promise<Model> {
         if (this._validators.copy(this._$data.copy, this._done)) {
             return Promise.resolve(this._$data.copy);
         }
         return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void> {
+    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void> {
         return (this._$target as ICrudPlus).move(items, target, meta);
     }
 
