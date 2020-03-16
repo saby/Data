@@ -1,6 +1,5 @@
 import {assert} from 'chai';
 import SbisRecord from 'Types/_entity/adapter/SbisRecord';
-import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
 import {
     IArrayFieldType,
     IDateTimeFieldType, IDictFieldType,
@@ -1276,16 +1275,15 @@ describe('Types/_entity/adapter/SbisRecord', () => {
         });
     });
 
-    describe('.setFormatController()', () => {
+    describe('._setFormatController()', () => {
         it('should create enumerable property named "s" after add a field', () => {
             const data: any = {};
             const adapter = new SbisRecord(data);
-            const controller = new SbisFormatFinder(data);
             const field = fieldsFactory({
                 type: 'string',
                 name: 'foo'
             });
-            adapter.setFormatController(controller);
+            adapter._setFormatController(data);
             adapter.addField(field);
 
             const keys = Object.keys(data);

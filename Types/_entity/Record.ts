@@ -855,7 +855,11 @@ export default class Record<T = any> extends mixin<
      * @protected
      */
     protected _createRawDataAdapter(): IRecord {
-        return (this._getAdapter() as IAdapter).forRecord(this._getRawDataFromOption());
+        return (this._getAdapter() as IAdapter).forRecord(
+            this._getRawDataFromOption(),
+            undefined,
+            this._getFormatController()
+        );
     }
 
     /**
@@ -1298,7 +1302,7 @@ export default class Record<T = any> extends mixin<
             {
                 format,
                 adapter: this._getAdapter(),
-                formatController: this._$formatController
+                formatController: this._getFormatController()
             }
         );
     }

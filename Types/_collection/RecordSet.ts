@@ -856,7 +856,8 @@ class RecordSet<
 
     protected _createRawDataAdapter(): adapter.ITable {
         return (this._getAdapter() as adapter.IAdapter).forTable(
-            this._getRawDataFromOption()
+            this._getRawDataFromOption(),
+            this._getFormatController()
         );
     }
 
@@ -1129,7 +1130,10 @@ class RecordSet<
      */
     getKeyProperty(): string {
         if (!this._$keyProperty) {
-            this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(this._getRawData());
+            this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(
+                this._getRawData(),
+                this._getFormatController()
+            );
         }
         return this._$keyProperty;
     }
@@ -1549,7 +1553,7 @@ class RecordSet<
             rawData,
             instanceState,
             keyProperty: this.getKeyProperty(),
-            formatController: this._$formatController
+            formatController: this._getFormatController()
         });
 
         return record;

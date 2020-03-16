@@ -51,6 +51,30 @@ const rawData = {
     ]
 };
 
+const fullRawData = {
+    s: format0,
+    d: [
+        0,
+        'Пётр',
+        [
+            {
+                s: format1,
+                d: [
+                    0,
+                    'Вова'
+                ]
+            },
+            {
+                s: format1,
+                d: [
+                    0,
+                    'Оля'
+                ]
+            }
+        ]
+    ]
+};
+
 describe('Types/_entity/format/FormatController', () => {
     let sbisFormatFinder: SbisFormatFinder;
 
@@ -144,6 +168,12 @@ describe('Types/_entity/format/FormatController', () => {
 
             assert.isTrue((sbisFormatFinder as any)._cache.has(1));
             assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+        });
+
+        it('.recoverData()', () => {
+            const data = JSON.parse(JSON.stringify(rawData));
+
+            assert.deepEqual(fullRawData, sbisFormatFinder.recoverData(data));
         });
     });
 });

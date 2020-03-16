@@ -296,12 +296,38 @@ class SbisFormatFinder {
       return result.value;
    }
 
-    scanFormats(data) {
+    scanFormats(data: any): void {
         if (typeof data === 'object') {
             const generator = new RecursiveIterator(data);
 
             generator.next(this._cache);
         }
+    }
+
+    recoverData(data: any): any {
+        if (Array.isArray(data)) {
+            for (const item of data) {
+                this.recoverData(item);
+            }
+        } else if (data && typeof data === 'object') {
+            const record = (data as IRecordFormat);
+
+            if (record.f !== undefined) {
+                const format = this.getFormat(record.f);
+
+                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
+                    record.s = format;
+                }
+
+                delete record.f;
+            }
+
+            if (record.d) {
+                this.recoverData(record.d);
+            }
+        }
+
+        return data;
     }
 }
 
