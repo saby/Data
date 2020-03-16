@@ -195,7 +195,9 @@ export default abstract class Local<TData = unknown> extends mixin<
                 () => this._prepareReadResult(data)
             ) as Promise<Model>;
         } else {
-            return Promise.reject(new ReferenceError(`Can't perform read() because record with key "${key}" does not exist`));
+            return Promise.reject(new ReferenceError(
+                `Can't perform read() because record with key "${key}" does not exist`
+            ));
         }
     }
 
@@ -252,7 +254,9 @@ export default abstract class Local<TData = unknown> extends mixin<
         const keysArray = keys instanceof Array ? keys : [keys];
         for (let i = 0, len = keysArray.length; i < len; i++) {
             if (!destroyByKey(keysArray[i])) {
-                return Promise.reject(new ReferenceError(`Can't perform destroy() because record with key "${keysArray[i]}" does not exist`));
+                return Deferred.fail(new ReferenceError(
+                    `Can't perform destroy() because record with key "${keysArray[i]}" does not exist`
+                )) as unknown as Promise<void>;
             }
         }
 
