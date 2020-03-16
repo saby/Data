@@ -171,7 +171,7 @@ export default interface ICrud {
      *     });
      * </pre>
      */
-    update(data: Record | RecordSet, meta?: object): Promise<void | number | string>;
+    update(data: Record | RecordSet, meta?: object): Promise<void>;
 
     /**
      * Удаляет запись из источника данных

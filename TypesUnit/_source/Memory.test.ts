@@ -178,7 +178,7 @@ describe('Types/_source/Memory', () => {
                 return source.read(existsId).then((model) => {
                     model.set('LastName', 'Петров');
                     return source.update(model).then((success) => {
-                        assert.isTrue(!!success);
+                        assert.isTrue(Boolean(success));
                         assert.isFalse(model.isChanged());
                         return source.read(existsId).then((model) => {
                             assert.strictEqual(model.get('LastName'), 'Петров');
@@ -226,9 +226,9 @@ describe('Types/_source/Memory', () => {
                     keyProperty: 'Id'
                 });
 
-                return source.update(model).then((id: number) => {
+                return source.update(model).then((id) => {
                     assert.equal(model.get('Id'), id);
-                    return source.read(id).then((readModel) => {
+                    return source.read(String(id)).then((readModel) => {
                         assert.equal(readModel.get('Id'), id);
                     });
                 });
@@ -1140,7 +1140,7 @@ describe('Types/_source/Memory', () => {
                     return source.read(existsId).then((model) => {
                         model.set('LastName', 'Петров');
                         return source.update(model).then((success) => {
-                            assert.isTrue(!!success);
+                            assert.isTrue(Boolean(success));
                             return source.read(existsId).then((model) => {
                                 assert.equal(model.get('LastName'), 'Петров');
                             });

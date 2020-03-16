@@ -145,7 +145,7 @@ export default class HierarchicalMemory extends mixin<
         return this._source.read(key, meta);
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<void | number | string> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         return this._source.update(data, meta);
     }
 

@@ -277,7 +277,7 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrud).read(key, meta) as Promise<Model>;
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<void | number | string> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         return (this._$target as ICrud).update(data, meta);
     }
 
