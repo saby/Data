@@ -198,7 +198,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         }
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<void | number | string> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         const updateRecord = (record) => {
             const keyProperty = this.getKeyProperty();
             let key = keyProperty ? record.get(keyProperty) : undefined;
@@ -233,7 +233,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
         return this._loadAdditionalDependencies().addCallback(
             () => this._prepareUpdateResult(data, keys)
-        ) as Promise<void | number | string>;
+        ) as Promise<void>;
     }
 
     destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {

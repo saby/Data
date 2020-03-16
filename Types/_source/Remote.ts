@@ -283,7 +283,7 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<void | number | string> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.update,
             this._$passing.update.call(this, data, meta)

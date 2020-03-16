@@ -1084,7 +1084,7 @@ export default class SbisService extends Rpc {
         });
     }
 
-    update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void | EntityId> {
+    update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
             return this._loadAdditionalDependencies((ready) => {
                 this._connectAdditionalDependencies(
