@@ -195,7 +195,7 @@ export default abstract class Local<TData = unknown> extends mixin<
                 () => this._prepareReadResult(data)
             ) as Promise<Model>;
         } else {
-            return Promise.reject(new ReferenceError(`Record with key "${key}" does not exist`));
+            return Promise.reject(new ReferenceError(`Can't perform read() because record with key "${key}" does not exist`));
         }
     }
 
@@ -252,7 +252,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         const keysArray = keys instanceof Array ? keys : [keys];
         for (let i = 0, len = keysArray.length; i < len; i++) {
             if (!destroyByKey(keysArray[i])) {
-                return Promise.reject(new ReferenceError(`Record with key "${keysArray[i]}" does not exist`));
+                return Promise.reject(new ReferenceError(`Can't perform destroy() because record with key "${keysArray[i]}" does not exist`));
             }
         }
 
@@ -294,7 +294,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         const indexFrom = this._getIndexByKey(from);
         const indexTo = this._getIndexByKey(to);
         if (indexFrom === -1 || indexTo === -1) {
-           return Promise.reject(new ReferenceError(`Record with key "${from}" or "${to}" does not exist`));
+           return Promise.reject(new ReferenceError(`Can't perform merge() because record with key "${from}" or "${to}" does not exist`));
         }
 
         this._getTableAdapter().merge(
@@ -311,7 +311,7 @@ export default abstract class Local<TData = unknown> extends mixin<
     copy(key: string | number, meta?: object): Promise<Model> {
         const index = this._getIndexByKey(key);
         if (index === -1) {
-            return Promise.reject(new ReferenceError(`Record with key "${key}" does not exist`));
+            return Promise.reject(new ReferenceError(`Can't perform copy() because record with key "${key}" does not exist`));
         } else {
             const copy = this._getTableAdapter().copy(index);
             this._reIndex();
@@ -349,7 +349,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             targetPosition = this._getIndexByKey(target);
             targetItem = adapter.forRecord(tableAdapter.at(targetPosition));
             if (targetPosition === -1) {
-                return Promise.reject(new ReferenceError('Can\'t find target position'));
+                return Promise.reject(new ReferenceError('Can\'t perform move() because target position "${target}" is not found'));
             }
         }
 
