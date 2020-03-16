@@ -14,7 +14,6 @@ import {
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
-import Deferred = require('Core/Deferred');
 
 interface IData {
     read?: Model;
@@ -273,22 +272,22 @@ export default class PrefetchProxy extends mixin<
 
     read(key: number | string, meta?: object): Promise<Model> {
         if (this._validators.read(this._$data.read, this._done)) {
-            return Deferred.success(this._$data.read);
+            return Promise.resolve(this._$data.read);
         }
         return (this._$target as ICrud).read(key, meta) as Promise<Model>;
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         return (this._$target as ICrud).update(data, meta);
     }
 
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
+    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
         return (this._$target as ICrud).destroy(keys, meta);
     }
 
     query(query?: Query): Promise<DataSet> {
         if (this._validators.query(this._$data.query, this._done)) {
-            return Deferred.success(this._$data.query);
+            return Promise.resolve(this._$data.query);
         }
         return (this._$target as ICrud).query(query);
     }
@@ -299,18 +298,18 @@ export default class PrefetchProxy extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<null> {
+    merge(from: string | number, to: string | number): Promise<void> {
         return (this._$target as ICrudPlus).merge(from, to);
     }
 
     copy(key: string | number, meta?: object): Promise<Model> {
         if (this._validators.copy(this._$data.copy, this._done)) {
-            return Deferred.success(this._$data.copy);
+            return Promise.resolve(this._$data.copy);
         }
         return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<null> {
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void> {
         return (this._$target as ICrudPlus).move(items, target, meta);
     }
 

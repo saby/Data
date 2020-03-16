@@ -39,7 +39,7 @@ export default interface ICrudPlus {
      *     });
      * </pre>
      */
-    merge(from: string | number, to: string | number): Promise<null>;
+    merge(from: string | number, to: string | number): Promise<void>;
 
     /**
      * Создает копию записи
@@ -69,5 +69,5 @@ export default interface ICrudPlus {
      * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
      */
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<null>;
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void>;
 }

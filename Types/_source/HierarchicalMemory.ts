@@ -14,7 +14,6 @@ import {
 } from '../entity';
 import {RecordSet} from '../collection';
 import {mixin} from '../util';
-import Deferred = require('Core/Deferred');
 
 interface IOptions extends IMemoryOptions {
     parentProperty?: string;
@@ -146,67 +145,61 @@ export default class HierarchicalMemory extends mixin<
         return this._source.read(key, meta);
     }
 
-    update(data: Record | RecordSet, meta?: object): Promise<null> {
+    update(data: Record | RecordSet, meta?: object): Promise<void> {
         return this._source.update(data, meta);
     }
 
-    destroy(keys: any | any[], meta?: object): Promise<null> {
+    destroy(keys: any | any[], meta?: object): Promise<void> {
         return this._source.destroy(keys, meta);
     }
 
     query(query?: Query): Promise<DataSet> {
-        const result = new Deferred();
+        return new Promise<DataSet>((resolve, reject) => {
+            import('Types/collection').then((collection) => {
+                this._source.query(query).then((response) => {
+                    if (this._$parentProperty) {
+                        const hierarchy = new relation.Hierarchy({
+                            keyProperty: this._keyProperty,
+                            parentProperty: this._$parentProperty
+                        });
 
-        require(['Types/collection'], (collection) => {
-            this._source.query(query).then((response) => {
-                if (this._$parentProperty) {
-                    const hierarchy = new relation.Hierarchy({
-                        keyProperty: this._keyProperty,
-                        parentProperty: this._$parentProperty
-                    });
+                        const sourceRecords = new collection.RecordSet({
+                            rawData: this._source.data,
+                            adapter: this._source.getAdapter(),
+                            keyProperty: this._keyProperty
+                        });
 
-                    const sourceRecords = new collection.RecordSet({
-                        rawData: this._source.data,
-                        adapter: this._source.getAdapter(),
-                        keyProperty: this._keyProperty
-                    });
+                        const breadcrumbs = new collection.RecordSet({
+                            adapter: this._source.getAdapter(),
+                            keyProperty: this._keyProperty
+                        });
 
-                    const breadcrumbs = new collection.RecordSet({
-                        adapter: this._source.getAdapter(),
-                        keyProperty: this._keyProperty
-                    });
+                        // Extract breadcrumbs as path from filtered node to the root
+                        const startFromId = query.getWhere()[this._$parentProperty];
+                        let startFromNode = sourceRecords.getRecordById(startFromId);
+                        if (startFromNode) {
+                            breadcrumbs.add(startFromNode, 0);
+                            let node;
+                            while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
+                                breadcrumbs.add(node, 0);
+                                startFromNode = node.get(this._keyProperty);
+                            }
+                        }
 
-                    // Extract breadcrumbs as path from filtered node to the root
-                    const startFromId = query.getWhere()[this._$parentProperty];
-                    let startFromNode = sourceRecords.getRecordById(startFromId);
-                    if (startFromNode) {
-                        breadcrumbs.add(startFromNode, 0);
-                        let node;
-                        while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
-                            breadcrumbs.add(node, 0);
-                            startFromNode = node.get(this._keyProperty);
+                        // Store breadcrumbs as 'path' in meta data
+                        const data = response.getRawData() as IQueryRawData;
+                        if (data) {
+                            const metaData =  data.meta || {};
+                            metaData.path = breadcrumbs;
+                            data.meta = metaData;
+                            response.setRawData(data);
                         }
                     }
 
-                    // Store breadcrumbs as 'path' in meta data
-                    const data = response.getRawData() as IQueryRawData;
-                    if (data) {
-                        const metaData =  data.meta || {};
-                        metaData.path = breadcrumbs;
-                        data.meta = metaData;
-                        response.setRawData(data);
-                    }
-                }
-
-                result.callback(response);
-            }).catch((err) => {
-                result.errback(err);
-            });
-        }, (err) => {
-            result.errback(err);
+                    resolve(response);
+                }).catch(reject);
+            }).catch((reject));
         });
-
-        return result as Promise<DataSet>;
     }
 
     // endregion
@@ -215,7 +208,7 @@ export default class HierarchicalMemory extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<any> {
+    merge(from: string | number, to: string | number): Promise<void> {
         return this._source.merge(from, to);
     }
 
@@ -223,7 +216,7 @@ export default class HierarchicalMemory extends mixin<
         return this._source.copy(key, meta);
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<any> {
+    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void> {
         return this._source.move(items, target, meta);
     }
 

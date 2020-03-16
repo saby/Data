@@ -62,8 +62,8 @@ describe('Types/_source/HierarchicalMemory', () => {
 
     describe('.destroy()', () => {
         it('should delete record', () => {
-            return source.destroy(1).then((result) => {
-                assert.equal(result, 1);
+            return source.destroy(1).then(() => {
+                assert.isOk('fine');
             });
         });
     });
