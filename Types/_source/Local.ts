@@ -295,35 +295,34 @@ export default abstract class Local<TData = unknown> extends mixin<
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
     merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
-        const targetIndex = this._getIndexByKey(target);
-        if (targetIndex === -1) {
-            return Promise.reject(new ReferenceError(`Can't perform merge() because target record with key "${target}" does not exist`));
-        }
-
-        let error: Error;
         const mergedKeys = merged instanceof Array ? merged : [merged];
-        const adapter = this._getTableAdapter();
-        mergedKeys.forEach((mergedKey) => {
-            const mergedIndex = this._getIndexByKey(mergedKey);
-            if (mergedIndex === -1) {
-                error = new ReferenceError(`Can't perform merge() because source record with key "${mergedKey}" does not exist`);
-                return;
-            }
+        const tableAdapter = this._getTableAdapter();
+        const keyProperty = this.getKeyProperty();
+        try {
+            mergedKeys.forEach((mergedKey) => {
+                // targetIndex can change within several merges that's why it must be refreshed it on each iteration
+                const targetIndex = this._getIndexByKey(target);
+                if (targetIndex === -1) {
+                    throw new ReferenceError(`Can't perform merge() because target record with key "${target}" does not exist`);
+                }
 
-            adapter.merge(
-                targetIndex,
-                mergedIndex,
-                this.getKeyProperty()
-            );
-        });
+                const mergedIndex = this._getIndexByKey(mergedKey);
+                if (mergedIndex === -1) {
+                    throw new ReferenceError(`Can't perform merge() because source record with key "${mergedKey}" does not exist`);
+                }
 
-        if (error) {
+                tableAdapter.merge(
+                    targetIndex,
+                    mergedIndex,
+                    keyProperty
+                );
+                this._reIndex();
+            });
+        } catch (error) {
             return Promise.reject(error);
         }
 
-        this._reIndex();
-
-        //FIXME: Should return void here
+        // FIXME: Actually should return void here
         return Promise.resolve(target as unknown as void);
     }
 

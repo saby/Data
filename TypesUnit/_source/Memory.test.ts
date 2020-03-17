@@ -1257,12 +1257,12 @@ describe('Types/_source/Memory', () => {
                 });
             });
 
-            it('should merge with single record', () => {
+            it('should merge target with single record', () => {
                 return source.merge(existsId, existsId2).then(() => {
                     return source.read(existsId).then((merged) => {
                         assert.equal(merged.get('Id'), existsId);
-                        assert.equal(merged.get('Order'), 1);
-                        assert.equal(merged.get('LastName'), 'qwe');
+                        assert.equal(merged.get('Order'), 3);
+                        assert.equal(merged.get('LastName'), 'Иванов');
 
                         return source.read(existsId2).then(() => {
                             throw new Error('Merged record should be deleted.');
@@ -1273,7 +1273,7 @@ describe('Types/_source/Memory', () => {
                 });
             });
 
-            it('should merge with several records', () => {
+            it('should merge target with several records', () => {
                 return source.merge(existsId, [existsId2, existsId3]).then(() => {
                     return source.read(existsId).then((merged) => {
                         assert.equal(merged.get('Id'), existsId);
