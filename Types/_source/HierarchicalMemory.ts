@@ -1,4 +1,4 @@
-import ICrud from './ICrud';
+import ICrud, {EntityKey} from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IDecorator from './IDecorator';
 import Memory, {IOptions as IMemoryOptions} from './Memory';
@@ -208,15 +208,15 @@ export default class HierarchicalMemory extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<void> {
-        return this._source.merge(from, to);
+    merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
+        return this._source.merge(target, merged);
     }
 
-    copy(key: string | number, meta?: object): Promise<Record> {
+    copy(key: EntityKey, meta?: object): Promise<Record> {
         return this._source.copy(key, meta);
     }
 
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void> {
+    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void> {
         return this._source.move(items, target, meta);
     }
 

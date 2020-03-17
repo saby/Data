@@ -12,6 +12,7 @@ describe('Types/_source/Memory', () => {
     const existsId = 5;
     const existsIdIndex = 6;
     const existsId2 = 6;
+    const existsId3 = 4;
     const notExistsId = 33;
 
     let data: Array<{
@@ -1256,14 +1257,28 @@ describe('Types/_source/Memory', () => {
                 });
             });
 
-            it('should merge models', () => {
+            it('should merge target with single record', () => {
                 return source.merge(existsId, existsId2).then(() => {
-                    return source.read(existsId).then(() => {
+                    return source.read(existsId).then((merged) => {
+                        assert.equal(merged.get('Id'), existsId);
+                        assert.equal(merged.get('Order'), 3);
+                        assert.equal(merged.get('LastName'), 'Иванов');
+
                         return source.read(existsId2).then(() => {
-                            throw new Error('Exists extention model.');
+                            throw new Error('Merged record should be deleted.');
                         }, (err) => {
                             assert.instanceOf(err, Error);
                         });
+                    });
+                });
+            });
+
+            it('should merge target with several records', () => {
+                return source.merge(existsId, [existsId2, existsId3]).then(() => {
+                    return source.read(existsId).then((merged) => {
+                        assert.equal(merged.get('Id'), existsId);
+                        assert.equal(merged.get('Order'), 1);
+                        assert.equal(merged.get('LastName'), 'Петров');
                     });
                 });
             });

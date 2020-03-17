@@ -1,4 +1,4 @@
-import ICrud from './ICrud';
+import ICrud, {EntityKey} from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import Base, {IOptions as IBaseOptions} from './Base';
 import DataMixin from './DataMixin';
@@ -188,7 +188,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         }) as Promise<Model | Record>;
     }
 
-    read(key: number | string, meta?: object): Promise<Model> {
+    read(key: EntityKey, meta?: object): Promise<Model> {
         const data = this._getRecordByKey(key);
         if (data) {
             return this._loadAdditionalDependencies().addCallback(
@@ -239,7 +239,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         ) as Promise<void>;
     }
 
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
+    destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
         const destroyByKey = (key) => {
             const index = this._getIndexByKey(key);
             if (index !== -1) {
@@ -294,25 +294,39 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     readonly '[Types/_source/ICrudPlus]': boolean = true;
 
-    merge(from: string | number, to: string | number): Promise<void> {
-        const indexFrom = this._getIndexByKey(from);
-        const indexTo = this._getIndexByKey(to);
-        if (indexFrom === -1 || indexTo === -1) {
-           return Promise.reject(new ReferenceError(`Can't perform merge() because record with key "${from}" or "${to}" does not exist`));
+    merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
+        const mergedKeys = merged instanceof Array ? merged : [merged];
+        const tableAdapter = this._getTableAdapter();
+        const keyProperty = this.getKeyProperty();
+        try {
+            mergedKeys.forEach((mergedKey) => {
+                // targetIndex can change within several merges that's why it must be refreshed it on each iteration
+                const targetIndex = this._getIndexByKey(target);
+                if (targetIndex === -1) {
+                    throw new ReferenceError(`Can't perform merge() because target record with key "${target}" does not exist`);
+                }
+
+                const mergedIndex = this._getIndexByKey(mergedKey);
+                if (mergedIndex === -1) {
+                    throw new ReferenceError(`Can't perform merge() because source record with key "${mergedKey}" does not exist`);
+                }
+
+                tableAdapter.merge(
+                    targetIndex,
+                    mergedIndex,
+                    keyProperty
+                );
+                this._reIndex();
+            });
+        } catch (error) {
+            return Promise.reject(error);
         }
 
-        this._getTableAdapter().merge(
-            indexFrom,
-            indexTo,
-            this.getKeyProperty()
-        );
-        this._reIndex();
-
-        //FIXME: Should return void here
-        return Promise.resolve(from as unknown as void);
+        // FIXME: Actually should return void here
+        return Promise.resolve(target as unknown as void);
     }
 
-    copy(key: string | number, meta?: object): Promise<Model> {
+    copy(key: EntityKey, meta?: object): Promise<Model> {
         const index = this._getIndexByKey(key);
         if (index === -1) {
             return Promise.reject(new ReferenceError(`Can't perform copy() because record with key "${key}" does not exist`));
@@ -326,8 +340,8 @@ export default abstract class Local<TData = unknown> extends mixin<
     }
 
     move(
-        items: string | number | Array<string | number>,
-        target: string | number,
+        items: EntityKey | EntityKey[],
+        target: EntityKey,
         meta?: IMovePosition
     ): Promise<void> {
         meta = meta || {};
@@ -423,7 +437,7 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @param key Значение ключа
      * @protected
      */
-    protected _getRecordByKey(key: number | string): adapter.IRecord {
+    protected _getRecordByKey(key: EntityKey): adapter.IRecord {
         return this._getTableAdapter().at(
             this._getIndexByKey(key)
         );
@@ -435,7 +449,7 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @return -1 - не найден, >=0 - индекс
      * @protected
      */
-    protected _getIndexByKey(key: string | number): number {
+    protected _getIndexByKey(key: EntityKey): number {
         const index = this._index[key];
         return index === undefined ? -1 : index;
     }

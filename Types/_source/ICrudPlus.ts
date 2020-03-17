@@ -1,4 +1,5 @@
 import {Record} from '../entity';
+import {EntityKey} from './ICrud';
 
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
@@ -21,9 +22,9 @@ export default interface ICrudPlus {
      */
 
     /**
-     * Объединяет одну запись с другой
-     * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
-     * @param to Первичный ключ записи-приёмника
+     * Объединяет одну запись с другими
+     * @param target Первичный ключ записи-приёмника
+     * @param merged Первичный ключ записи-источника (или нескольких записей), при успешном объедининии записи будут удалены
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
      * @example
      * Объединим статью с ключом 'article-from' со статьей с ключом 'article-to':
@@ -39,7 +40,7 @@ export default interface ICrudPlus {
      *     });
      * </pre>
      */
-    merge(from: string | number, to: string | number): Promise<void>;
+    merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void>;
 
     /**
      * Создает копию записи
@@ -60,7 +61,7 @@ export default interface ICrudPlus {
      *     });
      * </pre>
      */
-    copy(key: string | number, meta?: object): Promise<Record>;
+    copy(key: EntityKey, meta?: object): Promise<Record>;
 
     /**
      * Производит перемещение записи.
@@ -69,5 +70,5 @@ export default interface ICrudPlus {
      * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
      */
-    move(items: Array<string | number>, target: string | number, meta?: object): Promise<void>;
+    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void>;
 }
