@@ -1587,7 +1587,7 @@ describe('Types/_entity/Model', () => {
             });
         });
 
-        describe('.fromObject', () => {
+        describe('::fromObject', () => {
             it('should return a model', () => {
                 const data = {
                     id: 1,
@@ -1595,7 +1595,7 @@ describe('Types/_entity/Model', () => {
                     selected: true,
                     pid: null
                 };
-                const model = (Model as any).fromObject(data);
+                const model = Model.fromObject(data);
 
                 assert.instanceOf(model, Model);
                 for (const key in data) {
