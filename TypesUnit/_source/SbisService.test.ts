@@ -430,23 +430,13 @@ describe('Types/_source/SbisService', () => {
                     });
                 });
 
-                it('should generate request with additional fields from record', () => {
+                it('should generate request with given reference name', () => {
                     return service.read(
                         SbisBusinessLogic.existsId,
-                        getSampleModel()
+                        'Foo'
                     ).then(() => {
                         const args = SbisBusinessLogic.lastRequest.args;
-                        testArgIsModel(args.ДопПоля, getSampleModel());
-                    });
-                });
-
-                it('should generate request with additional fields from object', () => {
-                    return service.read(
-                        SbisBusinessLogic.existsId,
-                        getSampleMeta()
-                    ).then(() => {
-                        const args = SbisBusinessLogic.lastRequest.args;
-                        assert.deepEqual(args.ДопПоля, getSampleMeta());
+                        assert.strictEqual(args.Связь, 'Foo');
                     });
                 });
             });
@@ -538,27 +528,13 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with additional fields from record', () => {
-                const meta = new Model({
-                    adapter: 'Types/entity:adapter.Sbis'
-                });
-                meta.addField({name: 'Тест', type: 'integer'}, undefined, 7);
+            it('should generate request with given reference name', () => {
                 return service.update(
                     getSampleModel(),
-                    meta
+                    'Foo'
                 ).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
-                    testArgIsModel(args.ДопПоля, meta);
-                });
-            });
-
-            it('should generate request with additional fields from object', () => {
-                return service.update(
-                    getSampleModel(),
-                    getSampleMeta()
-                ).then(() => {
-                    const args = SbisBusinessLogic.lastRequest.args;
-                    assert.deepEqual(args.ДопПоля, getSampleMeta());
+                    assert.strictEqual(args.Связь, 'Foo');
                 });
             });
 
