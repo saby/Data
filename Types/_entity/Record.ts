@@ -1452,7 +1452,7 @@ export default class Record<T = any> extends mixin<
      * @param [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
      * @static
      */
-    static fromObject<T = any, K = object>(data: K, adapter?: AdapterDescriptor): Record<T> | null {
+    static fromObject<T = object>(data: T, adapter?: AdapterDescriptor): Record<T> | null {
         if (data === null) {
             return data as null;
         }

@@ -1600,7 +1600,7 @@ describe('Types/_entity/Model', () => {
                 assert.instanceOf(model, Model);
                 for (const key in data) {
                     if (data.hasOwnProperty(key)) {
-                        assert.strictEqual(model.get(key), data[key]);
+                        assert.strictEqual(model.get(key as never), data[key]);
                     }
                 }
             });
