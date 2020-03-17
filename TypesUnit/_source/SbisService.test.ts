@@ -429,16 +429,6 @@ describe('Types/_source/SbisService', () => {
                         assert.strictEqual(args.ИдО, SbisBusinessLogic.existsId);
                     });
                 });
-
-                it('should generate request with given reference name', () => {
-                    return service.read(
-                        SbisBusinessLogic.existsId,
-                        'Foo'
-                    ).then(() => {
-                        const args = SbisBusinessLogic.lastRequest.args;
-                        assert.strictEqual(args.Связь, 'Foo');
-                    });
-                });
             });
 
             context('and the model isn\'t exists', () => {
@@ -525,16 +515,6 @@ describe('Types/_source/SbisService', () => {
                         const args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args.Запись, model);
                     });
-                });
-            });
-
-            it('should generate request with given reference name', () => {
-                return service.update(
-                    getSampleModel(),
-                    'Foo'
-                ).then(() => {
-                    const args = SbisBusinessLogic.lastRequest.args;
-                    assert.strictEqual(args.Связь, 'Foo');
                 });
             });
 

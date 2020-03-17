@@ -537,42 +537,33 @@ function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResu
 interface IReadResult {
     ИдО: EntityKey;
     ИмяМетода: string | null;
-    Связь?: string;
 }
 
 /**
  * Returns data to send in read()
  */
-function passRead(this: SbisService, key: EntityKey, meta?: object | string): IReadResult {
+function passRead(this: SbisService, key: EntityKey, meta?: object): IReadResult {
     const args: IReadResult = {
         ИдО: key,
         ИмяМетода: this._$binding.format || null
     };
-    if (meta && typeof meta === 'string') {
-        args.Связь = meta;
-    }
     return args;
 }
 
 interface IUpdateResult {
     Запись?: Record;
     Записи?: Record;
-    Связь?: string;
 }
 
 /**
  * Returns data to send in update()
  */
-function passUpdate(this: SbisService, data: Record | RecordSet, meta?: object | string): IUpdateResult {
+function passUpdate(this: SbisService, data: Record | RecordSet, meta?: object): IUpdateResult {
     const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
     const args: IUpdateResult = {};
     const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
 
     args[recordArg] = superArgs[0];
-
-    if (meta && typeof meta === 'string') {
-        args.Связь = meta;
-    }
 
     return args;
 }
