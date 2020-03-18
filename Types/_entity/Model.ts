@@ -1085,7 +1085,7 @@ class Model<T = any> extends Record<T> implements IStateful {
     // region Statics
 
     static fromObject<T = object>(data: T, adapter?: AdapterDescriptor): Model<T> | null {
-        return Record.fromObject.call(Model, data, adapter);
+        return Record.fromObject.call(this, data, adapter);
     }
 
     // endregion
