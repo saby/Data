@@ -1,4 +1,5 @@
 import Record, {IOptions as IRecordOptions, ISerializableState as IRecordSerializableState} from './Record';
+import {AdapterDescriptor} from './FormattableMixin';
 import InstantiableMixin from './InstantiableMixin';
 import IStateful from './IStateful';
 import {IState as IDefaultSerializableState} from './SerializableMixin';
@@ -1083,17 +1084,8 @@ class Model<T = any> extends Record<T> implements IStateful {
 
     // region Statics
 
-    static fromObject(data: any, adapter: IAdapter): Model | null {
-        const record = Record.fromObject(data, adapter);
-        if (!record) {
-            return null;
-        }
-        return new Model({
-            rawData: record.getRawData(true),
-            adapter: record.getAdapter(),
-            //@ts-ignore
-            format: record._getFormat(true)// "Anakin, I Am Your Son"
-        });
+    static fromObject<T = object>(data: T, adapter?: AdapterDescriptor): Model<T> | null {
+        return Record.fromObject.call(this, data, adapter);
     }
 
     // endregion

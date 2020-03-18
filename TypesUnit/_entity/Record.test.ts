@@ -2251,10 +2251,15 @@ describe('Types/_entity/Record', () => {
 
             for (const key in data) {
                 if (data.hasOwnProperty(key)) {
-                    assert.strictEqual(recordA.get(key), data[key]);
-                    assert.strictEqual(recordB.get(key), data[key]);
+                    assert.strictEqual(recordA.get(key as never), data[key]);
+                    assert.strictEqual(recordB.get(key as never), data[key]);
                 }
             }
+        });
+
+        it('should return unchanged record', () => {
+            const record = Record.fromObject({foo: 'bar'});
+            assert.isFalse(record.isChanged());
         });
 
         it('should create DateTime field by default', () => {

@@ -1452,15 +1452,15 @@ export default class Record<T = any> extends mixin<
      * @param [adapter='Types/entity:adapter.Json'] Адаптер для сырых данных
      * @static
      */
-    static fromObject(data: any, adapter?: AdapterDescriptor): Record | null {
+    static fromObject<T = object>(data: T, adapter?: AdapterDescriptor): Record<T> | null {
         if (data === null) {
-            return data;
+            return data as null;
         }
         if (data && (data instanceof Record)) {
             return data;
         }
 
-        const record = new Record({
+        const record = new this({
             adapter: adapter || 'Types/entity:adapter.Json',
             format: []
         });
@@ -1483,6 +1483,8 @@ export default class Record<T = any> extends mixin<
 
             Record.addFieldTo(record, name, value);
         }
+
+        record.acceptChanges();
 
         return record;
     }
