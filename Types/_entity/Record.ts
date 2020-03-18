@@ -1484,6 +1484,8 @@ export default class Record<T = any> extends mixin<
             Record.addFieldTo(record, name, value);
         }
 
+        record.acceptChanges();
+
         return record;
     }
 

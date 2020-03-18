@@ -2257,6 +2257,11 @@ describe('Types/_entity/Record', () => {
             }
         });
 
+        it('should return unchanged record', () => {
+            const record = Record.fromObject({foo: 'bar'});
+            assert.isFalse(record.isChanged());
+        });
+
         it('should create DateTime field by default', () => {
             const record = Record.fromObject({date: new Date()});
             const field = record.getFormat().at(0);
