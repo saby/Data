@@ -26,6 +26,7 @@
  */
 
 export {default as Base} from './_source/Base';
+export {default as BindingMixin} from './_source/BindingMixin';
 export {default as DataSet} from './_source/DataSet';
 export {default as HierarchicalMemory} from './_source/HierarchicalMemory';
 export {default as ICrud, EntityKey as CrudEntityKey} from './_source/ICrud';
