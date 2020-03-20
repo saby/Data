@@ -281,7 +281,7 @@ class RecordSet<
         FormattableMixin.call(this, options);
 
         if (this._$rawData) {
-            this._assignRawData(this._getRawDataFromOption(), true);
+            this._resetRawDataAdapter(this._getRawDataFromOption(), true);
             this._initByRawData();
         }
 

@@ -21,6 +21,12 @@ interface IItem {
     name: string;
 }
 
+class TestRecordSet extends RecordSet {
+    get formatController(): SbisFormatFinder {
+        return this._$formatController;
+    }
+}
+
 describe('Types/_collection/RecordSet', () => {
     function getItems(): IItem[] {
         return [{
@@ -1594,6 +1600,20 @@ describe('Types/_collection/RecordSet', () => {
 
             assert.deepEqual(given, expected);
         });
+
+        it('should delete format controller', () => {
+            const rs = new TestRecordSet({
+                rawData: [{id: 1}, {id: 2}],
+                formatController: new SbisFormatFinder()
+            });
+            const newRs = new RecordSet({
+                rawData: [{id: 3}]
+            });
+
+            rs.assign(newRs);
+
+            assert.strictEqual(rs.formatController, null);
+        });
     });
 
     describe('.clear()', () => {
@@ -2683,11 +2703,12 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         it('should return an instance with format controller', () => {
-            const formatController = new SbisFormatFinder();
-            const instance = RecordSet.produceInstance([], {formatController});
+            const formatController = new SbisFormatFinder(getSbisItems());
+            const instance = TestRecordSet.produceInstance([], {formatController}) as TestRecordSet;
 
             assert.instanceOf(instance, RecordSet);
-            assert.deepEqual((instance as any)._$formatController, formatController);
+            assert.instanceOf(instance.formatController, SbisFormatFinder);
+            assert.deepEqual(instance.formatController.data, getSbisItems());
         });
 
         it('should return an instance with the given keyProperty', () => {

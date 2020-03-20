@@ -329,6 +329,10 @@ class SbisFormatFinder {
 
         return data;
     }
+
+    get data(): IRecordFormat | ITableFormat {
+        return this._data;
+    }
 }
 
 export {RecursiveIterator};
