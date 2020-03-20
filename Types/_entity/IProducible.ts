@@ -9,7 +9,7 @@ export default interface IProducible {
 
 /**
  * Интерфейс получения экземпляра класса через фабричный метод
- * @interface Types/_entity/IProducible
+ * @interface Types/_entity/IProducibleConstructor
  * @author Мальцев А.А.
  */
 export interface IProducibleConstructor extends Function {
