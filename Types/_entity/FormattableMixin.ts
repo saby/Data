@@ -697,8 +697,9 @@ export default abstract class FormattableMixin {
     /**
      * Resets adapter instance for certain data kind.
      * @param [data] Raw data to deal with
+     * @param saveFormatController
      */
-    protected _resetRawDataAdapter(data?: any): void {
+    protected _resetRawDataAdapter(data?: any, saveFormatController?: boolean): void {
         if (data === undefined) {
             if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
                 // Save possible rawData changes
@@ -706,6 +707,10 @@ export default abstract class FormattableMixin {
             }
         } else {
             this._$rawData = data;
+
+            if (!saveFormatController) {
+                this._$formatController = null;
+            }
         }
 
         this._rawDataAdapter = null;
