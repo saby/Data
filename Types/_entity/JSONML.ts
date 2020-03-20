@@ -6,8 +6,9 @@ export type IJSONML = Array<string|object> | string;
 
 /**
  * Абстрактный класс для работы с JSONML
- * @author Волоцкой В.Д.
  * @class Types/_entity/JSONML
+ * @public
+ * @author Волоцкой В.Д.
  */
 export default abstract class JSONML {
     /**

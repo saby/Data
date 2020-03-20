@@ -11,13 +11,13 @@
  * @includes format Types/_entity/format
  * @includes functor Types/_entity/functor
  * @includes Guid Types/_entity/Guid
+ * @includes JSONML Types/_entity/JSONML
  * @includes Identity Types/_entity/Identity
  * @includes ICloneable Types/_entity/ICloneable
  * @includes IEquatable Types/_entity/IEquatable
  * @includes IInstantiable Types/_entity/IInstantiable
  * @includes IObject Types/_entity/IObject
  * @includes IObservableObject Types/_entity/IObservableObject
- * @includes IProducible Types/_entity/IProducible
  * @includes IVersionable Types/_entity/IVersionable
  * @includes Model Types/_entity/Model
  * @includes ReactiveObject Types/_entity/ReactiveObject
@@ -25,7 +25,6 @@
  * @includes relation Types/_entity/relation
  * @includes Time Types/_entity/Time
  * @includes TimeInterval Types/_entity/TimeInterval
- * @includes JSONML Types/_entity/JSONML
  * @public
  * @author Мальцев А.А.
  */
@@ -56,6 +55,7 @@ export {
 import * as functor from './_entity/functor';
 export {functor};
 export {default as Guid} from './_entity/Guid';
+export {default as JSONML, IJSONML} from './_entity/JSONML';
 export {default as Identity} from './_entity/Identity';
 export {default as ICloneable} from './_entity/ICloneable';
 export {default as IEquatable} from './_entity/IEquatable';
@@ -87,4 +87,3 @@ export {
     IOptions as IVersionableMixinOptions,
     VersionCallback as VersionableMixinVersionCallback
 } from './_entity/VersionableMixin';
-export {default as JSONML, IJSONML} from './_entity/JSONML';
