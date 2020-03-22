@@ -187,7 +187,14 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     protected _recoverData(data: any, useLocaleController?: boolean): any {
         if (data && typeof data === 'object') {
-            const formatController = useLocaleController ? this._formatController : new FormatController(data);
+            let formatController;
+
+            if (useLocaleController) {
+                formatController = this._formatController;
+            } else {
+                formatController = data.formatController || new FormatController(data);
+            }
+
             return formatController.recoverData(data);
         }
 
@@ -211,6 +218,10 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
                         return this;
                     }
+                },
+                formatController: {
+                    enumerable: false,
+                    value: this._formatController
                 }
             });
         }

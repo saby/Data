@@ -83,10 +83,10 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
 
         if (at === undefined) {
-            this._data.d.push(this._recoverData(record.d));
+            this._data.d.push(this._recoverData(record).d);
         } else {
             this._checkRowIndex(at, true);
-            this._data.d.splice(at, 0,this._recoverData(record.d));
+            this._data.d.splice(at, 0,this._recoverData(record).d);
         }
     }
 
@@ -120,7 +120,7 @@ export default class SbisTable extends mixin<
         this._formatController.scanFormats(this._data.d[at]);
 
         const useLocaleController = this._data.d[at] === record.d;
-        this._data.d[at] = this._recoverData(record.d, useLocaleController);
+        this._data.d[at] = this._recoverData(record, useLocaleController).d;
     }
 
     move(source: number, target: number): void {
