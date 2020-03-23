@@ -1865,6 +1865,69 @@ describe('Types/_collection/RecordSet', () => {
                 rs.add(record);
             }, TypeError);
         });
+
+        it('should add record after recover to data', () => {
+            const rs = new RecordSet({
+                adapter: 'Types/entity:adapter.Sbis',
+                rawData: {
+                    f: 0,
+                    d: [
+                        [3, {
+                            f: 1,
+                            d: ['Sivov'],
+                            s: [{
+                                n: 'name',
+                                t: 'Строка'
+                            }]
+                        }]
+                    ],
+                    s: [{
+                        n: 'id',
+                        t: 'Число целое'
+                    }, {
+                        n: 'human',
+                        t: 'Запись'
+                    }]
+                }
+            });
+            const someRS = new RecordSet({
+                adapter: 'Types/entity:adapter.Sbis',
+                rawData: {
+                    f: 0,
+                    d: [
+                        [{
+                            f: 1,
+                            d: ['Ivanov'],
+                            s: [{
+                                n: 'name',
+                                t: 'Строка'
+                            }]
+                        }, 1],
+                        [{
+                            f: 1,
+                            d: ['Petroff']
+                        }, 2]
+                    ],
+                    s: [{
+                        n: 'human',
+                        t: 'Запись'
+                    }, {
+                        n: 'id',
+                        t: 'Число целое'
+                    }]
+                }
+            });
+
+            rs.add(someRS.at(1));
+
+            assert.deepEqual(rs.at(1).getRawData().d, [2, {
+                d: ['Petroff'],
+                s: [{
+                    n: 'name',
+                    t: 'Строка'
+                }]
+            }]);
+        });
     });
 
     describe('.remove()', () => {

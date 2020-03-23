@@ -1509,7 +1509,7 @@ class RecordSet<
             normalizedRawData = item.getRawData();
         } else {
             const normalizedAdapter = this.getAdapter().forRecord(null, this._getRawData());
-            const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
+            const itemAdapter = item.getAdapter().forRecord(item.getRawData(true), undefined, item._getFormatController());
             format.each((field, index) => {
                 normalizedAdapter.addField(field, index as number);
                 const name = field.getName();
