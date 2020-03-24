@@ -429,7 +429,25 @@ describe('Types/_source/SbisService', () => {
                         assert.strictEqual(args.ИдО, SbisBusinessLogic.existsId);
                     });
                 });
-            });
+ 
+                it('should generate request with additional fields if option passAddFieldsFromMeta is set', () => {
+                    const service = new SbisService({
+                        endpoint: 'USP',
+                        options: {
+                            passAddFieldsFromMeta: true
+                        }
+                    });
+                    const meta = {foo: 'bar'};
+
+                    return service.read(
+                        SbisBusinessLogic.existsId,
+                        meta
+                    ).then(() => {
+                        const args = SbisBusinessLogic.lastRequest.args;
+                        assert.deepEqual(args.ДопПоля, meta);
+                    });
+                });
+             });
 
             context('and the model isn\'t exists', () => {
                 it('should return an error', () => {
@@ -515,6 +533,24 @@ describe('Types/_source/SbisService', () => {
                         const args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args.Запись, model);
                     });
+                });
+            });
+
+            it('should generate request with additional fields if option passAddFieldsFromMeta is set', () => {
+                const service = new SbisService({
+                    endpoint: 'USP',
+                    options: {
+                        passAddFieldsFromMeta: true
+                    }
+                });
+                const meta = {foo: 'bar'};
+
+                return service.update(
+                    getSampleModel(),
+                    meta
+                ).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+                    assert.deepEqual(args.ДопПоля, meta);
                 });
             });
 

@@ -70,6 +70,7 @@ export interface IBinding extends IDefaultBinding {
  */
 export interface IOptionsOption extends IRemoteOptionsOption {
     hasMoreProperty?: string;
+    passAddFieldsFromMeta?: boolean;
 }
 
 /**
@@ -537,22 +538,32 @@ function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResu
 interface IReadResult {
     ИдО: EntityKey;
     ИмяМетода: string | null;
+    ДопПоля?: object;
 }
 
 /**
  * Returns data to send in read()
  */
 function passRead(this: SbisService, key: EntityKey, meta?: object): IReadResult {
+    const binding = this._$binding;
+    const passAddFieldsFromMeta = this._$options.passAddFieldsFromMeta;
+
     const args: IReadResult = {
         ИдО: key,
-        ИмяМетода: this._$binding.format || null
+        ИмяМетода: binding.format || null
     };
+
+    if (passAddFieldsFromMeta && meta && Object.keys(meta).length) {
+        args.ДопПоля = meta;
+    }
+
     return args;
 }
 
 interface IUpdateResult {
     Запись?: Record;
     Записи?: Record;
+    ДопПоля?: object;
 }
 
 /**
@@ -562,8 +573,13 @@ function passUpdate(this: SbisService, data: Record | RecordSet, meta?: object):
     const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
     const args: IUpdateResult = {};
     const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
+    const passAddFieldsFromMeta = this._$options.passAddFieldsFromMeta;
 
     args[recordArg] = superArgs[0];
+
+    if (passAddFieldsFromMeta && meta && Object.keys(meta).length) {
+        args.ДопПоля = meta;
+    }
 
     return args;
 }
