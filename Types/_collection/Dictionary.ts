@@ -24,7 +24,7 @@ type DictionaryValues<T> = T[] | IHashMap<T>;
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Мальцев А.А. и ко
  */
 export default abstract class Dictionary<T> extends mixin<
     DestroyableMixin,
