@@ -3,7 +3,7 @@
 def version = '20.3000'
 
 node ('controls') {
-    checkout_pipeline("20.3000/bugfix/fix_junitresultarchiver_branch")
+    checkout_pipeline("20.3000/bugfix/disable_browser_coverage")
     run_branch = load '/home/sbis/jenkins_pipeline/platforma/branch/run_branch'
     run_branch.execute('types', version)
 }
