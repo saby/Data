@@ -2,8 +2,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IMetaData from './IMetaData';
 import ICloneable from '../ICloneable';
-import FormatController from './SbisFormatFinder';
-import SbisFormatMixin, {ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisFormatMixin, {controllerInjected, ITableFormat, IRecordFormat} from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import {fieldsFactory} from '../format';
 import {mixin} from '../../util';
@@ -56,11 +55,10 @@ export default class SbisTable extends mixin<
     /**
      * Конструктор
      * @param data Сырые данные
-     * @param formatController контроллер форматов для сырых данных
      */
-    constructor(data?: ITableFormat, formatController?: FormatController) {
+    constructor(data?: ITableFormat) {
         super(data);
-        SbisFormatMixin.call(this, data, formatController);
+        SbisFormatMixin.call(this, data);
     }
 
     // region ITable
@@ -101,8 +99,8 @@ export default class SbisTable extends mixin<
         this._touchData();
         this._checkRowIndex(at);
 
-        if (this._formatController) {
-            this._formatController.scanFormats(this._data.d[at]);
+        if (this._data[controllerInjected]) {
+            this._data[controllerInjected].scanFormats(this._data.d[at]);
         }
 
         this._data.d.splice(at, 1);
@@ -117,7 +115,9 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
         this._checkFormat(record, '::replace()');
 
-        this._formatController.scanFormats(this._data.d[at]);
+        if (this._data[controllerInjected]) {
+            this._data[controllerInjected].scanFormats(this._data.d[at]);
+        }
 
         const useLocaleController = this._data.d[at] === record.d;
         this._data.d[at] = this._recoverData(record, useLocaleController).d;
@@ -287,8 +287,8 @@ export default class SbisTable extends mixin<
     }
 
     protected _removeD(at: number): void {
-        if (this._formatController && this._data.d.length !== 0) {
-            this._formatController.scanFormats(this._data.d[0][at]);
+        if (this._data[controllerInjected] && this._data.d.length !== 0) {
+            this._data[controllerInjected].scanFormats(this._data.d[0][at]);
         }
 
         this._data.d.forEach((item) => {

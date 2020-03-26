@@ -281,7 +281,7 @@ class RecordSet<
         FormattableMixin.call(this, options);
 
         if (this._$rawData) {
-            this._resetRawDataAdapter(this._getRawDataFromOption(), true);
+            this._resetRawDataAdapter(this._getRawDataFromOption());
             this._initByRawData();
         }
 
@@ -856,8 +856,7 @@ class RecordSet<
 
     protected _createRawDataAdapter(): adapter.ITable {
         return (this._getAdapter() as adapter.IAdapter).forTable(
-            this._getRawDataFromOption(),
-            this._getFormatController()
+            this._getRawDataFromOption()
         );
     }
 
@@ -904,9 +903,6 @@ class RecordSet<
             } else if ((options as any).idProperty) {
                 // Support deprecated  option 'idProperty'
                 instanceOptions.keyProperty = (options as any).idProperty;
-            }
-            if (options.formatController) {
-                instanceOptions.formatController = options.formatController;
             }
         }
         return new this(instanceOptions);
@@ -1131,8 +1127,7 @@ class RecordSet<
     getKeyProperty(): string {
         if (!this._$keyProperty) {
             this._$keyProperty = (this._getAdapter() as adapter.IAdapter).getKeyField(
-                this._getRawData(),
-                this._getFormatController()
+                this._getRawData()
             );
         }
         return this._$keyProperty;
@@ -1509,7 +1504,7 @@ class RecordSet<
             normalizedRawData = item.getRawData();
         } else {
             const normalizedAdapter = this.getAdapter().forRecord(null, this._getRawData());
-            const itemAdapter = item.getAdapter().forRecord(item.getRawData(true), undefined, item._getFormatController());
+            const itemAdapter = item.getAdapter().forRecord(item.getRawData(true));
             format.each((field, index) => {
                 normalizedAdapter.addField(field, index as number);
                 const name = field.getName();
@@ -1552,8 +1547,7 @@ class RecordSet<
             adapter: this.getAdapter(),
             rawData,
             instanceState,
-            keyProperty: this.getKeyProperty(),
-            formatController: this._getFormatController()
+            keyProperty: this.getKeyProperty()
         });
 
         return record;

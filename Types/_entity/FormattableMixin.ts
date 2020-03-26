@@ -5,8 +5,6 @@ import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {resolve, create, isRegistered} from '../di';
 import {format} from '../collection';
 import {object, logger} from '../util';
-import IFormatController from './adapter/IFormatController';
-import FormatController from './adapter/SbisFormatFinder';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
@@ -19,7 +17,6 @@ export interface IOptions {
    rawData?: any;
    format?: FormatDescriptor;
    cow?: boolean;
-   formatController?: FormatController;
 }
 
 export interface ISerializableState<T = IOptions> extends IDefaultSerializableState<T> {
@@ -93,8 +90,6 @@ interface IDeprecated {
  */
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': boolean;
-
-    protected _$formatController: FormatController;
 
    /**
     * @cfg {Object} Data in raw format which can be recognized via certain adapter.
@@ -179,7 +174,7 @@ export default abstract class FormattableMixin {
     *    });
     * </pre>
     */
-   protected _$adapter: IAdapter | IDecorator | IFormatController | string;
+   protected _$adapter: IAdapter | IDecorator | string;
 
     /**
      * @cfg {Types/_collection/format/Format|
@@ -618,7 +613,7 @@ export default abstract class FormattableMixin {
     /**
      * Returns common adapter instance.
      */
-    protected _getAdapter(): IAdapter | IDecorator | IFormatController {
+    protected _getAdapter(): IAdapter | IDecorator {
         if (
            this._$adapter === defaultAdapter &&
            FormattableMixin.prototype._getDefaultAdapter !== this._getDefaultAdapter
@@ -635,14 +630,6 @@ export default abstract class FormattableMixin {
         }
 
         return this._$adapter as IAdapter;
-    }
-
-    _getFormatController(): FormatController {
-        if (!this._$formatController) {
-            this._$formatController = new FormatController(this._getRawDataFromOption());
-        }
-
-        return this._$formatController;
     }
 
     /**
@@ -697,9 +684,8 @@ export default abstract class FormattableMixin {
     /**
      * Resets adapter instance for certain data kind.
      * @param [data] Raw data to deal with
-     * @param saveFormatController
      */
-    protected _resetRawDataAdapter(data?: any, saveFormatController?: boolean): void {
+    protected _resetRawDataAdapter(data?: any): void {
         if (data === undefined) {
             if (this._rawDataAdapter && typeof this._$rawData !== 'function') {
                 // Save possible rawData changes
@@ -707,10 +693,6 @@ export default abstract class FormattableMixin {
             }
         } else {
             this._$rawData = data;
-
-            if (!saveFormatController) {
-                this._$formatController = null;
-            }
         }
 
         this._rawDataAdapter = null;
@@ -909,6 +891,5 @@ Object.assign(FormattableMixin.prototype, {
     _formatClone: null,
     _rawDataAdapter: null,
     _rawDataFields: null,
-    _$formatController: null,
     hasDecalredFormat: FormattableMixin.prototype.hasDeclaredFormat // Deprecated
 });

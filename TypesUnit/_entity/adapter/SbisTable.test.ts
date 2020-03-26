@@ -792,9 +792,11 @@ describe('Types/_entity/adapter/SbisTable', () => {
         });
 
         it('serialize data chunk from data table', () => {
-            adapter._setFormatController(data);
             const chunkData = adapter.at(1);
-            assert.equal(JSON.stringify(chunkData), '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}');
+            assert.equal(
+                JSON.stringify(chunkData),
+                '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}'
+            );
         });
 
         it('toJSON not will be redefined', () => {

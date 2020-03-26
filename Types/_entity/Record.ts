@@ -713,9 +713,7 @@ export default class Record<T = any> extends mixin<
       if (options && options.adapter) {
          instanceOptions.adapter = options.adapter;
       }
-      if (options && options.formatController) {
-         instanceOptions.formatController = options.formatController;
-      }
+
       return new this(instanceOptions);
    }
 
@@ -856,9 +854,7 @@ export default class Record<T = any> extends mixin<
      */
     protected _createRawDataAdapter(): IRecord {
         return (this._getAdapter() as IAdapter).forRecord(
-            this._getRawDataFromOption(),
-            undefined,
-            this._getFormatController()
+            this._getRawDataFromOption()
         );
     }
 
@@ -1301,8 +1297,7 @@ export default class Record<T = any> extends mixin<
             this._getFieldType(format),
             {
                 format,
-                adapter: this._getAdapter(),
-                formatController: this._getFormatController()
+                adapter: this._getAdapter()
             }
         );
     }

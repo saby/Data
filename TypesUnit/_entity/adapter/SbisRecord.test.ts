@@ -1274,21 +1274,4 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             });
         });
     });
-
-    describe('._setFormatController()', () => {
-        it('should create enumerable property named "s" after add a field', () => {
-            const data: any = {};
-            const adapter = new SbisRecord(data);
-            const field = fieldsFactory({
-                type: 'string',
-                name: 'foo'
-            });
-            adapter._setFormatController(data);
-            adapter.addField(field);
-
-            const keys = Object.keys(data);
-            assert.notEqual(keys.indexOf('s'), -1);
-            assert.strictEqual(data.s[0].n, 'foo');
-        });
-    });
 });
