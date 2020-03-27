@@ -277,24 +277,25 @@ class SbisFormatFinder {
    /**
     * Возврашает формат по индефикатору.
     * @param {Number} id - индефикатор формата.
+    * @param {Boolean} copy - вернуть копию формата.
     */
-   getFormat(id?: number): IFieldFormat[] {
+   getFormat(id?: number, copy?: boolean): IFieldFormat[] {
       if (this._cache.has(id)) {
-         return this._cache.get(id);
+         return copy ? this.clone(this._cache.get(id)) : this._cache.get(id);
       }
 
-      if (!this._generator) {
-         this._generator = new RecursiveIterator(this._data);
-      }
-
-      const result = this._generator.next(this._cache, id);
+      const result = this.generator.next(this._cache, id);
 
       if (result.done) {
          throw new ReferenceError("Couldn't find format by id");
       }
 
-      return result.value;
+      return copy ? this.clone(result.value) : result.value;
    }
+
+    clone(format: IFieldFormat[]): IFieldFormat[] {
+       return format.slice();
+    }
 
     scanFormats(data: any): void {
         if (typeof data === 'object') {
@@ -313,11 +314,7 @@ class SbisFormatFinder {
             const record = (data as IRecordFormat);
 
             if (record.f !== undefined) {
-                const format = this.getFormat(record.f);
-
-                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
-                    record.s = format;
-                }
+                record.s = this.getFormat(record.f, true);
 
                 delete record.f;
             }
@@ -332,6 +329,14 @@ class SbisFormatFinder {
 
     get data(): IRecordFormat | ITableFormat {
         return this._data;
+    }
+
+    protected get generator(): RecursiveIterator {
+        if (this._generator) {
+            return this._generator;
+        }
+
+        return new RecursiveIterator(this._data);
     }
 }
 

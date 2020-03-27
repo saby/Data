@@ -1531,6 +1531,37 @@ describe('Types/_entity/Record', () => {
             assert.deepEqual(record1.getRawData(), record2.getRawData());
         });
 
+        it('should affect only given record if its format is linked to another one', () => {
+            const record = new Record({
+                adapter: new SbisAdapter(),
+                rawData: {
+                    _type: 'record',
+                    s: [
+                        {n: 'first', t: 'Запись'},
+                        {n: 'second', t: 'Запись'}
+                    ],
+                    d: [{
+                        s: [{n: 'foo', t: 'Число целое'}],
+                        f: 1,
+                        d: [1]
+                    }, {
+                        f: 1,
+                        d: [2]
+                    }]
+                }
+            });
+
+            const first = record.get('first');
+            const second = record.get('second');
+            first.addField({name: 'bar', type: 'string'}, 0, 'abc');
+            
+            assert.strictEqual(first.get('foo'), 1);
+            assert.strictEqual(first.get('bar'), 'abc');
+
+            assert.strictEqual(second.get('foo'), 2);
+            assert.isUndefined(second.get('bar'));
+        });
+
         it('should trigger onPropertyChange event with default value', () => {
             let result;
             const handler = (event, map) => {
