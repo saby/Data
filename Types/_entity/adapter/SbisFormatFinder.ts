@@ -293,14 +293,6 @@ class SbisFormatFinder {
       return copy ? this.clone(result.value) : result.value;
    }
 
-    add(id: number, format: IFieldFormat[]): void {
-        if (!this._cache) {
-            this._cache = new Map<number,  IFieldFormat[]>();
-        }
-
-        this._cache.set(id, format);
-    }
-
     clone(format: IFieldFormat[]): IFieldFormat[] {
        return JSON.parse(JSON.stringify(format));
     }
@@ -333,34 +325,6 @@ class SbisFormatFinder {
         }
 
         return data;
-    }
-
-    createFormatsController(data: any): SbisFormatFinder {
-        const formatsController = new SbisFormatFinder(data);
-
-        this._recursiveRun(data, (record) => {
-            formatsController.add(record.f, this.getFormat(record.f, true));
-        });
-
-        return formatsController;
-    }
-
-    protected _recursiveRun(data: any, callback: Function): void {
-        if (Array.isArray(data)) {
-            for (const item of data) {
-                this.recoverData(item);
-            }
-        } else if (data && typeof data === 'object') {
-            const record = (data as IRecordFormat);
-
-            if (record.f !== undefined) {
-                callback(record);
-            }
-
-            if (record.d) {
-                this.recoverData(record.d);
-            }
-        }
     }
 
     get data(): IRecordFormat | ITableFormat {
