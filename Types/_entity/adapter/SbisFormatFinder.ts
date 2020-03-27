@@ -294,7 +294,7 @@ class SbisFormatFinder {
    }
 
     clone(format: IFieldFormat[]): IFieldFormat[] {
-       return JSON.parse(JSON.stringify(format));
+       return format.slice();
     }
 
     scanFormats(data: any): void {
