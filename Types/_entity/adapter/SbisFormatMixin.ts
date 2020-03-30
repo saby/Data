@@ -334,6 +334,7 @@ export default abstract class SbisFormatMixin {
 
         this._format[name] = format;
         this._resetFieldIndices();
+        this._recoverData(this._data, true);
         this._data.s.splice(at, 0, this._buildS(format));
         this._buildD(
             at,
