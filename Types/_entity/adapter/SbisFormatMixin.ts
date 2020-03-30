@@ -106,7 +106,7 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: 
                 data.s = original.slice();
                 original = undefined;
             } else if (data.f) {
-                data.s = controller.getFormat(data.f).slice();
+                data.s = controller.getFormat(data.f, true);
             }
             return data.s;
         },
@@ -334,7 +334,6 @@ export default abstract class SbisFormatMixin {
 
         this._format[name] = format;
         this._resetFieldIndices();
-        this._recoverData(this._data, true);
         this._data.s.splice(at, 0, this._buildS(format));
         this._buildD(
             at,
