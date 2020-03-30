@@ -40,261 +40,220 @@ class IteratorArray {
     }
 }
 
-//TODO Использовать только после полного перехода на стандарт es6.
-/**
- * Функция генератор. Ищит в данных формат по индефикатору.
- * @param {Number} id - индефикатор формата.
- * @param {IRecordFormat | ITableFormat} data - сырые данные.
- * @param {Map <number, any>} storage - хранилище найденных форматов.
- */
-/*
-function* getFormatFromRawData(id: number, data: IRecordFormat | ITableFormat, storage: Map <number, any>) {
-   if (data instanceof Array) {
-      for (const element of data) {
-         id = yield* getFormatFromRawData(id, element, storage);
-      }
-   } else if (typeof data === 'object') {
-      if (data.f !== undefined && data.s) {
-         storage.set(data.f, data.s);
-
-         if (data.f === id) {
-            id = yield data.s;
-         }
-      }
-
-      if (data.d) {
-         id = yield* data.d;
-      }
-   }
-
-   return id;
-}
-*/
-
 /**
  * Класс рекусвиного стека. Хранит стек обрабатываемых узлов дерева.
  */
 class RecursiveStack {
-
     /**
      * Стек узлов
      */
-   protected _stack: Map<number, IFieldFormat[]>;
+    protected _stack: Map<number, IFieldFormat[]>;
 
     /**
      * Индефикатор обрабатываемага узла.
      */
-   processableId: number;
+    processableId: number;
 
     /**
      * Последний узел стека.
      */
-   protected _current: any;
+    protected _current: any;
 
-   constructor() {
-      this._stack = new Map();
-      this.processableId = -1;
-   }
+    constructor() {
+        this._stack = new Map();
+        this.processableId = -1;
+    }
 
     /**
      * Возврашет последний узел из стека.
      */
-   get currentNode(): any {
-      return this._current || undefined;
-   }
+    get currentNode(): any {
+        return this._current || undefined;
+    }
 
     /**
      * Добавляет узел в стек.
      * @param {any} node - Добавляемый узел.
      */
-   push(node: any): void {
-      this._current = node;
-      this.processableId++;
-      this._stack.set(this.processableId, this._current);
-   }
+    push(node: any): void {
+        this._current = node;
+        this.processableId++;
+        this._stack.set(this.processableId, this._current);
+    }
 
     /**
      * Удаляет последний узел из стека.
      */
-   pop(): void {
-      this.processableId--;
-      this._current = this._stack.get(this.processableId);
-      this._stack.delete(this.processableId + 1);
-   }
+    pop(): void {
+        this.processableId--;
+        this._current = this._stack.get(this.processableId);
+        this._stack.delete(this.processableId + 1);
+    }
 }
 
 /**
  * Класс рекурсивного итератора по форматам.
  */
-class RecursiveIterator {
-
+export class RecursiveIterator {
     /**
      * Инстансе рекусривного стека.
      */
-   protected stackNodes: RecursiveStack;
+    protected stackNodes: RecursiveStack;
 
-   constructor(data: IRecordFormat | ITableFormat) {
-      this.stackNodes = new RecursiveStack();
+    constructor(data: IRecordFormat | ITableFormat) {
+        this.stackNodes = new RecursiveStack();
 
-      //Сразу же добавляем в стек корень дерева.
-      this.stackNodes.push({
-         data
-      });
-   }
+        // Сразу же добавляем в стек корень дерева.
+        this.stackNodes.push({data});
+   } 
 
     /**
      * Делает итерацию до искомого формата.
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
      */
-   next(storage: Map<number, IFieldFormat[]>, id?: number): IResultGenerator {
-      while (true) {
-         if (this.stackNodes.processableId < 0) {
-             // id обрабтываемого узла меньше 0, значит дерево обработано.
-            return {value: undefined, done: true};
-         }
+    next(storage: Map<number, IFieldFormat[]>, id?: number): IResultGenerator {
+        while (true) {
+            if (this.stackNodes.processableId < 0) {
+                // id обрабтываемого узла меньше 0, значит дерево обработано.
+                return {value: undefined, done: true};
+            }
 
-         const result = this._process(storage, id);
+            const result = this._process(storage, id);
 
-         if (result) {
-            return {value: result, done: false};
-         }
-      }
-   }
+            if (result) {
+                return {value: result, done: false};
+            }
+        }
+    }
 
     /**
      * Обработчик узла.
      * @param {Number} id - индефикатор искомого формата.
      * @param {Map} storage - кеш форматов.
      */
-   protected _process(storage: Map<number, IFieldFormat[]>, id?: number): IFieldFormat[] {
-       //Получаем из стека послдений узел, чтобы обработь его.
-      const node = this.stackNodes.currentNode;
+    protected _process(storage: Map<number, IFieldFormat[]>, id?: number): IFieldFormat[] {
+        // Получаем из стека послдений узел, чтобы обработь его.
+        const node = this.stackNodes.currentNode;
 
-      if (node.data instanceof Array) {
-         if (!node.iterator) {
-             node.iterator = this.getIterator(node.data);
-         }
-
-         while (true) {
-            const item = node.iterator.next();
-
-            if (item.done) {
-               break;
+        if (node.data instanceof Array) {
+            if (!node.iterator) {
+                node.iterator = this._getIterator(node.data);
             }
 
-            //Оптимизация, в массивах нас интересуют только объекты.
-            if (item.value instanceof Object) {
-               this.stackNodes.push({
-                  data: item.value
-               });
+            while (true) {
+                const item = node.iterator.next();
 
-               const result = this._process(storage, id);
+                if (item.done) {
+                    break;
+                }
 
-               if (result) {
-                  return result;
-               }
+                // Оптимизация, в массивах нас интересуют только объекты.
+                if (item.value instanceof Object) {
+                    this.stackNodes.push({
+                        data: item.value
+                    });
+
+                    const result = this._process(storage, id);
+
+                    if (result) {
+                        return result;
+                    }
+                }
             }
-         }
 
-         this.stackNodes.pop();
+            this.stackNodes.pop();
 
-         return undefined;
-      } else if (node.data instanceof Object && !node.completed) {
+            return undefined;
+        } else if (node.data instanceof Object && !node.completed) {
+            if (node.data.f !== undefined && node.data.s && !storage.has(node.data.f)) {
+                storage.set(node.data.f, node.data.s);
 
-         if (node.data.f !== undefined && node.data.s && !storage.has(node.data.f)) {
-            storage.set(node.data.f, node.data.s);
-
-            if (node.data.f === id) {
-               return node.data.s;
+                if (node.data.f === id) {
+                    return node.data.s;
+                }
             }
-         }
 
-         let result;
+            let result;
 
-         //Если в record есть данные их надо обработать.
-         if (node.data.d) {
-            this.stackNodes.push( {
-               data: node.data.d
-            });
+            // Если в record есть данные их надо обработать.
+            if (node.data.d) {
+                this.stackNodes.push( {
+                    data: node.data.d
+                });
 
+                node.completed = true;
+                result = this._process(storage, id);
+            }
+
+            if (result) {
+                return result;
+            }
+
+            this.stackNodes.pop();
             node.completed = true;
-            result = this._process(storage, id);
-         }
 
-         if (result) {
-            return result;
-         }
+            return undefined;
+        }
 
-         this.stackNodes.pop();
-         node.completed = true;
+        this.stackNodes.pop();
+        return undefined;
+    }
 
-         return undefined;
-      }
+    protected _getIterator(data) {
+        return RecursiveIterator.doesEnvSupportIterator() ? data[Symbol.iterator]() : new IteratorArray(data);
+    }
 
-      this.stackNodes.pop();
-      return undefined;
-   }
-
-   protected getIterator(data) {
-       return RecursiveIterator.doesEnvSupportIterator() ? data[Symbol.iterator]() : new IteratorArray(data);
-   }
-
-   static doesEnvSupportIterator(): boolean {
-       return typeof Symbol !== 'undefined' && Symbol.iterator !== undefined;
-   }
-
+    static doesEnvSupportIterator(): boolean {
+        return typeof Symbol !== 'undefined' && Symbol.iterator !== undefined;
+    }
 }
 
 /**
  * Класс поиска форматов в сырых данных. С хранением в кеше раннее найденных форматов.
  */
-class SbisFormatFinder {
-   /**
-    * Кеш, хранит ранее найденные форматы.
-    */
-   protected _cache: Map<number, IFieldFormat[]>;
+export default class SbisFormatFinder {
+    /**
+     * Кеш, хранит ранее найденные форматы.
+     */
+    protected _cache: Map<number, IFieldFormat[]>;
 
-   /**
-    * Сырые данные.
-    */
-   protected _data: IRecordFormat | ITableFormat;
+    /**
+     * Сырые данные.
+     */
+    protected _data: IRecordFormat | ITableFormat;
 
-   /**
-    * Функция генератор для поиска формат в данных.
-    */
-   protected _generator: RecursiveIterator;
+    /**
+     * Функция генератор для поиска формат в данных.
+     */
+    protected _generator: RecursiveIterator;
 
-   /**
-    *
-    * @param {IRecordFormat | ITableFormat} data - Сырые данные, представлены в формате JSON объекта.
-    */
-   constructor(data?: IRecordFormat | ITableFormat) {
-      this._cache = new Map();
-      this._data = data;
-   }
+    /**
+     *
+     * @param {IRecordFormat | ITableFormat} data - Сырые данные, представлены в формате JSON объекта.
+     */
+    constructor(data?: IRecordFormat | ITableFormat) {
+       this._cache = new Map();
+       this._data = data;
+    }
 
    /**
     * Возврашает формат по индефикатору.
     * @param {Number} id - индефикатор формата.
     * @param {Boolean} copy - вернуть копию формата.
     */
-   getFormat(id?: number, copy?: boolean): IFieldFormat[] {
-      if (this._cache.has(id)) {
-         return copy ? this.clone(this._cache.get(id)) : this._cache.get(id);
-      }
+    getFormat(id?: number, copy?: boolean): IFieldFormat[] {
+        if (this._cache.has(id)) {
+            return copy ? this._clone(this._cache.get(id)) : this._cache.get(id);
+        }
 
-      const result = this.generator.next(this._cache, id);
+        const result = this.generator.next(this._cache, id);
 
-      if (result.done) {
-         throw new ReferenceError("Couldn't find format by id");
-      }
+        if (result.done) {
+            throw new ReferenceError("Couldn't find format by id");
+        }
 
-      return copy ? this.clone(result.value) : result.value;
-   }
-
-    clone(format: IFieldFormat[]): IFieldFormat[] {
-       return format.slice();
+        return copy ? this._clone(result.value) : result.value;
     }
 
     scanFormats(data: any): void {
@@ -331,6 +290,10 @@ class SbisFormatFinder {
         return this._data;
     }
 
+    protected _clone(format: IFieldFormat[]): IFieldFormat[] {
+        return format.slice();
+     }
+ 
     protected get generator(): RecursiveIterator {
         if (this._generator) {
             return this._generator;
@@ -339,6 +302,3 @@ class SbisFormatFinder {
         return new RecursiveIterator(this._data);
     }
 }
-
-export {RecursiveIterator};
-export default SbisFormatFinder;
