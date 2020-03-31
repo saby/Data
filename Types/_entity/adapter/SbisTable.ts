@@ -81,18 +81,20 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
 
         if (at === undefined) {
-            this._data.d.push(this._recoverData(record).d);
+            this._data.d.push(SbisFormatMixin.recoverData(record).d);
         } else {
             this._checkRowIndex(at, true);
-            this._data.d.splice(at, 0,this._recoverData(record).d);
+            this._data.d.splice(at, 0, SbisFormatMixin.recoverData(record).d);
         }
     }
 
     at(index: number): ITableFormat {
-        return this._isValidData() && this._data.d[index] ? this._replaceToJSON({
-            d: this._data.d[index],
-            s: this._data.s
-        }) : undefined;
+        return this._isValidData() && this._data.d[index] ?
+            SbisFormatMixin.makeSerializable({
+                d: this._data.d[index],
+                s: this._data.s
+            }) :
+            undefined;
     }
 
     remove(at: number): void {
@@ -119,8 +121,7 @@ export default class SbisTable extends mixin<
             this._data[controllerInjected].scanFormats(this._data.d[at]);
         }
 
-        const useLocaleController = this._data.d[at] === record.d;
-        this._data.d[at] = this._recoverData(record, useLocaleController).d;
+        this._data.d[at] = SbisFormatMixin.recoverData(record).d;
     }
 
     move(source: number, target: number): void {
@@ -267,7 +268,7 @@ export default class SbisTable extends mixin<
     readonly '[Types/_entity/ICloneable]': boolean;
 
     clone <T = this>(shallow?: boolean): T {
-        return new SbisTable(shallow ? this.getData() : this._cloneData()) as any;
+        return new SbisTable(shallow ? this.getData() : this._cloneData()) as unknown as T;
     }
 
     // endregion
@@ -279,7 +280,7 @@ export default class SbisTable extends mixin<
     getData: () => ITableFormat;
 
     protected _buildD(at: number, value: any): void {
-        value = this._recoverData(value);
+        value = SbisFormatMixin.recoverData(value);
 
         this._data.d.forEach((item) => {
             item.splice(at, 0, value);

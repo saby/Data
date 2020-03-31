@@ -69,9 +69,11 @@ export default class SbisRecord extends mixin<
 
     get(name: string): any {
         const index = this._getFieldIndex(name);
-        return index >= 0
-            ? this._replaceToJSON(this._cast(this._data.s[index], this._data.d[index]))
-            : undefined;
+        return index >= 0 ?
+            SbisFormatMixin.makeSerializable(
+                this._cast(this._data.s[index], this._data.d[index])
+            ) :
+            undefined;
     }
 
     set(name: string, value: any): void {
@@ -84,7 +86,7 @@ export default class SbisRecord extends mixin<
             this._data[controllerInjected].scanFormats(this._data.d[index]);
         }
 
-        value = this._recoverData(value);
+        value = SbisFormatMixin.recoverData(value);
 
         this._data.d[index] = this._uncast(this._data.s[index], value);
     }
@@ -103,7 +105,7 @@ export default class SbisRecord extends mixin<
 
     clone<T = this>(shallow?: boolean): T {
         // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.
-        return new SbisRecord(shallow ? this.getData() : this._cloneData(true)) as any;
+        return new SbisRecord(shallow ? this.getData() : this._cloneData(true)) as unknown as T;
     }
 
     // endregion
@@ -111,7 +113,7 @@ export default class SbisRecord extends mixin<
     // region SbisFormatMixin
 
     protected _buildD(at: number, value: any): void {
-        value = this._recoverData(value);
+        value = SbisFormatMixin.recoverData(value);
 
         this._data.d.splice(at, 0, value);
     }

@@ -1,4 +1,4 @@
-import {IFieldFormat, IRecordFormat, ITableFormat} from 'SbisFormatMixin';
+import {IFieldFormat, IRecordFormat, ITableFormat} from './SbisFormatMixin';
 import {Map} from '../../shim';
 
 interface IResultGenerator {
@@ -11,9 +11,45 @@ interface IIteratorResult {
     done: boolean;
 }
 
+type FormatCarrier = IRecordFormat | ITableFormat;
+
+/**
+ * Finds formats deep within given data and calls given function for each one.
+ * @param data Data to search
+ * @param callback Callback to call
+ */
+export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => void): void {
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            eachFormatEntry(item, callback);
+        }
+    } else if (data && typeof data === 'object') {
+        const record = data as FormatCarrier;
+        if (record.s || record.f) {
+            callback(record);
+        }
+        if (record.d) {
+            eachFormatEntry(record.d, callback);
+        }
+    }
+}
+
+function recoverFormats(data: unknown, controller: SbisFormatFinder): FormatCarrier[] {
+    const result = [];
+
+    eachFormatEntry(data, (entry) => {
+        const s = entry.s || controller.getFormat(entry.f);
+        delete entry.s;
+        entry.s = s;
+        result.push(entry);
+    });
+
+    return result;
+}
+
 class IteratorArray {
     currentIndex: number = -1;
-    _data: unknown[];
+    protected _data: unknown[];
 
     constructor(data) {
         this._data = data;
@@ -41,23 +77,23 @@ class IteratorArray {
 }
 
 /**
- * Класс рекусвиного стека. Хранит стек обрабатываемых узлов дерева.
+ * Recursive call stack holder which remember nodes list.
  */
 class RecursiveStack {
     /**
-     * Стек узлов
+     * Nodes list
      */
     protected _stack: Map<number, IFieldFormat[]>;
 
     /**
-     * Индефикатор обрабатываемага узла.
-     */
-    processableId: number;
-
-    /**
-     * Последний узел стека.
+     * Last node in stack.
      */
     protected _current: any;
+
+    /**
+     * Current node id.
+     */
+    processableId: number;
 
     constructor() {
         this._stack = new Map();
@@ -65,15 +101,15 @@ class RecursiveStack {
     }
 
     /**
-     * Возврашет последний узел из стека.
+     * Returns last node from stack
      */
     get currentNode(): any {
         return this._current || undefined;
     }
 
     /**
-     * Добавляет узел в стек.
-     * @param {any} node - Добавляемый узел.
+     * Adds node to stack.
+     * @param node Node to add.
      */
     push(node: any): void {
         this._current = node;
@@ -82,7 +118,7 @@ class RecursiveStack {
     }
 
     /**
-     * Удаляет последний узел из стека.
+     * Removes last node from stack.
      */
     pop(): void {
         this.processableId--;
@@ -92,29 +128,29 @@ class RecursiveStack {
 }
 
 /**
- * Класс рекурсивного итератора по форматам.
+ * Recursive formats iterator.
  */
 export class RecursiveIterator {
     /**
-     * Инстансе рекусривного стека.
+     * Recursice stack instance to iterate.
      */
-    protected stackNodes: RecursiveStack;
+    protected _stackNodes: RecursiveStack;
 
-    constructor(data: IRecordFormat | ITableFormat) {
-        this.stackNodes = new RecursiveStack();
+    constructor(data: FormatCarrier) {
+        this._stackNodes = new RecursiveStack();
 
-        // Сразу же добавляем в стек корень дерева.
-        this.stackNodes.push({data});
+        // Add root immediately.
+        this._stackNodes.push({data});
    } 
 
     /**
-     * Делает итерацию до искомого формата.
-     * @param {Number} id - индефикатор искомого формата.
-     * @param {Map} storage - кеш форматов.
+     * Proceeds iterations till given format.
+     * @param storage Formats cache.
+     * @param id Format id.
      */
     next(storage: Map<number, IFieldFormat[]>, id?: number): IResultGenerator {
         while (true) {
-            if (this.stackNodes.processableId < 0) {
+            if (this._stackNodes.processableId < 0) {
                 // id обрабтываемого узла меньше 0, значит дерево обработано.
                 return {value: undefined, done: true};
             }
@@ -128,13 +164,13 @@ export class RecursiveIterator {
     }
 
     /**
-     * Обработчик узла.
-     * @param {Number} id - индефикатор искомого формата.
-     * @param {Map} storage - кеш форматов.
+     * Single node handler.
+     * @param storage Formats cache.
+     * @param id Format id.
      */
     protected _process(storage: Map<number, IFieldFormat[]>, id?: number): IFieldFormat[] {
         // Получаем из стека послдений узел, чтобы обработь его.
-        const node = this.stackNodes.currentNode;
+        const node = this._stackNodes.currentNode;
 
         if (node.data instanceof Array) {
             if (!node.iterator) {
@@ -150,7 +186,7 @@ export class RecursiveIterator {
 
                 // Оптимизация, в массивах нас интересуют только объекты.
                 if (item.value instanceof Object) {
-                    this.stackNodes.push({
+                    this._stackNodes.push({
                         data: item.value
                     });
 
@@ -162,7 +198,7 @@ export class RecursiveIterator {
                 }
             }
 
-            this.stackNodes.pop();
+            this._stackNodes.pop();
 
             return undefined;
         } else if (node.data instanceof Object && !node.completed) {
@@ -178,7 +214,7 @@ export class RecursiveIterator {
 
             // Если в record есть данные их надо обработать.
             if (node.data.d) {
-                this.stackNodes.push( {
+                this._stackNodes.push( {
                     data: node.data.d
                 });
 
@@ -190,13 +226,13 @@ export class RecursiveIterator {
                 return result;
             }
 
-            this.stackNodes.pop();
+            this._stackNodes.pop();
             node.completed = true;
 
             return undefined;
         }
 
-        this.stackNodes.pop();
+        this._stackNodes.pop();
         return undefined;
     }
 
@@ -210,37 +246,46 @@ export class RecursiveIterator {
 }
 
 /**
- * Класс поиска форматов в сырых данных. С хранением в кеше раннее найденных форматов.
+ * Do search in raw data for formats. Uses internal cache for optimization.
  */
 export default class SbisFormatFinder {
     /**
-     * Кеш, хранит ранее найденные форматы.
+     * Formats cache.
      */
     protected _cache: Map<number, IFieldFormat[]>;
 
     /**
-     * Сырые данные.
+     * Raw data to search within.
      */
-    protected _data: IRecordFormat | ITableFormat;
+    protected _data: FormatCarrier;
 
     /**
-     * Функция генератор для поиска формат в данных.
+     * Generator to maintain searching process.
      */
     protected _generator: RecursiveIterator;
 
     /**
      *
-     * @param {IRecordFormat | ITableFormat} data - Сырые данные, представлены в формате JSON объекта.
+     * @param data Raw data to search within.
      */
-    constructor(data?: IRecordFormat | ITableFormat) {
+    constructor(data?: FormatCarrier) {
        this._cache = new Map();
        this._data = data;
     }
 
    /**
-    * Возврашает формат по индефикатору.
-    * @param {Number} id - индефикатор формата.
-    * @param {Boolean} copy - вернуть копию формата.
+    * Sets original format for given id.
+    * @param id Format id
+    * @param copy Format definition
+    */
+    setOriginal(id: number, data: IFieldFormat[]): void {
+        this._cache.set(id, this._clone(data));
+    }
+
+   /**
+    * Returns format by given id.
+    * @param id Format id.
+    * @param copy Return copy to keep original unchanged.
     */
     getFormat(id?: number, copy?: boolean): IFieldFormat[] {
         if (this._cache.has(id)) {
@@ -264,30 +309,17 @@ export default class SbisFormatFinder {
         }
     }
 
-    recoverData(data: any): any {
-        if (Array.isArray(data)) {
-            for (const item of data) {
-                this.recoverData(item);
-            }
-        } else if (data && typeof data === 'object') {
-            const record = (data as IRecordFormat);
-
-            if (record.f !== undefined) {
-                record.s = this.getFormat(record.f, true);
-
-                delete record.f;
-            }
-
-            if (record.d) {
-                this.recoverData(record.d);
-            }
-        }
-
-        return data;
+    get data(): FormatCarrier {
+        return this._data;
     }
 
-    get data(): IRecordFormat | ITableFormat {
-        return this._data;
+    static recoverData<T>(data: T, controller?: SbisFormatFinder): T {
+        controller = controller || new SbisFormatFinder(data as unknown as FormatCarrier);
+        recoverFormats(data, controller).forEach((recovered) => {
+            delete recovered.f;
+        });
+
+        return data;
     }
 
     protected _clone(format: IFieldFormat[]): IFieldFormat[] {

@@ -1,7 +1,6 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
-import {RecursiveIterator} from 'Types/_entity/adapter/SbisFormatFinder';
+import SbisFormatFinder, {RecursiveIterator} from 'Types/_entity/adapter/SbisFormatFinder';
 
 const format0 = [{
     n: '@Родитель',
@@ -25,69 +24,73 @@ const format1 = [{
     t: 'Строка'
 }];
 
-const rawData = {
-    f: 0,
-    s: format0,
-    d: [
-        0,
-        'Пётр',
-        [
-            {
-                f: 1,
-                s: format1,
-                d: [
-                    0,
-                    'Вова'
-                ]
-            },
-            {
-                f: 1,
-                d: [
-                    0,
-                    'Оля'
-                ]
-            }
+function getRawData(): any {
+    return {
+        f: 0,
+        s: format0.slice(),
+        d: [
+            0,
+            'Пётр',
+            [
+                {
+                    f: 1,
+                    s: format1.slice(),
+                    d: [
+                        0,
+                        'Вова'
+                    ]
+                },
+                {
+                    f: 1,
+                    d: [
+                        0,
+                        'Оля'
+                    ]
+                }
+            ]
         ]
-    ]
-};
+    };
+}
 
-const fullRawData = {
-    s: format0,
-    d: [
-        0,
-        'Пётр',
-        [
-            {
-                s: format1,
-                d: [
-                    0,
-                    'Вова'
-                ]
-            },
-            {
-                s: format1,
-                d: [
-                    0,
-                    'Оля'
-                ]
-            }
+function getFullRawData(): any {
+    return {
+        s: format0.slice(),
+        d: [
+            0,
+            'Пётр',
+            [
+                {
+                    s: format1.slice(),
+                    d: [
+                        0,
+                        'Вова'
+                    ]
+                },
+                {
+                    s: format1.slice(),
+                    d: [
+                        0,
+                        'Оля'
+                    ]
+                }
+            ]
         ]
-    ]
-};
+    };
+}
 
-describe('Types/_entity/format/FormatController', () => {
+describe('Types/_entity/adapter/SbisFormatFinder', () => {
     let sbisFormatFinder: SbisFormatFinder;
 
     beforeEach(() => {
-        sbisFormatFinder = new SbisFormatFinder(rawData);
+        sbisFormatFinder = new SbisFormatFinder(getRawData());
     });
 
     afterEach(() => {
         sbisFormatFinder = undefined;
     });
 
-    describe('native Iterator', () => {
-        describe('cache', () => {
+    describe('for native Iterator', () => {
+        describe('._cache', () => {
             it('has id with value 0, but not 1', () => {
                 sbisFormatFinder.getFormat(0);
                 assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
@@ -113,7 +116,7 @@ describe('Types/_entity/format/FormatController', () => {
         });
 
         it('.scanFormats()', () => {
-            sbisFormatFinder.scanFormats(rawData);
+            sbisFormatFinder.scanFormats(getRawData());
 
             assert.isTrue((sbisFormatFinder as any)._cache.has(0));
             assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
@@ -123,7 +126,7 @@ describe('Types/_entity/format/FormatController', () => {
         });
     });
 
-    describe('ours Iterator', () => {
+    describe('for pseudo Iterator', () => {
         var stubDoesEnvSupportIterator;
         beforeEach(() => {
             stubDoesEnvSupportIterator = sinon.stub(RecursiveIterator, 'doesEnvSupportIterator');
@@ -135,7 +138,7 @@ describe('Types/_entity/format/FormatController', () => {
             stubDoesEnvSupportIterator = undefined;
         });
 
-        describe('cache', () => {
+        describe('._cache', () => {
             it('has id with value 0, but not 1', () => {
                 sbisFormatFinder.getFormat(0);
                 assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
@@ -161,7 +164,7 @@ describe('Types/_entity/format/FormatController', () => {
         });
 
         it('.scanFormats()', () => {
-            sbisFormatFinder.scanFormats(rawData);
+            sbisFormatFinder.scanFormats(getRawData());
 
             assert.isTrue((sbisFormatFinder as any)._cache.has(0));
             assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
@@ -169,11 +172,11 @@ describe('Types/_entity/format/FormatController', () => {
             assert.isTrue((sbisFormatFinder as any)._cache.has(1));
             assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
         });
+    });
 
-        it('.recoverData()', () => {
-            const data = JSON.parse(JSON.stringify(rawData));
+    it('::recoverData()', () => {
+        const data = getRawData();
 
-            assert.deepEqual(fullRawData, sbisFormatFinder.recoverData(data));
-        });
+        assert.deepEqual(getFullRawData(), SbisFormatFinder.recoverData(data));
     });
 });

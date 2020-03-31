@@ -21,7 +21,7 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController from '../adapter/SbisFormatFinder';
+import FormatController, {eachFormatEntry} from '../adapter/SbisFormatFinder';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -95,24 +95,39 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
 }
 
 function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: FormatController): void {
-    let original = data.s;
+    if (data.s) {
+      controller.setOriginal(data.f, data.s);
+      return;
+    }
 
     Object.defineProperty(data, 's', {
         configurable: true,
-        enumerable: !!original,
         get(): IFieldFormat[] {
-            delete data.s;
-            if (original) {
-                data.s = original.slice();
-                original = undefined;
-            } else if (data.f) {
-                data.s = controller.getFormat(data.f, true);
-            }
+            data.s = controller.getFormat(data.f);
             return data.s;
         },
         set(value: IFieldFormat[]): void {
             delete data.s;
             data.s = value;
+        }
+    });
+}
+
+function normalizeCalculatedFormats(data: IRecordFormat | unknown, ): void {
+    const formats = {};
+
+    eachFormatEntry(data, (entry) => {
+        if (entry.f !== undefined && !formats[entry.f]) {
+            const prop = Object.getOwnPropertyDescriptor(data, 's');
+            if (prop && prop.enumerable === false) {
+                const s = entry.s;
+                delete entry.s;
+                entry.s = s;
+            }
+
+            if (entry.s) {
+                formats[entry.f] = entry.s;
+            }
         }
     });
 }
@@ -219,54 +234,6 @@ export default abstract class SbisFormatMixin {
         goThrough(data, topController);
     }
 
-    protected _recoverData(data: any, useLocaleController?: boolean): any {
-        if (data && data[controllerInjected]) {
-            return data[controllerInjected].recoverData(data);
-        }
-
-        return data;
-    }
-
-    protected _replaceToJSON<T>(data: T): T {
-        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
-
-            const getDataFormatJson = this._getDataFormatJson.bind(this);
-
-            Object.defineProperty(data, 'toJSON', {
-                enumerable: false,
-                value: function() {
-                    getDataFormatJson(this, {});
-
-                    return this;
-                }
-            });
-        }
-
-        return data;
-    }
-
-    protected _getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
-        if (Array.isArray(data)) {
-            for (const item of data) {
-                this._getDataFormatJson(item, formats);
-            }
-        } else if (data && data[controllerInjected]) {
-            const record = (data as IRecordFormat);
-
-            if (record.f !== undefined && !formats[record.f]) {
-                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
-                    record.s = data[controllerInjected].getFormat(record.f);
-                }
-
-                formats[record.f] = record.s;
-            }
-
-            if (record.d) {
-                this._getDataFormatJson(record.d, formats);
-            }
-        }
-    }
-
     // endregion
 
     // region Public methods
@@ -364,6 +331,27 @@ export default abstract class SbisFormatMixin {
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
         this._removeD(index);
+    }
+
+    // endregion
+
+    // region Static methods
+
+    static recoverData<T>(data: T): T {
+        return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
+    }
+
+    static makeSerializable<T>(data: T): T {
+        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
+            Object.defineProperty(data, 'toJSON', {
+                enumerable: false,
+                value: function() {
+                    normalizeCalculatedFormats(this);
+                    return this;
+                }
+            });
+        }
+        return data;
     }
 
     // endregion

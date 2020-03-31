@@ -1844,20 +1844,18 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         it('should add record with recovered data', () => {
-            const rs = new RecordSet({
-                adapter: 'Types/entity:adapter.Sbis',
+            const acceptor = new RecordSet({
+                adapter: new SbisAdapter(),
                 rawData: {
                     f: 0,
-                    d: [
-                        [3, {
-                            f: 1,
-                            d: ['Sivov'],
-                            s: [{
-                                n: 'name',
-                                t: 'Строка'
-                            }]
+                    d: [[3, {
+                        f: 1,
+                        d: ['Sivov'],
+                        s: [{
+                            n: 'name',
+                            t: 'Строка'
                         }]
-                    ],
+                    }]],
                     s: [{
                         n: 'id',
                         t: 'Число целое'
@@ -1867,24 +1865,22 @@ describe('Types/_collection/RecordSet', () => {
                     }]
                 }
             });
-            const someRS = new RecordSet({
-                adapter: 'Types/entity:adapter.Sbis',
+
+            const donor = new RecordSet({
+                adapter: new SbisAdapter(),
                 rawData: {
                     f: 0,
-                    d: [
-                        [{
-                            f: 1,
-                            d: ['Ivanov'],
-                            s: [{
-                                n: 'name',
-                                t: 'Строка'
-                            }]
-                        }, 1],
-                        [{
-                            f: 1,
-                            d: ['Petroff']
-                        }, 2]
-                    ],
+                    d: [[{
+                        f: 1,
+                        d: ['Ivanov'],
+                        s: [{
+                            n: 'name',
+                            t: 'Строка'
+                        }]
+                    }, 1], [{
+                        f: 1,
+                        d: ['Petroff']
+                    }, 2]],
                     s: [{
                         n: 'human',
                         t: 'Запись'
@@ -1895,9 +1891,9 @@ describe('Types/_collection/RecordSet', () => {
                 }
             });
 
-            rs.add(someRS.at(1));
+            acceptor.add(donor.at(1));
 
-            assert.deepEqual(rs.at(1).getRawData().d, [2, {
+            assert.deepEqual(acceptor.at(1).getRawData().d, [2, {
                 d: ['Petroff'],
                 s: [{
                     n: 'name',
