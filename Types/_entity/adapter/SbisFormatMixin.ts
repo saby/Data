@@ -19,13 +19,13 @@ import {
 } from '../format';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
-import {object, logger} from '../../util';
+import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
 import FormatController, {eachFormatEntry} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
-export const controllerInjected = Symbol('controller');
+export const controllerInjected = protect('controller');
 
 export interface IFieldType {
     n: string;
