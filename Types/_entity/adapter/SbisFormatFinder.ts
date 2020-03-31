@@ -340,5 +340,10 @@ class SbisFormatFinder {
     }
 }
 
+Object.defineProperty(SbisFormatFinder.prototype, 'toJSON', {
+    value: () => undefined,
+    enumerable: false
+});
+
 export {RecursiveIterator};
 export default SbisFormatFinder;

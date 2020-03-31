@@ -176,4 +176,14 @@ describe('Types/_entity/format/FormatController', () => {
             assert.deepEqual(fullRawData, sbisFormatFinder.recoverData(data));
         });
     });
+
+    it('is not serializing ', () => {
+        const record = {
+            rawData,
+            formatController: sbisFormatFinder
+        };
+        const cloneRecord = JSON.parse(JSON.stringify(record));
+
+        assert.isUndefined(cloneRecord.formatController);
+    });
 });
