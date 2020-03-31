@@ -71,6 +71,15 @@ define([
             assert.strictEqual(testEnum.get(), 2);
          });
 
+         it('should translate index to Number even if dictonary has taken from object', function() {
+             var inst = new Enum({
+                 dictionary: {0: 'one', 1: 'two'}
+             });
+    
+             inst.set('1');
+             assert.strictEqual(inst.get(), 1);
+         });
+
          it('should throw an exception if index is out of range', function() {
             assert.throws(function() {
                testEnum.set(569);
@@ -182,6 +191,15 @@ define([
 
             testEnum.setByValue('uno', true);
             assert.equal(testEnum.getAsValue(), 'one');
+         });
+
+         it('should translate index to Number even if dictonary has taken from object', function() {
+            var inst = new Enum({
+                dictionary: {0: 'one', 1: 'two'},
+             });
+    
+             inst.setByValue('two');
+            assert.strictEqual(inst.get(), 1);
          });
 
          it('should change current index to null', function() {

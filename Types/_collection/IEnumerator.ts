@@ -11,7 +11,6 @@ export default interface IEnumerator<T, U = EnumeratorIndex> {
 
     /**
      * Возвращает текущий элемент
-     * @return {*}
      * @example
      * Проверим текущий элемент:
      * <pre>
@@ -29,7 +28,6 @@ export default interface IEnumerator<T, U = EnumeratorIndex> {
 
     /**
      * Возвращает индекс текущего элемента
-     * @return {*}
      * @example
      * Проверим текущий элемент:
      * <pre>
@@ -48,7 +46,7 @@ export default interface IEnumerator<T, U = EnumeratorIndex> {
 
     /**
      * Перемещает указатель на следующий элемент
-     * @return {Boolean} true, если есть следующий элемент; false, если достигнут конец коллекции
+     * @return true, если есть следующий элемент; false, если достигнут конец коллекции
      * @example
      * Получим элементы коллекции:
      * <pre>

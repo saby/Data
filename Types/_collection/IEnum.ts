@@ -35,7 +35,6 @@ export default interface IEnum<T> {
 
     /**
      * Returns key of selected item
-     * @return {Number|Null}
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -52,7 +51,7 @@ export default interface IEnum<T> {
 
     /**
      * Sets item with given key as selected. If such key is not defined it throws an exception.
-     * @param {Number|Null} index Key of selected item
+     * @param index Key of selected item
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -69,8 +68,7 @@ export default interface IEnum<T> {
 
     /**
      * Returns value of selected item
-     * @param {Boolean} [localize=false] Should return the localized value
-     * @return {String}
+     * @param [localize=false] Should return the localized value
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -87,8 +85,8 @@ export default interface IEnum<T> {
 
     /**
      * Sets item with given value as selected. If such key is not defined it throws an exception.
-     * @param {String} value Value of selected item
-     * @param {Boolean} [localize=false] It's the localized value
+     * @param value Value of selected item
+     * @param [localize=false] It's the localized value
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {

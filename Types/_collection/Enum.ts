@@ -37,11 +37,11 @@ export default class Enum<T> extends mixin<
    SerializableMixin,
    CloneableMixin
 ) implements IEnum<T>, IProducible {
-   /**
-    * @cfg {Number|sting|null} Key of the selected item
-    * @name Types/_collection/Enum#index
-    */
-   protected _$index: IIndex;
+    /**
+     * @cfg Key of the selected item
+     * @name Types/_collection/Enum#index
+     */
+    protected _$index: IIndex;
 
     protected _childChanged: (data: any) => void;
 
@@ -98,6 +98,7 @@ export default class Enum<T> extends mixin<
             );
         } else {
             this._$index = index;
+            this._checkIndex();
         }
 
         if (changed) {
@@ -172,8 +173,8 @@ export default class Enum<T> extends mixin<
 
     /**
      * Triggers a change event
-     * @param {Number} index Key of selected item
-     * @param {String} value Value of selected item
+     * @param index Key of selected item
+     * @param value Value of selected item
      * @protected
      */
     protected _notifyChange(index: IIndex, value: T): void {

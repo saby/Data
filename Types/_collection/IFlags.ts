@@ -35,9 +35,8 @@ export default interface IFlags<T> {
 
     /**
      * Returns selection state by the flag name. If such name is not defined it throws an exception.
-     * @param {String} name Name of the flag
-     * @param {Boolean} [localize=false] Should return the localized flag name
-     * @return {Boolean|Null}
+     * @param name Name of the flag
+     * @param [localize=false] Should return the localized flag name
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -55,9 +54,9 @@ export default interface IFlags<T> {
 
     /**
      * Sets selection state by the flag name. If such name is not defined it throws an exception.
-     * @param {String} name Name of the flag
-     * @param {Boolean|Null} value Selection state
-     * @param {Boolean} [localize=false] It's the localized flag name
+     * @param name Name of the flag
+     * @param value Selection state
+     * @param [localize=false] It's the localized flag name
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -77,8 +76,7 @@ export default interface IFlags<T> {
 
     /**
      * Returns selection state by the flag index. If such index is not defined it throws an exception.
-     * @param {Number} index Index of the flag
-     * @return {Boolean|Null}
+     * @param index Index of the flag
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -96,8 +94,8 @@ export default interface IFlags<T> {
 
     /**
      * Sets selection state by the flag index. If such index is not defined it throws an exception.
-     * @param {Number} index Index of the flag
-     * @param {Boolean|Null} value Selection state
+     * @param index Index of the flag
+     * @param value Selection state
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {
@@ -118,7 +116,7 @@ export default interface IFlags<T> {
 
     /**
      * Sets flags selection from array. Indices which not present in that array are going to be set to null.
-     * @param {Array.<Boolean|Null>} source Array of flags selection
+     * @param source Array of flags selection
      * @example
      * <pre>
      *     requirejs(['Types/collection'], function(collection) {

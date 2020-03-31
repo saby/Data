@@ -127,7 +127,7 @@ class RecordSet<
      */
 
     /**
-     * @cfg {String|Function} Конструктор записей, порождаемых рекордсетом. По умолчанию {@link Types/_entity/Model}.
+     * @cfg Конструктор записей, порождаемых рекордсетом. По умолчанию {@link Types/_entity/Model}.
      * @name Types/_collection/RecordSet#model
      * @see getModel
      * @see Types/_entity/Record
@@ -162,7 +162,7 @@ class RecordSet<
     protected _$model: Function | string;
 
     /**
-     * @cfg {String} Название свойства записи, содержащего первичный ключ.
+     * @cfg Название свойства записи, содержащего первичный ключ.
      * @name Types/_collection/RecordSet#keyProperty
      * @see getKeyProperty
      * @example
@@ -185,7 +185,7 @@ class RecordSet<
     protected _$keyProperty: string;
 
     /**
-     * @cfg {Object} Метаданные
+     * @cfg Метаданные
      * @remark
      * Метаданные - это дополнительная информация, не связанная с RecordSet'ом напрямую.
      * Она используется механизмами списков для построения строки итогов, "хлебных крошек" и постраничной навигации.
@@ -221,7 +221,7 @@ class RecordSet<
     protected _$metaData: any;
 
     /**
-     * @cfg {Types/_collection/format/Format|Array.<Types/_entity/format/fieldsFactory/FieldDeclaration.typedef>} Формат всех полей метаданных.
+     * @cfg Формат всех полей метаданных.
      * @name Types/_collection/RecordSet#metaFormat
      * @example
      * Создадим рекордсет с метаданным, поле created которых имеет тип Date
@@ -970,7 +970,6 @@ class RecordSet<
 
     /**
      * Возвращает конструктор записей, порождаемых рекордсетом.
-     * @return {String|Function}
      * @see model
      * @see Types/_entity/Model
      * @see Types/di
@@ -1112,7 +1111,6 @@ class RecordSet<
 
     /**
      * Возвращает название свойства записи, содержащего первичный ключ
-     * @return {String}
      * @see setKeyProperty
      * @see keyProperty
      * @example
@@ -1197,7 +1195,6 @@ class RecordSet<
     /**
      * Возвращает метаданные RecordSet'а.
      * Подробнее о метаданных смотрите в описании опции {@link metaData}.
-     * @return {Object} Метаданные.
      * @see metaData
      * @see setMetaData
      */
