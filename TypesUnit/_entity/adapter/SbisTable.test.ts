@@ -4,7 +4,7 @@ import SbisFieldType from 'Types/_entity/adapter/SbisFieldType';
 import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
-import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
+import SbisFormatMixin, {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
@@ -749,7 +749,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
         });
     });
 
-    describe('support compression data', () => {
+    describe('within JSON.stringify() on data', () => {
         const data = {
             f: 0,
             s: [
@@ -766,14 +766,12 @@ describe('Types/_entity/adapter/SbisTable', () => {
                     d: [
                         'Ford', 'Focus2'
                     ]
-                }],
-                [1, {
+                }], [1, {
                     f: 1,
                     d: [
                         'AUDI', 'Q5'
                     ]
-                }],
-                [2, {
+                }], [2, {
                     f: 1,
                     d: [
                         'Hyundai', 'ix35'
@@ -781,6 +779,7 @@ describe('Types/_entity/adapter/SbisTable', () => {
                 }]
             ]
         };
+
         let adapter;
 
         beforeEach(() => {
@@ -791,23 +790,36 @@ describe('Types/_entity/adapter/SbisTable', () => {
             adapter = undefined;
         });
 
-        it('serialize data chunk from data table', () => {
-            adapter._setFormatController(data);
-            const chunkData = adapter.at(1);
-            assert.equal(JSON.stringify(chunkData), '{"d":[1,{"f":1,"d":["AUDI","Q5"],"s":[{"n":"model","t":"строка"},{"n":"brand","t":"строка"}]}],"s":[{"n":"id","t":"Число целое"},{"n":"data","t":"Запись"}]}');
+        it('should serialize full data chunk from table', () => {
+            const data = adapter.at(1);
+            const fullData = JSON.parse(JSON.stringify(data));
+            assert.deepEqual(fullData, {
+                d: [1, {
+                    f:1,
+                    d: ['AUDI','Q5'],
+                    s:[
+                        {n: 'model', t: 'строка'},
+                        {n: 'brand', t: 'строка'}
+                    ]
+                }],
+                s: [
+                    {n: 'id', t: 'Число целое'},
+                    {n: 'data', t: 'Запись'}
+                ]
+            });
         });
 
-        it('toJSON not will be redefined', () => {
+        it('shouldn\'t redefine .toJSON()', () => {
             const obj = {};
 
             try {
-                adapter._replaceToJSON(adapter._replaceToJSON(obj));
+                SbisFormatMixin.makeSerializable(SbisFormatMixin.makeSerializable(obj));
             } catch (err) {
                 assert.fail(err);
             }
         });
 
-        it('recover added compression data', () => {
+        it('should recover added data', () => {
             adapter.add({
                 f: 0,
                 d: [3, {

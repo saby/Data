@@ -19,12 +19,13 @@ import {
 } from '../format';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
-import {object, logger} from '../../util';
+import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController from '../adapter/SbisFormatFinder';
-import IFormatController from '../adapter/IFormatController';
+import FormatController, {eachFormatEntry} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
+
+export const controllerInjected = protect('controller');
 
 export interface IFieldType {
     n: string;
@@ -93,18 +94,47 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
-function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatController: FormatController): void {
+function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: FormatController): void {
+    if (data.s) {
+      controller.setOriginal(data.f, data.s);
+      return;
+    }
+
     Object.defineProperty(data, 's', {
         configurable: true,
         get(): IFieldFormat[] {
-            if (data.f) {
-                return formatController.getFormat(data.f);
-            }
+            data.s = controller.getFormat(data.f, true);
+            return data.s;
         },
         set(value: IFieldFormat[]): void {
             delete data.s;
             data.s = value;
         }
+    });
+}
+
+function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
+    const formats = {};
+    const normalized = [];
+
+    eachFormatEntry(data, (entry) => {
+        if (entry.f !== undefined && !formats[entry.f]) {
+            const prop = Object.getOwnPropertyDescriptor(data, 's');
+            if (prop && prop.enumerable === false) {
+                const s = entry.s;
+                delete entry.s;
+                entry.s = s;
+                normalized.push(entry);
+            }
+
+            if (entry.s) {
+                formats[entry.f] = entry.s;
+            }
+        }
+    });
+
+    normalized.forEach((entry) => {
+        delete entry.f;
     });
 }
 
@@ -114,12 +144,8 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, formatContro
  * @public
  * @author Мальцев А.А.
  */
-export default abstract class SbisFormatMixin implements IFormatController {
+export default abstract class SbisFormatMixin {
     readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
-
-    readonly '[Types/_entity/format/IFormatController]': boolean;
-
-    protected _formatController: FormatController;
 
     protected _moduleName: string;
 
@@ -155,7 +181,7 @@ export default abstract class SbisFormatMixin implements IFormatController {
         return '';
     }
 
-    constructor(data: IRecordFormat | ITableFormat, formatController: FormatController) {
+    constructor(data: IRecordFormat | ITableFormat) {
         if (data) {
             if (Object.getPrototypeOf(data) !== Object.prototype) {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
@@ -166,89 +192,52 @@ export default abstract class SbisFormatMixin implements IFormatController {
                 );
             }
 
-            if (typeof data === 'object') {
-                this._setFormatController(data, formatController);
-            }
+            this._injectFormatController(data);
         }
 
         this._data = data;
         this._format = {};
     }
 
-    // region IFormatController
+    // region FormatController
 
-    _setFormatController(data: IRecordFormat | ITableFormat, controller?: FormatController): void {
-        this._formatController = controller || new FormatController(data);
-
-        if (data && data.s === undefined) {
-            defineCalculatedFormat(data, this._formatController);
+    protected _injectFormatController(data: IRecordFormat | ITableFormat): void {
+        if (data[controllerInjected]) {
+            return;
         }
-    }
 
-    protected _recoverData(data: any, useLocaleController?: boolean): any {
-        if (data && typeof data === 'object') {
-            let formatController;
-
-            if (useLocaleController) {
-                formatController = this._formatController;
-            } else {
-                formatController = data.formatController || new FormatController(data);
+        const goThrough = (data: IRecordFormat | ITableFormat, controller: FormatController): void => {
+            if (!data) {
+                return;
             }
 
-            return formatController.recoverData(data);
-        }
+            if (data.f) {
+                defineCalculatedFormat(data, controller);
+                if (!data[controllerInjected]) {
+                    Object.defineProperty(data, controllerInjected, {
+                        enumerable: false,
+                        value: controller
+                    });
+                }
+            }
 
-        return data;
-    }
-
-    // endregion
-
-    // region toJSON
-
-    protected _replaceToJSON<T>(data: T): T {
-        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
-
-            const getDataFormatJson = this._getDataFormatJson.bind(this);
-
-            Object.defineProperties(data, {
-                toJSON: {
-                    enumerable: false,
-                    value: function() {
-                        getDataFormatJson(this, {});
-
-                        return this;
+            if (data.d && data.d.length) {
+                data.d.forEach((value: unknown) => {
+                    if (value && typeof value === 'object') {
+                        if ((value as Array<unknown>).forEach) {
+                            (value as Array<unknown>).forEach((subValue: unknown) => {
+                                goThrough(subValue as IRecordFormat, controller);
+                            });
+                        } else {
+                            goThrough(value as IRecordFormat, controller);
+                        }
                     }
-                },
-                formatController: {
-                    enumerable: false,
-                    value: this._formatController
-                }
-            });
-        }
-
-        return data;
-    }
-
-    protected _getDataFormatJson(data: IRecordFormat | unknown, formats: object): void {
-        if (Array.isArray(data)) {
-            for (const item of data) {
-                this._getDataFormatJson(item, formats);
+                });
             }
-        } else if (data && typeof data === 'object') {
-            const record = (data as IRecordFormat);
+        };
 
-            if (record.f !== undefined && !formats[record.f]) {
-                if (!record.s || Object.getOwnPropertyDescriptor(data, 's').enumerable === false) {
-                    record.s = this._formatController.getFormat(record.f);
-                }
-
-                formats[record.f] = record.s;
-            }
-
-            if (record.d) {
-                this._getDataFormatJson(record.d, formats);
-            }
-        }
+        const topController = new FormatController(data);
+        goThrough(data, topController);
     }
 
     // endregion
@@ -318,7 +307,6 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
         this._format[name] = format;
         this._resetFieldIndices();
-        this._recoverData(this._data, true);
         this._data.s.splice(at, 0, this._buildS(format));
         this._buildD(
             at,
@@ -353,6 +341,27 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
     // endregion
 
+    // region Static methods
+
+    static recoverData<T>(data: T): T {
+        return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
+    }
+
+    static makeSerializable<T>(data: T): T {
+        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
+            Object.defineProperty(data, 'toJSON', {
+                enumerable: false,
+                value: function() {
+                    normalizeCalculatedFormats(this);
+                    return this;
+                }
+            });
+        }
+        return data;
+    }
+
+    // endregion
+
     // region Protected methods
 
     protected _touchData(): void {
@@ -370,10 +379,6 @@ export default abstract class SbisFormatMixin implements IFormatController {
            data.s = [];
         }
         data._type = dataType;
-
-        if (!this._formatController) {
-            this._setFormatController(data);
-        }
 
         return data;
     }
@@ -668,11 +673,9 @@ export default abstract class SbisFormatMixin implements IFormatController {
 
 Object.assign(SbisFormatMixin.prototype, {
     '[Types/_entity/adapter/SbisFormatMixin]': true,
-    '[Types/_entity/format/IFormatController]': true,
     _data: null,
     _fieldIndices: null,
     _format: null,
     _sharedFieldFormat: null,
     _sharedFieldMeta: null,
-    _formatController: null
 });

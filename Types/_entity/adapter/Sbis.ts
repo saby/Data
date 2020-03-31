@@ -1,6 +1,6 @@
 import Abstract from './Abstract';
-import {ITableFormat, IRecordFormat} from './SbisFormatMixin';
-import FormatController from './../adapter/SbisFormatFinder';
+import {ITableFormat, IRecordFormat, controllerInjected} from './SbisFormatMixin';
+import FormatController from './SbisFormatController';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
@@ -17,34 +17,35 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class Sbis extends Abstract {
-   forTable(data?: ITableFormat, formatController?: FormatController): SbisTable {
-       return new SbisTable(data, formatController);
+   forTable(data?: ITableFormat): SbisTable {
+       return new SbisTable(data);
    }
 
-   forRecord(data?: IRecordFormat, tableData?:any, formatController?: FormatController): SbisRecord {
-       return new SbisRecord(data, formatController);
+   forRecord(data?: IRecordFormat, tableData?:any): SbisRecord {
+       return new SbisRecord(data);
    }
 
-    getKeyField(data: ITableFormat, formatController?: FormatController): string {
+    getKeyField(data: ITableFormat): string {
         // TODO: primary key field index can be defined in this._data.k. and can be -1
+        if (!data) {
+            return undefined;
+        }
+
+        const formatController = data[controllerInjected] || new FormatController(data);
+        const s = data.s || (typeof data.f === 'number' ? formatController.getFormat(data.f) : undefined);
+        if (!s) {
+            return undefined;
+        }
+
         let index;
-        let s;
-        const formatFinder = formatController || new FormatController(data);
-
-        if (data) {
-            s = data.s || (typeof data.f === 'number' ? formatFinder.getFormat(data.f) : undefined);
-
-            if (s) {
-                for (let i = 0, l = s.length; i < l; i++) {
-                    if (s[i].n && s[i].n[0] === '@') {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index === undefined && s.length) {
-                    index = 0;
-                }
+        for (let i = 0, l = s.length; i < l; i++) {
+            if (s[i].n && s[i].n[0] === '@') {
+                index = i;
+                break;
             }
+        }
+        if (index === undefined && s.length) {
+            index = 0;
         }
 
         return index === undefined ? undefined : s[index].n;

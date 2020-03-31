@@ -9,7 +9,6 @@ import fieldsFactory, {IDeclaration} from 'Types/_entity/format/fieldsFactory';
 import JsonAdapter from 'Types/_entity/adapter/Json';
 import SbisAdapter from 'Types/_entity/adapter/Sbis';
 import CowAdapter from 'Types/_entity/adapter/Cow';
-import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 import {IHashMap} from 'Types/declarations';
 import * as Serializer from 'Core/Serializer';
@@ -19,12 +18,6 @@ const RecordState = Record.RecordState;
 interface IItem {
     id: number;
     name: string;
-}
-
-class TestRecordSet extends RecordSet {
-    get formatController(): SbisFormatFinder {
-        return this._$formatController;
-    }
 }
 
 describe('Types/_collection/RecordSet', () => {
@@ -530,33 +523,6 @@ describe('Types/_collection/RecordSet', () => {
     });
 
     describe('.getFormat()', () => {
-        it('should pass the formatController to the record', () => {
-            const rs = new RecordSet({
-                rawData:  {
-                    s: [{
-                        n: 'foo', t: 'Запись'
-                    }],
-                    d: [[{
-                        f: 1,
-                        s: [{
-                            n: 'First name',
-                            t: 'Строка'
-                        }],
-                        d: ['John'],
-                        t: 'Запись'
-                    }], [{
-                        f: 1,
-                        d: ['Mike'],
-                        t: 'Запись'
-                    }]],
-                    t: 'recordset'
-                },
-                adapter: 'Types/entity:adapter.Sbis'
-            });
-
-            assert.strictEqual(rs.at(1).get('foo').get('First name'), 'Mike');
-        });
-
         it('should build the format from json raw data', () => {
             const format = rs.getFormat();
             assert.strictEqual(format.getCount(), 2);
@@ -626,6 +592,31 @@ describe('Types/_collection/RecordSet', () => {
             assert.strictEqual(format.at(0).getName(), 'bar');
             assert.strictEqual(format.at(0).getType(), Number);
         });
+
+        it('should return data for linked format', () => {
+            const rs = new RecordSet({
+                rawData:  {
+                    s: [{
+                        n: 'foo', t: 'Запись'
+                    }],
+                    d: [[{
+                        f: 1,
+                        s: [{n: 'First name', t: 'Строка'}],
+                        d: ['John'],
+                        t: 'Запись'
+                    }], [{
+                        f: 1,
+                        d: ['Mike'],
+                        t: 'Запись'
+                    }]],
+                    t: 'recordset'
+                },
+                adapter: 'Types/entity:adapter.Sbis'
+            });
+
+            assert.strictEqual(rs.at(1).get('foo').get('First name'), 'Mike');
+        });
+
     });
 
     describe('.addField()', () => {
@@ -1600,20 +1591,6 @@ describe('Types/_collection/RecordSet', () => {
 
             assert.deepEqual(given, expected);
         });
-
-        it('should delete format controller', () => {
-            const rs = new TestRecordSet({
-                rawData: [{id: 1}, {id: 2}],
-                formatController: new SbisFormatFinder()
-            });
-            const newRs = new RecordSet({
-                rawData: [{id: 3}]
-            });
-
-            rs.assign(newRs);
-
-            assert.strictEqual(rs.formatController, null);
-        });
     });
 
     describe('.clear()', () => {
@@ -1866,21 +1843,19 @@ describe('Types/_collection/RecordSet', () => {
             }, TypeError);
         });
 
-        it('should add record after recover to data', () => {
-            const rs = new RecordSet({
-                adapter: 'Types/entity:adapter.Sbis',
+        it('should add record with recovered data', () => {
+            const acceptor = new RecordSet({
+                adapter: new SbisAdapter(),
                 rawData: {
                     f: 0,
-                    d: [
-                        [3, {
-                            f: 1,
-                            d: ['Sivov'],
-                            s: [{
-                                n: 'name',
-                                t: 'Строка'
-                            }]
+                    d: [[3, {
+                        f: 1,
+                        d: ['Sivov'],
+                        s: [{
+                            n: 'name',
+                            t: 'Строка'
                         }]
-                    ],
+                    }]],
                     s: [{
                         n: 'id',
                         t: 'Число целое'
@@ -1890,24 +1865,22 @@ describe('Types/_collection/RecordSet', () => {
                     }]
                 }
             });
-            const someRS = new RecordSet({
-                adapter: 'Types/entity:adapter.Sbis',
+
+            const donor = new RecordSet({
+                adapter: new SbisAdapter(),
                 rawData: {
                     f: 0,
-                    d: [
-                        [{
-                            f: 1,
-                            d: ['Ivanov'],
-                            s: [{
-                                n: 'name',
-                                t: 'Строка'
-                            }]
-                        }, 1],
-                        [{
-                            f: 1,
-                            d: ['Petroff']
-                        }, 2]
-                    ],
+                    d: [[{
+                        f: 1,
+                        d: ['Ivanov'],
+                        s: [{
+                            n: 'name',
+                            t: 'Строка'
+                        }]
+                    }, 1], [{
+                        f: 1,
+                        d: ['Petroff']
+                    }, 2]],
                     s: [{
                         n: 'human',
                         t: 'Запись'
@@ -1918,9 +1891,9 @@ describe('Types/_collection/RecordSet', () => {
                 }
             });
 
-            rs.add(someRS.at(1));
+            acceptor.add(donor.at(1));
 
-            assert.deepEqual(rs.at(1).getRawData().d, [2, {
+            assert.deepEqual(acceptor.at(1).getRawData().d, [2, {
                 d: ['Petroff'],
                 s: [{
                     n: 'name',
@@ -2763,15 +2736,6 @@ describe('Types/_collection/RecordSet', () => {
 
             assert.instanceOf(instance, Foo);
             assert.equal(instance.getModel(), 'fooModel');
-        });
-
-        it('should return an instance with format controller', () => {
-            const formatController = new SbisFormatFinder(getSbisItems());
-            const instance = TestRecordSet.produceInstance([], {formatController}) as TestRecordSet;
-
-            assert.instanceOf(instance, RecordSet);
-            assert.instanceOf(instance.formatController, SbisFormatFinder);
-            assert.deepEqual(instance.formatController.data, getSbisItems());
         });
 
         it('should return an instance with the given keyProperty', () => {

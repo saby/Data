@@ -3,7 +3,6 @@ import SbisAdapter from 'Types/_entity/adapter/Sbis';
 import SbisTable from 'Types/_entity/adapter/SbisTable';
 import SbisRecord from 'Types/_entity/adapter/SbisRecord';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
-import SbisFormatFinder from 'Types/_entity/adapter/SbisFormatFinder';
 import 'Core/Date';
 
 describe('Types/_entity/adapter/Sbis', () => {
@@ -80,26 +79,6 @@ describe('Types/_entity/adapter/Sbis', () => {
                 ]
             };
             assert.equal(adapter.getKeyField(data), '@lastname');
-        });
-
-        it('should return first field prefixed with "@" from format controller', () => {
-            const data = {
-                d: [
-                ],
-                f: 0
-            };
-
-            const formatController = new SbisFormatFinder({
-                d: [
-                ],
-                f: 0,
-                s: [
-                    {n: 'id', t: 'Число целое'},
-                    {n: '@lastname', t: 'Строка'}
-                ]
-            });
-
-            assert.equal(adapter.getKeyField(data, formatController), '@lastname');
         });
 
         it('should return first field', () => {
