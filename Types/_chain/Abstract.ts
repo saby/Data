@@ -87,20 +87,6 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
         throw new Error('Not implemented');
     }
 
-    /**
-     * Перебирает все элементы коллекции, начиная с первого.
-     * @param callback Колбэк для каждого элемента (аргументами придут элемент коллекции и его индекс)
-     * @param [context] Контекст вызова callback
-     * @example
-     * Получим элементы коллекции:
-     * <pre>
-     * import {factory} from 'Types/chain';
-     * factory({foo: 'Foo', bar: 'Bar'}).each((value, key) => {
-     *     console.log('key: ' + key + ', value: ' + value);
-     * });
-     * //'key: foo, value: Foo', 'key: bar, value: Bar'
-     * </pre>
-     */
     each(callback: (item: T, index: U) => void, context?: object): void {
         const enumerator = this.getEnumerator();
         while (enumerator.moveNext()) {
