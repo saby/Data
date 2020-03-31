@@ -1,6 +1,6 @@
 import Abstract from './Abstract';
 import {ITableFormat, IRecordFormat, controllerInjected} from './SbisFormatMixin';
-import FormatController from './../adapter/SbisFormatFinder';
+import FormatController from './SbisFormatController';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';

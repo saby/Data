@@ -21,7 +21,7 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController, {eachFormatEntry} from '../adapter/SbisFormatFinder';
+import FormatController, {eachFormatEntry} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 

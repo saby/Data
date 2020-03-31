@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import SbisFormatFinder, {RecursiveIterator} from 'Types/_entity/adapter/SbisFormatFinder';
+import SbisFormatController, {RecursiveIterator} from 'Types/_entity/adapter/SbisFormatController';
 
 const format0 = [{
     n: '@Родитель',
@@ -78,51 +78,51 @@ function getFullRawData(): any {
     };
 }
 
-describe('Types/_entity/adapter/SbisFormatFinder', () => {
-    let sbisFormatFinder: SbisFormatFinder;
+describe('Types/_entity/adapter/SbisFormatController', () => {
+    let formatController: SbisFormatController;
 
     beforeEach(() => {
-        sbisFormatFinder = new SbisFormatFinder(getRawData());
+        formatController = new SbisFormatController(getRawData());
     });
 
     afterEach(() => {
-        sbisFormatFinder = undefined;
+        formatController = undefined;
     });
 
     describe('for native Iterator', () => {
         describe('._cache', () => {
             it('has id with value 0, but not 1', () => {
-                sbisFormatFinder.getFormat(0);
-                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
-                assert.isFalse((sbisFormatFinder as any)._cache.has(1));
+                formatController.getFormat(0);
+                assert.deepEqual(format0, (formatController as any)._cache.get(0));
+                assert.isFalse((formatController as any)._cache.has(1));
             });
 
             it('has all id', () => {
                 assert.throws(() => {
-                    sbisFormatFinder.getFormat();
+                    formatController.getFormat();
                 }, ReferenceError);
-                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
-                assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+                assert.deepEqual(format0, (formatController as any)._cache.get(0));
+                assert.deepEqual(format1, (formatController as any)._cache.get(1));
             });
         });
 
         it('.getFormat()', () => {
-            assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
-            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
-            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
+            assert.deepEqual(format0, formatController.getFormat(0));
+            assert.deepEqual(format1, formatController.getFormat(1));
+            assert.deepEqual(format1, formatController.getFormat(1));
             assert.throws(() => {
-                sbisFormatFinder.getFormat(2);
+                formatController.getFormat(2);
             }, ReferenceError);
         });
 
         it('.scanFormats()', () => {
-            sbisFormatFinder.scanFormats(getRawData());
+            formatController.scanFormats(getRawData());
 
-            assert.isTrue((sbisFormatFinder as any)._cache.has(0));
-            assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+            assert.isTrue((formatController as any)._cache.has(0));
+            assert.deepEqual(format0, (formatController as any)._cache.get(0));
 
-            assert.isTrue((sbisFormatFinder as any)._cache.has(1));
-            assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+            assert.isTrue((formatController as any)._cache.has(1));
+            assert.deepEqual(format1, (formatController as any)._cache.get(1));
         });
     });
 
@@ -140,43 +140,43 @@ describe('Types/_entity/adapter/SbisFormatFinder', () => {
 
         describe('._cache', () => {
             it('has id with value 0, but not 1', () => {
-                sbisFormatFinder.getFormat(0);
-                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
-                assert.isFalse((sbisFormatFinder as any)._cache.has(1));
+                formatController.getFormat(0);
+                assert.deepEqual(format0, (formatController as any)._cache.get(0));
+                assert.isFalse((formatController as any)._cache.has(1));
             });
 
             it('has all id', () => {
                 assert.throws(() => {
-                    sbisFormatFinder.getFormat();
+                    formatController.getFormat();
                 }, ReferenceError);
-                assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
-                assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+                assert.deepEqual(format0, (formatController as any)._cache.get(0));
+                assert.deepEqual(format1, (formatController as any)._cache.get(1));
             });
         });
 
         it('.getFormat()', () => {
-            assert.deepEqual(format0, sbisFormatFinder.getFormat(0));
-            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
-            assert.deepEqual(format1, sbisFormatFinder.getFormat(1));
+            assert.deepEqual(format0, formatController.getFormat(0));
+            assert.deepEqual(format1, formatController.getFormat(1));
+            assert.deepEqual(format1, formatController.getFormat(1));
             assert.throws(() => {
-                sbisFormatFinder.getFormat(2);
+                formatController.getFormat(2);
             }, ReferenceError);
         });
 
         it('.scanFormats()', () => {
-            sbisFormatFinder.scanFormats(getRawData());
+            formatController.scanFormats(getRawData());
 
-            assert.isTrue((sbisFormatFinder as any)._cache.has(0));
-            assert.deepEqual(format0, (sbisFormatFinder as any)._cache.get(0));
+            assert.isTrue((formatController as any)._cache.has(0));
+            assert.deepEqual(format0, (formatController as any)._cache.get(0));
 
-            assert.isTrue((sbisFormatFinder as any)._cache.has(1));
-            assert.deepEqual(format1, (sbisFormatFinder as any)._cache.get(1));
+            assert.isTrue((formatController as any)._cache.has(1));
+            assert.deepEqual(format1, (formatController as any)._cache.get(1));
         });
     });
 
     it('::recoverData()', () => {
         const data = getRawData();
 
-        assert.deepEqual(getFullRawData(), SbisFormatFinder.recoverData(data));
+        assert.deepEqual(getFullRawData(), SbisFormatController.recoverData(data));
     });
 });

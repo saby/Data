@@ -34,7 +34,7 @@ export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) 
     }
 }
 
-function recoverFormats(data: unknown, controller: SbisFormatFinder): FormatCarrier[] {
+function recoverFormats(data: unknown, controller: SbisFormatController): FormatCarrier[] {
     const result = [];
 
     eachFormatEntry(data, (entry) => {
@@ -248,7 +248,7 @@ export class RecursiveIterator {
 /**
  * Do search in raw data for formats. Uses internal cache for optimization.
  */
-export default class SbisFormatFinder {
+export default class SbisFormatController {
     /**
      * Formats cache.
      */
@@ -313,8 +313,8 @@ export default class SbisFormatFinder {
         return this._data;
     }
 
-    static recoverData<T>(data: T, controller?: SbisFormatFinder): T {
-        controller = controller || new SbisFormatFinder(data as unknown as FormatCarrier);
+    static recoverData<T>(data: T, controller?: SbisFormatController): T {
+        controller = controller || new SbisFormatController(data as unknown as FormatCarrier);
         recoverFormats(data, controller).forEach((recovered) => {
             delete recovered.f;
         });
