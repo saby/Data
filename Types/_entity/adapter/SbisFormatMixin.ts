@@ -103,7 +103,7 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: 
     Object.defineProperty(data, 's', {
         configurable: true,
         get(): IFieldFormat[] {
-            data.s = controller.getFormat(data.f);
+            data.s = controller.getFormat(data.f, true);
             return data.s;
         },
         set(value: IFieldFormat[]): void {
@@ -113,8 +113,9 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: 
     });
 }
 
-function normalizeCalculatedFormats(data: IRecordFormat | unknown, ): void {
+function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
     const formats = {};
+    const normalized = [];
 
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined && !formats[entry.f]) {
@@ -123,12 +124,17 @@ function normalizeCalculatedFormats(data: IRecordFormat | unknown, ): void {
                 const s = entry.s;
                 delete entry.s;
                 entry.s = s;
+                normalized.push(entry);
             }
 
             if (entry.s) {
                 formats[entry.f] = entry.s;
             }
         }
+    });
+
+    normalized.forEach((entry) => {
+        delete entry.f;
     });
 }
 
