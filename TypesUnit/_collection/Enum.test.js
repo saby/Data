@@ -194,12 +194,12 @@ define([
          });
 
          it('should translate index to Number even if dictonary has taken from object', function() {
-            var inst = new Enum({
-                dictionary: {0: 'one', 1: 'two'},
+             var inst = new Enum({
+                 dictionary: {0: 'one', 1: 'two'}
              });
     
              inst.setByValue('two');
-            assert.strictEqual(inst.get(), 1);
+             assert.strictEqual(inst.get(), 1);
          });
 
          it('should change current index to null', function() {
