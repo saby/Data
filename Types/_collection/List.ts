@@ -91,7 +91,7 @@ export default class List<T> extends mixin<
     VersionableMixin
 ) implements IEnumerable<T, number>, IList<T>, IIndexedCollection, IEquatable {
     /**
-     * @cfg {Array.<*>} Элементы списка
+     * @cfg Элементы списка
      * @name Types/_collection/List#items
      */
     protected _$items: T[];

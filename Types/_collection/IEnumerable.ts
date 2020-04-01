@@ -14,7 +14,6 @@ export default interface IEnumerable<T, U = EnumeratorIndex> {
 
     /**
      * Возвращает энумератор для перебора элементов коллекции
-     * @return {Types/_collection/IEnumerator}
      * @example
      * Получим элементы коллекции через энумератор:
      * <pre>
@@ -33,13 +32,13 @@ export default interface IEnumerable<T, U = EnumeratorIndex> {
 
     /**
      * Перебирает все элементы коллекции, начиная с первого. Цикл проходит полное количество итераций, его невозможно прервать досрочно.
-     * @param {function(*, Number)} callback Функция обратного вызова для каждого элемента коллекции.
+     * @param callback Функция обратного вызова для каждого элемента коллекции.
      * Аргументами придут
      * <ol>
      *     <li>item - обрабатываемый элемент коллекции, например {@link https://wi.sbis.ru/docs/js/Types/collection/List/ Types/collection:List}; возможные типы коллекций можно найти в библиотеке {@link https://wi.sbis.ru/docs/js/Types/collection/ Types/collection};</li>
      *     <li>index - порядковый номер такого элемента.</li>
      * </ol>
-     * @param {Object} [context] Контекст вызова callback
+     * @param [context] Контекст вызова callback
      * @example
      * Получим элементы коллекции:
      * <pre>

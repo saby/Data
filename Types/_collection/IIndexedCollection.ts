@@ -9,9 +9,8 @@ export default interface IIndexedCollection {
 
     /**
      * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
-     * @param {String} property Название свойства элемента.
-     * @param {*} value Значение свойства элемента.
-     * @return {Number}
+     * @param property Название свойства элемента.
+     * @param value Значение свойства элемента.
      * @example
      * Получим индекс элемента со значением свойства id равным 5:
      * <pre>
@@ -30,9 +29,8 @@ export default interface IIndexedCollection {
 
     /**
      * Возвращает индексы всех элементов с указанным значением свойства.
-     * @param {String} property Название свойства элемента.
-     * @param {*} value Значение свойства элемента.
-     * @return {Array.<Number>}
+     * @param property Название свойства элемента.
+     * @param value Значение свойства элемента.
      * @example
      * Получим индексы элементов со значением свойства node равным true:
      * <pre>

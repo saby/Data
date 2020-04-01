@@ -1,6 +1,7 @@
 import IEnumerable from './IEnumerable';
 import {EnumeratorCallback} from './IEnumerable';
 import IEnumerator from './IEnumerator';
+import {IIndex} from './IEnum';
 import ArrayEnumerator from './enumerator/Arraywise';
 import Objectwise from './enumerator/Objectwise';
 import {
@@ -36,13 +37,13 @@ export default abstract class Dictionary<T> extends mixin<
     ObservableMixin
 ) implements IEnumerable<T>, IEquatable {
     /**
-     * @cfg {Array.<String>|Object.<String>} Collection of keys and values
+     * @cfg Collection of keys and values
      * @name Types/_collection/Dictionary#dictionary
      */
     protected _$dictionary: DictionaryValues<T>;
 
     /**
-     * @cfg {Array.<String>|Object.<String>} Localized collection of keys and values
+     * @cfg Localized collection of keys and values
      * @name Types/_collection/Dictionary#localeDictionary
      */
     protected _$localeDictionary: DictionaryValues<T>;
@@ -133,8 +134,7 @@ export default abstract class Dictionary<T> extends mixin<
 
     /**
      * Returns collection of keys and values
-     * @param {Boolean} [localize=false] Should return localized version
-     * @return {Array.<String>|Object.<String>}
+     * @param [localize=false] Should return localized version
      * @protected
      */
     getDictionary(localize?: boolean): DictionaryValues<T> {
@@ -150,12 +150,11 @@ export default abstract class Dictionary<T> extends mixin<
 
     /**
      * Returns key of the value in dictionary
-     * @param {String} name Value for lookup
-     * @param {Boolean} [localize=false] Is the localized value
-     * @return {Number|String|undefined}
+     * @param name Value for lookup
+     * @param [localize=false] Is the localized value
      * @protected
      */
-    protected _getIndex(name: T, localize?: boolean): number | string {
+    protected _getIndex(name: T, localize?: boolean): IIndex {
         const enumerator = this.getEnumerator(localize);
         while (enumerator.moveNext()) {
             if (enumerator.getCurrent() === name) {
@@ -167,19 +166,17 @@ export default abstract class Dictionary<T> extends mixin<
 
     /**
      * Returns value of the key in dictionary
-     * @param {Number|String} index Key for lookup
-     * @param {Boolean} [localize=false] Should return the localized value
-     * @return {String}
+     * @param index Key for lookup
+     * @param [localize=false] Should return the localized value
      * @protected
      */
-    protected _getValue(index: number | string, localize?: boolean): any {
+    protected _getValue(index: IIndex, localize?: boolean): any {
         return localize && this._$localeDictionary ? this._$localeDictionary[index] : this._$dictionary[index];
     }
 
     /**
      * Extracts dictionary from the field format.
-     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
-     * @return {Array}
+     * @param format Field format
      * @protected
      */
     protected _getDictionaryByFormat(format: format.Field | format.UniversalField): any[] | IHashMap<any> {
@@ -196,8 +193,7 @@ export default abstract class Dictionary<T> extends mixin<
 
     /**
      * Extracts dictionary from the field format.
-     * @param {Types/_entity/format/Field|Types/_entity/format/UniversalField|String} format Field format
-     * @return {Array|undefined}
+     * @param format Field format
      * @protected
      */
     protected _getLocaleDictionaryByFormat(format: format.Field | format.UniversalField): any[] | IHashMap<any> {

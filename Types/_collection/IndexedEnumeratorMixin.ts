@@ -28,9 +28,9 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
     /**
      * Переиндексирует энумератор
-     * @param {Types/_collection/IObservable/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
-     * @param {Number} [start=0] С какой позиции переиндексировать
-     * @param {Number} [count=0] Число переиндексируемых элементов
+     * @param [action] Действие, приведшее к изменению.
+     * @param [start=0] С какой позиции переиндексировать
+     * @param [count=0] Число переиндексируемых элементов
      */
     reIndex(action: string, start?: number, count?: number): void {
         switch (action) {
@@ -52,9 +52,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
     /**
      * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
-     * @param {String} property Название свойства элемента.
-     * @param {*} value Значение свойства элемента.
-     * @return {Number}
+     * @param property Название свойства элемента.
+     * @param value Значение свойства элемента.
      */
     getIndexByValue(property: string, value: any): number {
         const index = this._getIndexForPropertyValue(property, value);
@@ -63,9 +62,8 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
     /**
      * Возвращает индексы всех элементов с указанным значением свойства.
-     * @param {String} property Название свойства элемента.
-     * @param {*} value Значение свойства элемента.
-     * @return {Array.<Number>}
+     * @param property Название свойства элемента.
+     * @param value Значение свойства элемента.
      */
     getIndicesByValue(property: string, value: any): number[] {
         return this._getIndexForPropertyValue(property, value);
@@ -73,7 +71,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
     /**
      * Устанавливает коллекцию при изменении которой поисходит переиндексация энумератора
-     * @param {Types/_entity/ObservableMixin} collection
+     * @param collection
      */
     setObservableCollection(collection: ObservableMixin): void {
         collection.subscribe('onCollectionChange', this._onCollectionChange);
@@ -81,7 +79,7 @@ export default abstract class IndexedEnumeratorMixin<T> {
 
     /**
      * Сбрасывает коллекцию при изменении которой поисходит переиндексация энумератора
-     * @param {Types/_entity/ObservableMixin} collection
+     * @param collection
      */
     unsetObservableCollection(collection: ObservableMixin): void {
         collection.unsubscribe('onCollectionChange', this._onCollectionChange);

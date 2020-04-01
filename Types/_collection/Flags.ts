@@ -42,7 +42,7 @@ export default class Flags<T> extends mixin<
    CloneableMixin
 ) implements IFlags<T>, IProducible {
    /**
-    * @cfg {Array.<Boolean|Null>} Selection state of the flags by their indices
+    * @cfg Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
     */
    protected _$values: IValue[];
