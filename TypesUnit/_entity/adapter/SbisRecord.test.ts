@@ -159,6 +159,20 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
             assert.strictEqual(adapter.get('id'), null);
         });
+
+        it('should return type "Запись" with linked format', () => {
+            const data = {
+                f: 0,
+                s: [{n: 'rec', t: 'Запись'}],
+                d: [{f: 0, d: [null]}]
+            };
+            const adapter = new SbisRecord(data);
+            const recData = adapter.get('rec');
+            const recAdapter = new SbisRecord(recData);
+
+            assert.deepEqual(recData.s, data.s);
+            assert.isNull(recAdapter.get('rec'));
+        });
     });
 
     describe('.set()', () => {

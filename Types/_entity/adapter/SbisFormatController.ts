@@ -25,7 +25,7 @@ export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) 
         }
     } else if (data && typeof data === 'object') {
         const record = data as FormatCarrier;
-        if (record.s || record.f) {
+        if (record.s !== undefined || record.f !== undefined) {
             callback(record);
         }
         if (record.d) {
