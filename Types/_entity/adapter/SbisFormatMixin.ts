@@ -286,6 +286,7 @@ export default abstract class SbisFormatMixin {
         this._format[name] = format;
         this._resetFieldIndices();
         this._data.s.splice(at, 0, this._buildS(format));
+        delete this._data.f;
         this._buildD(
             at,
             factory.serialize(
@@ -304,6 +305,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
+        delete this._data.f;
         this._removeD(index);
     }
 
@@ -314,6 +316,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
+        delete this._data.f;
         this._removeD(index);
     }
 
@@ -321,10 +324,16 @@ export default abstract class SbisFormatMixin {
 
     // region Static methods
 
+    /**
+     * Removes all shared formats by making "s" enumerable and removing "f"
+     */
     static recoverData<T>(data: T): T {
         return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
     }
 
+    /**
+     * Makes data serializable by adding toJSON method witch normalizes "s"'s and "f"'s
+     */
     static makeSerializable<T>(data: T): T {
         if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
             Object.defineProperty(data, 'toJSON', {
