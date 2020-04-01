@@ -1198,6 +1198,22 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.strictEqual(adapter.get(fieldName), def);
         });
 
+        it('should remove shared format index', () => {
+            const data = {
+                d: [],
+                s: [],
+                f: 0
+            };
+            const adapter = new SbisRecord(data);
+
+            adapter.addField(fieldsFactory({
+                type: 'string',
+                name: 'foo'
+            }));
+
+            assert.isUndefined(data.f);
+        });
+
         it('should throw an error for already exists field', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
@@ -1242,6 +1258,20 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             });
         });
 
+        it('should remove shared format index', () => {
+            const data = {
+                d: ['bar'],
+                s: [{n: 'foo', t: 'Строка'}],
+                f: 0
+            };
+            const adapter = new SbisRecord(data);
+
+            adapter.removeField('foo');
+
+            assert.isUndefined(data.f);
+        });
+
+
         it('should throw an error for not exists field', () => {
             assert.throws(() => {
                 adapter.removeField('Some');
@@ -1266,6 +1296,19 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.throws(() => {
                 adapter.getFormat(name);
             });
+        });
+
+        it('should remove shared format index', () => {
+            const data = {
+                d: ['bar'],
+                s: [{n: 'foo', t: 'Строка'}],
+                f: 0
+            };
+            const adapter = new SbisRecord(data);
+
+            adapter.removeFieldAt(0);
+
+            assert.isUndefined(data.f);
         });
 
         it('should throw an error for not exists field', () => {
