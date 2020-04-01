@@ -113,6 +113,27 @@ function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: 
     });
 }
 
+function injectFormatController(data: IRecordFormat | ITableFormat): void {
+    if (data[controllerInjected]) {
+        return;
+    }
+
+    const topController = new FormatController(data);
+
+    eachFormatEntry(data, (entry) => {
+        if (entry.f !== undefined) {
+            defineCalculatedFormat(entry, topController);
+            if (!entry[controllerInjected]) {
+                Object.defineProperty(entry, controllerInjected, {
+                    enumerable: false,
+                    value: topController
+                });
+            }
+        }
+
+    });
+}
+
 function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
     const formats = {};
     const normalized = [];
@@ -192,55 +213,12 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            this._injectFormatController(data);
+            injectFormatController(data);
         }
 
         this._data = data;
         this._format = {};
     }
-
-    // region FormatController
-
-    protected _injectFormatController(data: IRecordFormat | ITableFormat): void {
-        if (data[controllerInjected]) {
-            return;
-        }
-
-        const goThrough = (data: IRecordFormat | ITableFormat, controller: FormatController): void => {
-            if (!data) {
-                return;
-            }
-
-            if (data.f) {
-                defineCalculatedFormat(data, controller);
-                if (!data[controllerInjected]) {
-                    Object.defineProperty(data, controllerInjected, {
-                        enumerable: false,
-                        value: controller
-                    });
-                }
-            }
-
-            if (data.d && data.d.length) {
-                data.d.forEach((value: unknown) => {
-                    if (value && typeof value === 'object') {
-                        if ((value as Array<unknown>).forEach) {
-                            (value as Array<unknown>).forEach((subValue: unknown) => {
-                                goThrough(subValue as IRecordFormat, controller);
-                            });
-                        } else {
-                            goThrough(value as IRecordFormat, controller);
-                        }
-                    }
-                });
-            }
-        };
-
-        const topController = new FormatController(data);
-        goThrough(data, topController);
-    }
-
-    // endregion
 
     // region Public methods
 
@@ -389,7 +367,7 @@ export default abstract class SbisFormatMixin {
             if (data.s) {
                 data.s = this._data.s;
             }
-            if (data.f) {
+            if (data.f !== undefined) {
                 data.f = this._data.f;
             }
             // Keep sharing fields format

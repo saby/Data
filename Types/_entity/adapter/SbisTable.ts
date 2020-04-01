@@ -89,10 +89,12 @@ export default class SbisTable extends mixin<
     }
 
     at(index: number): ITableFormat {
-        return this._isValidData() && this._data.d[index] ?
+        const data = this._data;
+        return this._isValidData() && data.d[index] ?
             SbisFormatMixin.makeSerializable({
-                d: this._data.d[index],
-                s: this._data.s
+                [controllerInjected]: data[controllerInjected],
+                d: data.d[index],
+                s: data.s
             }) :
             undefined;
     }
