@@ -1,5 +1,4 @@
 import DateTime from './DateTime';
-import IProducible, {IProducibleConstructor} from './IProducible';
 import {
     Field,
     ArrayField,
@@ -14,20 +13,39 @@ import {
     IUniversalFieldDictionaryMeta,
     IUniversalFieldArrayMeta
 } from './format';
+import IProducible, {IProducibleConstructor} from './IProducible';
 import Record from './Record';
 import TimeInterval from './TimeInterval';
 import TheDate from './Date';
 import Time from './Time';
+import FormattableMixin from './FormattableMixin';
+import {ISerializable} from './SerializableMixin';
 import {create, resolve} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
-import {List, RecordSet} from '../collection';
-import renders = require('Core/defaultRenders');
+import {List, RecordSet, IEnum, Flags} from '../collection';
 import {IHashMap} from '../_declarations';
+import renders = require('Core/defaultRenders');
 
 type ValueType = string | Function | IProducible;
 
+interface ICastOptions {
+    format?: Field | UniversalField;
+    strict?: boolean;
+    [key: string]: unknown;
+}
+
+interface ISerializeOptions {
+    format?: Field | UniversalField;
+    [key: string]: unknown;
+}
+
 /**
- * Выделяет временную зону в строковом представлении Date
+ * Maximum precision to work with floating point as with a number
+ */
+const MAX_FLOAT_PRECISION = 3;
+
+/**
+ * Extracts time zone in Date string represenation.
  */
 const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
 
@@ -35,7 +53,7 @@ const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
  * Возвращает словарь для поля типа "Словарь"
  * @param format Формат поля
  */
-function getDictionary(format: DictionaryField | UniversalField): any[] | IHashMap<any> {
+function getDictionary(format: DictionaryField | UniversalField): unknown[] | IHashMap<unknown> {
     return (format instanceof DictionaryField
         ? format.getDictionary()
         : format.meta && (format.meta as IUniversalFieldDictionaryMeta).dictionary
@@ -47,8 +65,8 @@ function getDictionary(format: DictionaryField | UniversalField): any[] | IHashM
  * @param value Значение.
  * @param options Опции.
  */
-function isEnumNullable(value: any, options: any): boolean {
-    const dict = getDictionary(options.format);
+function isEnumNullable(value: unknown, options: ICastOptions): boolean {
+    const dict = getDictionary(options.format as DictionaryField);
     if (value === null && !dict.hasOwnProperty(value)) {
         return true;
     } else if (value === undefined) {
@@ -63,7 +81,7 @@ function isEnumNullable(value: any, options: any): boolean {
  * @param value Значение.
  * @param [options] Опции.
  */
-function isNullable(type: ValueType, value: any, options?: object): boolean {
+function isNullable(type: ValueType, value: unknown, options?: ICastOptions): boolean {
     if (value === undefined || value === null) {
         switch (type) {
             case 'identity':
@@ -87,11 +105,11 @@ function isNullable(type: ValueType, value: any, options?: object): boolean {
 /**
  * Возвращает скалярное значение из массива
  */
-function toScalar(value: any[]): any {
+function toScalar<T>(value: unknown): T {
     if (Array.isArray(value) && value.length < 2) {
         return value.length ? value[0] : null;
     }
-    return value;
+    return value as T;
 }
 
 /**
@@ -163,9 +181,9 @@ function getKind(format: ArrayField | UniversalField): string {
 
 /**
  * Сериализует поле флагов
- * @param {Types/_collection/Flags} data
+ * @param data
  */
-function serializeFlags(data: any): boolean[] {
+function serializeFlags(data: Flags<unknown>): boolean[] {
     const d = [];
     data.each((name) => {
         d.push(data.get(name));
@@ -235,13 +253,13 @@ const factory = {
      * @param [options] Опции
      * @return Типизированное значение
      */
-    cast(value: any, type: ValueType, options?: any): any {
+    cast<T = unknown>(value: unknown, type: ValueType, options?: ICastOptions): T {
         options = options || {};
         if (isNullable(type, value, options)) {
-            return value;
+            return value as T;
         }
 
-        let TypeConstructor = type;
+        let TypeConstructor: unknown = type;
         if (typeof TypeConstructor === 'string') {
             TypeConstructor = TypeConstructor.toLowerCase();
             switch (TypeConstructor) {
@@ -263,39 +281,51 @@ const factory = {
 
                 case 'link':
                 case 'integer':
-                    return typeof (value) === 'number' ?
-                        value :
-                        (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
+                    if (typeof value === 'number') {
+                        return value as unknown as T;
+                    }
+                    value = parseInt(value as string, 10);
+                    if (Number.isNaN(value as number)) {
+                        return null;
+                    }
+                    return value as T;
 
                 case 'real':
                 case 'double':
-                    return typeof (value) === 'number' ?
-                        value :
-                        (isNaN(parseFloat(value)) ? null : parseFloat(value));
+                    if (typeof value === 'number') {
+                        return value as unknown as T;
+                    }
+                    value = parseFloat(value as string);
+                    if (Number.isNaN(value as number)) {
+                        return null;
+                    }
+                    return value as T;
 
                 case 'boolean':
-                    return !!value;
+                    return !!value as unknown as T;
 
                 case 'money':
-                    if (!isLargeMoney(options.format)) {
-                        const precision = getPrecision(options.format);
-                        if (precision > 3) {
+                    const moneyFormat = options.format as MoneyField;
+                    if (!isLargeMoney(moneyFormat)) {
+                        const precision = getPrecision(moneyFormat);
+                        if (precision > MAX_FLOAT_PRECISION) {
                             return renders.real(value, precision, false, true);
                         }
                     }
-                    return value === undefined ? null : value;
+                    return value === undefined ? null : value as T;
 
                 case 'date':
                 case 'time':
                 case 'datetime':
                     if (value instanceof Date) {
-                        return value;
+                        return value as unknown as T;
                     } else if (value === 'infinity') {
-                        return Infinity;
+                        return Infinity as unknown as T;
                     } else if (value === '-infinity') {
-                        return -Infinity;
+                        return -Infinity as unknown as T;
                     }
                     value = dateFromSql('' + value).getTime();
+
                     if (TypeConstructor === 'date') {
                         TypeConstructor = TheDate;
                     } else if (TypeConstructor === 'time') {
@@ -307,27 +337,36 @@ const factory = {
 
                 case 'timeinterval':
                     if (value instanceof TimeInterval) {
-                        return value.toString();
+                        return value.toString() as unknown as T;
                     }
-                    return TimeInterval.toString(value);
+                    return TimeInterval.toString(value as string) as unknown as T;
 
                 case 'array':
-                    const kind = getKind(options.format);
+                    const arrayFormat = options.format as ArrayField;
+                    const kind = getKind(arrayFormat);
+                    const kindOptions = {...options, ...{strict: true}};
                     if (!(value instanceof Array)) {
                         value = [value];
                     }
-                    return value.map((val) => {
-                        return this.cast(val, kind, options);
-                    }, this);
+                    return (value as unknown[]).map(
+                        (val) => this.cast(val, kind, kindOptions),
+                        this
+                    ) as unknown as T;
+
+                case 'string':
+                    if (options.strict) {
+                        return String(value) as unknown as T;
+                    }
+                    return value as T;
 
                 default:
-                    return value;
+                    return value as T;
             }
         }
 
         if (typeof TypeConstructor === 'function') {
             if (value instanceof TypeConstructor) {
-                return value;
+                return value as T;
             }
 
             if (TypeConstructor.prototype['[Types/_entity/IProducible]']) {
@@ -337,8 +376,7 @@ const factory = {
                 );
             }
 
-            // @ts-ignore
-            return new TypeConstructor(value);
+            return new (TypeConstructor as new(opts: unknown) => T)(value);
         }
 
         throw new TypeError(`Unknown type ${TypeConstructor}`);
@@ -350,66 +388,76 @@ const factory = {
      * @param [options] Опции
      * @return Исходное значение
      */
-    serialize(value: any, options?: any): any {
+    serialize<T>(value: unknown, options?: ISerializeOptions): T {
         options = options || {};
         const type = getTypeName(options.format);
 
         if (isNullable(type, value, options)) {
-            return value;
+            return value as T;
         }
 
         if (value && typeof value === 'object') {
             if (value['[Types/_entity/FormattableMixin]']) {
-                value = value.getRawData(true);
+                value = (value as FormattableMixin).getRawData(true);
             }  else if (value['[Types/_collection/IFlags]']) {
-                value = serializeFlags(value);
+                value = serializeFlags(value as Flags<unknown>);
             } else if (value['[Types/_collection/IEnum]']) {
-                value = value.get();
+                value = (value as IEnum<unknown>).get();
             } else if (value['[Types/_collection/IList]'] && type === 'recordset') {
-                value = convertListToRecordSet(value);
-            } else if (value._moduleName === 'Deprecated/Record') {
-                throw new TypeError('Deprecated/Record can\'t be used with "Data"');
-            } else if (value._moduleName === 'Deprecated/RecordSet') {
-                throw new TypeError('Deprecated/RecordSet can\'t be used with "Data"');
-            } else if (value._moduleName === 'Deprecated/Enum') {
-                throw new TypeError('Deprecated/Enum can\'t be used with "Data"');
+                value = convertListToRecordSet(value as List<Record>);
+            } else {
+                const moduleName = (value as ISerializable)._moduleName;
+                if (
+                    moduleName === 'Deprecated/Record' ||
+                    moduleName === 'Deprecated/RecordSet' ||
+                    moduleName === 'Deprecated/Enum'
+                ) {
+                    throw new TypeError(`${moduleName} can't be used with "Types" module`);
+                }
             }
         }
 
         switch (type) {
             case 'integer':
                 value = toScalar(value);
-                return typeof (value) === 'number'
-                    ? value
-                    : (isNaN(value = value - 0) ? null : parseInt(value, 10));
+                if (typeof value === 'number') {
+                    return value as unknown as T;
+                }
+                value = (value as number) - 0;
+                if (Number.isNaN(value as number)) {
+                    return null;
+                }
+                return parseInt(value as string, 10) as unknown as T;
 
             case 'real':
             case 'double':
                 return toScalar(value);
 
             case 'link':
-                return parseInt(value, 10);
+                return parseInt(value as string, 10) as unknown as T;
 
             case 'money':
                 value = toScalar(value);
-                if (!isLargeMoney(options.format)) {
-                    const precision = getPrecision(options.format);
-                    if (precision > 3) {
+                const moneyFormat = options.format as MoneyField;
+                if (!isLargeMoney(moneyFormat)) {
+                    const precision = getPrecision(moneyFormat);
+                    if (precision > MAX_FLOAT_PRECISION) {
                         return renders.real(value, precision, false, true);
                     }
                 }
-                return value;
+                return value as T;
 
             case 'date':
             case 'time':
             case 'datetime':
                 value = toScalar(value);
+                const dateTimeFormat = options.format as DateTimeField;
                 let serializeMode = TO_SQL_MODE.DATE;
                 let withoutTimeZone = false;
                 switch (type) {
                     case 'datetime':
                         serializeMode = TO_SQL_MODE.DATETIME;
-                        withoutTimeZone = isWithoutTimeZone(options.format);
+                        withoutTimeZone = isWithoutTimeZone(dateTimeFormat);
                         break;
                     case 'time':
                         serializeMode = TO_SQL_MODE.TIME;
@@ -421,33 +469,34 @@ const factory = {
                 if (value instanceof Date) {
                     value = dateToSql(value, serializeMode);
                     if (withoutTimeZone) {
-                        value = value.replace(SQL_TIME_ZONE, '');
+                        value = (value as string).replace(SQL_TIME_ZONE, '');
                     }
                 } else if (value === Infinity) {
-                    return 'infinity';
+                    return 'infinity' as unknown as T;
                 } else if (value === -Infinity) {
-                    return '-infinity';
+                    return '-infinity' as unknown as T;
                 }
-                return value;
+                return value as T;
 
             case 'timeinterval':
                 value = toScalar(value);
                 if (value instanceof TimeInterval) {
-                    return value.toString();
+                    return value.toString() as unknown as T;
                 }
-                return TimeInterval.toString(value);
+                return TimeInterval.toString(value as string) as unknown as T;
 
             case 'array':
-                const kind = getKind(options.format);
+                const kind = getKind(options.format as ArrayField);
                 if (!(value instanceof Array)) {
                     value = [value];
                 }
-                return value.map((val) => {
-                    return this.serialize(val, {format: kind});
-                }, this);
+                return (value as unknown[]).map(
+                    (val) => this.serialize(val, {format: kind}),
+                    this
+                ) as unknown as T;
 
             default:
-                return value;
+                return value as T;
         }
     }
 };

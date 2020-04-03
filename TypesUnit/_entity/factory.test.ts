@@ -172,7 +172,7 @@ describe('Types/_entity/factory', () => {
         context('for datetime, date and time', () => {
             it('should return special DateTime instance', () => {
                 const datetime = '2015-09-24 15:54:28.981+03';
-                const value = factory.cast(datetime, 'datetime');
+                const value: DateTime = factory.cast(datetime, 'datetime');
 
                 assert.instanceOf(value, DateTime);
                 assert.strictEqual(value.getTime(), 1443099268981);
@@ -180,7 +180,7 @@ describe('Types/_entity/factory', () => {
 
             it('should return special Date instance', () => {
                 const date = '2015-09-24';
-                const value = factory.cast(date, 'date');
+                const value: TheDate = factory.cast(date, 'date');
 
                 assert.instanceOf(value, TheDate);
                 assert.strictEqual(value.getTime(), 1443042000000);
@@ -188,7 +188,7 @@ describe('Types/_entity/factory', () => {
 
             it('should return special Time instance', () => {
                 const time = '15:54:28.981+03';
-                const value = factory.cast(time, 'time');
+                const value: Time = factory.cast(time, 'time');
 
                 assert.instanceOf(value, Time);
                 assert.strictEqual(value.getHours(), 15);
@@ -237,8 +237,8 @@ describe('Types/_entity/factory', () => {
         context('for array', () => {
             it('should return an Array of String from Field', () => {
                 const format = getFormatMock('array') as ArrayField;
-                const array = ['foo', 'bar'];
                 format.getKind = () => 'string';
+                const array = ['foo', 'bar'];
 
                 assert.deepEqual(
                     factory.cast(array, format.getType(), {format}),
@@ -248,12 +248,23 @@ describe('Types/_entity/factory', () => {
 
             it('should return an Array of Number from UniversalField', () => {
                 const format = getUniversalFormatMock('array');
-                const array = ['1', '2a', 3];
                 format.meta = {kind: 'integer'};
+                const array = ['1', '2a', 3];
 
                 assert.deepEqual(
                     factory.cast(array, format.type, {format}),
                     [1, 2, 3]
+                );
+            });
+
+            it('should cast elements type to string', () => {
+                const format = getFormatMock('array') as ArrayField;
+                format.getKind = () => 'string';
+                const array = ['1', 2, '3', null];
+
+                assert.deepEqual(
+                    factory.cast(array, format.getType(), {format}),
+                    ['1', '2', '3', null]
                 );
             });
 
@@ -302,7 +313,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('enum') as DictionaryField;
                 format.getDictionary = () => ['one', 'two'];
 
-                const value = factory.cast(1, Enum, {format});
+                const value: Enum<string> = factory.cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -312,7 +323,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: {null: 'null', 0: 'one', 1: 'two'}
                 });
 
-                const value = factory.cast(null, Enum, {format});
+                const value: Enum<string> = factory.cast(null, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), null);
                 assert.strictEqual(value.getAsValue(), 'null');
@@ -332,7 +343,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two']
                 };
 
-                const value = factory.cast(1, Enum, {format});
+                const value: Enum<string> = factory.cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -343,7 +354,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two']
                 };
 
-                const value = factory.cast(1, Enum, {format});
+                const value: Enum<string> = factory.cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -377,7 +388,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('flags') as EnumField;
                 format.getDictionary = () => ['one', 'two', 'three'];
 
-                const value = factory.cast([true, null, false], Flags, {format});
+                const value: Flags<string> = factory.cast([true, null, false], Flags, {format});
                 assert.instanceOf(value, Flags);
                 assert.isTrue(value.get('one'));
                 assert.isNull(value.get('two'));
@@ -391,7 +402,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two', 'three']
                 };
 
-                const value = factory.cast([true, null, false], Flags, {format});
+                const value: Flags<string> = factory.cast([true, null, false], Flags, {format});
                 assert.instanceOf(value, Flags);
                 assert.isTrue(value.get('one'));
                 assert.isNull(value.get('two'));
@@ -425,7 +436,7 @@ describe('Types/_entity/factory', () => {
 
         context('for record', () => {
             it('should return a Model from UniversalField', () => {
-                const value = factory.cast(
+                const value: Model = factory.cast(
                     {foo: 'bar'},
                     Model,
                     {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
@@ -437,7 +448,7 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return a Model from shortcut', () => {
-                const value = factory.cast(
+                const value: Model = factory.cast(
                     {foo: 'bar'},
                     'record',
                     {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
@@ -469,7 +480,7 @@ describe('Types/_entity/factory', () => {
 
         context('for recordset', () => {
             it('should return a RecordSet from UniversalField', () => {
-                const value = factory.cast(
+                const value: RecordSet = factory.cast(
                     [{foo: 'bar'}],
                     RecordSet,
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
@@ -482,7 +493,7 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return a RecordSet from shortcut', () => {
-                const value = factory.cast(
+                const value: RecordSet = factory.cast(
                     [{foo: 'bar'}],
                     'recordset',
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
@@ -513,12 +524,13 @@ describe('Types/_entity/factory', () => {
 
             it('should return a RecordSet with the injected model', () => {
                 const SomeModel = () => ({});
-                const value = factory.cast([], RecordSet, {
-                    format: {
-                        name: 'foo',
-                        type: 'recordset'
-                    },
-                    adapter: 'Types/entity:adapter.Json',
+                const format = {
+                    name: 'foo',
+                    type: 'recordset'
+                } as UniversalField;
+                const value: RecordSet = factory.cast([], RecordSet, {
+                    format,
+                    adapter: new JsonAdapter(),
                     model: SomeModel
                 });
 
@@ -534,7 +546,8 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return a Date', () => {
-                const value = factory.cast('2001-02-03', Date);
+                const value: Date = factory.cast('2001-02-03', Date);
+
                 assert.instanceOf(value, Date);
                 assert.equal(value.getFullYear(), 2001);
                 assert.equal(value.getMonth(), 1);
@@ -610,12 +623,10 @@ describe('Types/_entity/factory', () => {
 
         context('for string', () => {
             it('should return passed value', () => {
-                const format = getUniversalFormatMock('string');
-
-                assert.strictEqual(factory.serialize('bar', format), 'bar');
-                assert.strictEqual(factory.serialize(1, format), 1);
-                assert.isNull(factory.serialize(null, format));
-                assert.isUndefined(factory.serialize(undefined, format));
+                assert.strictEqual(factory.serialize('bar'), 'bar');
+                assert.strictEqual(factory.serialize(1), 1);
+                assert.isNull(factory.serialize(null));
+                assert.isUndefined(factory.serialize(undefined));
             });
         });
 
@@ -656,7 +667,7 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.serialize(null, 'integer'));
+                assert.isNull(factory.serialize(null));
                 assert.isUndefined(factory.serialize(
                     undefined,
                     {format: getUniversalFormatMock('link')}
