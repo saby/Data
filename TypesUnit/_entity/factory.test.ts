@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import factory from 'Types/_entity/factory';
+import {cast, serialize} from 'Types/_entity/factory';
 import {
     ArrayField,
     DateTimeField,
@@ -55,87 +55,87 @@ describe('Types/_entity/factory', () => {
     describe('.cast()', () => {
         context('for integer', () => {
             it('should return a Number', () => {
-                assert.strictEqual(factory.cast(1, 'integer'), 1);
-                assert.strictEqual(factory.cast('1', 'integer'), 1);
-                assert.strictEqual(factory.cast('1a', 'integer'), 1);
-                assert.strictEqual(factory.cast('0890', 'integer'), 890);
+                assert.strictEqual(cast(1, 'integer'), 1);
+                assert.strictEqual(cast('1', 'integer'), 1);
+                assert.strictEqual(cast('1a', 'integer'), 1);
+                assert.strictEqual(cast('0890', 'integer'), 890);
             });
 
             it('should return null', () => {
-                assert.strictEqual(factory.cast('a', 'integer'), null);
-                assert.strictEqual(factory.cast('a1', 'integer'), null);
+                assert.strictEqual(cast('a', 'integer'), null);
+                assert.strictEqual(cast('a1', 'integer'), null);
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.cast(null, 'integer'));
-                assert.isUndefined(factory.cast(undefined, 'integer'));
+                assert.isNull(cast(null, 'integer'));
+                assert.isUndefined(cast(undefined, 'integer'));
             });
         });
 
         context('for string', () => {
             it('should return passed value', () => {
-                assert.strictEqual(factory.cast('bar', 'string'), 'bar');
-                assert.strictEqual(factory.cast(1, 'string'), 1);
-                assert.isNull(factory.cast(null, 'string'));
-                assert.isUndefined(factory.cast(undefined, 'string'));
+                assert.strictEqual(cast('bar', 'string'), 'bar');
+                assert.strictEqual(cast(1, 'string'), 1);
+                assert.isNull(cast(null, 'string'));
+                assert.isUndefined(cast(undefined, 'string'));
             });
         });
 
         context('for link', () => {
             it('should return a Number', () => {
-                assert.strictEqual(factory.cast(1, 'link'), 1);
-                assert.strictEqual(factory.cast('1', 'link'), 1);
-                assert.strictEqual(factory.cast('1a', 'link'), 1);
-                assert.strictEqual(factory.cast('0890', 'link'), 890);
+                assert.strictEqual(cast(1, 'link'), 1);
+                assert.strictEqual(cast('1', 'link'), 1);
+                assert.strictEqual(cast('1a', 'link'), 1);
+                assert.strictEqual(cast('0890', 'link'), 890);
             });
 
             it('should return null', () => {
-                assert.strictEqual(factory.cast('a', 'link'), null);
-                assert.strictEqual(factory.cast('a1', 'link'), null);
+                assert.strictEqual(cast('a', 'link'), null);
+                assert.strictEqual(cast('a1', 'link'), null);
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.cast(null, 'integer'));
-                assert.isUndefined(factory.cast(undefined, 'link'));
+                assert.isNull(cast(null, 'integer'));
+                assert.isUndefined(cast(undefined, 'link'));
             });
         });
 
         context('for real and double', () => {
             it('should return a Number', () => {
-                assert.strictEqual(factory.cast(1.2, 'real'), 1.2);
-                assert.strictEqual(factory.cast('1.2', 'real'), 1.2);
-                assert.strictEqual(factory.cast('1a', 'real'), 1);
-                assert.strictEqual(factory.cast('0890', 'real'), 890);
+                assert.strictEqual(cast(1.2, 'real'), 1.2);
+                assert.strictEqual(cast('1.2', 'real'), 1.2);
+                assert.strictEqual(cast('1a', 'real'), 1);
+                assert.strictEqual(cast('0890', 'real'), 890);
             });
 
             it('should return null', () => {
-                assert.strictEqual(factory.cast('a', 'real'), null);
-                assert.strictEqual(factory.cast('a1', 'real'), null);
+                assert.strictEqual(cast('a', 'real'), null);
+                assert.strictEqual(cast('a1', 'real'), null);
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.cast(null, 'real'));
-                assert.isUndefined(factory.cast(undefined, 'real'));
+                assert.isNull(cast(null, 'real'));
+                assert.isUndefined(cast(undefined, 'real'));
             });
         });
 
         context('for money', () => {
             it('should return a Number', () => {
                 assert.strictEqual(
-                    factory.cast(1.2, 'money'),
+                    cast(1.2, 'money'),
                     1.2
                 );
             });
 
             it('should return passed value', () => {
-                assert.strictEqual(factory.cast('1.2', 'money'), '1.2');
-                assert.strictEqual(factory.cast('0890', 'money'), '0890');
-                assert.strictEqual(factory.cast('1a', 'money'), '1a');
-                assert.strictEqual(factory.cast('a', 'money'), 'a');
-                assert.strictEqual(factory.cast('a1', 'money'), 'a1');
+                assert.strictEqual(cast('1.2', 'money'), '1.2');
+                assert.strictEqual(cast('0890', 'money'), '0890');
+                assert.strictEqual(cast('1a', 'money'), '1a');
+                assert.strictEqual(cast('a', 'money'), 'a');
+                assert.strictEqual(cast('a1', 'money'), 'a1');
 
-                assert.isNull(factory.cast(null, 'money'));
-                assert.isUndefined(factory.cast(undefined, 'money'));
+                assert.isNull(cast(null, 'money'));
+                assert.isUndefined(cast(undefined, 'money'));
             });
 
             it('should return passed value if precision less or equal 3 ', () => {
@@ -143,7 +143,7 @@ describe('Types/_entity/factory', () => {
                 format.getPrecision = () => 3;
 
                 assert.strictEqual(
-                    factory.cast(1.2, format.getType(), {format}),
+                    cast(1.2, format.getType(), {format}),
                     1.2
                 );
             });
@@ -153,7 +153,7 @@ describe('Types/_entity/factory', () => {
                 format.getPrecision = () => 4;
 
                 assert.strictEqual(
-                    factory.cast(1.2, format.getType(), {format}),
+                    cast(1.2, format.getType(), {format}),
                     '1.2000'
                 );
             });
@@ -163,7 +163,7 @@ describe('Types/_entity/factory', () => {
                 format.isLarge = () => true;
 
                 assert.strictEqual(
-                    factory.cast('1.2', format.getType(), {format}),
+                    cast('1.2', format.getType(), {format}),
                     '1.2'
                 );
             });
@@ -172,7 +172,7 @@ describe('Types/_entity/factory', () => {
         context('for datetime, date and time', () => {
             it('should return special DateTime instance', () => {
                 const datetime = '2015-09-24 15:54:28.981+03';
-                const value: DateTime = factory.cast(datetime, 'datetime');
+                const value: DateTime = cast(datetime, 'datetime');
 
                 assert.instanceOf(value, DateTime);
                 assert.strictEqual(value.getTime(), 1443099268981);
@@ -180,7 +180,7 @@ describe('Types/_entity/factory', () => {
 
             it('should return special Date instance', () => {
                 const date = '2015-09-24';
-                const value: TheDate = factory.cast(date, 'date');
+                const value: TheDate = cast(date, 'date');
 
                 assert.instanceOf(value, TheDate);
                 assert.strictEqual(value.getTime(), 1443042000000);
@@ -188,7 +188,7 @@ describe('Types/_entity/factory', () => {
 
             it('should return special Time instance', () => {
                 const time = '15:54:28.981+03';
-                const value: Time = factory.cast(time, 'time');
+                const value: Time = cast(time, 'time');
 
                 assert.instanceOf(value, Time);
                 assert.strictEqual(value.getHours(), 15);
@@ -200,14 +200,14 @@ describe('Types/_entity/factory', () => {
 
             it('should return Infinity', () => {
                 const time = 'infinity';
-                const value = factory.cast(time, 'date');
+                const value = cast(time, 'date');
 
                 assert.strictEqual(value, Infinity);
             });
 
             it('should return -Infinity', () => {
                 const time = '-infinity';
-                const value = factory.cast(time, 'date');
+                const value = cast(time, 'date');
 
                 assert.strictEqual(value, -Infinity);
             });
@@ -215,22 +215,22 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const value = new Date();
 
-                assert.strictEqual(factory.cast(value, 'datetime'), value);
-                assert.isNull(factory.cast(null, 'datetime'));
-                assert.isUndefined(factory.cast(undefined, 'datetime'));
+                assert.strictEqual(cast(value, 'datetime'), value);
+                assert.isNull(cast(null, 'datetime'));
+                assert.isUndefined(cast(undefined, 'datetime'));
             });
         });
 
         context('for timeinterval', () => {
             it('should return a String', () => {
                 const interval = new TimeInterval('P10DT0H0M0S');
-                assert.strictEqual(factory.cast(interval, 'timeinterval'), 'P10DT0H0M0S');
+                assert.strictEqual(cast(interval, 'timeinterval'), 'P10DT0H0M0S');
             });
 
             it('should return passed value', () => {
-                assert.strictEqual(factory.cast('P10DT0H0M0S', 'timeinterval'), 'P10DT0H0M0S');
-                assert.isNull(factory.cast(null, 'timeinterval'));
-                assert.isUndefined(factory.cast(undefined, 'timeinterval'));
+                assert.strictEqual(cast('P10DT0H0M0S', 'timeinterval'), 'P10DT0H0M0S');
+                assert.isNull(cast(null, 'timeinterval'));
+                assert.isUndefined(cast(undefined, 'timeinterval'));
             });
         });
 
@@ -241,7 +241,7 @@ describe('Types/_entity/factory', () => {
                 const array = ['foo', 'bar'];
 
                 assert.deepEqual(
-                    factory.cast(array, format.getType(), {format}),
+                    cast(array, format.getType(), {format}),
                     ['foo', 'bar']
                 );
             });
@@ -252,7 +252,7 @@ describe('Types/_entity/factory', () => {
                 const array = ['1', '2a', 3];
 
                 assert.deepEqual(
-                    factory.cast(array, format.type, {format}),
+                    cast(array, format.type, {format}),
                     [1, 2, 3]
                 );
             });
@@ -263,7 +263,7 @@ describe('Types/_entity/factory', () => {
                 const array = ['1', 2, '3', null];
 
                 assert.deepEqual(
-                    factory.cast(array, format.getType(), {format}),
+                    cast(array, format.getType(), {format}),
                     ['1', '2', '3', null]
                 );
             });
@@ -273,7 +273,7 @@ describe('Types/_entity/factory', () => {
                 format.getKind = () => 'string';
 
                 assert.deepEqual(
-                    factory.cast('foo', format.getType(), {format}),
+                    cast('foo', format.getType(), {format}),
                     ['foo']
                 );
             });
@@ -282,29 +282,29 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('array') as ArrayField;
                 format.getKind = () => 'string';
 
-                assert.isNull(factory.cast(null, format.getType(), {format}));
-                assert.isUndefined(factory.cast(undefined, format.getType(), {format}));
+                assert.isNull(cast(null, format.getType(), {format}));
+                assert.isUndefined(cast(undefined, format.getType(), {format}));
             });
         });
 
         context('for identity', () => {
             it('should return same value for Identity', () => {
                 const value = ['bar'];
-                assert.strictEqual(factory.cast(value, 'identity'), value);
-                assert.isNull(factory.cast(null, 'identity'));
+                assert.strictEqual(cast(value, 'identity'), value);
+                assert.isNull(cast(null, 'identity'));
             });
 
             it('should return null', () => {
-                assert.isNull(factory.cast(null, 'identity'));
+                assert.isNull(cast(null, 'identity'));
             });
         });
 
         context('for hierarchy', () => {
             it('should return passed value', () => {
-                assert.strictEqual(factory.cast('bar', 'hierarchy'), 'bar');
-                assert.strictEqual(factory.cast(1, 'hierarchy'), 1);
-                assert.isNull(factory.cast(null, 'hierarchy'));
-                assert.isUndefined(factory.cast(undefined, 'hierarchy'));
+                assert.strictEqual(cast('bar', 'hierarchy'), 'bar');
+                assert.strictEqual(cast(1, 'hierarchy'), 1);
+                assert.isNull(cast(null, 'hierarchy'));
+                assert.isUndefined(cast(undefined, 'hierarchy'));
             });
         });
 
@@ -313,7 +313,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('enum') as DictionaryField;
                 format.getDictionary = () => ['one', 'two'];
 
-                const value: Enum<string> = factory.cast(1, Enum, {format});
+                const value: Enum<string> = cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -323,7 +323,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: {null: 'null', 0: 'one', 1: 'two'}
                 });
 
-                const value: Enum<string> = factory.cast(null, Enum, {format});
+                const value: Enum<string> = cast(null, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), null);
                 assert.strictEqual(value.getAsValue(), 'null');
@@ -333,7 +333,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('enum') as EnumField;
                 format.getDictionary = () => ({0: 'one', 1: 'two'});
 
-                const value = factory.cast(null, Enum, {format});
+                const value = cast(null, Enum, {format});
                 assert.isNull(value);
             });
 
@@ -343,7 +343,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two']
                 };
 
-                const value: Enum<string> = factory.cast(1, Enum, {format});
+                const value: Enum<string> = cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -354,7 +354,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two']
                 };
 
-                const value: Enum<string> = factory.cast(1, Enum, {format});
+                const value: Enum<string> = cast(1, Enum, {format});
                 assert.instanceOf(value, Enum);
                 assert.strictEqual(value.get(), 1);
             });
@@ -363,7 +363,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('enum') as EnumField;
                 format.getDictionary = () => [];
 
-                const value = factory.cast(1, 'enum', {format});
+                const value = cast(1, 'enum', {format});
                 assert.instanceOf(value, Enum);
             });
 
@@ -371,15 +371,15 @@ describe('Types/_entity/factory', () => {
                 const value = new Enum();
 
                 assert.strictEqual(
-                    factory.cast(value, Enum),
+                    cast(value, Enum),
                     value
                 );
             });
 
             it('should return passed value', () => {
                 const format = getFormatMock('enum');
-                assert.isNull(factory.cast(null, Enum, {format}));
-                assert.isUndefined(factory.cast(undefined, Enum, {format}));
+                assert.isNull(cast(null, Enum, {format}));
+                assert.isUndefined(cast(undefined, Enum, {format}));
             });
         });
 
@@ -388,7 +388,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('flags') as EnumField;
                 format.getDictionary = () => ['one', 'two', 'three'];
 
-                const value: Flags<string> = factory.cast([true, null, false], Flags, {format});
+                const value: Flags<string> = cast([true, null, false], Flags, {format});
                 assert.instanceOf(value, Flags);
                 assert.isTrue(value.get('one'));
                 assert.isNull(value.get('two'));
@@ -402,7 +402,7 @@ describe('Types/_entity/factory', () => {
                     dictionary: ['one', 'two', 'three']
                 };
 
-                const value: Flags<string> = factory.cast([true, null, false], Flags, {format});
+                const value: Flags<string> = cast([true, null, false], Flags, {format});
                 assert.instanceOf(value, Flags);
                 assert.isTrue(value.get('one'));
                 assert.isNull(value.get('two'));
@@ -414,7 +414,7 @@ describe('Types/_entity/factory', () => {
                 const format = getFormatMock('flags') as FlagsField;
                 format.getDictionary = () => [];
 
-                const value = factory.cast([true, null, false], 'flags', {format});
+                const value = cast([true, null, false], 'flags', {format});
                 assert.instanceOf(value, Flags);
             });
 
@@ -422,21 +422,21 @@ describe('Types/_entity/factory', () => {
                 const value = new Flags();
 
                 assert.strictEqual(
-                    factory.cast(value, Flags),
+                    cast(value, Flags),
                     value
                 );
             });
 
             it('should return passed value', () => {
                 const format = getFormatMock('flags');
-                assert.isNull(factory.cast(null, Flags, {format}));
-                assert.isUndefined(factory.cast(undefined, Flags, {format}));
+                assert.isNull(cast(null, Flags, {format}));
+                assert.isUndefined(cast(undefined, Flags, {format}));
             });
         });
 
         context('for record', () => {
             it('should return a Model from UniversalField', () => {
-                const value: Model = factory.cast(
+                const value: Model = cast(
                     {foo: 'bar'},
                     Model,
                     {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
@@ -448,7 +448,7 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return a Model from shortcut', () => {
-                const value: Model = factory.cast(
+                const value: Model = cast(
                     {foo: 'bar'},
                     'record',
                     {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
@@ -460,17 +460,17 @@ describe('Types/_entity/factory', () => {
 
             it('should return same instance for Record', () => {
                 const value = new Model();
-                assert.strictEqual(factory.cast(value, 'record'), value);
+                assert.strictEqual(cast(value, 'record'), value);
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.cast(
+                assert.isNull(cast(
                     null,
                     'record',
                     {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
                 ));
 
-                assert.isUndefined(factory.cast(
+                assert.isUndefined(cast(
                 undefined,
                 'record',
                 {format: getUniversalFormatMock('record'), adapter: new JsonAdapter()}
@@ -480,7 +480,7 @@ describe('Types/_entity/factory', () => {
 
         context('for recordset', () => {
             it('should return a RecordSet from UniversalField', () => {
-                const value: RecordSet = factory.cast(
+                const value: RecordSet = cast(
                     [{foo: 'bar'}],
                     RecordSet,
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
@@ -493,7 +493,7 @@ describe('Types/_entity/factory', () => {
             });
 
             it('should return a RecordSet from shortcut', () => {
-                const value: RecordSet = factory.cast(
+                const value: RecordSet = cast(
                     [{foo: 'bar'}],
                     'recordset',
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
@@ -505,17 +505,17 @@ describe('Types/_entity/factory', () => {
 
             it('should return same instance for RecordSet', () => {
                 const value = new RecordSet();
-                assert.strictEqual(factory.cast(value, RecordSet), value);
+                assert.strictEqual(cast(value, RecordSet), value);
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.cast(
+                assert.isNull(cast(
                     null,
                     'recordset',
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
                 ));
 
-                assert.isUndefined(factory.cast(
+                assert.isUndefined(cast(
                     undefined,
                     'recordset',
                     {format: getUniversalFormatMock('recordset'), adapter: new JsonAdapter()}
@@ -528,7 +528,7 @@ describe('Types/_entity/factory', () => {
                     name: 'foo',
                     type: 'recordset'
                 } as UniversalField;
-                const value: RecordSet = factory.cast([], RecordSet, {
+                const value: RecordSet = cast([], RecordSet, {
                     format,
                     adapter: new JsonAdapter(),
                     model: SomeModel
@@ -540,13 +540,13 @@ describe('Types/_entity/factory', () => {
 
         context('for only type constructor', () => {
             it('should return a Number', () => {
-                const value = factory.cast(10, Number);
+                const value = cast(10, Number);
                 assert.instanceOf(value, Number);
                 assert.equal(value, 10);
             });
 
             it('should return a Date', () => {
-                const value: Date = factory.cast('2001-02-03', Date);
+                const value: Date = cast('2001-02-03', Date);
 
                 assert.instanceOf(value, Date);
                 assert.equal(value.getFullYear(), 2001);
@@ -561,17 +561,17 @@ describe('Types/_entity/factory', () => {
             it('should return a Number', () => {
                 const format = getUniversalFormatMock('integer');
                 assert.strictEqual(
-                    factory.serialize(1, {format}),
+                    serialize(1, {format}),
                     1
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1', {format}),
+                    serialize('1', {format}),
                     1
                 );
 
                 assert.strictEqual(
-                    factory.serialize('0890', {format}),
+                    serialize('0890', {format}),
                     890
                 );
             });
@@ -581,7 +581,7 @@ describe('Types/_entity/factory', () => {
                 obj.valueOf = () => 33;
 
                 assert.strictEqual(
-                    factory.serialize(obj, {format: getUniversalFormatMock('integer')}),
+                    serialize(obj, {format: getUniversalFormatMock('integer')}),
                     33
                 );
             });
@@ -589,7 +589,7 @@ describe('Types/_entity/factory', () => {
             it('should return a Number from Array', () => {
                 const arr = [1];
                 assert.strictEqual(
-                    factory.serialize(arr, {format: getUniversalFormatMock('integer')}),
+                    serialize(arr, {format: getUniversalFormatMock('integer')}),
                     1
                 );
             });
@@ -598,17 +598,17 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('integer');
 
                 assert.strictEqual(
-                    factory.serialize('1a', {format}),
+                    serialize('1a', {format}),
                     null
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a', {format}),
+                    serialize('a', {format}),
                     null
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a1', {format}),
+                    serialize('a1', {format}),
                     null
                 );
             });
@@ -616,17 +616,17 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const format = getUniversalFormatMock('integer');
 
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
         context('for string', () => {
             it('should return passed value', () => {
-                assert.strictEqual(factory.serialize('bar'), 'bar');
-                assert.strictEqual(factory.serialize(1), 1);
-                assert.isNull(factory.serialize(null));
-                assert.isUndefined(factory.serialize(undefined));
+                assert.strictEqual(serialize('bar'), 'bar');
+                assert.strictEqual(serialize(1), 1);
+                assert.isNull(serialize(null));
+                assert.isUndefined(serialize(undefined));
             });
         });
 
@@ -635,22 +635,22 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('link');
 
                 assert.strictEqual(
-                    factory.serialize(1, {format}),
+                    serialize(1, {format}),
                     1
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1', {format}),
+                    serialize('1', {format}),
                     1
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1a', {format}),
+                    serialize('1a', {format}),
                     1
                 );
 
                 assert.strictEqual(
-                    factory.serialize('0890', {format}),
+                    serialize('0890', {format}),
                     890
                 );
             });
@@ -659,16 +659,16 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('link');
 
                 assert.isTrue(
-                    isNaN(factory.serialize('a', {format}))
+                    isNaN(serialize('a', {format}))
                 );
                 assert.isTrue(
-                    isNaN(factory.serialize('a1', {format}))
+                    isNaN(serialize('a1', {format}))
                 );
             });
 
             it('should return passed value', () => {
-                assert.isNull(factory.serialize(null));
-                assert.isUndefined(factory.serialize(
+                assert.isNull(serialize(null));
+                assert.isUndefined(serialize(
                     undefined,
                     {format: getUniversalFormatMock('link')}
                 ));
@@ -680,38 +680,38 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('real');
 
                 assert.strictEqual(
-                    factory.serialize(1.2, {format}),
+                    serialize(1.2, {format}),
                     1.2
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1.2', {format}),
+                    serialize('1.2', {format}),
                     '1.2'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1a', {format}),
+                    serialize('1a', {format}),
                     '1a'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('0890', {format}),
+                    serialize('0890', {format}),
                     '0890'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a', {format}),
+                    serialize('a', {format}),
                     'a'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a1', {format}),
+                    serialize('a1', {format}),
                     'a1'
                 );
 
-                assert.isNull(factory.serialize(null, {format}));
+                assert.isNull(serialize(null, {format}));
 
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -720,33 +720,33 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('money');
 
                 assert.strictEqual(
-                    factory.serialize('1.2', {format}),
+                    serialize('1.2', {format}),
                     '1.2'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('0890', {format}),
+                    serialize('0890', {format}),
                     '0890'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('1a', {format}),
+                    serialize('1a', {format}),
                     '1a'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a', {format}),
+                    serialize('a', {format}),
                     'a'
                 );
 
                 assert.strictEqual(
-                    factory.serialize('a1', {format}),
+                    serialize('a1', {format}),
                     'a1'
                 );
 
-                assert.isNull(factory.serialize(null, {format}));
+                assert.isNull(serialize(null, {format}));
 
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
 
             it('should return passed value if precision less or equal 3', () => {
@@ -754,7 +754,7 @@ describe('Types/_entity/factory', () => {
                 format.getPrecision = () => 3;
 
                 assert.strictEqual(
-                    factory.serialize(1.2, {format}),
+                    serialize(1.2, {format}),
                     1.2
                 );
             });
@@ -765,7 +765,7 @@ describe('Types/_entity/factory', () => {
                 });
 
                 assert.strictEqual(
-                    factory.serialize(1.2, {format}),
+                    serialize(1.2, {format}),
                     '1.2000'
                 );
             });
@@ -775,7 +775,7 @@ describe('Types/_entity/factory', () => {
                 format.isLarge = () => true;
 
                 assert.strictEqual(
-                    factory.serialize('1.2', {format}),
+                    serialize('1.2', {format}),
                     '1.2'
                 );
             });
@@ -787,7 +787,7 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('datetime');
 
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '2015-09-24 15:54:28.981+03'
                 );
             });
@@ -800,7 +800,7 @@ describe('Types/_entity/factory', () => {
                 };
 
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '2001-04-15 00:00:00'
                 );
             });
@@ -812,7 +812,7 @@ describe('Types/_entity/factory', () => {
                 const datetime = new Date(2001, 3, 15);
 
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '2001-04-15 00:00:00'
                 );
             });
@@ -826,7 +826,7 @@ describe('Types/_entity/factory', () => {
 
                 assert.strictEqual(datetime.getTimezoneOffset(), 30);
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '2001-01-01 10:20:30'
                 );
 
@@ -838,7 +838,7 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('date');
 
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '2015-09-24'
                 );
             });
@@ -848,28 +848,28 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('time');
 
                 assert.strictEqual(
-                    factory.serialize(datetime, {format}),
+                    serialize(datetime, {format}),
                     '15:54:28.981+03'
                 );
             });
 
             it('should return a String for Infinity', () => {
                 assert.equal(
-                    factory.serialize(Infinity, {format: getUniversalFormatMock('date')}),
+                    serialize(Infinity, {format: getUniversalFormatMock('date')}),
                     'infinity'
                 );
             });
 
             it('should return a String for -Infinity', () => {
                 assert.equal(
-                    factory.serialize(-Infinity, {format: getUniversalFormatMock('date')}),
+                    serialize(-Infinity, {format: getUniversalFormatMock('date')}),
                     '-infinity'
                 );
             });
 
             it('should return a String with current date for empty string', () => {
                 assert.strictEqual(
-                    factory.serialize('', {format: getUniversalFormatMock('date')}),
+                    serialize('', {format: getUniversalFormatMock('date')}),
                     dateToSql(new Date(), MODE.DATE)
                 );
             });
@@ -878,11 +878,11 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('datetime');
 
                 assert.strictEqual(
-                    factory.serialize('bar', {format}),
+                    serialize('bar', {format}),
                     'bar'
                 );
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -890,7 +890,7 @@ describe('Types/_entity/factory', () => {
             it('should return a String', () => {
                 const interval = new TimeInterval('P10DT0H0M0S');
                 assert.strictEqual(
-                    factory.serialize(interval, {format: getUniversalFormatMock('timeinterval')}),
+                    serialize(interval, {format: getUniversalFormatMock('timeinterval')}),
                     'P10DT0H0M0S'
                 );
             });
@@ -899,11 +899,11 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('timeinterval');
 
                 assert.strictEqual(
-                    factory.serialize('P10DT0H0M0S', {format}),
+                    serialize('P10DT0H0M0S', {format}),
                     'P10DT0H0M0S'
                 );
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -915,7 +915,7 @@ describe('Types/_entity/factory', () => {
                 const array = ['foo', 'bar'];
 
                 assert.deepEqual(
-                    factory.serialize(array, {format}),
+                    serialize(array, {format}),
                     ['foo', 'bar']
                 );
             });
@@ -929,7 +929,7 @@ describe('Types/_entity/factory', () => {
                 const array = ['1', '2a', 3];
 
                 assert.deepEqual(
-                    factory.serialize(array, {format}),
+                    serialize(array, {format}),
                     [1, null, 3]
                 );
             });
@@ -940,7 +940,7 @@ describe('Types/_entity/factory', () => {
                 });
 
                 assert.deepEqual(
-                    factory.serialize('foo', {format}),
+                    serialize('foo', {format}),
                     ['foo']
                 );
             });
@@ -948,8 +948,8 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const format = getFormatMock('array');
 
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -958,19 +958,19 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('identity');
 
                 assert.deepEqual(
-                    factory.serialize('foo', {format}),
+                    serialize('foo', {format}),
                     'foo'
                 );
 
                 assert.deepEqual(
-                    factory.serialize(['foo'], {format}),
+                    serialize(['foo'], {format}),
                     ['foo']
                 );
             });
 
             it('should return null', () => {
                 assert.isNull(
-                    factory.serialize(null, {format: getUniversalFormatMock('identity')})
+                    serialize(null, {format: getUniversalFormatMock('identity')})
                 );
             });
         });
@@ -980,18 +980,18 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('hierarchy');
 
                 assert.strictEqual(
-                    factory.serialize('bar', {format}),
+                    serialize('bar', {format}),
                     'bar'
                 );
 
                 assert.strictEqual(
-                    factory.serialize(1, {format}),
+                    serialize(1, {format}),
                     1
                 );
 
-                assert.isNull(factory.serialize(null, {format}));
+                assert.isNull(serialize(null, {format}));
 
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -1003,7 +1003,7 @@ describe('Types/_entity/factory', () => {
                 });
 
                 assert.strictEqual(
-                    factory.serialize(value, {format: getUniversalFormatMock('enum')}),
+                    serialize(value, {format: getUniversalFormatMock('enum')}),
                     1
                 );
             });
@@ -1012,13 +1012,13 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('enum');
 
                 assert.strictEqual(
-                    factory.serialize('bar', {format}),
+                    serialize('bar', {format}),
                     'bar'
                 );
 
-                assert.isNull(factory.serialize(null, {format}));
+                assert.isNull(serialize(null, {format}));
 
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -1030,7 +1030,7 @@ describe('Types/_entity/factory', () => {
                 });
 
                 assert.deepEqual(
-                    factory.serialize(value, {format: getUniversalFormatMock('flags')}),
+                    serialize(value, {format: getUniversalFormatMock('flags')}),
                     [null, true, false]
                 );
             });
@@ -1039,7 +1039,7 @@ describe('Types/_entity/factory', () => {
                 const value = [true, null, false];
 
                 assert.strictEqual(
-                    factory.serialize(value, {format: getUniversalFormatMock('flags')}),
+                    serialize(value, {format: getUniversalFormatMock('flags')}),
                     value
                 );
             });
@@ -1047,8 +1047,8 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const format = getUniversalFormatMock('flags');
 
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -1058,7 +1058,7 @@ describe('Types/_entity/factory', () => {
                 const value = new Model({rawData});
 
                 assert.strictEqual(
-                    factory.serialize(value, {format: getUniversalFormatMock('record')}),
+                    serialize(value, {format: getUniversalFormatMock('record')}),
                     rawData
                 );
             });
@@ -1066,8 +1066,8 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const format = getUniversalFormatMock('record');
 
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
 
@@ -1077,7 +1077,7 @@ describe('Types/_entity/factory', () => {
                 const value = new RecordSet({rawData});
 
                 assert.strictEqual(
-                    factory.serialize(value, {format: getUniversalFormatMock('recordset')}),
+                    serialize(value, {format: getUniversalFormatMock('recordset')}),
                     rawData
                 );
             });
@@ -1089,7 +1089,7 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('recordset');
 
                 assert.deepEqual(
-                    factory.serialize(value, {format}),
+                    serialize(value, {format}),
                     [data]
                 );
             });
@@ -1097,8 +1097,8 @@ describe('Types/_entity/factory', () => {
             it('should return passed value', () => {
                 const format = getUniversalFormatMock('recordset');
 
-                assert.isNull(factory.serialize(null, {format}));
-                assert.isUndefined(factory.serialize(undefined, {format}));
+                assert.isNull(serialize(null, {format}));
+                assert.isUndefined(serialize(undefined, {format}));
             });
         });
     });
