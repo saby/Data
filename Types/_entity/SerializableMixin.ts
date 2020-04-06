@@ -89,6 +89,15 @@ function createModuleNameError(instance: object, critical?: boolean, skip?: numb
     }
 }
 
+export interface ISerializable<T = unknown> {
+    /**
+     * Construction class name
+     */
+    _moduleName: string;
+
+    toJSON(): ISignature<T>;
+}
+
 /**
  * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
  * @remark
@@ -116,7 +125,7 @@ export default class SerializableMixin<T = any> {
     protected _instanceNumber: number;
 
     /**
-     * Class module name
+     * Construction class name
      */
     protected _moduleName: string;
 

@@ -3,7 +3,7 @@ import {IHashMap} from '../_declarations';
 
 export type SerializationMode = 'time' | 'date' | 'datetime';
 
-const MODE: IHashMap<SerializationMode> = {
+export const MODE: IHashMap<SerializationMode> = {
     TIME: 'time',
     DATE: 'date',
     DATETIME: 'datetime'
@@ -45,5 +45,3 @@ export default function toSQL(date: Date, mode: SerializationMode = MODE.DATETIM
 
     return dateFormatter(date, format);
 }
-
-export {MODE};

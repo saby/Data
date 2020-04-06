@@ -5,7 +5,7 @@ import IObservableObject from './IObservableObject';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import DestroyableMixin from './DestroyableMixin';
-import factory from './factory';
+import {cast, serialize} from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin, {IOptions as IObservableMixinOptions} from './ObservableMixin';
 import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
@@ -1292,7 +1292,7 @@ export default class Record<T = any> extends mixin<
         const value = adapter.get(name);
         const format = this._getFieldFormat(name, adapter);
 
-        return factory.cast(
+        return cast(
             value,
             this._getFieldType(format),
             {
@@ -1319,7 +1319,7 @@ export default class Record<T = any> extends mixin<
 
         const adapter = this._getRawDataAdapter();
 
-        value = factory.serialize(value, {
+        value = serialize(value, {
             format: this._getFieldFormat(name, adapter),
             adapter: this.getAdapter()
         });

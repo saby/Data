@@ -38,6 +38,7 @@
 /TypesUnit/_entity/dateParser.test.js
 /TypesUnit/_entity/DateTime.test.js
 /TypesUnit/_entity/descriptor.test.js
+/TypesUnit/_entity/factory.test.js
 /TypesUnit/_entity/format/**/*.js
 /TypesUnit/_entity/functor/**/*.js
 /TypesUnit/_entity/JSONML.test.js

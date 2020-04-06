@@ -42,7 +42,8 @@ export {default as Date} from './_entity/Date';
 export {default as DateTime} from './_entity/DateTime';
 export {default as descriptor, DescriptorValidator} from './_entity/descriptor';
 export {default as DestroyableMixin} from './_entity/DestroyableMixin';
-export {default as factory} from './_entity/factory';
+import * as factory from './_entity/factory';
+export {factory};
 import * as format from './_entity/format';
 export {format};
 export {

@@ -1,5 +1,5 @@
 import FIELD_TYPE from './SbisFieldType';
-import factory from '../factory';
+import {serialize} from '../factory';
 import {
     fieldsFactory,
     IFieldDeclaration,
@@ -289,7 +289,7 @@ export default abstract class SbisFormatMixin {
         delete this._data.f;
         this._buildD(
             at,
-            factory.serialize(
+            serialize(
                 format.getDefaultValue(),
                 {format}
             )
@@ -338,7 +338,7 @@ export default abstract class SbisFormatMixin {
         if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
             Object.defineProperty(data, 'toJSON', {
                 enumerable: false,
-                value: function() {
+                value(): T {
                     normalizeCalculatedFormats(this);
                     return this;
                 }
@@ -664,5 +664,5 @@ Object.assign(SbisFormatMixin.prototype, {
     _fieldIndices: null,
     _format: null,
     _sharedFieldFormat: null,
-    _sharedFieldMeta: null,
+    _sharedFieldMeta: null
 });
