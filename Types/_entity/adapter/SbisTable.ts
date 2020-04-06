@@ -1,9 +1,14 @@
-import DestroyableMixin from '../DestroyableMixin';
 import ITable from './ITable';
 import IMetaData from './IMetaData';
-import ICloneable from '../ICloneable';
-import SbisFormatMixin, {controllerInjected, ITableFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisFormatMixin, {
+    controllerInjected,
+    ITableFormat,
+    IRecordFormat,
+    setEntryFormatController
+} from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
+import ICloneable from '../ICloneable';
+import DestroyableMixin from '../DestroyableMixin';
 import {fieldsFactory} from '../format';
 import {mixin} from '../../util';
 import {merge} from '../../object';
@@ -90,13 +95,21 @@ export default class SbisTable extends mixin<
 
     at(index: number): ITableFormat {
         const data = this._data;
-        return this._isValidData() && data.d[index] ?
-            SbisFormatMixin.makeSerializable({
-                [controllerInjected]: data[controllerInjected],
-                d: data.d[index],
-                s: data.s
-            }) :
-            undefined;
+        if (!this._isValidData() || !data.d[index]) {
+            return undefined;
+        }
+
+        const item = {
+            d: data.d[index],
+            s: data.s
+        };
+
+        // Inherit record format controller from table
+        if (data[controllerInjected]) {
+            setEntryFormatController(item, data[controllerInjected]);
+        }
+
+        return SbisFormatMixin.makeSerializable(item);
     }
 
     remove(at: number): void {
