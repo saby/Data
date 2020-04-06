@@ -94,23 +94,32 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
-function defineCalculatedFormat(data: IRecordFormat | ITableFormat, controller: FormatController): void {
-    if (data.s) {
-      controller.setOriginal(data.f, data.s);
+function defineEntryCalculatedFormat(entry: IRecordFormat | ITableFormat, controller: FormatController): void {
+    if (entry.s) {
+      controller.setOriginal(entry.f, entry.s);
       return;
     }
 
-    Object.defineProperty(data, 's', {
+    Object.defineProperty(entry, 's', {
         configurable: true,
         get(): IFieldFormat[] {
-            data.s = controller.getFormat(data.f, true);
-            return data.s;
+            entry.s = controller.getFormat(entry.f, true);
+            return entry.s;
         },
         set(value: IFieldFormat[]): void {
-            delete data.s;
-            data.s = value;
+            delete entry.s;
+            entry.s = value;
         }
     });
+}
+
+export function setEntryFormatController(entry: IRecordFormat | ITableFormat, controller: FormatController): void {
+    if (!entry[controllerInjected]) {
+        Object.defineProperty(entry, controllerInjected, {
+            enumerable: false,
+            value: controller
+        });
+    }
 }
 
 function injectFormatController(data: IRecordFormat | ITableFormat): void {
@@ -122,15 +131,9 @@ function injectFormatController(data: IRecordFormat | ITableFormat): void {
 
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined) {
-            defineCalculatedFormat(entry, topController);
-            if (!entry[controllerInjected]) {
-                Object.defineProperty(entry, controllerInjected, {
-                    enumerable: false,
-                    value: topController
-                });
-            }
+            defineEntryCalculatedFormat(entry, topController);
+            setEntryFormatController(entry, topController);
         }
-
     });
 }
 
@@ -318,33 +321,6 @@ export default abstract class SbisFormatMixin {
         this._data.s.splice(index, 1);
         delete this._data.f;
         this._removeD(index);
-    }
-
-    // endregion
-
-    // region Static methods
-
-    /**
-     * Removes all shared formats by making "s" enumerable and removing "f"
-     */
-    static recoverData<T>(data: T): T {
-        return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
-    }
-
-    /**
-     * Makes data serializable by adding toJSON method witch normalizes "s"'s and "f"'s
-     */
-    static makeSerializable<T>(data: T): T {
-        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
-            Object.defineProperty(data, 'toJSON', {
-                enumerable: false,
-                value(): T {
-                    normalizeCalculatedFormats(this);
-                    return this;
-                }
-            });
-        }
-        return data;
     }
 
     // endregion
@@ -654,6 +630,33 @@ export default abstract class SbisFormatMixin {
     protected abstract _buildD(at: number, value: any): void;
 
     protected abstract _removeD(at: number): void;
+
+    // endregion
+
+    // region Static methods
+
+    /**
+     * Removes all shared formats by making "s" enumerable and removing "f"
+     */
+    static recoverData<T>(data: T): T {
+        return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
+    }
+
+    /**
+     * Makes data serializable by adding toJSON method witch normalizes "s"'s and "f"'s
+     */
+    static makeSerializable<T>(data: T): T {
+        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
+            Object.defineProperty(data, 'toJSON', {
+                enumerable: false,
+                value(): T {
+                    normalizeCalculatedFormats(this);
+                    return this;
+                }
+            });
+        }
+        return data;
+    }
 
     // endregion
 }

@@ -1,7 +1,11 @@
-import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
-import SbisFormatMixin, {controllerInjected, IFieldFormat, IRecordFormat} from './SbisFormatMixin';
+import SbisFormatMixin, {
+    controllerInjected,
+    IFieldFormat,
+    IRecordFormat
+} from './SbisFormatMixin';
+import DestroyableMixin from '../DestroyableMixin';
 import {mixin} from '../../util';
 
 /**
