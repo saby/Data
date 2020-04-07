@@ -795,9 +795,8 @@ describe('Types/_entity/adapter/SbisTable', () => {
             const fullData = JSON.parse(JSON.stringify(data));
             assert.deepEqual(fullData, {
                 d: [1, {
-                    f:1,
                     d: ['AUDI','Q5'],
-                    s:[
+                    s: [
                         {n: 'model', t: 'строка'},
                         {n: 'brand', t: 'строка'}
                     ]
