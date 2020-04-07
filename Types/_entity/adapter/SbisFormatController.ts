@@ -11,40 +11,33 @@ interface IIteratorResult {
     done: boolean;
 }
 
-type FormatCarrier = IRecordFormat | ITableFormat;
+export type FormatCarrier = IRecordFormat | ITableFormat;
 
 /**
  * Finds formats deep within given data and calls given function for each one.
  * @param data Data to search
  * @param callback Callback to call
  */
-export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => void): void {
+export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => boolean | void): boolean | void {
     if (Array.isArray(data)) {
         for (const item of data) {
-            eachFormatEntry(item, callback);
+            if (eachFormatEntry(item, callback) === false) {
+                return false;
+            }
         }
     } else if (data && typeof data === 'object') {
         const record = data as FormatCarrier;
         if (record.s !== undefined || record.f !== undefined) {
-            callback(record);
+            if (callback(record) === false) {
+                return false;;
+            }
         }
         if (record.d) {
-            eachFormatEntry(record.d, callback);
+            if (eachFormatEntry(record.d, callback) === false) {
+                return false;
+            }
         }
     }
-}
-
-function recoverFormats(data: unknown, controller: SbisFormatController): FormatCarrier[] {
-    const result = [];
-
-    eachFormatEntry(data, (entry) => {
-        const s = entry.s || controller.getFormat(entry.f);
-        delete entry.s;
-        entry.s = s;
-        result.push(entry);
-    });
-
-    return result;
 }
 
 class IteratorArray {
@@ -264,6 +257,10 @@ export default class SbisFormatController {
      */
     protected _generator: RecursiveIterator;
 
+    get data(): FormatCarrier {
+        return this._data;
+    }
+
     /**
      *
      * @param data Raw data to search within.
@@ -309,23 +306,10 @@ export default class SbisFormatController {
         }
     }
 
-    get data(): FormatCarrier {
-        return this._data;
-    }
-
-    static recoverData<T>(data: T, controller?: SbisFormatController): T {
-        controller = controller || new SbisFormatController(data as unknown as FormatCarrier);
-        recoverFormats(data, controller).forEach((recovered) => {
-            delete recovered.f;
-        });
-
-        return data;
-    }
-
     protected _clone(format: IFieldFormat[]): IFieldFormat[] {
         return format.slice();
-     }
- 
+    }
+
     protected get generator(): RecursiveIterator {
         if (this._generator) {
             return this._generator;

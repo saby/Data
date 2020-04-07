@@ -52,32 +52,6 @@ function getRawData(): any {
     };
 }
 
-function getFullRawData(): any {
-    return {
-        s: format0.slice(),
-        d: [
-            0,
-            'Пётр',
-            [
-                {
-                    s: format1.slice(),
-                    d: [
-                        0,
-                        'Вова'
-                    ]
-                },
-                {
-                    s: format1.slice(),
-                    d: [
-                        0,
-                        'Оля'
-                    ]
-                }
-            ]
-        ]
-    };
-}
-
 describe('Types/_entity/adapter/SbisFormatController', () => {
     let formatController: SbisFormatController;
 
@@ -172,11 +146,5 @@ describe('Types/_entity/adapter/SbisFormatController', () => {
             assert.isTrue((formatController as any)._cache.has(1));
             assert.deepEqual(format1, (formatController as any)._cache.get(1));
         });
-    });
-
-    it('::recoverData()', () => {
-        const data = getRawData();
-
-        assert.deepEqual(getFullRawData(), SbisFormatController.recoverData(data));
     });
 });
