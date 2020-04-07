@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import SbisRecord from 'Types/_entity/adapter/SbisRecord';
-import {
+import SbisFormatMixin, {
     IArrayFieldType,
     IDateTimeFieldType, IDictFieldType,
     IFieldType,
@@ -1228,6 +1228,30 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.isUndefined(data.f);
         });
 
+        it('should move original format declaration to the next link', () => {
+            const data: IRecordFormat = {
+                _type: 'record',
+                f: 0,
+                s: [{n: 'foo', t: 'Запись'}],
+                d: [{
+                    _type: 'record',
+                    f: 0,
+                    d: [null]
+                }]
+            };
+            const adapter = new SbisRecord(data);
+
+            adapter.addField(fieldsFactory({
+                type: 'string',
+                name: 'bar'
+            }));
+
+            const recordData = data.d[0];
+            assert.strictEqual(recordData.f, 0);
+            assert.isTrue(Object.keys(recordData).includes('s'));
+            assert.strictEqual(recordData.s.length, 1);
+        });
+
         it('should throw an error for already exists field', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
@@ -1285,7 +1309,6 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.isUndefined(data.f);
         });
 
-
         it('should throw an error for not exists field', () => {
             assert.throws(() => {
                 adapter.removeField('Some');
@@ -1329,6 +1352,89 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.throws(() => {
                 adapter.removeFieldAt(9);
             });
+        });
+    });
+
+    describe('::recoverData()', () => {
+        const format0 = [{
+            n: 'Id',
+            t: 'Число целое'
+        }, {
+            n: 'Name',
+            t: 'Строка'
+        }, {
+            n: 'Entries',
+            t: {
+                n: 'Массив',
+                t: 'Объект'
+            }
+        }];
+
+        const format1 = [{
+            n: 'Id',
+            t: 'Число целое'
+        }, {
+            n: 'Name',
+            t: 'Строка'
+        }];
+
+        function getRawData(): any {
+            return {
+                f: 0,
+                s: format0.slice(),
+                d: [
+                    0,
+                    'Пётр',
+                    [
+                        {
+                            f: 1,
+                            s: format1.slice(),
+                            d: [
+                                0,
+                                'Вова'
+                            ]
+                        },
+                        {
+                            f: 1,
+                            d: [
+                                0,
+                                'Оля'
+                            ]
+                        }
+                    ]
+                ]
+            };
+        }
+
+        function getFullRawData(): any {
+            return {
+                s: format0.slice(),
+                d: [
+                    0,
+                    'Пётр',
+                    [
+                        {
+                            s: format1.slice(),
+                            d: [
+                                0,
+                                'Вова'
+                            ]
+                        },
+                        {
+                            s: format1.slice(),
+                            d: [
+                                0,
+                                'Оля'
+                            ]
+                        }
+                    ]
+                ]
+            };
+        }
+
+        it('should replace shared formats with implementations', () => {
+            const data = getRawData();
+            assert.deepEqual(getFullRawData(), SbisFormatMixin.recoverData(data));
         });
     });
 });

@@ -21,7 +21,7 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController, {eachFormatEntry} from './SbisFormatController';
+import FormatController, {eachFormatEntry, FormatCarrier} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -103,7 +103,10 @@ function defineEntryCalculatedFormat(entry: IRecordFormat | ITableFormat, contro
     Object.defineProperty(entry, 's', {
         configurable: true,
         get(): IFieldFormat[] {
-            entry.s = controller.getFormat(entry.f, true);
+            Object.defineProperty(entry, 's', {
+                configurable: true,
+                value: controller.getFormat(entry.f, true)
+            });
             return entry.s;
         },
         set(value: IFieldFormat[]): void {
@@ -122,6 +125,9 @@ export function setEntryFormatController(entry: IRecordFormat | ITableFormat, co
     }
 }
 
+/**
+ * Injects format controller deep within data scope
+ */
 function injectFormatController(data: IRecordFormat | ITableFormat): void {
     if (data[controllerInjected]) {
         return;
@@ -137,13 +143,49 @@ function injectFormatController(data: IRecordFormat | ITableFormat): void {
     });
 }
 
+/**
+ * Removes format index and also shift the original definition to the next link
+ */
+function removeAndShiftFormatOrigin(data: IRecordFormat | ITableFormat): void {
+    const formatIndex = data.f;
+    if (formatIndex === undefined) {
+        return;
+    }
+
+    const topController = data[controllerInjected];
+    const topData = topController ? topController.data : data;
+
+    // Check that it's the very first format defintion
+    const prop = Object.getOwnPropertyDescriptor(data, 's');
+    if (prop && prop.enumerable === true) {
+        // Shift orignal format difinition to the next link
+        eachFormatEntry(topData, (entry) => {
+            if (entry === topData) {
+                return;
+            }
+
+            if (entry.f === formatIndex) {
+                const s = entry.s;
+                delete entry.s;
+                entry.s = s;
+                return false;
+            }
+        });
+    }
+
+    delete data.f;
+}
+
+/**
+ * Makes each first format entry enumerable deep within data scope
+ */
 function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
     const formats = {};
     const normalized = [];
 
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined && !formats[entry.f]) {
-            const prop = Object.getOwnPropertyDescriptor(data, 's');
+            const prop = Object.getOwnPropertyDescriptor(entry, 's');
             if (prop && prop.enumerable === false) {
                 const s = entry.s;
                 delete entry.s;
@@ -160,6 +202,22 @@ function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
     normalized.forEach((entry) => {
         delete entry.f;
     });
+}
+
+/**
+ *  Makes each format entry enumerable deep within data scope
+ */
+function recoverFormats(data: unknown, controller: FormatController): FormatCarrier[] {
+    const result = [];
+
+    eachFormatEntry(data, (entry) => {
+        const s = entry.s || controller.getFormat(entry.f);
+        delete entry.s;
+        entry.s = s;
+        result.push(entry);
+    });
+
+    return result;
 }
 
 /**
@@ -289,7 +347,7 @@ export default abstract class SbisFormatMixin {
         this._format[name] = format;
         this._resetFieldIndices();
         this._data.s.splice(at, 0, this._buildS(format));
-        delete this._data.f;
+        removeAndShiftFormatOrigin(this._data);
         this._buildD(
             at,
             serialize(
@@ -308,7 +366,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        delete this._data.f;
+        removeAndShiftFormatOrigin(this._data);
         this._removeD(index);
     }
 
@@ -319,7 +377,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        delete this._data.f;
+        removeAndShiftFormatOrigin(this._data);
         this._removeD(index);
     }
 
@@ -639,7 +697,16 @@ export default abstract class SbisFormatMixin {
      * Removes all shared formats by making "s" enumerable and removing "f"
      */
     static recoverData<T>(data: T): T {
-        return data ? FormatController.recoverData(data, data[controllerInjected]) : data;
+        if (!data) {
+            return data;
+        }
+
+        const controller = data[controllerInjected] || new FormatController(data as unknown as FormatCarrier);
+        recoverFormats(data, controller).forEach((recovered) => {
+            delete recovered.f;
+        });
+
+        return data;
     }
 
     /**
