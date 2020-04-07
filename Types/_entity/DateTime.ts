@@ -11,6 +11,14 @@ function mixin(Base: Function): IDateTimeConstructor {
 }
 
 /**
+ * Тип даты и времени.
+ * @class Types/_entity/DateTime
+ * @extends Date
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Date and time type
  * @class Types/_entity/DateTime
  * @extends Date
