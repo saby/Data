@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import SbisRecord from 'Types/_entity/adapter/SbisRecord';
-import SbisFormatMixin, {
+import {
     IArrayFieldType,
     IDateTimeFieldType, IDictFieldType,
     IFieldType,
@@ -1434,7 +1434,14 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
         it('should replace shared formats with implementations', () => {
             const data = getRawData();
-            assert.deepEqual(getFullRawData(), SbisFormatMixin.recoverData(data));
+            const adapter = new SbisRecord();
+            assert.deepEqual(getFullRawData(), adapter.recoverData(data));
+        });
+
+        it('should not replace shared formats with implementations', () => {
+            const adapter = new SbisRecord();
+            const data = adapter.getData();
+            assert.deepEqual(data, adapter.recoverData(data));
         });
     });
 });
