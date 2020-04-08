@@ -17,7 +17,7 @@ class IteratorArray {
     currentIndex: number = -1;
     protected _data: unknown[];
 
-    constructor(data) {
+    constructor(data: unknown[]) {
         this._data = data;
     }
 
@@ -202,7 +202,7 @@ export class RecursiveIterator {
         return undefined;
     }
 
-    protected _getIterator(data) {
+    protected _getIterator(data: unknown[]): unknown {
         return RecursiveIterator.doesEnvSupportIterator() ? data[Symbol.iterator]() : new IteratorArray(data);
     }
 
