@@ -1,7 +1,6 @@
 import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
 import SbisFormatMixin, {
-    controllerInjected,
     IFieldFormat,
     IRecordFormat
 } from './SbisFormatMixin';
@@ -73,11 +72,10 @@ export default class SbisRecord extends mixin<
 
     get(name: string): any {
         const index = this._getFieldIndex(name);
-        return index >= 0 ?
-            SbisFormatMixin.makeSerializable(
-                this._cast(this._data.s[index], this._data.d[index])
-            ) :
-            undefined;
+        if (index < 0) {
+            return undefined;
+        }
+        return this._cast(this._data.s[index], this._data.d[index]);
     }
 
     set(name: string, value: any): void {
@@ -85,12 +83,6 @@ export default class SbisRecord extends mixin<
         if (index < 0) {
             throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
         }
-
-        if (this._data[controllerInjected] && this._data.d[index]) {
-            this._data[controllerInjected].scanFormats(this._data.d[index]);
-        }
-
-        value = this.recoverData(value);
 
         this._data.d[index] = this._uncast(this._data.s[index], value);
     }
@@ -117,16 +109,10 @@ export default class SbisRecord extends mixin<
     // region SbisFormatMixin
 
     protected _buildD(at: number, value: any): void {
-        value = this.recoverData(value);
-
         this._data.d.splice(at, 0, value);
     }
 
     protected _removeD(at: number): void {
-        if (this._data[controllerInjected]) {
-            this._data[controllerInjected].scanFormats(this._data.d[at]);
-        }
-
         this._data.d.splice(at, 1);
     }
 
