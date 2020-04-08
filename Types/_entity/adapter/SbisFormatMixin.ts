@@ -21,11 +21,12 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController, {FormatCarrier} from './SbisFormatController';
+import {FormatCarrier} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
+type GenericFormat = IRecordFormat | ITableFormat;
 
-export const controllerInjected = protect('controller');
+export const storeInjected = protect('formatStore');
 
 export interface IFieldType {
     n: string;
@@ -94,33 +95,25 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return FIELD_TYPE[(outerName + '').toLowerCase()];
 }
 
-function defineEntryCalculatedFormat(entry: IRecordFormat | ITableFormat, controller: FormatController): void {
+function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
     if (entry.s) {
-      controller.setOriginal(entry.f, entry.s);
-      return;
+        store.set(entry.f, entry.s.slice());
+    } else {
+        Object.defineProperty(entry, 's', {
+            configurable: true,
+            enumerable: true,
+            value: store.get(entry.f).slice()
+        });
     }
 
-    Object.defineProperty(entry, 's', {
-        configurable: true,
-        get(): IFieldFormat[] {
-            Object.defineProperty(entry, 's', {
-                configurable: true,
-                value: controller.getFormat(entry.f, true)
-            });
-            return entry.s;
-        },
-        set(value: IFieldFormat[]): void {
-            delete entry.s;
-            entry.s = value;
-        }
-    });
+    delete entry.f;
 }
 
-export function setEntryFormatController(entry: IRecordFormat | ITableFormat, controller: FormatController): void {
-    if (!entry[controllerInjected]) {
-        Object.defineProperty(entry, controllerInjected, {
+export function setEntryFormatStore(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
+    if (!entry[storeInjected]) {
+        Object.defineProperty(entry, storeInjected, {
             enumerable: false,
-            value: controller
+            value: store
         });
     }
 }
@@ -155,109 +148,18 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
 /**
  * Injects format controller deep within data scope
  */
-function injectFormatController(data: IRecordFormat | ITableFormat): void {
-    if (data[controllerInjected]) {
+export function injectFormats(data: GenericFormat): void {
+    if (data[storeInjected]) {
         return;
     }
 
-    const topController = new FormatController(data);
+    const store = new Map<number, IFieldFormat[]>();
 
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined) {
-            defineEntryCalculatedFormat(entry, topController);
-            setEntryFormatController(entry, topController);
+            setEntryCalculatedFormat(entry, store);
+            setEntryFormatStore(entry, store);
         }
-    });
-}
-
-/**
- * Removes shared format from given node.
- * In case when it's original definition also removes all shares as well so after that this format is no longer shared.
- */
-function removeFormatLink(data: IRecordFormat | ITableFormat): void {
-    const formatIndex = data.f;
-    if (formatIndex === undefined) {
-        return;
-    }
-
-    // Check that it's the original format defintion
-    const prop = Object.getOwnPropertyDescriptor(data, 's');
-    const propEnumerable = prop && prop.enumerable === true;
-    if (propEnumerable) {
-        // Go from the top
-        const topController = data[controllerInjected];
-        const topData = topController ? topController.data : data;
-
-        // Remove all shares if original removes
-        eachFormatEntry(topData, (entry) => {
-            if (entry === topData) {
-                return;
-            }
-
-            if (entry.f === formatIndex) {
-                const entryFormat = entry.s;
-                delete entry.s;
-                entry.s = entryFormat;
-
-                delete entry.f;
-            }
-        });
-    }
-
-    // Make format enumerable
-    if (prop && !propEnumerable) {
-        const dataFormat = data.s;
-        delete data.s;
-        data.s = dataFormat;
-    }
-
-    // Remove format index
-    delete data.f;
-}
-
-/**
- * Makes each first format entry enumerable deep within data scope
- */
-function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
-    const formats = {};
-    const normalized = [];
-
-    eachFormatEntry(data, (entry) => {
-        if (entry.f !== undefined && !formats[entry.f]) {
-            const prop = Object.getOwnPropertyDescriptor(entry, 's');
-            if (prop && prop.enumerable === false) {
-                const s = entry.s;
-                delete entry.s;
-                entry.s = s;
-                normalized.push(entry);
-            }
-
-            if (entry.s) {
-                formats[entry.f] = entry.s;
-            }
-        }
-    });
-
-    normalized.forEach((entry) => {
-        delete entry.f;
-    });
-}
-
-/**
- *  Makes each format entry enumerable deep within data scope
- */
-function recoverFormats(data: unknown, controller: FormatController): void {
-    const recovered = [];
-
-    eachFormatEntry(data, (entry) => {
-        const s = entry.s || controller.getFormat(entry.f);
-        delete entry.s;
-        entry.s = s;
-        recovered.push(entry);
-    });
-
-    recovered.forEach((entry) => {
-        delete entry.f;
     });
 }
 
@@ -275,7 +177,7 @@ export default abstract class SbisFormatMixin {
     /**
      * Сырые данные
      */
-    protected _data: IRecordFormat | ITableFormat;
+    protected _data: GenericFormat;
 
     /**
      * Название поля -> индекс в d
@@ -304,7 +206,7 @@ export default abstract class SbisFormatMixin {
         return '';
     }
 
-    constructor(data: IRecordFormat | ITableFormat) {
+    constructor(data: GenericFormat) {
         if (data) {
             if (Object.getPrototypeOf(data) !== Object.prototype) {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
@@ -315,7 +217,7 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            injectFormatController(data);
+            injectFormats(data);
         }
 
         this._data = data;
@@ -324,7 +226,7 @@ export default abstract class SbisFormatMixin {
 
     // region Public methods
 
-    getData(): IRecordFormat | ITableFormat {
+    getData(): GenericFormat {
         return this._data;
     }
 
@@ -388,7 +290,6 @@ export default abstract class SbisFormatMixin {
         this._format[name] = format;
         this._resetFieldIndices();
         this._data.s.splice(at, 0, this._buildS(format));
-        removeFormatLink(this._data);
         this._buildD(
             at,
             serialize(
@@ -407,7 +308,6 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        removeFormatLink(this._data);
         this._removeD(index);
     }
 
@@ -418,22 +318,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        removeFormatLink(this._data);
         this._removeD(index);
-    }
-
-    /**
-     * Removes all shared formats by making "s" enumerable and removing "f"
-     */
-    recoverData<T>(data: T): T {
-        if (!data || (this._data && this._data[controllerInjected] === data[controllerInjected])) {
-            return data;
-        }
-
-        const controller = data[controllerInjected] || new FormatController(data as unknown as FormatCarrier);
-        recoverFormats(data, controller);
-
-        return data;
     }
 
     // endregion
@@ -444,7 +329,7 @@ export default abstract class SbisFormatMixin {
         this._data = this._normalizeData(this._data, this.type);
     }
 
-    protected _normalizeData(data: any, dataType: string): IRecordFormat | ITableFormat {
+    protected _normalizeData(data: any, dataType: string): GenericFormat {
         if (!(data instanceof Object)) {
            data = {};
         }
@@ -459,7 +344,7 @@ export default abstract class SbisFormatMixin {
         return data;
     }
 
-    protected _cloneData(shareFormat?: boolean): IRecordFormat | ITableFormat {
+    protected _cloneData(shareFormat?: boolean): GenericFormat {
         const data = object.clone(this._data);
         if (shareFormat && data) {
             if (data.s) {
@@ -743,26 +628,6 @@ export default abstract class SbisFormatMixin {
     protected abstract _buildD(at: number, value: any): void;
 
     protected abstract _removeD(at: number): void;
-
-    // endregion
-
-    // region Static methods
-
-    /**
-     * Makes data serializable by adding toJSON method witch normalizes "s"'s and "f"'s
-     */
-    static makeSerializable<T>(data: T): T {
-        if (data && typeof data === 'object' && typeof (data as any).toJSON !== 'function') {
-            Object.defineProperty(data, 'toJSON', {
-                enumerable: false,
-                value(): T {
-                    normalizeCalculatedFormats(this);
-                    return this;
-                }
-            });
-        }
-        return data;
-    }
 
     // endregion
 }

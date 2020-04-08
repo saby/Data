@@ -1,10 +1,10 @@
 import ITable from './ITable';
 import IMetaData from './IMetaData';
 import SbisFormatMixin, {
-    controllerInjected,
     ITableFormat,
     IRecordFormat,
-    setEntryFormatController
+    setEntryFormatStore,
+    storeInjected
 } from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import ICloneable from '../ICloneable';
@@ -86,10 +86,10 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
 
         if (at === undefined) {
-            this._data.d.push(this.recoverData(record).d);
+            this._data.d.push(record.d);
         } else {
             this._checkRowIndex(at, true);
-            this._data.d.splice(at, 0, this.recoverData(record).d);
+            this._data.d.splice(at, 0, record.d);
         }
     }
 
@@ -105,20 +105,14 @@ export default class SbisTable extends mixin<
         };
 
         // Inherit record format controller from table
-        if (data[controllerInjected]) {
-            setEntryFormatController(item, data[controllerInjected]);
-        }
+        setEntryFormatStore(item, data[storeInjected]);
 
-        return SbisFormatMixin.makeSerializable(item);
+        return item;
     }
 
     remove(at: number): void {
         this._touchData();
         this._checkRowIndex(at);
-
-        if (this._data[controllerInjected]) {
-            this._data[controllerInjected].scanFormats(this._data.d[at]);
-        }
 
         this._data.d.splice(at, 1);
     }
@@ -132,11 +126,7 @@ export default class SbisTable extends mixin<
         record.s = this._data.s;
         this._checkFormat(record, '::replace()');
 
-        if (this._data[controllerInjected]) {
-            this._data[controllerInjected].scanFormats(this._data.d[at]);
-        }
-
-        this._data.d[at] = this.recoverData(record).d;
+        this._data.d[at] = record.d;
     }
 
     move(source: number, target: number): void {
@@ -295,18 +285,12 @@ export default class SbisTable extends mixin<
     getData: () => ITableFormat;
 
     protected _buildD(at: number, value: any): void {
-        value = this.recoverData(value);
-
         this._data.d.forEach((item) => {
             item.splice(at, 0, value);
         });
     }
 
     protected _removeD(at: number): void {
-        if (this._data[controllerInjected] && this._data.d.length !== 0) {
-            this._data[controllerInjected].scanFormats(this._data.d[0][at]);
-        }
-
         this._data.d.forEach((item) => {
             item.splice(at, 1);
         });

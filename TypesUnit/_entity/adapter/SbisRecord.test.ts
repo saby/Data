@@ -57,6 +57,33 @@ describe('Types/_entity/adapter/SbisRecord', () => {
 
             assert.isUndefined(adapter);
         });
+
+        it('should normalize shared formats', () => {
+            const data = {
+                f: 1,
+                d: [{
+                    f: 2,
+                    d: [{
+                        f: 1,
+                        d: [null]
+                    }],
+                    s: [{n: 'bar', t: 'Строка'}]
+                }],
+                s: [{n: 'foo', t: 'Строка'}]
+            };
+            const adapter = new SbisRecord(data);
+
+            assert.deepEqual(adapter.getData(), {
+                d: [{
+                    d: [{
+                        d: [null],
+                        s: [{n: 'foo', t: 'Строка'}]
+                    }],
+                    s: [{n: 'bar', t: 'Строка'}]
+                }],
+                s: [{n: 'foo', t: 'Строка'}]
+            });
+        });
     });
 
     describe('.clone()', () => {
@@ -1212,50 +1239,6 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.strictEqual(adapter.get(fieldName), def);
         });
 
-        it('should remove shared format index', () => {
-            const data = {
-                d: [],
-                s: [],
-                f: 0
-            };
-            const adapter = new SbisRecord(data);
-
-            adapter.addField(fieldsFactory({
-                type: 'string',
-                name: 'foo'
-            }));
-
-            assert.isUndefined(data.f);
-        });
-
-        it('should remove original format and all its shares', () => {
-            const originalFormat = [{n: 'foo', t: 'Запись'}];
-            const data: IRecordFormat = {
-                _type: 'record',
-                f: 0,
-                s: originalFormat.slice(),
-                d: [{
-                    _type: 'record',
-                    f: 0,
-                    d: [null]
-                }]
-            };
-            const adapter = new SbisRecord(data);
-
-            adapter.addField(fieldsFactory({
-                type: 'string',
-                name: 'bar'
-            }));
-
-            assert.isUndefined(data.f);
-            assert.strictEqual(data.s.length, 2);
-
-            const recordData = data.d[0];
-            assert.isUndefined(recordData.f);
-            assert.isTrue(Object.keys(recordData).includes('s'));
-            assert.strictEqual(recordData.s.length, 1);
-        });
-
         it('should throw an error for already exists field', () => {
             assert.throws(() => {
                 adapter.addField(fieldsFactory({
@@ -1300,19 +1283,6 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             });
         });
 
-        it('should remove shared format index', () => {
-            const data = {
-                d: ['bar'],
-                s: [{n: 'foo', t: 'Строка'}],
-                f: 0
-            };
-            const adapter = new SbisRecord(data);
-
-            adapter.removeField('foo');
-
-            assert.isUndefined(data.f);
-        });
-
         it('should throw an error for not exists field', () => {
             assert.throws(() => {
                 adapter.removeField('Some');
@@ -1339,113 +1309,10 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             });
         });
 
-        it('should remove shared format index', () => {
-            const data = {
-                d: ['bar'],
-                s: [{n: 'foo', t: 'Строка'}],
-                f: 0
-            };
-            const adapter = new SbisRecord(data);
-
-            adapter.removeFieldAt(0);
-
-            assert.isUndefined(data.f);
-        });
-
         it('should throw an error for not exists field', () => {
             assert.throws(() => {
                 adapter.removeFieldAt(9);
             });
-        });
-    });
-
-    describe('::recoverData()', () => {
-        const format0 = [{
-            n: 'Id',
-            t: 'Число целое'
-        }, {
-            n: 'Name',
-            t: 'Строка'
-        }, {
-            n: 'Entries',
-            t: {
-                n: 'Массив',
-                t: 'Объект'
-            }
-        }];
-
-        const format1 = [{
-            n: 'Id',
-            t: 'Число целое'
-        }, {
-            n: 'Name',
-            t: 'Строка'
-        }];
-
-        function getRawData(): any {
-            return {
-                f: 0,
-                s: format0.slice(),
-                d: [
-                    0,
-                    'Пётр',
-                    [
-                        {
-                            f: 1,
-                            s: format1.slice(),
-                            d: [
-                                0,
-                                'Вова'
-                            ]
-                        },
-                        {
-                            f: 1,
-                            d: [
-                                0,
-                                'Оля'
-                            ]
-                        }
-                    ]
-                ]
-            };
-        }
-
-        function getFullRawData(): any {
-            return {
-                s: format0.slice(),
-                d: [
-                    0,
-                    'Пётр',
-                    [
-                        {
-                            s: format1.slice(),
-                            d: [
-                                0,
-                                'Вова'
-                            ]
-                        },
-                        {
-                            s: format1.slice(),
-                            d: [
-                                0,
-                                'Оля'
-                            ]
-                        }
-                    ]
-                ]
-            };
-        }
-
-        it('should replace shared formats with implementations', () => {
-            const data = getRawData();
-            const adapter = new SbisRecord();
-            assert.deepEqual(getFullRawData(), adapter.recoverData(data));
-        });
-
-        it('should not replace shared formats with implementations', () => {
-            const adapter = new SbisRecord();
-            const data = adapter.getData();
-            assert.deepEqual(data, adapter.recoverData(data));
         });
     });
 });
