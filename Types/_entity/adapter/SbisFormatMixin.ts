@@ -21,7 +21,7 @@ import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/Mone
 import {Map} from '../../shim';
 import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
-import FormatController, {eachFormatEntry, FormatCarrier} from './SbisFormatController';
+import FormatController, {FormatCarrier} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 
@@ -122,6 +122,33 @@ export function setEntryFormatController(entry: IRecordFormat | ITableFormat, co
             enumerable: false,
             value: controller
         });
+    }
+}
+
+/**
+ * Finds formats deep within given data and calls given function for each one.
+ * @param data Data to search
+ * @param callback Callback to call
+ */
+function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => boolean | void): boolean | void {
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            if (eachFormatEntry(item, callback) === false) {
+                return false;
+            }
+        }
+    } else if (data && typeof data === 'object') {
+        const record = data as FormatCarrier;
+        if (record.s !== undefined || record.f !== undefined) {
+            if (callback(record) === false) {
+                return false;
+            }
+        }
+        if (record.d) {
+            if (eachFormatEntry(record.d, callback) === false) {
+                return false;
+            }
+        }
     }
 }
 
@@ -696,8 +723,8 @@ export default abstract class SbisFormatMixin {
     /**
      * Removes all shared formats by making "s" enumerable and removing "f"
      */
-    static recoverData<T>(data: T): T {
-        if (!data) {
+    recoverData<T>(data: T): T {
+        if (!data || (this._data && this._data[controllerInjected] === data[controllerInjected])) {
             return data;
         }
 

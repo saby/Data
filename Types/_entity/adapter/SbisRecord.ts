@@ -90,7 +90,7 @@ export default class SbisRecord extends mixin<
             this._data[controllerInjected].scanFormats(this._data.d[index]);
         }
 
-        value = SbisFormatMixin.recoverData(value);
+        value = this.recoverData(value);
 
         this._data.d[index] = this._uncast(this._data.s[index], value);
     }
@@ -117,7 +117,7 @@ export default class SbisRecord extends mixin<
     // region SbisFormatMixin
 
     protected _buildD(at: number, value: any): void {
-        value = SbisFormatMixin.recoverData(value);
+        value = this.recoverData(value);
 
         this._data.d.splice(at, 0, value);
     }

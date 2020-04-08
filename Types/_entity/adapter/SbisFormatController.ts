@@ -13,33 +13,6 @@ interface IIteratorResult {
 
 export type FormatCarrier = IRecordFormat | ITableFormat;
 
-/**
- * Finds formats deep within given data and calls given function for each one.
- * @param data Data to search
- * @param callback Callback to call
- */
-export function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => boolean | void): boolean | void {
-    if (Array.isArray(data)) {
-        for (const item of data) {
-            if (eachFormatEntry(item, callback) === false) {
-                return false;
-            }
-        }
-    } else if (data && typeof data === 'object') {
-        const record = data as FormatCarrier;
-        if (record.s !== undefined || record.f !== undefined) {
-            if (callback(record) === false) {
-                return false;;
-            }
-        }
-        if (record.d) {
-            if (eachFormatEntry(record.d, callback) === false) {
-                return false;
-            }
-        }
-    }
-}
-
 class IteratorArray {
     currentIndex: number = -1;
     protected _data: unknown[];
@@ -134,7 +107,7 @@ export class RecursiveIterator {
 
         // Add root immediately.
         this._stackNodes.push({data});
-   } 
+   }
 
     /**
      * Proceeds iterations till given format.
