@@ -171,35 +171,47 @@ function injectFormatController(data: IRecordFormat | ITableFormat): void {
 }
 
 /**
- * Removes format index and also shift the original definition to the next link
+ * Removes shared format from given node.
+ * In case when it's original definition also removes all shares as well so after that this format is no longer shared.
  */
-function removeAndShiftFormatOrigin(data: IRecordFormat | ITableFormat): void {
+function removeFormatLink(data: IRecordFormat | ITableFormat): void {
     const formatIndex = data.f;
     if (formatIndex === undefined) {
         return;
     }
 
-    const topController = data[controllerInjected];
-    const topData = topController ? topController.data : data;
-
-    // Check that it's the very first format defintion
+    // Check that it's the original format defintion
     const prop = Object.getOwnPropertyDescriptor(data, 's');
-    if (prop && prop.enumerable === true) {
-        // Shift orignal format difinition to the next link
+    const propEnumerable = prop && prop.enumerable === true;
+    if (propEnumerable) {
+        // Go from the top
+        const topController = data[controllerInjected];
+        const topData = topController ? topController.data : data;
+
+        // Remove all shares if original removes
         eachFormatEntry(topData, (entry) => {
             if (entry === topData) {
                 return;
             }
 
             if (entry.f === formatIndex) {
-                const s = entry.s;
+                const entryFormat = entry.s;
                 delete entry.s;
-                entry.s = s;
-                return false;
+                entry.s = entryFormat;
+
+                delete entry.f;
             }
         });
     }
 
+    // Make format enumerable
+    if (prop && !propEnumerable) {
+        const dataFormat = data.s;
+        delete data.s;
+        data.s = dataFormat;
+    }
+
+    // Remove format index
     delete data.f;
 }
 
@@ -234,17 +246,19 @@ function normalizeCalculatedFormats(data: IRecordFormat | unknown): void {
 /**
  *  Makes each format entry enumerable deep within data scope
  */
-function recoverFormats(data: unknown, controller: FormatController): FormatCarrier[] {
-    const result = [];
+function recoverFormats(data: unknown, controller: FormatController): void {
+    const recovered = [];
 
     eachFormatEntry(data, (entry) => {
         const s = entry.s || controller.getFormat(entry.f);
         delete entry.s;
         entry.s = s;
-        result.push(entry);
+        recovered.push(entry);
     });
 
-    return result;
+    recovered.forEach((entry) => {
+        delete entry.f;
+    });
 }
 
 /**
@@ -374,7 +388,7 @@ export default abstract class SbisFormatMixin {
         this._format[name] = format;
         this._resetFieldIndices();
         this._data.s.splice(at, 0, this._buildS(format));
-        removeAndShiftFormatOrigin(this._data);
+        removeFormatLink(this._data);
         this._buildD(
             at,
             serialize(
@@ -393,7 +407,7 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        removeAndShiftFormatOrigin(this._data);
+        removeFormatLink(this._data);
         this._removeD(index);
     }
 
@@ -404,8 +418,22 @@ export default abstract class SbisFormatMixin {
         delete this._format[name];
         this._resetFieldIndices();
         this._data.s.splice(index, 1);
-        removeAndShiftFormatOrigin(this._data);
+        removeFormatLink(this._data);
         this._removeD(index);
+    }
+
+    /**
+     * Removes all shared formats by making "s" enumerable and removing "f"
+     */
+    recoverData<T>(data: T): T {
+        if (!data || (this._data && this._data[controllerInjected] === data[controllerInjected])) {
+            return data;
+        }
+
+        const controller = data[controllerInjected] || new FormatController(data as unknown as FormatCarrier);
+        recoverFormats(data, controller);
+
+        return data;
     }
 
     // endregion
@@ -719,22 +747,6 @@ export default abstract class SbisFormatMixin {
     // endregion
 
     // region Static methods
-
-    /**
-     * Removes all shared formats by making "s" enumerable and removing "f"
-     */
-    recoverData<T>(data: T): T {
-        if (!data || (this._data && this._data[controllerInjected] === data[controllerInjected])) {
-            return data;
-        }
-
-        const controller = data[controllerInjected] || new FormatController(data as unknown as FormatCarrier);
-        recoverFormats(data, controller).forEach((recovered) => {
-            delete recovered.f;
-        });
-
-        return data;
-    }
 
     /**
      * Makes data serializable by adding toJSON method witch normalizes "s"'s and "f"'s

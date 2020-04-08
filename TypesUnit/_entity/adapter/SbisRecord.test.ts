@@ -1228,11 +1228,12 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.isUndefined(data.f);
         });
 
-        it('should move original format declaration to the next link', () => {
+        it('should remove original format and all its shares', () => {
+            const originalFormat = [{n: 'foo', t: 'Запись'}];
             const data: IRecordFormat = {
                 _type: 'record',
                 f: 0,
-                s: [{n: 'foo', t: 'Запись'}],
+                s: originalFormat.slice(),
                 d: [{
                     _type: 'record',
                     f: 0,
@@ -1246,8 +1247,11 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 name: 'bar'
             }));
 
+            assert.isUndefined(data.f);
+            assert.strictEqual(data.s.length, 2);
+
             const recordData = data.d[0];
-            assert.strictEqual(recordData.f, 0);
+            assert.isUndefined(recordData.f);
             assert.isTrue(Object.keys(recordData).includes('s'));
             assert.strictEqual(recordData.s.length, 1);
         });
