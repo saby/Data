@@ -1,6 +1,5 @@
 import Abstract from './Abstract';
-import {ITableFormat, IRecordFormat, controllerInjected} from './SbisFormatMixin';
-import FormatController from './SbisFormatController';
+import {ITableFormat, IRecordFormat, injectFormats} from './SbisFormatMixin';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
@@ -31,8 +30,8 @@ export default class Sbis extends Abstract {
             return undefined;
         }
 
-        const formatController = data[controllerInjected] || new FormatController(data);
-        const s = data.s || (typeof data.f === 'number' ? formatController.getFormat(data.f) : undefined);
+        injectFormats(data);
+        const s = data.s;
         if (!s) {
             return undefined;
         }

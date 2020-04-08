@@ -4,7 +4,7 @@ import SbisFieldType from 'Types/_entity/adapter/SbisFieldType';
 import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
-import SbisFormatMixin, {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
+import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
@@ -746,102 +746,6 @@ describe('Types/_entity/adapter/SbisTable', () => {
             assert.throws(() => {
                 adapter.removeFieldAt(9);
             });
-        });
-    });
-
-    describe('within JSON.stringify() on data', () => {
-        const data = {
-            f: 0,
-            s: [
-                {n: 'id', t: 'Число целое'},
-                {n: 'data', t: 'Запись'}
-            ],
-            d: [
-                [0, {
-                    f: 1,
-                    s: [
-                        {n: 'model', t: 'строка'},
-                        {n: 'brand', t: 'строка'}
-                    ],
-                    d: [
-                        'Ford', 'Focus2'
-                    ]
-                }], [1, {
-                    f: 1,
-                    d: [
-                        'AUDI', 'Q5'
-                    ]
-                }], [2, {
-                    f: 1,
-                    d: [
-                        'Hyundai', 'ix35'
-                    ]
-                }]
-            ]
-        };
-
-        let adapter;
-
-        beforeEach(() => {
-            adapter = new SbisTable(data);
-        });
-
-        afterEach(() => {
-            adapter = undefined;
-        });
-
-        it('should serialize full data chunk from table', () => {
-            const data = adapter.at(1);
-            const fullData = JSON.parse(JSON.stringify(data));
-            assert.deepEqual(fullData, {
-                d: [1, {
-                    d: ['AUDI','Q5'],
-                    s: [
-                        {n: 'model', t: 'строка'},
-                        {n: 'brand', t: 'строка'}
-                    ]
-                }],
-                s: [
-                    {n: 'id', t: 'Число целое'},
-                    {n: 'data', t: 'Запись'}
-                ]
-            });
-        });
-
-        it('shouldn\'t redefine .toJSON()', () => {
-            const obj = {};
-
-            try {
-                SbisFormatMixin.makeSerializable(SbisFormatMixin.makeSerializable(obj));
-            } catch (err) {
-                assert.fail(err);
-            }
-        });
-
-        it('should recover added data', () => {
-            adapter.add({
-                f: 0,
-                d: [3, {
-                    f: 15,
-                    s: [
-                        {n: 'model', t: 'строка'},
-                        {n: 'brand', t: 'строка'}
-                    ],
-                    d: [
-                        'KIA', 'Mohave'
-                    ]
-                }],
-                s: [
-                    {n: 'id', t: 'Число целое'},
-                    {n: 'data', t: 'Запись'}
-                ]
-            });
-
-            assert.strictEqual(adapter._data.d[3][1].f, undefined);
-            assert.deepEqual(adapter._data.d[3][1].s,  [
-                {n: 'model', t: 'строка'},
-                {n: 'brand', t: 'строка'}
-            ]);
         });
     });
 });
