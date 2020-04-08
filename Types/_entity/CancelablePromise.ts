@@ -10,6 +10,31 @@ export function PromiseCanceledError(message: string): void {
 PromiseCanceledError.prototype = Object.create(Error.prototype);
 
 /**
+ * Обертка для функции Промис, которая позволяет разрешать её экземпляры, как отменённые.
+ * @remark
+ * В следующем примере сделаем экземпляр отмененным:
+ * <pre>
+ *     import {CancelablePromise} from 'Types/entity';
+ *
+ *     const promiseToDealWith = new Promise((resolve) => setTimeout(resolve, 1000));
+ *
+ *     // Сделаем отмененный Промис
+ *     const cancelable = new CancelablePromise(promiseToDealWith);
+ *
+ *     // Посмотрим обёртку Промиса
+ *     cancelable.promise
+ *         .then(() => console.log('resolved'))
+ *         .catch((err) => console.log('canceled', err.isCanceled, err.message));
+ *
+ *     // Отменим Промис
+ *     cancelable.cancel('That\'s way too long');
+ * </pre>
+ * @class Types/_entity/CancelablePromise
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Wrapper for Promise which makes it possible to treat promise instance as canceled.
  * @remark
  * Let's make the promise instance cancelable

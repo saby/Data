@@ -35,6 +35,11 @@ function normalizeType(type: Descriptor): Descriptor {
 }
 
 /**
+ * Возвращает валидатор для составного типа, который должен подходить для одного из заданных простых типов.
+ * @param types Составной тип дескриптора.
+ */
+
+/*
  * Returns validator for composite type which must be suitable for one of given simple types
  * @param types Composite type descriptor
  */
@@ -68,6 +73,11 @@ function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
 }
 
 /**
+ * Возвращает валидатор для определенного типа.
+ * @param type Тип дескриптора.
+ */
+
+/*
  * Returns validator for certain type.
  * @param type Type descriptor
  */
@@ -122,6 +132,20 @@ function validate<T>(type: Descriptor): ValidateFunc<T> {
 }
 
 /**
+ * Возвращает валидатор для требуемого значения.
+ * @function
+ * @name Types/_entity/descriptor#required
+ * @example
+ * Определим необходимость ограничения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required()(1)); // 1
+ * console.log(descriptor(Number).required()()); // TypeError
+ * </pre>
+ */
+
+/*
  * Returns validator for required value.
  * @function
  * @name Types/_entity/descriptor#required
@@ -148,6 +172,21 @@ function required<T>(): DescriptorValidator<T> {
 type RequiredValidator<T> = () => DescriptorValidator<T>;
 
 /**
+ * Возвращает валидатор для ограничения «Один из».
+ * @function
+ * @name Types/_entity/descriptor#oneOf
+ * @param values Допустимые значения.
+ * @example
+ * Определим ограничение включения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).oneOf(['foo', 'bar'])('foo')); // 'foo'
+ * console.log(descriptor(String).oneOf(['foo', 'bar'])('baz')); // TypeError
+ * </pre>
+ */
+
+/*
  * Returns validator for "One of" restriction.
  * @function
  * @name Types/_entity/descriptor#oneOf
@@ -179,6 +218,21 @@ function oneOf<T>(values: T[]): DescriptorValidator<T> {
 type oneOfValidator<T> = (values: T[]) => DescriptorValidator<T>;
 
 /**
+ * Возвращает валидатор для ограничения «Не».
+ * @function
+ * @name Types/_entity/descriptor#not
+ * @param values Допустимые значения.
+ * @example
+ * Определим ограничение исключения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).not('foo', 'bar')('baz')); // 'baz'
+ * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
+ * </pre>
+ */
+
+/*
  * Returns validator for "Not" restriction.
  * @function
  * @name Types/_entity/descriptor#not
@@ -210,6 +264,21 @@ function not<T>(values: T[]): DescriptorValidator<T> {
 type notValidator<T> = (values: T[]) => DescriptorValidator<T>;
 
 /**
+ * Возвращает валидатор для ограничения Array <T>.
+ * @function
+ * @name Types/_entity/descriptor#arrayOf
+ * @param type Тип дескриптора.
+ * @example
+ * Определите тип ограничения для массива:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Array).arrayOf(Boolean)([true])); // [true]
+ * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
+ * </pre>
+ */
+
+/*
  * Returns validator for Array<T> restriction.
  * @function
  * @name Types/_entity/descriptor#arrayOf
@@ -248,6 +317,11 @@ function arrayOf<T>(type: Descriptor): DescriptorValidator<T> {
 type arrayOfValidator<T> = (type: Descriptor) => DescriptorValidator<T>;
 
 /**
+ * Создает элемент цепочки со всеми доступными валидаторами.
+ * @param parent Предыдущий элемент цепи.
+ */
+
+/*
  * Creates chain element with all available validators.
  * @param parent Previous chain element
  */
@@ -277,6 +351,71 @@ function chain<T>(parent: ValidateFunc<T>): DescriptorValidator<T> {
 }
 
 /**
+ * Создает дескриптор, который проверяет данный тип значения.
+ * @remark
+ * Вы можете установить:
+ * - тип ограничения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number)(0)); // 0
+ * console.log(descriptor(Number)('0')); // TypeError
+ *
+ * console.log(descriptor(Number, null)(0)); // 0
+ * console.log(descriptor(Number, null)(null)); // null
+ * console.log(descriptor(Number, null)('0')); // TypeError
+ *
+ * console.log(descriptor(Number, String)(0)); // 0
+ * console.log(descriptor(Number, String)('0')); // '0'
+ * console.log(descriptor(Number, String)(true)); // TypeError
+ * </pre>
+ *
+ * - необходимость ограничения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required()(1)); // 1
+ * console.log(descriptor(Number).required()()); // TypeError
+ * </pre>
+ *
+ * - включение ограничения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).oneOf('foo', 'bar')('foo')); // 'foo'
+ * console.log(descriptor(String).oneOf('foo', 'bar')('baz')); // TypeError
+ * </pre>
+ *
+ * - исключение ограничения:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(String).not('foo', 'bar')('baz')); // 'baz'
+ * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
+ * </pre>
+ *
+ * - kind restriction for array:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Array).arrayOf(Boolean)([true])); // [true]
+ * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
+ * </pre>
+ *
+ * - связанное ограничение:
+ * <pre>
+ * import {descriptor} from 'Types/entity';
+ *
+ * console.log(descriptor(Number).required().not(666)(0)); // 0
+ * console.log(descriptor(Number).required().not(666)(666)); // TypeError
+ * </pre>
+ * @class Types/_entity/descriptor
+ * @param types Desirable value types
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Creates type descriptor which checks given value type.
  * @remark
  * You can set:

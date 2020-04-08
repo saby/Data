@@ -1,4 +1,33 @@
 /**
+ * Библиотека форматов.
+ * @library Types/_entity/format
+ * @includes Field Types/_entity/format/Field
+ * @includes ArrayField Types/_entity/format/ArrayField
+ * @includes BinaryField Types/_entity/format/BinaryField
+ * @includes BooleanField Types/_entity/format/BooleanField
+ * @includes DateField Types/_entity/format/DateField
+ * @includes DateTimeField Types/_entity/format/DateTimeField
+ * @includes DictionaryField Types/_entity/format/DictionaryField
+ * @includes EnumField Types/_entity/format/EnumField
+ * @includes fieldsFactory Types/_entity/format/fieldsFactory
+ * @includes FlagsField Types/_entity/format/FlagsField
+ * @includes IdentityField Types/_entity/format/IdentityField
+ * @includes IntegerField Types/_entity/format/IntegerField
+ * @includes MoneyField Types/_entity/format/MoneyField
+ * @includes ObjectField Types/_entity/format/ObjectField
+ * @includes RealField Types/_entity/format/RealField
+ * @includes RecordField Types/_entity/format/RecordField
+ * @includes RecordSetField Types/_entity/format/RecordSetField
+ * @includes RpcFileField Types/_entity/format/RpcFileField
+ * @includes StringField Types/_entity/format/StringField
+ * @includes TimeField Types/_entity/format/TimeField
+ * @includes TimeIntervalField Types/_entity/format/TimeIntervalField
+ * @includes UuidField Types/_entity/format/UuidField
+ * @includes XmlField Types/_entity/format/XmlField
+ * @author Мальцев А.А.
+ */
+
+/*
  * Formats library.
  * @library Types/_entity/format
  * @includes Field Types/_entity/format/Field
