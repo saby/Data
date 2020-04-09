@@ -413,19 +413,8 @@ class RecordSet<
     // region List
 
     clear(): void {
-        for (let i = 0, count = this._$items.length; i < count; i++) {
-            const item = this._$items[i];
-            if (item) {
-                item.detach();
-            }
-        }
-
-        if (!this.hasDeclaredFormat()) {
-            this._clearFormat();
-        }
-        (this._getRawDataAdapter() as adapter.ITable).clear();
-        this._resetRawDataFields();
-
+        this._detachItems();
+        this._clearRawData();
         super.clear();
     }
 
@@ -579,41 +568,39 @@ class RecordSet<
      * </pre>
      */
     assign(items: IEnumerable<T> | T[]): T[] {
+        // Do nothing if assigning to itself
         if (items === this) {
             return [];
         }
 
-        const oldItems = this._$items.slice();
+        // We can trust foreign data only if it's a recordset and this instance doesn't have its own format
         const hasDeclaredFormat = this.hasDeclaredFormat();
-        let result;
-
         if (items instanceof RecordSet && !hasDeclaredFormat) {
-            // We can trust foreign data only if recordset doesn't have its own format
+            this._detachItems();
+
             this._$adapter = items.getAdapter();
             this._assignRawData(items.getRawData(), hasDeclaredFormat);
-            result = new Array(items.getCount());
+
+            const result = new Array(items.getCount());
             super.assign(result);
-        } else {
-            // Otherwise we have to check and normalize foreign data if needed
-            items = this._itemsToArray(items);
-            if (items.length && items[0] && items[0]['[Types/_entity/Record]']) {
-                this._$adapter = items[0].getAdapter();
-            }
-            items = this._normalizeItems(items, RECORD_STATE.ADDED);
-            this._assignRawData(null, hasDeclaredFormat);
-            items = this._addItemsToRawData(items);
-            super.assign(items);
-            result = items;
+
+            return result;
         }
 
-        for (let i = 0, count = oldItems.length; i < count; i++) {
-            const item = oldItems[i];
-            if (item) {
-                item.detach();
-            }
+        // Otherwise we have to check and normalize foreign data
+        items = this._itemsToArray(items);
+        if (items.length && items[0] && items[0]['[Types/_entity/Record]']) {
+            this._$adapter = items[0].getAdapter();
         }
+        items = this._normalizeItems(items, RECORD_STATE.ADDED);
 
-        return result;
+        this._detachItems();
+        this._clearRawData();
+
+        items = this._addItemsToRawData(items);
+        super.assign(items);
+
+        return items;
     }
 
     /**
@@ -776,6 +763,19 @@ class RecordSet<
         return super._itemsSlice(begin, end);
     }
 
+    protected _detachItems(items?: T[]): void {
+        if (!items) {
+            items = this._$items;
+        }
+
+        for (let i = 0, count = items.length; i < count; i++) {
+            const item = items[i];
+            if (item) {
+                item.detach();
+            }
+        }
+    }
+
     // endregion
 
     // region SerializableMixin
@@ -873,6 +873,14 @@ class RecordSet<
             this._clearFormat();
         }
         this._nextVersion();
+    }
+
+    protected _clearRawData(): void {
+        if (!this.hasDeclaredFormat()) {
+            this._clearFormat();
+        }
+        (this._getRawDataAdapter() as adapter.ITable).clear();
+        this._resetRawDataFields();
     }
 
     // endregion

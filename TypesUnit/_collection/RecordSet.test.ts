@@ -1288,6 +1288,26 @@ describe('Types/_collection/RecordSet', () => {
             assert.strictEqual(rs.getCount(), 2);
         });
 
+        it('should keep raw data format for SBIS adapter after become empty', () => {
+            const adapter = new SbisAdapter();
+            const format = [{n: 'foo', t: 'Строка'}];
+            const rawData = {
+                _type: 'recordset',
+                d: [['bar']],
+                s: format
+            };
+            const rs = new RecordSet({adapter, rawData});
+
+            rs.assign([]);
+
+            const resultData = rs.getRawData();
+            assert.deepEqual(resultData, {
+                _type: 'recordset',
+                d: [],
+                s: format
+            });
+        });
+
         it('should keep foreign records owner', () => {
             const records = [new Model(), new Model(), new Model()];
 
