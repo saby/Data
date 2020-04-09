@@ -1,4 +1,21 @@
 /**
+ * Библиотека адаптеров.
+ * @library Types/_entity/adapter
+ * @includes Abstract Types/_entity/adapter/Abstract
+ * @includes Cow Types/_entity/adapter/Cow
+ * @includes Json Types/_entity/adapter/Json
+ * @includes IAdapter Types/_entity/adapter/IAdapter
+ * @includes IDataHolder Types/_entity/adapter/IDataHolder
+ * @includes IDecorator Types/_entity/adapter/IDecorator
+ * @includes IMetaData Types/_entity/adapter/IMetaData
+ * @includes IRecord Types/_entity/adapter/IRecord
+ * @includes ITable Types/_entity/adapter/ITable
+ * @includes RecordSet Types/_entity/adapter/RecordSet
+ * @includes Sbis Types/_entity/adapter/Sbis
+ * @author Мальцев А.А.
+ */
+
+/*
  * Adapters library.
  * @library Types/_entity/adapter
  * @includes Abstract Types/_entity/adapter/Abstract

@@ -44,6 +44,21 @@ export interface IDeclaration extends IShortDeclaration {
 export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | IHashMap<Function> | IHashMap<string>;
 
 /**
+ * Создает формат поля по его декларативному описанию.
+ * @remark
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *      <li><b>declaration</b> {@link FieldDeclaration Declarative definition}</li>
+ * </ul>
+ * <h2>Возвращает</h2>
+ * {@link Types/_entity/format/Field} Формат поля.
+ * @class Types/_entity/format/fieldsFactory
+ * @param declaration Декларативное описание.
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Creates field format by its declarative definition.
  * @remark
  * <h2>Параметры функции</h2>
@@ -59,6 +74,31 @@ export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | I
  */
 export default function<T extends Field = Field>(declaration: IDeclaration): T {
      /**
+      * @typedef {String} FieldType
+      * @variant boolean Логический тип
+      * @variant integer Целое число
+      * @variant real Реальное число
+      * @variant money Денежный тип
+      * @variant string Строчный тип
+      * @variant xml Строка в XML-формате
+      * @variant datetime Дата и время
+      * @variant date Дата
+      * @variant time Время
+      * @variant timeinterval Временной интервал
+      * @variant identity Идентификатор базы данных
+      * @variant enum Перечисляемый тип
+      * @variant flags Флаг
+      * @variant record Запись
+      * @variant model Модель
+      * @variant recordset RecordSet
+      * @variant binary Двоичные данные
+      * @variant uuid UUID
+      * @variant rpcfile RPC-файл
+      * @variant object JSON-объект
+      * @variant array Массив
+      */
+
+     /*
       * @typedef {String} FieldType
       * @variant boolean Logical
       * @variant integer Integer number
@@ -84,6 +124,17 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
       */
 
      /**
+      * @typedef {Object} FieldDeclaration
+      * @property {String} name Имя поля.
+      * @property {FieldType|Function|String} type Тип поля (имя типа или конструктор типа)
+      * @property {*} defaultValue Значение по умолчанию.
+      * @property {Boolean} nullable Значение может быть нулевым.
+      * @property {*} [*] Доступны любые варианты конструктора желаемого типа (Types/_entity/format/*Field).
+      * Например, опция "precision" для типа @{link Types/_entity/format/MoneyField money}:
+      * {name: 'amount', type: 'money', precision: 4}
+      */
+
+     /*
       * @typedef {Object} FieldDeclaration
       * @property {String} name Field name
       * @property {FieldType|Function|String} type Field type (type name or type constructor)
