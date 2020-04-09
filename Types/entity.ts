@@ -1,4 +1,36 @@
 /**
+ * 
+ * Библиотека, которая предоставляет различные виды сущностей.
+ * @library Types/entity
+ * @includes adapter Types/_entity/adapter
+ * @includes CancelablePromise Types/_entity/CancelablePromise
+ * @includes compare Types/_entity/compare
+ * @includes Date Types/_entity/Date
+ * @includes DateTime Types/_entity/DateTime
+ * @includes descriptor Types/_entity/descriptor
+ * @includes factory Types/_entity/factory
+ * @includes format Types/_entity/format
+ * @includes functor Types/_entity/functor
+ * @includes Guid Types/_entity/Guid
+ * @includes JSONML Types/_entity/JSONML
+ * @includes Identity Types/_entity/Identity
+ * @includes ICloneable Types/_entity/ICloneable
+ * @includes IEquatable Types/_entity/IEquatable
+ * @includes IInstantiable Types/_entity/IInstantiable
+ * @includes IObject Types/_entity/IObject
+ * @includes IObservableObject Types/_entity/IObservableObject
+ * @includes IVersionable Types/_entity/IVersionable
+ * @includes Model Types/_entity/Model
+ * @includes ReactiveObject Types/_entity/ReactiveObject
+ * @includes Record Types/_entity/Record
+ * @includes relation Types/_entity/relation
+ * @includes Time Types/_entity/Time
+ * @includes TimeInterval Types/_entity/TimeInterval
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that provides various kinds of entities.
  * @library Types/entity
  * @includes adapter Types/_entity/adapter

@@ -8,6 +8,13 @@ const ISO_PREFIX = 'ISO:';
 const ISO_FORMAT = 'YYYY-MM-DD';
 
 /**
+ * Тип даты.
+ * @class Types/_entity/Date
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Date type
  * @class Types/_entity/Date
  * @public
