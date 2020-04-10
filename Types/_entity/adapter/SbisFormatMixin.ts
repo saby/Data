@@ -102,7 +102,8 @@ function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFiel
         Object.defineProperty(entry, 's', {
             configurable: true,
             enumerable: true,
-            value: store.get(entry.f).slice()
+            value: store.get(entry.f).slice(),
+            writable: true
         });
     }
 
