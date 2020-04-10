@@ -12,7 +12,6 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
  * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @class Types/_source/Base
- * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_source/OptionsMixin
