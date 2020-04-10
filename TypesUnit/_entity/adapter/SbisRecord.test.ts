@@ -84,6 +84,21 @@ describe('Types/_entity/adapter/SbisRecord', () => {
                 s: [{n: 'foo', t: 'Строка'}]
             });
         });
+
+        it('should define writable property for shared format', () => {
+            const adapter = new SbisRecord({
+                f: 1,
+                d: [{
+                    f: 1,
+                    d: [[null]]
+                }],
+                s: [{n: 'foo', t: 'Строка'}]
+            });
+            const data = adapter.getData();
+            const formatDescriptor = Object.getOwnPropertyDescriptor(data.d[0], 's');
+
+            assert.isTrue(formatDescriptor.writable);
+        });
     });
 
     describe('.clone()', () => {
