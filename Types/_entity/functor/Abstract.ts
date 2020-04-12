@@ -3,6 +3,13 @@ import {protect} from 'Types/util';
 const $functors = protect('functors');
 
 /**
+ * Абстрактный функтор.
+ * @class Types/_entity/functor/Abstract
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Abstract functor.
  * @class Types/_entity/functor/Abstract
  * @public
@@ -10,6 +17,12 @@ const $functors = protect('functors');
  */
 export default class Abstract<T = Function> {
     /**
+     * Конструктор.
+     * @param fn Функция при вызове функтора.
+     * @param args... Возможные аргументы.
+     */
+
+    /*
      * Constructor.
      * @param fn Function to call when functor calls
      * @param args... Possible arguments
@@ -19,6 +32,11 @@ export default class Abstract<T = Function> {
     }
 
     /**
+     * Создает новый функтор.
+     * @param fn Функция при вызове функтора.
+     */
+
+    /*
      * Creates new functor.
      * @param fn Function to call when functor calls
      */
