@@ -2,6 +2,73 @@ import VersionableMixin, {VersionCallback} from './VersionableMixin';
 import {Map} from '../shim';
 
 /**
+ * Реактивный объект предоставляет возможность отслеживать его изменения.
+ * @remark
+ * Это объект JavaScript с определенным набором параметром. Когда любой из них обновляется, вы можете отслеживать изменение его состояния, используя метод {@link getVersion}.
+ *
+ * В соответствии с ограничением JavaScript при работе с параметрами объекта, чтобы избежать ошибок, соблюдайте правило: ReactiveObject отслеживает только те параметры, которые были переданы конструктору. Это также означает, что вы не должны добавлять или удалять параметры в экземпляре ReactiveObject (это означает, что эти параметры просто не будут реактивными).
+ *
+ * Отследим параметр 'foo':
+ * <pre>
+ * import {ReactiveObject} from 'Types/entity';
+ * const instance = new ReactiveObject({
+ *     foo: 'bar'
+ * });
+ * console.log(instance.foo, instance.getVersion()); // 'bar', 0
+ * instance.foo = 'baz';
+ * console.log(instance.foo, instance.getVersion()); // 'baz', 1
+ * </pre>
+ *
+ * Вы также можете отслеживать изменение версии с помощью callback'а:
+ * <pre>
+ * import {ReactiveObject} from 'Types/entity';
+ * const instance = new ReactiveObject({
+ *     foo: 'bar'
+ * }, (version) => {
+ *     console.log('version:', version);
+ * });
+ * instance.foo = 'baz'; // outputs 'version: 1' in console
+ * </pre>
+ *
+ * Вы можете установить параметр 'только для чтения', использовав {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get property getter}:
+ * <pre>
+ * import {ReactiveObject} from 'Types/entity';
+ * const instance = new ReactiveObject({
+ *     get foo() {
+ *         return 'bar';
+ *     }
+ * });
+ * console.log(instance.foo, instance.getVersion()); // 'bar', 0
+ * instance.foo = 'baz'; // Throws an error
+ * </pre>
+ *
+ * Вы также можете определить свою собственную логику чтения и записи значения параметра:
+ * <pre>
+ * import {ReactiveObject} from 'Types/entity';
+ * const instance = new ReactiveObject({
+ *     email: 'foo@bar.com',
+ *     get domain(): string {
+ *         return this.email.split('@')[1];
+ *     },
+ *     set domain(value: string) {
+ *         const parts = this.email.split('@');
+ *         parts[1] = value;
+ *         this.email = parts.join('@');
+ *     }
+ * });
+ * console.log(instance.email); // 'foo@bar.com'
+ * console.log(instance.domain); // 'bar.com'
+ * instance.domain = 'bar.org';
+ * console.log(instance.email); // 'foo@bar.org'
+ * console.log(instance.domain); // 'bar.org'
+ * </pre>
+ * @class Types/_entity/ReactiveObject
+ * @extends Types/_entity/VersionableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Reactive object provides ability to track its changes.
  * @remark
  * It's just a plain JavaScript object with certain set of properties. When any of them being updated, you can track state change using {@link getVersion} method.
@@ -71,6 +138,12 @@ class ReactiveObject<T> extends VersionableMixin {
     private _nestedVersions: Map<string, number>;
 
     /**
+     * Конструктор реактивных объектов.
+     * @param data Устанавливает реактивные свойства.
+     * @param [callback] Callback вызывается при изменении версии.
+     */
+
+    /*
      * Reactive object constructor.
      * @param data Reactive properties set.
      * @param [callback] Callback invoked on version change.
@@ -113,6 +186,11 @@ class ReactiveObject<T> extends VersionableMixin {
     // region Protected
 
     /**
+     * Определение параметров прокси от данного объекта до текущего экземпляра.
+     * @param donor Объект для получения объявленных параметров.
+     */
+
+    /*
      * Proxies properties definition from given object to the current instance
      * @param donor Object to get properties declaration from
      */
