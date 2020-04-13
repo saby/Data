@@ -1,4 +1,11 @@
 /**
+ * Тип GUID.
+ * @class Types/_entity/Guid
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Guid type
  * @class Types/_entity/Guid
  * @public
@@ -6,6 +13,10 @@
  */
 export default class Guid {
     /**
+     * Возвращает строку, заполненную случайными числами, которая выглядит, как GUID.
+     */
+
+    /*
      * Returns a string filled with random numbers which looks like GUID
      */
     static create(): string {
