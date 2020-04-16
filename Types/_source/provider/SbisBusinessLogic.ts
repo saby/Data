@@ -52,10 +52,7 @@ function getTimedOutResponse<T>(
     logger: ILogger
 ): Promise<T> {
     const itsPromise = !(origin as Deferred<T>).isReady;
-    const timeoutMs = 1000 * timeout;
-    let timeoutError = new Error(
-        `Timeout of ${timeout} seconds had expired before the method '${methodName}' at '${address}' returned any results`
-    );
+    const timeoutError = `Timeout of ${timeout} seconds had expired before the method '${methodName}' at '${address}' returned any results`;
     let timeoutHandler: number;
 
     // Clear links to timeout and error instance in purpose of disappearing in memory allocation tree.
@@ -64,13 +61,12 @@ function getTimedOutResponse<T>(
             clearTimeout(timeoutHandler);
             timeoutHandler = undefined;
         }
-        timeoutError = undefined;
     };
 
     timeoutHandler = setTimeout(() => {
-        throwError(timeoutError, logger);
+        throwError(new Error(timeoutError), logger);
         unallocate();
-    }, timeoutMs);
+    }, 1000 * timeout);
 
     if (itsPromise) {
         return new Promise((resolve, reject) => {
