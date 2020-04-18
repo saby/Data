@@ -25,7 +25,6 @@ export interface IRpcTransport {
 
 export interface IRpcTransportOptions {
     serviceUrl: string;
-    timeout?: number;
 }
 
 export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRpcTransport;
@@ -159,17 +158,11 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
             methodName = endpoint.contract + this._nameSpaceSeparator + methodName;
         }
 
-        const useTimeout = !!this._$callTimeout;
-        const transportOptions: IRpcTransportOptions = {
+        let result = new Transport({
             serviceUrl: endpoint.address
-        };
-        if (useTimeout) {
-            transportOptions.timeout = this._$callTimeout;
-        }
+        }).callMethod(methodName, args || {}) as any;
 
-        let result = new Transport(transportOptions).callMethod(methodName, args || {});
-
-        if (useTimeout) {
+        if (result && this._$callTimeout) {
             result = getTimedOutResponse(
                 result,
                 this._$callTimeout,
