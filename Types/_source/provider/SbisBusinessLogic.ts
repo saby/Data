@@ -31,7 +31,7 @@ export interface IRpcTransportOptions {
 export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRpcTransport;
 
 // Default timeout to produce a call (in seconds)
-const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5 : 0;
+const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5000 : 0;
 
 function throwError(err: Error, logger: ILogger): void {
     logger.info('Types/_source/provider/SbisBusinessLogic', err.message);
@@ -53,7 +53,7 @@ function getTimedOutResponse<T>(
     logger: ILogger
 ): Promise<T> {
     const itsPromise = !(origin as Deferred<T>).isReady;
-    const timeoutError = `Timeout of ${timeout} seconds had expired before the method '${methodName}' at '${address}' returned any results`;
+    const timeoutError = `Timeout of ${timeout} ms had expired before the method '${methodName}' at '${address}' returned any results`;
     let timeoutHandler: number;
 
     // Clear links to timeout and error instance in purpose of disappearing in memory allocation tree.
@@ -67,7 +67,7 @@ function getTimedOutResponse<T>(
     timeoutHandler = setTimeout(() => {
         throwError(new Error(timeoutError), logger);
         unallocate();
-    }, 1000 * timeout);
+    }, timeout);
 
     if (itsPromise) {
         return new Promise((resolve, reject) => {
