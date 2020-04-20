@@ -136,7 +136,7 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
                assert.equal(logger.lastTag, 'Types/_source/provider/SbisBusinessLogic');
                assert.equal(
                    logger.lastMessage,
-                   'Timeout of -1 seconds had expired before the method \'foo.bar\' at \'undefined\' returned any results'
+                   'Timeout of -1 ms had expired before the method \'foo.bar\' at \'undefined\' returned any results'
                );
            });
        });
