@@ -1,9 +1,13 @@
 import {assert} from 'chai';
-import SbisBusinessLogic from 'Types/_source/provider/SbisBusinessLogic';
+import SbisBusinessLogic, {IRpcTransportOptions} from 'Types/_source/provider/SbisBusinessLogic';
 import {ILogger} from 'Types/_util/logger';
 
 class TransportMock {
     protected resolver: Promise<unknown> = Promise.resolve(null);
+
+    constructor(options: IRpcTransportOptions) {
+        TransportMock.lastOptions = options;
+    }
 
     callMethod<T>(method: string, args: any): Promise<T> {
         TransportMock.lastMethod = method;
@@ -15,6 +19,7 @@ class TransportMock {
         // Do nothing
     }
 
+    static lastOptions: IRpcTransportOptions;
     static lastMethod: string;
     static lastArgs: any;
 }
@@ -106,6 +111,16 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
        it('should override default object name', () => {
           provider.call('boo.bar');
           assert.equal(TransportMock.lastMethod, 'boo.bar');
+       });
+
+       it('should pass given timeout to the transport implementation', () => {
+          const callTimeout = 12345;
+          const bl = new SbisBusinessLogic({
+             callTimeout,
+             transport: TransportMock
+          });
+          bl.call('foo.bar');
+          assert.equal(TransportMock.lastOptions.timeout, callTimeout);
        });
 
        it('should log an error on expired timeout', () => {
