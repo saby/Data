@@ -11,51 +11,19 @@
       "Types/*"
    ],
    "scripts": {
-      "build": "npm run build:typescript && npm run build:units && npm run build:compile",
+      "build": "npm run build:typescript && npm run build:app",
       "build:typescript": "saby-typescript --install --tslint=tslint.json",
-      "build:units": "saby-units --install",
       "build:compile": "saby-typescript --compiler 2>&1 || echo done",
-      "start": "saby-units --server",
-      "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
-      "test:coverage": "saby-units --isolated --coverage --report",
-      "lint": "saby-typescript --lint -q Types/**/*.ts"
-   },
-   "saby-units": {
-      "moduleType": "amd",
-      "tests": [
-         "TypesUnit"
-      ],
-      "links": {
-         "node_modules/wasaby-app/src/Application": "Application",
-         "node_modules/rmi/src/client/Browser": "Browser",
-         "node_modules/rmi/src/client/Env": "Env",
-         "node_modules/sbis3-ws/WS.Core": "WS.Core",
-         "node_modules/sbis3-ws/Inferno": "Inferno",
-         "node_modules/sbis3-ws/View": "View",
-         "node_modules/saby-i18n/I18n": "I18n"
-      },
-      "url": {
-         "port": 1025
-      }
-   },
-   "nyc": {
-      "include": [
-         "Types/**/*.js"
-      ],
-      "reporter": [
-         "text",
-         "html"
-      ],
-      "cache": false,
-      "eager": true,
-      "report-dir": "./artifacts/coverage"
+      "build:app": "wasaby-cli --tasks=build",
+      "start": "wasaby-cli --tasks=startTest --server",
+      "test": "wasaby-cli --tasks=startTest --node --report=console",
+      "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
+      "lint": "saby-typescript --lint -q Types/**/*.ts",
+      "update-cli-store": "wasaby-cli --tasks=initStore",
+      "prepare": "npm run update-cli-store"
    },
    "devDependencies": {
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-20.4000",
-      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-20.4000",
-      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-20.4000",
-      "saby-units": "git+https://github.com/saby/Units.git#rc-20.4000",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-20.4000",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-20.4000"
+      "wasaby-cli": "git+https://github.com/saby/wasaby-cli.git#rc-20.4000",
+      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-20.4000"
    }
 }
