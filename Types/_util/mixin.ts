@@ -3,7 +3,7 @@
  */
 function inheritStatic<T>(Base: T, Sub: Function): void {
     // Don't inherit from plain object
-    if ((Base as any) === Object) {
+    if ((Base as unknown) === Object) {
         return;
     }
 
@@ -15,6 +15,10 @@ function inheritStatic<T>(Base: T, Sub: Function): void {
             case 'name':
             case 'prototype':
                 // Skip some valuable keys of type Function
+                break;
+            case 'toJSON':
+                // Skip inheritance for toJSON() because it should be unique for ultimate class.
+                // Otherwise WS.Core/ext/requirejs/extras/resourceLoadHandler won't work properly.
                 break;
             default:
                 if (!Sub.hasOwnProperty(key)) {
@@ -39,7 +43,7 @@ export function applyMixins(Sub: Function, ...mixins: Function[]): void {
         const proto = isClass ? (mixin as any).prototype : mixin;
 
         if (isClass) {
-            inheritStatic(mixin as any, Sub);
+            inheritStatic(mixin, Sub);
         }
 
         const inject = (name) => {
