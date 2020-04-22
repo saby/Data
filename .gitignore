@@ -51,3 +51,4 @@
 /TypesUnit/_object/**/*.js
 /TypesUnit/_shim/**/*.js
 /TypesUnit/_source/**/*.js
+/TypesUnit/_util/**/*.js
