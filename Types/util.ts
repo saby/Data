@@ -10,7 +10,10 @@
  */
 
 export {default as logger, ILogger} from './_util/logger';
-export {default as object} from './_util/object';
 export {mixin, applyMixins} from './_util/mixin';
+
+import * as object from './_util/object';
+export {object};
+
 export {default as protect} from './_util/protect';
 export {default as deprecateExtend} from './_util/deprecateExtend';
