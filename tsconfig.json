@@ -2,16 +2,28 @@
   "extends": "./node_modules/saby-typescript/configs/es5.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "Env/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Env/*"],
+      "Browser/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Browser/*"],
+      "I18n/*": ["node_modules/wasaby-cli/store/_repos/saby-i18n/I18n/*"],
+      "WS.Core/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/*"],
+      "View/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/View/*"],
+      "Inferno/*": ["node_modules/wasaby-cli/store/_repos/saby-inferno/Inferno/*"],
+      "UI/*": ["node_modules/wasaby-cli/store/_repos/saby-ui/UI/*"],
+      "Vdom/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/Vdom/*"],
+      "SbisEnv/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/SbisEnv/*"],
+      "Application/*": ["node_modules/wasaby-cli/store/_repos/wasaby-app/src/Application/*"],
+      "Core/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/core/*"],
+      "Lib/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/lib/*"],
+      "Transport/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/transport/*"],
+      "json!*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/global"],
+      "tmpl!*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/global"],
+      "wml!*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/global"]
+    },
     "types" : ["mocha", "requirejs"]
   },
-  "include": [
-    "Application/**/*.ts",
-    "Browser/**/*.ts",
-    "Env/**/*.ts",
-    "Types/**/*.ts",
-    "TypesUnit/**/*.ts",
-    "I18n/**/*.ts",
-    "View/**/*.ts",
-    "WS.Core/**/*.ts"
+  "exclude": [
+      "build-ui",
+      "application"
   ]
 }
