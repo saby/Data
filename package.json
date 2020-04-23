@@ -11,19 +11,17 @@
       "Types/*"
    ],
    "scripts": {
-      "build": "npm run build:typescript && npm run build:app",
-      "build:typescript": "saby-typescript --install --tslint=tslint.json",
-      "build:compile": "saby-typescript --compiler 2>&1 || echo done",
+      "build": "npm run build:install && npm run build:typescript && npm run build:app",
+      "build:install": "wasaby-cli --tasks=initStore",
+      "build:typescript": "saby-typescript --install --mode-development",
       "build:app": "wasaby-cli --tasks=build",
+      "compile": "saby-typescript --compiler 2>&1 || echo done",
       "start": "wasaby-cli --tasks=startTest --server",
       "test": "wasaby-cli --tasks=startTest --node --report=console",
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
-      "lint": "saby-typescript --lint -q Types/**/*.ts",
-      "update-cli-store": "wasaby-cli --tasks=initStore",
-      "prepare": "npm run update-cli-store"
+      "lint": "saby-typescript --lint -q Types/**/*.ts"
    },
    "devDependencies": {
-      "wasaby-cli": "git+https://github.com/saby/wasaby-cli.git#rc-20.4000",
-      "saby-typescript": "git+https://github.com/saby/TypeScript.git#rc-20.4000"
+      "wasaby-cli": "git+https://github.com/saby/wasaby-cli.git#rc-20.4000"
    }
 }

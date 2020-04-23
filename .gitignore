@@ -7,9 +7,11 @@
 .vscode
 
 # Development mode artifacts
+/application
+/build-ui
+/builderConfig.json
 /index.js
 /package-lock.json
-/tsconfig.base.json
 /artifacts
 /node_modules
 /tslib.js
