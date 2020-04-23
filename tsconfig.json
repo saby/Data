@@ -1,12 +1,7 @@
 {
+  "extends": "./node_modules/saby-typescript/configs/es5.json",
   "compilerOptions": {
-    "alwaysStrict": true,
     "baseUrl": ".",
-    "importHelpers": true,
-    "lib": ["dom", "es5", "es2016", "es2018.promise", "scripthost"],
-    "module": "amd",
-    "moduleResolution": "classic",
-    "noUnusedLocals": true,
     "paths": {
       "Env/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Env/*"],
       "Browser/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Browser/*"],
@@ -25,7 +20,6 @@
       "tmpl!*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/global"],
       "wml!*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/global"]
     },
-    "target": "es5",
     "types" : ["mocha", "requirejs"]
   },
   "exclude": [
