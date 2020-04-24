@@ -1,6 +1,6 @@
 import {assert} from 'chai';
-import * as di from 'Types/di';
 import SbisService, {
+    getQueryArguments,
     IBinding,
     positionExpression
 } from 'Types/_source/SbisService';
@@ -15,6 +15,7 @@ import Record from 'Types/_entity/Record';
 import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
 import List from 'Types/_collection/List';
+import * as di from 'Types/di';
 import {ExtendDate, IExtendDateConstructor} from 'Types/_declarations';
 import Deferred = require('Core/Deferred');
 import coreExtend = require('Core/core-extend');
@@ -1795,6 +1796,20 @@ describe('Types/_source/SbisService', () => {
 
             assert.instanceOf(provider, Foo);
             assert.equal(json.state.$options.provider, 'Foo');
+        });
+    });
+
+    describe('getQueryArguments()', () => {
+        it('should return valid arguments for .query()', () => {
+            const query = new Query();
+            query.orderBy({foo: false})
+                .offset(10);
+            const args = getQueryArguments(query);
+
+            assert.instanceOf(args.Фильтр, Record);
+            assert.instanceOf(args.Сортировка, RecordSet);
+            assert.instanceOf(args.Навигация, Record);
+            assert.instanceOf(args.ДопПоля, Array);
         });
     });
 });
