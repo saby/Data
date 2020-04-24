@@ -632,17 +632,28 @@ interface IQueryResult {
  * Returns data to send in query()
  */
 function passQuery(this: SbisService, query?: Query): IQueryResult {
-    const nav = getNavigationParams(query, this._$options, this._$adapter);
+    const adapter = this._$adapter;
+    const nav = getNavigationParams(query, this._$options, adapter);
     const filter = getFilterParams(query);
     const sort = getSortingParams(query);
     const add = getAdditionalParams(query);
 
     return {
-        Фильтр: buildRecord(filter, this._$adapter),
-        Сортировка: buildRecordSet(sort, this._$adapter, this.getKeyProperty()),
-        Навигация: buildRecord(nav, this._$adapter),
+        Фильтр: buildRecord(filter, adapter),
+        Сортировка: buildRecordSet(sort, adapter, this.getKeyProperty()),
+        Навигация: buildRecord(nav, adapter),
         ДопПоля: add
     };
+}
+
+/**
+ * Public implemetation which returns standard query() method arguments
+ * @package [query] query params
+ * @package [options] SbisService constructor options
+ */
+export function getQueryArguments(query?: Query, options?: IOptions): IQueryResult {
+    const source = new SbisService(options);
+    return passQuery.call(source, query);
 }
 
 interface ICopyResult {
