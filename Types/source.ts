@@ -57,6 +57,7 @@ export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
 export {
     default as SbisService,
+    getQueryArguments as sbisServiceGetQueryArguments,
     positionExpression as sbisServicePositionExpression,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
