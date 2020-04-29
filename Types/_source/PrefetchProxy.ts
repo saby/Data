@@ -5,7 +5,6 @@ import OptionsMixin from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
 import {
-    DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin,
     Record,
@@ -113,7 +112,6 @@ const defaultValidators = {
  *     }, console.error);
  * </pre>
  * @class Types/_source/PrefetchProxy
- * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/IDecorator
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
@@ -126,7 +124,6 @@ export default class PrefetchProxy extends mixin<
     OptionsToPropertyMixin,
     SerializableMixin
 >(
-    DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus {
