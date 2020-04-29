@@ -113,7 +113,6 @@ const defaultValidators = {
  *     }, console.error);
  * </pre>
  * @class Types/_source/PrefetchProxy
- * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_source/IDecorator
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
