@@ -13,7 +13,7 @@
    "scripts": {
       "build": "npm run build:install && npm run build:typescript && npm run build:app",
       "build:install": "wasaby-cli --tasks=initStore",
-      "build:typescript": "saby-typescript --install --mode-development",
+      "build:typescript": "saby-typescript --install --mode=development",
       "build:app": "wasaby-cli --tasks=build",
       "compile": "saby-typescript --compiler 2>&1 || echo done",
       "start": "wasaby-cli --tasks=startTest --server",
