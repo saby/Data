@@ -5,7 +5,6 @@ import OptionsMixin from './OptionsMixin';
 import Query from './Query';
 import DataSet from './DataSet';
 import {
-    DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin,
     Record,
@@ -125,7 +124,6 @@ export default class PrefetchProxy extends mixin<
     OptionsToPropertyMixin,
     SerializableMixin
 >(
-    DestroyableMixin,
     OptionsToPropertyMixin,
     SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus {
