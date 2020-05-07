@@ -7,9 +7,9 @@ interface IDateFormatOptions {
     separator?: string;
 }
 
-type Format = (date: Date, format: string) => string;
+type Format = (date: Date, format: string, timeZone?: number) => string;
 
-let tokensRegex;
+let tokensRegex: RegExp;
 const tokens = {};
 const locale = locales.current;
 const AM_PM_BOUNDARY = 12;
@@ -190,6 +190,9 @@ function getHalfYearRomanLong(date: Date): string {
     );
 }
 
+/**
+ * Returns time zone of given date
+ */
 function getTimeZone(date: Date, options: IDateFormatOptions): string {
     let totalMinutes = date.getTimezoneOffset();
     const sign = totalMinutes <= 0 ? '+' : '-';
@@ -199,6 +202,27 @@ function getTimeZone(date: Date, options: IDateFormatOptions): string {
     const minutesStr = minutes ? options.separator + withLeadZeroes(minutes, 2) : '';
 
     return `${sign}${withLeadZeroes(hours, 2)}${minutesStr}`;
+}
+
+/**
+ * Returns the date as if it attached to given time zone
+ */
+function getTzDate(date: Date, timeZoneOffset: number): Date {
+    const localTimeZoneOffset = date.getTimezoneOffset();
+    if (timeZoneOffset === localTimeZoneOffset) {
+        return date;
+    }
+
+    const tzDate = new Date(date.getTime());
+
+    // local time + localTimeZoneOffset = UTC time
+    // UTC time - timeZoneOffset = given timezone time
+    tzDate.setMinutes(tzDate.getMinutes() + localTimeZoneOffset - timeZoneOffset);
+
+    // Pretend that the time zone offset is match the desired one
+    tzDate.getTimezoneOffset = () => timeZoneOffset;
+
+    return tzDate;
 }
 
 /**
@@ -306,7 +330,8 @@ addToken('ZZ', getTimeZone, {separator: ''});
  * <h2>Параметры функции</h2>
  * <ul>
  *      <li><b>date</b> {Date} Дата.</li>
- *      <li><b>format</b> {String} Формат вывода.</li>
+ *      <li><b>mask</b> {String} Маска формата вывода.</li>
+ *      <li><b>[timeZoneOffset]</b> {Number} Смещение часового пояса, в котором требуется вывести значения. По умолчанию используется локальный.</li>
  * </ul>
  * <h2>Возвращает</h2>
  * {String} Дата в указанном формате.
@@ -374,6 +399,13 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     const date = new Date(2018, 4, 7);
  *     console.log(format(date, format.FULL_DATE_DOW)); // 07 мая'18, понедельник
  * </pre>
+ * Выведем текущее время в часовом поясе клиента:
+ * <pre>
+ *     import {date as format} from 'Types/formatter';
+ *     import {DateTime} from 'Types/entity';
+ *     const date = new Date();
+ *     console.log(format(date, format.SHORT_TIME, DateTime.getClientTimezoneOffset()));
+ * </pre>
  *
  * <h2>Доступные маски.</h2>
  * Отображение времени:
@@ -440,14 +472,16 @@ addToken('ZZ', getTimeZone, {separator: ''});
  * @public
  * @author Мальцев А.А.
  */
-function format(date: Date, format: string): string {
-    return String(format).replace(getTokensRegex(), (token) => {
+function format(date: Date, mask: string, timeZoneOffset?: number): string {
+    const actualDate = timeZoneOffset === undefined ? date : getTzDate(date, timeZoneOffset);
+
+    return String(mask).replace(getTokensRegex(), (token) => {
         // Check if to be escaped
         if (token[0] === '[' && token[token.length - 1] === ']') {
             return token.substr(1, token.length - 2);
         }
 
-        return formatByToken(date, tokens[token][0], tokens[token][1]);
+        return formatByToken(actualDate, tokens[token][0], tokens[token][1]);
     });
 }
 
