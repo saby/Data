@@ -1,17 +1,20 @@
 import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from './SerializableMixin';
+import {global} from '../util';
 import {register} from '../di';
+
+const NOW = new Date();
 
 interface IDateTimeConstructor {
     new(): Date & SerializableMixin;
     fromJSON(data: ISignature): DateTime;
 }
 
-function mixin(Base: Function): IDateTimeConstructor {
-    return Base as any;
+function mixin(Base: unknown): IDateTimeConstructor {
+    return Base as IDateTimeConstructor;
 }
 
 /**
- * Тип даты и времени.
+ * Тип "Дата-время". Расширяет стандартный тип Date для более точной работы с типами "Дата" и "Время".
  * @class Types/_entity/DateTime
  * @extends Date
  * @public
@@ -19,7 +22,7 @@ function mixin(Base: Function): IDateTimeConstructor {
  */
 
 /*
- * Date and time type
+ * Date and time type. Extends standard Date type to work with "Date" and "Time" types more precisely.
  * @class Types/_entity/DateTime
  * @extends Date
  * @public
@@ -84,7 +87,26 @@ export default class DateTime extends mixin(SerializableMixin) {
     }
 
     // @ts-ignore override Date signature
-    toJSON(key?: any): ISignature;
+    toJSON(key?: any): ISignature {
+        return SerializableMixin.prototype.toJSON.call(this);
+    }
+
+    // endregion
+
+    // region Statics
+
+    /**
+     * Returns client time zone offset taken from cookie named 'tz'.
+     * It's an analogue of {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset getTimezoneOffset} but it could be used on SSR to synchronize rendered values of date/time with client time zone.
+     */
+    static getClientTimezoneOffset(): number {
+        const clientTimeZoneStr = global.process?.domain?.req?.cookies?.tz;
+        if (clientTimeZoneStr) {
+            return parseInt(clientTimeZoneStr, 10);
+        }
+
+        return NOW.getTimezoneOffset();
+    }
 
     // endregion
 }

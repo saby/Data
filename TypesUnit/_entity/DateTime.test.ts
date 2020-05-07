@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import DateTime from 'Types/_entity/DateTime';
+import {global} from 'Types/util';
 
 describe('Types/_entity/DateTime', () => {
     describe('.constructor()', () => {
@@ -32,6 +33,33 @@ describe('Types/_entity/DateTime', () => {
             });
 
             assert.equal(instance.getTime(), time);
+        });
+    });
+
+    describe('::getClientTimezoneOffset()', () => {
+        it('should return local time zone by default', () => {
+            const offset = DateTime.getClientTimezoneOffset();
+            const now = new Date();
+
+            assert.strictEqual(offset, now.getTimezoneOffset());
+        });
+
+        it('should return time zone from cookie on SSR environment', () => {
+            const process = global.process;
+
+            const tz = 123;
+            global.process = {
+                domain: {
+                    req: {
+                        cookies: {tz}
+                    }
+                }
+            };
+            const offset = DateTime.getClientTimezoneOffset();
+
+            global.process = process;
+
+            assert.strictEqual(offset, tz);
         });
     });
 });

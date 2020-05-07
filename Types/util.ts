@@ -9,6 +9,10 @@
  * @author Мальцев А.А.
  */
 
+// tslint:disable-next-line:ban-comma-operator
+const global = (0, eval)('this');
+export {global};
+
 export {default as logger, ILogger} from './_util/logger';
 export {mixin, applyMixins} from './_util/mixin';
 
