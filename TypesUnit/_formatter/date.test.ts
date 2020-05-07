@@ -206,7 +206,7 @@ describe('Types/_formatter/date', () => {
         assert.equal(format(dt, 'ddl'), 'undefined');
     });
 
-    context('timezones', () => {
+    context('for certain timezone', () => {
         let timezoneOffsetStub;
         let date;
 
@@ -237,6 +237,12 @@ describe('Types/_formatter/date', () => {
         it('should format "ZZ" as timezone without colon', () => {
             timezoneOffsetStub.callsFake(() => 210);
             assert.equal(format(date, 'ZZ'), '-0330');
+        });
+
+        it('should format "DD.MM HH:mm Z" as UTC+0 for date given as UTC+3', () => {
+            const date = new Date(2020, 4, 1, 1, 50, 0); // 01.05 01:50 +03
+            timezoneOffsetStub.callsFake(() => -180);
+            assert.equal(format(date, 'DD.MM HH:mm Z', 0), '30.04 22:50 +00');
         });
     });
 
