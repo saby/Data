@@ -200,6 +200,21 @@ describe('Types/_source/Query', () => {
             assert.equal(query.getJoin().length, 1);
         });
     });
+
+    describe('.union()', () => {
+        it('should set union queries', () => {
+            const unionQueries = [new Query(), new Query()];
+            query.union(...unionQueries);
+            assert.deepEqual(query.getUnion(), unionQueries);
+        });
+
+        it('should throw TypeError if there is no Query instance', () => {
+            const unionQueries = [new Query(), {} as Query];
+            assert.throw(() => {
+                query.union(...unionQueries);
+            }, TypeError);
+        });
+    });
 });
 
 describe('Types/_source/Query:Join', () => {
