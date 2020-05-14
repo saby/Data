@@ -15,6 +15,19 @@ interface IProduceOptions {
 }
 
 /**
+ * Перечисляемый тип. Это перечисляемая коллекция ключей и значений, один из которых может быть выбран или нет.
+ * @class Types/_collection/Enum
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IEnum
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
+
+ /*
  * Enumerable type. It's an enumerable collection of keys and values and one of them can be selected or not.
  * @class Types/_collection/Enum
  * @extends Types/_collection/Dictionary
@@ -26,6 +39,7 @@ interface IProduceOptions {
  * @public
  * @author Мальцев А.А.
  */
+
 export default class Enum<T> extends mixin<
     Dictionary<any>,
     ManyToManyMixin,
@@ -38,6 +52,11 @@ export default class Enum<T> extends mixin<
    CloneableMixin
 ) implements IEnum<T>, IProducible {
     /**
+     * @cfg Ключ выбранного элемента.
+     * @name Types/_collection/Enum#index
+     */
+
+    /*
      * @cfg Key of the selected item
      * @name Types/_collection/Enum#index
      */
@@ -161,6 +180,11 @@ export default class Enum<T> extends mixin<
     // region Protected methods
 
     /**
+     * Преобразует ключ в численный тип.
+     * @protected
+     */
+
+    /*
      * Converts key to the Number type
      * @protected
      */
@@ -172,6 +196,13 @@ export default class Enum<T> extends mixin<
     }
 
     /**
+     * Запускает событие изменения.
+     * @param index Ключ выбранного элемента.
+     * @param value Значение выбранного элемента.
+     * @protected
+     */
+
+    /*
      * Triggers a change event
      * @param index Key of selected item
      * @param value Value of selected item

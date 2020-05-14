@@ -1,4 +1,13 @@
 /**
+ * Библиотека, которая обеспечивает цепные ленивые вычисления для различных видов коллекций.
+ * @library Types/chain
+ * @includes factory Types/_chain/factory
+ * @includes Abstract Types/_chain/Abstract
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that provides chained lazy calculations over various kinds of collections.
  * @library Types/chain
  * @includes factory Types/_chain/factory
