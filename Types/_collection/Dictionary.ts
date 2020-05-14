@@ -17,6 +17,19 @@ import {IHashMap} from '../_declarations';
 type DictionaryValues<T> = T[] | IHashMap<T>;
 
 /**
+ * Абстрактная сущность, в которой словарь представляет собой набор ключей и значений.
+ * @class Types/_collection/Dictionary
+ * @implements Types/_collection/IEnumerable
+ * @implements Types/_entity/IEquatable
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/ObservableMixin
+ * @public
+ * @author Мальцев А.А.
+ * @remark 
+ * Это абстрактный класс, и у него не может быть экземпляров.
+ */
+
+/*
  * An abstract enity which have the dictionary as collection of keys and values.
  * It's an abstract class and it's can't have instances.
  * @class Types/_collection/Dictionary
@@ -37,18 +50,32 @@ export default abstract class Dictionary<T> extends mixin<
     ObservableMixin
 ) implements IEnumerable<T>, IEquatable {
     /**
+     * @cfg Коллекция ключей и значений.
+     * @name Types/_collection/Dictionary#dictionary
+     */
+
+    /*
      * @cfg Collection of keys and values
      * @name Types/_collection/Dictionary#dictionary
      */
     protected _$dictionary: DictionaryValues<T>;
 
     /**
+     * @cfg Локализованная коллекция ключей и значений.
+     * @name Types/_collection/Dictionary#localeDictionary
+     */
+
+    /*
      * @cfg Localized collection of keys and values
      * @name Types/_collection/Dictionary#localeDictionary
      */
     protected _$localeDictionary: DictionaryValues<T>;
 
     /**
+     * Название конкретного типа, который использовался при сериализации. Должен быть переопределен.
+     */
+
+    /*
      * Name of the concrete type which used during the serialization. Should be overrided.
      */
     protected _type: string;
@@ -133,6 +160,12 @@ export default abstract class Dictionary<T> extends mixin<
     // region Public methods
 
     /**
+     * Возвращает коллекцию ключей и значений.
+     * @param [localize=false] Should return localized version
+     * @protected
+     */
+
+    /*
      * Returns collection of keys and values
      * @param [localize=false] Should return localized version
      * @protected
@@ -149,6 +182,13 @@ export default abstract class Dictionary<T> extends mixin<
     // region Protected methods
 
     /**
+     * Возвращает ключ значения в словаре.
+     * @param name Значение для поиска.
+     * @param [localize=false] Является ли локализованным значение.
+     * @protected
+     */
+
+    /*
      * Returns key of the value in dictionary
      * @param name Value for lookup
      * @param [localize=false] Is the localized value
@@ -165,6 +205,13 @@ export default abstract class Dictionary<T> extends mixin<
     }
 
     /**
+     * Возвращает значение ключа в словаре.
+     * @param index Ключ для поиска.
+     * @param [localize=false] Должен вернуть локализованное значение.
+     * @protected
+     */
+
+    /*
      * Returns value of the key in dictionary
      * @param index Key for lookup
      * @param [localize=false] Should return the localized value
@@ -175,6 +222,12 @@ export default abstract class Dictionary<T> extends mixin<
     }
 
     /**
+     * Извлекает словарь из формата поля.
+     * @param format Формат поля.
+     * @protected
+     */
+
+    /*
      * Extracts dictionary from the field format.
      * @param format Field format
      * @protected
@@ -192,6 +245,12 @@ export default abstract class Dictionary<T> extends mixin<
     }
 
     /**
+     * Извлекает словарь из формата поля.
+     * @param format Формат поля.
+     * @protected
+     */
+
+    /*
      * Extracts dictionary from the field format.
      * @param format Field format
      * @protected
