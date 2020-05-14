@@ -1,4 +1,20 @@
 /**
+ * Библиотека, которая форматирует типы в строки.
+ * @library Types/formatter
+ * @includes cyrTranslit Types/_formatter/cyrTranslit
+ * @includes date Types/_formatter/date
+ * @includes dateFromSql Types/_formatter/dateFromSql
+ * @includes dateToSql Types/_formatter/dateToSql
+ * @includes numberRoman Types/_formatter/numberRoman
+ * @includes numberWords Types/_formatter/numberWords
+ * @includes number Types/_formatter/number
+ * @includes period Types/_formatter/period
+ * @includes retrospect Types/_formatter/retrospect
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that formats types to strings
  * @library Types/formatter
  * @includes cyrTranslit Types/_formatter/cyrTranslit
