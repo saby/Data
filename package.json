@@ -1,6 +1,6 @@
 {
    "name": "saby-types",
-   "version": "20.3100.0",
+   "version": "20.3200.0",
    "repository": {
       "type": "git",
       "url": "git@github.com:saby/Types.git"
@@ -51,11 +51,11 @@
       "report-dir": "./artifacts/coverage"
    },
    "devDependencies": {
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-20.3100",
-      "saby-i18n": "git+https://platform-git.sbis.ru/saby/i18n.git#rc-20.3100",
-      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-20.3100",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-20.3100",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-20.3100",
-      "wasaby-app": "git+https://platform-git.sbis.ru/saby/wasaby-app.git#rc-20.3100"
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-20.3200",
+      "saby-i18n": "git+https://platform-git.sbis.ru/saby/i18n.git#rc-20.3200",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-20.3200",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-20.3200",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-20.3200",
+      "wasaby-app": "git+https://platform-git.sbis.ru/saby/wasaby-app.git#rc-20.3200"
    }
 }
