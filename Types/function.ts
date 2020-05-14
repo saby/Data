@@ -1,4 +1,16 @@
 /**
+ * Библиотека, улучшающая работу с функциями.
+ * @library Types/function
+ * @includes debounce Types/_function/debounce
+ * @includes delay Types/_function/delay
+ * @includes memoize Types/_function/memoize
+ * @includes once Types/_function/once
+ * @includes throttle Types/_function/throttle
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that improves work with functions
  * @library Types/function
  * @includes debounce Types/_function/debounce

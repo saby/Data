@@ -1,4 +1,12 @@
 /**
+ * Библиотека уровня совместимости.
+ * @library Types/shim
+ * @includes Map Types/_shim/Map
+ * @includes Set Types/_shim/Set
+ * @author Мальцев А.А.
+ */
+
+/*
  * Compatibility layer library
  * @library Types/shim
  * @includes Map Types/_shim/Map

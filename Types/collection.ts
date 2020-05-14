@@ -1,4 +1,26 @@
 /**
+ * Библиотека, которая предоставляет различные виды коллекций.
+ * @library Types/collection
+ * @includes enumerableComparator Types/_collection/enumerableComparator
+ * @includes Enum Types/_collection/Enum
+ * @includes enumerator Types/_collection/enumerator
+ * @includes factory Types/_collection/factory
+ * @includes format Types/_collection/format
+ * @includes Flags Types/_collection/Flags
+ * @includes IEnum Types/_collection/IEnum
+ * @includes IFlags Types/_collection/IFlags
+ * @includes IEnumerable Types/_collection/IEnumerable
+ * @includes IEnumerator Types/_collection/IEnumerator
+ * @includes IList Types/_collection/IList
+ * @includes IObservable Types/_collection/IObservable
+ * @includes List Types/_collection/List
+ * @includes ObservableList Types/_collection/ObservableList
+ * @includes RecordSet Types/_collection/RecordSet
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that provides various kinds of collections
  * @library Types/collection
  * @includes enumerableComparator Types/_collection/enumerableComparator
