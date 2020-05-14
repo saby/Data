@@ -1,4 +1,31 @@
 /**
+ * Библиотека, которая обеспечивает доступ к источникам данных.
+ * @library Types/source
+ * @includes Base Types/_source/Base
+ * @includes DataSet Types/_source/DataSet
+ * @includes HierarchicalMemory Types/_source/HierarchicalMemory
+ * @includes ICrud Types/_source/ICrud
+ * @includes ICrudPlus Types/_source/ICrudPlus
+ * @includes IData Types/_source/IData
+ * @includes IProvider Types/_source/IProvider
+ * @includes IRpc Types/_source/IRpc
+ * @includes Local Types/_source/Local
+ * @includes Memory Types/_source/Memory
+ * @includes PrefetchProxy Types/_source/PrefetchProxy
+ * @includes Query Types/_source/Query
+ * @includes queryAndExpression Types/_source/Query#andExpression
+ * @includes queryOrExpression Types/_source/Query#orExpression
+ * @includes QueryJoin Types/_source/Query#Join
+ * @includes QueryOrder Types/_source/Query#Order
+ * @includes Remote Types/_source/Remote
+ * @includes Rpc Types/_source/Rpc
+ * @includes SbisService Types/_source/SbisService
+ * @includes sbisServicePositionExpression Types/_source/SbisService#positionExpression
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Library that provides access to data sources
  * @library Types/source
  * @includes Base Types/_source/Base
