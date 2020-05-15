@@ -1,6 +1,5 @@
 import {ICloneable, OptionsToPropertyMixin} from '../entity';
 import {IHashMap} from '../_declarations';
-import { query } from 'Application/Env';
 
 export enum ExpandMode {
     None,
@@ -75,7 +74,9 @@ function playExpressionInner<T>(
     } else {
         // If there is no atom that means there is a group
         stack.push(expression);
-        onGroupBegins(expression.type, expression.conditions);
+        if (onGroupBegins) {
+            onGroupBegins(expression.type, expression.conditions);
+        }
 
         // Play each condition
         expression.conditions.forEach((condition) => {
@@ -141,7 +142,10 @@ function playExpressionInner<T>(
         });
 
         stack.pop();
-        onGroupEnds(expression.type, stack.length && stack[stack.length - 1].type);
+
+        if (onGroupEnds) {
+            onGroupEnds(expression.type, stack.length && stack[stack.length - 1].type);
+        }
     }
 }
 
@@ -155,8 +159,8 @@ function playExpressionInner<T>(
 export function playExpression<T>(
     expression: WhereExpression<T>,
     onAtomAppears: AtomAppearCallback,
-    onGroupBegins: GroupBeginCallback<T>,
-    onGroupEnds: GroupEndCallback
+    onGroupBegins?: GroupBeginCallback<T>,
+    onGroupEnds?: GroupEndCallback
 ): void {
     playExpressionInner(
         expression instanceof PartialExpression ? expression : andExpression(expression as unknown as T),

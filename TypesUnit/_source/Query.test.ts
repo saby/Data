@@ -217,7 +217,7 @@ describe('Types/_source/Query', () => {
     });
 });
 
-describe('Types/_source/Query:Join', () => {
+describe('Types/_source/Query.Join', () => {
     let select: IHashMap<string>;
     let on: IHashMap<string>;
     let as: string;
