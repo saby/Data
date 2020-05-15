@@ -11,7 +11,6 @@ import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
 import Query, {
     ExpandMode,
-    PartialExpression,
     playExpression,
     NavigationType,
     WhereExpression
@@ -100,16 +99,6 @@ interface IOldMoveMeta {
     hierField: string;
 }
 
-type PositionDeclaration = [EntityKey, IHashMap<unknown>];
-
-export class PositionExpression<T = PositionDeclaration> extends PartialExpression<T> {
-    readonly type: string = 'sbisPosition';
-}
-
-export function positionExpression<T>(...conditions: PositionDeclaration[]): PositionExpression<T> {
-    return new PositionExpression(conditions as unknown as T[]);
-}
-
 /**
  * Returns BL object name and its method name joined by separator.
  * If method name already contains the separator then returns it unchanged.
@@ -172,8 +161,8 @@ function getGroupsByComplexIds(ids: EntityKey[], defaults: string): object {
  * @param adapter
  */
 function buildRecord(data: unknown, adapter: AdapterDescriptor): Record | null {
-    if (data && DataMixin.isModelInstance(data)) {
-        return data as Record;
+    if (data instanceof Record) {
+        return data;
     }
 
     const RecordType = resolve<typeof Record>('Types/entity:Record');
@@ -214,6 +203,17 @@ function buildRecordSet<T = unknown>(
     return records;
 }
 
+function eachQuery<T>(
+    query: Query<T>,
+    callback: (item: Query<T>, parent: Query<T>) => void,
+    prev?: Query<T>
+): void {
+    callback(query, prev);
+    query.getUnion().forEach((unionQuery: Query) => {
+        eachQuery(unionQuery, callback, query);
+    });
+}
+
 /**
  * Returns sorting parameters
  */
@@ -222,20 +222,22 @@ function getSortingParams(query: Query): string[] | null {
         return null;
     }
 
-    const orders = query.getOrderBy();
-    if (orders.length === 0) {
-        return null;
-    }
+    let sort = null;
+    eachQuery(query, (subQuery) => {
+        const orders = subQuery.getOrderBy();
+        for (let i = 0; i < orders.length; i++) {
+            const order = orders[i];
+            if (!sort) {
+                sort = [];
+            }
+            sort.push({
+                n: order.getSelector(),
+                o: order.getOrder(),
+                l: order.getNullPolicy()
+            });
+        }
+    });
 
-    const sort = [];
-    for (let i = 0; i < orders.length; i++) {
-        const order = orders[i];
-        sort.push({
-            n: order.getSelector(),
-            o: order.getOrder(),
-            l: order.getNullPolicy()
-        });
-    }
     return sort;
 }
 
@@ -246,13 +248,8 @@ function getSortingParams(query: Query): string[] | null {
 function expressionToObject<T>(expr: WhereExpression<T>): object {
     const result = {};
     let currentType: string = '';
-    let processingPosition = false;
 
     playExpression(expr, (key, value) => {
-        if (processingPosition) {
-            return;
-        }
-
         if (currentType === 'or') {
             result[key] = result[key] || [];
             if (value !== undefined) {
@@ -263,14 +260,8 @@ function expressionToObject<T>(expr: WhereExpression<T>): object {
         }
     }, (type) => {
         currentType = type;
-        if (type === 'sbisPosition') {
-            processingPosition = true;
-        }
     }, (type, restoreType) => {
         currentType = restoreType;
-        if (type === 'sbisPosition') {
-            processingPosition = false;
-        }
     });
 
     return result;
@@ -283,7 +274,7 @@ function expressionToObject<T>(expr: WhereExpression<T>): object {
  * @param cursor Cursor to affect
  * @return True if argument expr contains expression
  */
-function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor): boolean {
+function applyPairToCursor(expr: string, value: unknown, cursor: ICursor): boolean {
     // Skip undefined values
     if (value === undefined) {
         return false;
@@ -324,152 +315,181 @@ function applyExpressionAndValue(expr: string, value: unknown, cursor: ICursor):
 }
 
 /**
- * Applies multiple positions to given cursor
- * @param conditions Conditions of positions to apply
- * @param cursor Cursor to affect
- * @param adapter Adapter to use in records
- */
-function applyMultiplePosition(conditions: PositionDeclaration[], cursor: ICursor, adapter: AdapterDescriptor): void {
-    cursor.position = [];
-
-    conditions.forEach(([conditionKey, conditionFilter]) => {
-        const conditionCursor: ICursor = {
-            position: null,
-            direction: null
-        };
-        Object.keys(conditionFilter).forEach((filterKey) => {
-            applyExpressionAndValue(filterKey, conditionFilter[filterKey], conditionCursor);
-        });
-
-        (cursor.position as object[]).push({
-            id: conditionKey,
-            nav:  buildRecord(conditionCursor.position, adapter)
-        });
-
-        cursor.direction = cursor.direction || conditionCursor.direction;
-    });
-}
-
-/**
  * Returns navigation parameters
  */
-function getNavigationParams(query: Query, options: IOptionsOption, adapter: AdapterDescriptor): object | null {
+function getNavigationParams(query: Query, options: IOptionsOption, adapter: AdapterDescriptor): object[] | null {
+    const result = [];
+
     if (!query) {
-        return null;
+        return result;
     }
 
-    const offset = query.getOffset();
-    const limit = query.getLimit();
-    const meta = query.getMeta();
-    const moreProp = options.hasMoreProperty;
-    const hasMoreProp = meta.hasOwnProperty(moreProp);
-    const more = hasMoreProp ? meta[moreProp] : offset >= 0;
-    const withoutOffset = offset === 0;
-    const withoutLimit = limit === undefined || limit === null;
+    eachQuery(query, (subQuery) => {
+        const offset = subQuery.getOffset();
+        const limit = subQuery.getLimit();
+        const meta = subQuery.getMeta();
+        const moreProp = options.hasMoreProperty;
+        const hasMoreProp = meta.hasOwnProperty(moreProp);
+        const more = hasMoreProp ? meta[moreProp] : offset >= 0;
+        const withoutOffset = offset === 0;
+        const withoutLimit = limit === undefined || limit === null;
 
-    let params = null;
-    switch (meta.navigationType || options.navigationType) {
-        case NavigationType.Page:
-            if (!withoutOffset || !withoutLimit) {
-                params = {
-                    Страница: limit > 0 ? Math.floor(offset / limit) : 0,
-                    РазмерСтраницы: limit,
-                    ЕстьЕще: more
-                };
-            }
-            break;
+        let params = null;
 
-        case NavigationType.Position:
-            if (!withoutLimit) {
-                const where = query.getWhere();
-                const cursor: ICursor = {
-                    position: null,
-                    direction: null
-                };
-                let processingPosition = false;
+        switch (meta.navigationType || options.navigationType) {
+            case NavigationType.Page:
+                if (!withoutOffset || !withoutLimit) {
+                    params = {
+                        Страница: limit > 0 ? Math.floor(offset / limit) : 0,
+                        РазмерСтраницы: limit,
+                        ЕстьЕще: more
+                    };
+                }
+                break;
 
-                playExpression(where, (expr, value) => {
-                    if (processingPosition) {
-                        return;
-                    }
+            case NavigationType.Position:
+                if (!withoutLimit) {
+                    const cursor: ICursor = {
+                        position: null,
+                        direction: null
+                    };
 
-                    if (applyExpressionAndValue(expr, value, cursor)) {
-                        // Also delete property with operand in query (by link)
-                        delete where[expr];
-                    }
+                    const where = subQuery.getWhere();
+                    playExpression(where, (expr, value) => {
+                        if (applyPairToCursor(expr, value, cursor)) {
+                            // Also delete property with operand in subQuery (by link)
+                            delete where[expr];
+                        }
+                    });
 
-                }, (type, conditions) => {
-                    if (type === 'sbisPosition') {
-                        processingPosition = true;
-                        applyMultiplePosition(conditions as PositionDeclaration[], cursor, adapter);
-                    }
-                }, (type) => {
-                    if (type === 'sbisPosition') {
-                        processingPosition = false;
-                    }
-                });
+                    params = {
+                        HasMore: more,
+                        Limit: limit,
+                        Direction: cursor.direction || CursorDirection.forward,
+                        Position: cursor.position instanceof Array
+                            ? buildRecordSet(cursor.position, adapter)
+                            : buildRecord(cursor.position, adapter)
+                    };
+                }
+                break;
 
-                params = {
-                    HasMore: more,
-                    Limit: limit,
-                    Direction: cursor.direction || CursorDirection.forward,
-                    Position: cursor.position instanceof Array
-                        ? buildRecordSet(cursor.position, adapter)
-                        : buildRecord(cursor.position, adapter)
-                };
-            }
-            break;
+            default:
+                if (!withoutOffset || !withoutLimit) {
+                    params = {
+                        Offset: offset || 0,
+                        Limit: limit,
+                        HasMore: more
+                    };
+                }
+        }
 
-        default:
-            if (!withoutOffset || !withoutLimit) {
-                params = {
-                    Offset: offset || 0,
-                    Limit: limit,
-                    HasMore: more
-                };
-            }
-    }
+        result.push(params);
+    });
 
-    return params;
+    return result;
+}
+
+interface IMultipleNavigation {
+    id: EntityKey;
+    nav: Record<unknown>;
+}
+
+function getMultipleNavigation(
+    summaryNav: object[],
+    summaryFilter: object[],
+    adapter: AdapterDescriptor
+): IMultipleNavigation[] {
+    const navigation = [];
+
+    summaryNav.forEach((sectionNav, index) => {
+        // Treat first filter key as section id
+        const sectionFilter = summaryFilter[index];
+        const sectionKey = Object.keys(sectionFilter)[0];
+        const sectionId = object.getPropertyValue(sectionFilter, sectionKey) ;
+
+        // Delete section id from filter to prevent sending it in general filter
+        delete sectionFilter[sectionKey];
+
+        navigation.push({
+            id: sectionId === undefined ? null : sectionId,
+            nav: buildRecord(sectionNav, adapter)
+        });
+    });
+
+    return navigation;
 }
 
 /**
  * Returns filtering parameters
  */
-function getFilterParams(query: Query): object | null {
-    let params = null;
-    if (query) {
-        const whereExpr = query.getWhere();
-        // Pass records and models 'as is'
-        if (DataMixin.isModelInstance(whereExpr)) {
-            params = whereExpr;
-        } else {
-            params = expressionToObject(whereExpr);
-        }
+function getFilterParams(query: Query): object[] {
+    const result = [];
 
-        const meta = query.getMeta();
+    if (!query) {
+        return result;
+    }
+
+    interface IHierarchyOptions {
+        Разворот?: string;
+        ВидДерева?: string;
+    }
+
+    eachQuery(query, (subQuery) => {
+        const whereExpr = subQuery.getWhere();
+        // Pass records and models 'as is'
+        const whereObject: IHierarchyOptions = whereExpr instanceof Record
+            ? whereExpr
+            : expressionToObject(whereExpr);
+
+        const meta = subQuery.getMeta();
         if (meta) {
             switch (meta.expand) {
                 case ExpandMode.None:
-                    params.Разворот = 'Без разворота';
+                    whereObject.Разворот = 'Без разворота';
                     break;
                 case ExpandMode.Nodes:
-                    params.Разворот = 'С разворотом';
-                    params.ВидДерева = 'Только узлы';
+                    whereObject.Разворот = 'С разворотом';
+                    whereObject.ВидДерева = 'Только узлы';
                     break;
                 case ExpandMode.Leaves:
-                    params.Разворот = 'С разворотом';
-                    params.ВидДерева = 'Только листья';
+                    whereObject.Разворот = 'С разворотом';
+                    whereObject.ВидДерева = 'Только листья';
                     break;
                 case ExpandMode.All:
-                    params.Разворот = 'С разворотом';
-                    params.ВидДерева = 'Узлы и листья';
+                    whereObject.Разворот = 'С разворотом';
+                    whereObject.ВидДерева = 'Узлы и листья';
                     break;
             }
         }
+
+        result.push(whereObject);
+    });
+
+    return result;
+}
+
+function mergeFilterParams(summaryFilter: object[]): object {
+    if (!summaryFilter) {
+        return summaryFilter;
     }
 
-    return params;
+    const result = summaryFilter.reduce((memo, item) => {
+        if (item instanceof Record) {
+            if (!memo) {
+                return item;
+            }
+            item.each((value, name) => {
+                object.setPropertyValue(memo, name as string, value);
+            });
+            return memo;
+        } else if (memo instanceof Record) {
+            memo.set(item);
+            return memo;
+        }
+        return {...(memo || {}), ...item};
+    }, null);
+
+    return result;
 }
 
 type AdditionalParams = string[] | IHashMap<unknown>;
@@ -478,10 +498,15 @@ type AdditionalParams = string[] | IHashMap<unknown>;
  * Returns additional parameters
  */
 function getAdditionalParams(query: Query): AdditionalParams {
-    let additional: AdditionalParams = [];
-    if (query) {
-        additional = query.getSelect();
-        if (additional && DataMixin.isModelInstance(additional)) {
+    let result: AdditionalParams = [];
+
+    if (!query) {
+        return result;
+    }
+
+    eachQuery(query, (subQuery) => {
+        let additional: AdditionalParams = subQuery.getSelect();
+        if (additional instanceof Record) {
             const obj = {};
             additional.each((key, value) => {
                 obj[key] = value;
@@ -503,9 +528,11 @@ function getAdditionalParams(query: Query): AdditionalParams {
             throw new TypeError('Types/_source/SbisService::getAdditionalParams(): unsupported data type. ' +
               'Only Array, Types/_entity/Record or Object are allowed.');
         }
-    }
 
-    return additional;
+        (result as unknown[]).push(...additional);
+    });
+
+    return result;
 }
 
 interface ICreateMeta extends IHashMap<unknown> {
@@ -521,7 +548,7 @@ interface ICreateResult {
  * Returns data to send in create()
  */
 function passCreate(this: SbisService, meta?: Record | ICreateMeta): ICreateResult {
-    if (!DataMixin.isModelInstance(meta)) {
+    if (!(meta instanceof Record)) {
         meta = {...meta || {}};
         if (!('ВызовИзБраузера' in meta)) {
             meta.ВызовИзБраузера = true;
@@ -624,7 +651,7 @@ function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap
 interface IQueryResult {
     Фильтр: Record;
     Сортировка: RecordSet<unknown, Model<unknown>>;
-    Навигация: Record;
+    Навигация: Record<unknown> | RecordSet<unknown, Model<unknown>>;
     ДопПоля: AdditionalParams;
 }
 
@@ -633,15 +660,22 @@ interface IQueryResult {
  */
 function passQuery(this: SbisService, query?: Query): IQueryResult {
     const adapter = this._$adapter;
-    const nav = getNavigationParams(query, this._$options, adapter);
+    let nav = getNavigationParams(query, this._$options, adapter);
     const filter = getFilterParams(query);
     const sort = getSortingParams(query);
     const add = getAdditionalParams(query);
 
+    const isMultipleNavigation = nav.length > 1;
+    if (isMultipleNavigation) {
+        nav = getMultipleNavigation(nav, filter, adapter);
+    }
+
     return {
-        Фильтр: buildRecord(filter, adapter),
+        Фильтр: buildRecord(mergeFilterParams(filter), adapter),
         Сортировка: buildRecordSet(sort, adapter, this.getKeyProperty()),
-        Навигация: buildRecord(nav, adapter),
+        Навигация: isMultipleNavigation
+            ? buildRecordSet(nav, adapter, this.getKeyProperty())
+            : (nav.length ? buildRecord(nav[0], adapter) : null),
         ДопПоля: add
     };
 }
@@ -864,16 +898,13 @@ function oldMove(
  *         // Do something with articles
  *     }).catch(onError);
  * </pre>
- * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по курсору:
+ * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
  * <pre>
- *     import {SbisService, Query, QueryNavigationType, queryAndExpression, sbisServicePositionExpression} from 'Types/source';
+ *     import {SbisService, Query} from 'Types/source';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
- *         keyProperty: 'articleId',
- *         options: {
- *             navigationType: QueryNavigationType.POSITION
- *         }
+ *         keyProperty: 'articleId'
  *     });
  *
  *     const sections = {
@@ -884,21 +915,25 @@ function oldMove(
  *         art: 460
  *     };
  *
- *     const query = new Query();
- *     // Set multiple cursors position by value of field 'PublicationDate' within hierarchy nodes with given id
- *     query.where(queryAndExpression({
- *         visible: true
- *     }, sbisServicePositionExpression(
- *         [sections.movies, {'PublicationDate>=': new Date(2020, 0, 10)}],
- *         [sections.comics, {'PublicationDate>=': new Date(2020, 0, 12)}]
- *     )));
- *     query.limit(100);
+ *     // Use union of queries with various parameters
+ *     const moviesQuery = new Query()
+ *         .where({sectionId: sections.movies})
+ *         .offset(20)
+ *         .limit(10)
+ *         .orderBy('imdbRating', true);
  *
- *     dataSource.query(query).then((response) => {
+ *     const comicsQuery = new Query()
+ *         .where({sectionId: sections.comics})
+ *         .offset(30)
+ *         .limit(15)
+ *         .orderBy('starComRating', true);
+ *
+ *     comicsQuery.union(moviesQuery);
+ *
+ *     dataSource.query(comicsQuery).then((response) => {
  *         const articles = response.getAll();
  *         console.log(`
- *             Visible articles from sections "Movies" (published on the 10th of January 2020 or later)
- *             and "Comics" (published on the 12th of January 2020 or later).
+ *             Articles from sections "Comics" and "Movies" with different query params
  *         `);
  *         // Do something with articles
  *     }).catch(onError);

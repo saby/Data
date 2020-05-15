@@ -1,8 +1,7 @@
 import {assert} from 'chai';
 import SbisService, {
     getQueryArguments,
-    IBinding,
-    positionExpression
+    IBinding
 } from 'Types/_source/SbisService';
 import DataSet from 'Types/_source/DataSet';
 import Query, {
@@ -1413,7 +1412,57 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
-            it('should generate request with andExpression() and positionExpression()', () => {
+            it('should generate request with page navigation from union query', () => {
+                const service = new SbisService({endpoint: 'USP'});
+
+                const queryA = new Query()
+                    .offset(10)
+                    .limit(5);
+
+                const queryB = new Query();
+                queryB
+                    .where({a: 1, b: 2})
+                    .offset(20)
+                    .limit(10);
+
+                queryA.union(queryB);
+
+                return service.query(queryA).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+
+                    assert.strictEqual(args.Фильтр.s.length, 1);
+                    assert.strictEqual(args.Фильтр.s[0].n, 'b');
+
+                    assert.strictEqual(args.Фильтр.d.length, 1);
+                    assert.strictEqual(args.Фильтр.d[0], 2);
+
+                    assert.strictEqual(args.Навигация.s.length, 2);
+                    assert.strictEqual(args.Навигация.s[0].n, 'id');
+                    assert.strictEqual(args.Навигация.s[1].n, 'nav');
+
+                    assert.strictEqual(args.Навигация.d.length, 2);
+                    assert.deepEqual(args.Навигация.d[0], [null, {
+                        _type: 'record',
+                        s: [
+                            {n: 'ЕстьЕще', t: 'Логическое'},
+                            {n: 'РазмерСтраницы', t: 'Число целое'},
+                            {n: 'Страница', t: 'Число целое'}
+                        ],
+                        d: [true, 5, 2]
+                    }]);
+                    assert.deepEqual(args.Навигация.d[1], [1, {
+                        _type: 'record',
+                        s: [
+                            {n: 'ЕстьЕще', t: 'Логическое'},
+                            {n: 'РазмерСтраницы', t: 'Число целое'},
+                            {n: 'Страница', t: 'Число целое'}
+                        ],
+                        d: [true, 10, 2]
+                    }]);
+                });
+            });
+
+            it('should generate request with position navigation from union query', () => {
                 const service = new SbisService({
                     endpoint: 'USP',
                     options: {
@@ -1421,48 +1470,55 @@ describe('Types/_source/SbisService', () => {
                     }
                 });
 
-                const query = new Query();
-                query.where(andExpression(
-                    {a: 1},
-                    positionExpression(
-                        [2, {'b>': 3}],
-                        [4, {'с<': 5}]
-                    )
-                )).limit(10);
+                const queryA = new Query()
+                    .where({a: 1, 'b>': 2})
+                    .limit(10);
 
-                return service.query(query).then(() => {
+                const queryB = new Query();
+                queryB
+                    .where({c: 3, d: 4, 'e<': 5})
+                    .limit(20);
+
+                queryA.union(queryB);
+
+                return service.query(queryA).then(() => {
                     const args = SbisBusinessLogic.lastRequest.args;
 
                     assert.strictEqual(args.Фильтр.s.length, 1);
+                    assert.strictEqual(args.Фильтр.s[0].n, 'd');
+                    assert.strictEqual(args.Фильтр.d[0], 4);
 
-                    assert.strictEqual(args.Фильтр.s[0].n, 'a');
-                    assert.strictEqual(args.Фильтр.d[0], 1);
+                    assert.strictEqual(args.Навигация.s.length, 2);
+                    assert.strictEqual(args.Навигация.s[0].n, 'id');
+                    assert.strictEqual(args.Навигация.s[1].n, 'nav');
 
-                    assert.strictEqual(args.Навигация.s[0].n, 'Direction');
-                    assert.strictEqual(args.Навигация.d[0], 'backward');
-
-                    assert.strictEqual(args.Навигация.s[3].n, 'Position');
-                    const navigation = args.Навигация.d[3];
-
-                    assert.strictEqual(navigation.s.length, 2);
-                    assert.strictEqual(navigation.s[0].n, 'id');
-                    assert.strictEqual(navigation.s[1].n, 'nav');
-
-                    assert.strictEqual(navigation.d.length, 2);
-                    assert.deepEqual(navigation.d[0], [2, {
+                    assert.strictEqual(args.Навигация.d.length, 2);
+                    assert.deepEqual(args.Навигация.d[0], [1, {
                         _type: 'record',
-                        d: [3],
-                        s: [{
-                            n: 'b',
-                            t: 'Число целое'
+                        s: [
+                            {n: 'Direction', t: 'Строка'},
+                            {n: 'HasMore', t: 'Логическое'},
+                            {n: 'Limit', t: 'Число целое'},
+                            {n: 'Position', t: 'Запись'}
+                        ],
+                        d: ['forward', true, 10, {
+                            _type: 'record',
+                            s: [{n: 'b', t: 'Число целое'}],
+                            d: [2]
                         }]
                     }]);
-                    assert.deepEqual(navigation.d[1], [4, {
+                    assert.deepEqual(args.Навигация.d[1], [3, {
                         _type: 'record',
-                        d: [5],
-                        s: [{
-                            n: 'с',
-                            t: 'Число целое'
+                        s: [
+                            {n: 'Direction', t: 'Строка'},
+                            {n: 'HasMore', t: 'Логическое'},
+                            {n: 'Limit', t: 'Число целое'},
+                            {n: 'Position', t: 'Запись'}
+                        ],
+                        d: ['backward', true, 20, {
+                            _type: 'record',
+                            s: [{n: 'e', t: 'Число целое'}],
+                            d: [5]
                         }]
                     }]);
                 });

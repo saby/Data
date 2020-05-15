@@ -47,7 +47,6 @@
  * @includes Remote Types/_source/Remote
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
- * @includes sbisServicePositionExpression Types/_source/SbisService#positionExpression
  * @public
  * @author Мальцев А.А.
  */
@@ -85,6 +84,5 @@ export {default as Rpc} from './_source/Rpc';
 export {
     default as SbisService,
     getQueryArguments as sbisServiceGetQueryArguments,
-    positionExpression as sbisServicePositionExpression,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
