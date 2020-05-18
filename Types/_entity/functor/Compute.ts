@@ -55,6 +55,12 @@ export default class Compute<T> extends Abstract<T> implements ICompute {
    readonly properties: string[];
 
     /**
+     * Создает функтор.
+     * @param fn Функция вызова.
+     * @param properties Свойства, от которых зависит результат расчета.
+     */
+
+    /*
      * Creates the functor.
      * @param fn Function to call
      * @param properties Properties on which calculation result is depends on

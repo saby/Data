@@ -40,6 +40,12 @@ function getTokensRegex(): RegExp {
 }
 
 /**
+ * Добавляет токен соответствия.
+ * @param token Токен.
+ * @param handler Обработчик токена (для String - имя метода в Date.prototype).
+ */
+
+/*
  * Adds token to match
  * @param token Token
  * @param handler Token handler (for String is the method name in Date.prototype)
@@ -50,6 +56,13 @@ function addToken(token: string, handler: string|Function): void {
 }
 
 /**
+ * Применяет значение токена к указанной дате.
+ * @param date Используемая дата.
+ * @param value Применяемое значение.
+ * @param handler Обработчик токена (для String - имя метода в Date.prototype).
+ */
+
+/*
  * Applies token value to given date
  * @param date Date to being affected
  * @param value Value to apply
@@ -72,6 +85,16 @@ addToken('YY', setShortYear);
 addToken('YYYY', 'setFullYear');
 
 /**
+ * Разбирает дату из строки по заданному формату.
+ * @function
+ * @name Types/_entity/dateParser
+ * @param str Дата в строковом представлении.
+ * @param format Формат даты.
+ * @private
+ * @author Мальцев А.А.
+ */
+
+/*
  * Parses date from string by given format.
  * @function
  * @name Types/_entity/dateParser
