@@ -1,4 +1,11 @@
 /**
+ * Интерфейс объектов, поддерживающих простые итерации один за другим.
+ * @interface Types/_collection/IEnumerator
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Interface of object which supports simple iteration one by one.
  * @interface Types/_collection/IEnumerator
  * @public
