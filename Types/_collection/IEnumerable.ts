@@ -4,6 +4,13 @@ export type EnumeratorIndex = number | string;
 export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => void;
 
 /**
+ * Интерфейс коллекции, который предоставляет элементам коллекции простую итерацию один за другим.
+ * @interface Types/_collection/IEnumerable
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Interface of collection which provides their members through simple iteration one by one.
  * @interface Types/_collection/IEnumerable
  * @public
@@ -13,7 +20,7 @@ export default interface IEnumerable<T, U = EnumeratorIndex> {
     readonly '[Types/_collection/IEnumerable]': boolean;
 
     /**
-     * Возвращает энумератор для перебора элементов коллекции
+     * Возвращает энумератор для перебора элементов коллекции.
      * @example
      * Получим элементы коллекции через энумератор:
      * <pre>

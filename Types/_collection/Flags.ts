@@ -19,6 +19,19 @@ function prepareValue(value: any): IValue {
 }
 
 /**
+ * Тип "Флаг". Это перечисляемая коллекция ключей и значений, каждый из которых может быть выбран или нет.
+ * @class Types/_collection/Flags
+ * @extends Types/_collection/Dictionary
+ * @implements Types/_collection/IFlags
+ * @implements Types/_entity/IProducible
+ * @mixes Types/_entity/ManyToManyMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/CloneableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Flags type. It's an enumerable collection of keys and values and every one of them can be selected or not.
  * @class Types/_collection/Flags
  * @extends Types/_collection/Dictionary
@@ -206,6 +219,13 @@ export default class Flags<T> extends mixin<
     // region Protected methods
 
     /**
+     * Возвращает порядковый номер флага.
+     * @param name Имя флага.
+     * @param [localize=false] Локализованное имя флага.
+     * @protected
+     */
+
+    /*
      * Returns an ordinal index of the flag.
      * @param name Name of the flag
      * @param [localize=false] Is the localized flag name
@@ -239,6 +259,14 @@ export default class Flags<T> extends mixin<
     }
 
     /**
+     * Запускает событие изменения.
+     * @param name Имя флага.
+     * @param index Индекс флага.
+     * @param value Новое значение выбранного флага.
+     * @protected
+     */
+
+    /*
      * Triggers a change event
      * @param name Name of the flag
      * @param index Index of the flag
@@ -253,6 +281,12 @@ export default class Flags<T> extends mixin<
     }
 
     /**
+     * Запускает событие массового изменения.
+     * @param values Выбранные значения.
+     * @protected
+     */
+
+    /*
      * Triggers a mass change event
      * @param values Selection
      * @protected
