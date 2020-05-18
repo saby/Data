@@ -1,4 +1,12 @@
 /**
+ * Библиотека форматов.
+ * @library Types/_collection/format
+ * @includes factory Types/_collection/format/factory
+ * @includes Format Types/_collection/format/Format
+ * @author Мальцев А.А.
+ */
+
+/*
  * Formats library.
  * @library Types/_collection/format
  * @includes factory Types/_collection/format/factory
