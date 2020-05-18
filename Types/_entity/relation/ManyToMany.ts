@@ -18,6 +18,13 @@ function isAlive(entity: any): boolean {
 }
 
 /**
+ * Посредник, который обеспечивает модель отношений «many-to-manyм».
+ * @class Types/_entity/relation/ManyToMany
+ * @mixes Types/_entity/DestroyableMixin
+ * @author Мальцев А.А.
+ */
+
+/*
  * Mediator which provides "many-to-many" relationship model.
  * @class Types/_entity/relation/ManyToMany
  * @mixes Types/_entity/DestroyableMixin
@@ -63,6 +70,13 @@ export default class ManyToMany extends DestroyableMixin {
     // region Public methods
 
     /**
+     * Добавляет отношения между двумя объектами.
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     * @param [name] Наименование отношений.
+     */
+
+    /*
      * Adds an relationship between two entities
      * @param master Master entity
      * @param slave Slave entity
@@ -74,6 +88,12 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Удаляет отношения между двумя объектами.
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     */
+
+    /*
      * Removes an relationship between two entities
      * @param master Master entity
      * @param slave Slave entity
@@ -84,6 +104,12 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Удаляет все отношения для данного объекта.
+     * @param entity Объект.
+     * @param which Вид отношений.
+     */
+
+    /*
      * Removes all relationships for given entity
      * @param entity Entity
      * @param which Kind of relationships
@@ -107,6 +133,12 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Возвращает все подчиненные объекты для главного.
+     * @param master Главный объект.
+     * @param callback Обратный вызов для передачи каждого подчиненного объекта.
+     */
+
+    /*
      * Returns all slaves for master
      * @param master Master entity
      * @param callback Callback to pass each slave entity
@@ -127,6 +159,12 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Возвращает все главные объекты для подчиненного.
+     * @param master Подчиненный объект.
+     * @param callback Обратный вызов для передачи каждого главного объекта.
+     */
+
+    /*
      * Returns all masters for slave
      * @param master Slave entity
      * @param callback Callback to pass each master entity
@@ -151,6 +189,14 @@ export default class ManyToMany extends DestroyableMixin {
     // region Protected methods
 
     /**
+     * Добавляет отношения с типом "hasMany".
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     * @param name Наименование отношений.
+     * @protected
+     */
+
+    /*
      * Adds relationship with kind "hasMany"
      * @param master Master entity
      * @param slave Slave entity
@@ -174,6 +220,13 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Удаляет отношения типа "hasMany".
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     * @protected
+     */
+
+    /*
      * Removes relationship with kind "hasMany"
      * @param master Master entity
      * @param slave Slave entity
@@ -193,6 +246,14 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Добавляет отношения типа "belongsTo".
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     * @param name Наименование отношений.
+     * @protected
+     */
+
+    /*
      * Adds relationship with kind "belongsTo"
      * @param master Master entity
      * @param slave Slave entity
@@ -216,6 +277,13 @@ export default class ManyToMany extends DestroyableMixin {
     }
 
     /**
+     * Удаляет отношения типа "belongsTo".
+     * @param master Главный объект.
+     * @param slave Подчиненный объект.
+     * @protected
+     */
+
+    /*
      * Removes relationship with kind "belongsTo"
      * @param master Master entity
      * @param slave Slave entity
