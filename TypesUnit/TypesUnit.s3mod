@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ui_module id="686f183d-0bcc-4732-b4e4-6016c2a67a12" name="Types" package="Платформа" responsible="Мальцев А.А." required="1" version="1.00">
+<ui_module id="686f183d-0bcc-4732-b4e4-6016c2a67a12" name="TypesUnit" package="Платформа" responsible="Мальцев А.А." required="1" version="1.00">
 
   <description/>
 
