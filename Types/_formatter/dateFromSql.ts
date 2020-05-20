@@ -4,6 +4,16 @@ import {constants} from 'Env/Env';
 const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2})[:-]*([0-9]{2})*$/;
 
 /**
+ * Создает экземпляр даты из строки в формате SQL. Если в этой строке есть информация о часовом поясе, дата результата будет преобразована в местный часовой пояс.
+ * @function
+ * @name Types/_formatter/dateFromSql
+ * @param dateTime Дата и/или время в формате SQL.
+ * @param defaultTimeZone Используйте данный часовой пояс для преобразования указанной даты (содержит смещение от UTC в минутах). Используется, если указанная дата не содержит информацию о часовом поясе.
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Creates Date instance from a string in SQL format. In case when those string has an information about time zone the result date will be converted to the local time zone.
  * @function
  * @name Types/_formatter/dateFromSql
