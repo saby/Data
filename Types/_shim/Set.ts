@@ -1,4 +1,10 @@
 /**
+ * Ограниченная эмуляция стандартного встроенного объекта «Set», если он не поддерживается.
+ * Подробнее читайте здесь - {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set}.
+ * @author Мальцев А.А.
+ */
+
+/*
  * Limited emulation of standard built-in object "Set" if it's not supported.
  * Follow {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set} for details.
  * @author Мальцев А.А.

@@ -2,6 +2,13 @@ import DateTime from './DateTime';
 import {register} from '../di';
 
 /**
+ * Тип "время".
+ * @class Types/_entity/Time
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Time type
  * @class Types/_entity/Time
  * @public

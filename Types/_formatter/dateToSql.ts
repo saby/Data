@@ -18,6 +18,16 @@ const FORMAT = {
 const UNIX_EPOCH_START = new Date(0);
 
 /**
+ * Сериализует дату в предпочтительный формат SQL.
+ * @function
+ * @name Types/_formatter/dateToSql
+ * @param date Дата для сериализации.
+ * @param mode Режим сериализации.
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Serializes Date to the preferred SQL format.
  * @function
  * @name Types/_formatter/dateToSql

@@ -22,6 +22,13 @@ const MATCH_DAY_NUMBER = /^DD\.|\.DD/;
 const MATCH_HOURS = /HH/;
 
 /**
+ * Добавляет нули в начало числа.
+ * @param value Число
+ * @param count Максимальное количество цифр.
+ * @return Число с нулями в начале.
+ */
+
+/*
  * Adds lead zeroes to the Number
  * @param value Number
  * @param count Max digits count
@@ -243,6 +250,13 @@ function getTokensRegex(): RegExp {
 }
 
 /**
+ * Добавляет токен для соответствия.
+ * @param token Токен.
+ * @param handler Обработчик токена (для String - имя метода в Date.prototype).
+ * @param [options] Параметры для передачи обработчику.
+ */
+
+/*
  * Adds token to match
  * @param token Token
  * @param handler Token handler (for String is the method name in Date.prototype)
@@ -254,6 +268,13 @@ function addToken(token: string, handler: string|Function, options: IDateFormatO
 }
 
 /**
+ * Форматирует дату с обработчиком.
+ * @param date Дата для форматирования.
+ * @param handler Обработчик токена (для String - имя метода в Date.prototype).
+ * @param [options] Параметры для передачи обработчику.
+ */
+
+/*
  * Formats date with a handler
  * @param date Date to format
  * @param handler Token handler (for String is the method name in Date.prototype)
