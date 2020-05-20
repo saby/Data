@@ -1,4 +1,11 @@
 /**
+ * Возвращает оболочку для защищенного свойства.
+ * @param property Наименование свойства.
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Returns wrapper for protected property
  * @param property Property name
  * @public
