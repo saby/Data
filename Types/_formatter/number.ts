@@ -303,6 +303,60 @@ function getNumberFormat(options: IFormat): IFormat {
 
 /**
  *
+ * Метод возвращает строку с чувствительным к языку представлением этого числа.
+ * @remark
+ * Params:
+ * <ul>
+ *    <li>source - Число</li>
+ *    <li>options - Объект с некоторыми или всеми из следующих параметров:
+ *        <ul>
+ *            <li>
+ *                style - Стиль форматирования, который будет использован. Возможные значения: «десятичное» для простого форматирования чисел и «процент» для процентного форматирования. По умолчанию - «десятичный».
+ *            <li>
+ *                useGrouping - Использовать ли группирующие разделители, такие как разделители тысяч или тысячные/сто тысячные/крор разделители. Возможные значения: true и false. по умолчанию - true.
+ *                Следующие параметры делятся на две группы: minimumIntegerDigits, minimumFractionDigits, и maximumFractionDigits в одной группе, minimumSignificantDigits и maximumSignificantDigits в другой группе.
+ *                Если хотя бы один параметр из второй группы определен, то первая группа игнорируется.
+ *            </li>
+ *            <li>
+ *                minimumIntegerDigits - Минимальное количество целых чисел. Возможные значения от 1 до 21. по умолчанию - 1.
+ *            </li>
+ *            <li>
+ *                minimumFractionDigits - Минимальное количество дробных чисел. Возможные значения от 0 до 20;
+ *                по умолчанию для простого числа и процента - 0; по умолчанию для форматирования валюты используется количество младших разрядов, представленное в списке кодов валют ISO 4217 (2, если в списке нет этой информации).
+ *            </li>
+ *            <li>
+ *                maximumFractionDigits - Максимальное количество дробных чисел. Возможные значения от 0 до 20;
+ *                по умолчанию для обычного форматирования числа больше, чем "minimalFractionDigits" и 3; 
+ *                значение по умолчанию для форматирования валюты - большее из minimumFractionDigits и числа младших цифр, предоставленных списком кодов валют IS O 4217 (2, если список не предоставляет эту информацию);
+ *                значение по умолчанию для форматирования в процентах - это больше, чем minimumFractionDigits и 0.
+ *            </li>
+ *            <li>
+ *                minimumSignificantDigits - Минимальное количество значащих чисел. Возможные значения от 1 до 21; по умолчанию - 1.
+ *            </li>
+ *            <li>
+ *                maximumSignificantDigits - Максимальное количество значащих чисел. Возможные значения от 1 до 21; по умолчанию - 21.
+ *            </li>
+ *         </ul>
+ *     </li>
+ * </ul>
+ * Если локализация не включена, будет использоваться локаль «en-US».
+ *
+ * <h2>Пример</h2>
+ * <pre>
+ *     import {number as formatNumber} from 'Types/formatter';
+ *     formatNumber(12325.13) // return '12,325.13' for en-US locale and '12 325,13' for ru-RU
+ * </pre>
+ * Подробнее - {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat MDN}.
+ * @class
+ * @name Types/_formatter/number
+ * @public
+ * @author Мальцев А.А.
+ * @spec[tc39/ecma402/master/spec/numberformat.html]
+ * @clause[sec-formatnumber]
+ */
+
+/*
+ *
  * The method returns a string with a language-sensitive representation of this number.
  * @remark
  * Params:
