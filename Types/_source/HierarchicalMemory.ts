@@ -24,6 +24,51 @@ interface ISerializableState extends IDefaultSerializableState {
 }
 
 /**
+ * Источник, который возвращает «хлебные крошки» в корень иерархии в результате выполнения метода query().
+ * @remark
+ * "Хлебные крошки" хранятся в виде массива в свойстве "path" метаданных RecordSet's.
+ *
+ * Давайте создадим иерархический источник и выберем данные с помощью хлебных крошек:
+ * <pre>
+ *     import {HierarchicalMemory, Query} from 'Types/source';
+ *
+ *     const goods = new HierarchicalMemory({
+ *         data: [
+ *             {id: 1, parent: null, name: 'Laptops'},
+ *             {id: 10, parent: 1, name: 'Apple MacBook Pro'},
+ *             {id: 11, parent: 1, name: 'Xiaomi Mi Notebook Air'},
+ *             {id: 2, parent: null, name: 'Smartphones'},
+ *             {id: 20, parent: 2, name: 'Apple iPhone'},
+ *             {id: 21, parent: 2, name: 'Samsung Galaxy'}
+ *         ],
+ *         keyProperty: 'id',
+ *         parentProperty: 'parent'
+ *     });
+ *
+ *     const laptopsQuery = new Query();
+ *     laptopsQuery.where({parent: 1});
+ *
+ *     goods.query(laptopsQuery).then((response) => {
+ *         const items = response.getAll();
+ *         items.forEach((item) => {
+ *              console.log(item.get('name')); // 'Apple MacBook Pro', 'Xiaomi Mi Notebook Air'
+ *         });
+ *         items.getMetaData().path.map((item) => {
+ *             console.log(item.get('name')); // 'Laptops'
+ *         });
+ *     }).catch(console.error);
+ * </pre>
+ * @class Types/_source/HierarchicalMemory
+ * @mixes Types/_entity/DestroyableMixin
+ * @implements Types/_source/IDecorator
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_entity/SerializableMixin
+ * @author Мальцев А.А.
+ * @public
+ */
+
+/*
  * Source which returns "breadcrumbs" to the root of hierarchy in the result of query() method.
  * @remark
  * "Breadcrumbs" stores as Array in property "path" of RecordSet's meta data.
@@ -75,36 +120,41 @@ export default class HierarchicalMemory extends mixin<
     SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus {
     /**
-     * @cfg {Object} See {@link Types/_source/Memory#data}.
+     * @cfg {Object} Смотрите {@link Types/_source/Memory#data}.
      * @name Types/_source/HierarchicalMemory#data
      */
 
     /**
-     * @cfg {String|Types/_entity/adapter/IAdapter} See {@link Types/_source/Memory#adapter}.
+     * @cfg {String|Types/_entity/adapter/IAdapter} Смотрите {@link Types/_source/Memory#adapter}.
      * @name Types/_source/HierarchicalMemory#adapter
      */
 
     /**
-     * @cfg {String|Function} See {@link Types/_source/Memory#model}.
+     * @cfg {String|Function} Смотрите {@link Types/_source/Memory#model}.
      * @name Types/_source/HierarchicalMemory#model
      */
 
     /**
-     * @cfg {String|Function} See {@link Types/_source/Memory#listModule}.
+     * @cfg {String|Function} Смотрите {@link Types/_source/Memory#listModule}.
      * @name Types/_source/HierarchicalMemory#listModule
      */
 
     /**
-     * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} See {@link Types/_source/Memory#filter}.
+     * @cfg {Function(Types/_entity/adapter/IRecord, Object):Boolean} Смотрите {@link Types/_source/Memory#filter}.
      * @name Types/_source/HierarchicalMemory#filter
      */
 
     /**
-     * @cfg {String} See {@link Types/_source/Memory#keyProperty}.
+     * @cfg {String} Смотрите {@link Types/_source/Memory#keyProperty}.
      * @name Types/_source/HierarchicalMemory#keyProperty
      */
 
     /**
+     * @cfg {String} Имя параметра записи, которое содержит идентификатор узла, которому принадлежит другой узел или список.
+     * @name Types/_source/HierarchicalMemory#parentProperty
+     */
+
+    /*
      * @cfg {String} Record's property name that contains identity of the node another node or leaf belongs to.
      * @name Types/_source/HierarchicalMemory#parentProperty
      */
