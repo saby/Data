@@ -145,6 +145,14 @@ function playExpressionInner<T>(
 }
 
 /**
+ * Воспроизводит выражения путем вызова заданных колбэков для каждой его части.
+ * @param expression Выражение для воспроизведения.
+ * @param onAtomAppears Колбек на атомарное значение.
+ * @param onGroupBegins Колбек на начало группы атомарных значений.
+ * @param onGroupEnds Колбек на конец группы атомарных значений.
+ */
+
+/*
  * Plays expression by calling given callbacks for each part of it
  * @param expression Expression to play
  * @param onAtomAppears In atom value appears
@@ -167,6 +175,11 @@ export function playExpression<T>(
 }
 
 /**
+ * Клонирует объект.
+ * @param data Клонируемый объект.
+ */
+
+/*
  * Clones object
  * @param data Object to clone
  */
@@ -181,6 +194,11 @@ function duplicate<T>(data: T): T {
 }
 
 /**
+ * Разбирает выражение из набора полей.
+ * @param expression Выражение с заданными полями.
+ */
+
+/*
  * Parses expression from fields set
  * @param expression Expression with fields set
  */
@@ -213,6 +231,13 @@ interface IJoinOptions {
 }
 
 /**
+ * Объект, который определяет способ объединения множеств.
+ * @class Types/_source/Query/Join
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @public
+ */
+
+/*
  * An object which defines a way of joining of sets.
  * @class Types/_source/Query/Join
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -220,30 +245,55 @@ interface IJoinOptions {
  */
 export class Join extends OptionsToPropertyMixin {
     /**
+     * @cfg {String} Правильно заданное имя.
+     * @name Types/_source/Query/Join#resource
+     */
+
+    /*
      * @cfg {String} The right set name
      * @name Types/_source/Query/Join#resource
      */
     protected _$resource: string = '';
 
     /**
+     * @cfg {String} Псевдоним правильно установленного имени.
+     * @name Types/_source/Query/Join#as
+     */
+
+    /*
      * @cfg {String} The alias of the right set name
      * @name Types/_source/Query/Join#as
      */
     protected _$as: string = '';
 
     /**
+     * @cfg {Object} Присоединить правило.
+     * @name Types/_source/_source/Query/Join#on
+     */
+
+    /*
      * @cfg {Object} Join rule
      * @name Types/_source/_source/Query/Join#on
      */
     protected _$on: IHashMap<string> = {};
 
     /**
+     * @cfg {Object} Имена полей для выбора.
+     * @name Types/_source/Query/Join#select
+     */
+
+    /*
      * @cfg {Object} Field names to select
      * @name Types/_source/Query/Join#select
      */
     protected _$select: IHashMap<string> = {};
 
     /**
+     * @cfg {Boolean} Внутреннее соединение.
+     * @name Types/_source/Query/Join#inner
+     */
+
+    /*
      * @cfg {Boolean} It's an inner join
      * @name Types/_source/Query/Join#inner
      */
@@ -255,6 +305,10 @@ export class Join extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает правильно заданное имя.
+     */
+
+    /*
      * Returns the right set name
      */
     getResource(): string {
@@ -262,6 +316,10 @@ export class Join extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает псевдоним правильно заданного имени.
+     */
+
+    /*
      * Returns the alias of the right set name
      */
     getAs(): string {
@@ -269,6 +327,10 @@ export class Join extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает присоединенное правило.
+     */
+
+    /*
      * Returns join rule
      */
     getOn(): IHashMap<string> {
@@ -276,6 +338,10 @@ export class Join extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает имена полей для выбора.
+     */
+
+    /*
      * Returns field names to select
      */
     getSelect(): IHashMap<string> {
@@ -283,6 +349,10 @@ export class Join extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает флаг, что это внутреннее соединение.
+     */
+
+    /*
      * Returns flag that it's an inner join
      */
     isInner(): boolean {
@@ -297,6 +367,13 @@ interface IOrderOptions {
 }
 
 /**
+ * Объект, который определяет способ сортировки множеств.
+ * @class Types/_source/Query/Order
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @public
+ */
+
+/*
  * An object which defines a way of sorting of sets.
  * @class Types/_source/Query/Order
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -304,18 +381,33 @@ interface IOrderOptions {
  */
 export class Order extends OptionsToPropertyMixin {
     /**
+     * @cfg {String} Имя поля для применения сортировки.
+     * @name Types/_source/Query/Order#selector
+     */
+
+    /*
      * @cfg {String} Field name to apply the sorting for
      * @name Types/_source/Query/Order#selector
      */
     protected _$selector: string = '';
 
     /**
+     * @cfg {Boolean} Порядок сортировки.
+     * @name Types/_source/Query/Order#order
+     */
+
+    /*
      * @cfg {Boolean} Order of the sorting
      * @name Types/_source/Query/Order#order
      */
     protected _$order: boolean | string = false;
 
     /**
+     * @cfg {Boolean} Политика позиционирования значений, подобных NULL (не определено - в зависимости от опции 'order', false - в начале, true - в конце).
+     * @name Types/_source/Query/Order#nullPolicy
+     */
+
+    /*
      * @cfg {Boolean} NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning, true - in the end)
      * @name Types/_source/Query/Order#nullPolicy
      */
@@ -340,6 +432,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает имя поля, к которому применяется сортировка.
+     */
+
+    /*
      * Returns field name to apply the sorting for
      */
     getSelector(): string {
@@ -347,6 +443,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает порядок сортировки.
+     */
+
+    /*
      * Returns order of the sorting
      */
     getOrder(): boolean | string {
@@ -354,6 +454,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Возвращает NULL-подобную политику позиционирования значений (не определено - зависит от опции 'order', false - в начале, true - в конце).
+     */
+
+    /*
      * Returns NULL-like values positioning policy (undefined - depending on 'order' option, false - in the beginning, true - in the end)
      */
     getNullPolicy(): boolean {
@@ -363,6 +467,10 @@ export class Order extends OptionsToPropertyMixin {
     // region Static
 
     /**
+     * Сортировка "по возрастанию".
+     */
+
+    /*
      * 'Ascending' sort order
      */
     static get SORT_ASC(): boolean {
@@ -370,6 +478,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Сортировка "по убыванию".
+     */
+
+    /*
      * 'Descending' sort order
      */
     static get SORT_DESC(): boolean {
@@ -377,6 +489,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Сортировка "по возрастанию" в виде строки.
+     */
+
+    /*
      * 'Ascending' sort order as a string
      */
     static get SORT_ASC_STR(): string {
@@ -384,6 +500,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Сортировка "по возрастанию" в виде строки.
+     */
+
+    /*
      * 'Descending' sort order as a string
      */
     static get SORT_DESC_STR(): string {
@@ -391,6 +511,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Политика позиционирования NULL-подобных значений: в начале.
+     */
+
+    /*
      * NULL-like values positioning policy: in the beginning
      */
     static get NULL_POLICY_FIRST(): boolean {
@@ -398,6 +522,10 @@ export class Order extends OptionsToPropertyMixin {
     }
 
     /**
+     * Политика позиционирования NULL-подобных значений: в конце.
+     */
+
+    /*
      * NULL-like values positioning policy: in the end
      */
     static get NULL_POLICY_LAST(): boolean {
@@ -408,6 +536,30 @@ export class Order extends OptionsToPropertyMixin {
 }
 
 /**
+ * Запрос для создания выбора из нескольких наборов в источнике данных.
+ * @remark
+ * Давайте выберем 100 заказов в магазине за последние двадцать четыре часа и отсортируем их по возрастанию номера заказа:
+ * <pre>
+ *     import {Query} from 'Types/source';
+ *
+ *     const twentyFourHoursAgo = new Date();
+ *     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+ *
+ *     const query = new Query();
+ *     query
+ *         .select(['id', 'date', 'customerId'])
+ *         .from('Orders')
+ *         .where((order) => order.date - twentyFourHoursAgo >= 0)
+ *         .orderBy('id')
+ *         .limit(100);
+ * </pre>
+ * @class Types/_source/Query
+ * @implements Types/_entity/ICloneable
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Query to build a selection from multiple sets within data source.
  * @remark
  * Let's select 100 shop orders from last twenty-four hours and sort them by ascending of order number:
@@ -432,51 +584,91 @@ export class Order extends OptionsToPropertyMixin {
  */
 export default class Query<T = unknown> implements ICloneable {
     /**
+     * Имена полей для выбора.
+     */
+
+    /*
      * Field names to select
      */
     protected _select: IHashMap<string> = {};
 
     /**
+     * Название набора для выбора данных.
+     */
+
+    /*
      * The name of the set to select data from
      */
     protected _from: string = '';
 
     /**
+     * Псевдоним набора для выбора данных.
+     */
+
+    /*
      * Alias of the set to select data from
      */
     protected _as: string = '';
 
     /**
+     * Правила объединения данных из других наборов.
+     */
+
+    /*
      * Rules for join data from another sets
      */
     protected _join: Join[] = [];
 
     /**
+     * Правила фильтрации данных.
+     */
+
+    /*
      * Rules for filtering data
      */
     protected _where: WhereExpression<T> = {};
 
     /**
+     * Правила группировки данных.
+     */
+
+    /*
      * Rules for grouping data
      */
     protected _groupBy: string[] = [];
 
     /**
+     * Правила сортировки данных.
+     */
+
+    /*
      * Rules for sorting data
      */
     protected _orderBy: Order[] = [];
 
     /**
+     * Смещение, чтобы обрезать выделение с начала.
+     */
+
+    /*
      * Offset to slice the selection from the beginning
      */
     protected _offset: number = 0;
 
     /**
+     * Максимальное количество строк в выборке.
+     */
+
+    /*
      * Maximum rows count in the selection
      */
     protected _limit: number = undefined;
 
     /**
+     * Дополнительные метаданные для отправки в источник данных.
+     */
+
+    /*
      * Additional metadata to send to the data source
      */
     protected _meta: unknown | IMeta = {};
@@ -507,6 +699,10 @@ export default class Query<T = unknown> implements ICloneable {
     // region Public methods
 
     /**
+     * Сбрасывает все ранее определенные настройки.
+     */
+
+    /*
      * Resets all the previously defined settings
      */
     clear(): this {
@@ -525,6 +721,18 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает имена полей для выбора.
+     * @example
+     * Получим имена полей для выбора:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select(['id', 'date']);
+     *     console.log(query.getSelect()); // {id: 'id', date: 'date'}
+     * </pre>
+     */
+
+    /*
      * Returns field names to select
      * @example
      * Get field names to select:
@@ -540,6 +748,26 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает имена полей для выбора.
+     * @param expression Имена полей для выбора.
+     * @example
+     * Выберем магазинные заказы с определенным набором полей:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select(['id', 'date', 'customerId' ])
+     *         .from('Orders');
+     * </pre>
+     * Выберем магазинные заказы со всеми доступными полями:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders');
+     * </pre>
+     */
+
+    /*
      * Sets field names to select
      * @param expression Field names to select
      * @example
@@ -565,6 +793,19 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает имя набора для выбора данных.
+     * @example
+     * Получим название набора:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select(['id', 'date'])
+     *         .from('Orders');
+     *     console.log(query.getFrom()); // 'Orders'
+     * </pre>
+     */
+
+    /*
      * Returns the name of the set to select data from
      * @example
      * Get the name of the set:
@@ -581,6 +822,19 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает псевдоним набора для выбора данных.
+     * @example
+     * Получить псевдоним набора:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select(['o.id', 'o.date'])
+     *         .from('Orders', 'o');
+     *     console.log(query.getAs()); // 'o'
+     * </pre>
+     */
+
+    /*
      * Returns alias of the set to select data from
      * @example
      * Get the alias of the set:
@@ -597,6 +851,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает имя (и псевдоним, если необходимо) набора для выбора данных.
+     * @param name Название набора.
+     * @param [as] Псевдоним множества.
+     * @example
+     * Выберем заказы магазина с определением псевдонима:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select(['o.id', 'o.date', 'o.customerId'])
+     *         .from('Orders', 'o');
+     * </pre>
+     */
+
+    /*
      * Sets the name (and the alias if necessary) of the set to select data from
      * @param name The name of the set
      * @param [as] The alias of the set
@@ -617,6 +885,27 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила для объединения данных из других наборов.
+     * @example
+     * Получите правила присоединения с набором «Клиенты»:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .join(
+     *             'Customers',
+     *             {id: 'customerId'},
+     *             ['name', 'email']
+     *         );
+     *
+     *     const join = query.getJoin()[0];
+     *     console.log(join.getResource()); // 'Customers'
+     *     console.log(join.getSelect()); // {name: 'name', email: 'email'}
+     * </pre>
+     */
+
+    /*
      * Returns rules for join data from another sets
      * @example
      * Get the rules for joining with 'Customers' set:
@@ -641,6 +930,36 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает правило для объединения данных из другого набора.
+     * @param name Имя (и псевдоним, если необходимо) другого набора.
+     * @param on Условия присоединения.
+     * @param expression Имена полей (и псевдонимы при необходимости) для выбора из другого набора.
+     * @param [inner=true] Внутреннее или внешнее соединение.
+     * @example
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .join(
+     *             'Customers',
+     *             {id: 'customerId'},
+     *             '*'
+     *         );
+     *
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .join(
+     *             'Customers',
+     *             {id: 'customerId'},
+     *             {customerName: 'name', customerEmail: 'email'}
+     *         );
+     * </pre>
+     */
+
+    /*
      * Sets rule to join data from another set
      * @param name The name (and alias if necessary) of the another set
      * @param on Joining conditions
@@ -690,6 +1009,31 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила фильтрации данных.
+     * @example
+     * Получим правила фильтрации данных:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .where({host: 'my.store.com'});
+     *
+     *     console.log(query.getWhere()); // {'host': 'my.store.com'}
+     *
+     *     const twentyFourHoursAgo = new Date();
+     *     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+     *     const dynamicQuery = new Query();
+     *         .select(['id', 'date', 'customerId'])
+     *         .from('Orders')
+     *         .where((order) => order.date - twentyFourHoursAgo >= 0)
+     *         .orderBy('id')
+     *         .limit(100);
+     * </pre>
+     */
+
+    /*
      * Returns rules for filtering data
      * @example
      * Get rules for filtering data:
@@ -718,6 +1062,52 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает правила фильтрации данных.
+     * @remark
+     * Если аргумент 'expression' является функцией, он получит следующие аргументы: элемент выбора и его порядковый номер.
+     * @param expression Правила фильтрации данных.
+     * @example
+     * Давайте выберем приземлившиеся рейсы в московский аэропорт «Шереметьево» (SVO) из Нью-Йорка или Лос-Анджелеса:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('AirportsSchedule')
+     *         .where({
+     *             to: 'SVO',
+     *             state: 'Landed',
+     *             fromCity: ['New York', 'Los Angeles']
+     *         });
+     * </pre>
+     * Выберем рейсы, прибывающие в московское "Шереметьево" (SVO) из нью-йоркского "JFK" с авиакомпанией "Delta" (DL) или из парижского "CDG" с авиакомпанией "Air France" (AF):
+     * <pre>
+     *     import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('AirportsSchedule')
+     *         .where(queryAndExpression({
+     *             to: 'SVO',
+     *             state: 'Scheduled'
+     *         }, queryOrExpression(
+     *             {from: 'JFK', airline: 'DL'},
+     *             {from: 'CDG', airline: 'AF'}
+     *         )));
+     * </pre>
+     * Давайте выберем 100 заказов в магазине за последние двадцать четыре часа и отсортируем их по возрастанию номера заказа:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const twentyFourHoursAgo = new Date();
+     *     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+     *     const dynamicQuery = new Query();
+     *         .select(['id', 'date', 'customerId'])
+     *         .from('Orders')
+     *         .where((order) => order.date - twentyFourHoursAgo >= 0)
+     *         .orderBy('id')
+     *         .limit(100);
+     * </pre>
+     */
+
+    /*
      * Sets rules for filtering data
      * @remark
      * If argument 'expression' is a Function it would receive following arguments: an item of the selection and its ordering number.
@@ -775,6 +1165,23 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила для сортировки данных.
+     * @example
+     * Получим правила сортировки:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .orderBy('id');
+     *
+     *     const order = query.getOrderBy()[0];
+     *     console.log(order.getSelector()); // 'id'
+     *     console.log(order.getOrder()); // false
+     * </pre>
+     */
+
+    /*
      * Returns rules for sorting data
      * @example
      * Get the rules for sorting:
@@ -795,6 +1202,52 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает правила сортировки данных.
+     * @param selector Имя поля имен полей и направления сортировки для каждого из них (false - возрастание, true - убывание).
+     * @param [desc=false] Сортировать по убыванию (селектором является строка).
+     * @param [nullPolicy] Политика позиционирования значений, подобных NULL (не определено - в зависимости от опции 'order', false - в начале, true - в конце).
+     * @example
+     * Отсортируем заказы по возрастанию значения поля id:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .orderBy('id');
+     * </pre>
+     * Отсортируем заказы по убыванию значений поля 'id':
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .orderBy('id', true);
+     * </pre>
+     * Отсортируем заказы сначала по возрастанию значений поля customerId, а затем по убыванию значений поля date:
+     * <pre>
+     *     import {Query, QueryOrder} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .orderBy([
+     *             {customerId: QueryOrder.SORT_ASC},
+     *             {date: QueryOrder.SORT_DESC}
+     *         ]);
+     * </pre>
+     * Отсортируем заказы, используя различные нулевые политики для каждого поля:
+     * <pre>
+     *     import {Query, QueryOrder} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .orderBy([
+     *             ['customerId', QueryOrder.SORT_DESC, QueryOrder.NULL_POLICY_FIRST],
+     *             [date, QueryOrder.SORT_ASC, QueryOrder.NULL_POLICY_LAST]
+     *         ]);
+     * </pre>
+     */
+
+    /*
      * Sets rules for sorting data
      * @param selector Field name of field names and sorting directions for each of them (false - ascending,
      * true - descending)
@@ -904,6 +1357,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила для группировки данных.
+     * @example
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .groupBy('customerId');
+     *
+     *     console.log(query.getGroupBy()); // ['customerId']
+     * </pre>
+     */
+
+    /*
      * Returns rules for grouping data
      * @example
      * <pre>
@@ -921,6 +1388,25 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает правила группировки данных.
+     * @param expression Правила группировки данных.
+     * @example
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *
+     *     const querySimple = new source.Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .groupBy('customerId');
+     *
+     *     const queryComplex = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .groupBy(['date', 'customerId']);
+     * </pre>
+     */
+
+    /*
      * Sets rules for grouping data
      * @param expression Rules for grouping data
      * @example
@@ -953,6 +1439,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает смещение, чтобы обрезать выделение с начала.
+     * @example
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .offset(50);
+     *
+     *     query.getOffset(); // 50
+     * </pre>
+     */
+
+    /*
      * Returns offset to slice the selection from the beginning
      * @example
      * <pre>
@@ -970,6 +1470,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает смещение, чтобы обрезать выделение с начала.
+     * @param start Значение смещения.
+     * @example
+     * Skip first 50 orders:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .offset(50);
+     * </pre>
+     */
+
+    /*
      * Sets offset to slice the selection from the beginning
      * @param start Offset value
      * @example
@@ -989,6 +1503,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает максимальное количество строк в выборке.
+     * @example
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .limit(10);
+     *
+     *     console.log(query.getLimit()); // 10
+     * </pre>
+     */
+
+    /*
      * Returns maximum rows count in the selection
      * @example
      * <pre>
@@ -1006,6 +1534,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает максимальное количество строк в выборке.
+     * @param count Максимальное количество строк.
+     * @example
+     * Получим первые 10 заказов:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Orders')
+     *         .limit(10);
+     * </pre>
+     */
+
+    /*
      * Sets maximum rows count in the selection
      * @param count Maximum rows count
      * @example
@@ -1025,6 +1567,20 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает дополнительные метаданные.
+     * @example
+     * <pre>
+     *     import {Query, QueryNavigationType} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Catalogue')
+     *         .meta({navigationType: QueryNavigationType.Offset});
+     *
+     *     console.log(query.getMeta()); // {navigationType: 'Offset'}
+     * </pre>
+     */
+
+    /*
      * Returns additional metadata
      * @example
      * <pre>
@@ -1042,6 +1598,22 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает дополнительные метаданные для отправки в источник данных.
+     * Дополнительные метаданные предоставляют информацию источнику данных о желаемом поведении в различных аспектах способа извлечения данных. Определенный источник данных может не поддерживать эти аспекты, поэтому убедитесь, что это так, если вы хотите их использовать.
+     * @param data Метаданные.
+     * @example
+     * Установим поле метаданных, которое указывает на нужный тип навигации в запросе:
+     * <pre>
+     *     import {Query, QueryNavigationType} from 'Types/source';
+     *     const query = new Query()
+     *         .select('*')
+     *         .from('Catalogue')
+     *         .where({'parentId': 10})
+     *         .meta({navigationType: QueryNavigationType.Offset});
+     * </pre>
+     */
+
+    /*
      * Sets additional metadata to send to the data source.
      * Additional metadata provides information to the data source about desired behaviour in various aspects in the way of extracting data. Certain data source may not support those aspects so make sure it does if you want to use them.
      * @param data Metadata

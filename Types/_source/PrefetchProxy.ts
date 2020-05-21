@@ -70,6 +70,59 @@ const defaultValidators = {
 };
 
 /**
+ * Источник данных, который содержит предварительно выбранные данные и возвращает их при первом вызове любого метода для чтения данных.
+ * Второй и последующие вызовы будут переданы на целевой источник данных.
+ * @remark
+ * Давайте создадим источник данных с двумя списками: первый - это предварительно выбранные данные, а второй - таргет.
+ * Источник памяти:
+ * <pre>
+ *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
+ *
+ *     const fastFoods = new PrefetchProxy({
+ *         data: {
+ *             query: new DataSet({
+ *                 rawData: [
+ *                     {id: 1, name: 'Mret a Panger'},
+ *                     {id: 2, name: 'Cofta Cosfee'},
+ *                     {id: 3, name: 'AET'},
+ *                 ]
+ *             })
+ *         },
+ *         target: new Memory({
+ *             data: [
+ *                 {id: 1, name: 'Kurger Bing'},
+ *                 {id: 2, name: 'DcMonald\'s'},
+ *                 {id: 3, name: 'CFK'},
+ *                 {id: 4, name: 'Kuicq'}
+ *             ],
+ *         })
+ *     });
+ *
+ *     //First query will return prefetched data
+ *     fastFoods.query().then((spots) => {
+ *         spots.getAll().forEach((spot) => {
+ *             console.log(spot.get('name'));//'Mret a Panger', 'Cofta Cosfee', 'AET'
+ *         });
+ *     }, console.error);
+ *
+ *     //Second query will return real data from target source
+ *     fastFoods.query().then((spots) => {
+ *         spots.getAll().forEach((spot) => {
+ *             console.log(spot.get('name'));//'Kurger Bing', 'DcMonald's', 'CFK', 'Kuicq'
+ *         });
+ *     }, console.error);
+ * </pre>
+ * @class Types/_source/PrefetchProxy
+ * @implements Types/_source/IDecorator
+ * @implements Types/_source/ICrud
+ * @implements Types/_source/ICrudPlus
+ * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/_entity/SerializableMixin
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Data source which contains prefetched data and returns them on the first call of any method for data reading.
  * Second and further calls will be proxied to the target data source.
  * @remark
@@ -130,12 +183,24 @@ export default class PrefetchProxy extends mixin<
     SerializableMixin
 ) implements IDecorator, ICrud, ICrudPlus {
     /**
+     * @cfg {Types/_source/ICrud} Целевой источник данных.
+     * @name Types/_source/PrefetchProxy#target
+     */
+
+    /*
      * @cfg {Types/_source/ICrud} Target data source
      * @name Types/_source/PrefetchProxy#target
      */
     protected _$target: ITarget = null;
 
     /**
+     * @cfg {Object} Предварительно выбранные данные для методов, которые обеспечивают операции чтения.
+     * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
+     * @name Types/_source/PrefetchProxy#data
+     * @see getData
+     */
+
+    /*
      * @cfg {Object} Prefetched data for methods which provide reading operations
      * {@link Types/_source/ICrud} и {@link Types/_source/ICrudPlus}.
      * @name Types/_source/PrefetchProxy#data
@@ -144,25 +209,76 @@ export default class PrefetchProxy extends mixin<
     protected _$data: IData = {
 
         /**
-         * @cfg {Types/_entity/Record} Prefetched data for {@link Types/_source/ICrud#read} method.
+         * @cfg {Types/_entity/Record} Предварительно выбранные данные для метода {@link Types/_source/ICrud#read}.
          * @name Types/_source/PrefetchProxy#data.read
          */
         read: null,
 
         /**
-         * @cfg {Types/_source/DataSet} Prefetched data for {@link Types/_source/ICrud#query} method.
+         * @cfg {Types/_source/DataSet} Предварительно выбранные данные для метода {@link Types/_source/ICrud#query}.
          * @name Types/_source/PrefetchProxy#data.query
          */
         query: null,
 
         /**
-         * @cfg {Types/_entity/Record} Prefetched data for {@link Types/_source/ICrud#copy} method.
+         * @cfg {Types/_entity/Record} Предварительно выбранные данные для метода {@link Types/_source/ICrud#copy}.
          * @name Types/_source/PrefetchProxy#data.copy
          */
         copy: null
     };
 
     /**
+     * @cfg {Object} Валидаторы данных, которые решают, являются ли они действительными или нет, и, соответственно, должны ли они возвращать предварительно выбранные данные или вызывать целевой источник.
+     * @name Types/_source/PrefetchProxy#validators
+     * @example
+     * Давайте закешируем данные за одну минуту.
+     * <pre>
+     *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
+     *
+     *     const EXPIRATION_INTERVAL = 60000;
+     *     const EXPIRATION_TIME = Date.now() + EXPIRATION_INTERVAL;
+     *
+     *     const forecast = new PrefetchProxy({
+     *         target: new Memory({
+     *             data: [
+     *                 {id: 1, name: 'Moscow', temperature: -25},
+     *                 {id: 2, name: 'Los Angeles', temperature: 20}
+     *             ],
+     *         }),
+     *         data: {
+     *             query: new DataSet({
+     *                 rawData: [
+     *                     {id: 1, name: 'Moscow', temperature: -23},
+     *                     {id: 2, name: 'Los Angeles', temperature: 22}
+     *                 ]
+     *             })
+     *         },
+     *         validators: {
+     *             query: (data) => {
+     *                 return Date.now() < EXPIRATION_TIME;
+     *             }
+     *         }
+     *     });
+     *
+     *     //First 60 seconds source will be returning prefetched data
+     *     forecast.query().then((cities) => {
+     *         cities.getAll().forEach((city) => {
+     *             console.log(city.get('name') + ': ' + city.get('temperature'));//'Moscow: -25', 'Los Angeles: 20'
+     *         });
+     *     }, console.error);
+     *
+     *     //60 seconds later source will be returning updated data
+     *     setTimeout(() => {
+     *         forecast.query().then((cities) => {
+     *             cities.getAll().forEach((city) => {
+     *                 console.log(city.get('name') + ': ' + city.get('temperature'));//'Moscow: -23', 'Los Angeles: 22'
+     *             });
+     *         }, console.error);
+     *     }, EXPIRATION_INTERVAL);
+     * </pre>
+     */
+
+    /*
      * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it return prefetched data or invoke target source.
      * @name Types/_source/PrefetchProxy#validators
      * @example
@@ -240,6 +356,11 @@ export default class PrefetchProxy extends mixin<
     }
 
     /**
+     * Возвращает данные для методов, которые обеспечивают операции чтения.
+     * @see data
+     */
+
+    /*
      * Returns data for methods which provide reading operations.
      * @see data
      */
