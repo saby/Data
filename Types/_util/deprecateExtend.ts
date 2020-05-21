@@ -1,6 +1,12 @@
 import logger from './logger';
 
 /**
+ * Возвращает оболочку для устаревшего метода extend().
+ * @public
+ * @author Мальцев А.А.
+ */
+
+/*
  * Returns wrapper for deprecate extend() method.
  * @public
  * @author Мальцев А.А.
