@@ -26,6 +26,10 @@ export default abstract class ReadWriteMixin {
     '[Types/_entity/ReadWriteMixin]': boolean;
 
     /**
+     * @deprecated Старомодные параметры.
+     */
+
+    /*
      * @deprecated Old-fashioned options
      */
     protected _options: any;

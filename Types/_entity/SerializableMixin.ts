@@ -125,6 +125,10 @@ export default class SerializableMixin<T = any> {
     protected _instanceNumber: number;
 
     /**
+     * Название класса конструкции.
+     */
+
+    /*
      * Construction class name
      */
     protected _moduleName: string;
@@ -135,6 +139,10 @@ export default class SerializableMixin<T = any> {
     private '__proto__': this;
 
     /**
+     * Метод реализован в OptionsToPropertyMixin.
+     */
+
+    /*
      * Method implemented in OptionsToPropertyMixin
      */
     protected _getOptions: () => T;

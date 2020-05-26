@@ -12,6 +12,10 @@ import {Map, Set} from '../shim';
 import {IHashMap} from '../_declarations';
 
 /**
+ * Разделитель для пути в объекте.
+ */
+
+/*
  * Separator for path in object
  */
 const ROUTE_SEPARATOR = '.';
@@ -359,41 +363,73 @@ class Model<T = any> extends Record<T> implements IStateful {
     protected _$keyProperty: string;
 
     /**
+     * Модель удалена в источнике данных, из которого она взята.
+     */
+
+    /*
      * The model is deleted in data source which it's taken from
      */
     protected _isDeleted: boolean;
 
     /**
+     * Модель изменена.
+     */
+
+    /*
      * The model is changed
      */
     protected _isChanged: boolean;
 
     /**
+     * Значения по умолчанию для вычисляемых свойств.
+     */
+
+    /*
      * Default values of calculated properties
      */
     protected _defaultPropertiesValues: object;
 
     /**
+     * Карта зависимостей свойств, такая как 'имя свойства' -> ['имена свойств, которые зависят от этого']
+     */
+
+    /*
      * Properties dependency map like 'property name' -> ['property names that depend of that one']
      */
     protected _propertiesDependency: Map<string, Set<string>>;
 
     /**
+     * Имя свойства, для которого сейчас собираются зависимости.
+     */
+
+    /*
      * Property name which now gathering dependencies for
      */
     protected _propertiesDependencyGathering: string;
 
     /**
+     * Свойства задаются через параметры конструктора.
+     */
+
+    /*
      * Properties injected via constructor options
      */
     protected _propertiesInjected: boolean;
 
     /**
+     * Свойства имен которых рассчитываются прямо сейчас.
+     */
+
+    /*
      * Properties names which calculating right now
      */
     protected _calculatingProperties: Set<string>;
 
     /**
+     * Имена свойств и значения, которые были затронуты во время вызовов рекурсивного метода set().
+     */
+
+    /*
      * Properties names and values which affected during the recurseve set() calls
      */
     protected _deepChangedProperties: object;

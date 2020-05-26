@@ -263,16 +263,28 @@ export default interface IFlags<T> {
     fromArray(source: IValue[]): void;
 
     /**
+     * Устанавливает состояние выбора всех флагов на false.
+     */
+
+    /*
      * Sets selection state of all the flags to false
      */
     setFalseAll(): void;
 
     /**
+     * Устанавливает состояние выбора всех флагов на true.
+     */
+
+    /*
      * Sets selection state of all the flags to true
      */
     setTrueAll(): void;
 
     /**
+     * Устанавливает состояние выбора всех флагов на null.
+     */
+
+    /*
      * Sets selection state of all the flags to null
      */
     setNullAll(): void;

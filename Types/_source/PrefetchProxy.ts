@@ -329,11 +329,19 @@ export default class PrefetchProxy extends mixin<
     protected _$validators: IValidators;
 
     /**
+     * По умолчанию и вводится через валидаторы опций, которые объединены вместе.
+     */
+
+    /*
      * Default and injected via option validators which combined together
      */
     protected _validators: IValidators = defaultValidators;
 
     /**
+     * Состояние чтения предварительно выбранных данных.
+     */
+
+    /*
      * The state of reading prefetched data
      */
     protected _done: IDone = {};
