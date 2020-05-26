@@ -1,6 +1,6 @@
-import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from './SerializableMixin';
-import {global} from '../util';
-import {register} from '../di';
+import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from '../SerializableMixin';
+import {global} from '../../util';
+import {register} from '../../di';
 
 const NOW = new Date();
 
@@ -15,7 +15,7 @@ function mixin(Base: unknown): IDateTimeConstructor {
 
 /**
  * Тип "Дата-время". Расширяет стандартный тип Date для более точной работы с типами "Дата" и "Время".
- * @class Types/_entity/DateTime
+ * @class Types/_entity/applied/DateTime
  * @extends Date
  * @public
  * @author Мальцев А.А.
@@ -23,7 +23,7 @@ function mixin(Base: unknown): IDateTimeConstructor {
 
 /*
  * Date and time type. Extends standard Date type to work with "Date" and "Time" types more precisely.
- * @class Types/_entity/DateTime
+ * @class Types/_entity/applied/DateTime
  * @extends Date
  * @public
  * @author Мальцев А.А.
@@ -121,7 +121,7 @@ Object.setPrototypeOf(Interlayer.prototype, Date.prototype);
 Object.setPrototypeOf(DateTime.prototype, Interlayer.prototype);
 
 Object.assign(DateTime.prototype, {
-    '[Types/_entity/DateTime]': true,
+    '[Types/_entity/applied/DateTime]': true,
     _moduleName: 'Types/entity:DateTime'
 });
 

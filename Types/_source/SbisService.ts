@@ -18,7 +18,7 @@ import Query, {
 import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
-import {AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity';
+import {applied, AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity';
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {IHashMap} from '../declarations';
@@ -403,15 +403,18 @@ function getMultipleNavigation(
 
     summaryNav.forEach((sectionNav, index) => {
         // Treat first filter key as section id
-        const sectionFilter = summaryFilter[index];
-        const sectionKey = Object.keys(sectionFilter)[0];
-        const sectionId = object.getPropertyValue(sectionFilter, sectionKey) ;
+        const sectionFilter = summaryFilter[index] || {};
+        const primaryKeys = Object.entries(sectionFilter)
+            .filter(([key, value]) => value instanceof applied.PrimaryKey)
+            .map(([key, value]) => {
+                // Delete section id from filter to prevent sending it in general filter
+                delete sectionFilter[key];
 
-        // Delete section id from filter to prevent sending it in general filter
-        delete sectionFilter[sectionKey];
+                return value;
+            });
 
         navigation.push({
-            id: sectionId === undefined ? null : sectionId,
+            id: primaryKeys.length === 0 ? null : (primaryKeys.length ? primaryKeys[0] : primaryKeys),
             nav: buildRecord(sectionNav, adapter)
         });
     });
@@ -901,6 +904,7 @@ function oldMove(
  * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
  * <pre>
  *     import {SbisService, Query} from 'Types/source';
+ *     import {applied} from 'Types/entity';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
@@ -917,13 +921,13 @@ function oldMove(
  *
  *     // Use union of queries with various parameters
  *     const moviesQuery = new Query()
- *         .where({sectionId: sections.movies})
+ *         .where({sectionId: new applied.PrimaryKey(sections.movies)})
  *         .offset(20)
  *         .limit(10)
  *         .orderBy('imdbRating', true);
  *
  *     const comicsQuery = new Query()
- *         .where({sectionId: sections.comics})
+ *         .where({sectionId: new applied.PrimaryKey(sections.comics)})
  *         .offset(30)
  *         .limit(15)
  *         .orderBy('starComRating', true);

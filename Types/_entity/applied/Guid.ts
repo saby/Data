@@ -1,13 +1,13 @@
 /**
  * Тип GUID.
- * @class Types/_entity/Guid
+ * @class Types/_entity/applied/Guid
  * @public
  * @author Мальцев А.А.
  */
 
 /*
  * Guid type
- * @class Types/_entity/Guid
+ * @class Types/_entity/applied/Guid
  * @public
  * @author Мальцев А.А.
  */

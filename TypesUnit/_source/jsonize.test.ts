@@ -3,9 +3,9 @@ import jsonize from 'Types/_source/jsonize';
 import Record from 'Types/_entity/Record';
 import RecordSet from 'Types/_collection/RecordSet';
 import DataSet from 'Types/_source/DataSet';
-import DateTime from 'Types/_entity/DateTime';
-import TheDate from 'Types/_entity/Date';
-import Time from 'Types/_entity/Time';
+import DateTime from 'Types/_entity/applied/DateTime';
+import TheDate from 'Types/_entity/applied/Date';
+import Time from 'Types/_entity/applied/Time';
 import {ExtendDate, IExtendDateConstructor} from 'Types/_declarations';
 import 'Core/Date';
 

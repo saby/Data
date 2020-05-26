@@ -1,5 +1,5 @@
-import VersionableMixin, {VersionCallback} from './VersionableMixin';
-import {Map} from '../shim';
+import VersionableMixin, {VersionCallback} from '../VersionableMixin';
+import {Map} from '../../shim';
 
 /**
  * Реактивный объект предоставляет возможность отслеживать его изменения.
@@ -62,7 +62,7 @@ import {Map} from '../shim';
  * console.log(instance.email); // 'foo@bar.org'
  * console.log(instance.domain); // 'bar.org'
  * </pre>
- * @class Types/_entity/ReactiveObject
+ * @class Types/_entity/applied/ReactiveObject
  * @extends Types/_entity/VersionableMixin
  * @public
  * @author Мальцев А.А.

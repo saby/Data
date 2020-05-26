@@ -1,7 +1,7 @@
 import {assert} from 'chai';
-import CancelablePromise, {PromiseCanceledError} from 'Types/_entity/CancelablePromise';
+import CancelablePromise, {PromiseCanceledError} from 'Types/_entity/applied/CancelablePromise';
 
-describe('Types/_entity/CancelablePromise', () => {
+describe('Types/_entity/applied/CancelablePromise', () => {
     describe('promise', () => {
         it('should return instance of Promise', () => {
             const origin = new Promise((resolve) => resolve());
