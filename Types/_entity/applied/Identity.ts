@@ -65,7 +65,7 @@ export default class Identity {
         return this._value[0] === null ? null : this._value.join(',');
     }
 
-    // endregion Public methods
+    // endregion
 }
 
 Identity.prototype['[Types/_entity/applied/Identity]'] = true;

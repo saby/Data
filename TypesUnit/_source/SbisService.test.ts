@@ -10,6 +10,7 @@ import Query, {
     ExpandMode,
     NavigationType
 } from 'Types/_source/Query';
+import PrimaryKey from 'Types/_entity/applied/PrimaryKey';
 import Record from 'Types/_entity/Record';
 import Model from 'Types/_entity/Model';
 import RecordSet from 'Types/_collection/RecordSet';
@@ -1421,7 +1422,7 @@ describe('Types/_source/SbisService', () => {
 
                 const queryB = new Query();
                 queryB
-                    .where({a: 1, b: 2})
+                    .where({a: new PrimaryKey(1), b: 2})
                     .offset(20)
                     .limit(10);
 
@@ -1471,12 +1472,12 @@ describe('Types/_source/SbisService', () => {
                 });
 
                 const queryA = new Query()
-                    .where({a: 1, 'b>': 2})
+                    .where({a: new PrimaryKey(1), 'b>': 2})
                     .limit(10);
 
                 const queryB = new Query();
                 queryB
-                    .where({c: 3, d: 4, 'e<': 5})
+                    .where({c: new PrimaryKey(3), d: 4, 'e<': 5})
                     .limit(20);
 
                 queryA.union(queryB);
