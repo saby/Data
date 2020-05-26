@@ -1164,6 +1164,10 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила для объединения с другими запросами.
+     */
+
+    /*
      * Returns rules for union with another queries
      */
     getUnion(): Array<Query<T>> {
@@ -1171,6 +1175,33 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Устанавливает правила объединения с другими запросами.
+     * @param queries Запросы для объединения.
+     * @example
+     * Выберем новый и последний заказанный товар:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *
+     *     const lastOrderedGoods = new Query()
+     *         .select({
+     *             goodId: 'id',
+     *             goodName: 'name'
+     *         })
+     *         .from('Orders')
+     *         .where({
+     *              state: ['Payed', 'Completed']
+     *          })
+     *         .orderBy('datetime', true)
+     *
+     *     const newAndLastOrderedGoods = new Query()
+     *         .select(['id', 'name'])
+     *         .from('Goods')
+     *         .orderBy('puplicationDate', true)
+     *         .union(lastOrderedGoods);
+     * </pre>
+     */
+    
+    /*
      * Sets rules for union with another queries
      * @param queries Queries to union with
      * @example
@@ -1209,6 +1240,22 @@ export default class Query<T = unknown> implements ICloneable {
     }
 
     /**
+     * Возвращает правила сортировки данных.
+     * @example
+     * Получим правила сортировки:
+     * <pre>
+     *     import {Query} from 'Types/source';
+     *     const query = new Query()
+     *         .from('Orders')
+     *         .orderBy('id');
+     *
+     *     const order = query.getOrderBy()[0];
+     *     console.log(order.getSelector()); // 'id'
+     *     console.log(order.getOrder()); // false
+     * </pre>
+     */
+
+    /*
      * Returns rules for sorting data
      * @example
      * Get the rules for sorting:

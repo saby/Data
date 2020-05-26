@@ -43,11 +43,19 @@ const arraySlice = Array.prototype.slice;
  */
 class ObservableList<T> extends List<T> implements IReceiver {
     /**
+     * Количество измененных элементов, что важно для генерации одного события с действием ACTION_RESET вместо нескольких.
+     */
+
+    /*
      * Count of changed items that is a critical to generate one event with ACTION_RESET action instead of several ones
      */
     protected _resetChangesCount: number;
 
     /**
+     * Элементы, измененные во время работы события, были выключены.
+     */
+
+    /*
      * Items changed during event raising was switched off
      */
     protected _silentChangedItems: T[];

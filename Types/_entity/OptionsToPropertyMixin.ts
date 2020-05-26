@@ -67,6 +67,10 @@ function defineProperty(instance: object, proto: object, name: string, key: stri
  */
 export default abstract class OptionsToPropertyMixin {
     /**
+     * @deprecated Только для старомодного наследования.
+     */
+
+    /*
      * @deprecated Only for old-fashioned inheritance
      */
     protected _options: any;

@@ -155,16 +155,28 @@ export default abstract class Local<TData = unknown> extends mixin<
     protected _$filter: FilterFunction;
 
     /**
+     * Индекс для быстрого поиска записи по его ключу.
+     */
+
+    /*
      * Index to fast search record by its key
      */
     protected _index: IHashMap<number>;
 
     /**
+     * Идет настройка держателя данных.
+     */
+
+    /*
      * Data holder setup is in progress
      */
     protected _settingUpDataHolder: boolean;
 
     /**
+     * С чем работает источник данных.
+     */
+
+    /*
      * Data the source work with
      */
     get data(): any {
