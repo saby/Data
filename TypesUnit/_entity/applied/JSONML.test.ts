@@ -1,7 +1,7 @@
 import {assert} from 'chai';
-import JSONML from 'Types/_entity/JSONML';
+import JSONML from 'Types/_entity/applied/JSONML';
 
-describe('Types/entity:JSONML', () => {
+describe('Types/_entity/applied/JSONML', () => {
     const TEXT_JSONML = 'Hello world';
     const attributes = {class: 'someClass'};
     const children = ['Hello world'];

@@ -2,6 +2,7 @@
   "extends": "./node_modules/saby-typescript/configs/es5.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "application",
     "paths": {
       "Env/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Env/*"],
       "Browser/*": ["node_modules/wasaby-cli/store/_repos/rmi/src/client/Browser/*"],

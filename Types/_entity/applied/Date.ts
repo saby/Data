@@ -1,22 +1,22 @@
 import DateTime from './DateTime';
-import parseDate from './dateParser';
-import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
-import {date as formatDate} from '../formatter';
-import {register} from '../di';
+import parseDate from '../dateParser';
+import SerializableMixin, {IState as IDefaultSerializableState} from '../SerializableMixin';
+import {date as formatDate} from '../../formatter';
+import {register} from '../../di';
 
 const ISO_PREFIX = 'ISO:';
 const ISO_FORMAT = 'YYYY-MM-DD';
 
 /**
  * Тип даты.
- * @class Types/_entity/Date
+ * @class Types/_entity/applied/Date
  * @public
  * @author Мальцев А.А.
  */
 
 /*
  * Date type
- * @class Types/_entity/Date
+ * @class Types/_entity/applied/Date
  * @public
  * @author Мальцев А.А.
  */
@@ -56,7 +56,7 @@ export default class Date extends DateTime {
 }
 
 Object.assign(Date.prototype, {
-    '[Types/_entity/Date]': true,
+    '[Types/_entity/applied/Date]': true,
     _moduleName: 'Types/entity:Date'
 });
 

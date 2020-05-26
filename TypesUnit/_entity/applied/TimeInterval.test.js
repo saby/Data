@@ -1,11 +1,12 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_entity/TimeInterval'
+   'Types/_entity/applied/TimeInterval'
 ], function (
    TimeInterval
 ) {
    TimeInterval = TimeInterval.default;
-   describe('Types/_entity/TimeInterval', function () {
+
+   describe('Types/_entity/applied/TimeInterval', function () {
       var ti;
 
       beforeEach(function() {

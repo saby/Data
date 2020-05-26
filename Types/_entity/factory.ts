@@ -1,4 +1,4 @@
-import DateTime from './DateTime';
+import DateTime from './applied/DateTime';
 import {
     Field,
     ArrayField,
@@ -15,9 +15,9 @@ import {
 } from './format';
 import IProducible, {IProducibleConstructor} from './IProducible';
 import Record from './Record';
-import TimeInterval from './TimeInterval';
-import TheDate from './Date';
-import Time from './Time';
+import TimeInterval from './applied/TimeInterval';
+import TheDate from './applied/Date';
+import Time from './applied/Time';
 import FormattableMixin from './FormattableMixin';
 import {ISerializable} from './SerializableMixin';
 import {create, resolve} from '../di';

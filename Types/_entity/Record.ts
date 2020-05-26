@@ -138,13 +138,13 @@ function getValueType(value: any): string | IFieldDeclaration {
             } else if (value && value['[Types/_collection/RecordSet]']) {
                 return 'recordset';
             } else if (value instanceof Date) {
-                if (value['[Types/_entity/Date]']) {
+                if (value['[Types/_entity/applied/Date]']) {
                      return 'date';
                 }
-                if (value['[Types/_entity/Time]']) {
+                if (value['[Types/_entity/applied/Time]']) {
                      return 'time';
                 }
-                if (value['[Types/_entity/DateTime]']) {
+                if (value['[Types/_entity/applied/DateTime]']) {
                      return 'datetime';
                 }
                 if (value.hasOwnProperty('_serializeMode')) {

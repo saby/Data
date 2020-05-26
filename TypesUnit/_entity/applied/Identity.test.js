@@ -1,6 +1,6 @@
 /* global beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_entity/Identity'
+   'Types/_entity/applied/Identity'
 ], function(
    Identity
 ) {
@@ -8,7 +8,7 @@ define([
 
    Identity = Identity.default;
 
-   describe('Types/_entity/Identity', function() {
+   describe('Types/_entity/applied/Identity', function() {
       describe('.constructor()', function() {
          it('should create Identity', function() {
             var instance = new Identity([]);

@@ -1,4 +1,4 @@
-import {protect} from '../util';
+import {protect} from '../../util';
 
 const $isCanceled = protect('isCanceled') as symbol;
 
@@ -29,7 +29,7 @@ PromiseCanceledError.prototype = Object.create(Error.prototype);
  *     // Отменим Промис
  *     cancelable.cancel('That\'s way too long');
  * </pre>
- * @class Types/_entity/CancelablePromise
+ * @class Types/_entity/applied/CancelablePromise
  * @public
  * @author Мальцев А.А.
  */
@@ -54,7 +54,7 @@ PromiseCanceledError.prototype = Object.create(Error.prototype);
  *     // Cancel the promise
  *     cancelable.cancel('That\'s way too long');
  * </pre>
- * @class Types/_entity/CancelablePromise
+ * @class Types/_entity/applied/CancelablePromise
  * @public
  * @author Мальцев А.А.
  */

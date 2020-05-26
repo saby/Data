@@ -1,8 +1,8 @@
 import {assert} from 'chai';
-import DateTime from 'Types/_entity/DateTime';
+import DateTime from 'Types/_entity/applied/DateTime';
 import {global} from 'Types/util';
 
-describe('Types/_entity/DateTime', () => {
+describe('Types/_entity/applied/DateTime', () => {
     describe('.constructor()', () => {
         it('should create instance of Date', () => {
             const instance = new DateTime();
