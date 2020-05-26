@@ -55,6 +55,11 @@ export default class Flags<T> extends mixin<
    CloneableMixin
 ) implements IFlags<T>, IProducible {
    /**
+    * @cfg Выбор состояния флагов по их показателям.
+    * @name Types/_collection/Flags#values
+    */
+
+   /*
     * @cfg Selection state of the flags by their indices
     * @name Types/_collection/Flags#values
     */

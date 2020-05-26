@@ -63,6 +63,10 @@ function buildFormatFromObject(partialFormat: object, rawDataFormat: format.Form
 }
 
 /**
+ * Строит формат по необработанным данным.
+ */
+
+/*
  * Builds format by raw data.
  */
 function buildFormatByRawData(this: FormattableMixin): format.Format {
@@ -82,6 +86,11 @@ function buildFormatByRawData(this: FormattableMixin): format.Format {
 
 interface IDeprecated {
     /**
+     * Старомодные параметры.
+     * @deprecated
+     */
+
+    /*
      * Old-fashioned options, bad stuff
      * @deprecated
      */
@@ -210,6 +219,10 @@ export default abstract class FormattableMixin {
    protected _$rawData: any;
 
     /**
+     * Работа с необработанными данными в режиме Copy-On-Write.
+     */
+
+    /*
      * Work with raw data in Copy-On-Write mode.
      */
     protected _$cow: boolean;
@@ -451,26 +464,46 @@ export default abstract class FormattableMixin {
     protected _$format: FormatDescriptor;
 
     /**
+     * Окончательно построенный формат.
+     */
+
+    /*
      * Finally built format
      */
     protected _format: format.Format;
 
     /**
+     * Копия _format, которая используется для кэширования в getFormat()
+     */
+
+    /*
      * Clone of the _format, uses for caching in getFormat()
      */
     protected _formatClone: format.Format;
 
      /**
+      * Значение _$format не связано с исходным значением.
+      */
+
+     /*
       * Value of _$format is unlinked from original value
       */
     protected _formatUnlinked: boolean;
 
     /**
+     * Экземпляр адаптера для работы с необработанными данными.
+     */
+
+    /*
      * Adapter instance to deal with raw data
      */
     protected _rawDataAdapter: GenericAdapter;
 
     /**
+     * Список имен полей, взятых из адаптера необработанных данных.
+     */
+
+    /*
      * List of field names taken from raw data adapter
      */
     protected _rawDataFields: string[];
@@ -607,6 +640,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает флаг, который указывает на то, что формат был объявлен напрямую.
+     */
+
+    /*
      * Returns flag which indicates the fact that format was declared directly.
      */
     hasDeclaredFormat(): boolean {
@@ -837,6 +874,10 @@ export default abstract class FormattableMixin {
     // region Protected methods
 
     /**
+     * Возвращает необработанные данные из адаптера.
+     */
+
+    /*
      * Returns raw data from adapter.
      */
     protected _getRawData(): any {
@@ -847,6 +888,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает исходные данные, введенные через параметр.
+     */
+
+    /*
      * Returns original data injected via option.
      */
     protected _getRawDataFromOption(): any {
@@ -854,6 +899,11 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает адаптер по умолчанию, как это и должно быть.
+     * @deprecated Метод _getDefaultAdapter() устарел. Вместо этого используйте опцию 'adapter'.
+     */
+
+    /*
      * Returns default adapter as it was supposed to be.
      * @deprecated Method _getDefaultAdapter() is deprecated. Use 'adapter' option instead.
      */
@@ -862,6 +912,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает общий экземпляр адаптера.
+     */
+
+    /*
      * Returns common adapter instance.
      */
     protected _getAdapter(): IAdapter | IDecorator {
@@ -884,6 +938,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает экземпляр адаптера для определенного типа данных.
+     */
+
+    /*
      * Returns adapter instance for certain data kind.
      */
     protected _getRawDataAdapter(): GenericAdapter {
@@ -896,6 +954,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Создает экземпляр адаптера для определенного типа данных (таблица, запись, декоратор или метаданные).
+     */
+
+    /*
      * Creates adapter instance for certain data kind (table, record, decorator or meta data).
      */
     protected _createRawDataAdapter(): GenericAdapter {
@@ -903,6 +965,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Инициализирует экземпляр адаптера.
+     */
+
+    /*
      * Initializes adapter instance.
      */
     protected _initRawDataAdapter(adapter: GenericAdapter): void {
@@ -983,6 +1049,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Возвращает список имен полей, взятых из адаптера необработанных данных.
+     */
+
+    /*
      * Returns list of field names taken from raw data adapter
      */
     protected _getRawDataFields(): string[] {
@@ -1003,6 +1073,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Сбрасывает _rawDataFields.
+     */
+
+    /*
      * Resets _rawDataFields
      */
     protected _resetRawDataFields(): void {
@@ -1034,6 +1108,10 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Очищает формат полей. Это работает, только если формат не был объявлен.
+     */
+
+    /*
      * Clears fields format. It works only if format haven't been declared.
      */
     protected _clearFormat(): void {
@@ -1045,13 +1123,17 @@ export default abstract class FormattableMixin {
     }
 
     /**
-     * Clears _formatClone
+     * Очизает _formatClone.
      */
     protected _clearFormatClone(): void {
         this._formatClone = null;
     }
 
     /**
+     * Разрыв связи _$format с исходным значением.
+     */
+
+    /*
      * Unlinks _$format with original value
      */
     protected _unlinkFormatOption(): void {
@@ -1063,6 +1145,11 @@ export default abstract class FormattableMixin {
     }
 
     /**
+     * Псевдоним для hasDeclaredFormat().
+     * @deprecated
+     */
+
+    /*
      * Alias for hasDeclaredFormat()
      * @deprecated
      */

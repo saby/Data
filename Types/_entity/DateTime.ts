@@ -96,6 +96,11 @@ export default class DateTime extends mixin(SerializableMixin) {
     // region Statics
 
     /**
+     * Возвращает смещение часового пояса клиента, взятое из cookie с именем 'tz'.
+     * Аналог {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset getTimezoneOffset}, но его можно использовать в SSR для синхронизации отображаемых значений даты/времени с часовым поясом клиента.
+     */
+
+    /*
      * Returns client time zone offset taken from cookie named 'tz'.
      * It's an analogue of {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset getTimezoneOffset} but it could be used on SSR to synchronize rendered values of date/time with client time zone.
      */

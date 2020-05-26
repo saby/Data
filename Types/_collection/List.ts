@@ -97,6 +97,10 @@ export default class List<T> extends mixin<
     protected _$items: T[];
 
     /**
+     * Индексатор элементов.
+     */
+
+    /*
      * Items indexer
      */
     protected _indexer: Indexer<T[]>;
@@ -430,7 +434,7 @@ export default class List<T> extends mixin<
     }
 
     /**
-     * Вызывает метод splice
+     * Вызывает метод splice.
      * @param items Коллекция с элементами для замены
      * @param start Индекс в массиве, с которого начинать добавление.
      * @param action Действие, приведшее к изменению.
@@ -445,7 +449,7 @@ export default class List<T> extends mixin<
     }
 
     /**
-     * Приводит переденные элементы к массиву
+     * Приводит переденные элементы к массиву.
      * @protected
      */
     protected _itemsToArray(items: IEnumerable<T> | T[]): T[] {
