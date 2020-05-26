@@ -1,7 +1,7 @@
 import {assert} from 'chai';
-import ReactiveObject from 'Types/_entity/ReactiveObject';
+import ReactiveObject from 'Types/_entity/applied/ReactiveObject';
 
-describe('Types/_entity/ReactiveObject', () => {
+describe('Types/_entity/applied/ReactiveObject', () => {
     describe('.constructor()', () => {
         it('should create instance of ReactiveObject', () => {
             const instance = new ReactiveObject({});

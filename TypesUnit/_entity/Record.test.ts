@@ -11,9 +11,9 @@ import IntegerField from 'Types/_entity/format/IntegerField';
 import ArrayField from 'Types/_entity/format/ArrayField';
 import fieldsFactory, {FormatDeclaration} from 'Types/_entity/format/fieldsFactory';
 import ManyToMany from 'Types/_entity/relation/ManyToMany';
-import DateTime from 'Types/_entity/DateTime';
-import TheDate from 'Types/_entity/Date';
-import Time from 'Types/_entity/Time';
+import DateTime from 'Types/_entity/applied/DateTime';
+import TheDate from 'Types/_entity/applied/Date';
+import Time from 'Types/_entity/applied/Time';
 import {ExtendDate, IExtendDateConstructor} from 'Types/_declarations';
 import * as extend from 'Core/core-extend';
 

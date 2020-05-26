@@ -1,18 +1,18 @@
-import {register} from '../di';
+import {register} from '../../di';
 
 /**
  * Тип данных "Идентификатор".
- * @class Types/_entity/Identity
+ * @class Types/_entity/applied/Identity
  * @public
  * @author Мальцев А.А.
  * @example
  * <pre>
- *     require(['Types/_entity/Identity'], function (Identity) {
- *         var id = new Identity([1, 'Employees']);
- *         console.log(id.getValue());//1
- *         console.log(id.getName());//'Employees'
- *         console.log(String(id));//'1,Employees'
- *     });
+ *     import {Identity} from 'Types/entity';
+ * 
+ *     const id = new Identity([1, 'Employees']);
+ *     console.log(id.getValue()); // 1
+ *     console.log(id.getName()); // 'Employees'
+ *     console.log(String(id)); // '1,Employees'
  * </pre>
  */
 export default class Identity {
@@ -65,10 +65,10 @@ export default class Identity {
         return this._value[0] === null ? null : this._value.join(',');
     }
 
-    // endregion Public methods
+    // endregion
 }
 
-Identity.prototype['[Types/_entity/Identity]'] = true;
+Identity.prototype['[Types/_entity/applied/Identity]'] = true;
 Identity.prototype._separator = ',';
 Identity.prototype._value = null;
 

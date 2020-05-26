@@ -14,10 +14,10 @@ import {
 } from 'Types/_entity/format';
 import JsonAdapter from 'Types/_entity/adapter/Json';
 import Model from 'Types/_entity/Model';
-import TheDate from 'Types/_entity/Date';
-import Time from 'Types/_entity/Time';
-import DateTime from 'Types/_entity/DateTime';
-import TimeInterval from 'Types/_entity/TimeInterval';
+import TheDate from 'Types/_entity/applied/Date';
+import Time from 'Types/_entity/applied/Time';
+import DateTime from 'Types/_entity/applied/DateTime';
+import TimeInterval from 'Types/_entity/applied/TimeInterval';
 import Enum from 'Types/_collection/Enum';
 import Flags from 'Types/_collection/Flags';
 import List from 'Types/_collection/List';

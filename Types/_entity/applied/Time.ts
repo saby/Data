@@ -1,16 +1,16 @@
 import DateTime from './DateTime';
-import {register} from '../di';
+import {register} from '../../di';
 
 /**
  * Тип "время".
- * @class Types/_entity/Time
+ * @class Types/_entity/applied/Time
  * @public
  * @author Мальцев А.А.
  */
 
 /*
  * Time type
- * @class Types/_entity/Time
+ * @class Types/_entity/applied/Time
  * @public
  * @author Мальцев А.А.
  */
@@ -21,7 +21,7 @@ export default class Time extends DateTime {
 }
 
 Object.assign(Time.prototype, {
-    '[Types/_entity/Time]': true,
+    '[Types/_entity/applied/Time]': true,
     _moduleName: 'Types/entity:Time'
 });
 
