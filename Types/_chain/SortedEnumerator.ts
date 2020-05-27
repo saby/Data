@@ -26,7 +26,7 @@ export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
             const shouldSaveIndices: boolean = this.previous.shouldSaveIndices;
             this._items = super._getItems()
                 .map(([index, item]) => new SortWrapper(item, index))
-                .sort(this.compareFunction)
+                .sort(this.compareFunction as CompareFunction<unknown>)
                 .map((item, index): [U, T] => {
                     const result: [U, T] = [
                         shouldSaveIndices ? SortWrapper.indexOf(item) : index as unknown as U,
@@ -41,7 +41,7 @@ export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
         return this._items;
     }
 
-    static defaultCompare(a: any, b: any): number {
+    static defaultCompare<Z>(a: Z, b: Z): number {
         return a === b ? 0 : (a > b ? 1 : -1);
     }
 }

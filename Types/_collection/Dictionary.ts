@@ -25,7 +25,7 @@ type DictionaryValues<T> = T[] | IHashMap<T>;
  * @mixes Types/_entity/ObservableMixin
  * @public
  * @author Мальцев А.А.
- * @remark 
+ * @remark
  * Это абстрактный класс, и у него не может быть экземпляров.
  */
 
