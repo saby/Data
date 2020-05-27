@@ -41,7 +41,7 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  *      <li><b>source</b> {IEnumerable<T, U>} | {T[]} | {IHashMap<T>{ | {object} | {Abstract<T, U>} Исходная коллекция.</li>
  * </ul>
  * <h2>Возвращает</h2>
- * {Enumerable<T, U>} | {Arraywise<T>} | {Objectwise<T>} | {Abstract<T, U>} Дата в указанном формате.
+ * {Enumerable<T, U>} | {Arraywise<T>} | {Objectwise<T>} | {Abstract<T, U>} Коллекция для выполнения вызовов по цепочке.
  *
  * Функция является дженериком вида factory<T[, U]>, где:
  * <ul>
