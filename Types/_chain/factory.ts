@@ -36,10 +36,29 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
 /**
  * Создает последовательную цепочку вызовов, обрабатывающих коллекции различных типов.
  * @remark
+ * <h2>Параметры функции</h2>
+ * <ul>
+ *      <li><b>source</b> {IEnumerable<T, U>} | {T[]} | {IHashMap<T>{ | {object} | {Abstract<T, U>} Исходная коллекция.</li>
+ * </ul>
+ * <h2>Возвращает</h2>
+ * {Enumerable<T, U>} | {Arraywise<T>} | {Objectwise<T>} | {Abstract<T, U>} Дата в указанном формате.
+ *
+ * Функция является дженериком вида factory<T[, U]>, где:
+ * <ul>
+ *     <li>T: тип элемента цепочки;</li>
+ *     <li>[U]: тип индекса цепочки (для массива number по-умолчанию).</li>
+ * </ul>
+ * @example
  * Выберем из массива имена персонажей женского пола, отсортированные по имени:
  * <pre>
  * import {factory} from 'Types/chain';
- * factory([
+ *
+ * interface ICharacter {
+ *    name: string;
+ *    gender: 'M' | 'F' | 'R';
+ * }
+ *
+ * factory<ICharacter>([
  *     {name: 'Philip J. Fry', gender: 'M'},
  *     {name: 'Turanga Leela', gender: 'F'},
  *     {name: 'Professor Farnsworth', gender: 'M'},
@@ -56,7 +75,13 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * <pre>
  * import {factory} from 'Types/chain';
  * import {RecordSet} from 'Types/collection';
- * factory(new RecordSet({rawData: [
+ *
+ * interface ICharacter {
+ *    name: string;
+ *    gender: 'M' | 'F' | 'R';
+ * }
+ *
+ * factory(new RecordSet<ICharacter>({rawData: [
  *     {name: 'Philip J. Fry', gender: 'M'},
  *     {name: 'Turanga Leela', gender: 'F'},
  *     {name: 'Professor Farnsworth', gender: 'M'},
@@ -68,6 +93,7 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  *     .value();
  * //[Model(Amy Wong), Model(Turanga Leela)]
  * </pre>
+ *
  * Другие примеры смотрите в описании методов класса {@link Types/_chain/Abstract}.
  *
  * @class Types/_chain/factory
@@ -75,18 +101,21 @@ register('Types/chain:Zipped', Zipped, { instantiate: false });
  * @public
  * @author Мальцев А.А.
  */
-export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U>): Abstract<T, U>;
-export default function factory<T>(source: T[]): Abstract<T, number>;
-export default function factory<T>(source: IHashMap<T> | object): Abstract<T, string>;
-export default function factory<T, U>(source: Abstract<T, U> | IEnumerable<T, U> | T[] | IHashMap<T>): Abstract<T, U> {
+export default function factory<T, U>(source: IEnumerable<T, U>): Enumerable<T, U>;
+export default function factory<T>(source: T[]): Arraywise<T>;
+export default function factory<T>(source: IHashMap<T> | object): Objectwise<T>;
+export default function factory<T, U>(source: Abstract<T, U>): Abstract<T, U>;
+export default function factory<T, U>(
+    source: IEnumerable<T, U> | T[] | IHashMap<T> | object | Abstract<T, U>
+): Enumerable<T, U> | Arraywise<T> | Objectwise<T> | Abstract<T, U> {
     if (source instanceof Abstract) {
         return source;
     } else if (source && source['[Types/_collection/IEnumerable]']) {
-        return new Enumerable(source);
+        return new Enumerable<T, U>(source);
     } else if (source instanceof Array) {
-        return new Arraywise(source) as unknown as Abstract<T, U>;
+        return new Arraywise(source);
     } else if (source instanceof Object) {
-        return new Objectwise(source as IHashMap<T>) as unknown as Abstract<T, U>;
+        return new Objectwise(source as IHashMap<T>);
     }
     throw new TypeError(`Unsupported source type "${source}": only Array or Object are supported.`);
 }

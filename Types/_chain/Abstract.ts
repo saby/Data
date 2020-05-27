@@ -761,7 +761,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
     *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
-   sort(compareFunction?: CompareFunction): Sorted<T, U> {
+   sort(compareFunction?: CompareFunction<T>): Sorted<T, U> {
       const Next = resolve<any>('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }
