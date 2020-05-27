@@ -1200,7 +1200,7 @@ export default class Query<T = unknown> implements ICloneable {
      *         .union(lastOrderedGoods);
      * </pre>
      */
-    
+
     /*
      * Sets rules for union with another queries
      * @param queries Queries to union with
