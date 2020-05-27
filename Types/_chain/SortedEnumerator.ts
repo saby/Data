@@ -8,7 +8,7 @@ import Abstract from './Abstract';
  * @author Мальцев А.А.
  */
 export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
-    private compareFunction: CompareFunction;
+    private compareFunction: CompareFunction<T>;
 
     /**
      * Конструктор сортирующего энумератора.
@@ -16,7 +16,7 @@ export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
      * @param [compareFunction] Функция сравнения.
      * @protected
      */
-    constructor(previous: Abstract<T, U>, compareFunction?: CompareFunction) {
+    constructor(previous: Abstract<T, U>, compareFunction?: CompareFunction<T>) {
         super(previous);
         this.compareFunction = compareFunction || SortedEnumerator.defaultCompare;
     }

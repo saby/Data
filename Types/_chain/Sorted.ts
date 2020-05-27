@@ -13,14 +13,14 @@ export default class Sorted<T, U> extends Abstract<T, U> {
     /**
      * Функция сравнения
      */
-    protected _compareFunction: CompareFunction;
+    protected _compareFunction: CompareFunction<T>;
 
     /**
      * Конструктор сортирующего звена цепочки.
      * @param source Предыдущее звено.
      * @param [compareFunction] Функция сравнения
      */
-    constructor(source: Abstract<T, U>, compareFunction?: CompareFunction) {
+    constructor(source: Abstract<T, U>, compareFunction?: CompareFunction<T>) {
         super(source);
         this._compareFunction = compareFunction;
     }
