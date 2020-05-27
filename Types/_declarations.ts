@@ -1,4 +1,4 @@
-export type CompareFunction<T> = (a: T, b: T) => number;
+export type CompareFunction<T = unknown> = (a: T, b: T) => number;
 
 export interface IHashMap<T> {
     [key: string]: T;

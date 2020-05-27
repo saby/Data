@@ -30,9 +30,9 @@ export default class Enumerable<T, U> extends Abstract<T, U> {
 
     // region IObject
 
-    toObject(): IObject<T> {
+    toObject<S = IObject<T>>(): S {
         if (this._source['[Types/_entity/IObject]']) {
-            const result = {};
+            const result = {} as S;
             this.each((key, value) => {
                 result[key as unknown as string] = value;
             });
