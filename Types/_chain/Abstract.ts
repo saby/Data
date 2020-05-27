@@ -229,8 +229,8 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * factory(record).toObject();//{id: 1, title: 'New One'}
      * </pre>
      */
-    toObject(): IObject<T> {
-        const result: IObject<T> = {};
+    toObject<S = IObject<T>>(): S {
+        const result = {} as S;
         const enumerator = this.getEnumerator();
         while (enumerator.moveNext()) {
             result[enumerator.getCurrentIndex() as unknown as string] = enumerator.getCurrent();
@@ -761,7 +761,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
     *    .value();//[1, 2, 3, 4, 5]
     * </pre>
     */
-   sort(compareFunction?: CompareFunction): Sorted<T, U> {
+   sort(compareFunction?: CompareFunction<T>): Sorted<T, U> {
       const Next = resolve<any>('Types/chain:Sorted');
       return new Next(this, compareFunction);
    }

@@ -501,7 +501,7 @@ type AdditionalParams = string[] | IHashMap<unknown>;
  * Returns additional parameters
  */
 function getAdditionalParams(query: Query): AdditionalParams {
-    let result: AdditionalParams = [];
+    const result: AdditionalParams = [];
 
     if (!query) {
         return result;

@@ -24,7 +24,7 @@ export class MapPolyfill<K, V> {
 
     static _getUnhashedKey(key: string): string {
         const strKey = String(key);
-        const unhashedKey = strKey.slice(strKey.indexOf('@')+1);
+        const unhashedKey = strKey.slice(strKey.indexOf('@') + 1);
         return unhashedKey === 'null' ? null : unhashedKey;
     }
 
