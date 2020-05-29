@@ -1,4 +1,4 @@
-/*
+/**
  * Библиотека прикладных типов.
  * @library Types/_entity/applied
  * @includes CancelablePromise Types/_entity/applied/CancelablePromise

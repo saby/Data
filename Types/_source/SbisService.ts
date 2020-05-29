@@ -732,7 +732,7 @@ interface IMoveResult {
     IndexNumber: string;
     HierarchyName: string;
     ObjectName: string;
-    ObjectId: EntityKey;
+    ObjectId: EntityKey | EntityKey[];
     DestinationId: EntityKey;
     Order: string;
     ReadMethod: string;
@@ -742,7 +742,7 @@ interface IMoveResult {
 /**
  * Returns data to send in move()
  */
-function passMove(this: SbisService, from: EntityKey, to: EntityKey, meta?: IMoveMeta): IMoveResult {
+function passMove(this: SbisService, from: EntityKey | EntityKey[], to: EntityKey, meta?: IMoveMeta): IMoveResult {
     return {
         IndexNumber: this._$orderProperty,
         HierarchyName: meta.parentProperty || null,

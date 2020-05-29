@@ -40,7 +40,7 @@ export interface IPassing {
     query?: (query: Query) => object;
     copy?: (key: EntityKey, meta?: object) => object;
     merge?: (from: EntityKey, to: EntityKey) => object;
-    move?: (from: EntityKey, to: EntityKey, meta?: object) => object;
+    move?: (from: EntityKey | EntityKey[], to: EntityKey, meta?: object) => object;
 }
 
 export interface IOptionsOption extends IOptionsMixinOption {

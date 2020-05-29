@@ -351,11 +351,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         }
     }
 
-    move(
-        items: EntityKey | EntityKey[],
-        target: EntityKey,
-        meta?: IMovePosition
-    ): Promise<void> {
+    move(items: EntityKey | EntityKey[], target: EntityKey, meta?: IMovePosition): Promise<void> {
         meta = meta || {};
         const sourceItems = [];
         if (!(items instanceof Array)) {
