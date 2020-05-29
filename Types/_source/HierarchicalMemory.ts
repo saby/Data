@@ -266,7 +266,7 @@ export default class HierarchicalMemory extends mixin<
         return this._source.copy(key, meta);
     }
 
-    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void> {
+    move(items: EntityKey | EntityKey[], target: EntityKey, meta?: object): Promise<void> {
         return this._source.move(items, target, meta);
     }
 
