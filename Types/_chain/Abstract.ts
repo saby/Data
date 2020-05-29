@@ -779,6 +779,10 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
             return (item) => item;
         }
 
+        if (Number(name) === 1) {
+            return (item) => item;
+        }
+
         return (item: unknown) => object.getPropertyValue(item, name);
     }
 

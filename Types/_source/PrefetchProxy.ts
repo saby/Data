@@ -435,7 +435,7 @@ export default class PrefetchProxy extends mixin<
         return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;
     }
 
-    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void> {
+    move(items: EntityKey | EntityKey[], target: EntityKey, meta?: object): Promise<void> {
         return (this._$target as ICrudPlus).move(items, target, meta);
     }
 

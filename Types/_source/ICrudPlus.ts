@@ -70,5 +70,5 @@ export default interface ICrudPlus {
      * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки вернет Error.
      */
-    move(items: EntityKey[], target: EntityKey, meta?: object): Promise<void>;
+    move(items: EntityKey | EntityKey[], target: EntityKey, meta?: object): Promise<void>;
 }
