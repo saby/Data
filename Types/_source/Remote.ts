@@ -505,6 +505,10 @@ Object.assign(Remote.prototype, /** @lends Types/_source/Remote.prototype */{
         move: passMove
     }),
 
+    /**
+     * @cfg {Object} Дополнительные настройки удаленного источника данных.
+     * @name Types/_source/Remote#options
+     */
     _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Base, {
         /**
          * @cfg {Boolean} При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись).

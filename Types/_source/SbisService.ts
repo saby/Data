@@ -1519,13 +1519,23 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
      */
     _$orderProperty: 'ПорНомер',
 
+    /**
+     * @cfg {Object} Дополнительные настройки источника данных бизнес-логики СБИС.
+     * @name Types/_source/SbisService#options
+     */
     _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Rpc, {
         /**
          * @cfg {String} Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится
          * значение поля HasMore аргумента Навигация, передаваемое в вызов {@link query}.
          * @name Types/_source/SbisService#options.hasMoreProperty
          */
-        hasMoreProperty: 'hasMore'
+        hasMoreProperty: 'hasMore',
+
+        /**
+         * @cfg {Boolean} Передавать аргумент "ДопПоля" при вызове методов {@link read} и {@link update}, значение которых получено из метаданных {@link Types/_source/Query#meta запроса}.
+         * @name Types/_source/SbisService#options.passAddFieldsFromMeta
+         */
+        passAddFieldsFromMeta: false
     }))
 });
 
