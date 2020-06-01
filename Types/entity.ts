@@ -101,6 +101,7 @@ export {
     DateTime,
     Guid,
     JSONML,
+    Identity,
     IJSONML,
     PromiseCanceledError,
     ReactiveObject,
