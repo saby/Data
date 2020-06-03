@@ -1115,12 +1115,6 @@ describe('Types/_entity/Record', () => {
             assert.strictEqual(recordData, record.getRawData(true));
         });
 
-        it('shouldn\'t recognize date signature and create date instance within data', () => {
-            const rawData = {date: '2020-06-03T10:05:22Z'};
-            const rec = new Record({rawData});
-            assert.deepEqual(rawData, rec.getRawData());
-        });
-
         it('should return data with default values from subclass\' own format', () => {
             class SubRecord extends Record {
                 _$format: FormatDescriptor = getFormatDeclaration();
