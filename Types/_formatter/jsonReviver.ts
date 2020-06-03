@@ -123,7 +123,7 @@ export function withConfig<S>(config?: IConfig): TReviver<S> {
         }
 
         // Resolve links and instances at root
-        if (name === '' && Object.keys(this).length === 1) {
+        if (name === '' && (!this || Object.keys(this).length === 1)) {
             try {
                 resolveLinks();
                 resolveInstances();
@@ -135,7 +135,7 @@ export function withConfig<S>(config?: IConfig): TReviver<S> {
             }
 
             // In this case result hasn't been assigned and should be resolved from this
-            if (result === value as unknown as T) {
+            if (this && result === value as unknown as T) {
                 result = this[name];
             }
         }
