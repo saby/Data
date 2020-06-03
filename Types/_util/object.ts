@@ -5,8 +5,8 @@
  */
 
 import {IObject, ICloneable} from '../entity';
-import {jsonReplacer, jsonReviverWithConfig} from '../formatter';
 import {Set} from '../shim';
+import Serializer = require('Core/Serializer');
 
 function getPropertyMethodName(property: string, prefix: string): string {
     return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
@@ -82,9 +82,10 @@ export function clone<T>(original: T | ICloneable): T {
         if (original['[Types/_entity/ICloneable]']) {
             return (original as ICloneable).clone<T>();
         } else {
+            const serializer = new Serializer();
             return JSON.parse(
-                JSON.stringify(original, jsonReplacer),
-                jsonReviverWithConfig({resolveDates: false})
+                JSON.stringify(original, serializer.serialize),
+                serializer.deserialize
             );
         }
     } else {
