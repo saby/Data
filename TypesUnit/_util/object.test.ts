@@ -108,11 +108,6 @@ describe('Types/_util/object', () => {
             assert.deepEqual(clone(obj), obj);
         });
 
-        it('shouldn\'t create Date instance from date signature', () => {
-            const obj = {date: '2020-06-03T10:05:22Z'};
-            assert.deepEqual(clone(obj), obj);
-        });
-
         it('should clone using ICloneable method', () => {
             const obj = {
                 '[Types/_entity/ICloneable]': true,
