@@ -1106,13 +1106,19 @@ describe('Types/_entity/Record', () => {
     });
 
     describe('.getRawData()', () => {
-        it('should return a record data', () => {
+        it('should return the copy of data', () => {
             assert.notEqual(recordData, record.getRawData());
             assert.deepEqual(recordData, record.getRawData());
         });
 
-        it('should return a shared record data', () => {
+        it('should return shared data', () => {
             assert.strictEqual(recordData, record.getRawData(true));
+        });
+
+        it('shouldn\'t recognize date signature and create date instance within data', () => {
+            const rawData = {date: '2020-06-03T10:05:22Z'};
+            const rec = new Record({rawData});
+            assert.deepEqual(rawData, rec.getRawData());
         });
 
         it('should return data with default values from subclass\' own format', () => {

@@ -1,6 +1,6 @@
 import {ISignature, ILinkSignature} from './jsonReplacer';
 import {resolve} from '../di';
-import {ISerializableSignature} from '../entity';
+import {ISerializableSignature, ISerializableConstructor} from '../entity';
 
 interface ISerializedLink {
     name: string;
@@ -8,6 +8,12 @@ interface ISerializedLink {
     scope: object;
     value: ILinkSignature;
 }
+
+interface IConfig {
+    resolveDates?: boolean;
+}
+
+type TReviver<T> = (name: string, value: ISignature | unknown) => T;
 
 const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 
@@ -40,17 +46,14 @@ function resolveLinks(): void {
 }
 
 function resolveInstances(): void {
-    let Module;
-    let name;
-
     for (let i = 0; i < unresolvedInstances.length; i++) {
         const item = unresolvedInstances[i];
         let instance = null;
         if (instanceStorage[item.value.id]) {
             instance = instanceStorage[item.value.id];
         } else if (item.value.module) {
-            name = item.value.module;
-            Module = resolve(name);
+            const name = item.value.module;
+            const Module = resolve<ISerializableConstructor>(name);
             if (!Module) {
                 throw new Error(`The module "${name}" is not loaded yet.`);
             }
@@ -69,66 +72,80 @@ function resolveInstances(): void {
     }
 }
 
+const defaultConfig = {
+    resolveDates: true
+};
+
+export function withConfig<S>(config?: IConfig): TReviver<S> {
+    const actualConfig: IConfig = {...defaultConfig, ...config};
+
+    return function configuredJsonReviver<T>(name: string, value: ISignature | unknown): T {
+        let result: T = value as unknown as T;
+
+        if (value instanceof Object &&
+            value.hasOwnProperty('$serialized$')
+        ) {
+            switch ((value as ISerializableSignature).$serialized$) {
+                case 'inst':
+                    unresolvedInstances.push({
+                        scope: this,
+                        name,
+                        value
+                    });
+                    unresolvedInstancesId.push((value as ISerializableSignature).id);
+                    break;
+                case 'link':
+                    unresolvedLinks.push({
+                        scope: this,
+                        name,
+                        value: value as ILinkSignature
+                    });
+                    break;
+                case '+inf':
+                    result = Infinity as unknown as T;
+                    break;
+                case '-inf':
+                    result = -Infinity as unknown as T;
+                    break;
+                case 'undef':
+                    result = undefined;
+                    break;
+                case 'NaN':
+                    result = NaN as unknown as T;
+                    break;
+                default:
+                    throw new Error(`Unknown serialized type "${(value as ISerializableSignature).$serialized$}" detected`);
+            }
+        }
+
+        if (actualConfig.resolveDates && typeof result === 'string' && DATE_MATCH.test(result)) {
+            result = new Date(result) as unknown as T;
+        }
+
+        // Resolve links and instances at root
+        if (name === '' && Object.keys(this).length === 1) {
+            try {
+                resolveLinks();
+                resolveInstances();
+            } finally {
+                unresolvedLinks = [];
+                unresolvedInstances = [];
+                unresolvedInstancesId = [];
+                instanceStorage = {};
+            }
+
+            // In this case result hasn't been assigned and should be resolved from this
+            if (result === value as unknown as T) {
+                result = this[name];
+            }
+        }
+
+        return result;
+    }
+}
+
+const defaultReviver = withConfig();
+
 export default function jsonReviver<T>(name: string, value: ISignature | unknown): T {
-    let result: T = value as unknown as T;
-
-    if ((value instanceof Object) &&
-        value.hasOwnProperty('$serialized$')
-    ) {
-        switch ((value as ISerializableSignature).$serialized$) {
-            case 'inst':
-                unresolvedInstances.push({
-                    scope: this,
-                    name,
-                    value
-                });
-                unresolvedInstancesId.push((value as ISerializableSignature).id);
-                break;
-            case 'link':
-                unresolvedLinks.push({
-                    scope: this,
-                    name,
-                    value: value as ILinkSignature
-                });
-                break;
-            case '+inf':
-                result = Infinity as unknown as T;
-                break;
-            case '-inf':
-                result = -Infinity as unknown as T;
-                break;
-            case 'undef':
-                result = undefined;
-                break;
-            case 'NaN':
-                result = NaN as unknown as T;
-                break;
-            default:
-                throw new Error(`Unknown serialized type "${(value as ISerializableSignature).$serialized$}" detected`);
-        }
-    }
-
-    if (typeof result === 'string' && DATE_MATCH.test(result)) {
-        result = new Date(result) as unknown as T;
-    }
-
-    // Resolve links and instances at root
-    if (name === '' && Object.keys(this).length === 1) {
-        try {
-            resolveLinks();
-            resolveInstances();
-        } finally {
-            unresolvedLinks = [];
-            unresolvedInstances = [];
-            unresolvedInstancesId = [];
-            instanceStorage = {};
-        }
-
-        // In this case result hasn't been assigned and should be resolved from this
-        if (result === value as unknown as T) {
-            result = this[name];
-        }
-    }
-
-    return result;
+    return defaultReviver.call(this, name, value) as T;
 }
