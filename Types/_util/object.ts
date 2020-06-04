@@ -8,6 +8,19 @@ import {IObject, ICloneable} from '../entity';
 import {Set} from '../shim';
 import Serializer = require('Core/Serializer');
 
+interface IOptions {
+    keepUndefined?: boolean;
+    processCloneable?: boolean;
+}
+
+const defaultOtions: IOptions = {
+    keepUndefined: true,
+    processCloneable: true
+}
+
+const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
+const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
+
 function getPropertyMethodName(property: string, prefix: string): string {
     return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
 }
@@ -94,35 +107,55 @@ export function clone<T>(original: T | ICloneable): T {
 }
 
 /**
- * Реурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
+ * Рекурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
  * @param original Объект для клонирования
- * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
+ * @param [options] Опции клонирования
  * @return Клон объекта
  */
-export function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean, processing?: Set<Object>): T {
-    let result;
-    let checkedProcessing = processing;
+export function clonePlain<T>(original: T | ICloneable, options?: IOptions | boolean): T {
+    const normalizedOptions: IOptions = options === false ?
+        {processCloneable: false} :
+        options === true ? {} : options;
 
-    if (!checkedProcessing) {
-        checkedProcessing = new Set();
-    }
-    if (checkedProcessing.has(original)) {
+    return clonePlainInner(
+        original,
+        {...defaultOtions, ...normalizedOptions || {}},
+        new Set()
+    );
+}
+
+function clonePlainInner<T>(original: T | ICloneable, options: IOptions, inProgress: Set<Object>): T {
+    // Avoid recursion through repeatable objects
+    if (inProgress.has(original)) {
         return original as T;
     }
 
-    if (original instanceof Array) {
-        checkedProcessing.add(original);
-        result = original.map((item) => clonePlain<T>(item, processCloneable, checkedProcessing));
-        checkedProcessing.delete(original);
-    } else if (original instanceof Object) {
-        if (Object.getPrototypeOf(original) === Object.prototype) {
-            checkedProcessing.add(original);
+    let result;
+
+    if (PLAIN_OBJECT_STRINGIFIER.call(original) === '[object Array]') {
+        inProgress.add(original);
+        result = (original as unknown as T[]).map(
+            (item) => clonePlainInner<T>(item, options, inProgress)
+        );
+        // Skip undefined as JSON.stringify() does
+        if (!options.keepUndefined) {
+            result = result.filter((value) => value !== undefined);
+        }
+        inProgress.delete(original);
+    } else if (original && typeof original === 'object') {
+        if (Object.getPrototypeOf(original) === PLAIN_OBJECT_PROTOTYPE) {
+            inProgress.add(original);
             result = {};
-            Object.keys(original).forEach((key) => {
-                result[key] = clonePlain(original[key], processCloneable, checkedProcessing);
+            Object.entries(original).forEach(([key, value]) => {
+                // Skip undefined as JSON.stringify() does
+                if (!options.keepUndefined && value === undefined) {
+                    return;
+                }
+
+                result[key] = clonePlainInner(value, options, inProgress);
             });
-            checkedProcessing.delete(original);
-        } else if (original['[Types/_entity/ICloneable]']) {
+            inProgress.delete(original);
+        } else if (options.processCloneable && original['[Types/_entity/ICloneable]']) {
             result = (original as ICloneable).clone<T>();
         } else {
             result = original;

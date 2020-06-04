@@ -1106,12 +1106,12 @@ describe('Types/_entity/Record', () => {
     });
 
     describe('.getRawData()', () => {
-        it('should return a record data', () => {
+        it('should return the copy of data', () => {
             assert.notEqual(recordData, record.getRawData());
             assert.deepEqual(recordData, record.getRawData());
         });
 
-        it('should return a shared record data', () => {
+        it('should return shared data', () => {
             assert.strictEqual(recordData, record.getRawData(true));
         });
 

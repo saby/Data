@@ -570,7 +570,9 @@ export default abstract class FormattableMixin {
      * </pre>
      */
     getRawData(shared?: boolean): any {
-        return shared ? this._getRawData() : object.clone(this._getRawData());
+        return shared ?
+            this._getRawData() :
+            object.clonePlain(this._getRawData(), {keepUndefined: false});
     }
 
     /**

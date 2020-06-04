@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import jsonReviver from 'Types/_formatter/jsonReviver';
+import jsonReviver, {withConfig} from 'Types/_formatter/jsonReviver';
 import {register, unregister} from 'Types/di';
 
 class Serializeable {
@@ -23,12 +23,19 @@ class Serializeable {
 }
 
 describe('Types/_formatter/jsonReviver', () => {
-    it('should deserialize a date', () => {
+    it('should deserialize a date by default', () => {
        const date = new Date('1995-12-17T01:02:03');
        const dateStr = date.toJSON();
        const result = jsonReviver<Date>('', dateStr);
        assert.instanceOf(result, Date);
        assert.strictEqual(result.getTime(), date.getTime());
+    });
+
+    it('shouldn\'t deserialize a date if resolveDates === false', () => {
+        const date = new Date('1995-12-17T01:02:03');
+        const dateStr = date.toJSON();
+        const result = withConfig<String>({resolveDates: false})('', dateStr);
+        assert.strictEqual(result, dateStr);
     });
 
     it('should deserialize Infinity', () => {
