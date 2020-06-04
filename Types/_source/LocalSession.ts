@@ -437,7 +437,7 @@ class ModelManager {
     }
 
    get(data: object): Model {
-      data = object.clonePlain(data, true);
+      data = object.clonePlain(data);
       switch (this.adapter) {
          case 'Types/entity:adapter.RecordSet':
          case 'adapter.recordset':
@@ -491,7 +491,7 @@ class Converter {
     }
 
     get(data: object[]): RecordSet | object {
-        data = object.clonePlain(data, true);
+        data = object.clonePlain(data);
         switch (this.adapter) {
             case 'Types/entity:adapter.RecordSet':
             case 'adapter.recordset':

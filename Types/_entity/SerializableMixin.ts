@@ -36,6 +36,10 @@ export interface IOptions<T> {
      [key: string]: T;
 }
 
+export interface ISerializableConstructor extends ObjectConstructor {
+    fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T;
+}
+
 /**
  * Возвращает уникальный номер инстанса
  */
