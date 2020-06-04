@@ -8,6 +8,16 @@ import {IObject, ICloneable} from '../entity';
 import {Set} from '../shim';
 import Serializer = require('Core/Serializer');
 
+interface IOptions {
+    keepUndefined?: boolean;
+    processCloneable?: boolean;
+}
+
+const defaultOtions: IOptions = {
+    keepUndefined: true,
+    processCloneable: true
+}
+
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
 
@@ -99,14 +109,22 @@ export function clone<T>(original: T | ICloneable): T {
 /**
  * Рекурсивно клонирует простые простые объекты и массивы. Сложные объекты передаются по ссылке.
  * @param original Объект для клонирования
- * @param [processCloneable=false] Обрабатывать объекты, поддерживающие интерфейс Types/_entity/ICloneable
+ * @param [options] Опции клонирования
  * @return Клон объекта
  */
-export function clonePlain<T>(original: T | ICloneable, processCloneable?: boolean): T {
-    return clonePlainInner(original, processCloneable, new Set());
+export function clonePlain<T>(original: T | ICloneable, options?: IOptions | boolean): T {
+    const normalizedOptions: IOptions = options === false ?
+        {processCloneable: false} :
+        options === true ? {} : options;
+
+    return clonePlainInner(
+        original,
+        {...defaultOtions, ...normalizedOptions || {}},
+        new Set()
+    );
 }
 
-function clonePlainInner<T>(original: T | ICloneable, processCloneable: boolean, inProgress: Set<Object>): T {
+function clonePlainInner<T>(original: T | ICloneable, options: IOptions, inProgress: Set<Object>): T {
     // Avoid recursion through repeatable objects
     if (inProgress.has(original)) {
         return original as T;
@@ -117,18 +135,23 @@ function clonePlainInner<T>(original: T | ICloneable, processCloneable: boolean,
     if (PLAIN_OBJECT_STRINGIFIER.call(original) === '[object Array]') {
         inProgress.add(original);
         result = (original as unknown as T[]).map(
-            (item) => clonePlainInner<T>(item, processCloneable, inProgress)
+            (item) => clonePlainInner<T>(item, options, inProgress)
         );
         inProgress.delete(original);
     } else if (original && typeof original === 'object') {
         if (Object.getPrototypeOf(original) === PLAIN_OBJECT_PROTOTYPE) {
             inProgress.add(original);
             result = {};
-            Object.keys(original).forEach((key) => {
-                result[key] = clonePlainInner(original[key], processCloneable, inProgress);
+            Object.entries(original).forEach(([key, value]) => {
+                // Skip undefined as JSON.stringify() does
+                if (!options.keepUndefined && value === undefined) {
+                    return;
+                }
+
+                result[key] = clonePlainInner(value, options, inProgress);
             });
             inProgress.delete(original);
-        } else if (original['[Types/_entity/ICloneable]']) {
+        } else if (options.processCloneable && original['[Types/_entity/ICloneable]']) {
             result = (original as ICloneable).clone<T>();
         } else {
             result = original;

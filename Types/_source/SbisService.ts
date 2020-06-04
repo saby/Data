@@ -1131,7 +1131,7 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        meta = object.clonePlain(meta, true);
+        meta = object.clonePlain(meta);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
                 super.create(meta) as any,
@@ -1196,7 +1196,7 @@ export default class SbisService extends Rpc {
     }
 
     query(query?: Query): Promise<DataSet> {
-       query = object.clonePlain(query, true);
+       query = object.clonePlain(query);
        return this._loadAdditionalDependencies((ready) => {
           this._connectAdditionalDependencies(
              super.query(query) as any,
