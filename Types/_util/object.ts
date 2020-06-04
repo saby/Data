@@ -128,7 +128,7 @@ function clonePlainInner<T>(original: T | ICloneable, processCloneable: boolean,
                 result[key] = clonePlainInner(original[key], processCloneable, inProgress);
             });
             inProgress.delete(original);
-        } else if (processCloneable && original['[Types/_entity/ICloneable]']) {
+        } else if (original['[Types/_entity/ICloneable]']) {
             result = (original as ICloneable).clone<T>();
         } else {
             result = original;
