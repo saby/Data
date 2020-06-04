@@ -61,7 +61,7 @@ export default function jsonReplacer<T = unknown>(name: string, value: T): ISign
     }
 
     // Resolve links and instances at root
-    if (name === '' && Object.keys(this).length === 1) {
+    if (name === '' && (!this || Object.keys(this).length === 1)) {
         linksStorage = {};
     }
 

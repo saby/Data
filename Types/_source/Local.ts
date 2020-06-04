@@ -194,7 +194,7 @@ export default abstract class Local<TData = unknown> extends mixin<
     readonly '[Types/_source/ICrud]': boolean = true;
 
     create(meta?: object): Promise<Model | Record> {
-        meta = object.clonePlain(meta, true);
+        meta = object.clonePlain(meta);
         return this._loadAdditionalDependencies().addCallback(() => {
             return this._prepareCreateResult(meta);
         }) as Promise<Model | Record>;
@@ -408,7 +408,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     protected _wrapToDataSet(data: any): DataSet {
         return super._wrapToDataSet(
-            object.clonePlain(data, true)
+            object.clonePlain(data)
         );
     }
 
@@ -419,14 +419,14 @@ export default abstract class Local<TData = unknown> extends mixin<
     protected _prepareCreateResult(data: any): Model {
         return super._prepareCreateResult.call(
             this,
-            object.clonePlain(data, true)
+            object.clonePlain(data)
         );
     }
 
     protected _prepareReadResult(data: any): Model {
         return super._prepareReadResult.call(
             this,
-            object.clonePlain(data, true)
+            object.clonePlain(data)
         );
     }
 

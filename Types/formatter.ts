@@ -39,7 +39,7 @@ export {
     MODE as TO_SQL_MODE
 } from './_formatter/dateToSql';
 export {default as jsonReplacer} from './_formatter/jsonReplacer';
-export {default as jsonReviver} from './_formatter/jsonReviver';
+export {default as jsonReviver, withConfig as jsonReviverWithConfig} from './_formatter/jsonReviver';
 export {default as numberRoman} from './_formatter/numberRoman';
 export {default as numberWords} from './_formatter/numberWords';
 export {default as number} from './_formatter/number';

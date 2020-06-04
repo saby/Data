@@ -10,7 +10,7 @@
  * @author Мальцев А.А.
  */
 export default interface ISerializable {
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/ISerializable]': boolean;
 
     /**
      * Instance module name

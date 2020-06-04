@@ -85,6 +85,7 @@ import * as relation from './_entity/relation';
 export {relation};
 export {
     default as SerializableMixin,
+    ISerializableConstructor,
     ISignature as ISerializableSignature,
     IState as ISerializableState
 } from './_entity/SerializableMixin';

@@ -230,7 +230,7 @@ export default class Memory extends Local {
 
         const table = query ? query.getFrom() : undefined;
         if (!this._emptyData.has(table)) {
-            const items = object.clonePlain(this._applyFrom(table), true);
+            const items = object.clonePlain(this._applyFrom(table));
             const adapter = this.getAdapter().forTable(items);
 
             adapter.clear();
