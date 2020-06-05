@@ -135,7 +135,36 @@ describe('Types/_util/object', () => {
             assert.deepEqual(clonePlain(obj), obj);
         });
 
-        it('should call method clone() if object implements ICloneable', () => {
+        it('should save the object key with undefined value by default', () => {
+            const obj = {foo: undefined};
+            const objClone = clonePlain(obj);
+
+            assert.isUndefined(objClone.foo);
+            assert.isTrue(objClone.hasOwnProperty('foo'));
+        });
+
+        it('shouldn\'t save the object key with undefined value if keepUndefined is false', () => {
+            const obj = {foo: undefined};
+            const objClone = clonePlain(obj, {keepUndefined: false});
+
+            assert.isFalse(objClone.hasOwnProperty('foo'));
+        });
+
+        it('should save the array entry with undefined value by default', () => {
+            const obj = [0, undefined, 1];
+            const objClone = clonePlain(obj);
+
+            assert.deepEqual(objClone, [0, undefined, 1]);
+        });
+
+        it('should save the array entry with undefined value if keepUndefined is false', () => {
+            const obj = [0, undefined, 1];
+            const objClone = clonePlain(obj, {keepUndefined: false});
+
+            assert.deepEqual(objClone, [0, undefined, 1]);
+        });
+
+        it('should call method clone() if object implements ICloneable by default', () => {
             let called = false;
 
             class Foo {
@@ -149,11 +178,29 @@ describe('Types/_util/object', () => {
                foo: new Foo()
             };
 
-            clonePlain(obj, true);
+            clonePlain(obj);
             assert.isTrue(called);
         });
 
-        it('should don\'t clone complicated Object', () => {
+        it('shouldn\'t call method clone() if object implements ICloneable if processCloneable is false', () => {
+            let called = false;
+
+            class Foo {
+                ['[Types/_entity/ICloneable]']: boolean = true;
+                clone(): void {
+                    called = true;
+                }
+            }
+
+            const obj = {
+               foo: new Foo()
+            };
+
+            clonePlain(obj, {processCloneable: false});
+            assert.isFalse(called);
+        });
+
+        it('shouldn\'t clone complicated Object', () => {
             const Foo = () => {
                 // I'm dummy
             };
