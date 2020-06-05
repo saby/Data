@@ -150,18 +150,18 @@ describe('Types/_util/object', () => {
             assert.isFalse(objClone.hasOwnProperty('foo'));
         });
 
-        it('should save the array enrty with undefined value by default', () => {
+        it('should save the array entry with undefined value by default', () => {
             const obj = [0, undefined, 1];
             const objClone = clonePlain(obj);
 
             assert.deepEqual(objClone, [0, undefined, 1]);
         });
 
-        it('shouldn\'t save the array enrty with undefined value if keepUndefined is false', () => {
+        it('should save the array entry with undefined value if keepUndefined is false', () => {
             const obj = [0, undefined, 1];
             const objClone = clonePlain(obj, {keepUndefined: false});
 
-            assert.deepEqual(objClone, [0, 1]);
+            assert.deepEqual(objClone, [0, undefined, 1]);
         });
 
         it('should call method clone() if object implements ICloneable by default', () => {
