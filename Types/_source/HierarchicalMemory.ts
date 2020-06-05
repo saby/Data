@@ -225,14 +225,20 @@ export default class HierarchicalMemory extends mixin<
                         });
 
                         // Extract breadcrumbs as path from filtered node to the root
-                        const startFromId = query.getWhere()[this._$parentProperty];
-                        let startFromNode = sourceRecords.getRecordById(startFromId);
-                        if (startFromNode) {
-                            breadcrumbs.add(startFromNode, 0);
-                            let node;
-                            while (startFromNode && (node = hierarchy.getParent(startFromNode, sourceRecords))) {
-                                breadcrumbs.add(node, 0);
-                                startFromNode = node.get(this._keyProperty);
+                        const whereConditions = query.getWhere();
+                        if (this._$parentProperty in whereConditions) {
+                            const startFromId = whereConditions[this._$parentProperty];
+                            let startFromNode = sourceRecords.getRecordById(startFromId);
+                            if (startFromNode) {
+                                breadcrumbs.add(startFromNode, 0);
+                                let node;
+                                while (
+                                    startFromNode &&
+                                    (node = hierarchy.getParent(startFromNode, sourceRecords))
+                                ) {
+                                    breadcrumbs.add(node, 0);
+                                    startFromNode = node.get(this._keyProperty);
+                                }
                             }
                         }
 
