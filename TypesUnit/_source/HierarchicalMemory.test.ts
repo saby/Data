@@ -110,6 +110,23 @@ describe('Types/_source/HierarchicalMemory', () => {
                 assert.deepEqual(path, expectPath);
             });
         });
+
+        it('should return an empty path if query\'s filter doesn\'t have property related to parentProperty', () => {
+            const source = new HierarchicalMemory({
+                data: [
+                    {id: 1, parent: null, name: 'Catalogue'},
+                    {id: 10, parent: 1, name: 'Computers'},
+                    {id: 100, parent: 10, name: 'Laptops'}
+                ],
+                keyProperty: 'id',
+                parentProperty: 'parent'
+            });
+
+            const query = new Query();
+            return source.query(query).then((result) => {
+                assert.strictEqual(result.getAll().getMetaData().path.getCount(), 0);
+            });
+        });
     });
 
     describe('.merge()', () => {
