@@ -92,7 +92,11 @@ function getFieldTypeNameByInner(innerName: string): string {
 }
 
 function getFieldInnerTypeNameByOuter(outerName: string): string {
-    return FIELD_TYPE[(outerName + '').toLowerCase()];
+    const result = FIELD_TYPE[(outerName + '').toLowerCase()];
+    if (!result) {
+        throw new TypeError(`Field type "${outerName}" is not supported.`);
+    }
+    return result;
 }
 
 function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {

@@ -2417,6 +2417,15 @@ describe('Types/_entity/Record', () => {
             assert.equal(field.getKind(), 'datetime');
         });
 
+        it('should create Array field with kind of Array', () => {
+            const value = [[1]];
+            const record = Record.fromObject({foo: value});
+            const field = record.getFormat().at(0) as ArrayField;
+
+            assert.equal(field.getType(), 'array');
+            assert.deepEqual(field.getKind() as unknown, {type: 'array', kind: 'integer'});
+        });
+
         it('should create Array field with kind of first not null element', () => {
             const record = Record.fromObject({foo: [null, 1]});
             const field = record.getFormat().at(0) as ArrayField;
