@@ -1242,6 +1242,18 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             assert.strictEqual((format.t as IArrayFieldType).t, 'Логическое');
         });
 
+        it('should throw TypeError if array elements type is not supported', () => {
+            const field = new fieldFormat.ArrayField({
+                type: 'array',
+                name: 'foo',
+                kind: {type: 'array', kind: 'integer'}
+            });
+
+            assert.throws(() => {
+                adapter.addField(field, 0);
+            }, TypeError);
+        });
+
         it('should use a field default value', () => {
             const fieldName = 'New';
             const def = 'abc';
