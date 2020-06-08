@@ -1,4 +1,4 @@
-# Type system#####1
+# Type system
 
 This TypeScript package provides Wasaby type system for efficient work with types, data structures, collections and types transformation.
 
