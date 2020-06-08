@@ -137,17 +137,13 @@ function clonePlainInner<T>(original: T | ICloneable, options: IOptions, inProgr
         result = (original as unknown as T[]).map(
             (item) => clonePlainInner<T>(item, options, inProgress)
         );
-        // Skip undefined as JSON.stringify() does
-        if (!options.keepUndefined) {
-            result = result.filter((value) => value !== undefined);
-        }
         inProgress.delete(original);
     } else if (original && typeof original === 'object') {
         if (Object.getPrototypeOf(original) === PLAIN_OBJECT_PROTOTYPE) {
             inProgress.add(original);
             result = {};
             Object.entries(original).forEach(([key, value]) => {
-                // Skip undefined as JSON.stringify() does
+                // Omit undefined values as JSON.stringify() does
                 if (!options.keepUndefined && value === undefined) {
                     return;
                 }
