@@ -1,4 +1,4 @@
-# Type system
+# Type system8
 
 This TypeScript package provides Wasaby type system for efficient work with types, data structures, collections and types transformation.
 
