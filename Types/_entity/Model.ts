@@ -7,18 +7,9 @@ import {IAdapter} from './adapter';
 import {Compute, ICompute, Track, ITrack} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
 import {create, register} from '../di';
-import {applyMixins, deprecateExtend, logger} from '../util';
+import {applyMixins, deprecateExtend, logger, protect} from '../util';
 import {Map, Set} from '../shim';
 import {IHashMap} from '../_declarations';
-
-/**
- * Разделитель для пути в объекте.
- */
-
-/*
- * Separator for path in object
- */
-const ROUTE_SEPARATOR = '.';
 
 type PropertyGetter<T, U> = (this: T, value?: U) => U;
 type PropertySetter<T, U> = (this: T, value: U) => U;
@@ -48,6 +39,16 @@ interface ISerializableState extends IRecordSerializableState {
     _isDeleted: boolean;
     _defaultPropertiesValues: object;
 }
+
+/*
+ * Separator for path in object
+ */
+const ROUTE_SEPARATOR = '.';
+
+/*
+ * A flag which indicates that property is calculating at very moment
+ */
+const isCalculating = protect('isCalculating');
 
 /**
  * Абстрактная модель.
@@ -417,15 +418,6 @@ class Model<T = any> extends Record<T> implements IStateful {
     protected _propertiesInjected: boolean;
 
     /**
-     * Свойства имен которых рассчитываются прямо сейчас.
-     */
-
-    /*
-     * Properties names which calculating right now
-     */
-    protected _calculatingProperties: Set<string>;
-
-    /**
      * Имена свойств и значения, которые были затронуты во время вызовов рекурсивного метода set().
      */
 
@@ -468,7 +460,6 @@ class Model<T = any> extends Record<T> implements IStateful {
     destroy(): void {
         this._defaultPropertiesValues = null;
         this._propertiesDependency = null;
-        this._calculatingProperties = null;
         this._deepChangedProperties = null;
 
         super.destroy();
@@ -499,7 +490,7 @@ class Model<T = any> extends Record<T> implements IStateful {
             return preValue;
         }
 
-        const value = this._processCalculatedValue(name as string, preValue, property, true);
+        const value = this._processCalculatedValue(name as string, preValue, property.get, true);
 
         if (value !== superValue) {
             this._removeChild(superValue);
@@ -511,7 +502,6 @@ class Model<T = any> extends Record<T> implements IStateful {
         } else if (this._fieldsCache.has(name as string)) {
             this._fieldsCache.delete(name as string);
         }
-
         return value;
     }
 
@@ -526,7 +516,9 @@ class Model<T = any> extends Record<T> implements IStateful {
         const map = this._getHashMap(name, value);
         const pairs = [];
         const propertiesErrors = [];
-        const isCalculating = this._calculatingProperties ? this._calculatingProperties.size > 0 : false;
+        let hasCalculating = this._$properties && Object.values(this._$properties).some(
+            (property) => property.get && property.get[isCalculating] || property.set && property.set[isCalculating]
+        );
 
         Object.keys(map).forEach((key) => {
             this._deleteDependencyCache(key);
@@ -550,7 +542,7 @@ class Model<T = any> extends Record<T> implements IStateful {
                         }
 
                         // Calculate new value
-                        value = this._processCalculatedValue(key, value, property, false);
+                        value = this._processCalculatedValue(key, value, property.set, false);
                         const storeInRawData = value !== undefined;
 
                         if (isTracking) {
@@ -578,11 +570,11 @@ class Model<T = any> extends Record<T> implements IStateful {
         const pairsErrors = [];
         let changedProperties = super._setPairs(pairs, pairsErrors);
 
-        if (isCalculating && changedProperties) {
+        if (hasCalculating && changedProperties) {
             // Here is the set() that recursive calls from another set() so just accumulate the changes
             this._deepChangedProperties = this._deepChangedProperties || {};
             Object.assign(this._deepChangedProperties, changedProperties);
-        } else if (!isCalculating && this._deepChangedProperties) {
+        } else if (!hasCalculating && this._deepChangedProperties) {
             // Here is the top level set() so do merge with accumulated changes
             if (changedProperties) {
                 Object.assign(this._deepChangedProperties, changedProperties);
@@ -592,7 +584,7 @@ class Model<T = any> extends Record<T> implements IStateful {
         }
 
         // It's top level set() so notify changes if have some
-        if (!isCalculating && changedProperties) {
+        if (!hasCalculating && changedProperties) {
             const changed = Object.keys(changedProperties).reduce((memo, key) => {
                 memo[key] = this.get(key as K);
                 return memo;
@@ -1009,23 +1001,17 @@ class Model<T = any> extends Record<T> implements IStateful {
      * Вычисляет/записывает значение свойства
      * @param name Имя свойства
      * @param value Значение свойства
-     * @param property Описание свойства
+     * @param method Метод вычисления свойства
      * @param isReading Вычисление или запись
      * @protected
      */
-    protected _processCalculatedValue(name: string, value: any, property: IProperty, isReading?: boolean): any {
+    protected _processCalculatedValue(name: string, value: any, method: IPropertyGetter<Model, unknown>, isReading?: boolean): any {
         // Check for recursive calculating
-        let calculatingProperties = this._calculatingProperties;
-        if (!calculatingProperties) {
-            calculatingProperties = this._calculatingProperties = new Set();
-        }
-        const checkKey = name + '|' + isReading;
-        if (calculatingProperties.has(checkKey)) {
+        if (method[isCalculating]) {
             throw new Error(`Recursive value ${isReading ? 'reading' : 'writing'} detected for property "${name}"`);
         }
 
         // Initial conditions
-        const method = isReading ? property.get : property.set;
         const isFunctor = isReading && Compute.isFunctor(method);
         const doGathering = isReading && !isFunctor;
 
@@ -1045,13 +1031,13 @@ class Model<T = any> extends Record<T> implements IStateful {
 
         // Get or set property value
         try {
-            calculatingProperties.add(checkKey);
+            method[isCalculating] = true;
             value = method.call(this, value);
         } finally {
             if (isReading) {
                 this._propertiesDependencyGathering = prevGathering;
             }
-            calculatingProperties.delete(checkKey);
+            method[isCalculating] = false;
         }
 
         return value;
@@ -1157,7 +1143,6 @@ Object.assign(Model.prototype, {
     _defaultPropertiesValues: null,
     _propertiesDependency: null,
     _propertiesDependencyGathering: '',
-    _calculatingProperties: null,
     _deepChangedProperties: null,
     getId: Model.prototype.getKey,
     getIdProperty: Model.prototype.getKeyProperty,
