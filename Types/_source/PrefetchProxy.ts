@@ -229,6 +229,11 @@ export default class PrefetchProxy extends mixin<
      * @cfg {Object} Валидаторы данных, которые решают, являются ли они действительными или нет, и, соответственно, должны ли они возвращать предварительно выбранные данные или вызывать целевой источник.
      * @name Types/_source/PrefetchProxy#validators
      * @example
+     * В аргументы валидатора передаются:
+     * - предварительно выбранные данные для валидируемого метода;
+     * - статус отработки по каждому методу;
+     * - оригинальные аргументы метода по CRUD-контракту.
+     *
      * Давайте закешируем данные за одну минуту.
      * <pre>
      *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
@@ -280,6 +285,11 @@ export default class PrefetchProxy extends mixin<
      * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it return prefetched data or invoke target source.
      * @name Types/_source/PrefetchProxy#validators
      * @example
+     * Each validator accept following arguments:
+     * - prefetchaed data for validationg method;
+     * - state of done for each method;
+     * - original arguments according to calling CRUD-method.
+     *
      * Let's cache data for one minute
      * <pre>
      *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
