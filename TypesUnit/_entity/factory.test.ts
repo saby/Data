@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub, SinonStub} from 'sinon';
 import {cast, serialize} from 'Types/_entity/factory';
 import {
     ArrayField,
@@ -25,7 +25,7 @@ import RecordSet from 'Types/_collection/RecordSet';
 import dateToSql, {MODE} from 'Types/_formatter/dateToSql';
 
 interface IStubbedDate extends Date {
-    tzoStub?: sinon.SinonStub;
+    tzoStub?: SinonStub;
 }
 
 function getFormatMock(type: string): Field {
@@ -42,7 +42,7 @@ function getUniversalFormatMock(type: string): UniversalField {
 }
 
 function patchTzo(date: IStubbedDate, offset: number): void {
-    date.tzoStub = sinon.stub(date, 'getTimezoneOffset');
+    date.tzoStub = stub(date, 'getTimezoneOffset');
     date.tzoStub.returns(offset);
 }
 

@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {spy} from 'sinon';
 import Model, {IProperty} from 'Types/_entity/Model';
 import Compute from 'Types/_entity/functor/Compute';
 import Track from 'Types/_entity/functor/Track';
@@ -1122,9 +1122,9 @@ describe('Types/_entity/Model', () => {
                 }
             });
 
-            sinon.spy(model, 'set');
+            const setSpy = spy(model, 'set');
             model.merge(model);
-            assert.isFalse((model.set as any).called);
+            assert.isFalse(setSpy.called);
         });
 
         context('with various adapter types', () => {

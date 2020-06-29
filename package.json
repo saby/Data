@@ -16,6 +16,7 @@
       "build:typescript": "saby-typescript --install --mode=development",
       "build:app": "wasaby-cli --tasks=build",
       "compile": "saby-typescript --compiler",
+      "watch": "saby-typescript --compiler --watch",
       "start": "wasaby-cli --tasks=startTest --server",
       "test": "wasaby-cli --tasks=startTest --node --report=console",
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",

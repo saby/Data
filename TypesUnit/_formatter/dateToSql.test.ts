@@ -1,10 +1,10 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import dateToSql, {MODE} from 'Types/_formatter/dateToSql';
 
 describe('Types/_formatter/dateToSql', () => {
     function patchTzo(date: Date, offset: number): void {
-        (date as any).tzoStub = sinon.stub(date, 'getTimezoneOffset');
+        (date as any).tzoStub = stub(date, 'getTimezoneOffset');
         (date as any).tzoStub.returns(offset);
     }
 

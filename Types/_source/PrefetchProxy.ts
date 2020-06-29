@@ -33,9 +33,9 @@ interface IPrefetchProxySerializableState extends ISerializableState {
 type ITarget = ICrud | ICrudPlus;
 
 interface IValidators {
-    read?: (data: Record, done?: IDone) => boolean;
-    query?: (data: DataSet, done?: IDone) => boolean;
-    copy?: (data: Record, done?: IDone) => boolean;
+    read?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
+    query?: (data: DataSet, done?: IDone, query?: Query) => boolean;
+    copy?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
 }
 
 interface IOptions {
@@ -397,7 +397,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     read(key: EntityKey, meta?: object): Promise<Model> {
-        if (this._validators.read(this._$data.read, this._done)) {
+        if (this._validators.read(this._$data.read, this._done, key, meta)) {
             return Promise.resolve(this._$data.read);
         }
         return (this._$target as ICrud).read(key, meta) as Promise<Model>;
@@ -412,7 +412,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     query(query?: Query): Promise<DataSet> {
-        if (this._validators.query(this._$data.query, this._done)) {
+        if (this._validators.query(this._$data.query, this._done, query)) {
             return Promise.resolve(this._$data.query);
         }
         return (this._$target as ICrud).query(query);
@@ -429,7 +429,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        if (this._validators.copy(this._$data.copy, this._done)) {
+        if (this._validators.copy(this._$data.copy, this._done, key, meta)) {
             return Promise.resolve(this._$data.copy);
         }
         return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;
