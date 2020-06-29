@@ -1,13 +1,13 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import format from 'Types/_formatter/date';
 import * as locales from 'Core/helpers/i18n/locales';
 import i18n = require('Core/i18n');
 
 describe('Types/_formatter/date', () => {
     function setLocale(locale: string): () => void {
-        const stubEnabled = sinon.stub(i18n, 'isEnabled');
-        const stubGetLang = sinon.stub(i18n, 'getLang');
+        const stubEnabled = stub(i18n, 'isEnabled');
+        const stubGetLang = stub(i18n, 'getLang');
         stubEnabled.returns(true);
         stubGetLang.returns(locale);
 
@@ -212,7 +212,7 @@ describe('Types/_formatter/date', () => {
 
         beforeEach(() => {
             date = new Date(2018, 11, 1);
-            timezoneOffsetStub = sinon.stub(date, 'getTimezoneOffset');
+            timezoneOffsetStub = stub(date, 'getTimezoneOffset');
         });
 
         afterEach(() => {

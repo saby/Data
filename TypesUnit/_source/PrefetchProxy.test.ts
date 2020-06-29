@@ -1,6 +1,8 @@
 import {assert} from 'chai';
+import {spy} from 'sinon';
 import PrefetchProxy from 'Types/_source/PrefetchProxy';
 import OptionsMixin from 'Types/_source/OptionsMixin';
+import { Query } from 'Types/source';
 
 describe('Types/_source/PrefetchProxy', () => {
     const getTarget = (data) => {
@@ -170,6 +172,27 @@ describe('Types/_source/PrefetchProxy', () => {
             });
         });
 
+        it('should pass valid arguments to validator', () => {
+            const readData = {};
+            const data: unknown = {read: readData};
+            const validators = {read: (data: unknown, done: unknown, key: unknown, meta: unknown) => true};
+            const readSpy = spy(validators, 'read');
+
+            const source = new PrefetchProxy({target, data, validators});
+            const entityId = 123;
+            const entityMeta = {};
+
+            return source.read(entityId, entityMeta).then((data) => {
+                assert.strictEqual(readSpy.callCount, 1);
+
+                const call = readSpy.lastCall;
+                assert.strictEqual(call.args[0], readData);
+                assert.deepEqual(call.args[1], {});
+                assert.strictEqual(call.args[2], entityId);
+                assert.strictEqual(call.args[3], entityMeta);
+            });
+        });
+
         it('should always return result from data.read', () => {
             const expected: any = {foo: 'bar'};
             const source = new PrefetchProxy({
@@ -261,6 +284,25 @@ describe('Types/_source/PrefetchProxy', () => {
             });
         });
 
+        it('should pass valid arguments to validator', () => {
+            const queryData = {};
+            const data: unknown = {query: queryData};
+            const validators = {query: (data: unknown, done: unknown, query: unknown) => true};
+            const querySpy = spy(validators, 'query');
+
+            const source = new PrefetchProxy({target, data, validators});
+            const query = new Query();
+
+            return source.query(query).then((data) => {
+                assert.strictEqual(querySpy.callCount, 1);
+
+                const call = querySpy.lastCall;
+                assert.strictEqual(call.args[0], queryData);
+                assert.deepEqual(call.args[1], {});
+                assert.strictEqual(call.args[2], query);
+            });
+        });
+
         it('should always return result from data.query', () => {
             const expected: any = {foo: 'bar'};
             const source = new PrefetchProxy({
@@ -336,6 +378,27 @@ describe('Types/_source/PrefetchProxy', () => {
                 assert.equal(data, expected);
 
                 assert.equal(source.copy(undefined) as any, '!copy');
+            });
+        });
+
+        it('should pass valid arguments to validator', () => {
+            const copyData = {};
+            const data: unknown = {copy: copyData};
+            const validators = {copy: (data: unknown, done: unknown, key: unknown, meta: unknown) => true};
+            const copySpy = spy(validators, 'copy');
+
+            const source = new PrefetchProxy({target, data, validators});
+            const entityId = 123;
+            const entityMeta = {};
+
+            return source.copy(entityId, entityMeta).then((data) => {
+                assert.strictEqual(copySpy.callCount, 1);
+
+                const call = copySpy.lastCall;
+                assert.strictEqual(call.args[0], copyData);
+                assert.deepEqual(call.args[1], {});
+                assert.strictEqual(call.args[2], entityId);
+                assert.strictEqual(call.args[3], entityMeta);
             });
         });
 

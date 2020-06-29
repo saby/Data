@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import retrospect, {Type} from 'Types/_formatter/retrospect';
 import i18n = require('Core/i18n');
 
@@ -8,8 +8,8 @@ describe('Types/_formatter/retrospect', () => {
     let stubGetLang;
 
     before(() => {
-        stubEnabled = sinon.stub(i18n, 'isEnabled');
-        stubGetLang = sinon.stub(i18n, 'getLang');
+        stubEnabled = stub(i18n, 'isEnabled');
+        stubGetLang = stub(i18n, 'getLang');
         stubEnabled.returns(true);
         stubGetLang.returns('en-US');
     });
