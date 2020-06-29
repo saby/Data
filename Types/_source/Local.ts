@@ -284,6 +284,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             items = this._applyJoin(items, query.getJoin());
             items = this._applyWhere(items, query.getWhere(), query.getMeta());
             items = this._applyOrderBy(items, query.getOrderBy());
+            items = this._applySelect(items, query.getSelect());
             total = adapter.forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
         } else if (this._$filter) {
@@ -489,6 +490,37 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @protected
      */
     protected abstract _applyJoin(data: any, join: Join[]): any;
+
+    /**
+     * Applies fieldset selection
+     * @param data Data to handle
+     * @param select Fieldset to select
+     * @protected
+     */
+    protected _applySelect(data: any, select: IHashMap<string>): any {
+        const selectNames = Object.keys(select);
+
+        if (!selectNames.length) {
+            return data;
+        }
+
+        const adapter = this.getAdapter();
+        const tableAdapter = adapter.forTable();
+
+        this._each(data, (item) => {
+            const original = adapter.forRecord(item);
+            const applied = adapter.forRecord();
+
+            selectNames.forEach((originalName) => {
+                applied.set(select[originalName], original.get(originalName));
+            });
+
+            tableAdapter.add(applied.getData());
+        });
+
+        return tableAdapter.getData();
+    }
+
 
     /**
      * Applies filter
