@@ -768,7 +768,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders');
      * </pre>
      */
@@ -896,7 +896,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .join(
      *             'Customers',
@@ -944,16 +944,15 @@ export default class Query<T = unknown> implements ICloneable {
      *     import {Query} from 'Types/source';
      *
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .join(
      *             'Customers',
-     *             {id: 'customerId'},
-     *             '*'
+     *             {id: 'customerId'}
      *         );
      *
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .join(
      *             'Customers',
@@ -977,8 +976,7 @@ export default class Query<T = unknown> implements ICloneable {
      *         .from('Orders')
      *         .join(
      *             'Customers',
-     *             {id: 'customerId'},
-     *             '*'
+     *             {id: 'customerId'}
      *         );
      *
      *     const query = new Query()
@@ -1018,7 +1016,7 @@ export default class Query<T = unknown> implements ICloneable {
      *     import {Query} from 'Types/source';
      *
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .where({host: 'my.store.com'});
      *
@@ -1072,7 +1070,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('AirportsSchedule')
      *         .where({
      *             to: 'SVO',
@@ -1084,7 +1082,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('AirportsSchedule')
      *         .where(queryAndExpression({
      *             to: 'SVO',
@@ -1284,7 +1282,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .orderBy('id');
      * </pre>
@@ -1292,7 +1290,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .orderBy('id', true);
      * </pre>
@@ -1300,7 +1298,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query, QueryOrder} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .orderBy([
      *             {customerId: QueryOrder.SORT_ASC},
@@ -1311,7 +1309,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query, QueryOrder} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .orderBy([
      *             ['customerId', QueryOrder.SORT_DESC, QueryOrder.NULL_POLICY_FIRST],
@@ -1431,7 +1429,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .groupBy('customerId');
      *
@@ -1463,12 +1461,12 @@ export default class Query<T = unknown> implements ICloneable {
      *     import {Query} from 'Types/source';
      *
      *     const querySimple = new source.Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .groupBy('customerId');
      *
      *     const queryComplex = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .groupBy(['date', 'customerId']);
      * </pre>
@@ -1510,7 +1508,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .offset(50);
      *
@@ -1542,7 +1540,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .offset(50);
      * </pre>
@@ -1572,7 +1570,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .limit(10);
      *
@@ -1604,7 +1602,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Orders')
      *         .limit(10);
      * </pre>
@@ -1634,7 +1632,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query, QueryNavigationType} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Catalogue')
      *         .meta({navigationType: QueryNavigationType.Offset});
      *
@@ -1667,7 +1665,7 @@ export default class Query<T = unknown> implements ICloneable {
      * <pre>
      *     import {Query, QueryNavigationType} from 'Types/source';
      *     const query = new Query()
-     *         .select('*')
+     *         .select()
      *         .from('Catalogue')
      *         .where({'parentId': 10})
      *         .meta({navigationType: QueryNavigationType.Offset});

@@ -664,6 +664,50 @@ describe('Types/_source/Memory', () => {
             });
         });
 
+        context('when fields selection applied', () => {
+            it('should return given fieldset from string', () => {
+                const data = [
+                    {a: 'a1', b: 'b1', c: 'c1'},
+                    {a: 'a2', b: 'b2', c: 'c2'},
+                    {a: 'a3', b: 'b3', c: 'c3'}
+                ];
+                const source = new MemorySource({data});
+                const query = new Query().select('a');
+
+                return source.query(query).then((ds) => {
+                    assert.deepEqual(ds.getAll().getRawData(), [{a: 'a1'}, {a: 'a2'}, {a: 'a3'}]);
+                });
+            });
+
+            it('should return given fieldset from array', () => {
+                const data = [
+                    {a: 'a1', b: 'b1', c: 'c1'},
+                    {a: 'a2', b: 'b2', c: 'c2'},
+                    {a: 'a3', b: 'b3', c: 'c3'}
+                ];
+                const source = new MemorySource({data});
+                const query = new Query().select(['b']);
+
+                return source.query(query).then((ds) => {
+                    assert.deepEqual(ds.getAll().getRawData(), [{b: 'b1'}, {b: 'b2'}, {b: 'b3'}]);
+                });
+            });
+
+            it('should return given fieldset from object', () => {
+                const data = [
+                    {a: 'a1', b: 'b1', c: 'c1'},
+                    {a: 'a2', b: 'b2', c: 'c2'},
+                    {a: 'a3', b: 'b3', c: 'c3'}
+                ];
+                const source = new MemorySource({data});
+                const query = new Query().select({c: 'AliasOfC'});
+
+                return source.query(query).then((ds) => {
+                    assert.deepEqual(ds.getAll().getRawData(), [{AliasOfC: 'c1'}, {AliasOfC: 'c2'}, {AliasOfC: 'c3'}]);
+                });
+            });
+        });
+
         context('when the filter applied', () => {
             const tests = [{
                 filter: {LastName: 'Иванов'},
