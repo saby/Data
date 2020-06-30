@@ -199,23 +199,23 @@ class RecordSet<
      * @see getMetaData
      * @see setMetaData
      * @example
-     * Создадим рекордсет c "хлебными крошками":
+     * Создадим рекордсет c метаданными произвольного формата:
      * <pre>
      *     import {RecordSet} from 'Types/collection';
      *     const rs = new RecordSet({
      *         metaData: {
-     *             crumbs: [{
-     *                  id: 1,
-     *                  name: 'Home'
+     *             favorites: [{
+     *                  id: 4,
+     *                  name: 'Ultimate'
      *             }, {
      *                 id: 2,
-     *                 name: 'Catalogue'
+     *                 name: 'Question'
      *             }]
      *         }
      *     });
      *
-     *     const crumbs = rs.getMetaData().crumbs;
-     *     console.log(crumbs[0].name); // 'Home'
+     *     const favorites = rs.getMetaData().favorites;
+     *     console.log(favorites[0].name); // 'Ultimate'
      * </pre>
      */
     protected _$metaData: any;
