@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import number from 'Types/_formatter/number';
-import i18n = require('Core/i18n');
+import {controller} from 'I18n/i18n';
 
 describe('Types/_formatter/number', () => {
     const locales = ['en-US', 'ru-RU', 'foo-BAR'];
@@ -16,10 +16,8 @@ describe('Types/_formatter/number', () => {
             let stubIntl;
 
             beforeEach(() => {
-                stubIntl = sinon.stub(i18n, 'getLang');
-                stubIntl.callsFake(() => {
-                    return locale;
-                });
+                stubIntl = sinon.stub(controller, 'currentLocale');
+                stubIntl.get(() => locale);
             });
 
             afterEach(() => {

@@ -1,5 +1,6 @@
 import toRoman from './numberRoman';
-import locales = require('Core/helpers/i18n/locales');
+import * as controller from 'i18n!controller?';
+import ILocale from 'I18n/locales/Interfaces/ILocale';
 
 interface IDateFormatOptions {
     lead?: number;
@@ -11,7 +12,6 @@ type Format = (date: Date, format: string, timeZone?: number) => string;
 
 let tokensRegex: RegExp;
 const tokens = {};
-const locale = locales.current;
 const AM_PM_BOUNDARY = 12;
 const MINUTES_IN_HOUR = 60;
 const SECONDS_IN_MINUTE = 60;
@@ -20,6 +20,10 @@ const DECIMAL_POINT = '.';
 const PARTS_SPACER = ' ';
 const MATCH_DAY_NUMBER = /^DD\.|\.DD/;
 const MATCH_HOURS = /HH/;
+
+const getConfig = (): ILocale => {
+    return controller.currentLocaleConfig;
+}
 
 /**
  * Добавляет нули в начало числа.
@@ -60,28 +64,28 @@ function getTotalHours(date: Date): number {
  * Returns localized am/pm mark
  */
 function getAmPm(date: Date): string {
-    return date.getHours() >= AM_PM_BOUNDARY ? locale.config.pm : locale.config.am;
+    return date.getHours() >= AM_PM_BOUNDARY ? getConfig().calendarEntities.pm : getConfig().calendarEntities.am;
 }
 
 /**
  * Returns localized day of week in minimized notation
  */
 function getDayOfWeekMin(date: Date): string {
-    return locale.config.minDays[date.getDay()];
+    return getConfig().calendarEntities.minDays[date.getDay()];
 }
 
 /**
  * Returns localized day of week in short notation
  */
 function getDayOfWeekShort(date: Date): string {
-    return locale.config.shortDays[date.getDay()];
+    return getConfig().calendarEntities.shortDays[date.getDay()];
 }
 
 /**
  * Returns localized day of week in long notation
  */
 function getDayOfWeekLong(date: Date): string {
-    return locale.config.longDays[date.getDay()];
+    return getConfig().calendarEntities.longDays[date.getDay()];
 }
 
 /**
@@ -95,21 +99,21 @@ function getHumanMonth(date: Date): number {
  * Returns localized month name in short notation
  */
 function getMonthNameShort(date: Date): string {
-    return locale.config.shortMonths[date.getMonth()];
+    return getConfig().calendarEntities.shortMonths[date.getMonth()];
 }
 
 /**
  * Returns localized month name in long notation
  */
 function getMonthNameLong(date: Date): string {
-    return locale.config.longMonths[date.getMonth()];
+    return getConfig().calendarEntities.longMonths[date.getMonth()];
 }
 
 /**
  * Returns localized month name in ordinal notation
  */
 function getMonthOrdinal(date: Date): string {
-    return locale.config.ordinalMonths[date.getMonth()];
+    return getConfig().calendarEntities.ordinalMonths[date.getMonth()];
 }
 
 /**
@@ -130,7 +134,7 @@ function getQuarterRoman(date: Date): string {
  * Returns quarter number in minimized roman notation
  */
 function getQuarterRomanMin(date: Date): string {
-    return locale.config.minQuarter.replace(
+    return getConfig().calendarEntities.minQuarter.replace(
         '$digit$s$',
         getQuarterRoman(date)
     );
@@ -140,7 +144,7 @@ function getQuarterRomanMin(date: Date): string {
  * Returns quarter number in short roman notation
  */
 function getQuarterRomanShort(date: Date): string {
-    return locale.config.shortQuarter.replace(
+    return getConfig().calendarEntities.shortQuarter.replace(
         '$digit$s$',
         getQuarterRoman(date)
     );
@@ -150,7 +154,7 @@ function getQuarterRomanShort(date: Date): string {
  * Returns quarter number in long roman notation
  */
 function getQuarterRomanLong(date: Date): string {
-    return locale.config.longQuarter.replace(
+    return getConfig().calendarEntities.longQuarter.replace(
         '$digit$s$',
         getQuarterRoman(date)
     );
@@ -181,7 +185,7 @@ function getHalfYearRoman(date: Date): string {
  * Returns localized half a year in minimized roman notation
  */
 function getHalfYearRomanMin(date: Date): string {
-    return locale.config.minHalfYear.replace(
+    return getConfig().calendarEntities.minHalfYear.replace(
         '$digit$s$',
         getHalfYearRoman(date)
     );
@@ -191,7 +195,7 @@ function getHalfYearRomanMin(date: Date): string {
  * Returns localized half a year in long roman notation
  */
 function getHalfYearRomanLong(date: Date): string {
-    return locale.config.longHalfYear.replace(
+    return getConfig().calendarEntities.longHalfYear.replace(
         '$digit$s$',
         getHalfYearRoman(date)
     );
@@ -520,25 +524,25 @@ class Constants {
         return this.FULL_TIME.replace(MATCH_HOURS, 'HHH');
     }
     get FULL_DATE_DOW(): string {
-        return locale.config.fullDateDayOfWeekFormat;
+        return getConfig().date.fullDateDayOfWeekFormat;
     }
     get FULL_DATE(): string {
-        return locale.config.fullDateFormat;
+        return getConfig().date.fullDateFormat;
     }
     get FULL_DATE_FULL_MONTH(): string {
-        return locale.config.fullDateFullMonthFormat;
+        return getConfig().date.fullDateFullMonthFormat;
     }
     get FULL_DATE_FULL_MONTH_FULL_YEAR(): string {
-        return locale.config.fullDateFullMonthFullYearFormat;
+        return getConfig().date.fullDateFullMonthFullYearFormat;
     }
     get FULL_DATE_FULL_YEAR(): string {
-         return locale.config.fullDateFullYearFormat;
+         return getConfig().date.fullDateFullYearFormat;
     }
     get FULL_DATE_SHORT_MONTH(): string {
-         return locale.config.fullDateShortMonthFormat;
+         return getConfig().date.fullDateShortMonthFormat;
     }
     get FULL_DATE_SHORT_MONTH_FULL_YEAR(): string {
-         return locale.config.fullDateShortMonthFullYearFormat;
+         return getConfig().date.fullDateShortMonthFullYearFormat;
     }
     get FULL_DATE_SHORT_TIME(): string {
         return this.FULL_DATE + PARTS_SPACER + this.SHORT_TIME;
@@ -559,22 +563,22 @@ class Constants {
         return this.FULL_DATE_FULL_YEAR + PARTS_SPACER + this.FULL_TIME_FRACTION;
     }
     get FULL_DATETIME(): string {
-         return locale.config.fullDateShortMonthFormat + PARTS_SPACER + locale.config.shortTimeFormat;
+         return getConfig().date.fullDateShortMonthFormat + PARTS_SPACER + getConfig().date.shortTimeFormat;
     }
     get FULL_HALF_YEAR(): string {
-         return locale.config.fullHalfYearFormat;
+         return getConfig().date.fullHalfYearFormat;
     }
     get FULL_MONTH(): string {
-         return locale.config.fullMonthFormat;
+         return getConfig().date.fullMonthFormat;
     }
     get FULL_QUATER(): string {
-         return locale.config.fullQuarterFormat;
+         return getConfig().date.fullQuarterFormat;
     }
     get FULL_YEAR(): string {
         return 'YYYY';
     }
     get FULL_TIME(): string {
-         return locale.config.fullTimeFormat;
+         return getConfig().date.fullTimeFormat;
     }
     get FULL_TIME_FRACTION(): string {
         return this.FULL_TIME + DECIMAL_POINT + 'SSS';
@@ -586,16 +590,16 @@ class Constants {
         return 'YYYY-MM-DD HH:mm:ss.SSSZZ';
     }
     get SHORT_DATE_DOW(): string {
-         return locale.config.shortDateDayOfWeekFormat;
+         return getConfig().date.shortDateDayOfWeekFormat;
     }
     get SHORT_DATE(): string {
-         return locale.config.shortDateFormat;
+         return getConfig().date.shortDateFormat;
     }
     get SHORT_DATE_FULL_MONTH(): string {
-         return locale.config.shortDateFullMonthFormat;
+         return getConfig().date.shortDateFullMonthFormat;
     }
     get SHORT_DATE_SHORT_MONTH(): string {
-         return locale.config.shortDateShortMonthFormat;
+         return getConfig().date.shortDateShortMonthFormat;
     }
     get SHORT_DATE_SHORT_TIME(): string {
         return this.SHORT_DATE + PARTS_SPACER + this.SHORT_TIME;
@@ -607,19 +611,19 @@ class Constants {
         return this.SHORT_DATE + PARTS_SPACER + this.FULL_TIME_FRACTION;
     }
     get SHORT_DATETIME(): string {
-         return locale.config.shortDateShortMonthFormat + PARTS_SPACER + locale.config.shortTimeFormat;
+         return getConfig().date.shortDateShortMonthFormat + PARTS_SPACER + getConfig().date.shortTimeFormat;
     }
     get SHORT_HALF_YEAR(): string {
-         return locale.config.shortHalfYearFormat;
+         return getConfig().date.shortHalfYearFormat;
     }
     get SHORT_MONTH(): string {
-         return locale.config.shortMonthFormat;
+         return getConfig().date.shortMonthFormat;
     }
     get SHORT_QUATER(): string {
-         return locale.config.shortQuarterFormat;
+         return getConfig().date.shortQuarterFormat;
     }
     get SHORT_TIME(): string {
-         return locale.config.shortTimeFormat;
+         return getConfig().date.shortTimeFormat;
     }
 }
 

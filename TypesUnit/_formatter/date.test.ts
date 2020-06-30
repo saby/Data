@@ -1,15 +1,19 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import format from 'Types/_formatter/date';
-import * as locales from 'Core/helpers/i18n/locales';
-import i18n = require('Core/i18n');
+import enUS from 'I18n/locales/en-US';
+import ruRU from 'I18n/locales/ru-RU';
+import {controller} from 'I18n/i18n';
 
 describe('Types/_formatter/date', () => {
+    controller.addLocale('en-US', enUS);
+    controller.addLocale('ru-RU', ruRU);
+
     function setLocale(locale: string): () => void {
-        const stubEnabled = sinon.stub(i18n, 'isEnabled');
-        const stubGetLang = sinon.stub(i18n, 'getLang');
-        stubEnabled.returns(true);
-        stubGetLang.returns(locale);
+        const stubEnabled = sinon.stub(controller, 'isEnabled');
+        const stubGetLang = sinon.stub(controller, 'currentLocale');
+        stubEnabled.get(() => true);
+        stubGetLang.get(() => locale);
 
         return () => {
             stubEnabled.restore();
@@ -279,7 +283,7 @@ describe('Types/_formatter/date', () => {
             };
 
             Object.keys(map).forEach((constant) => {
-                const expected = locales.current.config[map[constant]];
+                const expected = controller.currentLocaleConfig.date[map[constant]];
                 it(`Should return ${expected} for ${constant}`, () => {
                     assert.strictEqual(format[constant], expected);
                 });

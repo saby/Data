@@ -1,19 +1,21 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import period, {Type} from 'Types/_formatter/period';
-import i18n = require('Core/i18n');
+import {controller} from 'I18n/i18n';
+import enUS from 'I18n/locales/en-US';
 
 type testingTuple = [Date, Date, Type, string];
 
 describe('Types/_formatter/period', () => {
+    controller.addLocale('en-US', enUS);
     let stubEnabled;
     let stubGetLang;
 
     before(() => {
-        stubEnabled = sinon.stub(i18n, 'isEnabled');
-        stubGetLang = sinon.stub(i18n, 'getLang');
-        stubEnabled.returns(true);
-        stubGetLang.returns('en-US');
+        stubEnabled = sinon.stub(controller, 'isEnabled');
+        stubGetLang = sinon.stub(controller, 'currentLocale');
+        stubEnabled.get(() => true);
+        stubGetLang.get(() => 'en-US');
     });
 
     after(() => {
