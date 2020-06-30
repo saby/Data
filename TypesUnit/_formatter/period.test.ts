@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import period, {Type} from 'Types/_formatter/period';
 import {controller} from 'I18n/i18n';
 import enUS from 'I18n/locales/en-US';
@@ -12,8 +12,8 @@ describe('Types/_formatter/period', () => {
     let stubGetLang;
 
     before(() => {
-        stubEnabled = sinon.stub(controller, 'isEnabled');
-        stubGetLang = sinon.stub(controller, 'currentLocale');
+        stubEnabled = stub(controller, 'isEnabled');
+        stubGetLang = stub(controller, 'currentLocale');
         stubEnabled.get(() => true);
         stubGetLang.get(() => 'en-US');
     });

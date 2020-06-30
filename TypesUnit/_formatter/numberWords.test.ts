@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import numberWords from 'Types/_formatter/numberWords';
 import * as enUS from 'json!Types/lang/en/en.json';
 import * as ruRU from 'json!Types/lang/ru/ru.json';
@@ -17,16 +17,16 @@ describe('Types/_formatter/numberWords', () => {
 
     locales.forEach((locale) => {
        describe(`if locale "${locale}" is enabled`, () => {
-          let stub;
+          let getLangStub;
 
           beforeEach(() => {
-             stub = sinon.stub(controller, 'currentLocale');
-             stub.get(() => locale);
+              getLangStub = stub(controller, 'currentLocale');
+              getLangStub.get(() => locale);
           });
 
           afterEach(() => {
-             stub.restore();
-             stub = undefined;
+              getLangStub.restore();
+              getLangStub = undefined;
           });
 
           it('should format 0 to words', () => {

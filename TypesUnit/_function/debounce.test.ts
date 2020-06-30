@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import debounce from 'Types/_function/debounce';
 
 describe('Types/_formatter/debounce', () => {
@@ -11,8 +11,8 @@ describe('Types/_formatter/debounce', () => {
     })();
 
     beforeEach(() => {
-        stubTimeout = sinon.stub(global, 'setTimeout').callsFake((callback) => callback());
-        stubClear = sinon.stub(global, 'clearTimeout').callsFake(() => {
+        stubTimeout = stub(global, 'setTimeout').callsFake((callback) => callback());
+        stubClear = stub(global, 'clearTimeout').callsFake(() => {
            // void
         });
     });

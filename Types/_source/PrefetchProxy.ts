@@ -33,9 +33,9 @@ interface IPrefetchProxySerializableState extends ISerializableState {
 type ITarget = ICrud | ICrudPlus;
 
 interface IValidators {
-    read?: (data: Record, done?: IDone) => boolean;
-    query?: (data: DataSet, done?: IDone) => boolean;
-    copy?: (data: Record, done?: IDone) => boolean;
+    read?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
+    query?: (data: DataSet, done?: IDone, query?: Query) => boolean;
+    copy?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
 }
 
 interface IOptions {
@@ -229,6 +229,11 @@ export default class PrefetchProxy extends mixin<
      * @cfg {Object} Валидаторы данных, которые решают, являются ли они действительными или нет, и, соответственно, должны ли они возвращать предварительно выбранные данные или вызывать целевой источник.
      * @name Types/_source/PrefetchProxy#validators
      * @example
+     * В аргументы валидатора передаются:
+     * - предварительно выбранные данные для валидируемого метода;
+     * - статус отработки по каждому методу;
+     * - оригинальные аргументы метода по CRUD-контракту.
+     *
      * Давайте закешируем данные за одну минуту.
      * <pre>
      *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
@@ -280,6 +285,11 @@ export default class PrefetchProxy extends mixin<
      * @cfg {Object} Data validators which decides are they still valid or not and, accordingly, should it return prefetched data or invoke target source.
      * @name Types/_source/PrefetchProxy#validators
      * @example
+     * Each validator accept following arguments:
+     * - prefetchaed data for validationg method;
+     * - state of done for each method;
+     * - original arguments according to calling CRUD-method.
+     *
      * Let's cache data for one minute
      * <pre>
      *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
@@ -397,7 +407,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     read(key: EntityKey, meta?: object): Promise<Model> {
-        if (this._validators.read(this._$data.read, this._done)) {
+        if (this._validators.read(this._$data.read, this._done, key, meta)) {
             return Promise.resolve(this._$data.read);
         }
         return (this._$target as ICrud).read(key, meta) as Promise<Model>;
@@ -412,7 +422,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     query(query?: Query): Promise<DataSet> {
-        if (this._validators.query(this._$data.query, this._done)) {
+        if (this._validators.query(this._$data.query, this._done, query)) {
             return Promise.resolve(this._$data.query);
         }
         return (this._$target as ICrud).query(query);
@@ -429,7 +439,7 @@ export default class PrefetchProxy extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        if (this._validators.copy(this._$data.copy, this._done)) {
+        if (this._validators.copy(this._$data.copy, this._done, key, meta)) {
             return Promise.resolve(this._$data.copy);
         }
         return (this._$target as ICrudPlus).copy(key, meta) as Promise<Model>;

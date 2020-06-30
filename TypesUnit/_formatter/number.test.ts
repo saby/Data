@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import number from 'Types/_formatter/number';
 import {controller} from 'I18n/i18n';
 
@@ -16,7 +16,7 @@ describe('Types/_formatter/number', () => {
             let stubIntl;
 
             beforeEach(() => {
-                stubIntl = sinon.stub(controller, 'currentLocale');
+                stubIntl = stub(controller, 'currentLocale');
                 stubIntl.get(() => locale);
             });
 

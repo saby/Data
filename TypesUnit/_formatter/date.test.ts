@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon';
+import {stub} from 'sinon';
 import format from 'Types/_formatter/date';
 import enUS from 'I18n/locales/en-US';
 import ruRU from 'I18n/locales/ru-RU';
@@ -10,8 +10,8 @@ describe('Types/_formatter/date', () => {
     controller.addLocale('ru-RU', ruRU);
 
     function setLocale(locale: string): () => void {
-        const stubEnabled = sinon.stub(controller, 'isEnabled');
-        const stubGetLang = sinon.stub(controller, 'currentLocale');
+        const stubEnabled = stub(controller, 'isEnabled');
+        const stubGetLang = stub(controller, 'currentLocale');
         stubEnabled.get(() => true);
         stubGetLang.get(() => locale);
 
@@ -216,7 +216,7 @@ describe('Types/_formatter/date', () => {
 
         beforeEach(() => {
             date = new Date(2018, 11, 1);
-            timezoneOffsetStub = sinon.stub(date, 'getTimezoneOffset');
+            timezoneOffsetStub = stub(date, 'getTimezoneOffset');
         });
 
         afterEach(() => {
