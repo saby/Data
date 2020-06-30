@@ -1,5 +1,4 @@
-import i18n = require('Core/i18n');
-import 'i18n!Types/_formatter/number';
+import {controller} from 'I18n/i18n';
 
 const DEFAULT_LOCALE = 'en-US';
 
@@ -98,7 +97,7 @@ function formatNumberToString(numberFormat: IFormat, x: number): string {
 }
 
 function partitionNumberPattern(numberFormat: IFormat, x: number): IPattern[] {
-    const localeFormat = FORMATS[i18n.getLang()] || FORMATS[DEFAULT_LOCALE];
+    const localeFormat = FORMATS[controller.currentLocale] || FORMATS[DEFAULT_LOCALE];
     const ild = localeFormat.symbols.latn;
     const style = numberFormat.style || 'decimal';
 

@@ -1,6 +1,5 @@
 import {iterateNumber} from './utils';
-import i18n = require('Core/i18n');
-import 'i18n!Types/_formatter/_numberWords/ru';
+import * as translate from 'i18n!Types';
 
 const DIGITS = {
     0: 'ноль',
@@ -106,7 +105,7 @@ export default function numToWordsRu(num: string, feminine: boolean = false): st
 
         // tslint:disable-next-line:triple-equals
         if (counter > 0 && +three != 0) {
-            words.push(i18n.rk(THOUSANDS[counter], +three));
+            words.push(translate(THOUSANDS[counter], +three));
         }
     });
 

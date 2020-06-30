@@ -1,7 +1,6 @@
 import numberWordsRu from './_numberWords/ru';
 import numberWordsEN from './_numberWords/en';
-import i18n = require('Core/i18n');
-import 'i18n!Types/_formatter/numberWords';
+import {controller} from 'I18n/i18n';
 
 /**
  * Функция, выводящая число прописью.
@@ -22,7 +21,7 @@ import 'i18n!Types/_formatter/numberWords';
 export default function numberWords(num: number | string, feminine: boolean = false): string {
     num = String(num);
 
-    switch (i18n.getLang()) {
+    switch (controller.currentLocale) {
         case 'ru-RU':
             return numberWordsRu(num, feminine);
         case 'en-US':

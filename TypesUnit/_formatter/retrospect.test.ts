@@ -1,17 +1,19 @@
 import {assert} from 'chai';
 import {stub} from 'sinon';
 import retrospect, {Type} from 'Types/_formatter/retrospect';
-import i18n = require('Core/i18n');
+import {controller} from 'I18n/i18n';
+import enUS from 'I18n/locales/en-US';
 
 describe('Types/_formatter/retrospect', () => {
+    controller.addLocale('en-US', enUS);
     let stubEnabled;
     let stubGetLang;
 
     before(() => {
-        stubEnabled = stub(i18n, 'isEnabled');
-        stubGetLang = stub(i18n, 'getLang');
-        stubEnabled.returns(true);
-        stubGetLang.returns('en-US');
+        stubEnabled = stub(controller, 'isEnabled');
+        stubGetLang = stub(controller, 'currentLocale');
+        stubEnabled.get(() => true);
+        stubGetLang.get(() => 'en-US');
     });
 
     after(() => {

@@ -1,6 +1,5 @@
 import format from './date';
-import i18n = require('Core/i18n');
-import 'i18n!Types/_formatter/retrospect';
+import * as translate from 'i18n!Types';
 
 export enum Type {
     Auto,
@@ -60,13 +59,13 @@ export default function retrospect(date: Date, type: Type = Type.Auto): string {
         case Type.Date:
             const today = new Date();
             if (isThisDay(date, today)) {
-                return i18n.rk('Today');
+                return translate('Today');
             }
 
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             if (isThisDay(date, yesterday)) {
-                return i18n.rk('Yesterday');
+                return translate('Yesterday');
             }
 
             return format(date, format.FULL_DATE);

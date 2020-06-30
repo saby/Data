@@ -1,16 +1,18 @@
 import {assert} from 'chai';
 import {stub} from 'sinon';
 import numberWords from 'Types/_formatter/numberWords';
-import i18n = require('Core/i18n');
 import * as enUS from 'json!Types/lang/en/en.json';
 import * as ruRU from 'json!Types/lang/ru/ru.json';
+import {controller} from 'I18n/i18n';
 
 describe('Types/_formatter/numberWords', () => {
     const locales = ['en-US', 'ru-RU'];
 
     before(() => {
-       i18n.setDict(ruRU, 'formatter', 'ru-RU');
-       i18n.setDict(enUS, 'formatter', 'en-US');
+        controller.addContext('Types', {
+            'ru-RU': ruRU,
+            'en-US': enUS
+        });
     });
 
     locales.forEach((locale) => {
@@ -18,8 +20,8 @@ describe('Types/_formatter/numberWords', () => {
           let getLangStub;
 
           beforeEach(() => {
-              getLangStub = stub(i18n, 'getLang');
-              getLangStub.returns(locale);
+              getLangStub = stub(controller, 'currentLocale');
+              getLangStub.get(() => locale);
           });
 
           afterEach(() => {
