@@ -10,6 +10,7 @@
  * @includes number Types/_formatter/number
  * @includes period Types/_formatter/period
  * @includes retrospect Types/_formatter/retrospect
+ * @includes template Types/_formatter/template
  * @public
  * @author Мальцев А.А.
  */
@@ -26,6 +27,7 @@
  * @includes number Types/_formatter/number
  * @includes period Types/_formatter/period
  * @includes retrospect Types/_formatter/retrospect
+ * @includes template Types/_formatter/template
  * @public
  * @author Мальцев А.А.
  */
@@ -45,3 +47,4 @@ export {default as numberWords} from './_formatter/numberWords';
 export {default as number} from './_formatter/number';
 export {default as period, Type as PeriodType} from './_formatter/period';
 export {default as retrospect, Type as RetrospectType} from './_formatter/retrospect';
+export {default as template} from './_formatter/template';
