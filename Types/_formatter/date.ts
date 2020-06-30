@@ -1,5 +1,6 @@
 import toRoman from './numberRoman';
-import * as controller from 'i18n!controller?';
+import 'i18n!controller?';
+import {controller} from 'I18n/i18n';
 import ILocale from 'I18n/locales/Interfaces/ILocale';
 
 interface IDateFormatOptions {
