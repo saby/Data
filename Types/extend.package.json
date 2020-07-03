@@ -11,5 +11,5 @@
     "Types/source",
     "Types/util"
   ],
-  "extendsTo": "vdom-superbundle.package.js"
+  "extendsTo": "online-superbundle.package.js"
 }
