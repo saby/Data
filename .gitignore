@@ -4,7 +4,6 @@
 .nyc_output
 .project
 .settings
-.vscode
 
 # Development mode artifacts
 /application

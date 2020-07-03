@@ -10,6 +10,14 @@
       "index.ts",
       "Types/*"
    ],
+   "saby-units": {
+      "moduleType": "amd",
+      "root": "application",
+      "report": "application/artifacts/xunit-report.xml",
+      "htmlCoverageReport": "./artifacts/coverage/index.html",
+      "jsonCoverageReport": "./artifacts/coverage.json",
+      "tests": ["TypesUnit"]
+   },
    "scripts": {
       "build": "npm run build:install && npm run build:typescript && npm run build:app",
       "build:install": "wasaby-cli --tasks=initStore",
