@@ -178,8 +178,8 @@ describe('Types/_parser/date', () => {
         assert.equal(date.getFullYear(), 2003);
     });
 
-    it('should parse date-time from D/M/YYYY H:MM:dd', () => {
-        const date = parse('1/2/2003 15:16:17', 'D/M/YYYY H:MM:s');
+    it('should parse date-time from D/M/YYYY H:mm:s', () => {
+        const date = parse('1/2/2003 15:16:17', 'D/M/YYYY H:mm:s');
         assert.equal(date.getDate(), 1);
         assert.equal(date.getMonth(), 1);
         assert.equal(date.getFullYear(), 2003);
