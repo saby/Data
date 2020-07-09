@@ -11,8 +11,6 @@ interface IDateFormatOptions {
 
 type Format = (date: Date, format: string, timeZone?: number) => string;
 
-let tokensRegex: RegExp;
-const tokens = {};
 const AM_PM_BOUNDARY = 12;
 const MINUTES_IN_HOUR = 60;
 const SECONDS_IN_MINUTE = 60;
@@ -21,6 +19,9 @@ const DECIMAL_POINT = '.';
 const PARTS_SPACER = ' ';
 const MATCH_DAY_NUMBER = /^DD\.|\.DD/;
 const MATCH_HOURS = /HH/;
+
+let tokensRegex: RegExp;
+const tokens = {};
 
 const getConfig = (): ILocale => {
     return controller.currentLocaleConfig;

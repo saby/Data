@@ -1,7 +1,7 @@
 import DateTime from './DateTime';
-import parseDate from '../dateParser';
 import SerializableMixin, {IState as IDefaultSerializableState} from '../SerializableMixin';
 import {date as formatDate} from '../../formatter';
+import {date as parseDate} from '../../parser';
 import {register} from '../../di';
 
 const ISO_PREFIX = 'ISO:';
