@@ -512,7 +512,13 @@ export default abstract class Local<TData = unknown> extends mixin<
             const applied = adapter.forRecord();
 
             selectNames.forEach((originalName) => {
-                applied.set(select[originalName], original.get(originalName));
+                const appliedName = select[originalName];
+                if (!applied.has(appliedName)) {
+                    const format = original.getFormat(originalName);
+                    format.setName(appliedName);
+                    applied.addField(format);
+                }
+                applied.set(appliedName, original.get(originalName));
             });
 
             tableAdapter.add(applied.getData());
