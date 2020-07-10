@@ -706,6 +706,25 @@ describe('Types/_source/Memory', () => {
                     assert.deepEqual(ds.getAll().getRawData(), [{AliasOfC: 'c1'}, {AliasOfC: 'c2'}, {AliasOfC: 'c3'}]);
                 });
             });
+
+            it('should return given fieldset using strict data adapter', () => {
+                const adapter = new SbisAdapter();
+                const data = {
+                    _type: 'recordset',
+                    d: [[1], [2]],
+                    s: [{n: 'a', t: 'Число целое'}]
+                };
+                const source = new MemorySource({adapter, data});
+                const query = new Query().select({a: 'aliasOfA'});
+
+                return source.query(query).then((ds) => {
+                    assert.deepEqual(ds.getAll().getRawData(), {
+                        _type: 'recordset',
+                        d: [[1], [2]],
+                        s: [{n: 'aliasOfA', t: 'Число целое'}]
+                    });
+                });
+            });
         });
 
         context('when the filter applied', () => {
