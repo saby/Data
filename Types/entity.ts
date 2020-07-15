@@ -76,7 +76,12 @@ export {default as IProducible} from './_entity/IProducible';
 export {default as ISerializable} from './_entity/ISerializable';
 export {default as IVersionable} from './_entity/IVersionable';
 export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
-export {default as Model, IProperty as IModelProperty} from './_entity/Model';
+import {default as Model, IProperty as IModelProperty} from './_entity/Model';
+import {register} from "./di";
+register('Types/entity:Model', Model, {instantiate: false});
+// FIXME: deprecated
+register('entity.model', Model);
+export { Model, IModelProperty};
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReadWriteMixin, IOptions as IReadWriteMixinOptions} from './_entity/ReadWriteMixin';

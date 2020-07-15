@@ -6,7 +6,7 @@ import {IState as IDefaultSerializableState} from './SerializableMixin';
 import {IAdapter} from './adapter';
 import {Compute, ICompute, Track, ITrack} from './functor';
 import {enumerator, EnumeratorCallback} from '../collection';
-import {create, register} from '../di';
+import {create} from '../di';
 import {applyMixins, deprecateExtend, logger, protect} from '../util';
 import {Map, Set} from '../shim';
 import {IHashMap} from '../_declarations';
@@ -1154,7 +1154,3 @@ export default Model;
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;
-
-register('Types/entity:Model', Model, {instantiate: false});
-// FIXME: deprecated
-register('entity.model', Model);
