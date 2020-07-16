@@ -1,7 +1,6 @@
 import {IEquatable} from '../../entity';
 import {format} from '../../entity';
 import List, {IOptions as IListOptions} from '../List';
-import {register} from '../../di';
 
 /**
  * Формат полей: список полей записи.
@@ -192,5 +191,3 @@ Object.assign(Format.prototype, {
     '[Types/_entity/IEquatable]': true,
     _moduleName: 'Types/collection:format.Format'
 });
-
-register('Types/collection:format.Format', Format, {instantiate: false});

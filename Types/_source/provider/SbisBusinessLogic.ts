@@ -1,6 +1,5 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
-import {register} from '../../di';
 import {logger as defaultLogger, ILogger} from '../../util';
 import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
@@ -187,5 +186,3 @@ Object.assign(SbisBusinessLogic.prototype, {
     '[Types/_source/provider/SbisBusinessLogic]': true,
     _nameSpaceSeparator: '.'
 });
-
-register('Types/source:provider.SbisBusinessLogic', SbisBusinessLogic, {instantiate: false});
