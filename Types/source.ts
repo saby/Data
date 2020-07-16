@@ -51,9 +51,12 @@
  * @author Мальцев А.А.
  */
 
+import {register} from './di';
+
 export {default as Base} from './_source/Base';
 export {default as BindingMixin} from './_source/BindingMixin';
-export {default as DataSet} from './_source/DataSet';
+import {default as DataSet} from './_source/DataSet';
+export {DataSet};
 export {default as HierarchicalMemory} from './_source/HierarchicalMemory';
 export {default as ICrud, EntityKey as CrudEntityKey} from './_source/ICrud';
 export {default as ICrudPlus} from './_source/ICrudPlus';
@@ -86,3 +89,6 @@ export {
     getQueryArguments as sbisServiceGetQueryArguments,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
+
+register('Types/source:DataSet', DataSet, {instantiate: false});
+register('Types/source:provider.SbisBusinessLogic', provider.SbisBusinessLogic, {instantiate: false});

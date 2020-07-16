@@ -42,6 +42,8 @@
  * @author Мальцев А.А.
  */
 
+import {register} from './di';
+
 export {
    default as enumerableComparator,
    ISession as IEnumerableComparatorSession
@@ -65,3 +67,5 @@ export {default as IObservable} from './_collection/IObservable';
 export {default as List, IOptions as IListOptions} from './_collection/List';
 export {default as ObservableList} from './_collection/ObservableList';
 export {default as RecordSet} from './_collection/RecordSet';
+
+register('Types/collection:format.Format', format.Format, {instantiate: false});

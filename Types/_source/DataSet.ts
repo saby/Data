@@ -7,7 +7,7 @@ import {
     Model,
     adapter
 } from '../entity';
-import {create, register} from '../di';
+import {create} from '../di';
 import {mixin} from '../util';
 import {IList, List, RecordSet} from '../collection';
 
@@ -921,5 +921,3 @@ Object.assign(DataSet.prototype, {
      getIdProperty: DataSet.prototype.getKeyProperty,
      setIdProperty: DataSet.prototype.setKeyProperty
 });
-
-register('Types/source:DataSet', DataSet, {instantiate: false});
