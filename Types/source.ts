@@ -51,12 +51,11 @@
  * @author Мальцев А.А.
  */
 
-import {register} from "./di";
+import {register} from './di';
 
 export {default as Base} from './_source/Base';
 export {default as BindingMixin} from './_source/BindingMixin';
 import {default as DataSet} from './_source/DataSet';
-register('Types/source:DataSet', DataSet, {instantiate: false});
 export {DataSet};
 export {default as HierarchicalMemory} from './_source/HierarchicalMemory';
 export {default as ICrud, EntityKey as CrudEntityKey} from './_source/ICrud';
@@ -69,7 +68,6 @@ export {default as Local} from './_source/Local';
 export {default as Memory} from './_source/Memory';
 export {default as PrefetchProxy} from './_source/PrefetchProxy';
 import * as provider from './_source/provider';
-register('Types/source:provider.SbisBusinessLogic', provider.SbisBusinessLogic, {instantiate: false});
 export {provider};
 export {
     andExpression as queryAndExpression,
@@ -91,3 +89,6 @@ export {
     getQueryArguments as sbisServiceGetQueryArguments,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
+
+register('Types/source:DataSet', DataSet, {instantiate: false});
+register('Types/source:provider.SbisBusinessLogic', provider.SbisBusinessLogic, {instantiate: false});

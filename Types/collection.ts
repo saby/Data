@@ -42,7 +42,7 @@
  * @author Мальцев А.А.
  */
 
-import {register} from "./di";
+import {register} from './di';
 
 export {
    default as enumerableComparator,
@@ -55,7 +55,6 @@ export {default as EventRaisingMixin} from './_collection/EventRaisingMixin';
 import * as factory from './_collection/factory';
 export {factory};
 import * as format from './_collection/format';
-register('Types/collection:format.Format', format.Format, {instantiate: false});
 export {format};
 export {default as Flags} from './_collection/Flags';
 export {default as IEnum} from './_collection/IEnum';
@@ -68,3 +67,5 @@ export {default as IObservable} from './_collection/IObservable';
 export {default as List, IOptions as IListOptions} from './_collection/List';
 export {default as ObservableList} from './_collection/ObservableList';
 export {default as RecordSet} from './_collection/RecordSet';
+
+register('Types/collection:format.Format', format.Format, {instantiate: false});

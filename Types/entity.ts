@@ -44,6 +44,8 @@
  * @author Мальцев А.А.
  */
 
+import {register} from './di';
+
 import * as adapter from './_entity/adapter';
 export {adapter};
 import * as applied from './_entity/applied';
@@ -77,10 +79,6 @@ export {default as ISerializable} from './_entity/ISerializable';
 export {default as IVersionable} from './_entity/IVersionable';
 export {default as ManyToManyMixin} from './_entity/ManyToManyMixin';
 import {default as Model, IProperty as IModelProperty} from './_entity/Model';
-import {register} from "./di";
-register('Types/entity:Model', Model, {instantiate: false});
-// FIXME: deprecated
-register('entity.model', Model);
 export { Model, IModelProperty};
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
@@ -100,7 +98,7 @@ export {
     VersionCallback as VersionableMixinVersionCallback
 } from './_entity/VersionableMixin';
 
-// Deprecated, applied library should be used instead.
+// FIXME: deprecated, applied library should be used instead.
 export {
     CancelablePromise,
     Date,
@@ -114,3 +112,7 @@ export {
     Time,
     TimeInterval
 } from './_entity/applied';
+
+register('Types/entity:Model', Model, {instantiate: false});
+// FIXME: deprecated
+register('entity.model', Model);
