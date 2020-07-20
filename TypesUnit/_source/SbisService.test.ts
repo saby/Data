@@ -1543,6 +1543,18 @@ describe('Types/_source/SbisService', () => {
                 });
             });
 
+            it('should generate request with cache parameters', () => {
+                const query = new Query();
+                const cacheParams = {
+                    maxAge: 123,
+                    mustRevalidate: true
+                }
+                return service.query(query, cacheParams).then(() => {
+                    const args = SbisBusinessLogic.lastRequest.args;
+                    assert.deepEqual(args.cache, cacheParams);
+                });
+            });
+
             it('should cancel the inner request', () => {
                 const def = service.query();
                 const lastDef = SbisBusinessLogic.lastDeferred;
