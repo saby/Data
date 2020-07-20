@@ -16,6 +16,9 @@
  * @author Мальцев А.А.
  */
 
-export {default as factory} from './_chain/factory';
+import {default as factory, registerFactory} from "./_chain/factory";
+// registration on library level is needed for proper lazy library initialization.
+registerFactory();
+export {factory};
 export {default as Abstract} from './_chain/Abstract';
 export {default as Objectwise} from './_chain/Objectwise';

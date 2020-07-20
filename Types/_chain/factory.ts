@@ -17,21 +17,24 @@ import {IEnumerable} from '../collection';
 import {IHashMap} from '../_declarations';
 import {register} from '../di';
 
-register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
-register('Types/chain:Arraywise', Arraywise, { instantiate: false });
-register('Types/chain:Concatenated', Concatenated, { instantiate: false });
-register('Types/chain:Counted', Counted, { instantiate: false });
-register('Types/chain:Enumerable', Enumerable, { instantiate: false });
-register('Types/chain:Filtered', Filtered, { instantiate: false });
-register('Types/chain:Flattened', Flattened, { instantiate: false });
-register('Types/chain:Grouped', Grouped, { instantiate: false });
-register('Types/chain:Mapped', Mapped, { instantiate: false });
-register('Types/chain:Objectwise', Objectwise, { instantiate: false });
-register('Types/chain:Reversed', Reversed, { instantiate: false });
-register('Types/chain:Sliced', Sliced, { instantiate: false });
-register('Types/chain:Sorted', Sorted, { instantiate: false });
-register('Types/chain:Uniquely', Uniquely, { instantiate: false });
-register('Types/chain:Zipped', Zipped, { instantiate: false });
+export function registerFactory() {
+    register('Types/chain:DestroyableMixin', Abstract, { instantiate: false });
+    register('Types/chain:Arraywise', Arraywise, { instantiate: false });
+    register('Types/chain:Concatenated', Concatenated, { instantiate: false });
+    register('Types/chain:Counted', Counted, { instantiate: false });
+    register('Types/chain:Enumerable', Enumerable, { instantiate: false });
+    register('Types/chain:Filtered', Filtered, { instantiate: false });
+    register('Types/chain:Flattened', Flattened, { instantiate: false });
+    register('Types/chain:Grouped', Grouped, { instantiate: false });
+    register('Types/chain:Mapped', Mapped, { instantiate: false });
+    register('Types/chain:Objectwise', Objectwise, { instantiate: false });
+    register('Types/chain:Reversed', Reversed, { instantiate: false });
+    register('Types/chain:Sliced', Sliced, { instantiate: false });
+    register('Types/chain:Sorted', Sorted, { instantiate: false });
+    register('Types/chain:Uniquely', Uniquely, { instantiate: false });
+    register('Types/chain:Zipped', Zipped, { instantiate: false });
+}
+registerFactory();
 
 /**
  * Создает последовательную цепочку вызовов, обрабатывающих коллекции различных типов.
