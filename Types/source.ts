@@ -65,7 +65,8 @@ export {default as IDecorator} from './_source/IDecorator';
 export {default as IProvider} from './_source/IProvider';
 export {default as IRpc} from './_source/IRpc';
 export {default as Local} from './_source/Local';
-export {default as Memory} from './_source/Memory';
+import {default as Memory} from './_source/Memory';
+export {Memory};
 export {default as PrefetchProxy} from './_source/PrefetchProxy';
 import * as provider from './_source/provider';
 export {provider};
@@ -84,11 +85,14 @@ export {
 } from './_source/Query';
 export {default as Remote} from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
+import {default as SbisService} from './_source/SbisService';
+export {SbisService};
 export {
-    default as SbisService,
     getQueryArguments as sbisServiceGetQueryArguments,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
 
 register('Types/source:DataSet', DataSet, {instantiate: false});
 register('Types/source:provider.SbisBusinessLogic', provider.SbisBusinessLogic, {instantiate: false});
+register('Types/source:Memory', Memory, {instantiate: false});
+register('Types/source:SbisService', SbisService, {instantiate: false});

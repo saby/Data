@@ -83,7 +83,8 @@ export { Model, IModelProperty};
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
 export {default as ReadWriteMixin, IOptions as IReadWriteMixinOptions} from './_entity/ReadWriteMixin';
-export {default as Record, State as RecordState} from './_entity/Record';
+import {default as Record, State as RecordState} from './_entity/Record';
+export {Record, RecordState};
 import * as relation from './_entity/relation';
 export {relation};
 export {
@@ -99,20 +100,57 @@ export {
 } from './_entity/VersionableMixin';
 
 // FIXME: deprecated, applied library should be used instead.
+import {Date, DateTime, Identity, Time} from './_entity/applied';
+export {Date, DateTime, Identity, Time};
 export {
     CancelablePromise,
-    Date,
-    DateTime,
     Guid,
     JSONML,
-    Identity,
     IJSONML,
     PromiseCanceledError,
     ReactiveObject,
-    Time,
     TimeInterval
 } from './_entity/applied';
 
 register('Types/entity:Model', Model, {instantiate: false});
 // FIXME: deprecated
 register('entity.model', Model);
+register('Types/entity:Record', Record, {instantiate: false});
+register('Types/entity:adapter.Cow', adapter.Cow, {instantiate: false});
+register('Types/entity:adapter.Json', adapter.Json, {instantiate: false});
+// FIXME: deprecated
+register('adapter.json', adapter.Json);
+register('Types/entity:adapter.RecordSet', adapter.RecordSet, {instantiate: false});
+// FIXME: deprecated
+register('adapter.recordset', adapter.RecordSet, {instantiate: false});
+register('Types/entity:adapter.Sbis', adapter.Sbis, {instantiate: false});
+// Deprecated
+register('adapter.sbis', adapter.Sbis);
+register('Types/entity:Date', Date, {instantiate: false});
+register('Types/entity:DateTime', DateTime, {instantiate: false});
+register('Types/entity:Identity', Identity, {instantiate: false});
+register('Types/entity:Time', Time, {instantiate: false});
+register('Types/entity:format.ArrayField', format.ArrayField, {instantiate: false});
+register('Types/entity:format.BinaryField', format.BinaryField, {instantiate: false});
+register('Types/entity:format.BooleanField', format.BooleanField, {instantiate: false});
+register('Types/entity:format.DateField', format.DateField, {instantiate: false});
+register('Types/entity:format.DateTimeField', format.DateTimeField, {instantiate: false});
+register('Types/entity:format.DictionaryField', format.DictionaryField, {instantiate: false});
+register('Types/entity:format.EnumField', format.EnumField, {instantiate: false});
+register('Types/entity:format.FlagsField', format.FlagsField, {instantiate: false});
+register('Types/entity:format.HierarchyField', format.HierarchyField, {instantiate: false});
+register('Types/entity:format.IdentityField', format.IdentityField, {instantiate: false});
+register('Types/entity:format.IntegerField', format.IntegerField, {instantiate: false});
+register('Types/entity:format.LinkField', format.LinkField, {instantiate: false});
+register('Types/entity:format.MoneyField', format.MoneyField, {instantiate: false});
+register('Types/entity:format.ObjectField', format.ObjectField, {instantiate: false});
+register('Types/entity:format.RealField', format.RealField, {instantiate: false});
+register('Types/entity:format.RecordField', format.RecordField, {instantiate: false});
+register('Types/entity:format.RecordSetField', format.RecordSetField, {instantiate: false});
+register('Types/entity:format.RpcFileField', format.RpcFileField, {instantiate: false});
+register('Types/entity:format.StringField', format.StringField, {instantiate: false});
+register('Types/entity:format.TimeField', format.TimeField, {instantiate: false});
+register('Types/entity:format.TimeIntervalField', format.TimeIntervalField, {instantiate: false});
+register('Types/entity:format.UniversalField', format.UniversalField, {instantiate: false});
+register('Types/entity:format.UuidField', format.UuidField, {instantiate: false});
+register('Types/entity:format.XmlField', format.XmlField, {instantiate: false});
