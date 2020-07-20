@@ -2,7 +2,8 @@ import Rpc from './Rpc';
 import {
     IOptions as IRemoteOptions,
     IOptionsOption as IRemoteOptionsOption,
-    IPassing as IRemotePassing
+    IPassing as IRemotePassing,
+    ICacheParameters
 } from './Remote';
 import {EntityKey} from './ICrud';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
@@ -661,7 +662,7 @@ interface IQueryResult {
 /**
  * Returns data to send in query()
  */
-function passQuery(this: SbisService, query?: Query): IQueryResult {
+function passQuery(this: SbisService, query?: Query, cache?: ICacheParameters): IQueryResult {
     const adapter = this._$adapter;
     let nav = getNavigationParams(query, this._$options, adapter);
     const filter = getFilterParams(query);
@@ -672,8 +673,7 @@ function passQuery(this: SbisService, query?: Query): IQueryResult {
     if (isMultipleNavigation) {
         nav = getMultipleNavigation(nav, filter, adapter);
     }
-
-    return {
+    const result = {
         Фильтр: buildRecord(mergeFilterParams(filter), adapter),
         Сортировка: buildRecordSet(sort, adapter, this.getKeyProperty()),
         Навигация: isMultipleNavigation
@@ -681,6 +681,12 @@ function passQuery(this: SbisService, query?: Query): IQueryResult {
             : (nav.length ? buildRecord(nav[0], adapter) : null),
         ДопПоля: add
     };
+
+    if (cache) {
+        (result as any).cache = cache;
+    }
+
+    return result;
 }
 
 /**
@@ -1195,11 +1201,11 @@ export default class SbisService extends Rpc {
         ))) as unknown as Promise<void>;
     }
 
-    query(query?: Query): Promise<DataSet> {
+    query(query?: Query, cache?: ICacheParameters): Promise<DataSet> {
        query = object.clonePlain(query);
        return this._loadAdditionalDependencies((ready) => {
           this._connectAdditionalDependencies(
-             super.query(query) as any,
+             super.query(query, cache) as any,
              ready
           );
        });

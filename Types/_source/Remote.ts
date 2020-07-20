@@ -26,6 +26,15 @@ interface IExtendedPromise<T> extends Promise<T> {
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
+/**
+ * Parameters to use in cached calls
+ */
+export interface ICacheParameters {
+    maxAge: number;
+    mustRevalidate?: number;
+    ignoredParams?: string[];
+}
+
 export enum NavigationTypes {
     PAGE = NavigationType.Page,
     OFFSET = NavigationType.Offset,
@@ -300,10 +309,10 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    query(query?: Query): Promise<DataSet> {
+    query(query?: Query, cache?: ICacheParameters): Promise<DataSet> {
         return this._callProvider(
             this._$binding.query,
-            this._$passing.query.call(this, query)
+            this._$passing.query.call(this, query, cache)
         ).addCallback(
             (data) => this._loadAdditionalDependencies().addCallback(
                 () => this._prepareQueryResult(data)
