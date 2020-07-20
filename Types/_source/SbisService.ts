@@ -2,8 +2,7 @@ import Rpc from './Rpc';
 import {
     IOptions as IRemoteOptions,
     IOptionsOption as IRemoteOptionsOption,
-    IPassing as IRemotePassing,
-    ICacheParameters
+    IPassing as IRemotePassing
 } from './Remote';
 import {EntityKey} from './ICrud';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
