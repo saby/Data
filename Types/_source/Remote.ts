@@ -309,10 +309,10 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    query(query?: Query, cache?: ICacheParameters): Promise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         return this._callProvider(
             this._$binding.query,
-            this._$passing.query.call(this, query, cache)
+            this._$passing.query.call(this, query)
         ).addCallback(
             (data) => this._loadAdditionalDependencies().addCallback(
                 () => this._prepareQueryResult(data)
@@ -391,10 +391,11 @@ export default abstract class Remote extends mixin<
      * Вызывает удаленный сервис через провайдер
      * @param name Имя сервиса
      * @param [args] Аргументы вызова
+     * @param [cache] Параметры кэширования
      * @return Асинхронный результат операции
      * @protected
      */
-    protected _callProvider(name: string, args: object): IExtendedPromise<any> {
+    protected _callProvider(name: string, args: object, cache?: ICacheParameters): IExtendedPromise<any> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -404,7 +405,8 @@ export default abstract class Remote extends mixin<
 
         const result = provider.call(
             name,
-            this._prepareProviderArguments(args)
+            this._prepareProviderArguments(args),
+            cache
         );
 
         if (this._$options.debug) {

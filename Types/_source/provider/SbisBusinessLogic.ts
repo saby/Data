@@ -4,6 +4,7 @@ import {logger as defaultLogger, ILogger} from '../../util';
 import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
 import Deferred = require('Core/Deferred');
+import { ICacheParameters } from '../Remote';
 
 export interface IEndPoint {
     contract?: string;
@@ -18,7 +19,7 @@ export interface IOptions {
 }
 
 export interface IRpcTransport {
-    callMethod<T>(method: string, args: unknown): Promise<T>;
+    callMethod<T>(method: string, args: unknown, recent?: boolean, protocol?: number, cache?: ICacheParameters): Promise<T>;
     abort(): void;
 }
 
@@ -148,7 +149,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-    call(name: string, args?: any[] | object): Promise<any> {
+    call(name: string, args?: any[] | object, cache?: ICacheParameters): Promise<any> {
         const Transport = this._$transport as IRpcTransportConstructor;
         const endpoint = this.getEndpoint();
 
@@ -166,7 +167,13 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
             transportOptions.timeout = this._$callTimeout;
         }
 
-        let result = new Transport(transportOptions).callMethod(methodName, args || {});
+        let result = new Transport(transportOptions).callMethod(
+            methodName,
+            args || {},
+            undefined,
+            undefined,
+            cache
+        );
 
         if (useTimeout) {
             result = getTimedOutResponse(

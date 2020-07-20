@@ -662,7 +662,7 @@ interface IQueryResult {
 /**
  * Returns data to send in query()
  */
-function passQuery(this: SbisService, query?: Query, cache?: ICacheParameters): IQueryResult {
+function passQuery(this: SbisService, query?: Query): IQueryResult {
     const adapter = this._$adapter;
     let nav = getNavigationParams(query, this._$options, adapter);
     const filter = getFilterParams(query);
@@ -673,7 +673,8 @@ function passQuery(this: SbisService, query?: Query, cache?: ICacheParameters): 
     if (isMultipleNavigation) {
         nav = getMultipleNavigation(nav, filter, adapter);
     }
-    const result = {
+
+    return  {
         Фильтр: buildRecord(mergeFilterParams(filter), adapter),
         Сортировка: buildRecordSet(sort, adapter, this.getKeyProperty()),
         Навигация: isMultipleNavigation
@@ -681,12 +682,6 @@ function passQuery(this: SbisService, query?: Query, cache?: ICacheParameters): 
             : (nav.length ? buildRecord(nav[0], adapter) : null),
         ДопПоля: add
     };
-
-    if (cache) {
-        (result as any).cache = cache;
-    }
-
-    return result;
 }
 
 /**
@@ -1201,11 +1196,11 @@ export default class SbisService extends Rpc {
         ))) as unknown as Promise<void>;
     }
 
-    query(query?: Query, cache?: ICacheParameters): Promise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
        query = object.clonePlain(query);
        return this._loadAdditionalDependencies((ready) => {
           this._connectAdditionalDependencies(
-             super.query(query, cache) as any,
+             super.query(query) as any,
              ready
           );
        });
