@@ -20,7 +20,8 @@ import FormattableMixin, {
 import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
 import {IReceiver} from './relation';
 import {IAdapter, IRecord, ITable} from './adapter';
-import {Field, IFieldDeclaration, UniversalField} from './format';
+import {DateTime} from './applied';
+import {Field, IFieldDeclaration, IShortDeclaration, UniversalField} from './format';
 import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
 import {register, create} from '../di';
 import {protect, mixin, deprecateExtend} from '../util';
@@ -119,7 +120,7 @@ function isEqualValues(first: any, second: any): boolean {
 /**
  * Возвращает тип значения
  */
-function getValueType(value: any): string | IFieldDeclaration {
+function getValueType(value: any): string | IShortDeclaration {
     switch (typeof value) {
         case 'boolean':
             return 'boolean';
@@ -145,7 +146,7 @@ function getValueType(value: any): string | IFieldDeclaration {
                      return 'time';
                 }
                 if (value['[Types/_entity/applied/DateTime]']) {
-                     return 'datetime';
+                    return {type: 'datetime', withoutTimeZone: (value as DateTime).withoutTimeZone};
                 }
                 if (value.hasOwnProperty('_serializeMode')) {
                     switch ((value as ExtendDate).getSQLSerializationMode()) {
@@ -176,7 +177,7 @@ function getValueType(value: any): string | IFieldDeclaration {
                             return true;
                         })
                     )
-                } as IFieldDeclaration;
+                } as IShortDeclaration;
             }
             return 'object';
 
@@ -1523,9 +1524,9 @@ export default class Record<T = any> extends mixin<
      * @param [format] Формат поля
      * @static
      */
-    protected static addFieldTo(record: Record, name: string, value: any, format?: IFieldDeclaration): void {
+    protected static addFieldTo(record: Record, name: string, value: unknown, format?: IFieldDeclaration): void {
         if (!format) {
-            let detectedFormat = getValueType(value);
+            let detectedFormat: IFieldDeclaration = getValueType(value) as IFieldDeclaration;
             if (typeof detectedFormat === 'string') {
                 detectedFormat = {name: '', type: detectedFormat};
             }

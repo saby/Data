@@ -1,4 +1,4 @@
-import DateTime from './DateTime';
+import DateTime, {$withoutTimeZone} from './DateTime';
 import {register} from '../../di';
 
 /**
@@ -17,6 +17,25 @@ import {register} from '../../di';
 export default class Time extends DateTime {
     protected get _proto(): object {
         return Time.prototype;
+    }
+    constructor(value?: number | string | Date);
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        hours?: number,
+        minutes?: number,
+        seconds?: number,
+        millisecond?: number
+    );
+    constructor(...args: Array<number | string | Date>) {
+        const instance = super(...args) as unknown as Time;
+
+        if (instance[$withoutTimeZone] === true) {
+            delete instance[$withoutTimeZone];
+        }
+
+        return instance;
     }
 }
 

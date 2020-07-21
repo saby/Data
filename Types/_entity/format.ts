@@ -67,6 +67,7 @@ export {default as EnumField} from './format/EnumField';
 export {
     default as fieldsFactory,
     IDeclaration as IFieldDeclaration,
+    IShortDeclaration,
     FormatDeclaration
 } from './format/fieldsFactory';
 export {default as FlagsField} from './format/FlagsField';
