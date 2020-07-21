@@ -1,31 +1,10 @@
 import {protect, logger} from '../util';
 
-/**
- * Свойство, хранящее признак десериализованного экземпляра
- */
-const $unserialized = protect('unserialized');
-
-/**
- * Поддерживается ли свойство __proto__ экземпляром Object
- */
-const isProtoSupported: boolean = typeof ({} as any).__proto__ === 'object';
-
-/**
- * Поддерживается вывод места определения функции через getFunctionDefinition()
- */
-// @ts-ignore
-const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 'function';
-
-/**
- * Счетчик экземляров
- */
-let instanceCounter = 0;
-
-export interface IState<T = any> {
+export interface IState<T = unknown> {
     $options?: T;
 }
 
-export interface ISignature<T = any> {
+export interface ISignature<T = unknown> {
     '$serialized$': string;
     module: string;
     id: number;
@@ -39,6 +18,31 @@ export interface IOptions<T> {
 export interface ISerializableConstructor extends ObjectConstructor {
     fromJSON<T = SerializableMixin, K = unknown>(data: ISignature<K>): T;
 }
+
+interface IObjectExt {
+    __proto__: Object;
+}
+
+/**
+ * Свойство, хранящее признак десериализованного экземпляра
+ */
+const $unserialized = protect('unserialized');
+
+/**
+ * Поддерживается ли свойство __proto__ экземпляром Object
+ */
+const isProtoSupported: boolean = typeof ({} as IObjectExt).__proto__ === 'object';
+
+/**
+ * Поддерживается вывод места определения функции через getFunctionDefinition()
+ */
+// @ts-ignore
+const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 'function';
+
+/**
+ * Счетчик экземляров
+ */
+let instanceCounter = 0;
 
 /**
  * Возвращает уникальный номер инстанса
@@ -122,7 +126,7 @@ export interface ISerializable<T = unknown> {
  * @public
  * @author Мальцев А.А.
  */
-export default class SerializableMixin<T = unknown> {
+export default class SerializableMixin<T = any> {
     /**
      * Уникальный номер инстанса
      */
