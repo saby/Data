@@ -33,7 +33,7 @@ function normalizeArguments(
     if (withoutTimeZoneIndex > -1) {
         return [
             args[withoutTimeZoneIndex] as boolean,
-            args.slice(0, withoutTimeZoneIndex - 1) as DateConstructorArgumentsTuple
+            args.slice(0, withoutTimeZoneIndex) as DateConstructorArgumentsTuple
         ];
     }
 

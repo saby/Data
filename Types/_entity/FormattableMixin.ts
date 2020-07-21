@@ -719,7 +719,7 @@ export default abstract class FormattableMixin {
      *     console.log(format.at(1).getName());// 'title'
      * </pre>
      */
-    getFormat(shared?: boolean): format.Format {
+    getFormat<TField = unknown>(shared?: boolean): format.Format {
         if (shared) {
             return this._getFormat(true);
         }

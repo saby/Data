@@ -1,8 +1,13 @@
-import Field from './Field';
+import Field, {IOptions as IFieldOptions} from './Field';
 import {IHashMap} from '../../_declarations';
 import {register} from '../../di';
 
 type Dictionary = string[] | IHashMap<string>;
+
+interface IOptions extends IFieldOptions {
+    dictionary?: Dictionary;
+    localeDictionary?: Dictionary;
+}
 
 /**
  * Формат поля со словарём (абстрактный класс)
@@ -17,14 +22,18 @@ export default class DictionaryField extends Field {
      * @name Types/_entity/format/DictionaryField#dictionary
      * @see getDictionary
      */
-    _$dictionary: Dictionary;
+    protected _$dictionary: Dictionary;
 
     /**
      * @cfg {Array.<String>} Локализованный словарь возможных значений
      * @name Types/_entity/format/DictionaryField#localeDictionary
      * @see getDictionary
      */
-    _$localeDictionary: Dictionary;
+    protected _$localeDictionary: Dictionary;
+
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     // region Public methods
 

@@ -13,7 +13,7 @@ export default class HierarchyField extends Field {
      * @name Types/_entity/format/HierarchyField#kind
      * @see getKind
      */
-    _$kind: string;
+    protected _$kind: string;
 
     // region Public methods
 

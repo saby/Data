@@ -1246,7 +1246,7 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             const field = new fieldFormat.ArrayField({
                 type: 'array',
                 name: 'foo',
-                kind: {type: 'array', kind: 'integer'}
+                kind: {type: 'array', kind: 'integer'} as unknown as string
             });
 
             assert.throws(() => {
