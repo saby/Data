@@ -8,7 +8,7 @@ import DestroyableMixin from './DestroyableMixin';
 import {cast, serialize} from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin, {IOptions as IObservableMixinOptions} from './ObservableMixin';
-import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
+import SerializableMixin, {IState as IDefaultSerializableState, ISignature as ISerializableSignature} from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
 import ReadWriteMixin, {IOptions as IReadWriteMixinOptions} from './ReadWriteMixin';
@@ -720,6 +720,12 @@ export default class Record<T = any> extends mixin<
     // endregion
 
     // region SerializableMixin
+
+    toJSON(): ISerializableSignature<IOptions>;
+    toJSON(key?: unknown): string;
+    toJSON(key?: unknown): ISerializableSignature<IOptions> | string {
+        return super.toJSON();
+    }
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState {
         let resultState: ISerializableState = SerializableMixin.prototype._getSerializableState.call(this, state);

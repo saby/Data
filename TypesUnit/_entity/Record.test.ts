@@ -2191,7 +2191,7 @@ describe('Types/_entity/Record', () => {
             const format = record.getFormat();
             const json = record.toJSON();
 
-            assert.isTrue(format.isEqual(json.state.$options.format));
+            assert.isTrue(format.isEqual(json.state.$options.format as Format));
         });
 
         it('should set subclass\'s module name from prototype', () => {

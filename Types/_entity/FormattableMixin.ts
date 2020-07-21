@@ -15,7 +15,7 @@ type GenericAdapter = ITable | IRecord | IDecorator | IMetaData;
 export interface IOptions {
    adapter?: AdapterDescriptor;
    rawData?: any;
-   format?: FormatDescriptor;
+   format?: FormatDescriptor | format.Format;
    cow?: boolean;
 }
 

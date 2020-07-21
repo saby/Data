@@ -21,11 +21,11 @@ const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 
  */
 let instanceCounter = 0;
 
-export interface IState<T = any> {
+export interface IState<T = unknown> {
     $options?: T;
 }
 
-export interface ISignature<T = any> {
+export interface ISignature<T = unknown> {
     '$serialized$': string;
     module: string;
     id: number;
@@ -37,7 +37,7 @@ export interface IOptions<T> {
 }
 
 export interface ISerializableConstructor extends ObjectConstructor {
-    fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T;
+    fromJSON<T = SerializableMixin, K = unknown>(data: ISignature<K>): T;
 }
 
 /**
@@ -122,7 +122,7 @@ export interface ISerializable<T = unknown> {
  * @public
  * @author Мальцев А.А.
  */
-export default class SerializableMixin<T = any> {
+export default class SerializableMixin<T = unknown> {
     /**
      * Уникальный номер инстанса
      */
@@ -233,13 +233,13 @@ export default class SerializableMixin<T = any> {
      *     instance instanceof Entity;//true
      * </pre>
      */
-    static fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T {
+    static fromJSON<T = SerializableMixin, K = unknown>(data: ISignature<K>): T {
         const initializer = this.prototype._setSerializableState(data.state);
-        const instance = new this(data.state.$options);
+        const instance = new this(data.state.$options as unknown as IOptions<T>);
         if (initializer) {
             initializer.call(instance);
         }
-        return instance as any as T;
+        return instance as unknown as T;
     }
 }
 
