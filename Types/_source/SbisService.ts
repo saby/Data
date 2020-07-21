@@ -673,7 +673,7 @@ function passQuery(this: SbisService, query?: Query): IQueryResult {
         nav = getMultipleNavigation(nav, filter, adapter);
     }
 
-    return {
+    return  {
         Фильтр: buildRecord(mergeFilterParams(filter), adapter),
         Сортировка: buildRecordSet(sort, adapter, this.getKeyProperty()),
         Навигация: isMultipleNavigation
