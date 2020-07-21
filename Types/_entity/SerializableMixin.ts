@@ -25,7 +25,7 @@ export interface IState<T = any> {
     $options?: T;
 }
 
-export interface ISignature<T = unknown> {
+export interface ISignature<T = any> {
     '$serialized$': string;
     module: string;
     id: number;
