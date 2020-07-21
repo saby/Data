@@ -9,9 +9,10 @@ class TransportMock {
         TransportMock.lastOptions = options;
     }
 
-    callMethod<T>(method: string, args: any): Promise<T> {
+    callMethod<T>(method: string, args: any, recent?: boolean, protocol?: number, cache?: unknown): Promise<T> {
         TransportMock.lastMethod = method;
         TransportMock.lastArgs = args;
+        TransportMock.lastCache = cache;
         return this.resolver as unknown as Promise<T>;
     }
 
@@ -22,6 +23,7 @@ class TransportMock {
     static lastOptions: IRpcTransportOptions;
     static lastMethod: string;
     static lastArgs: any;
+    static lastCache: unknown;
 }
 
 class DelayedMock extends TransportMock {
@@ -112,6 +114,14 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
           provider.call('boo.bar');
           assert.equal(TransportMock.lastMethod, 'boo.bar');
        });
+
+       it('should pass cache argument', () => {
+          const cacheParams = {
+              maxAge: 123
+          };
+          provider.call('name', {}, cacheParams);
+          assert.deepEqual(TransportMock.lastCache, cacheParams);
+     });
 
        it('should pass given timeout to the transport implementation', () => {
           const callTimeout = 12345;

@@ -1,3 +1,5 @@
+import { ICacheParameters } from '../Remote';
+
 /**
  * Интерфейс абстрактного провайдера
  * @interface Types/_source/provider/IAbstract
@@ -10,8 +12,8 @@ export default interface IAbstract {
     /**
      * Вызывает удаленный сервис
      * @param name Имя сервиса
-     * @param [args] Аргументы вызова
+     * @param args Аргументы вызова
      * @return Асинхронный результат операции
      */
-    call(name: string, args: string[] | Object): Promise<any>;
+    call(name: string, args: string[] | Object, cache?: ICacheParameters): Promise<any>;
 }

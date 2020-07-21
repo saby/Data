@@ -57,7 +57,7 @@ describe('Types/_source/SbisService', () => {
             constructor(cfg: object): void {
                 this._cfg = cfg;
             },
-            call(method: string, args: any): Promise<any> {
+            call(method: string, args: any, cache?: unknown): Promise<any> {
                 const def = new Deferred();
                 const idPosition = 3;
                 let error = '';
@@ -196,7 +196,8 @@ describe('Types/_source/SbisService', () => {
                     Mock.lastRequest = {
                         cfg: this._cfg,
                         method,
-                        args
+                        args,
+                        cache
                     };
 
                     if (error) {
@@ -1632,6 +1633,17 @@ describe('Types/_source/SbisService', () => {
                     assert.strictEqual(SbisBusinessLogic.lastRequest.method, 'Dummy');
                     const args = SbisBusinessLogic.lastRequest.args;
                     testArgIsDataSet(args, dataSet);
+                });
+            });
+
+            it('should generate request with cache argument', () => {
+                const cacheParams = {
+                    maxAge: 123,
+                    mustRevalidate: true
+                }
+                return service.call('Dummy', {}, cacheParams).then(() => {
+                    const cache = SbisBusinessLogic.lastRequest.cache;
+                    assert.deepEqual(cache, cacheParams);
                 });
             });
         });

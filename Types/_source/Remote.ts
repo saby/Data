@@ -26,6 +26,15 @@ interface IExtendedPromise<T> extends Promise<T> {
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
 
+/**
+ * Parameters to use in cached calls
+ */
+export interface ICacheParameters {
+    maxAge: number;
+    mustRevalidate?: number;
+    ignoredParams?: string[];
+}
+
 export enum NavigationTypes {
     PAGE = NavigationType.Page,
     OFFSET = NavigationType.Offset,
@@ -382,10 +391,11 @@ export default abstract class Remote extends mixin<
      * Вызывает удаленный сервис через провайдер
      * @param name Имя сервиса
      * @param [args] Аргументы вызова
+     * @param [cache] Параметры кэширования
      * @return Асинхронный результат операции
      * @protected
      */
-    protected _callProvider(name: string, args: object): IExtendedPromise<any> {
+    protected _callProvider(name: string, args: object, cache?: ICacheParameters): IExtendedPromise<any> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -395,7 +405,8 @@ export default abstract class Remote extends mixin<
 
         const result = provider.call(
             name,
-            this._prepareProviderArguments(args)
+            this._prepareProviderArguments(args),
+            cache
         );
 
         if (this._$options.debug) {
