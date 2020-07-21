@@ -7,8 +7,9 @@ import Format from 'Types/_collection/format/Format';
 import SbisAdapter from 'Types/_entity/adapter/Sbis';
 import RecordSetAdapter from 'Types/_entity/adapter/RecordSet';
 import {IRecordFormat} from 'Types/_entity/adapter/SbisFormatMixin';
-import IntegerField from 'Types/_entity/format/IntegerField';
 import ArrayField from 'Types/_entity/format/ArrayField';
+import DateTimeField from 'Types/_entity/format/DateTimeField';
+import IntegerField from 'Types/_entity/format/IntegerField';
 import fieldsFactory, {FormatDeclaration} from 'Types/_entity/format/fieldsFactory';
 import ManyToMany from 'Types/_entity/relation/ManyToMany';
 import DateTime from 'Types/_entity/applied/DateTime';
@@ -2293,7 +2294,7 @@ describe('Types/_entity/Record', () => {
             assert.isFalse(record.isChanged());
         });
 
-        it('should create DateTime field by default', () => {
+        it('should create DateTime field from standard Date', () => {
             const record = Record.fromObject({date: new Date()});
             const field = record.getFormat().at(0);
 
@@ -2305,6 +2306,14 @@ describe('Types/_entity/Record', () => {
             const field = record.getFormat().at(0);
 
             assert.equal(field.getType(), 'datetime');
+        });
+
+        it('should inherit withoutTimeZone flag from special DateTime type', () => {
+            const date = new DateTime(true);
+            const record = Record.fromObject({date});
+            const field = record.getFormat().at(0) as DateTimeField;
+
+            assert.isTrue(field.isWithoutTimeZone());
         });
 
         it('should create DateTime from special Date type', () => {

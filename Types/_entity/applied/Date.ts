@@ -29,11 +29,7 @@ export default class TheDate extends DateTime {
     constructor(
         year: number,
         month: number,
-        date?: number,
-        hours?: number,
-        minutes?: number,
-        seconds?: number,
-        millisecond?: number
+        date?: number
     );
     constructor(...args: Array<number | string | Date>) {
         const instance = super(...args) as unknown as TheDate;
