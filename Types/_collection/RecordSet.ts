@@ -1593,11 +1593,21 @@ class RecordSet<
 
     // endregion
 
-    // region Statics
+    // region SerializableMixin
 
-    static fromJSON<T = RecordSet, K = any>(data: ISerializableSignature<K>): T {
+    toJSON(): ISerializableSignature<IOptions<T>>;
+    toJSON(key?: unknown): string;
+    toJSON(key?: unknown): ISerializableSignature<IOptions<T>> | string {
+        return super.toJSON();
+    }
+
+    static fromJSON<T = RecordSet, K = IOptions<unknown>>(data: ISerializableSignature<K>): T {
         return ObservableList.fromJSON.call(this, data);
     }
+
+    // endregion
+
+    // region Statics
 
     /**
      * Создает из рекордсета патч - запись с измененными, добавленными записями и ключами удаленных записей.

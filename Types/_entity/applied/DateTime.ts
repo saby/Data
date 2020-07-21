@@ -2,15 +2,42 @@ import SerializableMixin, {ISignature, IState as IDefaultSerializableState} from
 import {global} from '../../util';
 import {register} from '../../di';
 
+type DateConstructorArgumentsTuple = [number | string | Date] |
+    [number, number, number, number, number, number, number];
+
+export const $withoutTimeZone = Symbol('withoutTimeZone');
+
 const NOW = new Date();
+
+export interface ISerializableState<T = number | string | Date> extends IDefaultSerializableState<T> {
+    withoutTimeZone?: boolean;
+}
+
+export interface IDateSignature<T = number | string | Date> extends ISignature<T> {
+    state: ISerializableState<T>;
+}
 
 interface IDateTimeConstructor {
     new(): Date & SerializableMixin;
-    fromJSON(data: ISignature): DateTime;
+    fromJSON(data: IDateSignature): DateTime;
 }
 
 function mixin(Base: unknown): IDateTimeConstructor {
     return Base as IDateTimeConstructor;
+}
+
+function normalizeArguments(
+    ...args: Array<number | string | Date | boolean>
+): [boolean, DateConstructorArgumentsTuple] {
+    const withoutTimeZoneIndex = args.findIndex((item) => typeof item === 'boolean');
+    if (withoutTimeZoneIndex > -1) {
+        return [
+            args[withoutTimeZoneIndex] as boolean,
+            args.slice(0, withoutTimeZoneIndex - 1) as DateConstructorArgumentsTuple
+        ];
+    }
+
+    return [false, args as DateConstructorArgumentsTuple];
 }
 
 /**
@@ -33,61 +60,111 @@ export default class DateTime extends mixin(SerializableMixin) {
         return DateTime.prototype;
     }
 
+    /**
+     * @property Сериализовать значение без сохранения информации о временной зоне
+     */
+    get withoutTimeZone(): boolean {
+        return Boolean(this[$withoutTimeZone]);
+    }
+
+    /**
+     * @property Без указания временной зоны
+     */
+    protected [$withoutTimeZone]: boolean;
+
     constructor(
-        year?: number | string,
-        month?: number,
-        day?: number,
-        hour?: number,
-        minute?: number,
-        second?: number,
-        millisecond?: number
-    ) {
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        value?: number | string | Date | boolean,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        hours?: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        hours?: number,
+        minutes?: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        hours?: number,
+        minutes?: number,
+        seconds?: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(
+        year: number,
+        month: number,
+        date?: number,
+        hours?: number,
+        minutes?: number,
+        seconds?: number,
+        millisecond?: number,
+        withoutTimeZone?: boolean
+    );
+    constructor(...args: Array<number | string | Date | boolean>) {
         super();
 
-        let instance;
-        switch (arguments.length) {
-            case 0:
-                instance = new Date();
-                break;
-            case 1:
-                instance = new Date(year);
-                break;
-            case 2:
-                instance = new Date(year as number, month);
-                break;
-            case 3:
-                instance = new Date(year as number, month, day);
-                break;
-            case 4:
-                instance = new Date(year as number, month, day, hour);
-                break;
-            case 5:
-                instance = new Date(year as number, month, day, hour, minute);
-                break;
-            case 6:
-                instance = new Date(year as number, month, day, hour, minute, second);
-                break;
-            default:
-                instance = new Date(year as number, month, day, hour, minute, second, millisecond);
-        }
+        const [withoutTimeZone, normalizedArgs]: [boolean, DateConstructorArgumentsTuple] = normalizeArguments(...args);
+        const instance = new Date(...normalizedArgs as [string | number | Date]);
 
         // Unfortunately we can't simply extend from Date because it's not a regular object. Here are some details
         // about this issue: https://stackoverflow.com/questions/6075231/how-to-extend-the-javascript-date-object
         Object.setPrototypeOf(instance, this._proto);
 
-        return instance;
+        if (withoutTimeZone === true) {
+            instance[$withoutTimeZone] = true;
+        }
+
+        return instance as unknown as DateTime;
     }
 
     // region SerializableMixin
 
-    _getSerializableState(state: IDefaultSerializableState): IDefaultSerializableState {
+    _getSerializableState(state: ISerializableState): ISerializableState {
         state.$options = this.getTime();
+        if (this[$withoutTimeZone]) {
+            state.withoutTimeZone = this[$withoutTimeZone];
+        }
 
         return state;
     }
 
-    // @ts-ignore override Date signature
-    toJSON(key?: any): ISignature {
+    _setSerializableState(state: ISerializableState): Function {
+        const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+        return function(): void {
+            fromSerializableMixin.call(this);
+            if (state.withoutTimeZone) {
+                this[$withoutTimeZone] = state.withoutTimeZone;
+            }
+        };
+    }
+
+    toJSON(): IDateSignature;
+    toJSON(key?: unknown): string;
+    toJSON(key?: unknown): IDateSignature | string {
         return SerializableMixin.prototype.toJSON.call(this);
     }
 

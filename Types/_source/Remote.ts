@@ -11,7 +11,15 @@ import Query, {NavigationType} from './Query';
 import DataSet from './DataSet';
 import jsonize from './jsonize';
 import {IAbstract} from './provider';
-import {adapter, Record, Model, ObservableMixin, IObservableMixinOptions, getMergeableProperty} from '../entity';
+import {
+    adapter,
+    Record,
+    Model,
+    ObservableMixin,
+    IObservableMixinOptions,
+    ISerializableSignature,
+    getMergeableProperty
+} from '../entity';
 import {RecordSet} from '../collection';
 import {create} from '../di';
 import {mixin, logger} from '../util';
@@ -364,6 +372,20 @@ export default abstract class Remote extends mixin<
         }
 
         return this._provider;
+    }
+
+    // endregion
+
+    // region SerializableMixin
+
+    toJSON(): ISerializableSignature<IOptions>;
+    toJSON(key?: unknown): string;
+    toJSON(key?: unknown): ISerializableSignature<IOptions> | string {
+        return super.toJSON();
+    }
+
+    static fromJSON<T = Remote, K = IOptions>(data: ISerializableSignature<K>): T {
+        return Base.fromJSON.call(this, data);
     }
 
     // endregion
