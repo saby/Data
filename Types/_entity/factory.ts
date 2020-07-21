@@ -37,6 +37,8 @@ import renders = require('Core/defaultRenders');
 
 type ValueType = string | Function | IProducible;
 
+type AbstractTypeConstructor<T> = new(opts: unknown, ...extraArgs: unknown[]) => T;
+
 interface ICastOptions {
     format?: Field | UniversalField;
     strict?: boolean;
@@ -245,6 +247,7 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
     }
 
     let TypeConstructor: unknown = type;
+    let TypeConstructorExtraArgs: unknown[];
     if (typeof TypeConstructor === 'string') {
         TypeConstructor = TypeConstructor.toLowerCase();
         switch (TypeConstructor) {
@@ -314,9 +317,10 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
                 if (TypeConstructor === 'date') {
                     TypeConstructor = TheDate;
                 } else if (TypeConstructor === 'time') {
-                        TypeConstructor = Time;
+                    TypeConstructor = Time;
                 } else {
-                        TypeConstructor = DateTime;
+                    TypeConstructor = DateTime;
+                    TypeConstructorExtraArgs = [isWithoutTimeZone(options.format as DateTimeField)];
                 }
                 break;
 
@@ -361,7 +365,11 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
             );
         }
 
-        return new (TypeConstructor as new(opts: unknown) => T)(value);
+        if (TypeConstructorExtraArgs) {
+            return new (TypeConstructor as AbstractTypeConstructor<T>)(value, ...TypeConstructorExtraArgs);
+        }
+
+        return new (TypeConstructor as AbstractTypeConstructor<T>)(value);
     }
 
     throw new TypeError(`Unknown type ${TypeConstructor}`);

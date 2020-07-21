@@ -18,6 +18,7 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class TimeField extends Field {
+    protected _$defaultValue: string | Date;
 
     // region Public methods
 

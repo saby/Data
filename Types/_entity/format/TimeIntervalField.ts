@@ -17,7 +17,7 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class TimeIntervalField extends Field {
-    _$defaultValue: number;
+    protected _$defaultValue: number;
 }
 
 Object.assign(TimeIntervalField.prototype, {

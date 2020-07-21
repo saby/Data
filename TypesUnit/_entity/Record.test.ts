@@ -1286,7 +1286,7 @@ describe('Types/_entity/Record', () => {
                 rawData: recordData
             });
 
-            assert.isTrue(format.isEqual(record.getFormat()));
+            assert.isTrue(format.isEqual(record.getFormat() as Format<IntegerField>));
         });
 
         it('should set the field format from Object with declaration', () => {

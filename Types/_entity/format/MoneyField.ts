@@ -1,5 +1,9 @@
-import RealField from './RealField';
+import RealField, {IOptions as IRealFieldOptions} from './RealField';
 import {register} from '../../di';
+
+export interface IOptions extends IRealFieldOptions {
+    large?: boolean;
+}
 
 /**
  * Формат денежного поля.
@@ -23,7 +27,11 @@ export default class MoneyField extends RealField {
      * @name Types/_entity/format/MoneyField#large
      * @see isLarge
      */
-    _$large: boolean;
+    protected _$large: boolean;
+
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     // region Public methods
 
