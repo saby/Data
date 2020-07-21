@@ -21,7 +21,7 @@ const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 
  */
 let instanceCounter = 0;
 
-export interface IState<T = unknown> {
+export interface IState<T = any> {
     $options?: T;
 }
 
