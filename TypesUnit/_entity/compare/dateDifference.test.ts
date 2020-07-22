@@ -47,9 +47,27 @@ describe('Types/_entity/compare/dateDifference', () => {
         assert.strictEqual(dateDifference(dateA, dateB, Units.Day), 1);
     });
 
+    it('should return difference in negative days', () => {
+        const dateA = new Date(2019, 11, 31);
+        const dateB = new Date(2020, 0, 1);
+        assert.strictEqual(dateDifference(dateB, dateA, Units.Day), -1);
+    });
+
     it('should return zero for same days', () => {
         const dateA = new Date(2020, 11, 20, 0);
         const dateB = new Date(2020, 11, 20, 1);
         assert.strictEqual(dateDifference(dateA, dateB, Units.Day), 0);
+    });
+
+    it('should return one day when hours difference less than 24', () => {
+        const dateA = new Date(2020, 6, 22, 23);
+        const dateB = new Date(2020, 6, 23, 1);
+        assert.strictEqual(dateDifference(dateA, dateB, Units.Day), 1);
+    });
+
+    it('should return actual days when hours difference less than 24', () => {
+        const dateA = new Date(2020, 4, 31, 23);
+        const dateB = new Date(2020, 5, 2, 1);
+        assert.strictEqual(dateDifference(dateA, dateB, Units.Day), 2);
     });
 });
