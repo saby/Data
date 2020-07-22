@@ -4,15 +4,28 @@ export enum Units {
     Day = 'Day'
 }
 
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
+const MONTHS_IN_YEAR = 12;
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const SECONDS_IN_MINUTE = 60;
+const MS_IN_SEC = 1000;
+const SECONDS_IN_DAY = HOURS_IN_DAY * MINUTES_IN_HOUR * SECONDS_IN_MINUTE;
+const MS_IN_DAY = SECONDS_IN_DAY * MS_IN_SEC;
 
-function getMonthDifference(dateA: Date, dateB: Date): number {
-    let dateAMonths = 12 * dateA.getFullYear() + dateA.getMonth();
-    let dateBMonths = 12 * dateB.getFullYear() + dateB.getMonth();
+function getDaysDifference(dateA: Date, dateB: Date): number {
+    const dateANoon = new Date(dateA.getFullYear(), dateA.getMonth(), dateA.getDate(), 12);
+    const dateBNoon = new Date(dateB.getFullYear(), dateB.getMonth(), dateB.getDate(), 12);
+
+    return (Number(dateBNoon) - Number(dateANoon)) / MS_IN_DAY;
+}
+
+function getMonthsDifference(dateA: Date, dateB: Date): number {
+    const dateAMonths = MONTHS_IN_YEAR * dateA.getFullYear() + dateA.getMonth();
+    const dateBMonths = MONTHS_IN_YEAR * dateB.getFullYear() + dateB.getMonth();
     return dateBMonths - dateAMonths;
 }
 
-function getYearDifference(dateA: Date, dateB: Date): number {
+function getYearsDifference(dateA: Date, dateB: Date): number {
     return dateB.getFullYear() - dateA.getFullYear();
 }
 
@@ -57,13 +70,13 @@ export default function dateDifference(dateA: Date, dateB: Date, units?: Units):
     if (dateA instanceof Date && dateB instanceof Date) {
         switch (units) {
             case Units.Year:
-                output = getYearDifference(dateA, dateB);
+                output = getYearsDifference(dateA, dateB);
                 break;
             case Units.Month:
-                output = getMonthDifference(dateA, dateB);
+                output = getMonthsDifference(dateA, dateB);
                 break;
             case Units.Day:
-                output = (Number(dateB) - Number(dateA)) / MS_IN_DAY;
+                output = getDaysDifference(dateA, dateB);
                 break;
             default:
                 output = Number(dateB) - Number(dateA);
