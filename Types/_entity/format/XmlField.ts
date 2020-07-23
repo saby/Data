@@ -17,7 +17,7 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class XmlField extends Field {
-    _$defaultValue: string;
+    protected _$defaultValue: string;
 }
 
 Object.assign(XmlField.prototype, {

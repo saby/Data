@@ -17,7 +17,7 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class IntegerField extends Field {
-    _$defaultValue: number;
+    protected _$defaultValue: number;
 }
 
 Object.assign(IntegerField.prototype, {

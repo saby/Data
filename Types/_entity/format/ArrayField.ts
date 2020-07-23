@@ -1,5 +1,9 @@
-import Field from './Field';
+import Field, {IOptions as IFieldOptions} from './Field';
 import {register} from '../../di';
+
+interface IOptions extends IFieldOptions {
+    kind?: string;
+}
 
 /**
  * Формат поля для массива значений.
@@ -23,7 +27,11 @@ export default class ArrayField extends Field {
      * @name Types/_entity/format/ArrayField#kind
      * @see getKind
      */
-    _$kind: string;
+    protected _$kind: string;
+
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     // region Public methods
 

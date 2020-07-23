@@ -1,31 +1,10 @@
 import {protect, logger} from '../util';
 
-/**
- * Свойство, хранящее признак десериализованного экземпляра
- */
-const $unserialized = protect('unserialized');
-
-/**
- * Поддерживается ли свойство __proto__ экземпляром Object
- */
-const isProtoSupported: boolean = typeof ({} as any).__proto__ === 'object';
-
-/**
- * Поддерживается вывод места определения функции через getFunctionDefinition()
- */
-// @ts-ignore
-const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 'function';
-
-/**
- * Счетчик экземляров
- */
-let instanceCounter = 0;
-
-export interface IState<T = any> {
+export interface IState<T = unknown> {
     $options?: T;
 }
 
-export interface ISignature<T = any> {
+export interface ISignature<T = unknown> {
     '$serialized$': string;
     module: string;
     id: number;
@@ -37,8 +16,33 @@ export interface IOptions<T> {
 }
 
 export interface ISerializableConstructor extends ObjectConstructor {
-    fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T;
+    fromJSON<T = SerializableMixin, K = unknown>(data: ISignature<K>): T;
 }
+
+interface IObjectExt {
+    __proto__: Object;
+}
+
+/**
+ * Свойство, хранящее признак десериализованного экземпляра
+ */
+const $unserialized = protect('unserialized');
+
+/**
+ * Поддерживается ли свойство __proto__ экземпляром Object
+ */
+const isProtoSupported: boolean = typeof ({} as IObjectExt).__proto__ === 'object';
+
+/**
+ * Поддерживается вывод места определения функции через getFunctionDefinition()
+ */
+// @ts-ignore
+const isFunctionDefinitionSupported: boolean = typeof getFunctionDefinition === 'function';
+
+/**
+ * Счетчик экземляров
+ */
+let instanceCounter = 0;
 
 /**
  * Возвращает уникальный номер инстанса
@@ -233,13 +237,13 @@ export default class SerializableMixin<T = any> {
      *     instance instanceof Entity;//true
      * </pre>
      */
-    static fromJSON<T = SerializableMixin, K = any>(data: ISignature<K>): T {
+    static fromJSON<T = SerializableMixin, K = unknown>(data: ISignature<K>): T {
         const initializer = this.prototype._setSerializableState(data.state);
-        const instance = new this(data.state.$options);
+        const instance = new this(data.state.$options as unknown as IOptions<T>);
         if (initializer) {
             initializer.call(instance);
         }
-        return instance as any as T;
+        return instance as unknown as T;
     }
 }
 

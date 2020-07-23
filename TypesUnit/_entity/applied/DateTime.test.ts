@@ -10,6 +10,24 @@ describe('Types/_entity/applied/DateTime', () => {
         });
     });
 
+    describe('.withoutTimeZone', () => {
+        it('should return false by default', () => {
+            const instance = new DateTime();
+            assert.isFalse(instance.withoutTimeZone);
+        });
+
+        it('should get the value from constructor argument', () => {
+            const instanceA = new DateTime(true);
+            assert.isTrue(instanceA.withoutTimeZone);
+
+            const instanceB = new DateTime(new Date(), true);
+            assert.isTrue(instanceB.withoutTimeZone);
+
+            const instanceC = new DateTime(2020, 6, 21, true);
+            assert.isTrue(instanceC.withoutTimeZone);
+        });
+    });
+
     describe('.toJSON()', () => {
         it('should save milliseconds into $options', () => {
             const instance = new DateTime();
@@ -17,6 +35,13 @@ describe('Types/_entity/applied/DateTime', () => {
             const serialized = instance.toJSON();
 
             assert.equal(serialized.state.$options, time);
+        });
+
+        it('should save withoutTimeZone flag into state', () => {
+            const instance = new DateTime(true);
+            const serialized = instance.toJSON();
+
+            assert.isTrue(serialized.state.withoutTimeZone);
         });
     });
 
@@ -33,6 +58,19 @@ describe('Types/_entity/applied/DateTime', () => {
             });
 
             assert.equal(instance.getTime(), time);
+        });
+
+        it('should create date with withoutTimeZone flag', () => {
+            const instance = DateTime.fromJSON({
+                $serialized$: 'inst',
+                module: '',
+                id: 0,
+                state: {
+                    withoutTimeZone: true
+                }
+            });
+
+            assert.isTrue(instance.withoutTimeZone);
         });
     });
 

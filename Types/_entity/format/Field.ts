@@ -6,6 +6,13 @@ import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
 import {isEqual} from '../../object';
 
+export interface IOptions {
+    name?: string;
+    type?: string | Function;
+    defaultValue?: unknown;
+    nullable?: boolean;
+}
+
 /**
  * Прототип поля записи.
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
@@ -29,14 +36,14 @@ export default abstract class Field extends mixin<
      * @see getName
      * @see setName
      */
-    _$name: string;
+    protected _$name: string;
 
     /**
-     * @cfg {String|Function} Модуль, который является конструктором значения поля
+     * @cfg Модуль, который является конструктором значения поля
      * @name Types/_entity/format/Field#type
      * @see getType
      */
-    _$type: any;
+    protected _$type: string | Function;
 
     /**
      * @cfg {*} Значение поля по умолчанию
@@ -44,7 +51,7 @@ export default abstract class Field extends mixin<
      * @see getDefaultValue
      * @see setDefaultValue
      */
-    _$defaultValue: any;
+    protected _$defaultValue: unknown;
 
     /**
      * @cfg {Boolean} Значение может быть null
@@ -52,14 +59,14 @@ export default abstract class Field extends mixin<
      * @see isNullable
      * @see setNullable
      */
-    _$nullable: boolean;
+    protected _$nullable: boolean;
 
     /**
      * Название типа поля
      */
-    _typeName: string;
+    protected _typeName: string;
 
-    constructor(options?: object) {
+    constructor(options?: IOptions) {
         super(options);
         OptionsToPropertyMixin.call(this, options);
     }
@@ -195,9 +202,11 @@ export default abstract class Field extends mixin<
     // endregion Public methods
 }
 
-Field.prototype['[Types/_entity/format/DestroyableMixin]'] = true;
-Field.prototype._$name = '';
-Field.prototype._$type = null;
-Field.prototype._$defaultValue = null;
-Field.prototype._$nullable = true;
-Field.prototype._typeName = '';
+Object.assign(Field.prototype, {
+    '[Types/_entity/format/DestroyableMixin]': true,
+    _$name: '',
+    _$type: null,
+    _$defaultValue: null,
+    _$nullable: true,
+    _typeName: ''
+});

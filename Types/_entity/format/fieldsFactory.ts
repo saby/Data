@@ -1,7 +1,7 @@
 import BooleanField from './BooleanField';
 import IntegerField from './IntegerField';
-import RealField from './RealField';
-import MoneyField from './MoneyField';
+import RealField, {IOptions as IRealFieldOptions} from './RealField';
+import MoneyField, {IOptions as IMoneyFieldOptions} from './MoneyField';
 import StringField from './StringField';
 import XmlField from './XmlField';
 import DateTimeField from './DateTimeField';
@@ -28,7 +28,7 @@ type Dictionary = string[] | IHashMap<string>;
 
 export interface IShortDeclaration {
     type: string | Function;
-    defaultValue?: any;
+    defaultValue?: unknown;
     kind?: string;
     nullable?: boolean;
     precision?: number;
@@ -153,62 +153,62 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
     if (typeof type === 'string') {
         switch (type.toLowerCase()) {
             case 'boolean':
-                return new BooleanField(declaration) as any;
+                return new BooleanField(declaration) as T;
             case 'integer':
-                return new IntegerField(declaration) as any;
+                return new IntegerField(declaration) as unknown as T;
             case 'real':
-                return new RealField(declaration) as any;
+                return new RealField(declaration as IRealFieldOptions) as unknown as T;
             case 'money':
-                return new MoneyField(declaration) as any;
+                return new MoneyField(declaration as IMoneyFieldOptions) as unknown as T;
             case 'string':
-                return new StringField(declaration) as any;
+                return new StringField(declaration) as T;
             case 'text':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
                     'Type "text" has been removed in 3.18.10. Use "string" instead.'
                 );
                 declaration.type = 'string';
-                return new StringField(declaration) as any;
+                return new StringField(declaration) as T;
             case 'xml':
-                return new XmlField(declaration) as any;
+                return new XmlField(declaration) as unknown as T;
             case 'datetime':
-                return new DateTimeField(declaration) as any;
+                return new DateTimeField(declaration) as unknown as T;
             case 'date':
-                return new DateField(declaration) as any;
+                return new DateField(declaration) as unknown as T;
             case 'time':
-                return new TimeField(declaration) as any;
+                return new TimeField(declaration) as unknown as T;
             case 'timeinterval':
-                return new TimeIntervalField(declaration) as any;
+                return new TimeIntervalField(declaration) as unknown as T;
             case 'link':
-                return new LinkField(declaration) as any;
+                return new LinkField(declaration) as unknown as T;
             case 'identity':
-                return new IdentityField(declaration) as any;
+                return new IdentityField(declaration) as unknown as T;
             case 'enum':
-                return new EnumField(declaration) as any;
+                return new EnumField(declaration) as unknown as T;
             case 'flags':
-                return new FlagsField(declaration) as any;
+                return new FlagsField(declaration) as unknown as T;
             case 'record':
             case 'model':
-                return new RecordField(declaration) as any;
+                return new RecordField(declaration) as T;
             case 'recordset':
-                return new RecordSetField(declaration) as any;
+                return new RecordSetField(declaration) as T;
             case 'binary':
-                return new BinaryField(declaration) as any;
+                return new BinaryField(declaration) as T;
             case 'uuid':
-                return new UuidField(declaration) as any;
+                return new UuidField(declaration) as T;
             case 'rpcfile':
-                return new RpcFileField(declaration) as any;
+                return new RpcFileField(declaration) as T;
             case 'hierarchy':
                 logger.error(
                     'Types/_entity/format/fieldsFactory',
                     'Type "hierarchy" has been removed in 3.18.10. Use "identity" instead.'
                 );
                 declaration.type = 'identity';
-                return new IdentityField(declaration) as any;
+                return new IdentityField(declaration) as unknown as T;
             case 'object':
-                return new ObjectField(declaration) as any;
+                return new ObjectField(declaration) as T;
             case 'array':
-                return new ArrayField(declaration) as any;
+                return new ArrayField(declaration) as unknown as T;
         }
 
         if (isRegistered(type)) {
@@ -220,24 +220,24 @@ export default function<T extends Field = Field>(declaration: IDeclaration): T {
         const inst = Object.create(type.prototype);
         if (inst['[Types/_entity/IObject]'] && inst['[Types/_entity/FormattableMixin]']) {
             // Yes it's Types/_entity/Record
-            return new RecordField(declaration) as any;
+            return new RecordField(declaration) as T;
         } else if (inst['[Types/_collection/IList]'] && inst['[Types/_entity/FormattableMixin]']) {
             // Yes it's Types/_collection/RecordSet
-            return new RecordSetField(declaration) as any;
+            return new RecordSetField(declaration) as T;
         } else if (inst['[Types/_collection/IEnum]']) {
-            return new EnumField(declaration) as any;
+            return new EnumField(declaration) as unknown as T;
         } else if (inst['[Types/_collection/IFlags]']) {
-            return new FlagsField(declaration) as any;
+            return new FlagsField(declaration) as unknown as T;
         } else if (inst instanceof Array) {
-            return new ArrayField(declaration) as any;
+            return new ArrayField(declaration) as unknown as T;
         } else if (inst instanceof Date) {
-            return new DateField(declaration) as any;
+            return new DateField(declaration) as unknown as T;
         } else if (inst instanceof String) {
-            return new StringField(declaration) as any;
+            return new StringField(declaration) as T;
         } else if (inst instanceof Number) {
-            return new RealField(declaration) as any;
+            return new RealField(declaration as IRealFieldOptions) as unknown as T;
         } else if (type === Object) {
-            return new ObjectField(declaration) as any;
+            return new ObjectField(declaration) as T;
         }
     }
 

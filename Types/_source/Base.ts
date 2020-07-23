@@ -1,7 +1,7 @@
 import OptionsMixin, {IOptions as IOptionsOptions} from './OptionsMixin';
 import LazyMixin from './LazyMixin';
 import DataMixin, {IOptions as IDataOptions} from './DataMixin';
-import {OptionsToPropertyMixin, SerializableMixin} from '../entity';
+import {OptionsToPropertyMixin, ISerializableSignature, SerializableMixin} from '../entity';
 import {deprecateExtend, mixin} from '../util';
 
 export interface IOptions extends IDataOptions, IOptionsOptions {
@@ -42,6 +42,20 @@ export default abstract class Base extends mixin<
         SerializableMixin.call(this);
         DataMixin.call(this, options);
     }
+
+    // region SerializableMixin
+
+    toJSON(): ISerializableSignature<IOptions>;
+    toJSON(key?: unknown): string;
+    toJSON(key?: unknown): ISerializableSignature<IOptions> | string {
+        return SerializableMixin.prototype.toJSON.call(this);
+    }
+
+    static fromJSON<T = Base, K = IOptions>(data: ISerializableSignature<K>): T {
+        return SerializableMixin.fromJSON.call(this, data);
+    }
+
+    // endregion
 
     /**
      * @deprecated

@@ -23,9 +23,9 @@ export default class IdentityField extends Field {
      * @see getDefaultValue
      * @see setDefaultValue
      */
-    _$defaultValue: any[];
+    protected _$defaultValue: any[];
 
-    _separator: string;
+    protected _separator: string;
 
     // region Public methods
 

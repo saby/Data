@@ -1,5 +1,9 @@
-import Field from './Field';
+import Field, {IOptions as IFieldOptions} from './Field';
 import {register} from '../../di';
+
+interface IOptions extends IFieldOptions {
+    withoutTimeZone?: boolean;
+}
 
 /**
  * Формат поля для даты и времени.
@@ -22,7 +26,11 @@ export default class DateTimeField extends Field {
      * @name Types/_entity/format/DateTimeField#withoutTimeZone
      * @see hasTimeZone
      */
-    _$withoutTimeZone: boolean;
+    protected _$withoutTimeZone: boolean;
+
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     // region Public methods
 

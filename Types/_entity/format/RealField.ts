@@ -1,5 +1,10 @@
-import Field from './Field';
+import Field, {IOptions as IFieldOptions} from './Field';
 import {register} from '../../di';
+
+export interface IOptions extends IFieldOptions {
+    defaultValue?: number;
+    precision?: number;
+}
 
 /**
  * Формат вещественного поля.
@@ -18,7 +23,7 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class RealField extends Field {
-    _$defaultValue: number;
+    protected _$defaultValue: number;
 
     /**
      * @cfg {Number} Максимальное количество знаков в дробной части
@@ -26,7 +31,11 @@ export default class RealField extends Field {
      * @see getPrecision
      * @see setPrecision
      */
-    _$precision: number;
+    protected _$precision: number;
+
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     // region Public methods
 
