@@ -48,11 +48,11 @@ export default abstract class Base extends mixin<
     toJSON(): ISerializableSignature<IOptions>;
     toJSON(key?: unknown): string;
     toJSON(key?: unknown): ISerializableSignature<IOptions> | string {
-        return super.toJSON();
+        return SerializableMixin.prototype.toJSON.call(this);
     }
 
     static fromJSON<T = Base, K = IOptions>(data: ISerializableSignature<K>): T {
-        return Base.fromJSON.call(this, data);
+        return SerializableMixin.fromJSON.call(this, data);
     }
 
     // endregion
