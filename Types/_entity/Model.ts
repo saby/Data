@@ -67,7 +67,7 @@ const isCalculating = protect('isCalculating');
  *
  * Для реализации конкретной модели используется наследование от абстрактной либо промежуточной.
  *
- * Для корректной сериализации и клонирования моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
+ * Для корректной {@link /doc/platform/developmentapl/interface-development/pattern-and-practice/serialization/#nota-bene сериализации и клонирования} моделей необходимо выносить их в отдельные модули и указывать имя модуля в свойстве _moduleName каждого наследника:
  * <pre>
  *     //My/Awesome/Model.ts
  *     import {Model} from 'Types/entity';
