@@ -109,14 +109,14 @@ export interface ISerializable<T = unknown> {
 /**
  * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
  * @remark
- * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать имя модуля для RequireJS.
+ * Для корректной работы {@link /doc/platform/developmentapl/interface-development/pattern-and-practice/serialization/#nota-bene сериализации и клонирования} необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать имя модуля для RequireJS.
  * @example
  * <pre>
- * define('My.SubModule', ['My.SuperModule'], function (SuperModule) {
+ * define('My/Sub/Module', ['My/Super/Module'], function (SuperModule) {
  *     'use strict';
  *
  *     var SubModule = SuperModule.extend({
- *        _moduleName: 'My.SubModule'
+ *        _moduleName: 'My/Sub/Module'
  *     });
  *
  *     return SubModule;
@@ -133,7 +133,7 @@ export default class SerializableMixin<T = any> {
     protected _instanceNumber: number;
 
     /**
-     * Название класса конструкции.
+     * Название класса-конструктора.
      */
 
     /*
