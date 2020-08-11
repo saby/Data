@@ -77,6 +77,8 @@ class EventRaisingMixin {
             this._eventRaisingTrigger.call(this, enabled, analyze);
         }
 
+        this._eventRaising = enabled;
+
         if (!isEqual) {
             this._notify('onEventRaisingChange', enabled, analyze);
         }

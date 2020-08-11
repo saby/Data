@@ -8,6 +8,7 @@ import DestroyableMixin from './DestroyableMixin';
 import {cast, serialize} from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin, {IOptions as IObservableMixinOptions} from './ObservableMixin';
+import EventRaisingMixin from './EventRaisingMixin';
 import SerializableMixin, {IState as IDefaultSerializableState} from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
@@ -252,6 +253,7 @@ export default class Record<T = any> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     ObservableMixin,
+    EventRaisingMixin,
     SerializableMixin,
     CloneableMixin,
     ManyToManyMixin,
@@ -262,6 +264,7 @@ export default class Record<T = any> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     ObservableMixin,
+    EventRaisingMixin,
     SerializableMixin,
     CloneableMixin,
     ManyToManyMixin,
@@ -1211,6 +1214,18 @@ export default class Record<T = any> extends mixin<
 
     // endregion
 
+    // region EventRaisingMixin
+
+    setEventRaising(enabled: boolean, analyze?: boolean): void {
+        if (analyze) {
+            throw new Error('The changes analysis is disabled for Records');
+        }
+
+        EventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
+    }
+
+    // endregion
+
     // region Proteted methods
 
     /**
@@ -1341,7 +1356,18 @@ export default class Record<T = any> extends mixin<
             this._childChanged(map);
         }
         this._nextVersion();
-        this._notify('onPropertyChange', map);
+
+        if (this._isNeedNotifyPropertyChange()) {
+            this._notify('onPropertyChange', map);
+        }
+    }
+
+    /**
+     * Возвращает признак, что нужно генерировать события об изменении записи
+     * @protected
+     */
+    protected _isNeedNotifyPropertyChange(): boolean {
+        return this._eventRaising && this.hasEventHandlers('onPropertyChange');
     }
 
     /**

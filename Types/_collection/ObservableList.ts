@@ -5,7 +5,6 @@ import EventRaisingMixin from './EventRaisingMixin';
 import {
     ISerializableSignature,
     ObservableMixin,
-    EventRaisingMixin as EntityEventRaisingMixin,
     relation,
     SerializableMixin
 } from '../entity';
@@ -63,7 +62,7 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
 
     constructor(options?: IListOptions<T>) {
         super(options);
-        EntityEventRaisingMixin.call(this, options);
+        EventRaisingMixin.call(this, options);
 
         this._publish('onCollectionChange', 'onCollectionItemChange');
     }
@@ -231,10 +230,10 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
 
     // endregion
 
-    // region EntityEventRaisingMixin
+    // region EventRaisingMixin
 
     setEventRaising(enabled: boolean, analyze?: boolean): void {
-        EntityEventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
+        EventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
 
         // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет
         // не тот
@@ -328,12 +327,11 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
     // endregion
 }
 
-applyMixins(ObservableList, ObservableMixin, IObservable, EntityEventRaisingMixin, EventRaisingMixin);
+applyMixins(ObservableList, ObservableMixin, IObservable, EventRaisingMixin);
 
 // tslint:disable-next-line:interface-name
 interface ObservableList<T> extends List<T>,
     ObservableMixin,
-    EntityEventRaisingMixin,
     EventRaisingMixin {
 }
 

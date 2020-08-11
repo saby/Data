@@ -1,7 +1,7 @@
 import enumerableComparator, {ISession} from './enumerableComparator';
 import {ChangeAction} from './IObservable';
 import IList from './IList';
-import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from 'entity';
+import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from '../entity';
 
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния.
@@ -12,6 +12,8 @@ import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from 'entit
  */
 class EventRaisingMixin {
     '[Types/_collection/EventRaisingMixin]': boolean;
+
+    protected _eventRaising: boolean;
 
     /**
      * Метод получения содержимого элемента коллекции (если такое поведение поддерживается)
@@ -27,6 +29,22 @@ class EventRaisingMixin {
      * Сообщение для режима блокировки изменений
      */
     protected _blockChangesMessage: string;
+
+    // region EntityEventRaisingMixin
+
+    constructor() {
+        EntityEventRaisingMixin.call(this);
+    }
+
+    setEventRaising(enabled: boolean, analyze?: boolean): void {
+        EntityEventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
+    }
+
+    isEventRaising(): boolean {
+        return EntityEventRaisingMixin.prototype.isEventRaising.call(this);
+    }
+
+    // endregion
 
     // region Protected methods
 
@@ -182,8 +200,6 @@ class EventRaisingMixin {
     // endregion
 }
 
-// tslint:disable-next-line:interface-name no-empty-interface
-interface EventRaisingMixin extends EntityEventRaisingMixin {}
 export default EventRaisingMixin;
 
 /**
@@ -192,7 +208,6 @@ export default EventRaisingMixin;
  */
 function onEventRaisingChange(this: EventRaisingMixin, enabled: boolean, analyze?: boolean): void {
     if (!analyze) {
-        this._eventRaising = enabled;
         return;
     }
 
@@ -202,12 +217,14 @@ function onEventRaisingChange(this: EventRaisingMixin, enabled: boolean, analyze
         this._beforeRaiseOff = null;
     } else {
         this._beforeRaiseOff = this._startUpdateSession();
-        this._eventRaising = enabled;
     }
 }
 
 Object.assign(EventRaisingMixin.prototype, {
     '[Types/_entity/EventRaisingMixin]': true,
+    _eventRaising: true,
+
+    '[Types/_collection/EventRaisingMixin]': true,
     _eventRaisingTrigger: onEventRaisingChange,
     _sessionItemContentsGetter: '',
     _beforeRaiseOff: null,
