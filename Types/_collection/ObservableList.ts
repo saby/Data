@@ -5,9 +5,10 @@ import EventRaisingMixin from './EventRaisingMixin';
 import {
     ISerializableSignature,
     ObservableMixin,
+    EventRaisingMixin as EntityEventRaisingMixin,
+    relation,
     SerializableMixin
 } from '../entity';
-import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {applyMixins} from '../util';
 
@@ -41,7 +42,7 @@ const arraySlice = Array.prototype.slice;
  * @public
  * @author Мальцев А.А.
  */
-class ObservableList<T> extends List<T> implements IReceiver {
+class ObservableList<T> extends List<T> implements relation.IReceiver {
     /**
      * Количество измененных элементов, что важно для генерации одного события с действием ACTION_RESET вместо нескольких.
      */
@@ -62,7 +63,7 @@ class ObservableList<T> extends List<T> implements IReceiver {
 
     constructor(options?: IListOptions<T>) {
         super(options);
-        EventRaisingMixin.call(this, options);
+        EntityEventRaisingMixin.call(this, options);
 
         this._publish('onCollectionChange', 'onCollectionItemChange');
     }
@@ -196,7 +197,7 @@ class ObservableList<T> extends List<T> implements IReceiver {
 
     // endregion
 
-    // region IReceiver
+    // region relation.IReceiver
 
     readonly '[Types/_entity/relation/IReceiver]': boolean;
 
@@ -230,10 +231,10 @@ class ObservableList<T> extends List<T> implements IReceiver {
 
     // endregion
 
-    // region EventRaisingMixin
+    // region EntityEventRaisingMixin
 
     setEventRaising(enabled: boolean, analyze?: boolean): void {
-        EventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
+        EntityEventRaisingMixin.prototype.setEventRaising.call(this, enabled, analyze);
 
         // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет
         // не тот
@@ -327,10 +328,14 @@ class ObservableList<T> extends List<T> implements IReceiver {
     // endregion
 }
 
-applyMixins(ObservableList, ObservableMixin, IObservable, EventRaisingMixin);
+applyMixins(ObservableList, ObservableMixin, IObservable, EntityEventRaisingMixin, EventRaisingMixin);
 
 // tslint:disable-next-line:interface-name
-interface ObservableList<T> extends List<T>, ObservableMixin, EventRaisingMixin, IReceiver {}
+interface ObservableList<T> extends List<T>,
+    ObservableMixin,
+    EntityEventRaisingMixin,
+    EventRaisingMixin {
+}
 
 Object.assign(ObservableList.prototype, {
     '[Types/_collection/ObservableList]': true,

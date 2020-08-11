@@ -1,29 +1,17 @@
 import enumerableComparator, {ISession} from './enumerableComparator';
 import {ChangeAction} from './IObservable';
-import {IList} from '../collection';
-import {ISerializable, ObservableMixin} from 'entity';
+import IList from './IList';
+import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from 'entity';
 
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния.
- * Работает соместно с {@link Types/_entity/ObservableMixin}.
+ * Работает соместно с {@link Types/_entity/EventRaisingMixin}.
  * @mixin Types/_collection/EventRaisingMixin
  * @public
  * @author Мальцев А.А.
  */
 class EventRaisingMixin {
-    '[Types/_entity/EventRaisingMixin]': boolean;
-
-    /**
-     * @event После изменения режима генерации событий
-     * @name Types/_collection/EventRaisingMixin#onEventRaisingChange
-     * @param {Boolean} enabled Включена или выключена генерация событий
-     * @param {Boolean} analyze Включен или выключен анализ изменений
-     */
-
-    /**
-     * Генерация событий включена
-     */
-    protected _eventRaising: boolean;
+    '[Types/_collection/EventRaisingMixin]': boolean;
 
     /**
      * Метод получения содержимого элемента коллекции (если такое поведение поддерживается)
@@ -39,79 +27,6 @@ class EventRaisingMixin {
      * Сообщение для режима блокировки изменений
      */
     protected _blockChangesMessage: string;
-
-    constructor() {
-        this._publish('onEventRaisingChange');
-    }
-
-    // region Public methods
-
-    /**
-     * Включает/выключает генерацию событий об изменении коллекции
-     * @param enabled Включить или выключить генерацию событий
-     * @param [analyze=false] Анализировать изменения (если включить, то при enabled = true будет произведен анализ всех изменений с момента enabled = false - сгенерируются события обо всех изменениях)
-     * @example
-     * Сгенерируем событие о перемещении элемента c позиции 1 на позицию 3:
-     * <pre>
-     *     import {ObservableList, IObservable} from 'Types/collection';
-     *
-     *     const list = new ObservableList({
-     *         items: ['one', 'two', 'three', 'four', 'five']
-     *     });
-     *
-     *     list.subscribe('onCollectionChange', (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
-     *         console.log(action === IObservable.ACTION_MOVE); // true
-     *
-     *         console.log(oldItems[0] === 'two'); // true
-     *         console.log(oldItems[0] === item); // true
-     *         console.log(oldItemsIndex === 1); // true
-     *
-     *         console.log(newItems[0] === 'two'); // true
-     *         console.log(newItems[0] === item); // true
-     *         console.log(newItemsIndex === 3); // true
-     *     });
-     *
-     *     list.setEventRaising(false, true);
-     *     const item = list.removeAt(1);
-     *     list.add(item, 3);
-     *     list.setEventRaising(true, true);
-     * </pre>
-     */
-    setEventRaising(enabled: boolean, analyze?: boolean): void {
-        enabled = !!enabled;
-        analyze = !!analyze;
-        const isEqual = this._eventRaising === enabled;
-
-        if (analyze && isEqual) {
-            throw new Error(`The events raising is already ${enabled ? 'enabled' : 'disabled'} with analize=true`);
-        }
-
-        if (analyze) {
-            if (enabled) {
-                this._eventRaising = enabled;
-                this._finishUpdateSession(this._beforeRaiseOff);
-                this._beforeRaiseOff = null;
-            } else {
-                this._beforeRaiseOff = this._startUpdateSession();
-                this._eventRaising = enabled;
-            }
-        } else {
-            this._eventRaising = enabled;
-        }
-
-        if (!isEqual) {
-            this._notify('onEventRaisingChange', enabled, analyze);
-        }
-    }
-
-    /**
-     * Возвращает признак, включена ли генерация событий об изменении проекции
-     */
-    isEventRaising(): boolean {
-        return this._eventRaising;
-    }
-
-    // endregion
 
     // region Protected methods
 
@@ -264,17 +179,36 @@ class EventRaisingMixin {
         return this._eventRaising && this.hasEventHandlers('onCollectionChange');
     }
 
-    // endregion Protected methods
+    // endregion
 }
 
 // tslint:disable-next-line:interface-name no-empty-interface
-interface EventRaisingMixin extends ObservableMixin {}
-
+interface EventRaisingMixin extends EntityEventRaisingMixin {}
 export default EventRaisingMixin;
+
+/**
+ * Hook to fulfill changes analysis.
+ * Executes in context of instance.
+ */
+function onEventRaisingChange(this: EventRaisingMixin, enabled: boolean, analyze?: boolean): void {
+    if (!analyze) {
+        this._eventRaising = enabled;
+        return;
+    }
+
+    if (enabled) {
+        this._eventRaising = enabled;
+        this._finishUpdateSession(this._beforeRaiseOff);
+        this._beforeRaiseOff = null;
+    } else {
+        this._beforeRaiseOff = this._startUpdateSession();
+        this._eventRaising = enabled;
+    }
+}
 
 Object.assign(EventRaisingMixin.prototype, {
     '[Types/_entity/EventRaisingMixin]': true,
-    _eventRaising: true,
+    _eventRaisingTrigger: onEventRaisingChange,
     _sessionItemContentsGetter: '',
     _beforeRaiseOff: null,
     _blockChangesMessage: ''
