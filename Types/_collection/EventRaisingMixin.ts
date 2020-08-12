@@ -200,6 +200,9 @@ class EventRaisingMixin {
     // endregion
 }
 
+// tslint:disable-next-line:interface-name no-empty-interface
+interface EventRaisingMixin extends EntityEventRaisingMixin {}
+
 export default EventRaisingMixin;
 
 /**
