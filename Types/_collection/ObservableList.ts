@@ -5,9 +5,9 @@ import EventRaisingMixin from './EventRaisingMixin';
 import {
     ISerializableSignature,
     ObservableMixin,
+    relation,
     SerializableMixin
 } from '../entity';
-import {IReceiver} from '../_entity/relation';
 import {register} from '../di';
 import {applyMixins} from '../util';
 
@@ -41,7 +41,7 @@ const arraySlice = Array.prototype.slice;
  * @public
  * @author Мальцев А.А.
  */
-class ObservableList<T> extends List<T> implements IReceiver {
+class ObservableList<T> extends List<T> implements relation.IReceiver {
     /**
      * Количество измененных элементов, что важно для генерации одного события с действием ACTION_RESET вместо нескольких.
      */
@@ -196,7 +196,7 @@ class ObservableList<T> extends List<T> implements IReceiver {
 
     // endregion
 
-    // region IReceiver
+    // region relation.IReceiver
 
     readonly '[Types/_entity/relation/IReceiver]': boolean;
 
@@ -330,7 +330,10 @@ class ObservableList<T> extends List<T> implements IReceiver {
 applyMixins(ObservableList, ObservableMixin, IObservable, EventRaisingMixin);
 
 // tslint:disable-next-line:interface-name
-interface ObservableList<T> extends List<T>, ObservableMixin, EventRaisingMixin, IReceiver {}
+interface ObservableList<T> extends List<T>,
+    ObservableMixin,
+    EventRaisingMixin {
+}
 
 Object.assign(ObservableList.prototype, {
     '[Types/_collection/ObservableList]': true,

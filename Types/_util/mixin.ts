@@ -75,6 +75,9 @@ type MixinConstructor8<
 type MixinConstructor9<
     M1, M2, M3, M4, M5, M6, M7, M8, M9
 > = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9;
+type MixinConstructor10<
+    M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
+> = new (...args: any[]) => M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9 & M10;
 
 export function mixin<M1>(...mixins: Function[]): MixinConstructor1<M1>;
 export function mixin<M1, M2>(...mixins: Function[]): MixinConstructor2<M1, M2>;
@@ -89,6 +92,9 @@ export function mixin<
 export function mixin<
     M1, M2, M3, M4, M5, M6, M7, M8, M9
 >(...mixins: Function[]): MixinConstructor9<M1, M2, M3, M4, M5, M6, M7, M8, M9>;
+export function mixin<
+    M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
+>(...mixins: Function[]): MixinConstructor10<M1, M2, M3, M4, M5, M6, M7, M8, M9, M10>;
 
 /**
  * Creates a subclass with given mixins

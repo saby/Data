@@ -637,6 +637,35 @@ describe('Types/_entity/Record', () => {
         });
     });
 
+    describe('.setEventRaising()', () => {
+        it('should disable and then enable onPropertyChange', () => {
+            let fired;
+            const handler = () => fired = true;
+
+            const record = new Record();
+            record.subscribe('onPropertyChange', handler);
+
+            record.setEventRaising(false);
+            fired = false;
+            record.set('foo', 'bar');
+            assert.isFalse(fired);
+
+            record.setEventRaising(true);
+            fired = false;
+            record.set('foo', 'baz');
+            assert.isTrue(fired);
+
+            record.unsubscribe('onCollectionItemChange', handler);
+        });
+
+        it('should throw an error if analize=true', () => {
+            const record = new Record();
+            assert.throws(() => {
+                record.setEventRaising(false, true);
+            });
+        });
+    });
+
     describe('.getChanged()', () => {
         it('should return a changed value', () => {
             record.set('max', 15);
