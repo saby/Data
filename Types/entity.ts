@@ -82,6 +82,7 @@ import {default as Model, IProperty as IModelProperty} from './_entity/Model';
 export { Model, IModelProperty};
 export {default as OptionsToPropertyMixin, getMergeableProperty} from './_entity/OptionsToPropertyMixin';
 export {default as ObservableMixin, IOptions as IObservableMixinOptions} from './_entity/ObservableMixin';
+export {default as EventRaisingMixin} from './_entity/EventRaisingMixin';
 export {default as ReadWriteMixin, IOptions as IReadWriteMixinOptions} from './_entity/ReadWriteMixin';
 import {default as Record, State as RecordState} from './_entity/Record';
 export {Record, RecordState};
@@ -113,19 +114,11 @@ export {
 } from './_entity/applied';
 
 register('Types/entity:Model', Model, {instantiate: false});
-// FIXME: deprecated
-register('entity.model', Model);
 register('Types/entity:Record', Record, {instantiate: false});
 register('Types/entity:adapter.Cow', adapter.Cow, {instantiate: false});
 register('Types/entity:adapter.Json', adapter.Json, {instantiate: false});
-// FIXME: deprecated
-register('adapter.json', adapter.Json);
 register('Types/entity:adapter.RecordSet', adapter.RecordSet, {instantiate: false});
-// FIXME: deprecated
-register('adapter.recordset', adapter.RecordSet, {instantiate: false});
 register('Types/entity:adapter.Sbis', adapter.Sbis, {instantiate: false});
-// Deprecated
-register('adapter.sbis', adapter.Sbis);
 register('Types/entity:Date', Date, {instantiate: false});
 register('Types/entity:DateTime', DateTime, {instantiate: false});
 register('Types/entity:Identity', Identity, {instantiate: false});
@@ -154,3 +147,9 @@ register('Types/entity:format.TimeIntervalField', format.TimeIntervalField, {ins
 register('Types/entity:format.UniversalField', format.UniversalField, {instantiate: false});
 register('Types/entity:format.UuidField', format.UuidField, {instantiate: false});
 register('Types/entity:format.XmlField', format.XmlField, {instantiate: false});
+
+// FIXME: deprecated
+register('entity.model', Model);
+register('adapter.json', adapter.Json);
+register('adapter.recordset', adapter.RecordSet, {instantiate: false});
+register('adapter.sbis', adapter.Sbis);
