@@ -166,8 +166,6 @@ export function injectFormats(data: GenericFormat): void {
             markEntryAsInjected(entry);
         }
     });
-
-    markEntryAsInjected(data);
 }
 
 /**
