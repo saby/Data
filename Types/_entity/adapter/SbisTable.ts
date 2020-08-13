@@ -3,8 +3,7 @@ import IMetaData from './IMetaData';
 import SbisFormatMixin, {
     ITableFormat,
     IRecordFormat,
-    setEntryFormatStore,
-    storeInjected
+    markEntryAsInjected
 } from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import ICloneable from '../ICloneable';
@@ -105,7 +104,7 @@ export default class SbisTable extends mixin<
         };
 
         // Inherit record format controller from table
-        setEntryFormatStore(item, data[storeInjected]);
+        markEntryAsInjected(item);
 
         return item;
     }

@@ -19,14 +19,14 @@ import {
 } from '../format';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
-import {object, logger, protect} from '../../util';
+import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
 import {FormatCarrier} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
-export const storeInjected = protect('formatStore');
+const entryInjected = '_ei';
 
 export interface IFieldType {
     n: string;
@@ -114,11 +114,11 @@ function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFiel
     delete entry.f;
 }
 
-export function setEntryFormatStore(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
-    if (!entry[storeInjected]) {
-        Object.defineProperty(entry, storeInjected, {
-            enumerable: false,
-            value: store
+export function markEntryAsInjected(entry: GenericFormat, enumerable: boolean = false): void {
+    if (!entry[entryInjected]) {
+        Object.defineProperty(entry, entryInjected, {
+            enumerable,
+            value: true
         });
     }
 }
@@ -154,7 +154,7 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
  * Injects format controller deep within data scope
  */
 export function injectFormats(data: GenericFormat): void {
-    if (data[storeInjected]) {
+    if (data[entryInjected]) {
         return;
     }
 
@@ -163,9 +163,11 @@ export function injectFormats(data: GenericFormat): void {
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined) {
             setEntryCalculatedFormat(entry, store);
-            setEntryFormatStore(entry, store);
+            markEntryAsInjected(entry);
         }
     });
+
+    markEntryAsInjected(data, true);
 }
 
 /**
