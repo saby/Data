@@ -26,7 +26,7 @@ import {FormatCarrier} from './SbisFormatController';
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
-export const storeInjected = protect('formatStore');
+const entryInjected = protect('injected');
 
 export interface IFieldType {
     n: string;
@@ -114,11 +114,11 @@ function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFiel
     delete entry.f;
 }
 
-export function setEntryFormatStore(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
-    if (!entry[storeInjected]) {
-        Object.defineProperty(entry, storeInjected, {
+export function markEntryAsInjected(entry: GenericFormat): void {
+    if (!entry[entryInjected]) {
+        Object.defineProperty(entry, entryInjected, {
             enumerable: false,
-            value: store
+            value: true
         });
     }
 }
@@ -154,7 +154,7 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
  * Injects format controller deep within data scope
  */
 export function injectFormats(data: GenericFormat): void {
-    if (data[storeInjected]) {
+    if (data[entryInjected]) {
         return;
     }
 
@@ -163,9 +163,11 @@ export function injectFormats(data: GenericFormat): void {
     eachFormatEntry(data, (entry) => {
         if (entry.f !== undefined) {
             setEntryCalculatedFormat(entry, store);
-            setEntryFormatStore(entry, store);
+            markEntryAsInjected(entry);
         }
     });
+
+    markEntryAsInjected(data);
 }
 
 /**
@@ -211,7 +213,7 @@ export default abstract class SbisFormatMixin {
         return '';
     }
 
-    constructor(data: GenericFormat) {
+    constructor(data: GenericFormat, injected?: boolean) {
         if (data) {
             if (Object.getPrototypeOf(data) !== Object.prototype) {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
@@ -222,7 +224,9 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            injectFormats(data);
+            if (!injected) {
+                injectFormats(data);
+            }
         }
 
         this._data = data;
