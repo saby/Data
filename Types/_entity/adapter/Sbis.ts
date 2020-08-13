@@ -16,13 +16,13 @@ import {register} from '../../di';
  * @author Мальцев А.А.
  */
 export default class Sbis extends Abstract {
-   forTable(data?: ITableFormat): SbisTable {
-       return new SbisTable(data);
-   }
+    forTable(data?: ITableFormat): SbisTable {
+        return new SbisTable(data, this._isUnserialized());
+    }
 
-   forRecord(data?: IRecordFormat, tableData?:any): SbisRecord {
-       return new SbisRecord(data);
-   }
+    forRecord(data?: IRecordFormat, tableData?: unknown): SbisRecord {
+        return new SbisRecord(data, this._isUnserialized());
+    }
 
     getKeyField(data: ITableFormat): string {
         // TODO: primary key field index can be defined in this._data.k. and can be -1
