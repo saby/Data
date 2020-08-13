@@ -198,7 +198,7 @@ export default class SerializableMixin<T = any> {
     }
 
     /**
-     * Check is the instance was unserialized.
+     * Check if the instance was unserialized.
      * @protected
      */
     protected _isUnserialized(): boolean {

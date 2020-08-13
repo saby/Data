@@ -19,10 +19,9 @@ import {
 } from '../format';
 import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
 import {Map} from '../../shim';
-import {object, logger} from '../../util';
+import {object, logger, protect} from '../../util';
 import {IHashMap} from '../../_declarations';
 import {FormatCarrier} from './SbisFormatController';
-import {protect} from '../../util';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
