@@ -718,12 +718,7 @@ describe('Types/_source/Memory', () => {
                 const query = new Query().select({a: 'aliasOfA'});
 
                 return source.query(query).then((ds) => {
-                    const rawData = ds.getAll().getRawData();
-                    assert.deepEqual({
-                        _type: rawData._type,
-                        d: rawData.d,
-                        s: rawData.s
-                    }, {
+                    assert.deepEqual(ds.getAll().getRawData(), {
                         _type: 'recordset',
                         d: [[1], [2]],
                         s: [{n: 'aliasOfA', t: 'Число целое'}]

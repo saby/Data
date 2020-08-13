@@ -198,6 +198,14 @@ export default class SerializableMixin<T = any> {
     }
 
     /**
+     * Check is the instance was unserialized.
+     * @protected
+     */
+    protected _isUnserialized(): boolean {
+        return Boolean(this[$unserialized]);
+    }
+
+    /**
      * Проверяет, что в прототипе указано имя модуля для RequireJS, иначе не будет работать десериализация
      * @param critical Отсутствие имени модуля критично
      * @param [skip] Сколько уровней пропустить при выводе стека вызова метода

@@ -60,9 +60,9 @@ export default class SbisTable extends mixin<
      * Конструктор
      * @param data Сырые данные
      */
-    constructor(data?: ITableFormat) {
+    constructor(data?: ITableFormat, injected?: boolean) {
         super(data);
-        SbisFormatMixin.call(this, data);
+        SbisFormatMixin.call(this, data, injected);
     }
 
     // region ITable

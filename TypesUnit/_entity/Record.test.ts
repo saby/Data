@@ -1557,10 +1557,7 @@ describe('Types/_entity/Record', () => {
                 record2.addField(field, undefined, record1.get(field.getName()));
             });
 
-            const rawData1 = record1.getRawData();
-            const rawData2 = record2.getRawData();
-            assert.deepEqual(rawData1.d, rawData2.d);
-            assert.deepEqual(rawData1.s, rawData2.s);
+            assert.deepEqual(record1.getRawData(), record2.getRawData());
         });
 
         it('should affect only given record if its format is linked to another one', () => {

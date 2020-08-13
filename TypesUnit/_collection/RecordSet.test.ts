@@ -1301,11 +1301,7 @@ describe('Types/_collection/RecordSet', () => {
             rs.assign([]);
 
             const resultData = rs.getRawData();
-            assert.deepEqual({
-                _type: resultData._type,
-                d: resultData.d,
-                s: resultData.s
-            }, {
+            assert.deepEqual(resultData, {
                 _type: 'recordset',
                 d: [],
                 s: format

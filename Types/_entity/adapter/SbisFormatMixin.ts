@@ -22,11 +22,12 @@ import {Map} from '../../shim';
 import {object, logger} from '../../util';
 import {IHashMap} from '../../_declarations';
 import {FormatCarrier} from './SbisFormatController';
+import {protect} from '../../util';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
-const entryInjected = '_ei';
+const entryInjected = protect('injected');
 
 export interface IFieldType {
     n: string;
@@ -114,10 +115,10 @@ function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFiel
     delete entry.f;
 }
 
-export function markEntryAsInjected(entry: GenericFormat, enumerable: boolean = false): void {
+export function markEntryAsInjected(entry: GenericFormat): void {
     if (!entry[entryInjected]) {
         Object.defineProperty(entry, entryInjected, {
-            enumerable,
+            enumerable: false,
             value: true
         });
     }
@@ -167,7 +168,7 @@ export function injectFormats(data: GenericFormat): void {
         }
     });
 
-    markEntryAsInjected(data, true);
+    markEntryAsInjected(data);
 }
 
 /**
@@ -213,7 +214,7 @@ export default abstract class SbisFormatMixin {
         return '';
     }
 
-    constructor(data: GenericFormat) {
+    constructor(data: GenericFormat, injected?: boolean) {
         if (data) {
             if (Object.getPrototypeOf(data) !== Object.prototype) {
                 throw new TypeError('Argument \'data\' should be an instance of plain Object');
@@ -224,7 +225,9 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            injectFormats(data);
+            if (!injected) {
+                injectFormats(data);
+            }
         }
 
         this._data = data;
