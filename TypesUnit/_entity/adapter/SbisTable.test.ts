@@ -611,8 +611,79 @@ describe('Types/_entity/adapter/SbisTable', () => {
     });
 
     describe('.getData()', () => {
+        const getNestedRecord = (values: unknown, format: IFieldFormat[], index?: Number, link?: boolean) => {
+            switch (link) {
+                case true:
+                    return [{
+                        d: values,
+                        f: index
+                    }];
+
+                case false:
+                    return [{
+                        d: values,
+                        f: index,
+                        s: format
+                    }];
+                case undefined:
+                    return [{
+                        d: values,
+                        s: format
+                    }];
+            }
+        };
+
         it('should return raw data', () => {
             assert.strictEqual(adapter.getData(), data);
+        });
+
+        it('should return return data with resolved format injections', () => {
+            const recordFormat = [{n: 'foo', t: 'Запись'}];
+            const nestedFormat = [{n: 'bar', t: 'Число целое'}];
+
+            const recordData = {
+                d: [
+                    getNestedRecord([1], nestedFormat, 0, false),
+                    getNestedRecord([2], nestedFormat, 0, true),
+                    getNestedRecord([3], nestedFormat, 0, true)
+                ],
+                s: recordFormat
+            };
+
+            const recordAdapter = new SbisTable(recordData);
+            const enhancedData = recordAdapter.getData();
+
+            assert.deepEqual(enhancedData, {
+                d: [
+                    getNestedRecord([1], nestedFormat),
+                    getNestedRecord([2], nestedFormat),
+                    getNestedRecord([3], nestedFormat)
+                ],
+                s: recordFormat
+            });
+        });
+
+        context('on optimized serialization method call', () => {
+            it('should return return original data by default', () => {
+                const recordFormat = [{n: 'foo', t: 'Запись'}];
+                const nestedFormat = [{n: 'bar', t: 'Число целое'}];
+
+                const recordData = {
+                    f: 0,
+                    s: recordFormat,
+                    d: [
+                        getNestedRecord([1], nestedFormat, 1, false),
+                        getNestedRecord([2], nestedFormat, 1, true),
+                        getNestedRecord([3], nestedFormat, 1, true)
+                    ]
+                };
+                const dataClone = JSON.parse(JSON.stringify(recordData));
+
+                const recordAdapter = new SbisTable(recordData);
+                const enhancedData = recordAdapter.getData();
+
+                assert.deepEqual((enhancedData as any).toJSON(), dataClone);
+            });
         });
     });
 

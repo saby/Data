@@ -27,6 +27,11 @@ type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
 const entryInjected = protect('injected');
+const formatInjected = protect('formatInjected');
+
+interface ISerializable {
+    toJSON(): unknown;
+}
 
 export interface IFieldType {
     n: string;
@@ -100,18 +105,42 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
 }
 
 function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
+    // Check is 6 protocol supported
+    const formatIndex = entry.f;
+    if (formatIndex === undefined) {
+        return;
+    }
+
+    // Skip if injection has done
+    if (entry[formatInjected]) {
+        return;
+    }
+
     if (entry.s) {
-        store.set(entry.f, entry.s.slice());
+        // Set reference of format index to format definition
+        store.set(formatIndex, entry.s.slice());
     } else {
+        // Set format definition by index
         Object.defineProperty(entry, 's', {
             configurable: true,
             enumerable: true,
-            value: store.get(entry.f).slice(),
+            value: store.get(formatIndex).slice(),
             writable: true
         });
     }
 
+    // Make format index not enumerable
     delete entry.f;
+    Object.defineProperty(entry, 'f', {
+        configurable: true,
+        value: formatIndex
+    });
+
+    // Mark entry as injected
+    Object.defineProperty(entry, formatInjected {
+        configurable: true,
+        value: true
+    });
 }
 
 export function markEntryAsInjected(entry: GenericFormat): void {
@@ -151,6 +180,61 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
 }
 
 /**
+ * Returns format hash
+ * @param format Format to handle
+ */
+function getFormatHash(format: IFieldFormat[]): string {
+    return format.map(
+        (field) => field.n + ':' + (field.t ? (field.t as IFieldType).n || field.t : 'Unknown')
+    ).join(',');
+}
+
+/**
+ * Restores links in repeatable formats
+ * @param data Raw data with formats
+ */
+function restoreFormatLinks(data: object): object {
+    const dataClone = object.clonePlain(data);
+    const formatStorage = new Map<string, number>();
+
+    eachFormatEntry(dataClone, (entry) => {
+        const format = entry.s;
+        if (format !== undefined) {
+            // TODO: accelerate this by using object comparsion by link
+            const formatKey = getFormatHash(format);
+            if (formatStorage.has(formatKey)) {
+                const formatNumber = formatStorage.get(formatKey);
+                delete entry.s;
+                entry.f = formatNumber;
+            } else {
+                const formatNumber = formatStorage.size;
+                formatStorage.set(formatKey, formatNumber);
+                entry.f = formatNumber;
+            }
+        }
+    });
+
+    return dataClone;
+}
+
+/**
+ * Brings ability to restore links in repeatable formats
+ * @param data Raw data with formats
+ */
+export function makeDataSerializable(data: object): void {
+    if (!data || (data as ISerializable).toJSON) {
+        return;
+    }
+
+    Object.defineProperty(data, 'toJSON', {
+        enumerable: false,
+        value: () => {
+            return restoreFormatLinks(data);
+        }
+    });
+}
+
+/**
  * Injects format controller deep within data scope
  */
 export function injectFormats(data: GenericFormat): void {
@@ -166,6 +250,8 @@ export function injectFormats(data: GenericFormat): void {
             markEntryAsInjected(entry);
         }
     });
+
+    makeDataSerializable(data);
 }
 
 /**
@@ -357,7 +443,7 @@ export default abstract class SbisFormatMixin {
             if (data.s) {
                 data.s = this._data.s;
             }
-            if (data.f !== undefined) {
+            if (data.f !== undefined && this._data.f !== undefined) {
                 data.f = this._data.f;
             }
             // Keep sharing fields format
