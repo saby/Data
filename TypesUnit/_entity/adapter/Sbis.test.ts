@@ -206,4 +206,53 @@ describe('Types/_entity/adapter/Sbis', () => {
             );
         });
     });
+
+    describe('::fromJSON()', () => {
+        it('should return instance which could produce valid record adapter for normalized data', () => {
+            const adapter = SbisAdapter.fromJSON({
+                $serialized$: 'inst',
+                module: 'Sbis',
+                id: 1,
+                state: {
+                    $options: {}
+                }
+            });
+
+            const getNestedFormat = () => [
+                {t: 'Строка', n: 'sub'}
+            ];
+
+            const getNestedRecord = (link: boolean = false) => {
+                if (link) {
+                    return {d: [
+                        'str'
+                    ], f: 0};
+                }
+
+                return {d: [
+                    'str'
+                ], s: getNestedFormat(), f: 0};
+            };
+
+            const recordData = {d: [
+                getNestedRecord(),
+                getNestedRecord(true)
+            ], s: [
+                {t: 'Запись', n: 'foo'},
+                {t: 'Запись', n: 'bar'}
+            ]};
+
+            const recordAdapter = adapter.forRecord(recordData);
+
+            assert.deepEqual(
+                recordAdapter.get('foo').s,
+                getNestedFormat()
+            );
+
+            assert.deepEqual(
+                recordAdapter.get('bar').s,
+                getNestedFormat()
+            );
+        });
+    });
 });
