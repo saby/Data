@@ -26,7 +26,11 @@ import {FormatCarrier} from './SbisFormatController';
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
-const entryInjected = protect('injected');
+const entryDenormalized = protect('denormalized');
+
+export interface ISerializable {
+    toJSON(): unknown;
+}
 
 export interface IFieldType {
     n: string;
@@ -99,28 +103,14 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return result;
 }
 
-function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
-    if (entry.s) {
-        store.set(entry.f, entry.s.slice());
-    } else {
-        Object.defineProperty(entry, 's', {
-            configurable: true,
-            enumerable: true,
-            value: store.get(entry.f).slice(),
-            writable: true
-        });
-    }
-
-    delete entry.f;
-}
-
-export function markEntryAsInjected(entry: GenericFormat): void {
-    if (!entry[entryInjected]) {
-        Object.defineProperty(entry, entryInjected, {
-            enumerable: false,
-            value: true
-        });
-    }
+/**
+ * Returns format hash
+ * @param format Format to handle
+ */
+function getFormatHash(format: IFieldFormat[]): string {
+    return format.map(
+        (field) => field.n + ':' + (field.t ? (field.t as IFieldType).n || field.t : 'Unknown')
+    ).join(',');
 }
 
 /**
@@ -150,21 +140,104 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
     }
 }
 
+function denormalizeEntry(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
+    // Check if entry is normalized
+    const formatIndex = entry.f;
+
+    if (entry.s) {
+        // Set reference from format index to format definition
+        store.set(formatIndex, entry.s.slice());
+    } else {
+        // Set format definition by index
+        Object.defineProperty(entry, 's', {
+            configurable: true,
+            enumerable: true,
+            value: store.get(formatIndex).slice(),
+            writable: true
+        });
+    }
+
+    // Keep the format index but make it not enumerable
+    delete entry.f;
+    Object.defineProperty(entry, 'f', {
+        configurable: true,
+        value: formatIndex
+    });
+}
+
+export function markEntryAsDenormalized(entry: GenericFormat): void {
+    Object.defineProperty(entry, entryDenormalized, {
+        enumerable: false,
+        value: true
+    });
+}
+
 /**
  * Injects format controller deep within data scope
  */
-export function injectFormats(data: GenericFormat): void {
-    if (data[entryInjected]) {
+export function denormalizeFormats(data: GenericFormat): void {
+    if (data[entryDenormalized]) {
         return;
     }
 
     const store = new Map<number, IFieldFormat[]>();
 
     eachFormatEntry(data, (entry) => {
-        if (entry.f !== undefined) {
-            setEntryCalculatedFormat(entry, store);
-            markEntryAsInjected(entry);
+        // Check if entry is normalized
+        if (entry.f === undefined) {
+            return;
         }
+
+        // Check if injection has done
+        if (entry[entryDenormalized]) {
+            return;
+        }
+
+        denormalizeEntry(entry, store);
+        markEntryAsDenormalized(entry);
+    });
+}
+
+/**
+ * Makes data clone with normalized formats
+ * @param data Raw data with formats
+ */
+export function normalizeFormats(data: object): object {
+    const dataClone = object.clonePlain(data);
+    const formatStorage = new Map<string, number>();
+
+    eachFormatEntry(dataClone, (entry) => {
+        const format = entry.s;
+        if (format !== undefined) {
+            // TODO: accelerate this by using object comparsion by link
+            const formatKey = getFormatHash(format);
+            if (formatStorage.has(formatKey)) {
+                const formatNumber = formatStorage.get(formatKey);
+                delete entry.s;
+                entry.f = formatNumber;
+            } else {
+                const formatNumber = formatStorage.size;
+                formatStorage.set(formatKey, formatNumber);
+                entry.f = formatNumber;
+            }
+        }
+    });
+
+    return dataClone;
+}
+
+/**
+ * Add additional behaviour during object serialization
+ * @param data Raw data with formats
+ */
+export function makeSerializable(data: object): void {
+    if (!data || (data as ISerializable).toJSON) {
+        return;
+    }
+
+    Object.defineProperty(data, 'toJSON', {
+        enumerable: false,
+        value: () => normalizeFormats(data)
     });
 }
 
@@ -222,7 +295,8 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            injectFormats(data);
+            denormalizeFormats(data);
+            makeSerializable(data);
         }
 
         this._data = data;
@@ -355,7 +429,7 @@ export default abstract class SbisFormatMixin {
             if (data.s) {
                 data.s = this._data.s;
             }
-            if (data.f !== undefined) {
+            if (data.f !== undefined && this._data.f !== undefined) {
                 data.f = this._data.f;
             }
             // Keep sharing fields format
