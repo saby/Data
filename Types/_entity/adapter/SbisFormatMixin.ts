@@ -222,9 +222,7 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            if (!injected) {
-                injectFormats(data);
-            }
+            injectFormats(data);
         }
 
         this._data = data;
