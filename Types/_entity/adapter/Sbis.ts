@@ -1,5 +1,5 @@
 import Abstract from './Abstract';
-import {ITableFormat, IRecordFormat, injectFormats} from './SbisFormatMixin';
+import {ITableFormat, IRecordFormat, denormalizeFormats} from './SbisFormatMixin';
 import SbisTable from './SbisTable';
 import SbisRecord from './SbisRecord';
 import FIELD_TYPE from './SbisFieldType';
@@ -30,7 +30,8 @@ export default class Sbis extends Abstract {
             return undefined;
         }
 
-        injectFormats(data);
+        denormalizeFormats(data);
+
         const s = data.s;
         if (!s) {
             return undefined;
