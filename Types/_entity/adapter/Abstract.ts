@@ -2,7 +2,7 @@ import DestroyableMixin from '../DestroyableMixin';
 import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
-import SerializableMixin from '../SerializableMixin';
+import SerializableMixin, { ISignature } from '../SerializableMixin';
 import {mixin} from '../../util';
 
 /**
@@ -76,6 +76,14 @@ export default abstract class Abstract extends mixin<
     getKeyField(data: any): string {
         throw new Error('Method must be implemented');
     }
+
+    // region SerializableMixin
+
+    static fromJSON<T = Abstract, K = any>(data: ISignature<K>): T {
+        return SerializableMixin.fromJSON.call(this, data);
+    }
+
+    // endregion
 }
 
 Object.assign(Abstract.prototype, {
