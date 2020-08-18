@@ -4,7 +4,7 @@ import SbisFieldType from 'Types/_entity/adapter/SbisFieldType';
 import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import IntegerField from 'Types/_entity/format/IntegerField';
 import StringField from 'Types/_entity/format/StringField';
-import {IFieldFormat, ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
+import {IFieldFormat, ITableFormat, ISerializable} from 'Types/_entity/adapter/SbisFormatMixin';
 
 describe('Types/_entity/adapter/SbisTable', () => {
     const getFormat = (): IFieldFormat[] => [
@@ -613,6 +613,16 @@ describe('Types/_entity/adapter/SbisTable', () => {
     describe('.getData()', () => {
         it('should return raw data', () => {
             assert.strictEqual(adapter.getData(), data);
+        });
+
+        it('should return return data with custom toJSON() method', () => {
+            const recordAdapter = new SbisTable({
+                d: [],
+                s: []
+            });
+            const enhancedData = recordAdapter.getData() as unknown as ISerializable;
+
+            assert.typeOf(enhancedData.toJSON, 'function');
         });
     });
 
