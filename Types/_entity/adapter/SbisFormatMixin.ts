@@ -26,10 +26,9 @@ import {FormatCarrier} from './SbisFormatController';
 type ComplexTypeMarker = 'record' | 'recordset';
 type GenericFormat = IRecordFormat | ITableFormat;
 
-const entryInjected = protect('injected');
-const formatInjected = protect('formatInjected');
+const entryDenormalized = protect('denormalized');
 
-interface ISerializable {
+export interface ISerializable {
     toJSON(): unknown;
 }
 
@@ -104,52 +103,14 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
     return result;
 }
 
-function setEntryCalculatedFormat(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
-    // Check is 6 protocol supported
-    const formatIndex = entry.f;
-    if (formatIndex === undefined) {
-        return;
-    }
-
-    // Skip if injection has done
-    if (entry[formatInjected]) {
-        return;
-    }
-
-    if (entry.s) {
-        // Set reference of format index to format definition
-        store.set(formatIndex, entry.s.slice());
-    } else {
-        // Set format definition by index
-        Object.defineProperty(entry, 's', {
-            configurable: true,
-            enumerable: true,
-            value: store.get(formatIndex).slice(),
-            writable: true
-        });
-    }
-
-    // Make format index not enumerable
-    delete entry.f;
-    Object.defineProperty(entry, 'f', {
-        configurable: true,
-        value: formatIndex
-    });
-
-    // Mark entry as injected
-    Object.defineProperty(entry, formatInjected {
-        configurable: true,
-        value: true
-    });
-}
-
-export function markEntryAsInjected(entry: GenericFormat): void {
-    if (!entry[entryInjected]) {
-        Object.defineProperty(entry, entryInjected, {
-            enumerable: false,
-            value: true
-        });
-    }
+/**
+ * Returns format hash
+ * @param format Format to handle
+ */
+function getFormatHash(format: IFieldFormat[]): string {
+    return format.map(
+        (field) => field.n + ':' + (field.t ? (field.t as IFieldType).n || field.t : 'Unknown')
+    ).join(',');
 }
 
 /**
@@ -179,21 +140,69 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
     }
 }
 
-/**
- * Returns format hash
- * @param format Format to handle
- */
-function getFormatHash(format: IFieldFormat[]): string {
-    return format.map(
-        (field) => field.n + ':' + (field.t ? (field.t as IFieldType).n || field.t : 'Unknown')
-    ).join(',');
+function denormalizeEntry(entry: GenericFormat, store: Map<number, IFieldFormat[]>): void {
+    // Check if entry is normalized
+    const formatIndex = entry.f;
+
+    if (entry.s) {
+        // Set reference from format index to format definition
+        store.set(formatIndex, entry.s.slice());
+    } else {
+        // Set format definition by index
+        Object.defineProperty(entry, 's', {
+            configurable: true,
+            enumerable: true,
+            value: store.get(formatIndex).slice(),
+            writable: true
+        });
+    }
+
+    // Keep the format index but make it not enumerable
+    delete entry.f;
+    Object.defineProperty(entry, 'f', {
+        configurable: true,
+        value: formatIndex
+    });
+}
+
+export function markEntryAsDenormalized(entry: GenericFormat): void {
+    Object.defineProperty(entry, entryDenormalized, {
+        enumerable: false,
+        value: true
+    });
 }
 
 /**
- * Restores links in repeatable formats
+ * Injects format controller deep within data scope
+ */
+export function denormalizeFormats(data: GenericFormat): void {
+    if (data[entryDenormalized]) {
+        return;
+    }
+
+    const store = new Map<number, IFieldFormat[]>();
+
+    eachFormatEntry(data, (entry) => {
+        // Check if entry is normalized
+        if (entry.f === undefined) {
+            return;
+        }
+
+        // Check if injection has done
+        if (entry[entryDenormalized]) {
+            return;
+        }
+
+        denormalizeEntry(entry, store);
+        markEntryAsDenormalized(entry);
+    });
+}
+
+/**
+ * Makes data clone with normalized formats
  * @param data Raw data with formats
  */
-function restoreFormatLinks(data: object): object {
+export function normalizeFormats(data: object): object {
     const dataClone = object.clonePlain(data);
     const formatStorage = new Map<string, number>();
 
@@ -218,40 +227,18 @@ function restoreFormatLinks(data: object): object {
 }
 
 /**
- * Brings ability to restore links in repeatable formats
+ * Add additional behaviour during object serialization
  * @param data Raw data with formats
  */
-export function makeDataSerializable(data: object): void {
+export function makeSerializable(data: object): void {
     if (!data || (data as ISerializable).toJSON) {
         return;
     }
 
     Object.defineProperty(data, 'toJSON', {
         enumerable: false,
-        value: () => {
-            return restoreFormatLinks(data);
-        }
+        value: () => normalizeFormats(data)
     });
-}
-
-/**
- * Injects format controller deep within data scope
- */
-export function injectFormats(data: GenericFormat): void {
-    if (data[entryInjected]) {
-        return;
-    }
-
-    const store = new Map<number, IFieldFormat[]>();
-
-    eachFormatEntry(data, (entry) => {
-        if (entry.f !== undefined) {
-            setEntryCalculatedFormat(entry, store);
-            markEntryAsInjected(entry);
-        }
-    });
-
-    makeDataSerializable(data);
 }
 
 /**
@@ -308,7 +295,8 @@ export default abstract class SbisFormatMixin {
                 );
             }
 
-            injectFormats(data);
+            denormalizeFormats(data);
+            makeSerializable(data);
         }
 
         this._data = data;
