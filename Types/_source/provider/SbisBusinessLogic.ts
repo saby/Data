@@ -1,7 +1,6 @@
 import IAbstract from './IAbstract';
 import {OptionsToPropertyMixin} from '../../entity';
 import {logger as defaultLogger, ILogger} from '../../util';
-import {RPCJSON} from 'Browser/Transport';
 import {constants} from 'Env/Env';
 import Deferred = require('Core/Deferred');
 import { ICacheParameters } from '../Remote';
@@ -30,11 +29,25 @@ export interface IRpcTransportOptions {
 
 export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRpcTransport;
 
+// Module name with default transport implementation
+const DEFAULT_TRANSPORT = 'Browser/Transport';
+
 // Default timeout to produce a call (in seconds)
 const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5000 : 0;
 
 function throwError(err: Error, logger: ILogger): void {
     logger.info('Types/_source/provider/SbisBusinessLogic', err.message);
+}
+
+/**
+ * Loads default transport implementation.
+ * @param overrided Overrided implementation
+ */
+function getDefaultTransport(overrided: IRpcTransportConstructor): Promise<IRpcTransportConstructor> {
+    if (overrided) {
+        return Promise.resolve(overrided);
+    }
+    return import(DEFAULT_TRANSPORT).then(({RPCJSON}) => RPCJSON);
 }
 
 /**
@@ -128,7 +141,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
     /**
      * @cfg {Function} Конструктор сетевого транспорта
      */
-    protected _$transport: IRpcTransportConstructor | any = RPCJSON;
+    protected _$transport: IRpcTransportConstructor;
 
     /**
      * Разделитель пространств имен
@@ -150,46 +163,48 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
     }
 
     call(name: string, args?: any[] | object, cache?: ICacheParameters): Promise<any> {
-        const Transport = this._$transport as IRpcTransportConstructor;
-        const endpoint = this.getEndpoint();
+        return getDefaultTransport(this._$transport).then((Transport) => {
+            const endpoint = this.getEndpoint();
 
-        let methodName = name + '';
-        const contractIncluded = methodName.indexOf(this._nameSpaceSeparator) > -1;
-        if (!contractIncluded && endpoint.contract) {
-            methodName = endpoint.contract + this._nameSpaceSeparator + methodName;
-        }
+            let methodName = name + '';
+            const contractIncluded = methodName.indexOf(this._nameSpaceSeparator) > -1;
+            if (!contractIncluded && endpoint.contract) {
+                methodName = endpoint.contract + this._nameSpaceSeparator + methodName;
+            }
 
-        const useTimeout = !!this._$callTimeout;
-        const transportOptions: IRpcTransportOptions = {
-            serviceUrl: endpoint.address
-        };
-        if (useTimeout) {
-            transportOptions.timeout = this._$callTimeout;
-        }
+            const useTimeout = !!this._$callTimeout;
+            const transportOptions: IRpcTransportOptions = {
+                serviceUrl: endpoint.address
+            };
+            if (useTimeout) {
+                transportOptions.timeout = this._$callTimeout;
+            }
 
-        let result = new Transport(transportOptions).callMethod(
-            methodName,
-            args || {},
-            undefined,
-            undefined,
-            cache
-        );
-
-        if (useTimeout) {
-            result = getTimedOutResponse(
-                result,
-                this._$callTimeout,
+            let result = new Transport(transportOptions).callMethod(
                 methodName,
-                endpoint.address,
-                this._$logger
+                args || {},
+                undefined,
+                undefined,
+                cache
             );
-        }
 
-        return result;
+            if (useTimeout) {
+                result = getTimedOutResponse(
+                    result,
+                    this._$callTimeout,
+                    methodName,
+                    endpoint.address,
+                    this._$logger
+                );
+            }
+
+            return result;
+        });
     }
 }
 
 Object.assign(SbisBusinessLogic.prototype, {
     '[Types/_source/provider/SbisBusinessLogic]': true,
+    _$transport: null,
     _nameSpaceSeparator: '.'
 });

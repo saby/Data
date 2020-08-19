@@ -96,31 +96,36 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
        });
 
        it('should call a method from given object', () => {
-          provider.call('bar');
-          assert.equal(TransportMock.lastMethod, 'foo.bar');
+          return provider.call('bar').then(() => {
+             assert.equal(TransportMock.lastMethod, 'foo.bar');
+          });
        });
 
        it('should transfer a valid arguments', () => {
-          provider.call('name', {bar: 'baz'});
-          assert.deepEqual(TransportMock.lastArgs, {bar: 'baz'});
+          return provider.call('name', {bar: 'baz'}).then(() => {
+             assert.deepEqual(TransportMock.lastArgs, {bar: 'baz'});
+          });
        });
 
        it('should transfer no arguments as empty object', () => {
-          provider.call('name');
-          assert.deepEqual(TransportMock.lastArgs, {});
+          return provider.call('name').then(() => {
+            assert.deepEqual(TransportMock.lastArgs, {});
+          });
        });
 
        it('should override default object name', () => {
-          provider.call('boo.bar');
-          assert.equal(TransportMock.lastMethod, 'boo.bar');
+          return provider.call('boo.bar').then(() => {
+            assert.equal(TransportMock.lastMethod, 'boo.bar');
+          });
        });
 
        it('should pass cache argument', () => {
           const cacheParams = {
-              maxAge: 123
+             maxAge: 123
           };
-          provider.call('name', {}, cacheParams);
-          assert.deepEqual(TransportMock.lastCache, cacheParams);
+          return provider.call('name', {}, cacheParams).then(() => {
+            assert.deepEqual(TransportMock.lastCache, cacheParams);
+        });
      });
 
        it('should pass given timeout to the transport implementation', () => {
@@ -129,8 +134,9 @@ describe('Types/_source/provider/SbisBusinessLogic', () => {
              callTimeout,
              transport: TransportMock
           });
-          bl.call('foo.bar');
-          assert.equal(TransportMock.lastOptions.timeout, callTimeout);
+          return bl.call('foo.bar').then(() => {
+            assert.equal(TransportMock.lastOptions.timeout, callTimeout);
+          });
        });
 
        it('should log an error on expired timeout', () => {
