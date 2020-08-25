@@ -16,7 +16,7 @@ interface IOptions {
 const defaultOtions: IOptions = {
     keepUndefined: true,
     processCloneable: true
-}
+};
 
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
@@ -83,6 +83,66 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
     }
 
     throw new ReferenceError(`Object doesn't have setter for property "${property}"`);
+}
+
+/**
+ * Извлекает значение по пути, ведущим вглубь объекта
+ * @param obj Объект
+ * @param path Путь внутри объекта
+ * @param onElementResolve Обработчик при извлечении очередного элемента
+ */
+export function extractValue<T>(
+    obj: unknown,
+    path: string[],
+    onElementResolve?: (name: string, scope: unknown, depth: number) => void
+): T {
+    let result: unknown = obj;
+
+    for (let i = 0; i < path.length; i++) {
+        if (result === undefined) {
+            return undefined;
+        }
+
+        const name = path[i];
+        if ((result as IObject).has && (result as IObject).get && (result as IObject).has(name)) {
+            result = (result as IObject).get(name);
+        } else {
+            /**
+             * if we want get "_options" field
+             * we maybe want all fields from current scope
+             * It is actual for stateless wml files
+             */
+            if (name !== '_options' || result[name]) {
+                if (onElementResolve) {
+                    onElementResolve(name, result, i);
+                }
+                result = result[name];
+            }
+       }
+    }
+
+    return result as T;
+}
+
+/**
+ * Вставляет значение по пути, ведущим вглубь объекта
+ * @param obj Объект
+ * @param path Путь внутри объекта
+ */
+export function implantValue<T>(obj: unknown, path: string[], value: T): boolean {
+    const lastPathPart = path.pop();
+    const lastObj = extractValue(obj, path);
+
+    if (lastObj) {
+        if ((lastObj as IObject).set) {
+            (lastObj as IObject).set(lastPathPart, value);
+        } else {
+            lastObj[lastPathPart] = value;
+        }
+        return true;
+    }
+
+    return false;
 }
 
 /**
