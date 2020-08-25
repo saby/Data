@@ -86,6 +86,58 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
 }
 
 /**
+ * Извлекает значение по пути, ведущим вглубь объекта
+ * @param obj Объект
+ * @param path Путь внутри объекта
+ */
+export function extractValue<T>(obj: unknown, path: string[]): T {
+    let result: unknown = obj;
+
+    for (let i = 0; i < path.length; i++) {
+        if (result === undefined) {
+            return undefined;
+        }
+
+        const name = path[i];
+        if ((result as IObject).has && (result as IObject).get && (result as IObject).has(name)) {
+            result = (result as IObject).get(name);
+        } else {
+            /**
+             * if we want get "_options" field
+             * we maybe want all fields from current scope
+             * It is actual for stateless wml files
+             */
+            if (name !== '_options' || result[name]) {
+                result = result[name];
+            }
+       }
+    }
+
+    return result as T;
+}
+
+/**
+ * Вставляет значение по пути, ведущим вглубь объекта
+ * @param obj Объект
+ * @param path Путь внутри объекта
+ */
+export function implantValue<T>(obj: unknown, path: string[], value: T): boolean {
+    const lastPathPart = path.pop();
+    const lastObj = extractValue(obj, path);
+
+    if (lastObj) {
+        if ((lastObj as IObject).set) {
+            (lastObj as IObject).set(lastPathPart, value);
+        } else {
+            lastObj[lastPathPart] = value;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Клонирует объект путем сериализации в строку и последующей десериализации.
  * @param original Объект для клонирования
  * @return Клон объекта

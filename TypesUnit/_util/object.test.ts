@@ -3,7 +3,9 @@ import {
     clone,
     clonePlain,
     getPropertyValue,
-    setPropertyValue
+    setPropertyValue,
+    extractValue,
+    implantValue
 } from 'Types/_util/object';
 
 describe('Types/_util/object', () => {
@@ -90,6 +92,128 @@ describe('Types/_util/object', () => {
 
             setPropertyValue(obj, 'foo', 'bar');
             assert.equal(obj._foo, 'bar');
+        });
+    });
+
+    describe('extractValue()', () => {
+        it('should return initial object for empty path', () => {
+            const obj = {};
+            assert.strictEqual(extractValue(obj, []), obj);
+        });
+
+        it('should return undefined for undefined', () => {
+            assert.isUndefined(extractValue('', ['foo']));
+        });
+
+        it('should return property value if propery exists in Record-like object', () => {
+            const obj = {
+                get(name: string): string {
+                    return `[${name}]`;
+                },
+                has(): boolean {
+                    return true;
+                }
+            };
+
+            assert.equal(extractValue(obj, ['foo']), '[foo]');
+        });
+
+        it('should return undefined if propery doesn\'t exist in Record-like object', () => {
+            const obj = {
+                get(name: string): string {
+                    return `[${name}]`;
+                },
+                has(): boolean {
+                    return false;
+                }
+            };
+
+            assert.isUndefined(extractValue(obj, ['foo']));
+        });
+
+        it('should return undefined for not exactly Record-like object', () => {
+            const obj = {
+                get(name: string): string {
+                    return `[${name}]`;
+                }
+            };
+
+            assert.isUndefined(extractValue(obj, ['foo']));
+        });
+
+        it('should return property value from object', () => {
+            const obj = {foo: 'bar'};
+            assert.equal(extractValue(obj, ['foo']), 'bar');
+        });
+
+        it('should return property value deep from object', () => {
+            const obj = {foo: {bar: 'baz'}};
+            assert.equal(extractValue(obj, ['foo', 'bar']), 'baz');
+        });
+
+        it('should return value of "_options" property if it is truthly', () => {
+            const options = {};
+            const obj = {_options: options};
+            assert.strictEqual(extractValue(obj, ['_options']), options);
+        });
+
+        it('should return owner of "_options" property if it is not truthly', () => {
+            const options = null;
+            const obj = {_options: options};
+            assert.strictEqual(extractValue(obj, ['_options']), obj);
+        });
+
+        it('should return undefiend for undefined object property', () => {
+            const obj = {};
+            assert.isUndefined(extractValue(obj, ['foo']));
+        });
+    });
+
+    describe('implantValue()', () => {
+        it('should return false for not an object', () => {
+            assert.isFalse(implantValue(null, [], 'foo'));
+        });
+
+        it('should set "undefined property" for empty path', () => {
+            const obj = {};
+            assert.isTrue(implantValue(obj, [], 'foo'));
+            assert.deepEqual(obj, {undefined: 'foo'});
+        });
+
+        it('should keep initial object for not exists path', () => {
+            const obj = {};
+            assert.isFalse(implantValue(obj, ['foo', 'bar'], 'baz'));
+            assert.deepEqual(obj, {});
+        });
+
+        it('should add not exists property for exists path', () => {
+            const obj = {};
+            assert.isTrue(implantValue(obj, ['foo'], 'bar'));
+            assert.deepEqual(obj, {foo: 'bar'});
+        });
+
+        it('should change exists property for exists path', () => {
+            const obj = {foo: 1};
+            assert.isTrue(implantValue(obj, ['foo'], 2));
+            assert.deepEqual(obj, {foo: 2});
+        });
+
+        it('should change exists property in deep', () => {
+            const obj = {foo: {bar: {baz: null}}};
+            assert.isTrue(implantValue(obj, ['foo', 'bar', 'baz'], 'wow!'));
+            assert.deepEqual(obj, {foo: {bar: {baz: 'wow!'}}});
+        });
+
+        it('should change exists property in Record-like object', () => {
+            let lastSet;
+            const obj = {
+                set(name: string, value: string): void {
+                    lastSet = {name, value};
+                }
+            };
+            assert.isTrue(implantValue(obj, ['foo'], 'bar'));
+
+            assert.deepEqual(lastSet, {name: 'foo', value: 'bar'});
         });
     });
 
