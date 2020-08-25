@@ -167,6 +167,20 @@ describe('Types/_util/object', () => {
             const obj = {};
             assert.isUndefined(extractValue(obj, ['foo']));
         });
+
+        it('should call onElementResolve for each found element in within path', () => {
+            const story = [];
+            const onElementHandler = (name: string, scope: object) => story.push({name, scope});
+
+            const obj = {foo: {bar: 'baz'}};
+            extractValue(obj, ['foo', 'bar'], onElementHandler);
+
+            assert.deepEqual(story, [{
+                name: 'foo', scope: obj
+            }, {
+                name: 'bar', scope: obj.foo
+            }]);
+        });
     });
 
     describe('implantValue()', () => {

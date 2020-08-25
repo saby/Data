@@ -89,8 +89,13 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
  * Извлекает значение по пути, ведущим вглубь объекта
  * @param obj Объект
  * @param path Путь внутри объекта
+ * @param onElementResolve Обработчик при извлечении очередного элемента
  */
-export function extractValue<T>(obj: unknown, path: string[]): T {
+export function extractValue<T>(
+    obj: unknown,
+    path: string[],
+    onElementResolve?: (name: string, scope: unknown) => void
+): T {
     let result: unknown = obj;
 
     for (let i = 0; i < path.length; i++) {
@@ -108,6 +113,9 @@ export function extractValue<T>(obj: unknown, path: string[]): T {
              * It is actual for stateless wml files
              */
             if (name !== '_options' || result[name]) {
+                if (onElementResolve) {
+                    onElementResolve(name, result);
+                }
                 result = result[name];
             }
        }
