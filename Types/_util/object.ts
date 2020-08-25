@@ -16,7 +16,7 @@ interface IOptions {
 const defaultOtions: IOptions = {
     keepUndefined: true,
     processCloneable: true
-}
+};
 
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
@@ -94,7 +94,7 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
 export function extractValue<T>(
     obj: unknown,
     path: string[],
-    onElementResolve?: (name: string, scope: unknown) => void
+    onElementResolve?: (name: string, scope: unknown, depth: number) => void
 ): T {
     let result: unknown = obj;
 
@@ -114,7 +114,7 @@ export function extractValue<T>(
              */
             if (name !== '_options' || result[name]) {
                 if (onElementResolve) {
-                    onElementResolve(name, result);
+                    onElementResolve(name, result, i);
                 }
                 result = result[name];
             }
