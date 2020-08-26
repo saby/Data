@@ -151,6 +151,11 @@ describe('Types/_util/object', () => {
             assert.equal(extractValue(obj, ['foo', 'bar']), 'baz');
         });
 
+        it('should deal with empty property values while going through', () => {
+            assert.isUndefined(extractValue({foo: undefined}, ['foo', 'bar']));
+            assert.isUndefined(extractValue({foo: null}, ['foo', 'bar']));
+        });
+
         it('should return value of "_options" property if it is truthly', () => {
             const options = {};
             const obj = {_options: options};

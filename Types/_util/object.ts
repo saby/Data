@@ -99,7 +99,7 @@ export function extractValue<T>(
     let result: unknown = obj;
 
     for (let i = 0; i < path.length; i++) {
-        if (result === undefined) {
+        if (!result) {
             return undefined;
         }
 
