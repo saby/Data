@@ -156,16 +156,16 @@ describe('Types/_util/object', () => {
             assert.isUndefined(extractValue({foo: null}, ['foo', 'bar']));
         });
 
-        it('should return value of "_options" property if it is truthly', () => {
+        it('should return value of "_someElseImpossibleValueInsteadOfOptions" property if it is truthly', () => {
             const options = {};
-            const obj = {_options: options};
-            assert.strictEqual(extractValue(obj, ['_options']), options);
+            const obj = {_someElseImpossibleValueInsteadOfOptions: options};
+            assert.strictEqual(extractValue(obj, ['_someElseImpossibleValueInsteadOfOptions']), options);
         });
 
-        it('should return owner of "_options" property if it is not truthly', () => {
+        it('should return owner of "_someElseImpossibleValueInsteadOfOptions" property if it is not truthly', () => {
             const options = null;
-            const obj = {_options: options};
-            assert.strictEqual(extractValue(obj, ['_options']), obj);
+            const obj = {_someElseImpossibleValueInsteadOfOptions: options};
+            assert.strictEqual(extractValue(obj, ['_someElseImpossibleValueInsteadOfOptions']), obj);
         });
 
         it('should return undefiend for undefined object property', () => {
