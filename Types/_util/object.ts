@@ -104,7 +104,7 @@ export function extractValue<T>(
         }
 
         const name = path[i];
-        if ((result as IObject).has && (result as IObject).get && (result as IObject).has(name)) {
+        if (result['[Types/_entity/IObject]'] && (result as IObject).has(name)) {
             result = (result as IObject).get(name);
         } else {
             /**

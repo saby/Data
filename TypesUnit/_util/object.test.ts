@@ -107,6 +107,7 @@ describe('Types/_util/object', () => {
 
         it('should return property value if propery exists in Record-like object', () => {
             const obj = {
+                '[Types/_entity/IObject]': true,
                 get(name: string): string {
                     return `[${name}]`;
                 },
@@ -120,6 +121,7 @@ describe('Types/_util/object', () => {
 
         it('should return undefined if propery doesn\'t exist in Record-like object', () => {
             const obj = {
+                '[Types/_entity/IObject]': true,
                 get(name: string): string {
                     return `[${name}]`;
                 },
@@ -226,6 +228,7 @@ describe('Types/_util/object', () => {
         it('should change exists property in Record-like object', () => {
             let lastSet;
             const obj = {
+                '[Types/_entity/IObject]': true,
                 set(name: string, value: string): void {
                     lastSet = {name, value};
                 }
