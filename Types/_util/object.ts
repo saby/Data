@@ -112,7 +112,7 @@ export function extractValue<T>(
              * we maybe want all fields from current scope
              * It is actual for stateless wml files
              */
-            if (name !== '_options' || result[name]) {
+            if (name !== '_someElseImpossibleValueInsteadOfOptions' || result[name]) {
                 if (onElementResolve) {
                     onElementResolve(name, result, i);
                 }
