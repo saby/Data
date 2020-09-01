@@ -406,6 +406,7 @@ export default abstract class SbisFormatMixin {
 
     protected _touchData(): void {
         this._data = this._normalizeData(this._data, this.type);
+        makeSerializable(this._data);
     }
 
     protected _normalizeData(data: any, dataType: string): GenericFormat {
