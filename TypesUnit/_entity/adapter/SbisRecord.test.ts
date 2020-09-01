@@ -13,6 +13,7 @@ import fieldsFactory from 'Types/_entity/format/fieldsFactory';
 import {IDateTimeMeta, IDictionaryMeta, IMoneyMeta, IArrayMeta} from 'Types/_entity/format/UniversalField';
 import FlagsField from 'Types/_entity/format/FlagsField';
 import RecordSet from 'Types/_collection/RecordSet';
+import { ISerializable } from 'Types/_entity/SerializableMixin';
 
 describe('Types/_entity/adapter/SbisRecord', () => {
     let data: IRecordFormat;
@@ -1264,6 +1265,17 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             }));
 
             assert.strictEqual(adapter.get(fieldName), def);
+        });
+
+        it('should initialize serializable data', () => {
+            const adapter = new SbisRecord(null);
+            adapter.addField(fieldsFactory({
+                type: 'string',
+                name: 'foo'
+            }));
+            const data = adapter.getData() as unknown as ISerializable;
+
+            assert.isFunction(data.toJSON);
         });
 
         it('should throw an error for already exists field', () => {
