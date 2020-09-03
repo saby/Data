@@ -47,4 +47,5 @@ describe('Types/_transformation/date', () => {
                 toEndOf(date, dateUnit.Year);
             });
         });
+    });
 });
