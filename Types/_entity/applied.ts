@@ -2,6 +2,7 @@
  * Библиотека прикладных типов.
  * @library Types/_entity/applied
  * @includes CancelablePromise Types/_entity/applied/CancelablePromise
+ * @includes PromiseCanceledError Types/_entity/applied/CancelablePromise#PromiseCanceledError
  * @includes Date Types/_entity/applied/Date
  * @includes DateTime Types/_entity/applied/DateTime
  * @includes Guid Types/_entity/applied/Guid
@@ -18,6 +19,7 @@
  * Applied types library.
  * @library Types/_entity/applied
  * @includes CancelablePromise Types/_entity/applied/CancelablePromise
+ * @includes PromiseCanceledError Types/_entity/applied/CancelablePromise#PromiseCanceledError
  * @includes Date Types/_entity/applied/Date
  * @includes DateTime Types/_entity/applied/DateTime
  * @includes Guid Types/_entity/applied/Guid
