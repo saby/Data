@@ -178,7 +178,7 @@ describe('Types/_entity/factory', () => {
                 assert.strictEqual(value.getTime(), 1443099268981);
             });
 
-            it('should translate withoutTimeZone flag from fromat to the DateTime instance', () => {
+            it('should translate withoutTimeZone flag from format instance to the DateTime instance', () => {
                 const datetime = '2015-09-24 15:54:28.981+03';
                 const format = new DateTimeField({withoutTimeZone: true});
                 const options = {format};
