@@ -1211,12 +1211,12 @@ class RecordSet<
             return this._metaData;
         }
 
-        const cast = (value, format) => {
+        const cast = (value: unknown, fieldFormat: format.Field | format.UniversalField): unknown => {
             return factory.cast(
                 value,
-                format,
+                this._getFieldType(fieldFormat),
                 {
-                    format,
+                    format: fieldFormat,
                     adapter: this._getAdapter(),
                     keyProperty: this.getKeyProperty()
                 }
@@ -1237,10 +1237,7 @@ class RecordSet<
                         const fieldIndex = metaFormat.getFieldIndex(fieldName);
                         if (fieldIndex > -1) {
                             fieldFormat = metaFormat.at(fieldIndex);
-                            fieldValue = cast(
-                                fieldValue,
-                                fieldFormat.getType()
-                            );
+                            fieldValue = cast(fieldValue, fieldFormat);
                         }
                     }
                     metaData[fieldName] = fieldValue;
@@ -1270,7 +1267,7 @@ class RecordSet<
 
                     metaData[fieldName] = cast(
                         (adapter as adapter.IMetaData).getMetaData(fieldName),
-                        fieldFormat ? fieldFormat.getType() : this._getFieldType(format)
+                        fieldFormat || format
                     );
                 });
             }
