@@ -3,6 +3,7 @@ import RecordSet from 'Types/_collection/RecordSet';
 import IBindCollection from 'Types/_collection/IObservable';
 import Record from 'Types/_entity/Record';
 import Model, {IProperty} from 'Types/_entity/Model';
+import {DateTime} from 'Types/_entity/applied';
 import {Track} from 'Types/_entity/functor';
 import {AdapterDescriptor} from 'Types/_entity/FormattableMixin';
 import fieldsFactory, {IDeclaration} from 'Types/_entity/format/fieldsFactory';
@@ -2548,6 +2549,23 @@ describe('Types/_collection/RecordSet', () => {
         });
 
         context('if adapter supports IMetaData interface', () => {
+            it('should return meta data with value from DateTime field', () => {
+                const rawData = {
+                    m: {
+                        d: ['2020-09-04 10:59:04.352440+03'],
+                        s: [{n: 'foo', t: 'Дата и время'}]
+                    }
+                };
+                const rs = new RecordSet({
+                    adapter: 'Types/entity:adapter.Sbis',
+                    rawData
+                });
+                const meta = rs.getMetaData();
+
+                assert.instanceOf(meta.foo, DateTime);
+                assert.strictEqual(meta.foo.getTime(), 1599206344352);
+            });
+
             it('should return meta data with total from Number', () => {
                 const rawData = {
                     n: 1
