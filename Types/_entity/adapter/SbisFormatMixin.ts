@@ -107,10 +107,14 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
  * Returns format hash
  * @param format Format to handle
  */
-function getFormatHash(format: IFieldFormat[]): string {
-    return format.map(
-        (field) => field.n + ':' + (field.t ? (field.t as IFieldType).n || field.t : 'Unknown')
-    ).join(',');
+export function getFormatHash(format: IFieldFormat[]): string {
+    return format.map((field) => {
+        let fieldType = field.t;
+        if (fieldType && (fieldType as IFieldType).n) {
+            fieldType = (fieldType as IFieldType).n + ':' + (fieldType as IArrayFieldType).t;
+        }
+        return field.n + ':' + fieldType;
+    }).join(',');
 }
 
 /**
