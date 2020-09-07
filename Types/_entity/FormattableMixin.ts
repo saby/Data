@@ -642,7 +642,7 @@ export default abstract class FormattableMixin {
     }
 
     /**
-     * Возвращает флаг, который указывает на то, что формат был объявлен напрямую.
+     * Возвращает признак того, что формат был задан явно.
      */
 
     /*
@@ -650,6 +650,17 @@ export default abstract class FormattableMixin {
      */
     hasDeclaredFormat(): boolean {
         return !!this._$format;
+    }
+
+    /**
+     * Обнуляет явно заданный формат.
+     */
+
+    /*
+     * Rest format which was declared directly.
+     */
+    resetDeclaredFormat(): void {
+        this._$format = this._formatClone = null;
     }
 
     /**

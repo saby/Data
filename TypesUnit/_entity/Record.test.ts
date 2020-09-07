@@ -1264,6 +1264,26 @@ describe('Types/_entity/Record', () => {
         });
     });
 
+    describe('.hasDeclaredFormat()', () => {
+        it('should return false by default', () => {
+            record = new Record();
+            assert.isFalse(record.hasDeclaredFormat());
+        });
+
+        it('should return true if "format" option received', () => {
+            record = new Record({format: {foo: String}});
+            assert.isTrue(record.hasDeclaredFormat());
+        });
+    });
+
+    describe('.resetDeclaredFormat()', () => {
+        it('should reset format taken from "format" option', () => {
+            record = new Record({format: {foo: String}});
+            record.resetDeclaredFormat();
+            assert.isFalse(record.hasDeclaredFormat());
+        });
+    });
+
     describe('.getFormat()', () => {
         it('should build the empty format by default', () => {
             const record = new Record();
