@@ -3,7 +3,8 @@ import {
     denormalizeFormats,
     normalizeFormats,
     IFieldFormat,
-    GenericFormat
+    GenericFormat,
+    getFormatHash
 } from 'Types/_entity/adapter/SbisFormatMixin';
 
 describe('Types/_entity/adapter/SbisFormatMixin', () => {
@@ -29,6 +30,18 @@ describe('Types/_entity/adapter/SbisFormatMixin', () => {
                 }];
         }
     };
+
+    describe('getFormatHash()', () => {
+        it('return different hashes for different array fields', () => {
+            const formatA = [{n: 'foo', t: {n: 'Массив', t: 'Число целое'}}];
+            const formatB = [{n: 'foo', t: {n: 'Массив', t: 'Строка'}}];
+
+            assert.notEqual(
+                getFormatHash(formatA),
+                getFormatHash(formatB)
+            );
+        });
+    });
 
     describe('normalizeFormats()', () => {
         it('should return return normalized data for repeatable format', () => {
