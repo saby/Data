@@ -41,6 +41,16 @@ describe('Types/_entity/adapter/SbisFormatMixin', () => {
                 getFormatHash(formatB)
             );
         });
+
+        it('return different hashes for different flags fields', () => {
+            const formatA = [{n: 'foo', t: {n: 'Флаги', s: {0: 'bar'}}}];
+            const formatB = [{n: 'foo', t: {n: 'Флаги', s: {1: 'bar'}}}];
+
+            assert.notEqual(
+                getFormatHash(formatA),
+                getFormatHash(formatB)
+            );
+        });
     });
 
     describe('normalizeFormats()', () => {

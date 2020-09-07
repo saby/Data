@@ -110,10 +110,16 @@ function getFieldInnerTypeNameByOuter(outerName: string): string {
 export function getFormatHash(format: IFieldFormat[]): string {
     return format.map((field) => {
         let fieldType = field.t;
+        let fieldDetails = '';
         if (fieldType && (fieldType as IFieldType).n) {
-            fieldType = (fieldType as IFieldType).n + ':' + (fieldType as IArrayFieldType).t;
+            if ((fieldType as IArrayFieldType).t) {
+                fieldDetails = (fieldType as IArrayFieldType).t;
+            } else if ((fieldType as IDictFieldType).s) {
+                fieldDetails = JSON.stringify((fieldType as IDictFieldType).s);
+            }
+            fieldType = (fieldType as IFieldType).n;
         }
-        return field.n + ':' + fieldType;
+        return field.n + ':' + fieldType + ':' + fieldDetails;
     }).join(',');
 }
 
