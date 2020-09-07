@@ -24,7 +24,7 @@ import {IHashMap} from '../../_declarations';
 import {FormatCarrier} from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
-type GenericFormat = IRecordFormat | ITableFormat;
+export type GenericFormat = IRecordFormat | ITableFormat;
 
 const entryDenormalized = protect('denormalized');
 

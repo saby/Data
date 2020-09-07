@@ -1,5 +1,10 @@
 import {assert} from 'chai';
-import {denormalizeFormats, normalizeFormats, IFieldFormat} from 'Types/_entity/adapter/SbisFormatMixin';
+import {
+    denormalizeFormats,
+    normalizeFormats,
+    IFieldFormat,
+    GenericFormat
+} from 'Types/_entity/adapter/SbisFormatMixin';
 
 describe('Types/_entity/adapter/SbisFormatMixin', () => {
     const getNestedRecord = (values: unknown, format: IFieldFormat[], index?: Number, link?: boolean) => {
@@ -90,6 +95,12 @@ describe('Types/_entity/adapter/SbisFormatMixin', () => {
                 getNestedRecord([2], nestedFormat),
                 getNestedRecord([3], nestedFormat)
             ]);
+        });
+
+        it('should deal with not an object', () => {
+            assert.doesNotThrow(() => {
+                denormalizeFormats('Foo' as unknown as GenericFormat);
+            });
         });
     });
 });
