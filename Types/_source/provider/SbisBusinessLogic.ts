@@ -18,7 +18,13 @@ export interface IOptions {
 }
 
 export interface IRpcTransport {
-    callMethod<T>(method: string, args: unknown, recent?: boolean, protocol?: number, cache?: ICacheParameters): Promise<T>;
+    callMethod<T>(
+        method: string,
+        args: unknown,
+        recent?: boolean,
+        protocol?: number,
+        cache?: ICacheParameters
+    ): Promise<T>;
     abort(): void;
 }
 
@@ -29,11 +35,14 @@ export interface IRpcTransportOptions {
 
 export type IRpcTransportConstructor = new(options: IRpcTransportOptions) => IRpcTransport;
 
-// Module name with default transport implementation
-const DEFAULT_TRANSPORT = 'Browser/Transport';
-
 // Default timeout to produce a call (in seconds)
 const DEFAULT_CALL_TIMEOUT: number = constants.isServerSide ? 5000 : 0;
+
+// Module name with default transport constructor
+const DEFAULT_TRANSPORT_MODULE = 'Browser/Transport';
+
+// Default transport constructor
+let defaultTransportConstructor: IRpcTransportConstructor;
 
 function throwError(err: Error, logger: ILogger): void {
     logger.info('Types/_source/provider/SbisBusinessLogic', err.message);
@@ -43,11 +52,19 @@ function throwError(err: Error, logger: ILogger): void {
  * Loads default transport implementation.
  * @param overrided Overrided implementation
  */
-function getDefaultTransport(overrided: IRpcTransportConstructor): Promise<IRpcTransportConstructor> {
+function getDefaultTransport(
+    overrided: IRpcTransportConstructor
+): IRpcTransportConstructor | Promise<IRpcTransportConstructor> {
     if (overrided) {
-        return Promise.resolve(overrided);
+        return overrided;
     }
-    return import(DEFAULT_TRANSPORT).then(({RPCJSON}) => RPCJSON);
+    if (defaultTransportConstructor) {
+        return defaultTransportConstructor;
+    }
+    return import(DEFAULT_TRANSPORT_MODULE).then(({RPCJSON}) => {
+        defaultTransportConstructor = RPCJSON;
+        return RPCJSON;
+    });
 }
 
 /**
@@ -162,8 +179,8 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
         return this._$endpoint;
     }
 
-    call(name: string, args?: any[] | object, cache?: ICacheParameters): Promise<any> {
-        return getDefaultTransport(this._$transport).then((Transport) => {
+    call<T>(name: string, args?: unknown[] | object, cache?: ICacheParameters): Promise<T> {
+        const invoke = <TInvokeResult>(Transport: IRpcTransportConstructor): Promise<TInvokeResult> => {
             const endpoint = this.getEndpoint();
 
             let methodName = name + '';
@@ -180,7 +197,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
                 transportOptions.timeout = this._$callTimeout;
             }
 
-            let result = new Transport(transportOptions).callMethod(
+            let result = new Transport(transportOptions).callMethod<TInvokeResult>(
                 methodName,
                 args || {},
                 undefined,
@@ -199,7 +216,14 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
             }
 
             return result;
-        });
+        };
+
+        const transport = getDefaultTransport(this._$transport);
+        if (transport instanceof Promise) {
+            return transport.then<T>(invoke);
+        }
+
+        return invoke<T>(transport);
     }
 }
 
