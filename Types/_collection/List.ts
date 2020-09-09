@@ -121,7 +121,7 @@ export default class List<T> extends mixin<
         }
     }
 
-    destroy(): void {
+    destroy(...args: unknown[]): void {
         this._$items = null;
         this._indexer = null;
 

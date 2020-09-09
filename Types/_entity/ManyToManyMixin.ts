@@ -17,7 +17,8 @@ export default abstract class ManyToManyMixin {
 
     // region Public methods
 
-    destroy(): void {
+    // This method calls implicitly when mixing in a row with DestroyableMixin
+    destroy(...args: unknown[]): void {
         const mediator = this._getMediator();
         const slaves = [];
 
