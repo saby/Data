@@ -145,9 +145,10 @@ function isWithoutTimeZone(format: DateTimeField | UniversalField): boolean {
     if (!format) {
         return false;
     }
-    return format instanceof DateTimeField
+    return Boolean(format instanceof DateTimeField
         ? format.isWithoutTimeZone()
-        : format.meta && (format.meta as IUniversalFieldDateTimeMeta).withoutTimeZone;
+        : format.meta && (format.meta as IUniversalFieldDateTimeMeta).withoutTimeZone
+    );
 }
 
 /**
