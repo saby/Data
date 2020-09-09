@@ -1,6 +1,12 @@
 import {assert} from 'chai';
 import CancelablePromise, {PromiseCanceledError} from 'Types/_entity/applied/CancelablePromise';
 
+class TransparentCancelablePromise<T> extends CancelablePromise<T> {
+    get chained(): Promise<T | void> {
+        return this._chained;
+    }
+}
+
 describe('Types/_entity/applied/CancelablePromise', () => {
     describe('promise', () => {
         it('should return instance of Promise', () => {
@@ -25,6 +31,12 @@ describe('Types/_entity/applied/CancelablePromise', () => {
             }).catch((err) => {
                 assert.equal(err, 'fail');
             });
+        });
+
+        it('should catch a rejection in original chain', () => {
+            const origin = new Promise((resolve, reject) => reject(new Error('fail')));
+            const instance = new TransparentCancelablePromise(origin);
+            return instance.chained;
         });
     });
 
