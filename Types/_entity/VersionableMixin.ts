@@ -18,13 +18,29 @@ export interface IOptions {
  */
 export default abstract class VersionableMixin implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': boolean;
+
+    // Номер версии объекта
     protected _version: number;
+
+    // Номер зафиксированной версии
+    protected _lockedVersion: number;
+
+    // Возвращает признак, что версия объекта зафиксирована (не будет меняться до момента снятия фиксации)
+    get versionLocked(): boolean {
+        return this._lockedVersion !== undefined;
+    }
 
     /**
      * @cfg {Function} Обработчик изменения версии
      * @name Types/_entity/VersionableMixin#versionCallback
      */
     protected _$versionCallback: VersionCallback;
+
+    // region ManyToManyMixin
+
+    protected _getMediator: () => ManyToMany;
+
+    // endregion
 
     // region IVersionable
 
@@ -34,7 +50,31 @@ export default abstract class VersionableMixin implements IVersionable {
         return this._version;
     }
 
+    // endregion
+
+    // Фиксирует версию объекта
+    lockVersion(): void {
+        if (this._lockedVersion !== undefined) {
+            throw new Error('Can\'t lock version because it\'s already locked');
+        }
+        this._lockedVersion = this._version;
+    }
+
+    // Снимает фиксацию версии объекта
+    unlockVersion(): void {
+        if (this._lockedVersion === undefined) {
+            throw new Error('Can\'t unlock version because it\'s not locked yet');
+        }
+        this._version = this._lockedVersion;
+        this._lockedVersion = undefined;
+    }
+
     protected _nextVersion(): void {
+        if (this._lockedVersion !== undefined) {
+            this._lockedVersion++;
+            return;
+        }
+
         this._version++;
         if (this._$versionCallback) {
             this._$versionCallback(this._version);
@@ -50,18 +90,13 @@ export default abstract class VersionableMixin implements IVersionable {
     }
 
     // endregion
-
-    // region ManyToManyMixin
-
-    protected _getMediator: () => ManyToMany;
-
-    // endregion
 }
 
 Object.assign(VersionableMixin.prototype, {
     '[Types/_entity/VersionableMixin]': true,
     '[Types/_entity/IVersionable]': true,
     _version: 0,
+    _lockedVersion: undefined,
     _$versionCallback: null
 });
 
