@@ -33,7 +33,7 @@ export default abstract class DestroyableMixin {
      * Наследники класса могут добавлять свою логику в смысл уничтожения экземпляра, например {@link Types/_entity/ObservableMixin} при вызове destroy() отписывает все обработчики событий уничтожаемого экземпляра.
      * Также метод может использоваться для помощи сборщику мусора — при уничтожении можно занулять все ссылки на объекты в 'this', что уменьшает число связей с объектом в куче памяти.
      */
-    destroy(): void {
+    destroy(...args: unknown[]): void {
         this[$destroyed] = true;
 
         // tslint:disable-next-line:forin

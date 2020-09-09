@@ -48,7 +48,8 @@ export default abstract class ObservableMixin {
         }
     }
 
-    destroy(): void {
+    // This method calls implicitly when mixing in a row with DestroyableMixin
+    destroy(...args: unknown[]): void {
         if (this._eventBusChannel) {
             this._eventBusChannel.unsubscribeAll();
             this._eventBusChannel.destroy();

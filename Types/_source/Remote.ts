@@ -279,7 +279,7 @@ export default abstract class Remote extends mixin<
     readonly '[Types/_source/ICrud]': boolean = true;
 
     create(meta?: object): Promise<Model> {
-        return this._callProvider(
+        return this._callProvider<Model>(
             this._$binding.create,
             this._$passing.create.call(this, meta)
         ).addCallback(
@@ -290,7 +290,7 @@ export default abstract class Remote extends mixin<
     }
 
     read(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider(
+        return this._callProvider<Model>(
             this._$binding.read,
             this._$passing.read.call(this, key, meta)
         ).addCallback(
@@ -301,7 +301,7 @@ export default abstract class Remote extends mixin<
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
-        return this._callProvider(
+        return this._callProvider<void>(
             this._$binding.update,
             this._$passing.update.call(this, data, meta)
         ).addCallback(
@@ -309,16 +309,15 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    // @ts-ignore
     destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
-        return this._callProvider(
+        return this._callProvider<void>(
             this._$binding.destroy,
             this._$passing.destroy.call(this, keys, meta)
         );
     }
 
     query(query?: Query): Promise<DataSet> {
-        return this._callProvider(
+        return this._callProvider<DataSet>(
             this._$binding.query,
             this._$passing.query.call(this, query)
         ).addCallback(
@@ -342,7 +341,7 @@ export default abstract class Remote extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider(
+        return this._callProvider<Model>(
             this._$binding.copy,
             this._$passing.copy.call(this, key, meta)
         ).addCallback(
@@ -384,10 +383,6 @@ export default abstract class Remote extends mixin<
         return super.toJSON();
     }
 
-    static fromJSON<T = Remote, K = IOptions>(data: ISerializableSignature<K>): T {
-        return Base.fromJSON.call(this, data);
-    }
-
     // endregion
 
     // region Protected methods
@@ -417,7 +412,10 @@ export default abstract class Remote extends mixin<
      * @return Асинхронный результат операции
      * @protected
      */
-    protected _callProvider(name: string, args: object, cache?: ICacheParameters): IExtendedPromise<any> {
+    protected _callProvider<TResult>(
+        name: string,
+        args: object, cache?: ICacheParameters
+    ): IExtendedPromise<TResult> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -425,7 +423,7 @@ export default abstract class Remote extends mixin<
             args = eventResult;
         }
 
-        const result = provider.call(
+        const result = provider.call<TResult>(
             name,
             this._prepareProviderArguments(args),
             cache
@@ -442,7 +440,7 @@ export default abstract class Remote extends mixin<
             });
         }
 
-        return result as IExtendedPromise<any>;
+        return result as IExtendedPromise<TResult>;
     }
 
     /**
@@ -478,6 +476,14 @@ export default abstract class Remote extends mixin<
     static get NAVIGATION_TYPE(): typeof NavigationTypes {
         return NavigationTypes;
     }
+
+    // region SerializableMixin
+
+    static fromJSON<T = Remote, K = IOptions>(data: ISerializableSignature<K>): T {
+        return Base.fromJSON.call(this, data);
+    }
+
+    // endregion
 
     // endregion
 }
