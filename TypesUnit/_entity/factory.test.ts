@@ -195,6 +195,16 @@ describe('Types/_entity/factory', () => {
                 assert.strictEqual(value.getTime(), 1443042000000);
             });
 
+            it('should return array of Date', () => {
+                const datetimes = ['2015-09-24 15:54:28.981+03'];
+                const timestamps = datetimes.map((val) => new Date(val).getTime());
+                const format = new ArrayField({kind: 'datetime'});
+                const options = {format};
+                const values: DateTime[] = cast(datetimes, 'array', options);
+
+                assert.deepEqual(values.map((value) => value.getTime()), timestamps);
+            });
+
             it('should return special Time instance', () => {
                 const time = '15:54:28.981+03';
                 const value: Time = cast(time, 'time');
