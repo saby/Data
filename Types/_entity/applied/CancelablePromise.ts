@@ -60,13 +60,13 @@ PromiseCanceledError.prototype = Object.create(Error.prototype);
  */
 export default class CancelablePromise<T> {
     readonly promise: Promise<T>;
+    protected _chained: Promise<T | void>;
 
     constructor(origin: Promise<T>) {
         this.promise = new Promise((resolve, reject) => {
-            origin.then((result) =>
+            this._chained = origin.then((result) =>
                 this[$isCanceled] ? reject(this[$isCanceled]) : resolve(result)
-            );
-            origin.catch((error) =>
+            ).catch((error) =>
                 this[$isCanceled] ? reject(this[$isCanceled]) : reject(error)
             );
         });
