@@ -309,7 +309,6 @@ export default abstract class Remote extends mixin<
         );
     }
 
-    // @ts-ignore
     destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
         return this._callProvider(
             this._$binding.destroy,

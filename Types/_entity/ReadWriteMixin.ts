@@ -50,7 +50,8 @@ export default abstract class ReadWriteMixin {
         }
     }
 
-    destroy(): void {
+    // This method calls implicitly when mixing in a row with DestroyableMixin
+    destroy(...args: unknown[]): void {
         if (this[$writable]) {
             ObservableMixin.prototype.destroy.call(this);
             ManyToManyMixin.prototype.destroy.call(this);
