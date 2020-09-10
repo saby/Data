@@ -321,6 +321,11 @@ export default class DataSet<
      */
     protected _$writable: boolean;
 
+    /*
+     * Использовать режим Copy-On-Write в конструируемых типах данных
+     */
+    protected _$cow: boolean;
+
     /**
      * Get instance can be changed
      */
@@ -873,6 +878,7 @@ export default class DataSet<
         }
         return create<T>(this._$model, {
             writable: this._$writable,
+            cow: this._$cow,
             rawData,
             adapter: this._$adapter,
             keyProperty: this._$keyProperty
@@ -887,6 +893,7 @@ export default class DataSet<
     protected _getListInstance<T extends IList<unknown>>(rawData: unknown): T {
         return create<T>(this._$listModule, {
             writable: this._$writable,
+            cow: this._$cow,
             rawData,
             adapter: this._$adapter,
             model: this._$model,
@@ -917,6 +924,7 @@ Object.assign(DataSet.prototype, {
     _$keyProperty: '',
     _$itemsProperty: '',
     _$metaProperty: '',
+    _$cow: false,
     _$writable: true,
      getIdProperty: DataSet.prototype.getKeyProperty,
      setIdProperty: DataSet.prototype.setKeyProperty
