@@ -58,9 +58,19 @@ function getDefaultTransport(
     if (overrided) {
         return overrided;
     }
+
     if (defaultTransportConstructor) {
         return defaultTransportConstructor;
     }
+
+    // Go with sync require on server side
+    if (constants.isServerSide) {
+        const {RPCJSON} = requirejs(DEFAULT_TRANSPORT_MODULE);
+        defaultTransportConstructor = RPCJSON;
+        return RPCJSON;
+    }
+
+    // Otherwise go with async require
     return import(DEFAULT_TRANSPORT_MODULE).then(({RPCJSON}) => {
         defaultTransportConstructor = RPCJSON;
         return RPCJSON;
