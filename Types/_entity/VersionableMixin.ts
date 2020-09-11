@@ -61,11 +61,13 @@ export default abstract class VersionableMixin implements IVersionable {
     }
 
     // Снимает фиксацию версии объекта
-    unlockVersion(): void {
+    unlockVersion(silent: boolean = false): void {
         if (this._lockedVersion === undefined) {
             throw new Error('Can\'t unlock version because it\'s not locked yet');
         }
-        this._version = this._lockedVersion;
+        if (!silent) {
+            this._version = this._lockedVersion;
+        }
         this._lockedVersion = undefined;
     }
 
