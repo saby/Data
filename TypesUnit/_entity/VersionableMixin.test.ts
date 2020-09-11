@@ -86,6 +86,16 @@ describe('Types/_entity/VersionableMixin', () => {
             assert.notEqual(inst.getVersion(), initialVersion);
         });
 
+        it('shouldn\'t change version in silent mode', () => {
+            const inst = new Entity();
+
+            const initialVersion = inst.getVersion();
+            inst.lockVersion();
+            inst.touch();
+            inst.unlockVersion(true);
+            assert.equal(inst.getVersion(), initialVersion);
+        });
+
         it('should throw an error if already unlocked', () => {
             const inst = new Entity();
             assert.throws(() => {
