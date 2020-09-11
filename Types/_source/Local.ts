@@ -194,7 +194,6 @@ export default abstract class Local<TData = unknown> extends mixin<
     readonly '[Types/_source/ICrud]': boolean = true;
 
     create(meta?: object): Promise<Model | Record> {
-        meta = object.clonePlain(meta);
         return this._loadAdditionalDependencies().addCallback(() => {
             return this._prepareCreateResult(meta);
         }) as Promise<Model | Record>;
@@ -409,7 +408,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     protected _wrapToDataSet(data: any): DataSet {
         return super._wrapToDataSet(
-            object.clonePlain(data)
+            this._detachData(data)
         );
     }
 
@@ -420,14 +419,14 @@ export default abstract class Local<TData = unknown> extends mixin<
     protected _prepareCreateResult(data: any): Model {
         return super._prepareCreateResult.call(
             this,
-            object.clonePlain(data)
+            this._detachData(data)
         );
     }
 
     protected _prepareReadResult(data: any): Model {
         return super._prepareReadResult.call(
             this,
-            object.clonePlain(data)
+            this._detachData(data)
         );
     }
 
@@ -437,14 +436,24 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     /**
      * Возвращает адаптер для работы с таблицей
-     * @protected
      */
     protected abstract _getTableAdapter(): adapter.ITable;
 
     /**
+     * Возвращает данные, отвязанные от данных источника
+     */
+    protected _detachData(data: unknown): unknown {
+        // There is no need to clone data in COW mode
+        if (this._$cow) {
+            return data;
+        }
+
+        return object.clonePlain(data);
+    }
+
+    /**
      * Возвращает данные модели с указанным ключом
      * @param key Значение ключа
-     * @protected
      */
     protected _getRecordByKey(key: EntityKey): adapter.IRecord {
         return this._getTableAdapter().at(
@@ -456,7 +465,6 @@ export default abstract class Local<TData = unknown> extends mixin<
      * Возвращает индекс модели с указанным ключом
      * @param key Значение ключа
      * @return -1 - не найден, >=0 - индекс
-     * @protected
      */
     protected _getIndexByKey(key: EntityKey): number {
         const index = this._index[key];
@@ -465,7 +473,6 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     /**
      * Перестраивает индекс
-     * @protected
      */
     protected _reIndex(): void {
         this._index = {};
@@ -479,7 +486,6 @@ export default abstract class Local<TData = unknown> extends mixin<
     /**
      * Применяет источник выборки
      * @param [from] Источник выборки
-     * @protected
      */
     protected abstract _applyFrom(from?: string): any;
 
@@ -487,7 +493,6 @@ export default abstract class Local<TData = unknown> extends mixin<
      * Применяет объединение
      * @param data Данные
      * @param join Выборки для объединения
-     * @protected
      */
     protected abstract _applyJoin(data: any, join: Join[]): any;
 
@@ -495,7 +500,6 @@ export default abstract class Local<TData = unknown> extends mixin<
      * Applies fieldset selection
      * @param data Data to handle
      * @param select Fieldset to select
-     * @protected
      */
     protected _applySelect(data: any, select: IHashMap<string>): any {
         const selectNames = Object.keys(select);
@@ -527,13 +531,11 @@ export default abstract class Local<TData = unknown> extends mixin<
         return tableAdapter.getData();
     }
 
-
     /**
      * Applies filter
      * @param data Data to handle
      * @param where Query filter
      * @param meta Query metadata
-     * @protected
      */
     protected _applyWhere(data: any, where?: WhereExpression<unknown>, meta?: IMeta): any {
         // TODO: support for IMeta.expand values
@@ -592,7 +594,6 @@ export default abstract class Local<TData = unknown> extends mixin<
      * Применяет сортировку
      * @param data Данные
      * @param order Параметры сортировки
-     * @protected
      */
     protected _applyOrderBy(data: any, order: Order[]): any {
         order = order || [];
@@ -674,7 +675,6 @@ export default abstract class Local<TData = unknown> extends mixin<
      * @param data Данные
      * @param [offset=0] Смещение начала выборки
      * @param [limit] Количество записей выборки
-     * @protected
      */
     protected _applyPaging(data: any, offset?: number, limit?: number): any {
         offset = offset || 0;
