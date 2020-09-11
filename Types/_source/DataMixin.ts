@@ -153,6 +153,11 @@ export default abstract class DataMixin implements IData {
      */
     protected _$keyProperty: string;
 
+    /*
+     * Использовать режим Copy-On-Write в данных, извлекаемых из источника.
+     */
+    protected _$cow: boolean;
+
     /**
      * Конструктор модуля, реализующего DataSet
      */
@@ -238,6 +243,7 @@ export default abstract class DataMixin implements IData {
      */
     protected _getModelInstance(data: any): Model {
         return create(this._$model, {
+            cow: this._$cow,
             writable: this._writable,
             rawData: data,
             adapter: this.getAdapter(),
@@ -251,17 +257,15 @@ export default abstract class DataMixin implements IData {
      * @protected
      */
     protected _getDataSetInstance(cfg: IDataSetOptions): DataSet {
-        return create(// eslint-disable-line new-cap
-            this._dataSetModule,
-            {
-                writable: this._writable,
-                adapter: this.getAdapter(),
-                model: this.getModel(),
-                listModule: this.getListModule(),
-                keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
-                ...cfg
-            }
-        );
+        return create(this._dataSetModule, {
+            cow: this._$cow,
+            writable: this._writable,
+            adapter: this.getAdapter(),
+            model: this.getModel(),
+            listModule: this.getListModule(),
+            keyProperty: this.getKeyProperty() || this._getKeyPropertyByData(cfg.rawData || null),
+            ...cfg
+        });
     }
 
     /**
@@ -340,6 +344,7 @@ Object.assign(DataMixin.prototype, {
     _$model: 'Types/entity:Model',
     _$listModule: 'Types/collection:RecordSet',
     _$keyProperty: '',
+    _$cow: false,
     _dataSetModule: 'Types/source:DataSet',
     _dataSetItemsProperty: '',
     _dataSetMetaProperty: '',
