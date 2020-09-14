@@ -38,7 +38,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * Первый элемент цепочки
      */
     get start(): Abstract<T, U> {
-        return this._previous ? this._previous.start : this;
+        return this._previous ? this._previous.start : this ;
     }
 
     /**
