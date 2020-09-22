@@ -3,7 +3,8 @@ import IMetaData from './IMetaData';
 import SbisFormatMixin, {
     ITableFormat,
     IRecordFormat,
-    markEntryAsDenormalized
+    markEntryAsDenormalized,
+    denormalizeFormats
 } from './SbisFormatMixin';
 import SbisRecord from './SbisRecord';
 import ICloneable from '../ICloneable';
@@ -77,6 +78,8 @@ export default class SbisTable extends mixin<
         this._touchData();
         record = this._normalizeData(record, SbisRecord.prototype.type);
 
+        denormalizeFormats(record);
+
         if (this._data.d.length === 0 && record.s) {
             this._data.s = record.s;
         }
@@ -122,6 +125,9 @@ export default class SbisTable extends mixin<
         if (!this._data.s.length && record.s.length) {
             this._data.s = record.s;
         }
+
+        denormalizeFormats(record);
+
         record.s = this._data.s;
         this._checkFormat(record, '::replace()');
 

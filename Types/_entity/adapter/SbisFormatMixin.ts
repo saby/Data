@@ -186,13 +186,15 @@ export function markEntryAsDenormalized(entry: GenericFormat): void {
  * Injects format controller deep within data scope
  */
 export function denormalizeFormats(data: GenericFormat): void {
-    if (data[entryDenormalized]) {
+    if (!data || data[entryDenormalized]) {
         return;
     }
 
-    const store = new Map<number, IFieldFormat[]>();
+    let store: Map<number, IFieldFormat[]>;
 
     eachFormatEntry(data, (entry) => {
+        store = store || new Map<number, IFieldFormat[]>();
+
         // Check if entry is normalized
         if (entry.f === undefined) {
             return;

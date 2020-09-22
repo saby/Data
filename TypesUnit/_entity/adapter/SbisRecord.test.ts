@@ -227,6 +227,19 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             );
         });
 
+        it('should normalize the value', () => {
+            const data = {
+                d: [null],
+                s: [{n: 'foo', t: 'Запись'}]
+            };
+            const adapter = new SbisRecord(data);
+            const value = {d: [], f: 0, s: []};
+
+            adapter.set('foo', value);
+            const storedValue = adapter.get('foo');
+            assert.notInclude(Object.keys(storedValue), 'f');
+        });
+
         it('should set type "Идентификатор" from Array', () => {
             const data = {
                 d: [[null]],
