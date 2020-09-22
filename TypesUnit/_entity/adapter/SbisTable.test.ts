@@ -327,6 +327,15 @@ describe('Types/_entity/adapter/SbisTable', () => {
             });
         });
 
+        it('should normalize the value', () => {
+            const table = {d: [], s: [{n: 'foo', t: 'Запись'}]};
+            const adapter = new SbisTable(table);
+            const rec = {d: [null], f: 0, s: [{n: 'foo', t: 'Запись'}]};
+
+            adapter.add(rec, 0);
+            assert.notInclude(Object.keys(rec), 'f');
+        });
+
         it('should take the format from the record if don\'t have own', () => {
             const table = {d: [], s: []};
             const adapter = new SbisTable(table);
@@ -521,6 +530,15 @@ describe('Types/_entity/adapter/SbisTable', () => {
             assert.throws(() => {
                 adapter.replace({d: [14]}, 99);
             });
+        });
+
+        it('should normalize the value', () => {
+            const table = {d: [null], s: [{n: 'foo', t: 'Запись'}]};
+            const adapter = new SbisTable(table);
+            const rec = {d: [null], f: 0, s: [{n: 'foo', t: 'Запись'}]};
+
+            adapter.replace(rec, 0);
+            assert.notInclude(Object.keys(rec), 'f');
         });
 
         it('should replace s in raw data', () => {

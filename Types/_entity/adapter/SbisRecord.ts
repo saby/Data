@@ -2,7 +2,8 @@ import IRecord from './IRecord';
 import ICloneable from '../ICloneable';
 import SbisFormatMixin, {
     IFieldFormat,
-    IRecordFormat
+    IRecordFormat,
+    denormalizeFormats
 } from './SbisFormatMixin';
 import DestroyableMixin from '../DestroyableMixin';
 import {mixin} from '../../util';
@@ -84,6 +85,7 @@ export default class SbisRecord extends mixin<
             throw new ReferenceError(`${this._moduleName}::set(): field "${name}" is not defined`);
         }
 
+        denormalizeFormats(value);
         this._data.d[index] = this._uncast(this._data.s[index], value);
     }
 
