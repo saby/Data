@@ -14,6 +14,12 @@
 export default class Guid {
     /**
      * Возвращает строку, заполненную случайными числами, которая выглядит, как GUID.
+     * @example
+     * <pre>
+     * import {applied} from 'Types/entity';
+     *
+     * const guid = applied.Guid.create();
+     * </pre>
      */
 
     /*
