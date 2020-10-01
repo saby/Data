@@ -64,7 +64,7 @@ export {default as IData} from './_source/IData';
 export {default as IDecorator} from './_source/IDecorator';
 export {default as IProvider} from './_source/IProvider';
 export {default as IRpc} from './_source/IRpc';
-export {default as Local} from './_source/Local';
+export {default as Local, MOVE_POSITION as LOCAL_MOVE_POSITION} from './_source/Local';
 import {default as Memory} from './_source/Memory';
 export {Memory};
 export {default as PrefetchProxy} from './_source/PrefetchProxy';

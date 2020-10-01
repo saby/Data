@@ -12,11 +12,11 @@ import {IHashMap} from '../_declarations';
 import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 
-const MOVE_POSITION = {
-    on: 'on',
-    before: 'before',
-    after: 'after'
-};
+export enum MOVE_POSITION {
+    On = 'on',
+    Before = 'before',
+    After = 'after'
+}
 
 interface IMovePosition {
     before?: boolean;
@@ -363,7 +363,7 @@ export default abstract class Local<TData = unknown> extends mixin<
         items.sort((a, b) => {
             const indexA = this._getIndexByKey(a);
             const indexB = this._getIndexByKey(b);
-            return  meta.position === MOVE_POSITION.after ? indexB - indexA : indexA - indexB;
+            return  meta.position === MOVE_POSITION.After ? indexB - indexA : indexA - indexB;
         }).forEach((id) => {
             const index = this._getIndexByKey(id);
             sourceItems.push(adapter.forRecord(tableAdapter.at(index)));
@@ -379,7 +379,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             }
         }
 
-        if (meta.position === MOVE_POSITION.on) {
+        if (meta.position === MOVE_POSITION.On) {
             return this._hierarchyMove(sourceItems, targetItem, meta);
         }
 
@@ -709,7 +709,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             parentValue = target.get(meta.parentProperty);
         }
         if (!meta.position && meta.hasOwnProperty('before')) {
-            meta.position = meta.before ? MOVE_POSITION.before : MOVE_POSITION.after;
+            meta.position = meta.before ? MOVE_POSITION.Before : MOVE_POSITION.After;
         }
 
         const tableAdapter = this._getTableAdapter();
@@ -720,9 +720,9 @@ export default abstract class Local<TData = unknown> extends mixin<
             }
             const index = this._getIndexByKey(item.get(this._$keyProperty));
             let targetIndex = this._getIndexByKey(targetsId);
-            if (meta.position === MOVE_POSITION.before && targetIndex > index) {
+            if (meta.position === MOVE_POSITION.Before && targetIndex > index) {
                 targetIndex--;
-            } else if (meta.position === MOVE_POSITION.after && targetIndex < index) {
+            } else if (meta.position === MOVE_POSITION.After && targetIndex < index) {
                 targetIndex++;
             }
             tableAdapter.move(index, targetIndex);
