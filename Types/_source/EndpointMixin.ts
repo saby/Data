@@ -1,5 +1,6 @@
-import {IEndpoint} from './IProvider';
-import {getMergeableProperty} from '../entity';
+import { IEndpoint } from './IProvider';
+import { getMergeableProperty } from '../entity';
+import { EntityMarker } from '../_declarations';
 
 export interface IOptions {
     endpoint?: IEndpoint | string;
@@ -12,7 +13,7 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class EndpointMixin {
-    readonly '[Types/_source/EndpointMixin]': boolean;
+    readonly '[Types/_source/EndpointMixin]': EntityMarker;
 
     /**
      * @cfg {Types/_source/IProvider/Endpoint.typedef[]|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.

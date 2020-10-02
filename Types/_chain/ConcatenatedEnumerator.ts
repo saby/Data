@@ -1,5 +1,6 @@
-import {enumerator, IEnumerable, IEnumerator} from '../collection';
+import { enumerator, IEnumerable, IEnumerator } from '../collection';
 import Abstract from './Abstract';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Объединяющий энумератор.
@@ -7,7 +8,7 @@ import Abstract from './Abstract';
  * @author Мальцев А.А.
  */
 export default class ConcatenatedEnumerator<T> implements IEnumerator<T> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     private previous: Abstract<T>;
     private items: Array<any | IEnumerable<T>>;
     private enumerator: IEnumerator<T>;

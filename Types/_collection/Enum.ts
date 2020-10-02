@@ -1,4 +1,4 @@
-import IEnum, {IIndex} from './IEnum';
+import IEnum, { IIndex } from './IEnum';
 import Dictionary from './Dictionary';
 import {
    IProducible,
@@ -7,8 +7,9 @@ import {
    CloneableMixin,
    format
 } from '../entity';
-import {register} from '../di';
-import {mixin} from '../util';
+import { register } from '../di';
+import { mixin } from '../util';
+import { EntityMarker } from '../_declarations';
 
 interface IProduceOptions {
     format?: format.Field | format.UniversalField;
@@ -78,7 +79,7 @@ export default class Enum<T> extends mixin<
 
     // region IEnum
 
-    readonly '[Types/_collection/IEnum]': boolean;
+    readonly '[Types/_collection/IEnum]': EntityMarker;
 
     get(): IIndex {
         return this._$index;
@@ -129,7 +130,7 @@ export default class Enum<T> extends mixin<
 
     // region IProducible
 
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': EntityMarker;
 
     static produceInstance<T>(data?: any, options?: IProduceOptions): Enum<T> {
         return new this({

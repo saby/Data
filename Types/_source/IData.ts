@@ -1,4 +1,5 @@
-import {adapter} from '../entity';
+import { adapter } from '../entity';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающиего абстракцию работы с данными.
@@ -8,7 +9,7 @@ import {adapter} from '../entity';
  * @author Мальцев А.А.
  */
 export default interface IData {
-    readonly '[Types/_source/IData]': boolean;
+    readonly '[Types/_source/IData]': EntityMarker;
 
     /**
      * Возвращает адаптер для работы с данными.

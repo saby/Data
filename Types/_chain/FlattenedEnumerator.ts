@@ -1,12 +1,13 @@
 import FlattenedMover from './FlattenedMover';
-import {IEnumerator} from '../collection';
+import { IEnumerator } from '../collection';
 import Abstract from './Abstract';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Разворачивающий энумератор
  */
 export default class FlattenedEnumerator<T> implements IEnumerator<T> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     private previous: Abstract<T>;
     private mover: FlattenedMover;
     private index: number;

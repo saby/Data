@@ -6,7 +6,8 @@ import SbisFormatMixin, {
     denormalizeFormats
 } from './SbisFormatMixin';
 import DestroyableMixin from '../DestroyableMixin';
-import {mixin} from '../../util';
+import { mixin } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер для записи таблицы данных в формате СБиС.
@@ -65,7 +66,7 @@ export default class SbisRecord extends mixin<
 
     // region IRecord
 
-    readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': EntityMarker;
 
     has(name: string): boolean {
         return this._has(name);
@@ -99,7 +100,7 @@ export default class SbisRecord extends mixin<
 
     // region ICloneable
 
-    readonly '[Types/_entity/ICloneable]': boolean;
+    readonly '[Types/_entity/ICloneable]': EntityMarker;
 
     clone<T = this>(shallow?: boolean): T {
         // FIXME: shall share _data.s with recordset _data.s after clone to keep in touch. Probably no longer need this.

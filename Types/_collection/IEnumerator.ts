@@ -11,10 +11,11 @@
  * @public
  * @author Мальцев А.А.
  */
-import {EnumeratorIndex} from './IEnumerable';
+import { EnumeratorIndex } from './IEnumerable';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 export default interface IEnumerator<T, U = EnumeratorIndex> {
-    readonly '[Types/_collection/IEnumerator]': boolean;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker;
 
     /**
      * Возвращает текущий элемент

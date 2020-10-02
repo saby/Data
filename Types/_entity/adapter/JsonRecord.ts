@@ -2,8 +2,9 @@ import DestroyableMixin from '../DestroyableMixin';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
 import JsonFormatMixin from './JsonFormatMixin';
-import {Field} from '../format';
-import {mixin} from '../../util';
+import { Field } from '../format';
+import { mixin } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер для записи таблицы данных в формате JSON
@@ -75,7 +76,7 @@ export default class JsonRecord extends mixin<
 
     // region IRecord
 
-    readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': EntityMarker;
 
     has(name: string): boolean {
         return this._isValidData() ? this._data.hasOwnProperty(name) : false;

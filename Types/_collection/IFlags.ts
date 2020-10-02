@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 export type IValue = boolean | null;
 
 /**
@@ -15,7 +17,7 @@ export type IValue = boolean | null;
  * @author Мальцев А.А.
  */
 export default interface IFlags<T> {
-    readonly '[Types/_collection/IFlags]': boolean;
+    readonly '[Types/_collection/IFlags]': EntityMarker;
 
     /**
      * @event Происходит после изменения выборки.

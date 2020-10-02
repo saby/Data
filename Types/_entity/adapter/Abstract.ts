@@ -3,7 +3,8 @@ import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
 import SerializableMixin, { ISignature } from '../SerializableMixin';
-import {mixin} from '../../util';
+import { mixin } from '../../util';
+import { EntityMarker } from 'Types/_declarations';
 
 /**
  * Абстрактный адаптер для данных.
@@ -22,7 +23,7 @@ export default abstract class Abstract extends mixin<
     DestroyableMixin,
     SerializableMixin
 ) implements IAdapter {
-    readonly '[Types/_entity/adapter/IAdapter]': boolean;
+    readonly '[Types/_entity/adapter/IAdapter]': EntityMarker;
 
     /**
      * Разделитель для обозначения пути в данных

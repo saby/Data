@@ -1,4 +1,5 @@
-import {Object as EventObject} from 'Env/Event';
+import { EntityMarker } from '../_declarations';
+import { Object as EventObject } from 'Env/Event';
 
 export enum ChangeAction {
     ACTION_ADD = 'a',
@@ -26,7 +27,7 @@ export type CollectionChangeHandler<T> = (
  * @author Мальцев А.А.
  */
 export default abstract class IObservable {
-    '[Types/_collection/IObservable]': boolean;
+    '[Types/_collection/IObservable]': EntityMarker;
 
     /**
      * Изменение коллекции: добавлены элементы

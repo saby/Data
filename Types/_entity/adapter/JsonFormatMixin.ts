@@ -1,5 +1,5 @@
-import {fieldsFactory, Field, UniversalField, IUniversalFieldMeta} from '../format';
-import {IHashMap} from '../../_declarations';
+import { fieldsFactory, Field, UniversalField, IUniversalFieldMeta } from '../format';
+import { IHashMap, EntityMarker } from '../../_declarations';
 
 /**
  * Миксин для работы с JSON-форматом в адаптерах
@@ -8,7 +8,7 @@ import {IHashMap} from '../../_declarations';
  * @author Мальцев А.А.
  */
 export default abstract class JsonFormatMixin {
-    '[Types/_entity/adapter/GenericFormatMixin]': boolean;
+    '[Types/_entity/adapter/GenericFormatMixin]': EntityMarker;
 
     protected _moduleName: string;
 

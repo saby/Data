@@ -3,8 +3,9 @@ import IRecord from './IRecord';
 import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import ICloneable from '../ICloneable';
-import {Field, UniversalField} from '../format';
-import {object} from '../../util';
+import { Field, UniversalField } from '../format';
+import { object } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер записи таблицы для работы в режиме Copy-on-write.
@@ -52,7 +53,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
 
     // region IRecord
 
-    readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': EntityMarker;
 
     has(name: string): boolean {
         return (this._originalRecord as IRecord).has(name);
@@ -107,7 +108,7 @@ export default class CowRecord extends DestroyableMixin implements IRecord, IDec
 
     // region IDecorator
 
-    readonly '[Types/_entity/adapter/IDecorator]': boolean;
+    readonly '[Types/_entity/adapter/IDecorator]': EntityMarker;
 
     getOriginal(): IRecord {
         return this._originalRecord as IRecord;

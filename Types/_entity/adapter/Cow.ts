@@ -3,9 +3,10 @@ import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import CowTable from './CowTable';
 import CowRecord from './CowRecord';
-import SerializableMixin, {IState as ICommonState} from '../SerializableMixin';
-import {register} from '../../di';
-import {mixin} from '../../util';
+import SerializableMixin, { IState as ICommonState } from '../SerializableMixin';
+import { register } from '../../di';
+import { mixin } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 interface ISerializableState extends ICommonState {
     _original: IAdapter;
@@ -82,7 +83,7 @@ export default class Cow extends mixin<
 
     // region IDecorator
 
-    readonly '[Types/_entity/adapter/IDecorator]': boolean;
+    readonly '[Types/_entity/adapter/IDecorator]': EntityMarker;
 
     getOriginal(): IAdapter {
         return this._original;

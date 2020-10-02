@@ -1,9 +1,10 @@
 import IAbstract from './IAbstract';
-import {OptionsToPropertyMixin} from '../../entity';
-import {logger as defaultLogger, ILogger} from '../../util';
-import {constants} from 'Env/Env';
-import Deferred = require('Core/Deferred');
+import { OptionsToPropertyMixin } from '../../entity';
+import { logger as defaultLogger, ILogger } from '../../util';
+import { constants } from 'Env/Env';
 import { ICacheParameters } from '../Remote';
+import { EntityMarker } from '../../_declarations';
+import Deferred = require('Core/Deferred');
 
 export interface IEndPoint {
     contract?: string;
@@ -141,7 +142,7 @@ function getTimedOutResponse<T>(
  * @author Мальцев А.А.
  */
 export default class SbisBusinessLogic extends OptionsToPropertyMixin implements IAbstract {
-    readonly '[Types/_source/provider/IAbstract]': boolean = true;
+    readonly '[Types/_source/provider/IAbstract]': EntityMarker = true;
 
     protected _$logger: ILogger = defaultLogger;
 

@@ -1,3 +1,5 @@
+import { EntityMarker } from '../../_declarations';
+
 /**
  * Интерфейс канала серверных событий
  * @interface Types/_source/provider/IChannel
@@ -5,7 +7,7 @@
  * @author Мальцев А.А.
  */
 export default interface IChannel {
-    readonly '[Types/_source/provider/IChannel]': boolean;
+    readonly '[Types/_source/provider/IChannel]': EntityMarker;
 
     /**
      * @event При получении уведомления о серверном событии

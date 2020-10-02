@@ -1,3 +1,4 @@
+import { EntityMarker } from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 // tslint:disable-next-line:ban-comma-operator
@@ -11,7 +12,7 @@ const DeferredCanceledError = global.DeferredCanceledError;
  * @author Мальцев А.А.
  */
 export default abstract class LazyMixin {
-    readonly '[Types/_source/LazyMixin]': boolean;
+    readonly '[Types/_source/LazyMixin]': EntityMarker;
 
     /**
      * Список зависимостей, которые нужно загружать лениво

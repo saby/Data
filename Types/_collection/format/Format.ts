@@ -1,6 +1,7 @@
-import {IEquatable} from '../../entity';
-import {format} from '../../entity';
-import List, {IOptions as IListOptions} from '../List';
+import { IEquatable } from '../../entity';
+import { format } from '../../entity';
+import List, { IOptions as IListOptions } from '../List';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Формат полей: список полей записи.
@@ -92,7 +93,7 @@ export default class Format<T = format.Field> extends List<T> implements IEquata
 
     // region IEquatable
 
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     isEqual(format: Format<T>): boolean {
         if (format === this) {

@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс коллекции с поиском элементов по значению свойств.
  * @interface Types/_collection/IIndexedCollection
@@ -5,7 +7,7 @@
  * @public
  */
 export default interface IIndexedCollection {
-    readonly '[Types/_collection/IIndexedCollection]': boolean;
+    readonly '[Types/_collection/IIndexedCollection]': EntityMarker;
 
     /**
      * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.

@@ -3,11 +3,11 @@ import ITable from './ITable';
 import GenericFormatMixin from './GenericFormatMixin';
 import JsonFormatMixin from './JsonFormatMixin';
 import JsonRecord from './JsonRecord';
-import {Field} from '../format';
-import {Set} from '../../shim';
-import {mixin} from '../../util';
-import {merge} from '../../object';
-import {IHashMap} from '../../_declarations';
+import { Field } from '../format';
+import { Set } from '../../shim';
+import { mixin } from '../../util';
+import { merge } from '../../object';
+import { IHashMap, EntityMarker } from '../../_declarations';
 
 type Data = IHashMap<any>;
 
@@ -85,7 +85,7 @@ export default class JsonTable extends mixin<
 
     // region ITable
 
-    readonly '[Types/_entity/adapter/ITable]': boolean;
+    readonly '[Types/_entity/adapter/ITable]': EntityMarker;
 
     getFields(): string[] {
         const count = this.getCount();

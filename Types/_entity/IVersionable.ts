@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс изменения версий объекта.
  * Позволяет быстро проверить изменилось ли что либо в объекте.
@@ -6,7 +8,7 @@
  * @author Мальцев А.А.
  */
 export default interface IVersionable {
-    readonly '[Types/_entity/IVersionable]': boolean;
+    readonly '[Types/_entity/IVersionable]': EntityMarker;
 
     /**
      * Возвращает версию объекта.

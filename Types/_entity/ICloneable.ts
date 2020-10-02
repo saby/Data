@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс клонирования объекта.
  * @interface Types/_entity/ICloneable
@@ -5,7 +7,7 @@
  * @author Мальцев А.А.
  */
 export default interface ICloneable {
-    readonly '[Types/_entity/ICloneable]': boolean;
+    readonly '[Types/_entity/ICloneable]': EntityMarker;
 
     /**
      * Создает новый объект, который являтся копией текущего экземпляра.

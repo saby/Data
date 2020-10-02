@@ -9,9 +9,10 @@ import SbisFormatMixin, {
 import SbisRecord from './SbisRecord';
 import ICloneable from '../ICloneable';
 import DestroyableMixin from '../DestroyableMixin';
-import {fieldsFactory} from '../format';
-import {mixin} from '../../util';
-import {merge} from '../../object';
+import { fieldsFactory } from '../format';
+import { mixin } from '../../util';
+import { merge } from '../../object';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер для таблицы данных в формате СБиС.
@@ -68,7 +69,7 @@ export default class SbisTable extends mixin<
 
     // region ITable
 
-    readonly '[Types/_entity/adapter/ITable]': boolean;
+    readonly '[Types/_entity/adapter/ITable]': EntityMarker;
 
     getCount(): number {
         return this._isValidData() ? this._data.d.length : 0;
@@ -167,7 +168,7 @@ export default class SbisTable extends mixin<
 
     // region IMetaData
 
-    readonly '[Types/_entity/adapter/IMetaData]': boolean;
+    readonly '[Types/_entity/adapter/IMetaData]': EntityMarker;
 
     getMetaDataDescriptor(): any {
         const result = [];
@@ -275,7 +276,7 @@ export default class SbisTable extends mixin<
 
     // region ICloneable
 
-    readonly '[Types/_entity/ICloneable]': boolean;
+    readonly '[Types/_entity/ICloneable]': EntityMarker;
 
     clone <T = this>(shallow?: boolean): T {
         return new SbisTable(shallow ? this.getData() : this._cloneData()) as unknown as T;

@@ -20,6 +20,7 @@ import {
 } from '../entity';
 import {register} from '../di';
 import {deprecateExtend, mixin, object} from '../util';
+import { EntityMarker } from '../_declarations';
 
 export interface IOptions<T> extends IReadWriteMixinOptions {
     items?: T[];
@@ -131,7 +132,7 @@ export default class List<T> extends mixin<
 
     // region IEnumerable
 
-    readonly '[Types/_collection/IEnumerable]': boolean;
+    readonly '[Types/_collection/IEnumerable]': EntityMarker;
 
     /**
      * Возвращает энумератор для перебора элементов списка.
@@ -159,7 +160,7 @@ export default class List<T> extends mixin<
 
     // region IList
 
-    readonly '[Types/_collection/IList]': boolean;
+    readonly '[Types/_collection/IList]': EntityMarker;
 
     assign(items: IEnumerable<T> | T[]): void {
         for (let i = 0, count = this._$items.length; i < count; i++) {
@@ -300,7 +301,7 @@ export default class List<T> extends mixin<
 
     // region IIndexedCollection
 
-    readonly '[Types/_collection/IIndexedCollection]': boolean;
+    readonly '[Types/_collection/IIndexedCollection]': EntityMarker;
 
     getIndexByValue(property: string, value: any): number {
         return this._getIndexer().getIndexByValue(property, value);
@@ -314,7 +315,7 @@ export default class List<T> extends mixin<
 
     // region IEquatable
 
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     isEqual(to: any): boolean {
         if (to === this) {

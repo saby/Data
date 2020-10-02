@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 export type IIndex = number | string | null;
 
 /**
@@ -15,7 +17,7 @@ export type IIndex = number | string | null;
  * @author Мальцев А.А.
  */
 export default interface IEnum<T> {
-    readonly '[Types/_collection/IEnum]': boolean;
+    readonly '[Types/_collection/IEnum]': EntityMarker;
 
     /**
      * @event Происходит после изменения выбранного элемента.

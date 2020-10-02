@@ -1,5 +1,6 @@
 import ITable from './ITable';
 import IRecord from './IRecord';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс адаптера, осуществляющиего операции с "сырыми" данными.
@@ -9,7 +10,7 @@ import IRecord from './IRecord';
  * @author Мальцев А.А.
  */
 export default interface IAdapter {
-    readonly '[Types/_entity/adapter/IAdapter]': boolean;
+    readonly '[Types/_entity/adapter/IAdapter]': EntityMarker;
 
     /**
      * Возвращает интерфейс доступа к данным в виде таблицы

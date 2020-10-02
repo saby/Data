@@ -1,10 +1,10 @@
-import {DestroyableMixin} from '../entity';
-import {IEnumerable} from '../collection';
-import {object} from '../util';
-import {resolve} from '../di';
-import {CompareFunction} from '../_declarations';
+import { DestroyableMixin } from '../entity';
+import { IEnumerable } from '../collection';
+import { object } from '../util';
+import { resolve } from '../di';
+import { CompareFunction, EntityMarker } from '../_declarations';
 import IEnumerator from '../_collection/IEnumerator';
-import {EnumeratorIndex} from '../_collection/IEnumerable';
+import { EnumeratorIndex } from '../_collection/IEnumerable';
 import Zipped from './Zipped';
 import Mapped from './Mapped';
 import Concatenated from './Concatenated';
@@ -81,7 +81,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
 
     // region IEnumerable
 
-    readonly '[Types/_collection/IEnumerable]': boolean = true;
+    readonly '[Types/_collection/IEnumerable]': EntityMarker = true;
 
     getEnumerator(): IEnumerator<T, U> {
         throw new Error('Not implemented');

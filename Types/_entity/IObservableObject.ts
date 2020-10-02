@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс уведомлений об изменении к свойств объекта.
  * @interface Types/_entity/IObservableObject
@@ -5,7 +7,7 @@
  * @author Мальцев А.А.
  */
 export default interface IObservableObject {
-    readonly '[Types/_entity/IObservableObject]': boolean;
+    readonly '[Types/_entity/IObservableObject]': EntityMarker;
 
     /**
      * @event После изменения набора свойств объекта.

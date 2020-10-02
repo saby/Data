@@ -1,4 +1,5 @@
 import IEnumerator from '../IEnumerator';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Энумератор для собственных свойств объекта
@@ -48,7 +49,7 @@ export default class Objectwise<T> implements IEnumerator<T, string> {
 
     // region IEnumerator
 
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
 
     getCurrent(): T {
         if (this._index < 0) {

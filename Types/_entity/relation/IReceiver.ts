@@ -1,10 +1,12 @@
+import { EntityMarker } from '../../_declarations';
+
 /**
  * Интерфейс сущности, взаимодействующей с посредником
  * @interface Types/_entity/relation/IReceiver
  * @author Мальцев А.А.
  */
 export default interface IReceiver {
-    readonly '[Types/_entity/relation/IReceiver]': boolean;
+    readonly '[Types/_entity/relation/IReceiver]': EntityMarker;
 
     /**
      * Принимает уведомление от посредника об изменении отношений

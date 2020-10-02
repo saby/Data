@@ -1,5 +1,6 @@
 import ICloneable from './ICloneable';
-import {protect} from '../util';
+import { protect } from '../util';
+import { EntityMarker } from '../_declarations';
 import * as Serializer from 'Core/Serializer';
 
 const $clone = protect('clone');
@@ -16,7 +17,7 @@ const $clone = protect('clone');
 export default class CloneableMixin implements ICloneable {
     // region Types/_entity/ICloneable
 
-    '[Types/_entity/ICloneable]': boolean;
+    '[Types/_entity/ICloneable]': EntityMarker;
 
     clone<T = this>(shallow?: boolean): T {
         let clone;

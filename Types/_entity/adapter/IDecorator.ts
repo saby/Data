@@ -1,6 +1,7 @@
 import IAdapter from './IAdapter';
 import ITable from './ITable';
 import IRecord from './IRecord';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс адаптера, являющегося декоратором
@@ -9,7 +10,7 @@ import IRecord from './IRecord';
  * @author Мальцев А.А.
  */
 export default interface IDecorator {
-    readonly '[Types/_entity/adapter/IDecorator]': boolean;
+    readonly '[Types/_entity/adapter/IDecorator]': EntityMarker;
     /**
      * Возвращает оригинальный адаптер
      */

@@ -1,7 +1,8 @@
-import enumerableComparator, {ISession} from './enumerableComparator';
-import {ChangeAction} from './IObservable';
+import enumerableComparator, { ISession } from './enumerableComparator';
+import { ChangeAction } from './IObservable';
 import IList from './IList';
-import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from '../entity';
+import { ISerializable, EventRaisingMixin as EntityEventRaisingMixin } from '../entity';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Миксин для реализации коллекции, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния.
@@ -11,7 +12,7 @@ import {ISerializable, EventRaisingMixin as EntityEventRaisingMixin} from '../en
  * @author Мальцев А.А.
  */
 class EventRaisingMixin {
-    '[Types/_collection/EventRaisingMixin]': boolean;
+    '[Types/_collection/EventRaisingMixin]': EntityMarker;
 
     protected _eventRaising: boolean;
 

@@ -1,8 +1,9 @@
 import DataSet from './DataSet';
 import Query from './Query';
 import DataMixin from './DataMixin';
-import {Model} from '../entity';
-import {mixin} from '../util';
+import { Model } from '../entity';
+import { mixin } from '../util';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
@@ -11,7 +12,7 @@ import {mixin} from '../util';
  * @author Мальцев А.А.
  */
 export default abstract class DataCrudMixin extends mixin<DataMixin>(Object) {
-    readonly '[Types/_source/DataCrudMixin]': boolean;
+    readonly '[Types/_source/DataCrudMixin]': EntityMarker;
 
     protected _prepareCreateResult(data: any): Model {
         return this._getModelInstance(data);

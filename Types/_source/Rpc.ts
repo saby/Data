@@ -1,6 +1,7 @@
 import Remote, { ICacheParameters } from './Remote';
 import DataSet from './DataSet';
 import IRpc from './IRpc';
+import { EntityMarker } from '../_declarations';
 import Deferred = require('Core/Deferred');
 
 /**
@@ -17,7 +18,7 @@ export default abstract class Rpc extends Remote implements IRpc {
 
     // region IRpc
 
-    readonly '[Types/_source/IRpc]': boolean = true;
+    readonly '[Types/_source/IRpc]': EntityMarker = true;
 
     call(command: string, data?: object, cache?: ICacheParameters): Promise<DataSet> {
         return this._callProvider<DataSet>(command, data, cache).addCallback(Deferred.skipLogExecutionTime(

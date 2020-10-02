@@ -1,5 +1,6 @@
-import {Record} from '../entity';
-import {EntityKey} from './ICrud';
+import { Record } from '../entity';
+import { EntityKey } from './ICrud';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
@@ -8,7 +9,7 @@ import {EntityKey} from './ICrud';
  * @author Мальцев А.А.
  */
 export default interface ICrudPlus {
-    readonly '[Types/_source/ICrudPlus]': boolean;
+    readonly '[Types/_source/ICrudPlus]': EntityMarker;
 
     /** @typedef {String} MovePosition
      *  @variant {String} before Вставить перед целевой записью

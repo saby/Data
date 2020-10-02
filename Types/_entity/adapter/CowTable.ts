@@ -3,8 +3,9 @@ import ITable from './ITable';
 import IAdapter from './IAdapter';
 import IDecorator from './IDecorator';
 import ICloneable from '../ICloneable';
-import {Field, UniversalField} from '../format';
-import {object} from '../../util';
+import { Field, UniversalField } from '../format';
+import { object } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер таблицы для работы в режиме Copy-on-write.
@@ -52,7 +53,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
 
     // region ITable
 
-    readonly '[Types/_entity/adapter/ITable]': boolean;
+    readonly '[Types/_entity/adapter/ITable]': EntityMarker;
 
     getFields(): string[] {
         return (this._originalTable as ITable).getFields();
@@ -132,7 +133,7 @@ export default class CowTable extends DestroyableMixin implements ITable, IDecor
 
     // region IDecorator
 
-    readonly '[Types/_entity/adapter/IDecorator]': boolean;
+    readonly '[Types/_entity/adapter/IDecorator]': EntityMarker;
 
     getOriginal(): ITable {
         return this._originalTable as ITable;

@@ -1,5 +1,6 @@
 import IVersionable from './IVersionable';
 import ManyToMany from './relation/ManyToMany';
+import { EntityMarker } from '../_declarations';
 
 export type VersionCallback = (version: number) => void;
 
@@ -17,7 +18,7 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class VersionableMixin implements IVersionable {
-    readonly '[Types/_entity/VersionableMixin]': boolean;
+    readonly '[Types/_entity/VersionableMixin]': EntityMarker;
 
     // Номер версии объекта
     protected _version: number;
@@ -44,7 +45,7 @@ export default abstract class VersionableMixin implements IVersionable {
 
     // region IVersionable
 
-    readonly '[Types/_entity/IVersionable]': boolean;
+    readonly '[Types/_entity/IVersionable]': EntityMarker;
 
     getVersion(): number {
         return this._version;

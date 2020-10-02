@@ -1,4 +1,5 @@
 import ICrud from './ICrud';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс источника, являющегося декоратором для другого источника
@@ -7,7 +8,7 @@ import ICrud from './ICrud';
  * @author Мальцев А.А.
  */
 export default interface IDecorator {
-    readonly '[Types/_source/IDecorator]': boolean;
+    readonly '[Types/_source/IDecorator]': EntityMarker;
 
     /**
      * Возвращает оригинальный источник данных

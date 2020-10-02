@@ -1,4 +1,5 @@
 import IInstantiable from './IInstantiable';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER || (Math.pow(2, 53) - 1);
 const IS_SERVER_SIDE = typeof window === 'undefined';
@@ -13,7 +14,7 @@ let counter = 0;
  * @author Мальцев А.А.
  */
 export default class InstantiableMixin implements IInstantiable {
-    '[Types/_entity/InstantiableMixin]': boolean;
+    '[Types/_entity/InstantiableMixin]': EntityMarker;
 
     /**
      * Префикс значений идентификатора
@@ -27,7 +28,7 @@ export default class InstantiableMixin implements IInstantiable {
 
     // region IInstantiable
 
-    readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly '[Types/_entity/IInstantiable]': EntityMarker;
 
     getInstanceId(): string {
         if (counter >= MAX_VALUE) {

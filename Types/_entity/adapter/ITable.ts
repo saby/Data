@@ -1,5 +1,6 @@
 import UniversalField from '../format/UniversalField';
 import Field from '../format/Field';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс адаптера для таблицы данных
@@ -8,7 +9,7 @@ import Field from '../format/Field';
  * @author Мальцев А.А.
  */
 export default interface ITable {
-    readonly '[Types/_entity/adapter/ITable]': boolean;
+    readonly '[Types/_entity/adapter/ITable]': EntityMarker;
 
     /**
      * Возвращает массив названий полей

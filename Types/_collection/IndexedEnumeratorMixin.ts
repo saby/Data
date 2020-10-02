@@ -1,8 +1,9 @@
 import IObservable from './IObservable';
 import IEnumerator from './IEnumerator';
-import {ObservableMixin} from '../entity';
-import {object} from '../util';
-import {Object as EventObject} from 'Env/Event';
+import { ObservableMixin } from '../entity';
+import { object } from '../util';
+import { EntityMarker } from '../_declarations';
+import { Object as EventObject } from 'Env/Event';
 
 /**
  * Миксин, позволящий использовать индексацию элементов в экземплярах,
@@ -12,7 +13,7 @@ import {Object as EventObject} from 'Env/Event';
  * @author Мальцев А.А.
  */
 export default abstract class IndexedEnumeratorMixin<T> {
-    readonly '[Types/_collection/IndexedEnumeratorMixin]': boolean;
+    readonly '[Types/_collection/IndexedEnumeratorMixin]': EntityMarker;
 
     /**
      * Индексы, распределенные по полям

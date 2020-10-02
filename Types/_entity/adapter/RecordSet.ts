@@ -3,9 +3,10 @@ import RecordSetTable from './RecordSetTable';
 import RecordSetRecord from './RecordSetRecord';
 import IDataHolder from './IDataHolder';
 import Record from '../Record';
-import {RecordSet as CollectionRecordSet} from '../../collection';
-import {register} from '../../di';
-import {object} from '../../util';
+import { RecordSet as CollectionRecordSet } from '../../collection';
+import { register } from '../../di';
+import { object } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер для рекордсета.
@@ -58,7 +59,7 @@ export default class RecordSet<TData extends CollectionRecordSet = CollectionRec
 
     // region ['Types/_entity/adapter/IDataHolder']
 
-    readonly '[Types/_entity/adapter/IDataHolder]': boolean;
+    readonly '[Types/_entity/adapter/IDataHolder]': EntityMarker;
 
     get dataReference(): TData {
         return this._dataReference;

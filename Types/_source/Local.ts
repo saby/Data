@@ -8,7 +8,7 @@ import DataSet from './DataSet';
 import {adapter, Record, Model} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
-import {IHashMap} from '../_declarations';
+import {IHashMap, EntityMarker} from '../_declarations';
 import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 
@@ -191,7 +191,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     // region ICrud
 
-    readonly '[Types/_source/ICrud]': boolean = true;
+    readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model | Record> {
         return this._loadAdditionalDependencies().addCallback(() => {
@@ -304,7 +304,7 @@ export default abstract class Local<TData = unknown> extends mixin<
 
     // region ICrudPlus
 
-    readonly '[Types/_source/ICrudPlus]': boolean = true;
+    readonly '[Types/_source/ICrudPlus]': EntityMarker = true;
 
     merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
         const mergedKeys = merged instanceof Array ? merged : [merged];

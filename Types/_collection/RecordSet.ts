@@ -1,10 +1,10 @@
 /* tslint:disable:member-ordering */
 
-import IEnumerable, {EnumeratorCallback} from './IEnumerable';
+import IEnumerable, { EnumeratorCallback } from './IEnumerable';
 import IObservable from './IObservable';
 import ObservableList from './ObservableList';
-import {IOptions as IListOptions} from './List';
-import {Format} from './format';
+import { IOptions as IListOptions } from './List';
+import { Format } from './format';
 import Arraywise from './enumerator/Arraywise';
 import Indexer from './Indexer';
 import {
@@ -24,10 +24,10 @@ import {
     Model,
     adapter
 } from '../entity';
-import {create, register} from '../di';
-import {logger, applyMixins} from '../util';
-import {isEqual} from '../object';
-import {IHashMap} from '../_declarations';
+import { create, register } from '../di';
+import { logger, applyMixins } from '../util';
+import { isEqual } from '../object';
+import { IHashMap, EntityMarker } from '../_declarations';
 
 const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
@@ -887,13 +887,13 @@ class RecordSet<
 
     // region IObservableObject
 
-    readonly '[Types/_entity/IObservableObject]': boolean;
+    readonly '[Types/_entity/IObservableObject]': EntityMarker;
 
     // endregion
 
     // region IProducible
 
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': EntityMarker;
 
     static produceInstance<T extends Record = Model>(data: any, options?: IOptions<T>): RecordSet<T> {
         const instanceOptions: any = {

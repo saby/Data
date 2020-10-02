@@ -1,7 +1,8 @@
 import IEnumerator from '../IEnumerator';
 import IndexedEnumeratorMixin from '../IndexedEnumeratorMixin';
-import {register} from '../../di';
-import {mixin} from '../../util';
+import { register } from '../../di';
+import { mixin } from '../../util';
+import { EntityMarker } from '../../_declarations';
 
 type FilterFunc<T> = (item: T, index: number) => boolean;
 type ResolveFunc<T> = (index: number) => T;
@@ -58,7 +59,7 @@ export default class Arraywise<T> extends mixin<
 
     // region IEnumerator
 
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
 
     getCurrent(): T {
         if (this._index < 0) {

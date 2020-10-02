@@ -1,16 +1,16 @@
-import Base, {IOptions as IBaseOptions} from './Base';
-import ICrud, {EntityKey} from './ICrud';
+import Base, { IOptions as IBaseOptions } from './Base';
+import ICrud, { EntityKey } from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IProvider from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
-import BindingMixin, {IOptions as IBindingOptions} from './BindingMixin';
-import EndpointMixin, {IOptions as IEndpointOptions} from './EndpointMixin';
-import OptionsMixin, {IOptionsOption as IOptionsMixinOption} from './OptionsMixin';
-import Query, {NavigationType} from './Query';
+import BindingMixin, { IOptions as IBindingOptions } from './BindingMixin';
+import EndpointMixin, { IOptions as IEndpointOptions } from './EndpointMixin';
+import OptionsMixin, { IOptionsOption as IOptionsMixinOption } from './OptionsMixin';
+import Query, { NavigationType } from './Query';
 import DataSet from './DataSet';
 import jsonize from './jsonize';
-import {IAbstract} from './provider';
+import { IAbstract } from './provider';
 import {
     adapter,
     Record,
@@ -20,9 +20,10 @@ import {
     ISerializableSignature,
     getMergeableProperty
 } from '../entity';
-import {RecordSet} from '../collection';
-import {create} from '../di';
-import {mixin, logger} from '../util';
+import { RecordSet } from '../collection';
+import { create } from '../di';
+import { mixin, logger } from '../util';
+import { EntityMarker } from '../_declarations';
 
 interface IExtendedPromise<T> extends Promise<T> {
     addCallback: (callback: Function) => IExtendedPromise<T>;
@@ -276,7 +277,7 @@ export default abstract class Remote extends mixin<
 
     // region ICrud
 
-    readonly '[Types/_source/ICrud]': boolean = true;
+    readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model> {
         return this._callProvider<Model>(
@@ -331,7 +332,7 @@ export default abstract class Remote extends mixin<
 
     // region ICrudPlus
 
-    readonly '[Types/_source/ICrudPlus]': boolean = true;
+    readonly '[Types/_source/ICrudPlus]': EntityMarker = true;
 
     merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
         return this._callProvider(
@@ -360,7 +361,7 @@ export default abstract class Remote extends mixin<
 
     // region IProvider
 
-    readonly '[Types/_source/IProvider]': boolean = true;
+    readonly '[Types/_source/IProvider]': EntityMarker = true;
 
     getProvider(): IAbstract {
         if (!this._provider) {

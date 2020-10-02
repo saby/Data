@@ -1,4 +1,5 @@
 import Field from '../format/Field';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс адаптера для работы с метаданными
@@ -7,7 +8,7 @@ import Field from '../format/Field';
  * @author Мальцев А.А.
  */
 export default interface IMetaData {
-    readonly '[Types/_entity/adapter/IMetaData]': boolean;
+    readonly '[Types/_entity/adapter/IMetaData]': EntityMarker;
 
     /**
      * Возвращает описание метаданных
