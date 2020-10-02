@@ -1,5 +1,5 @@
 import IInstantiable from './IInstantiable';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER || (Math.pow(2, 53) - 1);
 const IS_SERVER_SIDE = typeof window === 'undefined';

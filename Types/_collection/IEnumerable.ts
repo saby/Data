@@ -1,5 +1,5 @@
 import IEnumerator from './IEnumerator';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 export type EnumeratorIndex = number | string;
 export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => void;

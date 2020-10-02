@@ -1,6 +1,6 @@
 import { Record } from '../entity';
 import { EntityKey } from './ICrud';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.

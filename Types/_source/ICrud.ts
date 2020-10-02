@@ -2,7 +2,7 @@ import Query from './Query';
 import DataSet from './DataSet';
 import { Record } from '../entity';
 import { RecordSet } from '../collection';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 export type EntityKey = number | string;
 

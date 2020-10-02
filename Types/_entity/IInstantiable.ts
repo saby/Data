@@ -1,4 +1,4 @@
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс получения уникального идентификатора для экземпляра класса

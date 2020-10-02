@@ -1,5 +1,5 @@
 import IEnumerable from './IEnumerable';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс списка - коллекции c доступом по индексу.

@@ -12,7 +12,7 @@
  * @author Мальцев А.А.
  */
 import { EnumeratorIndex } from './IEnumerable';
-import { EntityMarker } from '../_declarations';
+import { EntityMarkerCompat as EntityMarker } from '../_declarations';
 
 export default interface IEnumerator<T, U = EnumeratorIndex> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker;

@@ -1,4 +1,5 @@
 export type EntityMarker = true;
+export type EntityMarkerCompat = boolean;
 
 export type CompareFunction<T = unknown> = (a: T, b: T) => number;
 
