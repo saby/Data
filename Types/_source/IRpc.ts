@@ -1,4 +1,5 @@
 import DataSet from './DataSet';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс источника данных, поддерживающего {@link https://en.wikipedia.org/wiki/Remote_procedure_call RPC}.
@@ -17,7 +18,7 @@ import DataSet from './DataSet';
  * @author Мальцев А.А.
  */
 export default interface IRpc {
-    readonly '[Types/_source/IRpc]': boolean;
+    readonly '[Types/_source/IRpc]': EntityMarker;
 
     /**
      *

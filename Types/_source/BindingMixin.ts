@@ -1,4 +1,5 @@
-import {getMergeableProperty} from '../entity';
+import { getMergeableProperty } from '../entity';
+import { EntityMarker } from '../_declarations';
 
 export interface IBinding {
     create?: string;
@@ -22,7 +23,7 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class BindingMixin {
-    readonly '[Types/_source/BindingMixin]': boolean;
+    readonly '[Types/_source/BindingMixin]': EntityMarker;
 
     /**
      * @cfg {Object} Соответствие методов CRUD контракту. Определяет, как именно источник реализует каждый метод CRUD.

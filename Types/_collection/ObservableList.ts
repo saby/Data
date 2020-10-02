@@ -1,6 +1,6 @@
 import IEnumerable from './IEnumerable';
 import IObservable from './IObservable';
-import List, {IOptions as IListOptions} from './List';
+import List, { IOptions as IListOptions } from './List';
 import EventRaisingMixin from './EventRaisingMixin';
 import {
     ISerializableSignature,
@@ -8,8 +8,9 @@ import {
     relation,
     SerializableMixin
 } from '../entity';
-import {register} from '../di';
-import {applyMixins} from '../util';
+import { register } from '../di';
+import { applyMixins } from '../util';
+import { EntityMarker } from '../_declarations';
 
 const arraySlice = Array.prototype.slice;
 
@@ -198,7 +199,7 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
 
     // region relation.IReceiver
 
-    readonly '[Types/_entity/relation/IReceiver]': boolean;
+    readonly '[Types/_entity/relation/IReceiver]': EntityMarker;
 
     relationChanged(which: any, route: string[]): any {
         const target = which.target;

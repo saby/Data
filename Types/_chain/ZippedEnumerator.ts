@@ -1,12 +1,13 @@
-import {IEnumerator} from '../collection';
+import { IEnumerator } from '../collection';
 import Abstract from './Abstract';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Объединяющий энумератор
  * @author Мальцев А.А.
  */
 export default class ZippedEnumerator<TResult, TSource1, TSource2> implements IEnumerator<TResult, number> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     private previous: Abstract<TSource1>;
     private items: TSource2[];
     private current: TResult;

@@ -1,3 +1,5 @@
+import { EntityMarker } from '../../_declarations';
+
 /**
  * Адаптер, содержащий данные для поддержки процессов инициализации.
  * @interface Types/_entity/adapter/IDataHolder
@@ -12,7 +14,7 @@
  * @author Мальцев А.А.
  */
 export default interface IDataHolder<T> {
-    readonly '[Types/_entity/adapter/IDataHolder]': boolean;
+    readonly '[Types/_entity/adapter/IDataHolder]': EntityMarker;
 
     /**
      * Свойство для хранения данных.

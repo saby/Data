@@ -1,4 +1,5 @@
 import IEnumerable from './IEnumerable';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Интерфейс списка - коллекции c доступом по индексу.
@@ -17,7 +18,7 @@ import IEnumerable from './IEnumerable';
  * @author Мальцев А.А.
  */
 export default interface IList<T> {
-    readonly '[Types/_collection/IList]': boolean;
+    readonly '[Types/_collection/IList]': EntityMarker;
 
     /**
      * Заменяет список другой коллекцией.

@@ -1,10 +1,11 @@
-import {Field, fieldsFactory, UniversalField, IFieldDeclaration, FormatDeclaration} from './format';
-import {Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData} from './adapter';
+import { Field, fieldsFactory, UniversalField, IFieldDeclaration, FormatDeclaration } from './format';
+import { Cow as CowAdapter, IAdapter, ITable, IRecord, IDecorator, IMetaData } from './adapter';
 import ISerializable from './ISerializable';
-import {IState as IDefaultSerializableState} from './SerializableMixin';
-import {resolve, create, isRegistered} from '../di';
-import {format} from '../collection';
-import {object, logger} from '../util';
+import { IState as IDefaultSerializableState } from './SerializableMixin';
+import { resolve, create, isRegistered } from '../di';
+import { format } from '../collection';
+import { object, logger } from '../util';
+import { EntityMarker } from '../_declarations';
 
 const defaultAdapter = 'Types/entity:adapter.Json';
 
@@ -111,7 +112,7 @@ interface IDeprecated {
  * @author Мальцев А.А.
  */
 export default abstract class FormattableMixin {
-    '[Types/_entity/FormattableMixin]': boolean;
+    '[Types/_entity/FormattableMixin]': EntityMarker;
 
    /**
     * @cfg {Object} Данные в необработанном формате, которые могут быть распознаны через определенный адаптер.

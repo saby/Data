@@ -1,8 +1,9 @@
 import IData from './IData';
-import DataSet, {IOptions as IDataSetOptions} from './DataSet';
-import {ReadWriteMixin, AdapterDescriptor, adapter, Record, Model} from '../entity';
-import {RecordSet} from '../collection';
-import {create} from '../di';
+import DataSet, { IOptions as IDataSetOptions } from './DataSet';
+import { ReadWriteMixin, AdapterDescriptor, adapter, Record, Model } from '../entity';
+import { RecordSet } from '../collection';
+import { create } from '../di';
+import { EntityMarker } from '../_declarations';
 
 export interface IOptions {
     adapter?: string | adapter.IAdapter;
@@ -20,7 +21,7 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class DataMixin implements IData {
-    readonly '[Types/_source/DataMixin]': boolean;
+    readonly '[Types/_source/DataMixin]': EntityMarker;
 
     /**
      * @cfg {String|Types/_entity/adapter/IAdapter} Адаптер для работы с форматом данных, выдаваемых источником.
@@ -189,7 +190,7 @@ export default abstract class DataMixin implements IData {
 
     // region IData
 
-    readonly '[Types/_source/IData]': boolean;
+    readonly '[Types/_source/IData]': EntityMarker;
 
     getAdapter(): adapter.IAdapter {
         if (typeof this._$adapter === 'string') {

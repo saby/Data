@@ -1,5 +1,6 @@
 import ManyToMany from './relation/ManyToMany';
 import IReceiver from './relation/IReceiver';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
@@ -8,7 +9,7 @@ import IReceiver from './relation/IReceiver';
  * @author Мальцев А.А.
  */
 export default abstract class ManyToManyMixin {
-    '[Types/_entity/ManyToManyMixin]': boolean;
+    '[Types/_entity/ManyToManyMixin]': EntityMarker;
 
     /**
      * Медиатор, отвечающий за связи между сущностями

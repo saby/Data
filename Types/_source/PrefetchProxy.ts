@@ -1,4 +1,4 @@
-import ICrud, {EntityKey} from './ICrud';
+import ICrud, { EntityKey } from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IDecorator from './IDecorator';
 import OptionsMixin from './OptionsMixin';
@@ -11,8 +11,9 @@ import {
     Model,
     ISerializableState
 } from '../entity';
-import {RecordSet} from '../collection';
-import {mixin} from '../util';
+import { RecordSet } from '../collection';
+import { mixin } from '../util';
+import { EntityMarker } from 'Types/_declarations';
 
 interface IData {
     read?: Model;
@@ -386,7 +387,7 @@ export default class PrefetchProxy extends mixin<
 
     // region IDecorator
 
-    readonly '[Types/_source/IDecorator]': boolean = true;
+    readonly '[Types/_source/IDecorator]': EntityMarker = true;
 
     getOriginal<T = ITarget>(): T {
         const original = this._$target;
@@ -400,7 +401,7 @@ export default class PrefetchProxy extends mixin<
 
     // region ICrud
 
-    readonly '[Types/_source/ICrud]': boolean = true;
+    readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model> {
         return (this._$target as ICrud).create(meta) as Promise<Model>;
@@ -432,7 +433,7 @@ export default class PrefetchProxy extends mixin<
 
     // region ICrudPlus
 
-    readonly '[Types/_source/ICrudPlus]': boolean = true;
+    readonly '[Types/_source/ICrudPlus]': EntityMarker = true;
 
     merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
         return (this._$target as ICrudPlus).merge(target, merged);

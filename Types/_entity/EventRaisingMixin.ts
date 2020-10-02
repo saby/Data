@@ -1,4 +1,5 @@
 import ObservableMixin from './ObservableMixin';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Миксин для реализации сущности, в которой можно приостанавливать генерацию событий об изменениях с фиксацией состояния.
@@ -8,7 +9,7 @@ import ObservableMixin from './ObservableMixin';
  * @author Мальцев А.А.
  */
 class EventRaisingMixin {
-    '[Types/_entity/EventRaisingMixin]': boolean;
+    '[Types/_entity/EventRaisingMixin]': EntityMarker;
 
     /**
      * @event После изменения режима генерации событий

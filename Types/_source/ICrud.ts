@@ -1,7 +1,8 @@
 import Query from './Query';
 import DataSet from './DataSet';
-import {Record} from '../entity';
-import {RecordSet} from '../collection';
+import { Record } from '../entity';
+import { RecordSet } from '../collection';
+import { EntityMarker } from '../_declarations';
 
 export type EntityKey = number | string;
 
@@ -48,7 +49,7 @@ export type EntityKey = number | string;
  * @author Мальцев А.А.
  */
 export default interface ICrud {
-    readonly '[Types/_source/ICrud]': boolean;
+    readonly '[Types/_source/ICrud]': EntityMarker;
 
     /**
      * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)

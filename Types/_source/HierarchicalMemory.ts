@@ -1,7 +1,7 @@
-import ICrud, {EntityKey} from './ICrud';
+import ICrud, { EntityKey } from './ICrud';
 import ICrudPlus from './ICrudPlus';
 import IDecorator from './IDecorator';
-import Memory, {IOptions as IMemoryOptions} from './Memory';
+import Memory, { IOptions as IMemoryOptions } from './Memory';
 import {IQueryRawData} from './Local';
 import Query from './Query';
 import DataSet from './DataSet';
@@ -12,8 +12,9 @@ import {
     Record,
     relation
 } from '../entity';
-import {RecordSet} from '../collection';
-import {mixin} from '../util';
+import { RecordSet } from '../collection';
+import { mixin } from '../util';
+import { EntityMarker } from '../_declarations';
 
 interface IOptions extends IMemoryOptions {
     parentProperty?: string;
@@ -175,7 +176,7 @@ export default class HierarchicalMemory extends mixin<
 
     // region IDecorator
 
-    readonly '[Types/_source/IDecorator]': boolean = true;
+    readonly '[Types/_source/IDecorator]': EntityMarker = true;
 
     getOriginal<T = Memory>(): T {
         return this._source as any;
@@ -185,7 +186,7 @@ export default class HierarchicalMemory extends mixin<
 
     // region ICrud
 
-    readonly '[Types/_source/ICrud]': boolean = true;
+    readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Record> {
         return this._source.create(meta);
@@ -262,7 +263,7 @@ export default class HierarchicalMemory extends mixin<
 
     // region ICrudPlus
 
-    readonly '[Types/_source/ICrudPlus]': boolean = true;
+    readonly '[Types/_source/ICrudPlus]': EntityMarker = true;
 
     merge(target: EntityKey, merged: EntityKey | EntityKey[]): Promise<void> {
         return this._source.merge(target, merged);

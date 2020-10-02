@@ -1,11 +1,12 @@
-import {assert} from 'chai';
+import { assert } from 'chai';
 import CowTableAdapter from 'Types/_entity/adapter/CowTable';
 import IAdapter from 'Types/_entity/adapter/IAdapter';
 import ITable from 'Types/_entity/adapter/ITable';
 import IRecord from 'Types/_entity/adapter/IRecord';
+import { EntityMarker } from 'Types/_declarations';
 
 class MockTable<T> implements ITable {
-    readonly '[Types/_entity/adapter/ITable]': boolean = true;
+    readonly '[Types/_entity/adapter/ITable]': EntityMarker = true;
     isClone: boolean;
     protected data: T[];
 
@@ -88,7 +89,7 @@ class MockTable<T> implements ITable {
 }
 
 class Mock<T> implements IAdapter {
-    readonly '[Types/_entity/adapter/IAdapter]': boolean = true;
+    readonly '[Types/_entity/adapter/IAdapter]': EntityMarker = true;
     isCloneable: boolean;
     lastTableAdapter: MockTable<T>;
 

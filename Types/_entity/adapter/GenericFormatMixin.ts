@@ -11,7 +11,8 @@ import {
     IUniversalFieldIdentityMeta,
     IUniversalFieldArrayMeta
 } from '../format';
-import {format} from '../../collection';
+import { format } from '../../collection';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Миксин для работы с форматом в адаптерах
@@ -20,7 +21,7 @@ import {format} from '../../collection';
  * @author Мальцев А.А.
  */
 export default abstract class GenericFormatMixin {
-    '[Types/_entity/adapter/GenericFormatMixin]': boolean;
+    '[Types/_entity/adapter/GenericFormatMixin]': EntityMarker;
 
     protected _moduleName: string;
 

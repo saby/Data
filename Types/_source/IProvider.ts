@@ -1,4 +1,5 @@
-import {IAbstract} from './provider';
+import { IAbstract } from './provider';
+import { EntityMarker } from '../_declarations';
 
 export interface IEndpoint {
     contract?: string;
@@ -12,7 +13,7 @@ export interface IEndpoint {
  * @author Мальцев А.А.
  */
 export default interface IProvider {
-    readonly '[Types/_source/IProvider]': boolean;
+    readonly '[Types/_source/IProvider]': EntityMarker;
 
     /**
      * @typedef {Object} Endpoint

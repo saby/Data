@@ -1,5 +1,5 @@
-import {ICloneable, OptionsToPropertyMixin} from '../entity';
-import {IHashMap} from '../_declarations';
+import { ICloneable, OptionsToPropertyMixin } from '../entity';
+import { IHashMap, EntityMarker } from '../_declarations';
 
 export enum ExpandMode {
     None,
@@ -681,7 +681,7 @@ export default class Query<T = unknown> implements ICloneable {
 
     // region ICloneable
 
-    readonly '[Types/_entity/ICloneable]': boolean;
+    readonly '[Types/_entity/ICloneable]': EntityMarker;
 
     clone<U = this>(): U {
         // TODO: deeper clone?

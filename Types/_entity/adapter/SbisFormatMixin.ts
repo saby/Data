@@ -1,5 +1,5 @@
 import FIELD_TYPE from './SbisFieldType';
-import {serialize} from '../factory';
+import { serialize } from '../factory';
 import {
     fieldsFactory,
     IFieldDeclaration,
@@ -17,11 +17,11 @@ import {
     IUniversalFieldIdentityMeta,
     IUniversalFieldArrayMeta
 } from '../format';
-import {DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION} from '../format/MoneyField';
-import {Map} from '../../shim';
-import {object, logger, protect} from '../../util';
-import {IHashMap} from '../../_declarations';
-import {FormatCarrier} from './SbisFormatController';
+import { DEFAULT_PRECISION as MONEY_FIELD_DEFAULT_PRECISION } from '../format/MoneyField';
+import { Map } from '../../shim';
+import { object, logger, protect } from '../../util';
+import { IHashMap, EntityMarker } from '../../_declarations';
+import { FormatCarrier } from './SbisFormatController';
 
 type ComplexTypeMarker = 'record' | 'recordset';
 export type GenericFormat = IRecordFormat | ITableFormat;
@@ -260,7 +260,7 @@ export function makeSerializable(data: object): void {
  * @author Мальцев А.А.
  */
 export default abstract class SbisFormatMixin {
-    readonly '[Types/_entity/adapter/SbisFormatMixin]': boolean;
+    readonly '[Types/_entity/adapter/SbisFormatMixin]': EntityMarker;
 
     protected _moduleName: string;
 

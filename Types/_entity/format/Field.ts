@@ -1,10 +1,11 @@
-import {mixin} from '../../util';
+import { mixin } from '../../util';
 import DestroyableMixin from '../DestroyableMixin';
 import IEquatable from '../IEquatable';
 import OptionsToPropertyMixin from '../OptionsToPropertyMixin';
 import SerializableMixin from '../SerializableMixin';
 import CloneableMixin from '../CloneableMixin';
-import {isEqual} from '../../object';
+import { isEqual } from '../../object';
+import { EntityMarker } from '../../_declarations';
 
 export interface IOptions {
     name?: string;
@@ -73,7 +74,7 @@ export default abstract class Field extends mixin<
 
     // region Types/_entity/IEquatable
 
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     /**
      * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable.

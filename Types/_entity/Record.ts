@@ -5,29 +5,29 @@ import IObservableObject from './IObservableObject';
 import IProducible from './IProducible';
 import IEquatable from './IEquatable';
 import DestroyableMixin from './DestroyableMixin';
-import {cast, serialize} from './factory';
+import { cast, serialize } from './factory';
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
-import ObservableMixin, {IOptions as IObservableMixinOptions} from './ObservableMixin';
+import ObservableMixin, { IOptions as IObservableMixinOptions } from './ObservableMixin';
 import EventRaisingMixin from './EventRaisingMixin';
-import SerializableMixin, {IState as IDefaultSerializableState, ISignature as ISerializableSignature} from './SerializableMixin';
+import SerializableMixin, { IState as IDefaultSerializableState, ISignature as ISerializableSignature } from './SerializableMixin';
 import CloneableMixin from './CloneableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
-import ReadWriteMixin, {IOptions as IReadWriteMixinOptions} from './ReadWriteMixin';
+import ReadWriteMixin, { IOptions as IReadWriteMixinOptions } from './ReadWriteMixin';
 import FormattableMixin, {
     ISerializableState as IFormattableSerializableState,
     IOptions as IFormattableOptions,
     AdapterDescriptor
 } from './FormattableMixin';
-import VersionableMixin, {IOptions as IVersionableMixinOptions} from './VersionableMixin';
-import {IReceiver} from './relation';
-import {IAdapter, IRecord, ITable} from './adapter';
-import {DateTime} from './applied';
-import {Field, IFieldDeclaration, IShortDeclaration, UniversalField} from './format';
-import {IEnumerable, EnumeratorCallback, enumerator, RecordSet, format} from '../collection';
-import {register, create} from '../di';
-import {protect, mixin, deprecateExtend} from '../util';
-import {Map} from '../shim';
-import {ExtendDate, IExtendDateConstructor} from '../_declarations';
+import VersionableMixin, { IOptions as IVersionableMixinOptions } from './VersionableMixin';
+import { IReceiver } from './relation';
+import { IAdapter, IRecord, ITable } from './adapter';
+import { DateTime } from './applied';
+import { Field, IFieldDeclaration, IShortDeclaration, UniversalField } from './format';
+import { IEnumerable, EnumeratorCallback, enumerator, RecordSet, format } from '../collection';
+import { register, create } from '../di';
+import { protect, mixin, deprecateExtend } from '../util';
+import { Map } from '../shim';
+import { ExtendDate, IExtendDateConstructor, EntityMarker } from '../_declarations';
 
 /**
  * Свойство, хранящее кэш полей
@@ -392,7 +392,7 @@ export default class Record<T = any> extends mixin<
 
     // region IObject
 
-    readonly '[Types/_entity/IObject]': boolean;
+    readonly '[Types/_entity/IObject]': EntityMarker;
 
     get<K extends keyof T>(name: K): T[K] {
         const cache = this._fieldsCache;
@@ -520,7 +520,7 @@ export default class Record<T = any> extends mixin<
 
     // region IEnumerable
 
-    readonly '[Types/_collection/IEnumerable]': boolean;
+    readonly '[Types/_collection/IEnumerable]': EntityMarker;
 
     /**
      * Возвращает энумератор для перебора названий полей записи
@@ -590,13 +590,13 @@ export default class Record<T = any> extends mixin<
 
     // region IObservableObject
 
-    readonly '[Types/_entity/IObservableObject]': boolean;
+    readonly '[Types/_entity/IObservableObject]': EntityMarker;
 
     // endregion
 
     // region IEquatable
 
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     isEqual(to: Record): boolean {
         if (to === this) {
@@ -628,7 +628,7 @@ export default class Record<T = any> extends mixin<
 
     // region IReceiver
 
-    readonly '[Types/_entity/relation/IReceiver]': boolean;
+    readonly '[Types/_entity/relation/IReceiver]': EntityMarker;
 
     relationChanged(which: any, route: string[]): any {
         const checkRawData = (fieldName, target) => {
@@ -708,18 +708,18 @@ export default class Record<T = any> extends mixin<
 
     // region IProducible
 
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': EntityMarker;
 
-   static produceInstance(data?: any, options?: any): any {
-      const instanceOptions: IOptions = {
-         rawData: data
-      };
-      if (options && options.adapter) {
-         instanceOptions.adapter = options.adapter;
-      }
+    static produceInstance(data?: any, options?: any): any {
+        const instanceOptions: IOptions = {
+            rawData: data
+        };
+        if (options && options.adapter) {
+            instanceOptions.adapter = options.adapter;
+        }
 
-      return new this(instanceOptions);
-   }
+        return new this(instanceOptions);
+    }
 
     // endregion
 

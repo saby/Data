@@ -1,4 +1,5 @@
-import {getMergeableProperty} from '../entity';
+import { getMergeableProperty } from '../entity';
+import { EntityMarker } from '../_declarations';
 
 export interface IOptionsOption {
     debug?: boolean;
@@ -15,7 +16,7 @@ export interface IOptions {
  * @author Мальцев А.А.
  */
 export default abstract class OptionsMixin {
-    readonly '[Types/_source/OptionsMixin]': boolean;
+    readonly '[Types/_source/OptionsMixin]': EntityMarker;
 
     /**
      * Дополнительные настройки источника данных.

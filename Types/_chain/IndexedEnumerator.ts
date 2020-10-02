@@ -1,12 +1,13 @@
 import Abstract from './Abstract';
-import {IEnumerator} from '../collection';
+import { IEnumerator } from '../collection';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Индексирующий энумератор
  * @author Мальцев А.А.
  */
 export default class IndexedEnumerator<T, U> implements IEnumerator<T, U> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     protected previous: Abstract<T, U>;
     protected _items: Array<[U, T]>;
     private index: number;

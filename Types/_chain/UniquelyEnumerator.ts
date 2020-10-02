@@ -1,5 +1,6 @@
-import {IEnumerator} from '../collection';
+import { IEnumerator } from '../collection';
 import Abstract from './Abstract';
+import { EntityMarker } from '../_declarations';
 
 type ExtractFunc = (item: any, index: string|number) => string|number;
 
@@ -8,7 +9,7 @@ type ExtractFunc = (item: any, index: string|number) => string|number;
  * @author Мальцев А.А.
  */
 export default class UniquelyEnumerator<T> implements IEnumerator<T> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     private previous: Abstract<T>;
     private idExtractor: ExtractFunc;
     private enumerator: IEnumerator<T>;

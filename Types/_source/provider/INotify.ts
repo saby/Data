@@ -1,4 +1,5 @@
 import IChannel from './IChannel';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс провайдера c доступом к серверным событиям
@@ -27,7 +28,7 @@ import IChannel from './IChannel';
  * </pre>
  */
 export default interface INotify {
-    readonly '[Types/_source/provider/INotify]': boolean;
+    readonly '[Types/_source/provider/INotify]': EntityMarker;
 
     /**
      * Возвращает канал серверных событий

@@ -1,4 +1,4 @@
-import IFlags, {IValue} from './IFlags';
+import IFlags, { IValue } from './IFlags';
 import Dictionary from './Dictionary';
 import {
    IProducible,
@@ -7,8 +7,9 @@ import {
    CloneableMixin,
    format
 } from '../entity';
-import {register} from '../di';
-import {mixin} from '../util';
+import { register } from '../di';
+import { mixin } from '../util';
+import { EntityMarker } from '../_declarations';
 
 interface IProduceOptions {
     format?: format.Field | format.UniversalField;
@@ -79,7 +80,7 @@ export default class Flags<T> extends mixin<
 
     // region IFlags
 
-    readonly '[Types/_collection/IFlags]': boolean;
+    readonly '[Types/_collection/IFlags]': EntityMarker;
 
     get(name: T, localize?: boolean): IValue {
         const ordinalIndex = this._getOrdinalIndex(name, localize);
@@ -186,7 +187,7 @@ export default class Flags<T> extends mixin<
 
     // region IProducible
 
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': EntityMarker;
 
     static produceInstance<T>(data?: any, options?: IProduceOptions): Flags<T> {
         return new this({

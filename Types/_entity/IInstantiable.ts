@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс получения уникального идентификатора для экземпляра класса
  * @interface Types/_entity/IInstantiable
@@ -5,7 +7,7 @@
  * @author Мальцев А.А.
  */
 export default interface IInstantiable {
-    readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly '[Types/_entity/IInstantiable]': EntityMarker;
 
     /**
      * Возвращает уникальный идентификатор экземпляра класса.

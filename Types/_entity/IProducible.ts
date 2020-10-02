@@ -1,10 +1,12 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс экземпляра класса, полученного через фабричный метод
  * @interface Types/_entity/IProducible
  * @author Мальцев А.А.
  */
 export default interface IProducible {
-    readonly '[Types/_entity/IProducible]': boolean;
+    readonly '[Types/_entity/IProducible]': EntityMarker;
 }
 
 /**

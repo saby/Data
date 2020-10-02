@@ -2,12 +2,12 @@ import DestroyableMixin from '../DestroyableMixin';
 import IAdapter from './IAdapter';
 import IRecord from './IRecord';
 import GenericFormatMixin from './GenericFormatMixin';
-import {Field} from '../format';
-import {create} from '../../di';
-import {mixin} from '../../util';
+import { Field } from '../format';
+import { create } from '../../di';
+import { mixin } from '../../util';
 import Record from '../Record';
-import {RecordSet, format} from '../../collection';
-import {IHashMap} from '../../_declarations';
+import { RecordSet, format } from '../../collection';
+import { IHashMap, EntityMarker } from '../../_declarations';
 
 /**
  * Адаптер для записи таблицы данных в формате записи.
@@ -50,7 +50,7 @@ export default class RecordSetRecord extends mixin<
 
     // region IRecord
 
-    readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': EntityMarker;
 
     /**
      * Конструктор

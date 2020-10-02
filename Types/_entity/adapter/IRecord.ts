@@ -1,5 +1,6 @@
 import Field from '../format/Field';
 import UniversalField from '../format/UniversalField';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс адаптера для записи таблицы данных
@@ -8,7 +9,7 @@ import UniversalField from '../format/UniversalField';
  * @author Мальцев А.А.
  */
 export default interface IRecord {
-    readonly '[Types/_entity/adapter/IRecord]': boolean;
+    readonly '[Types/_entity/adapter/IRecord]': EntityMarker;
 
     /**
      * Возвращает признак наличия поля в данных

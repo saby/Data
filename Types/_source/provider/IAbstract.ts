@@ -1,4 +1,5 @@
 import { ICacheParameters } from '../Remote';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Интерфейс абстрактного провайдера
@@ -7,7 +8,7 @@ import { ICacheParameters } from '../Remote';
  * @author Мальцев А.А.
  */
 export default interface IAbstract {
-    readonly '[Types/_source/provider/IAbstract]': boolean;
+    readonly '[Types/_source/provider/IAbstract]': EntityMarker;
 
     /**
      * Вызывает удаленный сервис

@@ -1,11 +1,12 @@
-import {assert} from 'chai';
+import { assert } from 'chai';
 import CowAdapter from 'Types/_entity/adapter/Cow';
 import CowTable from 'Types/_entity/adapter/CowTable';
 import CowRecord from 'Types/_entity/adapter/CowRecord';
 import IAdapter from 'Types/_entity/adapter/IAdapter';
+import { EntityMarker } from 'Types/_declarations';
 
 class Mock<T> implements IAdapter {
-    readonly '[Types/_entity/adapter/IAdapter]': boolean = true;
+    readonly '[Types/_entity/adapter/IAdapter]': EntityMarker = true;
 
     forTable(data: T): any {
         return {

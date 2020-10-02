@@ -7,4 +7,5 @@
  * Declarations library
  * @author Мальцев А.А.
  */
-export {IHashMap} from './_declarations';
+export { IHashMap } from './_declarations';
+export { EntityMarker } from './_declarations';

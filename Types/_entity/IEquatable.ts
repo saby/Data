@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс сравнения объектов.
  * @interface Types/_entity/IEquatable
@@ -5,7 +7,7 @@
  * @author Мальцев А.А.
  */
 export default interface IEquatable {
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     /**
      * Проверяет эквивалентность текущего объекта другому объекту.

@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс объектов, которые могут сохранять свое состояние.
  * @interface Types/_entity/IStateful
@@ -12,7 +14,7 @@
  * @author Мальцев А.А.
  */
 export default interface IStateful {
-    readonly '[Types/_entity/IStateful]': boolean;
+    readonly '[Types/_entity/IStateful]': EntityMarker;
 
     /**
      * Returns state for this instance.

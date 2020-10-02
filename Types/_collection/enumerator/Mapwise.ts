@@ -1,5 +1,6 @@
 import IEnumerator from '../IEnumerator';
-import {Map} from '../../shim';
+import { Map } from '../../shim';
+import { EntityMarker } from '../../_declarations';
 
 /**
  * Энумератор для Map
@@ -53,7 +54,7 @@ export default class Mapwise<T> implements IEnumerator<T> {
 
     // region IEnumerator
 
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
 
     getCurrent(): any {
         return this._index === -1 ? undefined : this._items.get(this._keys[this._index]);

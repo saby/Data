@@ -1,4 +1,5 @@
 import IEnumerator from './IEnumerator';
+import { EntityMarker } from '../_declarations';
 
 export type EnumeratorIndex = number | string;
 export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => void;
@@ -17,7 +18,7 @@ export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => 
  * @author Мальцев А.А.
  */
 export default interface IEnumerable<T, U = EnumeratorIndex> {
-    readonly '[Types/_collection/IEnumerable]': boolean;
+    readonly '[Types/_collection/IEnumerable]': EntityMarker;
 
     /**
      * Возвращает энумератор для перебора элементов коллекции.

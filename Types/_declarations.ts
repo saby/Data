@@ -1,3 +1,5 @@
+export type EntityMarker = true;
+
 export type CompareFunction<T = unknown> = (a: T, b: T) => number;
 
 export interface IHashMap<T> {

@@ -1,7 +1,8 @@
 import OptionsToPropertyMixin from './OptionsToPropertyMixin';
 import ObservableMixin from './ObservableMixin';
 import ManyToManyMixin from './ManyToManyMixin';
-import {protect} from '../util';
+import { protect } from '../util';
+import { EntityMarker } from '../_declarations';
 
 export interface IOptions {
     writable?: boolean;
@@ -23,7 +24,7 @@ const $writable = protect('writable');
  * @author Мальцев А.А.
  */
 export default abstract class ReadWriteMixin {
-    '[Types/_entity/ReadWriteMixin]': boolean;
+    '[Types/_entity/ReadWriteMixin]': EntityMarker;
 
     /**
      * @deprecated Старомодные параметры.

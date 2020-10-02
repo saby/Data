@@ -1,3 +1,5 @@
+import { EntityMarker } from '../_declarations';
+
 /**
  * Интерфейс доступа к свойствам объекта.
  * Позволяет читать и записывать значения свойств, а также проверять их наличие.
@@ -6,7 +8,7 @@
  * @author Мальцев А.А.
  */
 export default interface IObject<T = any> {
-    readonly '[Types/_entity/IObject]': boolean;
+    readonly '[Types/_entity/IObject]': EntityMarker;
 
     /**
      * Возвращает значение свойства.

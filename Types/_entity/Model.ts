@@ -1,15 +1,15 @@
-import Record, {IOptions as IRecordOptions, ISerializableState as IRecordSerializableState} from './Record';
-import {AdapterDescriptor} from './FormattableMixin';
+import Record, { IOptions as IRecordOptions, ISerializableState as IRecordSerializableState } from './Record';
+import { AdapterDescriptor } from './FormattableMixin';
 import InstantiableMixin from './InstantiableMixin';
 import IStateful from './IStateful';
-import {IState as IDefaultSerializableState} from './SerializableMixin';
-import {IAdapter} from './adapter';
-import {Compute, ICompute, Track, ITrack} from './functor';
-import {enumerator, EnumeratorCallback} from '../collection';
-import {create} from '../di';
-import {applyMixins, deprecateExtend, logger, protect} from '../util';
-import {Map, Set} from '../shim';
-import {IHashMap} from '../_declarations';
+import { IState as IDefaultSerializableState } from './SerializableMixin';
+import { IAdapter } from './adapter';
+import { Compute, ICompute, Track, ITrack } from './functor';
+import { enumerator, EnumeratorCallback } from '../collection';
+import { create } from '../di';
+import { applyMixins, deprecateExtend, logger, protect } from '../util';
+import { Map, Set } from '../shim';
+import { IHashMap, EntityMarker } from '../_declarations';
 
 type PropertyGetter<T, U> = (this: T, value?: U) => U;
 type PropertySetter<T, U> = (this: T, value: U) => U;
@@ -653,7 +653,7 @@ class Model<T = any> extends Record<T> implements IStateful {
 
     // region IStateful
 
-    readonly '[Types/_entity/IStateful]': boolean;
+    readonly '[Types/_entity/IStateful]': EntityMarker;
 
     getInstanceState<T = IHashMap<any>>(): T {
         if (!this._$properties) {

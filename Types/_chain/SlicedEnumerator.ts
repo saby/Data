@@ -1,12 +1,13 @@
-import {IEnumerator} from '../collection';
+import { IEnumerator } from '../collection';
 import Abstract from './Abstract';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Вырезающий энумератор
  * @author Мальцев А.А.
  */
 export default class SlicedEnumerator<T> implements IEnumerator<T> {
-    readonly '[Types/_collection/IEnumerator]': boolean = true;
+    readonly '[Types/_collection/IEnumerator]': EntityMarker = true;
     private previous: Abstract<T>;
     private begin: number;
     private end: number;

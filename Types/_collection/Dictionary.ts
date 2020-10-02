@@ -1,7 +1,7 @@
 import IEnumerable from './IEnumerable';
-import {EnumeratorCallback} from './IEnumerable';
+import { EnumeratorCallback } from './IEnumerable';
 import IEnumerator from './IEnumerator';
-import {IIndex} from './IEnum';
+import { IIndex } from './IEnum';
 import ArrayEnumerator from './enumerator/Arraywise';
 import Objectwise from './enumerator/Objectwise';
 import {
@@ -11,8 +11,8 @@ import {
     ObservableMixin,
     format
 } from '../entity';
-import {mixin} from '../util';
-import {IHashMap} from '../_declarations';
+import { mixin } from '../util';
+import { IHashMap, EntityMarker } from '../_declarations';
 
 type DictionaryValues<T> = T[] | IHashMap<T>;
 
@@ -94,7 +94,7 @@ export default abstract class Dictionary<T> extends mixin<
 
     // region IEnumerable
 
-    readonly '[Types/_collection/IEnumerable]': boolean;
+    readonly '[Types/_collection/IEnumerable]': EntityMarker;
 
     getEnumerator(localize?: boolean): IEnumerator<T> {
         const dictionary = localize && this._$localeDictionary ? this._$localeDictionary : this._$dictionary;
@@ -125,7 +125,7 @@ export default abstract class Dictionary<T> extends mixin<
 
     // region IEquatable
 
-    readonly '[Types/_entity/IEquatable]': boolean;
+    readonly '[Types/_entity/IEquatable]': EntityMarker;
 
     isEqual(to: any): boolean {
         if (!(to instanceof Dictionary)) {
