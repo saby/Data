@@ -84,7 +84,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                 this._itemsSlice(),
                 0,
                 oldItems,
-                0
+                0,
+                'assign'
             );
         }
     }
@@ -102,7 +103,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             this._itemsSlice(count),
             count,
             [],
-            0
+            0,
+            'append'
         );
     }
 
@@ -119,7 +121,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             this._itemsSlice(0, this.getCount() - length),
             0,
             [],
-            0
+            0,
+            'prepend'
         );
     }
 
@@ -136,7 +139,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             this._itemsSlice(),
             0,
             oldItems,
-            0
+            0,
+            'clear'
         );
     }
 
@@ -148,7 +152,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             this._itemsSlice(at, at + 1),
             at,
             [],
-            0
+            0,
+            'add'
         );
     }
 
@@ -159,7 +164,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             [],
             0,
             [item],
-            index
+            index,
+            'removeAt'
         );
         return item;
     }
@@ -175,7 +181,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                 this._itemsSlice(at, at + 1),
                 at,
                 [oldItem],
-                at
+                at,
+                'replace'
             );
         }
     }
@@ -190,7 +197,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                 [item],
                 to,
                 [item],
-                from
+                from,
+                'move'
             );
         }
     }
@@ -246,7 +254,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                     this._itemsSlice(),
                     0,
                     [],
-                    0
+                    0,
+                    'setEventRaising'
                 );
             } else {
                 // Собираем изменившиеся элементы в пачки
@@ -259,7 +268,8 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                             pack,
                             index,
                             pack,
-                            index
+                            index,
+                            'setEventRaising'
                         );
                     }
                 );

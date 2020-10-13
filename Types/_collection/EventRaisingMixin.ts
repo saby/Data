@@ -97,19 +97,19 @@ class EventRaisingMixin {
                 changes.newItemsIndex,
                 changes.oldItems,
                 changes.oldItemsIndex,
-                session
+                'analizeSession'
             );
         });
     }
 
     /**
      * Генерирует событие об изменении коллекции
-     * @param action Действие, приведшее к изменению.
-     * @param newItems Новые исходной коллекции.
-     * @param newItemsIndex Индекс коллекции, в котором появились новые элементы.
-     * @param oldItems Удаленные элементы коллекции.
-     * @param oldItemsIndex Индекс коллекции, в котором удалены элементы.
-     * @param [session] Серия обновлений
+     * @param action Действие, приведшее к изменению
+     * @param newItems Новые исходной коллекции
+     * @param newItemsIndex Индекс коллекции, в котором появились новые элементы
+     * @param oldItems Удаленные элементы коллекции
+     * @param oldItemsIndex Индекс коллекции, в котором удалены элементы
+     * @param [reason] Доп. информация о причине изменения
      * @protected
      */
     protected _notifyCollectionChange(
@@ -118,7 +118,7 @@ class EventRaisingMixin {
         newItemsIndex: number,
         oldItems: any[],
         oldItemsIndex: number,
-        session?: ISession
+        reason?: string
     ): void {
         if (!this._isNeedNotifyCollectionChange()) {
             return;
@@ -138,7 +138,8 @@ class EventRaisingMixin {
             newItems,
             newItemsIndex,
             oldItems,
-            oldItemsIndex
+            oldItemsIndex,
+            reason
         );
 
         this._blockChangesMessage = '';
