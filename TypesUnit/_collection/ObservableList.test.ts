@@ -12,11 +12,13 @@ describe('Types/_collection/ObservableList', () => {
         newItemsIndex: any,
         oldItems: any,
         oldItemsIndex: any,
+        reason: string,
         actionOriginal: any,
         newItemsOriginal: any,
         newItemsIndexOriginal: any,
         oldItemsOriginal: any,
-        oldItemsIndexOriginal: any
+        oldItemsIndexOriginal: any,
+        reasonOriginal: string
     ): void {
         if (action !== actionOriginal) {
             throw new Error('Invalid action');
@@ -38,6 +40,10 @@ describe('Types/_collection/ObservableList', () => {
         }
         if (oldItemsIndex !== oldItemsIndexOriginal) {
             throw new Error('Invalid oldItemsIndex');
+        }
+
+        if (reason !== reasonOriginal) {
+            throw new Error(`Invalid reason`);
         }
     }
 
@@ -83,7 +89,7 @@ describe('Types/_collection/ObservableList', () => {
                 items: items.slice()
             });
             const concatItems = [1, 2, 3];
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
                         action,
@@ -91,11 +97,13 @@ describe('Types/_collection/ObservableList', () => {
                         newItemsIndex,
                         oldItems,
                         oldItemsIndex,
+                        reason,
                         IBindCollection.ACTION_ADD,
                         concatItems,
                         items.length,
                         [],
-                        0
+                        0,
+                        'append'
                     );
                     done();
                 } catch (err) {
@@ -119,11 +127,11 @@ describe('Types/_collection/ObservableList', () => {
                 items: items.slice()
             });
             const concatItems = [4, 5, 6];
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_ADD, concatItems, 0, [], 0
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_ADD, concatItems, 0, [], 0, 'prepend'
                     );
                     done();
                 } catch (err) {
@@ -148,11 +156,11 @@ describe('Types/_collection/ObservableList', () => {
                 items: items.slice()
             });
             const fillItems = ['a', 'b'];
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_RESET, fillItems, 0, items, 0
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_RESET, fillItems, 0, items, 0, 'assign'
                     );
                     done();
                 } catch (err) {
@@ -228,11 +236,11 @@ describe('Types/_collection/ObservableList', () => {
             const list = new ObservableList({
                 items: items.slice()
             });
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_RESET, [], 0, items, 0
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_RESET, [], 0, items, 0, 'clear'
                     );
                     done();
                 } catch (err) {
@@ -258,11 +266,11 @@ describe('Types/_collection/ObservableList', () => {
                 let andDone = false;
                 let addIndex = items.length;
                 let addItem;
-                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                     try {
                         checkEvent(
-                            action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                            IBindCollection.ACTION_ADD, [addItem], addIndex, [], 0
+                            action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                            IBindCollection.ACTION_ADD, [addItem], addIndex, [], 0, 'add'
                         );
                         if (andDone) {
                             done();
@@ -298,11 +306,11 @@ describe('Types/_collection/ObservableList', () => {
                 });
                 let andDone = false;
                 let addItem;
-                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                     try {
                         checkEvent(
-                            action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                            IBindCollection.ACTION_ADD, [addItem], 0, [], 0
+                            action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                            IBindCollection.ACTION_ADD, [addItem], 0, [], 0, 'add'
                         );
                         if (andDone) {
                             done();
@@ -337,11 +345,11 @@ describe('Types/_collection/ObservableList', () => {
                 let andDone = false;
                 let addItem;
                 let at;
-                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                     try {
                         checkEvent(
-                            action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                            IBindCollection.ACTION_ADD, [addItem], at, [], 0
+                            action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                            IBindCollection.ACTION_ADD, [addItem], at, [], 0, 'add'
                         );
                         if (andDone) {
                             done();
@@ -379,11 +387,11 @@ describe('Types/_collection/ObservableList', () => {
             let andDone = false;
             let oldItem;
             let at;
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_REMOVE, [], 0, [oldItem], at
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_REMOVE, [], 0, [oldItem], at, 'removeAt'
                     );
                     if (andDone) {
                         done();
@@ -458,11 +466,11 @@ describe('Types/_collection/ObservableList', () => {
             let oldItem;
             let newItem;
             let at;
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_REPLACE, [newItem], at, [oldItem], at
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_REPLACE, [newItem], at, [oldItem], at, 'replace'
                     );
                     if (andDone) {
                         done();
@@ -524,11 +532,11 @@ describe('Types/_collection/ObservableList', () => {
             let newItem;
             let from;
             let to;
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 try {
                     checkEvent(
-                        action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                        IBindCollection.ACTION_MOVE, [newItem], to, [oldItem], from
+                        action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason,
+                        IBindCollection.ACTION_MOVE, [newItem], to, [oldItem], from, 'move'
                     );
                     if (andDone) {
                         done();

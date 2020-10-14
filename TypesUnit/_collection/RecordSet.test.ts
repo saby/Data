@@ -491,12 +491,13 @@ describe('Types/_collection/RecordSet', () => {
         it('should trigger an event with valid arguments', () => {
             const given: any = {};
             let firesCount = 0;
-            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+            const handler = (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason) => {
                 given.action = action;
                 given.newItems = newItems;
                 given.newItemsIndex = newItemsIndex;
                 given.oldItems = oldItems;
                 given.oldItemsIndex = oldItemsIndex;
+                given.reason = reason;
                 firesCount++;
             };
             const oldCount = rs.getCount();
@@ -520,6 +521,7 @@ describe('Types/_collection/RecordSet', () => {
             assert.strictEqual(given.newItemsIndex, 0);
             assert.strictEqual(given.oldItems.length, oldCount);
             assert.strictEqual(given.oldItemsIndex, 0);
+            assert.strictEqual(given.reason, 'setRawData');
         });
     });
 

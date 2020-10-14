@@ -819,7 +819,8 @@ class RecordSet<
             this._$items,
             0,
             oldItems,
-            0
+            0,
+            'setRawData'
         );
     }
 
