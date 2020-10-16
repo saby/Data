@@ -13,7 +13,6 @@ import CowAdapter from 'Types/_entity/adapter/Cow';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 import {IHashMap} from 'Types/declarations';
 import * as Serializer from 'Core/Serializer';
-import recordSet from "../../Types/_collection/factory/recordSet";
 
 const RecordState = Record.RecordState;
 
@@ -1116,7 +1115,7 @@ describe('Types/_collection/RecordSet', () => {
                 ]
             });
 
-            const recordSet: RecordSet = new RecordSet();
+            const recordSet = new RecordSet();
 
             recordSet.append([record]);
 
