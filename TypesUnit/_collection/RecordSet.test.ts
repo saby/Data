@@ -1103,6 +1103,59 @@ describe('Types/_collection/RecordSet', () => {
 
             assert.deepEqual(given, expected);
         });
+
+        it('should add two models', () => {
+            const rd = [{
+                id: 1,
+                rec: {}
+            }, {
+                id: 51,
+                rec: {}
+            }];
+
+            const format = [
+                {
+                    name: 'id',
+                    type: 'integer'
+                },
+                {
+                    name: 'rec',
+                    type: 'record'
+                }
+            ]
+            const recordSet = new RecordSet();
+
+            recordSet.append([new Model({
+                rawData: rd[0],
+                format: format
+            }), new Model({
+                rawData: rd[1],
+                format: format
+            })]);
+
+            assert.deepEqual(recordSet.at(0).getRawData(), rd[0]);
+            assert.deepEqual(recordSet.at(1).getRawData(), rd[1]);
+        });
+
+        it('should add model with the same format as external model has', () => {
+            const record = new Model({
+                rawData: {
+                    rec: {}
+                },
+                format: [
+                    {
+                        name: 'rec',
+                        type: 'record'
+                    }
+                ]
+            });
+
+            const recordSet = new RecordSet();
+
+            recordSet.append([record]);
+
+            assert.isTrue(recordSet.at(0).getFormat().isEqual(record.getFormat()));
+        });
     });
 
     describe('.prepend', () => {

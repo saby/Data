@@ -1456,7 +1456,7 @@ class RecordSet<
      * @protected
      */
     protected _normalizeItems(items: T[], state?: RecordState, itsRecordSet?: boolean): T[] {
-        const formatDefined = this.hasDeclaredFormat();
+        let formatDefined = this.hasDeclaredFormat();
         const result = [];
         let isEqualFormat;
         let resultItem;
@@ -1473,6 +1473,11 @@ class RecordSet<
                 format = item.getFormat(true);
                 this._clearFormat();
                 this._resetRawDataFields();
+
+                if (item.hasDeclaredFormat()) {
+                    this._format = this._$format = format.clone();
+                    formatDefined = true;
+                }
             } else if (!format) {
                 format = this._getFormat(true);
             }
