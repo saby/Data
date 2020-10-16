@@ -13,6 +13,7 @@ import CowAdapter from 'Types/_entity/adapter/Cow';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 import {IHashMap} from 'Types/declarations';
 import * as Serializer from 'Core/Serializer';
+import recordSet from "../../Types/_collection/factory/recordSet";
 
 const RecordState = Record.RecordState;
 
@@ -1100,6 +1101,26 @@ describe('Types/_collection/RecordSet', () => {
             expected[0].newItemsIndex = oldCount;
 
             assert.deepEqual(given, expected);
+        });
+
+        it('should add model with the same format as external model has', () => {
+            const record = new Model({
+                rawData: {
+                    rec: {}
+                },
+                format: [
+                    {
+                        name: 'rec',
+                        type: 'record'
+                    }
+                ]
+            });
+
+            const recordSet: RecordSet = new RecordSet();
+
+            recordSet.append([record]);
+
+            assert.isTrue(recordSet.at(0).getFormat().isEqual(record.getFormat()));
         });
     });
 

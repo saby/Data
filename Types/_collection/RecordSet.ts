@@ -1472,6 +1472,10 @@ class RecordSet<
                 format = item.getFormat(true);
                 this._clearFormat();
                 this._resetRawDataFields();
+
+                if (item.hasDeclaredFormat()) {
+                    this._format = this._$format = format.clone();
+                }
             } else if (!format) {
                 format = this._getFormat(true);
             }
