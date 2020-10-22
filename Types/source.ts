@@ -8,6 +8,7 @@
  * @includes ICrudPlus Types/_source/ICrudPlus
  * @includes IData Types/_source/IData
  * @includes IProvider Types/_source/IProvider
+ * @includes IProviderEndpoint Types/_source/IProvider#IEndpoint
  * @includes IRpc Types/_source/IRpc
  * @includes Local Types/_source/Local
  * @includes Memory Types/_source/Memory
@@ -35,6 +36,7 @@
  * @includes ICrudPlus Types/_source/ICrudPlus
  * @includes IData Types/_source/IData
  * @includes IProvider Types/_source/IProvider
+ * @includes IProviderEndpoint Types/_source/IProvider#IEndpoint
  * @includes IRpc Types/_source/IRpc
  * @includes Local Types/_source/Local
  * @includes Memory Types/_source/Memory
@@ -51,8 +53,6 @@
  * @author Мальцев А.А.
  */
 
-import {register} from './di';
-
 export {default as Base} from './_source/Base';
 export {default as BindingMixin} from './_source/BindingMixin';
 import {default as DataSet} from './_source/DataSet';
@@ -62,7 +62,7 @@ export {default as ICrud, EntityKey as CrudEntityKey} from './_source/ICrud';
 export {default as ICrudPlus} from './_source/ICrudPlus';
 export {default as IData} from './_source/IData';
 export {default as IDecorator} from './_source/IDecorator';
-export {default as IProvider} from './_source/IProvider';
+export {default as IProvider, IEndpoint as  IProviderEndpoint} from './_source/IProvider';
 export {default as IRpc} from './_source/IRpc';
 export {default as Local, MOVE_POSITION as LOCAL_MOVE_POSITION} from './_source/Local';
 import {default as Memory} from './_source/Memory';
@@ -91,6 +91,8 @@ export {
     getQueryArguments as sbisServiceGetQueryArguments,
     IOptions as ISbisServiceOptions
 } from './_source/SbisService';
+
+import {register} from './di';
 
 register('Types/source:DataSet', DataSet, {instantiate: false});
 register('Types/source:provider.SbisBusinessLogic', provider.SbisBusinessLogic, {instantiate: false});
