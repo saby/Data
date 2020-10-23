@@ -1,7 +1,7 @@
 import ICloneable from './ICloneable';
 import { protect } from '../util';
 import { EntityMarker } from '../_declarations';
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 
 const $clone = protect('clone');
 

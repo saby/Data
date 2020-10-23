@@ -6,7 +6,7 @@
 
 import {IObject, ICloneable} from '../entity';
 import {Set} from '../shim';
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 
 interface IOptions {
     keepUndefined?: boolean;
