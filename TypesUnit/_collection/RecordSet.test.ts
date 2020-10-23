@@ -12,7 +12,7 @@ import SbisAdapter from 'Types/_entity/adapter/Sbis';
 import CowAdapter from 'Types/_entity/adapter/Cow';
 import {ITableFormat} from 'Types/_entity/adapter/SbisFormatMixin';
 import {IHashMap} from 'Types/declarations';
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 
 const RecordState = Record.RecordState;
 
