@@ -1,7 +1,7 @@
 import ICloneable from './ICloneable';
+import { getJsonReplacerWithStorage, getJsonReviverWithStorage } from '../formatter';
 import { protect } from '../util';
 import { EntityMarker } from '../_declarations';
-import {Serializer} from 'UI/State';
 
 const $clone = protect('clone');
 
@@ -34,10 +34,12 @@ export default class CloneableMixin implements ICloneable {
 
             clone = Module.fromJSON(data);
         } else {
-            const serializer = new Serializer();
+            const functionsStorage: Map<number, Function> = new Map();
+            const replacer = getJsonReplacerWithStorage(functionsStorage);
+            const reviver = getJsonReviverWithStorage(undefined, functionsStorage);
             clone = JSON.parse(
-                JSON.stringify(this, serializer.serialize),
-                serializer.deserialize
+                JSON.stringify(this, replacer),
+                reviver
             );
         }
         clone[$clone] = true;

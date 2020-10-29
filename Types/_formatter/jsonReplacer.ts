@@ -1,23 +1,36 @@
 import {ISerializableSignature} from '../entity';
 
-type TLink = 'link';
-type TSpecial = '+inf' | '-inf' | 'undef' | 'NaN';
+export type LinkSignatureMark = 'link';
+export type FunctionSignatureMark = 'function';
+export type NativeSignatureMark = '+inf' | '-inf' | 'undef' | 'NaN';
 
 export interface ILinkSignature {
-    '$serialized$': TLink;
+    '$serialized$': LinkSignatureMark;
+    id: number;
+}
+
+export interface IFunctionSignature {
+    '$serialized$': FunctionSignatureMark;
     id: number;
 }
 
 export interface ISpecialSignature {
-    '$serialized$': TSpecial;
+    '$serialized$': NativeSignatureMark;
     id: number;
 }
 
 export type ISignature = ISerializableSignature | ILinkSignature | ISpecialSignature;
+type JsonReplacerFunction<T> = (name: string, value: T) => ISignature | T;
 
-let linksStorage = {};
-
-function serializeLink(value: ISerializableSignature): ISerializableSignature | ILinkSignature {
+/**
+ * Serializes links to the same object instances which allows do not to repeat their signatures
+ * @param value Serializable value
+ * @param storage Instances link storage to fill in
+ */
+function serializeLink(
+    value: ISerializableSignature,
+    storage: Map<number, ILinkSignature>
+): ISerializableSignature | ILinkSignature {
     if (
         value &&
         typeof value === 'object' &&
@@ -25,45 +38,73 @@ function serializeLink(value: ISerializableSignature): ISerializableSignature | 
         value.hasOwnProperty('id')
     ) {
         const id = value.id;
-        if (linksStorage.hasOwnProperty(id)) {
+        if (storage.has(id)) {
             return {
                 $serialized$: 'link',
                 id
             };
         } else {
-            linksStorage[id] = value;
+            storage.set(id, value as ILinkSignature);
         }
     }
 
     return value;
 }
 
-export default function jsonReplacer<T = unknown>(name: string, value: T): ISignature | T {
-    let result;
-    if (value as unknown === Infinity) {
-        result = {
-            $serialized$: '+inf'
-        };
-    } else if (value as unknown === -Infinity) {
-        result = {
-           $serialized$: '-inf'
-        };
-    } else if (value === undefined) {
-        result = {
-            $serialized$: 'undef'
-        };
-    } else if (Number.isNaN(value as unknown as number)) {
-        result = {
-            $serialized$: 'NaN'
-        };
-    } else {
-        result = serializeLink(value as unknown as ISerializableSignature);
-    }
+/**
+ * Creates a storage based replacer function for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify JSON.stringify}.
+ * @param functionsStorage Storage for functions
+ */
+export function getReplacerWithStorage<T = unknown>(
+    functionsStorage?: Map<number, Function>
+): JsonReplacerFunction<T> {
+    const linksStorage: Map<number, ILinkSignature> = new Map();
 
-    // Resolve links and instances at root
-    if (name === '' && (!this || Object.keys(this).length === 1)) {
-        linksStorage = {};
-    }
+    return function jsonReplacerWithStorage(name: string, value: T): ISignature | T {
+        let result;
 
-    return result;
+        if (functionsStorage && typeof value === 'function') {
+            const id = functionsStorage.size;
+            result = {
+                $serialized$: 'function',
+                id
+            };
+            functionsStorage.set(id, value);
+            return result;
+        }
+
+        if (value as unknown === Infinity) {
+            result = {
+                $serialized$: '+inf'
+            };
+        } else if (value as unknown === -Infinity) {
+            result = {
+               $serialized$: '-inf'
+            };
+        } else if (value === undefined) {
+            result = {
+                $serialized$: 'undef'
+            };
+        } else if (Number.isNaN(value as unknown as number)) {
+            result = {
+                $serialized$: 'NaN'
+            };
+        } else {
+            result = serializeLink(value as unknown as ISerializableSignature, linksStorage);
+        }
+
+        // Clear storage after root passed
+        if (name === '' && (!this || Object.keys(this).length === 1)) {
+            linksStorage.clear();
+        }
+
+        return result;
+    };
 }
+
+/**
+ * Default replacer for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify JSON.stringify}.
+ * @param name Property name
+ * @param value Property value
+ */
+export default getReplacerWithStorage();
