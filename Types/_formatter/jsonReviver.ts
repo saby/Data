@@ -7,6 +7,7 @@ import {
     ISerializableConstructor
 } from '../entity';
 import {
+    isInstantiable,
     resolve
 } from '../di';
 
@@ -28,6 +29,16 @@ interface IConfig {
     resolveDates?: boolean;
 }
 
+interface IParsed {
+    name: string;
+    path: string[];
+}
+
+interface IEsModule<T> {
+    __esModule: boolean;
+    default?: T;
+}
+
 type JsonReviverFunction<T> = (name: string, value: ISignature | unknown) => T;
 
 const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
@@ -35,6 +46,62 @@ const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 const defaultConfig: IConfig = {
     resolveDates: true
 };
+
+/**
+ * Parses module declaration include library name name and path.
+ * TODO: switch to wasaby-loader wnen it will be ready
+ * @param name Module name like 'Library/Name:Path.To.Module' or just 'Module/Name'
+ * @public
+ */
+export function parse(name: string): IParsed {
+    const parts = String(name || '').split(':', 2);
+    return {
+        name: parts[0],
+        path: parts[1] ? parts[1].split('.') : []
+    };
+}
+
+/**
+ * Resolves module by its name
+ * TODO: switch to wasaby-loader wnen it will be ready
+ * @param name Module name
+ * @param loader Modules loader
+ */
+function resolveConstructor(name: string, loader: Require = requirejs): ISerializableConstructor {
+    let module: ISerializableConstructor;
+
+    // Try to use DI because it's way too much faster
+    if (isInstantiable(name) === false) {
+        module = resolve<ISerializableConstructor>(name);
+    }
+
+    // Use RequireJS if module doesn't registered in DI
+    if (!module) {
+        const parts = parse(name);
+
+        module = loader(parts.name);
+        if (!module) {
+            throw new ReferenceError(`The module "${parts.name}" is not loaded yet. Please make sure it\'s included into application dependencies.`);
+        }
+
+        // Extract default module in case of ES6 module
+        if (
+            (module as unknown as IEsModule<ISerializableConstructor>).__esModule &&
+            (module as unknown as IEsModule<ISerializableConstructor>).default
+        ) {
+            module = (module as unknown as IEsModule<ISerializableConstructor>).default;
+        }
+
+        parts.path.forEach((element, index) => {
+            if (!(element in module)) {
+                throw new Error(`The module "${parts.name}" doesn\'t export element "${parts.path.slice(0, index).join('.')}".`);
+            }
+            module = module[element];
+        });
+    }
+
+    return module;
+}
 
 /**
  * Resolves links with corresponding instances signatures
@@ -85,7 +152,7 @@ function resolveInstances(
             instance = instancesStorage.get(item.value.id);
         } else if ((item.value as ISerializableSignature).module) {
             const name = (item.value as ISerializableSignature).module;
-            const Module = resolve<ISerializableConstructor>(name);
+            const Module = resolveConstructor(name);
             if (!Module) {
                 throw new Error(`The module "${name}" is not loaded yet.`);
             }
