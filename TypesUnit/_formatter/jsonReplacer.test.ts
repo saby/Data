@@ -16,6 +16,9 @@ class Serializeable {
     static instancesCount: number = 0;
 }
 
+class ComplexObject {
+}
+
 describe('Types/_formatter/jsonReplacer', () => {
     describe('jsonReplacer()', () => {
         it('should serialize Infinity', () => {
@@ -41,6 +44,12 @@ describe('Types/_formatter/jsonReplacer', () => {
         it('should serialize undefined if it\'s an array element', () => {
             const result = jsonReplacer('n', undefined) as ISpecialSignature;
             assert.strictEqual(result.$serialized$, 'undef');
+        });
+
+        it('should serialize complex object as undefined', () => {
+            const obj = new ComplexObject();
+            const result = jsonReplacer('n', obj) as ISpecialSignature;
+            assert.isUndefined(result);
         });
 
         it('should return unchanged', () => {

@@ -22,6 +22,14 @@ export interface ISpecialSignature {
 export type ISignature = ISerializableSignature | ILinkSignature | ISpecialSignature;
 type JsonReplacerFunction<T> = (name: string, value: T) => ISignature | T;
 
+const OBJECT_TAG = '[object Object]';
+
+function isPlainObject(obj: unknown): boolean {
+    return obj &&
+        Object.prototype.toString.call(obj) === OBJECT_TAG &&
+        Object.getPrototypeOf(obj) === Object.prototype;
+}
+
 /**
  * Serializes links to the same object instances which allows do not to repeat their signatures
  * @param value Serializable value
@@ -61,7 +69,18 @@ export function getReplacerWithStorage<T = unknown>(
     const linksStorage: Map<number, ILinkSignature> = new Map();
 
     return function jsonReplacerWithStorage(name: string, value: T): ISignature | T {
+        // Clear storage when root passed
+        if (name === '' && (!this || Object.keys(this).length === 1)) {
+            linksStorage.clear();
+        }
+
         let result;
+
+        // Skip complicated objects which not serializable
+        const isObject = value && typeof value === 'object';
+        if (isObject && !Array.isArray(value) && !isPlainObject(value)) {
+            return;
+        }
 
         if (functionsStorage && typeof value === 'function') {
             const id = functionsStorage.size;
@@ -91,11 +110,6 @@ export function getReplacerWithStorage<T = unknown>(
             };
         } else {
             result = serializeLink(value as unknown as ISerializableSignature, linksStorage);
-        }
-
-        // Clear storage after root passed
-        if (name === '' && (!this || Object.keys(this).length === 1)) {
-            linksStorage.clear();
         }
 
         return result;
