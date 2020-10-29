@@ -18,6 +18,11 @@ interface ISerializedLink {
     value: ILinkSignature | ISerializableSignature;
 }
 
+interface ISerializedFunc {
+    module: string;
+    path?: string;
+}
+
 interface IUnresolvedInstance {
     scope: object;
     name: string;
@@ -67,8 +72,8 @@ export function parse(name: string): IParsed {
  * @param name Module name
  * @param loader Modules loader
  */
-function resolveConstructor(name: string, loader: Require = requirejs): ISerializableConstructor {
-    let module: ISerializableConstructor;
+function resolveModule<T>(name: string, loader: Require = requirejs): T {
+    let module: unknown;
 
     // Try to use DI because it's way too much faster
     if (isInstantiable(name) === false) {
@@ -93,14 +98,14 @@ function resolveConstructor(name: string, loader: Require = requirejs): ISeriali
         }
 
         parts.path.forEach((element, index) => {
-            if (!(element in module)) {
+            if (!(element in (module as Object))) {
                 throw new Error(`The module "${parts.name}" doesn\'t export element "${parts.path.slice(0, index).join('.')}".`);
             }
             module = module[element];
         });
     }
 
-    return module;
+    return module as T;
 }
 
 /**
@@ -152,7 +157,7 @@ function resolveInstances(
             instance = instancesStorage.get(item.value.id);
         } else if ((item.value as ISerializableSignature).module) {
             const name = (item.value as ISerializableSignature).module;
-            const Module = resolveConstructor(name);
+            const Module = resolveModule<ISerializableConstructor>(name);
             if (!Module) {
                 throw new Error(`The module "${name}" is not loaded yet.`);
             }
@@ -207,6 +212,16 @@ export function getReviverWithStorage<T = unknown>(
                         name,
                         value: value as ILinkSignature
                     });
+                    break;
+
+                case 'func':
+                    result = resolveModule<T>(
+                        (value as ISerializedFunc).module +
+                        ((value as ISerializedFunc).path ? ':' + (value as ISerializedFunc).path : '')
+                    );
+                    if (typeof result !== 'function') {
+                        throw new Error(`Cannot resolve function "${name}".`);
+                    }
                     break;
 
                 case 'function':

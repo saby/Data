@@ -64,6 +64,15 @@ describe('Types/_formatter/jsonReviver', () => {
             assert.strictEqual(result, undefined);
         });
 
+        it('should deserialize foreign "func" signature', () => {
+            const result = jsonReviver('', {
+                $serialized$: 'func',
+                module: 'Types/formatter',
+                path: 'jsonReviver'
+            });
+            assert.strictEqual(result, jsonReviver);
+        });
+
         it('should return unchanged', () => {
             assert.strictEqual(
                 jsonReviver(
