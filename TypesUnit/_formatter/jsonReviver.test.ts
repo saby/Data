@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import jsonReviver, { getReviverWithStorage } from 'Types/_formatter/jsonReviver';
+import jsonReviver, { getReviverWithStorage, resolveInstances } from 'Types/_formatter/jsonReviver';
 import { register, unregister } from 'Types/di';
 
 class Serializeable {
@@ -258,6 +258,66 @@ describe('Types/_formatter/jsonReviver', () => {
                 id: 1
             });
             assert.strictEqual(result, foo);
+        });
+    });
+
+    describe('resolveInstances()', () => {
+        class Foo {
+            static fromJSON(): Foo {
+                return new Foo();
+            }
+        }
+
+        class Bar {
+            fromJSON(): Bar {
+                return new Bar();
+            }
+        }
+
+        beforeEach(() => {
+            register('resolveInstances#Foo', Foo, {instantiate: false});
+            register('resolveInstances#Bar', Bar, {instantiate: false});
+        });
+
+        afterEach(() => {
+            unregister('resolveInstances#Foo');
+            unregister('resolveInstances#Bar');
+        });
+
+        it('should create instance using static fromJSON method', () => {
+            const instances = [{
+                scope: {},
+                name: 'foo',
+                value: {
+                    $serialized$: 'inst',
+                    id: 1,
+                    module: 'resolveInstances#Foo',
+                    state: {}
+                }
+            }];
+            const storage = new Map<number, unknown>();
+
+            resolveInstances(instances, storage);
+            assert.instanceOf(storage.get(1), Foo);
+            assert.strictEqual(storage.get(1), instances[0].value);
+        });
+
+        it('should create instance using dynamic fromJSON method', () => {
+            const instances = [{
+                scope: {},
+                name: 'bar',
+                value: {
+                    $serialized$: 'inst',
+                    id: 2,
+                    module: 'resolveInstances#Bar',
+                    state: {}
+                }
+            }];
+            const storage = new Map<number, unknown>();
+
+            resolveInstances(instances, storage);
+            assert.instanceOf(storage.get(2), Bar);
+            assert.strictEqual(storage.get(2), instances[0].value);
         });
     });
 });

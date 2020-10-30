@@ -23,7 +23,7 @@ interface ISerializedFunc {
     path?: string;
 }
 
-interface IUnresolvedInstance {
+export interface IUnresolvedInstance {
     scope: object;
     name: string;
     instanceResolved?: boolean;
@@ -146,7 +146,7 @@ function resolveLinks(
  * @param unresolvedInstances Unresolved instances
  * @param instancesStorage Instances storage
  */
-function resolveInstances(
+export function resolveInstances(
     unresolvedInstances: IUnresolvedInstance[],
     instancesStorage: Map<number, unknown>
 ): void {
@@ -164,10 +164,16 @@ function resolveInstances(
             if (!Module.prototype) {
                 throw new Error(`The module "${name}" is not a constructor.`);
             }
-            if (typeof Module.fromJSON !== 'function') {
-                throw new Error(`The prototype of module "${name}" doesn't have fromJSON() method.`);
+            if (
+                typeof Module.fromJSON !== 'function' &&
+                typeof (Module.prototype as ISerializableConstructor).fromJSON !== 'function'
+            ) {
+                throw new Error(`The module "${name}" doesn't have fromJSON() method.`);
             }
-            instance = Module.fromJSON(item.value as ISerializableSignature);
+
+            instance = Module.fromJSON ?
+                Module.fromJSON(item.value as ISerializableSignature) :
+                (Module.prototype as ISerializableConstructor).fromJSON.call(Module, item.value);
 
             instancesStorage.set(item.value.id, instance);
         }
