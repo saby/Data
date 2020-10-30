@@ -1,28 +1,124 @@
-import {ISignature, ILinkSignature} from './jsonReplacer';
-import {resolve} from '../di';
-import {ISerializableSignature, ISerializableConstructor} from '../entity';
+import {
+    ISignature,
+    ILinkSignature
+} from './jsonReplacer';
+import {
+    ISerializableSignature,
+    ISerializableConstructor
+} from '../entity';
+import {
+    isInstantiable,
+    resolve
+} from '../di';
 
 interface ISerializedLink {
-    name: string;
     linkResolved?: boolean;
+    name: string;
     scope: object;
-    value: ILinkSignature;
+    value: ILinkSignature | ISerializableSignature;
+}
+
+interface ISerializedFunc {
+    module: string;
+    path?: string;
+}
+
+export interface IUnresolvedInstance {
+    scope: object;
+    name: string;
+    instanceResolved?: boolean;
+    value: ILinkSignature | ISerializableSignature;
 }
 
 interface IConfig {
     resolveDates?: boolean;
 }
 
-type TReviver<T> = (name: string, value: ISignature | unknown) => T;
+interface IParsed {
+    name: string;
+    path: string[];
+}
+
+interface IEsModule<T> {
+    __esModule: boolean;
+    default?: T;
+}
+
+type JsonReviverFunction<T> = (name: string, value: ISignature | unknown) => T;
 
 const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
 
-let unresolvedLinks: ISerializedLink[] = [];
-let unresolvedInstances = [];
-let unresolvedInstancesId = [];
-let instanceStorage = {};
+const defaultConfig: IConfig = {
+    resolveDates: true
+};
 
-function resolveLinks(): void {
+/**
+ * Parses module declaration include library name name and path.
+ * TODO: switch to wasaby-loader wnen it will be ready
+ * @param name Module name like 'Library/Name:Path.To.Module' or just 'Module/Name'
+ * @public
+ */
+export function parse(name: string): IParsed {
+    const parts = String(name || '').split(':', 2);
+    return {
+        name: parts[0],
+        path: parts[1] ? parts[1].split('.') : []
+    };
+}
+
+/**
+ * Resolves module by its name
+ * TODO: switch to wasaby-loader wnen it will be ready
+ * @param name Module name
+ * @param loader Modules loader
+ */
+function resolveModule<T>(name: string, loader: Require = requirejs): T {
+    let module: unknown;
+
+    // Try to use DI because it's way too much faster
+    if (isInstantiable(name) === false) {
+        module = resolve<ISerializableConstructor>(name);
+    }
+
+    // Use RequireJS if module doesn't registered in DI
+    if (!module) {
+        const parts = parse(name);
+
+        module = loader(parts.name);
+        if (!module) {
+            throw new ReferenceError(`The module "${parts.name}" is not loaded yet. Please make sure it\'s included into application dependencies.`);
+        }
+
+        // Extract default module in case of ES6 module
+        if (
+            (module as unknown as IEsModule<ISerializableConstructor>).__esModule &&
+            (module as unknown as IEsModule<ISerializableConstructor>).default
+        ) {
+            module = (module as unknown as IEsModule<ISerializableConstructor>).default;
+        }
+
+        parts.path.forEach((element, index) => {
+            if (!(element in (module as Object))) {
+                throw new Error(`The module "${parts.name}" doesn\'t export element "${parts.path.slice(0, index).join('.')}".`);
+            }
+            module = module[element];
+        });
+    }
+
+    return module as T;
+}
+
+/**
+ * Resolves links with corresponding instances signatures
+ * @param unresolvedLinks Unresolved links
+ * @param unresolvedInstances Unresolved instances
+ * @param unresolvedInstancesId Unresolved instances IDs
+ */
+function resolveLinks(
+    unresolvedLinks: ISerializedLink[],
+    unresolvedInstances: IUnresolvedInstance[],
+    unresolvedInstancesId: number[]
+): void {
     for (let i = 0; i < unresolvedLinks.length; i++) {
         const link = unresolvedLinks[i];
         if (link.linkResolved) {
@@ -45,41 +141,62 @@ function resolveLinks(): void {
     }
 }
 
-function resolveInstances(): void {
+/**
+ * Resolves instances
+ * @param unresolvedInstances Unresolved instances
+ * @param instancesStorage Instances storage
+ */
+export function resolveInstances(
+    unresolvedInstances: IUnresolvedInstance[],
+    instancesStorage: Map<number, unknown>
+): void {
     for (let i = 0; i < unresolvedInstances.length; i++) {
         const item = unresolvedInstances[i];
         let instance = null;
-        if (instanceStorage[item.value.id]) {
-            instance = instanceStorage[item.value.id];
-        } else if (item.value.module) {
-            const name = item.value.module;
-            const Module = resolve<ISerializableConstructor>(name);
+        if (instancesStorage.has(item.value.id)) {
+            instance = instancesStorage.get(item.value.id);
+        } else if ((item.value as ISerializableSignature).module) {
+            const name = (item.value as ISerializableSignature).module;
+            const Module = resolveModule<ISerializableConstructor>(name);
             if (!Module) {
                 throw new Error(`The module "${name}" is not loaded yet.`);
             }
             if (!Module.prototype) {
                 throw new Error(`The module "${name}" is not a constructor.`);
             }
-            if (typeof Module.fromJSON !== 'function') {
-                throw new Error(`The prototype of module "${name}" doesn't have fromJSON() method.`);
+            if (
+                typeof Module.fromJSON !== 'function' &&
+                typeof (Module.prototype as ISerializableConstructor).fromJSON !== 'function'
+            ) {
+                throw new Error(`The module "${name}" doesn't have fromJSON() method.`);
             }
-            instance = Module.fromJSON(item.value);
 
-            instanceStorage[item.value.id] = instance;
+            instance = Module.fromJSON ?
+                Module.fromJSON(item.value as ISerializableSignature) :
+                (Module.prototype as ISerializableConstructor).fromJSON.call(Module, item.value);
+
+            instancesStorage.set(item.value.id, instance);
         }
 
         item.scope[item.name] = item.value = instance;
     }
 }
 
-const defaultConfig = {
-    resolveDates: true
-};
+/**
+ * Creates a storage based reviver function for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse JSON.parse}.
+ * @param config Reviver config
+ * @param functionsStorage Storage for functions
+ */
+export function getReviverWithStorage<T = unknown>(
+    config: IConfig = defaultConfig,
+    functionsStorage?: Map<number, Function>
+): JsonReviverFunction<T> {
+    let unresolvedLinks: ISerializedLink[] = [];
+    let unresolvedInstances: IUnresolvedInstance[] = [];
+    let unresolvedInstancesId: number[] = [];
+    let instancesStorage: Map<number, unknown> = new Map();
 
-export function withConfig<S>(config?: IConfig): TReviver<S> {
-    const actualConfig: IConfig = {...defaultConfig, ...config};
-
-    return function configuredJsonReviver<T>(name: string, value: ISignature | unknown): T {
+    return function jsonReviverWithStorage(name: string, value: ISignature | unknown): T {
         let result: T = value as unknown as T;
 
         if (value instanceof Object &&
@@ -90,10 +207,11 @@ export function withConfig<S>(config?: IConfig): TReviver<S> {
                     unresolvedInstances.push({
                         scope: this,
                         name,
-                        value
+                        value: value as ISerializableSignature
                     });
                     unresolvedInstancesId.push((value as ISerializableSignature).id);
                     break;
+
                 case 'link':
                     unresolvedLinks.push({
                         scope: this,
@@ -101,37 +219,63 @@ export function withConfig<S>(config?: IConfig): TReviver<S> {
                         value: value as ILinkSignature
                     });
                     break;
+
+                case 'func':
+                    result = resolveModule<T>(
+                        (value as ISerializedFunc).module +
+                        ((value as ISerializedFunc).path ? ':' + (value as ISerializedFunc).path : '')
+                    );
+                    if (typeof result !== 'function') {
+                        throw new Error(`Cannot resolve function "${name}".`);
+                    }
+                    break;
+
+                case 'function':
+                    if (!functionsStorage) {
+                        throw new ReferenceError('Functions storage is required to restore function');
+                    }
+                    const functionId = (value as ISerializableSignature).id;
+                    if (!functionsStorage.has(functionId)) {
+                        throw new ReferenceError(`Functions storage doesn't contain function with id "${functionId}"`);
+                    }
+                    result = functionsStorage.get(functionId) as unknown as T;
+                    break;
+
                 case '+inf':
                     result = Infinity as unknown as T;
                     break;
+
                 case '-inf':
                     result = -Infinity as unknown as T;
                     break;
+
                 case 'undef':
                     result = undefined;
                     break;
+
                 case 'NaN':
                     result = NaN as unknown as T;
                     break;
+
                 default:
                     throw new Error(`Unknown serialized type "${(value as ISerializableSignature).$serialized$}" detected`);
             }
         }
 
-        if (actualConfig.resolveDates && typeof result === 'string' && DATE_MATCH.test(result)) {
+        if (config.resolveDates && typeof result === 'string' && DATE_MATCH.test(result)) {
             result = new Date(result) as unknown as T;
         }
 
         // Resolve links and instances at root
         if (name === '' && (!this || Object.keys(this).length === 1)) {
             try {
-                resolveLinks();
-                resolveInstances();
+                resolveLinks(unresolvedLinks, unresolvedInstances, unresolvedInstancesId);
+                resolveInstances(unresolvedInstances, instancesStorage);
             } finally {
                 unresolvedLinks = [];
                 unresolvedInstances = [];
                 unresolvedInstancesId = [];
-                instanceStorage = {};
+                instancesStorage = new Map();
             }
 
             // In this case result hasn't been assigned and should be resolved from this
@@ -141,11 +285,12 @@ export function withConfig<S>(config?: IConfig): TReviver<S> {
         }
 
         return result;
-    }
+    };
 }
 
-const defaultReviver = withConfig();
-
-export default function jsonReviver<T>(name: string, value: ISignature | unknown): T {
-    return defaultReviver.call(this, name, value) as T;
-}
+/**
+ * Default replacer for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse JSON.parse}.
+ * @param name Property name
+ * @param value Property value
+ */
+export default getReviverWithStorage();
