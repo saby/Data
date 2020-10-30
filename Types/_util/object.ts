@@ -4,9 +4,8 @@
  * @author Мальцев А.А.
  */
 
-import {IObject, ICloneable} from '../entity';
-import {Set} from '../shim';
-import {Serializer} from 'UI/State';
+import { IObject, ICloneable } from '../entity';
+import { getJsonReplacerWithStorage, getJsonReviverWithStorage } from '../formatter';
 
 interface IOptions {
     keepUndefined?: boolean;
@@ -155,10 +154,12 @@ export function clone<T>(original: T | ICloneable): T {
         if (original['[Types/_entity/ICloneable]']) {
             return (original as ICloneable).clone<T>();
         } else {
-            const serializer = new Serializer();
+            const functionsStorage: Map<number, Function> = new Map();
+            const replacer = getJsonReplacerWithStorage(functionsStorage);
+            const reviver = getJsonReviverWithStorage(undefined, functionsStorage);
             return JSON.parse(
-                JSON.stringify(original, serializer.serialize),
-                serializer.deserialize
+                JSON.stringify(original, replacer),
+                reviver
             );
         }
     } else {
