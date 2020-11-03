@@ -302,12 +302,12 @@ export default abstract class Remote extends mixin<
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
-        return this._callProvider<void>(
+        return this._callProvider(
             this._$binding.update,
             this._$passing.update.call(this, data, meta)
         ).then(
-            (key) => this._prepareUpdateResult(data, key)
-        );
+            (key: string[]) => this._prepareUpdateResult(data, key)
+        ) as Promise<void>;
     }
 
     destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
