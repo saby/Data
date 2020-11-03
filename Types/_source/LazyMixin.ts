@@ -20,7 +20,7 @@ export default abstract class LazyMixin {
      * @protected
      */
     // tslint:disable-next-line:ban-types
-    protected _loadAdditionalDependencies(callback: (err?: Error) => void): void {
+    protected _loadAdditionalDependenciesSync(callback: (err?: Error) => void): void {
         const deps = this._additionalDependencies;
         const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
 
@@ -40,10 +40,10 @@ export default abstract class LazyMixin {
      * Асинхронно загружает дополнительные зависимости
      * @protected
      */
-    protected _loadAdditionalDependenciesAsync<T = void>(): Promise<T> {
+    protected _loadAdditionalDependencies<T = void>(): Promise<T> {
         return new Promise((resolve, reject) => {
             try {
-                this._loadAdditionalDependencies((err) => {
+                this._loadAdditionalDependenciesSync((err) => {
                     if (err) {
                         reject(err);
                     }

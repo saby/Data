@@ -22,7 +22,7 @@ export default abstract class Rpc extends Remote implements IRpc {
 
     call(command: string, data?: object, cache?: ICacheParameters): Promise<DataSet> {
         return this._callProvider<DataSet>(command, data, cache).addCallback(skipLogExecutionTime(
-            (responseData) => this._loadAdditionalDependenciesAsync().then(skipLogExecutionTime(
+            (responseData) => this._loadAdditionalDependencies().then(skipLogExecutionTime(
                 () => this._wrapToDataSet(responseData)
             ))
         ));

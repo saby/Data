@@ -157,7 +157,7 @@ export default abstract class Abstract<T, U = EnumeratorIndex> extends Destroyab
      * import {SbisService} from 'Types/source';
      * import {factory} from 'Types/collection';
      * const dataSource = new SbisService({endpoint: 'Employee'});
-     * dataSource.query().addCallback((response) => {
+     * dataSource.query().then((response) => {
      *     const items = chain(response.getAll())
      *         .first(10)
      *         .value(factory.recordSet, {

@@ -196,7 +196,7 @@ export default abstract class Local<TData = unknown> extends mixin<
     readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model | Record> {
-        return this._loadAdditionalDependenciesAsync().then(
+        return this._loadAdditionalDependencies().then(
             () => this._prepareCreateResult(meta)
         );
     }
@@ -204,7 +204,7 @@ export default abstract class Local<TData = unknown> extends mixin<
     read(key: EntityKey, meta?: object): Promise<Model> {
         const data = this._getRecordByKey(key);
         if (data) {
-            return this._loadAdditionalDependenciesAsync().then(
+            return this._loadAdditionalDependencies().then(
                 () => this._prepareReadResult(data)
             );
         }
@@ -247,7 +247,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             keys = updateRecord(data);
         }
 
-        return this._loadAdditionalDependenciesAsync().then(
+        return this._loadAdditionalDependencies().then(
             () => this._prepareUpdateResult(data, keys)
         ) as Promise<void>;
     }
@@ -294,7 +294,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             total = adapter.forTable(items).getCount();
         }
 
-        return this._loadAdditionalDependenciesAsync().then(() => this._prepareQueryResult({
+        return this._loadAdditionalDependencies().then(() => this._prepareQueryResult({
             items,
             meta: {
                 total
@@ -348,10 +348,10 @@ export default abstract class Local<TData = unknown> extends mixin<
 
         const copy = this._getTableAdapter().copy(index);
         this._reIndex();
-        return this._loadAdditionalDependenciesAsync().then(
+        return this._loadAdditionalDependencies().then(
            () => this._prepareReadResult(copy)
         );
-}
+    }
 
     move(items: EntityKey | EntityKey[], target: EntityKey, meta?: IMovePosition): Promise<void> {
         meta = meta || {};
