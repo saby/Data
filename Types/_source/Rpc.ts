@@ -29,9 +29,10 @@ export default abstract class Rpc extends Remote implements IRpc {
                     () => this._wrapToDataSet(responseData)
                 ))
             ));
+            return result;
         }
 
-        return result;
+        return result.then((responseData) => this._wrapToDataSet(responseData));
     }
 
     // endregion

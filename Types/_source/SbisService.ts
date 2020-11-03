@@ -15,7 +15,6 @@ import Query, {
     NavigationType,
     WhereExpression
 } from './Query';
-import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
 import {applied, AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity';
