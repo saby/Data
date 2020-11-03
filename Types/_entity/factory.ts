@@ -24,7 +24,6 @@ import {create, resolve} from '../di';
 import {dateFromSql, dateToSql, TO_SQL_MODE} from '../formatter';
 import {List, RecordSet, IEnum, Flags} from '../collection';
 import {IHashMap} from '../_declarations';
-import renders = require('Core/defaultRenders');
 
 /**
  * Фабрика типов - перобразует исходные значения в типизированные и наоборот.
@@ -59,6 +58,63 @@ const MAX_FLOAT_PRECISION = 3;
  * Extracts time zone in Date string represenation.
  */
 const SQL_TIME_ZONE: RegExp = /[+-][:0-9]+$/;
+
+function formatInteger(val: number | string, noDelimiters: boolean): string {
+    const result = ('' + val).trim();
+
+    // Sample: "-000233.222px"
+    const numRe = /^-?([0]*)(\d+)\.?\d*\D*$/;
+    if (!result.match(numRe)) {
+       return '0';
+    }
+
+    const f = result.replace(numRe, '$2');
+    return (result.substr(0, 1) === '-' ? '-' : '') + (noDelimiters ? f : f.replace(/(?=(\d{3})+$)/g, ' ')
+        .trim());
+}
+
+function formatNumber(val: number | string, decimals: number): string {
+    const result = val + '';
+    const dotPos = result.indexOf('.');
+    let firstPart: number | string = result;
+
+    if (dotPos !== -1) {
+       firstPart = result.substring(0, dotPos);
+    }
+
+    // Получаем математическое округление дробной части
+    let parsedVal: string = dotPos === -1 ? '0' : result.substr(dotPos);
+    const isNegative = firstPart.indexOf('-') !== -1;
+    let weNeedDecimals;
+    if (parsedVal === '.') {
+       parsedVal = '.0';
+    }
+
+    if (parseFloat(parsedVal) !== 0) {
+       weNeedDecimals = parseFloat((parsedVal + '00000000000000000000000000000000')
+        .substr(0, decimals + 1))
+        .toFixed(decimals);
+    } else {
+       weNeedDecimals = parseFloat(parsedVal).toFixed(decimals);
+    }
+
+    if (weNeedDecimals === 1) {
+       firstPart = parseInt(firstPart, 10);
+       firstPart = isNegative ? firstPart - 1 : firstPart + 1;
+    }
+    weNeedDecimals = weNeedDecimals.replace(/.+\./, '');
+
+    // Если передано значение без точки или нам нужна только целая часть
+    if (decimals === 0) {
+       return formatInteger(firstPart, true);
+    }
+
+    const buffer = [];
+    buffer.push(formatInteger(firstPart, true));
+    buffer.push('.');
+    buffer.push(weNeedDecimals);
+    return buffer.join('');
+}
 
 /**
  * Возвращает словарь для поля типа "Словарь"
@@ -298,7 +354,7 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
                 if (!isLargeMoney(moneyFormat)) {
                     const precision = getPrecision(moneyFormat);
                     if (precision > MAX_FLOAT_PRECISION) {
-                        return renders.real(value, precision, false, true);
+                        return formatNumber(value as number, precision) as unknown as T;
                     }
                 }
                 return value === undefined ? null : value as T;
@@ -438,7 +494,7 @@ export function serialize<T>(value: unknown, options?: ISerializeOptions): T {
             if (!isLargeMoney(moneyFormat)) {
                 const precision = getPrecision(moneyFormat);
                 if (precision > MAX_FLOAT_PRECISION) {
-                    return renders.real(value, precision, false, true);
+                    return formatNumber(value as number, precision) as unknown as T;
                 }
             }
             return value as T;
