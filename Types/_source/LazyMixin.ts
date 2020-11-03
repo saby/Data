@@ -1,8 +1,5 @@
 import { EntityMarker, IDeferred } from '../_declarations';
 
-// tslint:disable-next-line:ban-comma-operator
-const global = (0, eval)('this');
-
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
  * @mixin Types/_source/LazyMixin
