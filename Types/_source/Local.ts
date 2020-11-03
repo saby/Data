@@ -10,7 +10,6 @@ import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 import {IHashMap, EntityMarker} from '../_declarations';
 import Deferred = require('Core/Deferred');
-import randomId = require('Core/helpers/Number/randomId');
 
 export enum MOVE_POSITION {
     On = 'on',
@@ -35,6 +34,10 @@ export interface IQueryRawData {
 export interface IOptions extends IBaseOptions {
     filter?: FilterFunction;
 }
+
+function randomId(prefix: string): string {
+    return prefix + Math.random().toString(36).substr(2) + (+new Date());
+ }
 
 function compareValues(given: unknown, expect: unknown, operator: string): boolean {
     // If array expected, use "given in expect" logic
