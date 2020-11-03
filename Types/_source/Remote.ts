@@ -25,12 +25,6 @@ import { create } from '../di';
 import { mixin, logger } from '../util';
 import { EntityMarker } from '../_declarations';
 
-interface IExtendedPromise<T> extends Promise<T> {
-    addCallback: (callback: Function) => IExtendedPromise<T>;
-    addErrback: (callback: Function) => IExtendedPromise<T>;
-    addCallbacks: (callback: Function, errback: Function) => IExtendedPromise<T>;
-}
-
 // tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
 const DeferredCanceledError = global.DeferredCanceledError;
@@ -430,7 +424,7 @@ export default abstract class Remote extends mixin<
     protected _callProvider<TResult>(
         name: string,
         args: object, cache?: ICacheParameters
-    ): IExtendedPromise<TResult> {
+    ): Promise<TResult> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -455,7 +449,7 @@ export default abstract class Remote extends mixin<
             });
         }
 
-        return result as IExtendedPromise<TResult>;
+        return result;
     }
 
     /**
