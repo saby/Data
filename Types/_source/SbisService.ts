@@ -1096,8 +1096,8 @@ export default class SbisService extends Rpc {
 
     /**
      * Создает пустую модель через источник данных
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
-     * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
+     * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
      * @see Types/_source/ICrud#create
      * @example
      * Создадим нового сотрудника:
@@ -1131,28 +1131,23 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        meta = object.clonePlain(meta);
-        return this._loadAdditionalDependencies((ready) => {
-            this._connectAdditionalDependencies(
-                super.create(meta) as any,
-                ready
-            );
-        });
+        return this._withAdditionalDependencies(
+            super.create(object.clonePlain(meta)),
+            this._loadAdditionalDependenciesAsync()
+        );
     }
 
     update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
-            return this._loadAdditionalDependencies((ready) => {
-                this._connectAdditionalDependencies(
-                    this._callProvider(
-                        this._$binding.updateBatch,
-                        passUpdateBatch(data as RecordSet, meta)
-                    ).addCallback(
-                        (key) => this._prepareUpdateResult(data, key)
-                    ) as any,
-                    ready
-                );
-            });
+            return this._withAdditionalDependencies(
+                this._callProvider(
+                    this._$binding.updateBatch,
+                    passUpdateBatch(data as RecordSet, meta)
+                ).then(
+                    (key: string[]) => this._prepareUpdateResult(data, key)
+                ),
+                this._loadAdditionalDependenciesAsync()
+            ) as Promise<void>;
         }
 
         return super.update(data, meta);
@@ -1196,13 +1191,10 @@ export default class SbisService extends Rpc {
     }
 
     query(query?: Query): Promise<DataSet> {
-       query = object.clonePlain(query);
-       return this._loadAdditionalDependencies((ready) => {
-          this._connectAdditionalDependencies(
-             super.query(query) as any,
-             ready
-          );
-       });
+        return this._withAdditionalDependencies(
+            super.query(object.clonePlain(query)),
+            this._loadAdditionalDependenciesAsync()
+        );
     }
 
     // endregion

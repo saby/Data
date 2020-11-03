@@ -284,7 +284,7 @@ export default abstract class Remote extends mixin<
             this._$binding.create,
             this._$passing.create.call(this, meta)
         ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
+            (data) => this._loadAdditionalDependenciesAsync().then(
                 () => this._prepareCreateResult(data)
             )
         );
@@ -295,7 +295,7 @@ export default abstract class Remote extends mixin<
             this._$binding.read,
             this._$passing.read.call(this, key, meta)
         ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
+            (data) => this._loadAdditionalDependenciesAsync().then(
                 () => this._prepareReadResult(data)
             )
         );
@@ -322,7 +322,7 @@ export default abstract class Remote extends mixin<
             this._$binding.query,
             this._$passing.query.call(this, query)
         ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
+            (data) => this._loadAdditionalDependenciesAsync().then(
                 () => this._prepareQueryResult(data)
             )
         );
