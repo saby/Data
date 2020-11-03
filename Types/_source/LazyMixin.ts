@@ -65,7 +65,7 @@ export default abstract class LazyMixin {
         additional: Promise<unknown>
     ): Promise<TResult> {
         const result = Promise.all([main, additional]).then(
-            ([result]) => result
+            ([callResult]) => callResult
         ) as Promise<TResult>;
 
         (result as IDeferred<TResult>).cancel = () => {
