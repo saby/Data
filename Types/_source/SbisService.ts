@@ -1131,22 +1131,22 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        return this._withAdditionalDependencies(
-            super.create(object.clonePlain(meta)),
-            this._loadAdditionalDependencies()
-        );
+        return super.create(object.clonePlain(meta));
     }
 
     update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
-            return this._withAdditionalDependencies(
+            const callResult = this._withAdditionalDependencies(
                 this._callProvider(
                     this._$binding.updateBatch,
                     passUpdateBatch(data as RecordSet, meta)
-                ).then(
-                    (key: string[]) => this._prepareUpdateResult(data, key)
                 ),
                 this._loadAdditionalDependencies()
+            );
+
+            return this._withCanelability(
+                callResult,
+                (key: string[]) => this._prepareUpdateResult(data, key)
             ) as Promise<void>;
         }
 
@@ -1188,13 +1188,6 @@ export default class SbisService extends Rpc {
             name,
             meta
         ))) as unknown as Promise<void>;
-    }
-
-    query(query?: Query): Promise<DataSet> {
-        return this._withAdditionalDependencies(
-            super.query(object.clonePlain(query)),
-            this._loadAdditionalDependencies()
-        );
     }
 
     // endregion

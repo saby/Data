@@ -19,7 +19,6 @@ export default abstract class LazyMixin {
      * @param callback Функция обратного вызова при успешной загрузке зависимостей
      * @protected
      */
-    // tslint:disable-next-line:ban-types
     protected _loadAdditionalDependenciesSync(callback: (err?: Error) => void): void {
         const deps = this._additionalDependencies;
         const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
@@ -61,7 +60,6 @@ export default abstract class LazyMixin {
      * @param additional Дополнительный вызов
      * @protected
      */
-    // tslint:disable-next-line:ban-types
     protected _withAdditionalDependencies<TResult>(
         main: Promise<TResult>,
         additional: Promise<unknown>
@@ -73,6 +71,27 @@ export default abstract class LazyMixin {
         (result as IDeferred<TResult>).cancel = () => {
             if ((main as IDeferred<TResult>).cancel) {
                 (main as IDeferred<TResult>).cancel();
+            }
+        };
+
+        return result;
+    }
+
+    /**
+     * Предоставляет возможность отменить Promise как это было реализовано в Deferred.
+     * @param main Основной вызов
+     * @param additional Дополнительный вызов
+     * @protected
+     */
+    protected _withCanelability<TResult>(
+        awaiter: Promise<TResult>,
+        callback: (result: TResult) => TResult
+    ): Promise<TResult> {
+        const result = awaiter.then(callback);
+
+        (result as IDeferred<TResult>).cancel = () => {
+            if ((awaiter as IDeferred<TResult>).cancel) {
+                (awaiter as IDeferred<TResult>).cancel();
             }
         };
 

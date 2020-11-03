@@ -280,34 +280,43 @@ export default abstract class Remote extends mixin<
     readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.create,
-            this._$passing.create.call(this, meta)
-        ).then(
-            (data) => this._loadAdditionalDependencies().then(
-                () => this._prepareCreateResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<Model>(
+                this._$binding.create,
+                this._$passing.create.call(this, meta)
+            ),
+            this._loadAdditionalDependencies()
         );
-    }
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareCreateResult(data)
+        );
+}
 
     read(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.read,
-            this._$passing.read.call(this, key, meta)
-        ).then(
-            (data) => this._loadAdditionalDependencies().then(
-                () => this._prepareReadResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<Model>(
+                this._$binding.read,
+                this._$passing.read.call(this, key, meta)
+            ),
+            this._loadAdditionalDependencies()
+        );
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareReadResult(data)
         );
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
-        return this._callProvider(
-            this._$binding.update,
-            this._$passing.update.call(this, data, meta)
-        ).then(
+        return this._withCanelability(
+            this._callProvider(
+                this._$binding.update,
+                this._$passing.update.call(this, data, meta)
+            ),
             (key: string[]) => this._prepareUpdateResult(data, key)
-        ) as Promise<void>;
+        ) as unknown as Promise<void>;
     }
 
     destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
@@ -318,13 +327,17 @@ export default abstract class Remote extends mixin<
     }
 
     query(query?: Query): Promise<DataSet> {
-        return this._callProvider<DataSet>(
-            this._$binding.query,
-            this._$passing.query.call(this, query)
-        ).then(
-            (data) => this._loadAdditionalDependencies().then(
-                () => this._prepareQueryResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<DataSet>(
+                this._$binding.query,
+                this._$passing.query.call(this, query)
+            ),
+            this._loadAdditionalDependencies()
+        );
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareQueryResult(data)
         );
     }
 
@@ -342,10 +355,11 @@ export default abstract class Remote extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.copy,
-            this._$passing.copy.call(this, key, meta)
-        ).then(
+        return this._withCanelability(
+            this._callProvider<Model>(
+                this._$binding.copy,
+                this._$passing.copy.call(this, key, meta)
+            ),
             (data) => this._prepareReadResult(data)
         );
     }
