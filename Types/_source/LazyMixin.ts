@@ -15,20 +15,25 @@ export default abstract class LazyMixin {
     protected _additionalDependencies: string[];
 
     /**
+     * Проверяет, что дополнительные зависимости уже загружены
+     * @protected
+     */
+    protected _areAdditionalDependenciesLoaded(): boolean {
+        return this._additionalDependencies.reduce((prev, curr) => prev && require.defined(curr), true);
+    }
+
+    /**
      * Загружает дополнительные зависимости (по возможности "синхронно")
      * @param callback Функция обратного вызова при успешной загрузке зависимостей
      * @protected
      */
     protected _loadAdditionalDependenciesSync(callback: (err?: Error) => void): void {
-        const deps = this._additionalDependencies;
-        const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
-
-        if (depsLoaded) {
+        if (this._areAdditionalDependenciesLoaded()) {
             callback();
         } else {
             // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
             require(
-                deps,
+                this._additionalDependencies,
                 () => callback(),
                 (error: Error) => callback(error)
             );
@@ -68,11 +73,13 @@ export default abstract class LazyMixin {
             ([callResult]) => callResult
         ) as Promise<TResult>;
 
-        (result as IDeferred<TResult>).cancel = () => {
-            if ((main as IDeferred<TResult>).cancel) {
-                (main as IDeferred<TResult>).cancel();
-            }
-        };
+        if (!(result as IDeferred<TResult>).cancel) {
+            (result as IDeferred<TResult>).cancel = () => {
+                if ((main as IDeferred<TResult>).cancel) {
+                    (main as IDeferred<TResult>).cancel();
+                }
+            };
+        }
 
         return result;
     }

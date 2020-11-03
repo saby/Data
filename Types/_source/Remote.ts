@@ -473,11 +473,13 @@ export default abstract class Remote extends mixin<
     ): Promise<TResult> {
         const result = awaiter.then(callback);
 
-        (result as IDeferred<TResult>).cancel = () => {
-            if ((awaiter as IDeferred<TResult>).cancel) {
-                (awaiter as IDeferred<TResult>).cancel();
-            }
-        };
+        if (!(result as IDeferred<TResult>).cancel) {
+            (result as IDeferred<TResult>).cancel = () => {
+                if ((awaiter as IDeferred<TResult>).cancel) {
+                    (awaiter as IDeferred<TResult>).cancel();
+                }
+            };
+        }
 
         return result;
     }

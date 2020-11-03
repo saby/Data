@@ -9,6 +9,7 @@ import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
+import DataSet from './DataSet';
 import Query, {
     ExpandMode,
     playExpression,
@@ -1130,7 +1131,15 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        return super.create(object.clonePlain(meta));
+        if (this._areAdditionalDependenciesLoaded()) {
+            return super.create(meta);
+        }
+
+        // Here we need to load additional dependencies first because passCreate() uses Record constructor
+        const metaClone = object.clonePlain(meta);
+        return this._loadAdditionalDependencies().then(
+            () => super.create(metaClone)
+        );
     }
 
     update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void> {
@@ -1187,6 +1196,18 @@ export default class SbisService extends Rpc {
             name,
             meta
         ))) as unknown as Promise<void>;
+    }
+
+    query(query?: Query): Promise<DataSet> {
+        if (this._areAdditionalDependenciesLoaded()) {
+            return super.query(query);
+        }
+
+        // Here we need to load additional dependencies first because passQuery() uses Record/RecordSet constructor
+        const queryClone = object.clonePlain(query);
+        return this._loadAdditionalDependencies().then(
+            () => super.query(queryClone)
+        );
     }
 
     // endregion
