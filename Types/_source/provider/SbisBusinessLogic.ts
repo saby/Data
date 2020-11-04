@@ -3,8 +3,7 @@ import { OptionsToPropertyMixin } from '../../entity';
 import { logger as defaultLogger, ILogger } from '../../util';
 import { constants } from 'Env/Env';
 import { ICacheParameters } from '../Remote';
-import { EntityMarker } from '../../_declarations';
-import Deferred = require('Core/Deferred');
+import { EntityMarker, IDeferred } from '../../_declarations';
 
 export interface IEndPoint {
     contract?: string;
@@ -87,13 +86,13 @@ function getDefaultTransport(
  * @param logger Logger instance
  */
 function getTimedOutResponse<T>(
-    origin: Promise<T> | Deferred<T>,
+    origin: Promise<T> | IDeferred<T>,
     timeout: number,
     methodName: string,
     address: string,
     logger: ILogger
 ): Promise<T> {
-    const itsPromise = !(origin as Deferred<T>).isReady;
+    const itsPromise = !(origin as IDeferred<T>).isReady;
     const timeoutError = `Timeout of ${timeout} ms had expired before the method '${methodName}' at '${address}' returned any results`;
     let timeoutHandler: number;
 
@@ -122,7 +121,7 @@ function getTimedOutResponse<T>(
         });
     }
 
-    (origin as Deferred<T>).addCallbacks((result) => {
+    (origin as IDeferred<T>).addCallbacks((result) => {
         unallocate();
         return result;
     }, (err) => {

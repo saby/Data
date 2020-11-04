@@ -23,13 +23,7 @@ import {
 import { RecordSet } from '../collection';
 import { create } from '../di';
 import { mixin, logger } from '../util';
-import { EntityMarker } from '../_declarations';
-
-interface IExtendedPromise<T> extends Promise<T> {
-    addCallback: (callback: Function) => IExtendedPromise<T>;
-    addErrback: (callback: Function) => IExtendedPromise<T>;
-    addCallbacks: (callback: Function, errback: Function) => IExtendedPromise<T>;
-}
+import { EntityMarker, IDeferred } from '../_declarations';
 
 // tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
@@ -280,34 +274,43 @@ export default abstract class Remote extends mixin<
     readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.create,
-            this._$passing.create.call(this, meta)
-        ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareCreateResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<Model>(
+                this._$binding.create,
+                this._$passing.create.call(this, meta)
+            ),
+            this._loadAdditionalDependencies()
+        );
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareCreateResult(data)
         );
     }
 
     read(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.read,
-            this._$passing.read.call(this, key, meta)
-        ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareReadResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<Model>(
+                this._$binding.read,
+                this._$passing.read.call(this, key, meta)
+            ),
+            this._loadAdditionalDependencies()
+        );
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareReadResult(data)
         );
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
-        return this._callProvider<void>(
-            this._$binding.update,
-            this._$passing.update.call(this, data, meta)
-        ).addCallback(
-            (key) => this._prepareUpdateResult(data, key)
-        );
+        return this._withCanelability(
+            this._callProvider(
+                this._$binding.update,
+                this._$passing.update.call(this, data, meta)
+            ),
+            (key: string[]) => this._prepareUpdateResult(data, key)
+        ) as unknown as Promise<void>;
     }
 
     destroy(keys: EntityKey | EntityKey[], meta?: object): Promise<void> {
@@ -318,13 +321,17 @@ export default abstract class Remote extends mixin<
     }
 
     query(query?: Query): Promise<DataSet> {
-        return this._callProvider<DataSet>(
-            this._$binding.query,
-            this._$passing.query.call(this, query)
-        ).addCallback(
-            (data) => this._loadAdditionalDependencies().addCallback(
-                () => this._prepareQueryResult(data)
-            )
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<DataSet>(
+                this._$binding.query,
+                this._$passing.query.call(this, query)
+            ),
+            this._loadAdditionalDependencies()
+        );
+
+        return this._withCanelability(
+            callResult,
+            (data) => this._prepareQueryResult(data)
         );
     }
 
@@ -342,10 +349,11 @@ export default abstract class Remote extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        return this._callProvider<Model>(
-            this._$binding.copy,
-            this._$passing.copy.call(this, key, meta)
-        ).addCallback(
+        return this._withCanelability(
+            this._callProvider<Model>(
+                this._$binding.copy,
+                this._$passing.copy.call(this, key, meta)
+            ),
             (data) => this._prepareReadResult(data)
         );
     }
@@ -416,7 +424,7 @@ export default abstract class Remote extends mixin<
     protected _callProvider<TResult>(
         name: string,
         args: object, cache?: ICacheParameters
-    ): IExtendedPromise<TResult> {
+    ): Promise<TResult> {
         const provider = this.getProvider();
 
         const eventResult = this._notify('onBeforeProviderCall', name, args);
@@ -441,7 +449,7 @@ export default abstract class Remote extends mixin<
             });
         }
 
-        return result as IExtendedPromise<TResult>;
+        return result;
     }
 
     /**
@@ -451,6 +459,29 @@ export default abstract class Remote extends mixin<
      */
     protected _prepareProviderArguments(args: object): object {
         return jsonize(args) as object;
+    }
+
+    /**
+     * Предоставляет возможность отменить Promise как это было реализовано в Deferred.
+     * @param main Основной вызов
+     * @param additional Дополнительный вызов
+     * @protected
+     */
+    protected _withCanelability<TResult>(
+        awaiter: Promise<TResult>,
+        callback: (result: TResult) => TResult
+    ): Promise<TResult> {
+        const result = awaiter.then(callback);
+
+        if (!(result as IDeferred<TResult>).cancel) {
+            (result as IDeferred<TResult>).cancel = () => {
+                if ((awaiter as IDeferred<TResult>).cancel) {
+                    (awaiter as IDeferred<TResult>).cancel();
+                }
+            };
+        }
+
+        return result;
     }
 
     protected _getValidKeyProperty(data: any): string {

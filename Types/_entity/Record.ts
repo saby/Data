@@ -219,7 +219,7 @@ function getValueType(value: any): string | IShortDeclaration {
  *         'Types/source'
  *     ], function (entity, source) {
  *         var source = new source.SbisService({endpoint: 'Employee'});
- *         source.call('read', {login: 'root'}).addCallback(function(response) {
+ *         source.call('read', {login: 'root'}).then(function(response) {
  *             var employee = new entity.Record({
  *                 rawData: response.getRawData(),
  *                 adapter: response.getAdapter()

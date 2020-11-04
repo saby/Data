@@ -9,13 +9,13 @@ import {IEndpoint as IProviderEndpoint} from './IProvider';
 import {IBinding as IDefaultBinding} from './BindingMixin';
 import OptionsMixin from './OptionsMixin';
 import DataMixin from './DataMixin';
+import DataSet from './DataSet';
 import Query, {
     ExpandMode,
     playExpression,
     NavigationType,
     WhereExpression
 } from './Query';
-import DataSet from './DataSet';
 import {IAbstract} from './provider';
 import {RecordSet} from '../collection';
 import {applied, AdapterDescriptor, getMergeableProperty, Record, Model} from '../entity';
@@ -1096,8 +1096,8 @@ export default class SbisService extends Rpc {
 
     /**
      * Создает пустую модель через источник данных
-     * @param {Object|Types/_entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
-     * @return {Core/Deferred} Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
+     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания модели.
+     * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Model}, в случае ошибки - Error.
      * @see Types/_source/ICrud#create
      * @example
      * Создадим нового сотрудника:
@@ -1131,28 +1131,31 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        meta = object.clonePlain(meta);
-        return this._loadAdditionalDependencies((ready) => {
-            this._connectAdditionalDependencies(
-                super.create(meta) as any,
-                ready
-            );
-        });
+        if (this._areAdditionalDependenciesLoaded()) {
+            return super.create(meta);
+        }
+
+        // Here we need to load additional dependencies first because passCreate() uses Record constructor
+        const metaClone = object.clonePlain(meta);
+        return this._loadAdditionalDependencies().then(
+            () => super.create(metaClone)
+        );
     }
 
     update(data: Record | RecordSet, meta?: IHashMap<unknown>): Promise<void> {
         if (this._$binding.updateBatch && DataMixin.isRecordSetInstance(data)) {
-            return this._loadAdditionalDependencies((ready) => {
-                this._connectAdditionalDependencies(
-                    this._callProvider(
-                        this._$binding.updateBatch,
-                        passUpdateBatch(data as RecordSet, meta)
-                    ).addCallback(
-                        (key) => this._prepareUpdateResult(data, key)
-                    ) as any,
-                    ready
-                );
-            });
+            const callResult = this._withAdditionalDependencies(
+                this._callProvider(
+                    this._$binding.updateBatch,
+                    passUpdateBatch(data as RecordSet, meta)
+                ),
+                this._loadAdditionalDependencies()
+            );
+
+            return this._withCanelability(
+                callResult,
+                (key: string[]) => this._prepareUpdateResult(data, key)
+            ) as Promise<void>;
         }
 
         return super.update(data, meta);
@@ -1196,13 +1199,15 @@ export default class SbisService extends Rpc {
     }
 
     query(query?: Query): Promise<DataSet> {
-       query = object.clonePlain(query);
-       return this._loadAdditionalDependencies((ready) => {
-          this._connectAdditionalDependencies(
-             super.query(query) as any,
-             ready
-          );
-       });
+        if (this._areAdditionalDependenciesLoaded()) {
+            return super.query(query);
+        }
+
+        // Here we need to load additional dependencies first because passQuery() uses Record/RecordSet constructor
+        const queryClone = object.clonePlain(query);
+        return this._loadAdditionalDependencies().then(
+            () => super.query(queryClone)
+        );
     }
 
     // endregion

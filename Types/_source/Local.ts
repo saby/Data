@@ -9,7 +9,6 @@ import {adapter, Record, Model} from '../entity';
 import {RecordSet} from '../collection';
 import {mixin, object} from '../util';
 import {IHashMap, EntityMarker} from '../_declarations';
-import Deferred = require('Core/Deferred');
 
 export enum MOVE_POSITION {
     On = 'on',
@@ -197,23 +196,23 @@ export default abstract class Local<TData = unknown> extends mixin<
     readonly '[Types/_source/ICrud]': EntityMarker = true;
 
     create(meta?: object): Promise<Model | Record> {
-        return this._loadAdditionalDependencies().addCallback(() => {
-            return this._prepareCreateResult(meta);
-        }) as Promise<Model | Record>;
+        return this._loadAdditionalDependencies().then(
+            () => this._prepareCreateResult(meta)
+        );
     }
 
     read(key: EntityKey, meta?: object): Promise<Model> {
         const data = this._getRecordByKey(key);
         if (data) {
-            return this._loadAdditionalDependencies().addCallback(
+            return this._loadAdditionalDependencies().then(
                 () => this._prepareReadResult(data)
-            ) as Promise<Model>;
-        } else {
-            return Promise.reject(new ReferenceError(
-                `Can't perform read() because record with key "${key}" does not exist`
-            ));
+            );
         }
-    }
+
+        return Promise.reject(new ReferenceError(
+            `Can't perform read() because record with key "${key}" does not exist`
+        ));
+}
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
         const updateRecord = (record) => {
@@ -248,7 +247,7 @@ export default abstract class Local<TData = unknown> extends mixin<
             keys = updateRecord(data);
         }
 
-        return this._loadAdditionalDependencies().addCallback(
+        return this._loadAdditionalDependencies().then(
             () => this._prepareUpdateResult(data, keys)
         ) as Promise<void>;
     }
@@ -268,13 +267,13 @@ export default abstract class Local<TData = unknown> extends mixin<
         const keysArray = keys instanceof Array ? keys : [keys];
         for (let i = 0, len = keysArray.length; i < len; i++) {
             if (!destroyByKey(keysArray[i])) {
-                return Deferred.fail(new ReferenceError(
+                return  Promise.reject(new ReferenceError(
                     `Can't perform destroy() because record with key "${keysArray[i]}" does not exist`
                 )) as unknown as Promise<void>;
             }
         }
 
-        return Deferred.success(undefined);
+        return Promise.resolve(undefined);
     }
 
     query(query?: Query): Promise<DataSet> {
@@ -295,12 +294,12 @@ export default abstract class Local<TData = unknown> extends mixin<
             total = adapter.forTable(items).getCount();
         }
 
-        return this._loadAdditionalDependencies().addCallback(() => this._prepareQueryResult({
+        return this._loadAdditionalDependencies().then(() => this._prepareQueryResult({
             items,
             meta: {
                 total
             }
-        }, query)) as Promise<DataSet>;
+        }, query));
     }
 
     // endregion
@@ -345,13 +344,13 @@ export default abstract class Local<TData = unknown> extends mixin<
         const index = this._getIndexByKey(key);
         if (index === -1) {
             return Promise.reject(new ReferenceError(`Can't perform copy() because record with key "${key}" does not exist`));
-        } else {
-            const copy = this._getTableAdapter().copy(index);
-            this._reIndex();
-            return this._loadAdditionalDependencies().addCallback(
-               () => this._prepareReadResult(copy)
-            ) as Promise<Model>;
         }
+
+        const copy = this._getTableAdapter().copy(index);
+        this._reIndex();
+        return this._loadAdditionalDependencies().then(
+           () => this._prepareReadResult(copy)
+        );
     }
 
     move(items: EntityKey | EntityKey[], target: EntityKey, meta?: IMovePosition): Promise<void> {

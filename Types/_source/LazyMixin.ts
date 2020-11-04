@@ -1,9 +1,4 @@
-import { EntityMarker } from '../_declarations';
-import Deferred = require('Core/Deferred');
-
-// tslint:disable-next-line:ban-comma-operator
-const global = (0, eval)('this');
-const DeferredCanceledError = global.DeferredCanceledError;
+import { EntityMarker, IDeferred } from '../_declarations';
 
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
@@ -20,66 +15,73 @@ export default abstract class LazyMixin {
     protected _additionalDependencies: string[];
 
     /**
-     * Загружает дополнительные зависимости
-     * @param [callback] Функция обратного вызова при успешной загрузке зависимостей
+     * Проверяет, что дополнительные зависимости уже загружены
      * @protected
      */
-    // tslint:disable-next-line:ban-types
-    protected _loadAdditionalDependencies(callback?: (ready: Deferred<any>) => void): Deferred<any> {
-        const deps = this._additionalDependencies;
-        const depsLoaded = deps.reduce((prev, curr) => prev && require.defined(curr), true);
-        const result = new Deferred();
-
-        if (depsLoaded) {
-            if (callback) {
-                callback.call(this, result);
-            } else {
-                result.callback();
-            }
-        } else {
-            // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
-            require(deps, () => {
-                // Don't call callback() if deferred has been cancelled during require
-                if (
-                    callback &&
-                    (!result.isReady() || !(result.getResult() instanceof DeferredCanceledError))
-                ) {
-                    callback.call(this, result);
-                } else {
-                    result.callback();
-                }
-            }, (error: Error) => result.errback(error));
-        }
-
-        return result;
+    protected _areAdditionalDependenciesLoaded(): boolean {
+        return this._additionalDependencies.reduce((prev, curr) => prev && require.defined(curr), true);
     }
 
     /**
-     * Связывает два деферреда, назначая результат работы ведущего результом ведомого.
-     * @param master Ведущий
-     * @param slave Ведомый
+     * Загружает дополнительные зависимости (по возможности "синхронно")
+     * @param callback Функция обратного вызова при успешной загрузке зависимостей
      * @protected
      */
-    // tslint:disable-next-line:ban-types
-    protected _connectAdditionalDependencies(master: Deferred<any>, slave: Deferred<any>): void {
-        // Cancel master on slave cancelling
-        if (!slave.isCallbacksLocked()) {
-            slave.addErrback((err) => {
-                if (err instanceof DeferredCanceledError) {
-                    master.cancel();
+    protected _loadAdditionalDependenciesSync(callback: (err?: Error) => void): void {
+        if (this._areAdditionalDependenciesLoaded()) {
+            callback();
+        } else {
+            // XXX: this case isn't covering by tests because all dependencies are always loaded in tests
+            require(
+                this._additionalDependencies,
+                () => callback(),
+                (error: Error) => callback(error)
+            );
+        }
+    }
+
+    /**
+     * Асинхронно загружает дополнительные зависимости
+     * @protected
+     */
+    protected _loadAdditionalDependencies<T = void>(): Promise<T> {
+        return new Promise((resolve, reject) => {
+            try {
+                this._loadAdditionalDependenciesSync((err) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve();
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    /**
+     * Производит загрузку дополнительных зависимостей параллельно с вызовом метода.
+     * @param main Основной вызов
+     * @param additional Дополнительный вызов
+     * @protected
+     */
+    protected _withAdditionalDependencies<TResult>(
+        main: Promise<TResult>,
+        additional: Promise<unknown>
+    ): Promise<TResult> {
+        const result = Promise.all([main, additional]).then(
+            ([callResult]) => callResult
+        ) as Promise<TResult>;
+
+        if (!(result as IDeferred<TResult>).cancel) {
+            (result as IDeferred<TResult>).cancel = () => {
+                if ((main as IDeferred<TResult>).cancel) {
+                    (main as IDeferred<TResult>).cancel();
                 }
-                return err;
-            });
+            };
         }
 
-        // Connect master's result with slave's result
-        master.addCallbacks((result) => {
-            slave.callback(result);
-            return result;
-        }, (err) => {
-            slave.errback(err);
-            return err;
-        });
+        return result;
     }
 }
 
