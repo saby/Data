@@ -21,4 +21,3 @@ export {object};
 
 export {default as protect} from './_util/protect';
 export {default as deprecateExtend} from './_util/deprecateExtend';
-export {default as skipLogExecutionTime} from './_util/skipLogExecutionTime';

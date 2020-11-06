@@ -9,7 +9,7 @@ import EndpointMixin, { IOptions as IEndpointOptions } from './EndpointMixin';
 import OptionsMixin, { IOptionsOption as IOptionsMixinOption } from './OptionsMixin';
 import Query, { NavigationType } from './Query';
 import DataSet from './DataSet';
-import { compatibleThen } from './Deferred';
+import { compatibleThen, DeferredCanceledError } from './Deferred';
 import jsonize from './jsonize';
 import { IAbstract } from './provider';
 import {
@@ -25,10 +25,6 @@ import { RecordSet } from '../collection';
 import { create } from '../di';
 import { mixin, logger } from '../util';
 import { EntityMarker } from '../_declarations';
-
-// tslint:disable-next-line:ban-comma-operator
-const global = (0, eval)('this');
-const DeferredCanceledError = global.DeferredCanceledError;
 
 /**
  * Parameters to use in cached calls

@@ -30,4 +30,7 @@ export interface IDeferred<T> extends Promise<T> {
     isReady(): boolean;
 }
 
-export type IDeferredConstructor = new<T>() => IDeferred<T>;
+export interface IDeferredConstructor {
+    new<T>(): IDeferred<T>;
+    skipLogExecutionTime(callback: Function): Function;
+}

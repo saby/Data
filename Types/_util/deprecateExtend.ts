@@ -26,11 +26,11 @@ export default function deprecateExtend(
         logger.info(tag, 'Method extend() is deprecated, use ES6 extends or Core/core-extend for inheritance');
     }
 
-    if (!require.defined('Core/core-extend')) {
+    if (!requirejs.defined('Core/core-extend')) {
         throw new ReferenceError(
             'You should require module "Core/core-extend" to use old-fashioned extending via static extend() method.'
         );
     }
-    const coreExtend = require('Core/core-extend');
+    const coreExtend = requirejs('Core/core-extend');
     return coreExtend(subClass, mixinsList, superClass);
 }
