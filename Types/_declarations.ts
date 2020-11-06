@@ -29,3 +29,5 @@ export interface IDeferred<T> extends Promise<T> {
     isCallbacksLocked(): boolean;
     isReady(): boolean;
 }
+
+export type IDeferredConstructor = new<T>() => IDeferred<T>;

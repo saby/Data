@@ -22,6 +22,7 @@ import {applied, AdapterDescriptor, getMergeableProperty, Record, Model} from '.
 import {register, resolve} from '../di';
 import {logger, object} from '../util';
 import {IHashMap} from '../declarations';
+import { compatibleThen } from './Deferred';
 
 /**
  * Separator for BL object name and method name
@@ -1137,7 +1138,8 @@ export default class SbisService extends Rpc {
 
         // Here we need to load additional dependencies first because passCreate() uses Record constructor
         const metaClone = object.clonePlain(meta);
-        return this._loadAdditionalDependencies().then(
+        return compatibleThen(
+            this._loadAdditionalDependencies(),
             () => super.create(metaClone)
         );
     }
@@ -1152,7 +1154,7 @@ export default class SbisService extends Rpc {
                 this._loadAdditionalDependencies()
             );
 
-            return this._withCanelability(
+            return compatibleThen(
                 callResult,
                 (key: string[]) => this._prepareUpdateResult(data, key)
             ) as Promise<void>;
@@ -1205,7 +1207,8 @@ export default class SbisService extends Rpc {
 
         // Here we need to load additional dependencies first because passQuery() uses Record/RecordSet constructor
         const queryClone = object.clonePlain(query);
-        return this._loadAdditionalDependencies().then(
+        return compatibleThen(
+            this._loadAdditionalDependencies(),
             () => super.query(queryClone)
         );
     }

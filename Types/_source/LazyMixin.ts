@@ -1,4 +1,6 @@
 import { EntityMarker, IDeferred } from '../_declarations';
+import Deferred from './Deferred';
+import { skipLogExecutionTime } from '../util';
 
 /**
  * Миксин, позволяющий загружать некоторые зависимости лениво.
@@ -45,6 +47,21 @@ export default abstract class LazyMixin {
      * @protected
      */
     protected _loadAdditionalDependencies<T = void>(): Promise<T> {
+        if (Deferred) {
+            const result = new Deferred<T>();
+            try {
+                this._loadAdditionalDependenciesSync((err) => {
+                    if (err) {
+                        result.errback(err);
+                    }
+                    result.callback(undefined);
+                });
+            } catch (err) {
+                result.errback(err);
+            }
+            return result;
+        }
+
         return new Promise((resolve, reject) => {
             try {
                 this._loadAdditionalDependenciesSync((err) => {
@@ -69,6 +86,14 @@ export default abstract class LazyMixin {
         main: Promise<TResult>,
         additional: Promise<unknown>
     ): Promise<TResult> {
+        if (Deferred && main instanceof Deferred && additional instanceof Deferred) {
+            return main.addCallback(skipLogExecutionTime(
+                (mainResult) => additional.addCallback(
+                    skipLogExecutionTime(() => mainResult)
+                )
+            ));
+        }
+
         const result = Promise.all([main, additional]).then(
             ([callResult]) => callResult
         ) as Promise<TResult>;

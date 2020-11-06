@@ -9,6 +9,7 @@ import EndpointMixin, { IOptions as IEndpointOptions } from './EndpointMixin';
 import OptionsMixin, { IOptionsOption as IOptionsMixinOption } from './OptionsMixin';
 import Query, { NavigationType } from './Query';
 import DataSet from './DataSet';
+import { compatibleThen } from './Deferred';
 import jsonize from './jsonize';
 import { IAbstract } from './provider';
 import {
@@ -23,7 +24,7 @@ import {
 import { RecordSet } from '../collection';
 import { create } from '../di';
 import { mixin, logger } from '../util';
-import { EntityMarker, IDeferred } from '../_declarations';
+import { EntityMarker } from '../_declarations';
 
 // tslint:disable-next-line:ban-comma-operator
 const global = (0, eval)('this');
@@ -282,7 +283,7 @@ export default abstract class Remote extends mixin<
             this._loadAdditionalDependencies()
         );
 
-        return this._withCanelability(
+        return compatibleThen(
             callResult,
             (data) => this._prepareCreateResult(data)
         );
@@ -297,14 +298,14 @@ export default abstract class Remote extends mixin<
             this._loadAdditionalDependencies()
         );
 
-        return this._withCanelability(
+        return compatibleThen(
             callResult,
             (data) => this._prepareReadResult(data)
         );
     }
 
     update(data: Record | RecordSet, meta?: object): Promise<void> {
-        return this._withCanelability(
+        return compatibleThen(
             this._callProvider(
                 this._$binding.update,
                 this._$passing.update.call(this, data, meta)
@@ -329,7 +330,7 @@ export default abstract class Remote extends mixin<
             this._loadAdditionalDependencies()
         );
 
-        return this._withCanelability(
+        return compatibleThen(
             callResult,
             (data) => this._prepareQueryResult(data)
         );
@@ -349,7 +350,7 @@ export default abstract class Remote extends mixin<
     }
 
     copy(key: EntityKey, meta?: object): Promise<Model> {
-        return this._withCanelability(
+        return compatibleThen(
             this._callProvider<Model>(
                 this._$binding.copy,
                 this._$passing.copy.call(this, key, meta)
@@ -459,29 +460,6 @@ export default abstract class Remote extends mixin<
      */
     protected _prepareProviderArguments(args: object): object {
         return jsonize(args) as object;
-    }
-
-    /**
-     * Предоставляет возможность отменить Promise как это было реализовано в Deferred.
-     * @param main Основной вызов
-     * @param additional Дополнительный вызов
-     * @protected
-     */
-    protected _withCanelability<TResult>(
-        awaiter: Promise<TResult>,
-        callback: (result: TResult) => TResult
-    ): Promise<TResult> {
-        const result = awaiter.then(callback);
-
-        if (!(result as IDeferred<TResult>).cancel) {
-            (result as IDeferred<TResult>).cancel = () => {
-                if ((awaiter as IDeferred<TResult>).cancel) {
-                    (awaiter as IDeferred<TResult>).cancel();
-                }
-            };
-        }
-
-        return result;
     }
 
     protected _getValidKeyProperty(data: any): string {

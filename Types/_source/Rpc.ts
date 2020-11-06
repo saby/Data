@@ -1,8 +1,8 @@
 import Remote, { ICacheParameters } from './Remote';
 import DataSet from './DataSet';
+import { compatibleThen } from './Deferred';
 import IRpc from './IRpc';
-import { EntityMarker, IDeferred } from '../_declarations';
-import { skipLogExecutionTime } from '../util';
+import { EntityMarker } from '../_declarations';
 
 /**
  * Источник данных, работающий по технологии RPC.
@@ -21,18 +21,15 @@ export default abstract class Rpc extends Remote implements IRpc {
     readonly '[Types/_source/IRpc]': EntityMarker = true;
 
     call(command: string, data?: object, cache?: ICacheParameters): Promise<DataSet> {
-        const result = this._callProvider<DataSet>(command, data, cache);
+        const callResult = this._withAdditionalDependencies(
+            this._callProvider<DataSet>(command, data, cache),
+            this._loadAdditionalDependencies()
+        );
 
-        if ((result as IDeferred<DataSet>).addCallback) {
-            (result as IDeferred<DataSet>).addCallback(skipLogExecutionTime(
-                (responseData) => this._loadAdditionalDependencies().then(skipLogExecutionTime(
-                    () => this._wrapToDataSet(responseData)
-                ))
-            ));
-            return result;
-        }
-
-        return result.then((responseData) => this._wrapToDataSet(responseData));
+        return compatibleThen(
+            callResult,
+            (responseData) => this._wrapToDataSet(responseData)
+        );
     }
 
     // endregion
