@@ -1,6 +1,5 @@
-import dateDifference, { Units } from "./dateDifference";
-
-const MONTH_IN_YEAR = 11;
+import dateDifference, { Units } from './dateDifference';
+import isFullInterval from './isFullInterval';
 
 /**
  * Рассчитывает количество интервалов между датами, включая граничные значения.
@@ -25,9 +24,14 @@ const MONTH_IN_YEAR = 11;
  *
  * Выведем Количество полных месяцев между датами:
  * <pre>
- *     import {dateInterval} from 'Types/entity';
+ *     import {compare} from 'Types/entity';
  *     const dateA = new Date(2019, 11, 01);
  *     const dateB = new Date(2019, 11, 30);
+ *     console.log(compare.dateInterval(dateA, dateB, compare.DateUnits.Month)); // 1
+ *
+ *     import {compare} from 'Types/entity';
+ *     const dateA = new Date(2019, 10, 25);
+ *     const dateB = new Date(2019, 11, 05);
  *     console.log(compare.dateInterval(dateA, dateB, compare.DateUnits.Month)); // 1
  * </pre>
  *
@@ -38,28 +42,28 @@ const MONTH_IN_YEAR = 11;
  */
 
 export default function dateInterval(begin: Date, end: Date, unit: Units): number {
+    if (!Units.hasOwnProperty(unit)) {
+        throw Error(`unit "${unit}" does not supported`);
+    }
+
     const diff = dateDifference(begin, end, unit);
 
-    switch ( unit ) {
+    if (isFullInterval(begin, end, unit)) {
+        return diff + 1;
+    }
+
+    return diff === 1 && !isBeginningUnit(begin, unit) ? 0 : diff;
+}
+
+function isBeginningUnit(data: Date, unit: Units) {
+    switch (unit) {
         case Units.Day:
-            return (diff + 1);
+            return data.getHours() === 0 && data.getMinutes() === 0;
 
         case Units.Month:
-            return isFullMonth(begin, end) ? (diff + 1) : diff;
+            return data.getDate() === 1;
 
         case Units.Year:
-            return isFullYear(begin, end) ? (diff + 1) : diff;
-
-        default:
-            throw Error(`unit "${unit}" does not supported`);
+            return data.getMonth() === 0;
     }
-}
-
-function isFullMonth(begin: Date, end: Date): boolean {
-    const lastDay = (new Date(end.getFullYear(), end.getMonth() + 1, 0)).getDate();
-    return begin.getDate() === 1 && end.getDate() === lastDay
-}
-
-function isFullYear(begin: Date, end: Date): boolean {
-    return isFullMonth(begin, end) && begin.getMonth() === 0 && end.getMonth() === MONTH_IN_YEAR;
 }
