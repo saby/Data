@@ -2,6 +2,7 @@
  * Библиотека, которая обеспечивает доступ к источникам данных.
  * @library Types/source
  * @includes Base Types/_source/Base
+ * @includes DataMixin Types/_source/DataMixin
  * @includes DataSet Types/_source/DataSet
  * @includes HierarchicalMemory Types/_source/HierarchicalMemory
  * @includes ICrud Types/_source/ICrud
@@ -30,6 +31,7 @@
  * Library that provides access to data sources
  * @library Types/source
  * @includes Base Types/_source/Base
+ * @includes DataMixin Types/_source/DataMixin
  * @includes DataSet Types/_source/DataSet
  * @includes HierarchicalMemory Types/_source/HierarchicalMemory
  * @includes ICrud Types/_source/ICrud
@@ -55,6 +57,7 @@
 
 export {default as Base} from './_source/Base';
 export {default as BindingMixin} from './_source/BindingMixin';
+export {default as DataMixin} from './_source/DataMixin';
 import {default as DataSet} from './_source/DataSet';
 export {DataSet};
 export {default as HierarchicalMemory} from './_source/HierarchicalMemory';
