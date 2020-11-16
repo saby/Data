@@ -5,6 +5,7 @@ import debounce from 'Types/_function/debounce';
 describe('Types/_formatter/debounce', () => {
     let stubTimeout;
     let stubClear;
+
     const global = (function(): any {
         // tslint:disable-next-line:ban-comma-operator
         return this || (0, eval)('this');
@@ -49,19 +50,19 @@ describe('Types/_formatter/debounce', () => {
         assert.equal(value, 1);
     });
 
-    it('should call method twice if argument "first" is true', () => {
+    it('should call method once if argument "first" is true', () => {
         let value = 0;
         const decorator = debounce(() => value++, 10, true);
         decorator();
-        assert.equal(value, 2);
+        assert.equal(value, 1);
     });
 
-    it('should call method 4 times in 2 series if argument "first" is true', () => {
+    it('should call method twice in 1 series if argument "first" is true', () => {
         let value = 0;
         const decorator = debounce(() => value++, 10, true);
 
         decorator();
         decorator();
-        assert.equal(value, 4);
+        assert.equal(value, 2);
     });
 });
