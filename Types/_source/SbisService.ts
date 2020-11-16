@@ -1131,7 +1131,6 @@ export default class SbisService extends Rpc {
      * </pre>
      */
     create(meta?: IHashMap<unknown>): Promise<Model> {
-        meta = object.clonePlain(meta);
         return this._loadAdditionalDependencies((ready) => {
             this._connectAdditionalDependencies(
                 super.create(meta) as any,
