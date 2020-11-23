@@ -86,6 +86,24 @@ describe('Types/_entity/adapter/SbisRecord', () => {
             });
         });
 
+        it('should skip not exact format', () => {
+            const data = {
+                f: 1,
+                d: [{
+                    f: 123
+                }],
+                s: [{n: 'foo', t: 'JSON-объект'}]
+            };
+            const adapter = new SbisRecord(data);
+
+            assert.deepEqual(adapter.getData(), {
+                d: [{
+                    f: 123
+                }],
+                s: [{n: 'foo', t: 'JSON-объект'}]
+            });
+        });
+
         it('should define writable property for shared format', () => {
             const adapter = new SbisRecord({
                 f: 1,
