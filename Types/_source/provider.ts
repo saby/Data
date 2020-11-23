@@ -1,6 +1,6 @@
 /**
  * Библиотека получения данных.
- * @library Types/source:provider
+ * @library Types/_source/provider
  * @includes IAbstract Types/_source/provider/IAbstract
  * @includes IChannel Types/_source/provider/IChannel
  * @includes INotify Types/_source/provider/INotify
@@ -10,7 +10,7 @@
 
 /*
  * Data providers library
- * @library Types/source:provider
+ * @library Types/_source/provider
  * @includes IAbstract Types/_source/provider/IAbstract
  * @includes IChannel Types/_source/provider/IChannel
  * @includes INotify Types/_source/provider/INotify
