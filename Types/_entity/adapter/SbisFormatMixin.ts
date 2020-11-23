@@ -137,7 +137,10 @@ function eachFormatEntry(data: unknown, callback: (entry: FormatCarrier) => bool
         }
     } else if (data && typeof data === 'object') {
         const record = data as FormatCarrier;
-        if (record.s !== undefined || record.f !== undefined) {
+        if (
+            record.d !== undefined &&
+            (record.s !== undefined || record.f !== undefined)
+        ) {
             if (callback(record) === false) {
                 return false;
             }
