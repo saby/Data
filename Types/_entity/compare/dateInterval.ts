@@ -4,22 +4,6 @@ import isFullInterval from './isFullInterval';
 /**
  * Рассчитывает количество интервалов между датами, включая граничные значения.
  * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>dateA</b> {Date} Первая дата.</li>
- *      <li><b>dateB</b> {Date} Вторая дата.</li>
- *      <li><b>[units]</b> {String} Единица расчета.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {number} Количество интервалов между датами.
- *
- * <h2>Доступные единицы расчета.</h2>
- * <ul>
- *     <li>Year: год;</li>
- *     <li>Month: месяц;</li>
- *     <li>Day: день;</li>
- * </ul>
- *
  * <h2>Примеры использования.</h2>
  *
  * Выведем Количество полных месяцев между датами:
@@ -35,8 +19,10 @@ import isFullInterval from './isFullInterval';
  *     console.log(compare.dateInterval(dateA, dateB, compare.DateUnits.Month)); // 1
  * </pre>
  *
- * @class
- * @name Types/_entity/compare/dateInterval
+ * @param begin Дата начала интервала
+ * @param end Дата окончания интервала
+ * @param unit Единица измерения интервала
+ * @returns Количество единиц между датами
  * @public
  * @author Мальцев А.А.
  */
@@ -55,7 +41,7 @@ export default function dateInterval(begin: Date, end: Date, unit: Units): numbe
     return diff === 1 && !isBeginningUnit(begin, unit) ? 0 : diff;
 }
 
-function isBeginningUnit(data: Date, unit: Units) {
+function isBeginningUnit(data: Date, unit: Units): boolean {
     switch (unit) {
         case Units.Day:
             return data.getHours() === 0 && data.getMinutes() === 0;

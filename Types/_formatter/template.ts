@@ -70,14 +70,6 @@ function resolve(expression: string, scope: unknown): unknown {
 
 /**
  * Форматирует строку по шаблону.
- * @remark
- * Параметры:
- * <ul>
- *      <li>{String} str Форматируемая строка.</li>
- *      <li>{Object} scope Данные для подстановки</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Отформатированная строка.
  * @example
  * <h2>Отформатируем строку c использованием объекта</h2>
  * <pre>
@@ -101,8 +93,9 @@ function resolve(expression: string, scope: unknown): unknown {
  *     }); // returns 'A neutron walks into a bar...'
  * </pre>
  *
- * @class
- * @name Types/_formatter/template
+ * @param str Форматируемая строка
+ * @param scope Данные для подстановки
+ * @returns Отформатированная строка
  * @public
  * @author Мальцев А.А.
  */

@@ -1,9 +1,23 @@
 import format from './date';
 import * as translate from 'i18n!Types';
 
+/**
+ * Тип квантификации
+ */
 export enum Type {
+    /**
+     *  Автопределение
+     */
     Auto,
+
+    /**
+     *  По времени
+     */
     Time,
+
+    /**
+     *  До дням
+     */
     Date
 }
 
@@ -21,22 +35,7 @@ function isThisDay(date: Date, thisDate: Date): boolean {
 
 /**
  * Преобраузет дату в строку относительно текущего момента времени ('сегодня', 'вчера' и т.п.).
- * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>date</b> {Date} Дата.</li>
- *      <li><b>[type]</b> {Type} Тип кванта.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Дата в текстовом виде.
- *
- * <h2>Доступные значения type.</h2>
- * <ul>
- *     <li>Auto: автопределение кванта;</li>
- *     <li>Time: квантирование по времени;</li>
- *     <li>Date: квантирование по дням;</li>
- * </ul>
- *
+ * @example
  * Выведем дату в с квантированемм по дням:
  * <pre>
  *     import {retrospect, retrospectType} from 'Types/formatter';
@@ -44,8 +43,9 @@ function isThisDay(date: Date, thisDate: Date): boolean {
  *     console.log(retrospect(today, retrospectType.Date)); // 'Сегодня'
  * </pre>
  *
- * @class
- * @name Types/_formatter/retrospect
+ * @param date Дата
+ * @param type Тип кванта
+ * @returns Дата в текстовом виде
  * @public
  * @author Мальцев А.А.
  */

@@ -5,22 +5,6 @@ const MONTH_IN_YEAR = 11;
 /**
  * Проверяет, что между датами только полные интервалы.
  * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>dateA</b> {Date} Первая дата.</li>
- *      <li><b>dateB</b> {Date} Вторая дата.</li>
- *      <li><b>[units]</b> {String} Единица расчета.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {boolean} Между датами только полные интервалы.
- *
- * <h2>Доступные единицы расчета.</h2>
- * <ul>
- *     <li>Year: год;</li>
- *     <li>Month: месяц;</li>
- *     <li>Day: день;</li>
- * </ul>
- *
  * <h2>Примеры использования.</h2>
  *
  * Проверим что между датами только полные месяця:
@@ -35,13 +19,15 @@ const MONTH_IN_YEAR = 11;
  *     console.log(compare.isFullInterval(dateA, dateB, compare.DateUnits.Month)); // false
  * </pre>
  *
- * @class
- * @name Types/_entity/compare/isFullInterval
+ * @param begin Дата начала интервала
+ * @param end Дата окончания интервала
+ * @param unit Единица измерения интервала
+ * @returns Между датами только полные интервалы
  * @public
  * @author Кудрявцев И.С.
  */
 
-export default function isFullInterval(begin: Date, end: Date, unit: Units) {
+export default function isFullInterval(begin: Date, end: Date, unit: Units): boolean {
     switch (unit) {
         case Units.Day:
             return isFullDay(begin, end);

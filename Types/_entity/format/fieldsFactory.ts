@@ -45,30 +45,16 @@ export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | I
 
 /**
  * Создает формат поля по его декларативному описанию.
- * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>declaration</b> {@link FieldDeclaration Declarative definition}</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {@link Types/_entity/format/Field} Формат поля.
- * @class Types/_entity/format/fieldsFactory
  * @param declaration Декларативное описание.
+ * @returns Формат поля.
  * @public
  * @author Мальцев А.А.
  */
 
 /*
  * Creates field format by its declarative definition.
- * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>declaration</b> {@link FieldDeclaration Declarative definition}</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {@link Types/_entity/format/Field} Field format.
- * @class Types/_entity/format/fieldsFactory
  * @param declaration Declarative definition
+ * @returns Field format.
  * @public
  * @author Мальцев А.А.
  */

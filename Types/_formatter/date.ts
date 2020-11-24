@@ -354,15 +354,6 @@ addToken('ZZ', getTimeZone, {separator: ''});
 /**
  * Преобразует дату в строку указанного формата.
  * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>date</b> {Date} Дата.</li>
- *      <li><b>mask</b> {String} Маска формата вывода.</li>
- *      <li><b>[timeZoneOffset]</b> {Number} Смещение часового пояса, в котором требуется вывести значения. По умолчанию используется локальный.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Дата в указанном формате.
- *
  * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации.</h2>
  * <ul>
  *     <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
@@ -494,8 +485,10 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     console.log(format(date, '[Today is] YYYY/DD/MM')); // Today is 2018/07/05
  * </pre>
  *
- * @class
- * @name Types/_formatter/date
+ * @param date Дата
+ * @param mask Маска формата вывода
+ * @param [timeZoneOffset] Смещение часового пояса, в котором требуется вывести значения. По умолчанию используется локальный.
+ * @returns Дата в указанном формате.
  * @public
  * @author Мальцев А.А.
  */

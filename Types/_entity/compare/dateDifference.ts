@@ -1,6 +1,20 @@
+/**
+ * Доступные единицы расчета
+ */
 export enum Units {
+    /**
+     * Год
+     */
     Year = 'Year',
+
+    /**
+     * Месяц
+     */
     Month = 'Month',
+
+    /**
+     * День
+     */
     Day = 'Day'
 }
 
@@ -29,26 +43,9 @@ function getYearsDifference(dateA: Date, dateB: Date): number {
     return dateB.getFullYear() - dateA.getFullYear();
 }
 
-
 /**
  * Рассчитывает разницу между датами в указанных единицах.
  * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>dateA</b> {Date} Первая дата.</li>
- *      <li><b>dateB</b> {Date} Вторая дата.</li>
- *      <li><b>[units]</b> {String} Единица расчета (если не передан, используются миллисекунды).</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {number} Разница между датами в виде целого числа (дробная часть отбрасывается) в указанных единицах.
- *
- * <h2>Доступные единицы расчета.</h2>
- * <ul>
- *     <li>Year: год;</li>
- *     <li>Month: месяц;</li>
- *     <li>Day: день;</li>
- * </ul>
- *
  * <h2>Примеры использования.</h2>
  *
  * Выведем число дней между двумя датами:
@@ -59,8 +56,10 @@ function getYearsDifference(dateA: Date, dateB: Date): number {
  *     console.log(compare.dateDifference(dateA, dateB, compare.DateUnits.Day)); // 1
  * </pre>
  *
- * @class
- * @name Types/_entity/compare/dateDifference
+ * @param dateA Первая дата
+ * @param dateB Вторая дата
+ * @param [units] Единица расчета (если не передан, используются миллисекунды)
+ * @returns Разница между датами в виде целого числа (дробная часть отбрасывается) в указанных единицах.
  * @public
  * @author Мальцев А.А.
  */

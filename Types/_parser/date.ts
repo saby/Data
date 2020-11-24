@@ -138,15 +138,7 @@ addToken('a', setAmPm, AM_PM_MATCHER);
 
 /**
  * Создает дату из строки по заданному формату.
- * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>str</b> {String} Дата в строковом представлении.</li>
- *      <li><b>format</b> {String} Формат даты.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {Date} Дата.
- *
+ * @example
  * Создадим дату из строки:
  * <pre>
  *     import {date as parse} from 'Types/parser';
@@ -155,16 +147,14 @@ addToken('a', setAmPm, AM_PM_MATCHER);
  *     console.log(dateInstance.getMonth()); // 11
  *     console.log(dateInstance.getFullYear()); // 2003
  * </pre>
- * @class
- * @name Types/_parser/date
+ * @param str Дата в строковом представлении
+ * @param format Формат даты
  * @public
  * @author Мальцев А.А.
  */
 
 /*
  * Produces Date from string by given format.
- * @function
- * @name Types/_parser/date
  * @param str Date in a string representation
  * @param format Date format
  * @public
