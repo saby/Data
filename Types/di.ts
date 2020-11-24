@@ -2,8 +2,6 @@ import {IHashMap} from './_declarations';
 
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
- * @class
- * @name Types/di
  * @public
  * @author Мальцев А.А.
  *
@@ -13,7 +11,14 @@ const SINGLETONE_MAP_INDEX = 2;
 const map = {};
 
 interface IOptions {
+    /**
+     * Инстанциировать только один объект
+     */
     instantiate?: boolean;
+
+    /**
+     * Создавать новый экземпляр или использовать переданный инстанс
+     */
     single?: boolean;
 }
 
@@ -31,15 +36,7 @@ function checkAlias(alias: string): void {
 }
 
 /**
- * @typedef {Object} DependencyOptions
- * @property {Boolean} [single=false] Инстанциировать только один объект
- * @property {Boolean} [instantiate=true] Создавать новый экземпляр или использовать переданный инстанс
- */
-
-/**
  * Регистрирует зависимость
- * @function
- * @name Types/di#register
  * @param alias Название зависимости
  * @param factory Фабрика объектов или готовый инстанс
  * @param [options] Опции
@@ -99,8 +96,6 @@ export function register(alias: string, factory: Function | object, options?: IO
 
 /**
  * Удаляет регистрацию зависимости
- * @function
- * @name Types/di#unregister
  * @param alias Название зависимости
  * @example
  * <pre>
@@ -114,9 +109,7 @@ export function unregister(alias: string): void {
 }
 
 /**
- * Проверяет регистрацию зависимости
- * @function
- * @name Types/di#isRegistered
+ * Проверяет регистрацию зависимости с указанным названием
  * @param alias Название зависимости
  * @example
  * <pre>
@@ -131,8 +124,6 @@ export function isRegistered(alias: string): boolean {
 
 /**
  * Возвращает занчение флага 'instantiate', с которым зарегистрирована зависимость
- * @function
- * @name Types/di#isInstantiable
  * @param alias Название зависимости
  * @example
  * <pre>
@@ -161,8 +152,6 @@ export function isInstantiable(alias: string): boolean {
 
 /**
  * Создает экземпляр зарегистрированной зависимости.
- * @function
- * @name Types/di#create
  * @param alias Название зависимости, или конструктор объекта или инстанс объекта
  * @param [options] Опции конструктора
  * @example
@@ -193,8 +182,6 @@ export function create<TResult, TOptions = IHashMap<any>>(
 
 /**
  * Разрешает зависимость
- * @function
- * @name Types/di#resolve
  * @param alias Название зависимости, или конструктор объекта или инстанс объекта
  * @param Опции конструктора
  * @example

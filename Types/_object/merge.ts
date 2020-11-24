@@ -32,14 +32,7 @@ function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
 
 /**
  * Рекурсивно объединяет два или более объектов.
- * @remark
- * <h2>Параметры функции</h2>
- *
- * <ul>
- *   <li><b>target</b> {Object}.</li>
- *   <li><b>sources</b> {Object}.</li>
- * </ul>
- *
+ * @example
  * <h2>Пример использования</h2>
  * <pre>
  *     import {merge} from 'Types/object';
@@ -51,7 +44,8 @@ function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
  *     ));
  * </pre>
  *
- * @class Types/_object/merge
+ * @param target Объект, в который объединять
+ * @param sources Объекты для объединения
  * @public
  * @author Мальцев А.А.
  */

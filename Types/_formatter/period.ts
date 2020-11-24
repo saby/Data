@@ -1,16 +1,62 @@
 import dateFormat from './date';
 
+/**
+ * Тип периода
+ */
 export enum Type {
+    /**
+     * Автоматически определить подходящий тип
+     */
     Auto,
+
+    /**
+     * В циыры
+     */
     Digital,
+
+    /**
+     * В виде дат в полном формате
+     */
     FullDate,
+
+    /**
+     * В виде дат в коротком формате
+     */
     ShortDate,
+
+    /**
+     * В виде месяцев в полном формате
+     */
     FullMonth,
+
+    /**
+     * В виде месяцев в коротком формате
+     */
     ShortMonth,
+
+    /**
+     * В виде кварталов в полном формате
+     */
     FullQuarter,
+
+    /**
+     * В виде кварталов в коротком формате
+     */
     ShortQuarter,
+
+    /**
+     * В виде полугодий в полном формате
+     */
     FullHalfYear,
+
+    /**
+     * В виде дат полугодий в коротком формате
+     */
     ShortHalfYear,
+
+    /**
+     * В виде дат в годовом формате
+     */
     Year
 }
 
@@ -98,29 +144,7 @@ function yearsPeriod(start: Date, finish: Date): string {
 
 /**
  * Преобразует временной период в строку указанного формата {@link http://axure.tensor.ru/standarts/v7/форматы_дат_и_времени_01_2.html по стандарту}.
- * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>start</b> {Date} Дата начала периода.</li>
- *      <li><b>finish</b> {Date} Дата окончания периода.</li>
- *      <li><b>[type]</b> {Type} Тип периода.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Период в в текстовом виде.
- *
- * <h2>Доступные значения type.</h2>
- * <ul>
- *     <li>FullDate: выводится период в виде дат в полном формате;</li>
- *     <li>ShortDate: выводится период в виде дат в коротком формате;</li>
- *     <li>FullMonth: выводится период в виде месяцев в полном формате;</li>
- *     <li>ShortMonth: выводится период в виде месяцев в коротком формате;</li>
- *     <li>FullQuarter: выводится период в виде кварталов в полном формате;</li>
- *     <li>ShortQuarter: выводится период в виде кварталов в коротком формате;</li>
- *     <li>FullHalfYear: выводится период в виде полугодий в полном формате;</li>
- *     <li>ShortHalfYear: выводится период в виде полугодий в коротком формате;</li>
- *     <li>Year: выводится период в виде дат в годовом формате;</li>
- * </ul>
- *
+ * @example
  * Выведем период в формате короткой даты:
  * <pre>
  *     import {period, periodType} from 'Types/formatter';
@@ -128,9 +152,10 @@ function yearsPeriod(start: Date, finish: Date): string {
  *     const finish = new Date(2019, 11, 3);
  *     console.log(period(start, finish, periodType.ShortDate)); // 7 май'18-3 дек'19
  * </pre>
- *
- * @class
- * @name Types/_formatter/period
+ * @param start Дата начала периода.
+ * @param finish Дата окончания периода.
+ * @param type Тип периода.
+ * @returns Период в в текстовом виде.
  * @public
  * @author Мальцев А.А.
  */

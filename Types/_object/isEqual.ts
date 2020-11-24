@@ -51,13 +51,6 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
  * {@link Types/_entity/IEquatable}, то такие объекты сравниваются через вызов метода isEqual().
  * Функция возвращает true, когда оба объекта/массива идентичны.
  *
- * <h2>Параметры функции</h2>
- *
- * <ul>
- *    <li><b>obj1</b> {Object|Array}.</li>
- *    <li><b>obj2</b> {Object|Array}.</li>
- * </ul>
- *
  * <h2>Пример использования</h2>
  * <pre>
  *     import {isEqual} from 'Types/object';
@@ -69,7 +62,8 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
  *     console.log(isEqual([0], ['0']));
  * </pre>
  *
- * @class Types/_object/isEqual
+ * @param obj1 Первый объект
+ * @param obj2 Второй объект
  * @public
  * @author Мальцев А.А.
  */

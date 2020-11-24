@@ -1,19 +1,10 @@
 import {applied} from '../entity';
-/**
- * Набор функций для модификаций даты и времени
- * @class
- * @name Types/_transformation/date
- * @public
- * @author Мальцев А.А.
- *
- */
 
 /**
  * Сдвигает дату на конец указанной единицы измерения даты/времени
- * @function
- * @name Types/_transformation/date#toEndOf
  * @param date Дата
  * @param unit Единица измерения
+ * @public
  * @example
  * Сдвинем дату на последний день месяца:
  * <pre>

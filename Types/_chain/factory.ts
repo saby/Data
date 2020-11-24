@@ -39,13 +39,6 @@ registerFactory();
 /**
  * Создает последовательную цепочку вызовов, обрабатывающих коллекции различных типов.
  * @remark
- * <h2>Параметры функции</h2>
- * <ul>
- *      <li><b>source</b> {IEnumerable<T, U>} | {T[]} | {IHashMap<T>{ | {object} | {Abstract<T, U>} Исходная коллекция.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {Enumerable<T, U>} | {Arraywise<T>} | {Objectwise<T>} | {Abstract<T, U>} Коллекция для выполнения вызовов по цепочке.
- *
  * Функция является дженериком вида factory<T[, U]>, где:
  * <ul>
  *     <li>T: тип элемента цепочки;</li>
@@ -101,6 +94,7 @@ registerFactory();
  *
  * @class Types/_chain/factory
  * @param source Коллекция, обрабатываемая цепочкой
+ * @returns Коллекция для выполнения вызовов по цепочке
  * @public
  * @author Мальцев А.А.
  */

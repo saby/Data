@@ -290,8 +290,6 @@ function convertListToRecordSet(list: List<Record>): RecordSet<unknown, Record> 
 
 /**
  * Возвращает типизированное значение из исходного.
- * @function
- * @name Types/_entity/factory#cast
  * @param value Исходное значение
  * @param type Тип значения
  * @param [options] Опции
@@ -434,8 +432,6 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
 
 /**
  * Возвращет исходное значение из типизированного.
- * @function
- * @name Types/_entity/factory#serialize
  * @param value Типизированное значение
  * @param [options] Опции
  * @return Исходное значение

@@ -16,16 +16,8 @@ const boundaries = {
 
 /**
  * Функция, переводящая арабское число в римское.
- * @remark
- * Параметры:
- * <ul>
- *      <li>{Number} num Арабское число.</li>
- * </ul>
- * <h2>Возвращает</h2>
- * {String} Римское число.
- *
- * @class
- * @name Types/_formatter/numberRoman
+ * @param num Арабское число
+ * @returns  Римское число
  * @public
  * @author Мальцев А.А.
  */
