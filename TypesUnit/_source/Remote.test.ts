@@ -516,7 +516,6 @@ describe('Types/_source/Remote', () => {
         it('should serialize "provider" option', () => {
             const Foo = () => {/**/};
             di.register('Foo', Foo);
-            https://wi.sbis.ru/doc/platform/developmentapl/development-tools/migration/scripts/#example-of-common-script-settings
             const source = new RemoteTesting({
                 provider: 'Foo'
             });
