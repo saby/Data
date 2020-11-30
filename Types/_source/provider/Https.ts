@@ -1,6 +1,7 @@
 import IAbstract from './IAbstract';
 import { EntityMarker } from '../../_declarations';
 import {ICacheParameters, IOptions as IOptionsRemote, IProviderOptions} from '../Remote';
+import 'Core/polyfill/PromiseAPIDeferred';
 
 interface ITransportOptions {
     method: string;
@@ -33,7 +34,7 @@ class Https implements IAbstract {
         read: 'GET',
         update: 'POST',
         destroy: 'POST',
-        query: 'GET',
+        query: 'POST',
         copy: 'POST',
         merge: 'POST',
         move: 'POST'
@@ -46,7 +47,11 @@ class Https implements IAbstract {
             this._httpMethodBinding = {...this._httpMethodBinding, ...options.httpMethodBinding};
         }
 
-        this._baseUrl = `${options.endpoint.address}/${options.endpoint.contract}`;
+        this._baseUrl = options.endpoint.address;
+
+        if (options.endpoint.contract) {
+            this._baseUrl += `/${options.endpoint.contract}`;
+        }
     }
 
     protected getTransportOptions(method: string, args: object = {}): ITransportOptions {
@@ -60,15 +65,29 @@ class Https implements IAbstract {
     }
 
     protected buildUrl(name: string, arg?: object): string {
-        return `${this._baseUrl}/${name}`;
+        const path = `${this._baseUrl}/${name}`;
+
+        if (arg && Object.keys(arg).length) {
+            const parameters = [];
+
+            for (const key of Object.keys(arg)) {
+                if (typeof arg[key] !== 'undefined') {
+                    parameters.push(`${key}=${JSON.stringify(arg[key])}`);
+                }
+            }
+
+            return encodeURI(`${path}?${parameters.join('&')}`);
+        }
+
+        return path;
     }
 
     call<T>(name: string, args: object, cache?: ICacheParameters, method?: string): Promise<T> {
         const httpMethod = method || this._httpMethodBinding[name];
-        const url = method === 'GET' ? this.buildUrl(name, args) : this.buildUrl(name);
+        const url = httpMethod === 'GET' ? this.buildUrl(name, args) : this.buildUrl(name);
 
         return new Promise<T>((resolve, reject) => {
-            this._transport(url, this.getTransportOptions(method, args)).then((response) => {
+            this._transport(url, this.getTransportOptions(httpMethod, args)).then((response) => {
                 if (response.ok) {
                     response.json().then(resolve).catch(reject);
                 } else {

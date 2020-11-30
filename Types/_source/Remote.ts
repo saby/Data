@@ -89,8 +89,10 @@ function isEmpty(value: any): boolean {
  * Формирует данные, передваемые в провайдер при вызове create().
  * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
  */
-function passCreate(meta?: object): object[] {
-    return [meta];
+function passCreate(meta?: object): any {
+    return {
+        meta
+    };
 }
 
 /**
@@ -98,8 +100,11 @@ function passCreate(meta?: object): object[] {
  * @param key Первичный ключ записи
  * @param [meta] Дополнительные мета данные
  */
-function passRead(key: string, meta?: object): any[] {
-    return [key, meta];
+function passRead(key: string, meta?: object): any {
+    return {
+        key,
+        meta
+    };
 }
 
 /**
@@ -107,7 +112,7 @@ function passRead(key: string, meta?: object): any[] {
  * @param data Обновляемая запись или рекордсет
  * @param [meta] Дополнительные мета данные
  */
-function passUpdate(this: Remote, data: Record | RecordSet, meta?: object): any[] {
+function passUpdate(this: Remote, data: Record | RecordSet, meta?: object): any {
     if (this._$options.updateOnlyChanged) {
         const keyProperty = this._getValidKeyProperty(data);
         if (!isEmpty(keyProperty)) {
@@ -137,7 +142,11 @@ function passUpdate(this: Remote, data: Record | RecordSet, meta?: object): any[
             }
         }
     }
-    return [data, meta];
+
+    return {
+        data,
+        meta
+    };
 }
 
 /**
@@ -145,23 +154,26 @@ function passUpdate(this: Remote, data: Record | RecordSet, meta?: object): any[
  * @param keys Первичный ключ, или массив первичных ключей записи
  * @param [meta] Дополнительные мета данные
  */
-function passDestroy(keys: string | string[], meta?: object|Record): any[] {
-    return [keys, meta];
+function passDestroy(keys: string | string[], meta?: object|Record): any {
+    return {
+        keys,
+        meta
+    };
 }
 
 /**
  * Формирует данные, передваемые в провайдер при вызове query().
  * @param [query] Запрос
  */
-function passQuery(query?: Query): any[] {
-    return query instanceof Query ? [
-         query.getSelect(),
-         query.getFrom(),
-         query.getWhere(),
-         query.getOrderBy(),
-         query.getOffset(),
-         query.getLimit()
-    ] : query;
+function passQuery(query?: Query): any {
+    return query instanceof Query ? {
+        select: query.getSelect(),
+        from: query.getFrom(),
+        where: query.getWhere(),
+        orderBy: query.getOrderBy(),
+        offset: query.getOffset(),
+        limit: query.getLimit()
+    } : query;
 }
 
 /**
@@ -169,8 +181,11 @@ function passQuery(query?: Query): any[] {
  * @param key Первичный ключ записи
  * @param [meta] Дополнительные мета данные
  */
-function passCopy(key: string, meta?: object): any[] {
-    return [key, meta];
+function passCopy(key: string, meta?: object): any {
+    return {
+        key,
+        meta
+    };
 }
 
 /**
@@ -178,8 +193,11 @@ function passCopy(key: string, meta?: object): any[] {
  * @param from Первичный ключ записи-источника (при успешном объедининии запись будет удалена)
  * @param to Первичный ключ записи-приёмника
  */
-function passMerge(from: string, to: string): string[] {
-    return [from, to];
+function passMerge(from: string, to: string): any {
+    return {
+        from,
+        to
+    };
 }
 
 /**
@@ -188,8 +206,12 @@ function passMerge(from: string, to: string): string[] {
  * @param target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
  * @param [meta] Дополнительные мета данные.
  */
-function passMove(from: EntityKey, to: string, meta?: object): any[] {
-    return [from, to, meta];
+function passMove(from: EntityKey, to: string, meta?: object): any {
+    return {
+        from,
+        to,
+        meta
+    };
 }
 
 /**
