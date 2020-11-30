@@ -1,7 +1,7 @@
 import Base, { IOptions as IBaseOptions } from './Base';
 import ICrud, { EntityKey } from './ICrud';
 import ICrudPlus from './ICrudPlus';
-import IProvider from './IProvider';
+import IProvider, { IEndpoint } from './IProvider';
 import DataMixin from './DataMixin';
 import DataCrudMixin from './DataCrudMixin';
 import BindingMixin, { IOptions as IBindingOptions } from './BindingMixin';
@@ -70,6 +70,11 @@ export interface IOptions extends IBaseOptions, IObservableMixinOptions, IBindin
     options?: IOptionsOption;
     passing?: IPassing;
     provider?: IAbstract | string;
+}
+
+export interface IProviderOptions {
+    endpoint?: IEndpoint;
+    options?: IOptionsOption;
 }
 
 function isNull(value: any): boolean {
@@ -394,7 +399,7 @@ export default abstract class Remote extends mixin<
      * @param options Аргументы конструктора
      * @protected
      */
-    protected _createProvider(provider: IAbstract | string, options: object): IAbstract {
+    protected _createProvider(provider: IAbstract | string, options: IProviderOptions): IAbstract {
         if (!provider) {
             throw new Error('Remote access provider is not defined');
         }

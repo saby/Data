@@ -2,7 +2,7 @@ import Rpc from './Rpc';
 import {
     IOptions as IRemoteOptions,
     IOptionsOption as IRemoteOptionsOption,
-    IPassing as IRemotePassing
+    IPassing as IRemotePassing, IProviderOptions
 } from './Remote';
 import {EntityKey} from './ICrud';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
@@ -1244,7 +1244,7 @@ export default class SbisService extends Rpc {
                 // TODO: remove pass 'service' and 'resource'
                 service: this._$endpoint.address,
                 resource: this._$endpoint.contract
-            });
+            } as IProviderOptions);
         }
 
         return this._provider;

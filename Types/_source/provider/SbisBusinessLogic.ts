@@ -2,17 +2,12 @@ import IAbstract from './IAbstract';
 import { OptionsToPropertyMixin } from '../../entity';
 import { logger as defaultLogger, ILogger } from '../../util';
 import { constants } from 'Env/Env';
-import { ICacheParameters } from '../Remote';
+import { IEndpoint } from '../IProvider';
+import { ICacheParameters, IProviderOptions } from '../Remote';
 import { EntityMarker } from '../../_declarations';
 import Deferred = require('Core/Deferred');
 
-export interface IEndPoint {
-    contract?: string;
-    address?: string;
-}
-
-export interface IOptions {
-    endpoint?: IEndPoint;
+export interface IOptions extends IProviderOptions {
     callTimeout?: number;
     logger?: ILogger;
     transport?: IRpcTransportConstructor;
@@ -164,7 +159,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
      *     });
      * </pre>
      */
-    protected _$endpoint: IEndPoint = {};
+    protected _$endpoint: IEndpoint = {};
 
     /**
      * @cfg {Function} Конструктор сетевого транспорта
@@ -186,7 +181,7 @@ export default class SbisBusinessLogic extends OptionsToPropertyMixin implements
      * @return {Endpoint}
      * @see endpoint
      */
-    getEndpoint(): IEndPoint {
+    getEndpoint(): IEndpoint {
         return this._$endpoint;
     }
 
