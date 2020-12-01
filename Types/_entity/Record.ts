@@ -67,14 +67,19 @@ const STATES: IStatesHash = {
 const FIELD_RELATION_PREFIX = 'field.';
 
 /**
- * Режим кэширования: только объекты
+ * Режим кэширования
  */
-const CACHE_MODE_OBJECTS = protect('objects');
+enum CacheMode {
+    /**
+     * Режим кэширования: только объекты
+     */
+    Objects = 'objects',
 
-/**
- * Режим кэширования: все значения
- */
-const CACHE_MODE_ALL = protect('all');
+    /**
+     * Режим кэширования: все значения
+     */
+    All = 'all'
+}
 
 type pairsTuple = [string, any, any, boolean];
 
@@ -82,7 +87,7 @@ export interface IOptions extends IObservableMixinOptions,
     IFormattableOptions,
     IVersionableMixinOptions,
     IReadWriteMixinOptions {
-    cacheMode?: string | symbol;
+    cacheMode?: CacheMode;
     cloneChanged?: boolean;
     owner?: RecordSet;
     state?: State;
@@ -349,9 +354,9 @@ export default class Record<T = any> extends mixin<
     protected _$state: State;
 
     /**
-     * @cfg {String} Режим кеширования
+     * @cfg Режим кеширования (по умолчанию - только объекты)
      */
-    protected _$cacheMode: string | symbol;
+    protected _$cacheMode: CacheMode;
 
     /**
      * @cfg {Boolean} Клонировать значения полей, поддерживающих интерфейс {@link Types/_entity/ICloneable}, и при вызове rejectChages восстанавливать клонированные значения.
@@ -1283,9 +1288,9 @@ export default class Record<T = any> extends mixin<
      */
     protected _isFieldValueCacheable(value: any): boolean {
         switch (this._$cacheMode) {
-            case CACHE_MODE_OBJECTS:
+            case CacheMode.Objects:
                 return value instanceof Object;
-            case CACHE_MODE_ALL:
+            case CacheMode.All:
                 return true;
         }
         return false;
@@ -1454,12 +1459,12 @@ export default class Record<T = any> extends mixin<
         return STATES;
     }
 
-    static get CACHE_MODE_OBJECTS(): symbol | string {
-        return CACHE_MODE_OBJECTS;
+    static get CACHE_MODE_OBJECTS(): CacheMode {
+        return CacheMode.Objects;
     }
 
-    static get CACHE_MODE_ALL(): symbol | string {
-        return CACHE_MODE_ALL;
+    static get CACHE_MODE_ALL(): CacheMode {
+        return CacheMode.All;
     }
 
     /**
@@ -1592,7 +1597,7 @@ Object.assign(Record.prototype, {
    '[Types/_entity/relation/IReceiver]': true,
    _moduleName: 'Types/entity:Record',
    _$state: STATES.DETACHED,
-   _$cacheMode: CACHE_MODE_OBJECTS,
+   _$cacheMode: CacheMode.Objects,
    _$cloneChanged: false,
    _$owner: null,
    _acceptedState: undefined
