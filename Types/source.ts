@@ -89,6 +89,7 @@ export {
 export {default as Remote, IProviderOptions } from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
 import {default as SbisService} from './_source/SbisService';
+export { default as Restful } from './_source/Restful';
 export {SbisService};
 export {
     getQueryArguments as sbisServiceGetQueryArguments,
