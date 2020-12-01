@@ -2,7 +2,7 @@ import Rpc from './Rpc';
 import {
     IOptions as IRemoteOptions,
     IOptionsOption as IRemoteOptionsOption,
-    IPassing as IRemotePassing
+    IPassing as IRemotePassing, IProviderOptions
 } from './Remote';
 import {EntityKey} from './ICrud';
 import {IEndpoint as IProviderEndpoint} from './IProvider';
@@ -602,10 +602,10 @@ interface IUpdateResult {
 function passUpdate(this: SbisService, data: Record | RecordSet, meta?: object): IUpdateResult {
     const superArgs = (Rpc.prototype as any)._$passing.update.call(this, data, meta);
     const args: IUpdateResult = {};
-    const recordArg = DataMixin.isRecordSetInstance(superArgs[0]) ? 'Записи' : 'Запись';
+    const recordArg = DataMixin.isRecordSetInstance(superArgs.data) ? 'Записи' : 'Запись';
     const passAddFieldsFromMeta = this._$options.passAddFieldsFromMeta;
 
-    args[recordArg] = superArgs[0];
+    args[recordArg] = superArgs.data;
 
     if (passAddFieldsFromMeta && meta && Object.keys(meta).length) {
         args.ДопПоля = meta;
@@ -1244,7 +1244,7 @@ export default class SbisService extends Rpc {
                 // TODO: remove pass 'service' and 'resource'
                 service: this._$endpoint.address,
                 resource: this._$endpoint.contract
-            });
+            } as IProviderOptions);
         }
 
         return this._provider;

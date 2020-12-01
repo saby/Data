@@ -21,7 +21,7 @@ class ProviderMock {
     '[Types/_source/provider/IAbstract]': true;
     result: any = null;
     lastName: string;
-    lastArgs: any[];
+    lastArgs: any;
 
     call(name: string, args: any): any {
         this.lastName = name;
@@ -201,7 +201,7 @@ describe('Types/_source/Remote', () => {
 
             provider.result = {foo: 'bar'};
             return dataSource.read(value).then((record) => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.key;
                 assert.equal(sent, 'foo');
 
                 assert.instanceOf(record, Record);
@@ -221,7 +221,7 @@ describe('Types/_source/Remote', () => {
             });
 
             return dataSource.update(record).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
                 assert.equal(sent.a, 1);
                 assert.equal(sent.b, 2);
                 assert.equal(sent.c, 3);
@@ -242,7 +242,7 @@ describe('Types/_source/Remote', () => {
 
             record.set('b', 20);
             return dataSource.update(record).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
                 assert.equal(sent.a, 1);
                 assert.equal(sent.b, 20);
                 assert.isUndefined(sent.c);
@@ -264,7 +264,7 @@ describe('Types/_source/Remote', () => {
 
             model.set('b', 20);
             return dataSource.update(model).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
                 assert.equal(sent.a, 1);
                 assert.equal(sent.b, 20);
                 assert.isUndefined(sent.c);
@@ -285,7 +285,7 @@ describe('Types/_source/Remote', () => {
             });
 
             return dataSource.update(model).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
 
                 assert.isTrue(sent.hasOwnProperty('a'));
                 assert.isFalse(sent.hasOwnProperty('b'));
@@ -310,7 +310,7 @@ describe('Types/_source/Remote', () => {
             });
 
             return dataSource.update(rs).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
                 assert.equal(sent.length, data.length);
             });
         });
@@ -336,7 +336,7 @@ describe('Types/_source/Remote', () => {
             rs.at(0).set('a', 1);
             rs.at(2).set('a', 2);
             return dataSource.update(rs).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.data;
 
                 assert.equal(sent.length, 2);
 
@@ -357,7 +357,7 @@ describe('Types/_source/Remote', () => {
             const value = 'foo';
 
             return dataSource.destroy(value).then(() => {
-                const sent = provider.lastArgs[0];
+                const sent = provider.lastArgs.keys;
                 assert.equal(sent, 'foo');
             });
         });
@@ -371,7 +371,7 @@ describe('Types/_source/Remote', () => {
             const query = new Query();
 
             return dataSource.query(query).then(() => {
-                assert.deepEqual(provider.lastArgs.length, 6);
+                assert.deepEqual(Object.keys(provider.lastArgs).length, 6);
             });
         });
     });
@@ -385,8 +385,8 @@ describe('Types/_source/Remote', () => {
             const to = 'bar';
 
             return dataSource.merge(from, to).then(() => {
-                assert.equal(provider.lastArgs[0], from);
-                assert.equal(provider.lastArgs[1], to);
+                assert.equal(provider.lastArgs.from, from);
+                assert.equal(provider.lastArgs.to, to);
             });
         });
     });
@@ -400,7 +400,7 @@ describe('Types/_source/Remote', () => {
             return dataSource.copy(id).then((copy) => {
                 assert.instanceOf(copy, Model);
                 assert.equal(provider.lastName, 'copyUser');
-                assert.equal(provider.lastArgs[0], 'test');
+                assert.equal(provider.lastArgs.key, 'test');
                 assert.deepEqual(copy.getRawData(), data);
             });
         });
@@ -415,8 +415,8 @@ describe('Types/_source/Remote', () => {
             const to = 'bar';
 
             return dataSource.move(from, to).then(() => {
-                assert.equal(provider.lastArgs[0], from);
-                assert.equal(provider.lastArgs[1], to);
+                assert.equal(provider.lastArgs.from, from);
+                assert.equal(provider.lastArgs.to, to);
             });
         });
     });
@@ -438,7 +438,9 @@ describe('Types/_source/Remote', () => {
             });
 
             it('should receive service name and arguments', () => {
-                const serviceArgs = [{}, [], 'a', 1, 0, false, true, null];
+                const serviceArgs = {
+                    meta: [{}, [], 'a', 1, 0, false, true, null]
+                };
                 let lastName;
                 let lastArgs;
                 const handler = (e, name, args) => {
@@ -446,44 +448,48 @@ describe('Types/_source/Remote', () => {
                     lastArgs = args;
                 };
                 dataSource.subscribe('onBeforeProviderCall', handler);
-                return dataSource.create(serviceArgs).then(() => {
+                return dataSource.create(serviceArgs.meta).then(() => {
                     dataSource.unsubscribe('onBeforeProviderCall', handler);
 
                     assert.strictEqual(lastName, dataSource.getBinding().create);
-                    assert.deepEqual(lastArgs, [serviceArgs]);
+                    assert.deepEqual(lastArgs, serviceArgs);
                 });
             });
 
             it('should change service arguments as an object', () => {
                 const handler = (e, name, args) => {
-                    args[0].a = 9;
-                    delete args[0].b;
-                    args[0].c = 3;
+                    args.meta.a = 9;
+                    delete args.meta.b;
+                    args.meta.c = 3;
                 };
                 const serviceArgs = {a: 1, b: 2};
-                const expectArgs: object[] = [{a: 9, c: 3}];
+                const expectArgs: any = {
+                    meta: {a: 9, c: 3}
+                };
 
                 dataSource.subscribe('onBeforeProviderCall', handler);
                 dataSource.create(serviceArgs);
                 dataSource.unsubscribe('onBeforeProviderCall', handler);
 
                 assert.deepEqual(provider.lastArgs, expectArgs);
-                assert.deepEqual([serviceArgs], expectArgs);
+                assert.deepEqual(serviceArgs, expectArgs.meta);
             });
 
             it('should change service arguments as an array', () => {
                 const handler = (e, name, args) => {
-                    args[0].push('new');
+                    args.meta.push('new');
                 };
                 const serviceArgs = [1, 2];
-                const expectArgs = [[1, 2, 'new']];
+                const expectArgs = {
+                    meta: [1, 2, 'new']
+                };
 
                 dataSource.subscribe('onBeforeProviderCall', handler);
                 dataSource.create(serviceArgs);
                 dataSource.unsubscribe('onBeforeProviderCall', handler);
 
                 assert.deepEqual(provider.lastArgs, expectArgs);
-                assert.deepEqual([serviceArgs], expectArgs);
+                assert.deepEqual(serviceArgs, expectArgs.meta);
             });
 
             it('should change service arguments and leave original untouched', () => {
@@ -510,7 +516,6 @@ describe('Types/_source/Remote', () => {
         it('should serialize "provider" option', () => {
             const Foo = () => {/**/};
             di.register('Foo', Foo);
-
             const source = new RemoteTesting({
                 provider: 'Foo'
             });

@@ -16,5 +16,5 @@ export default interface IAbstract {
      * @param args Аргументы вызова
      * @return Асинхронный результат операции
      */
-    call<T>(name: string, args: string[] | Object, cache?: ICacheParameters): Promise<T>;
+    call<T>(name: string, args: string[] | Object, cache?: ICacheParameters, httpMethod?: string): Promise<T>;
 }

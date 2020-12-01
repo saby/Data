@@ -86,7 +86,7 @@ export {
     SelectExpression as QuerySelectExpression,
     WhereExpression as QueryWhereExpression
 } from './_source/Query';
-export {default as Remote} from './_source/Remote';
+export {default as Remote, IProviderOptions } from './_source/Remote';
 export {default as Rpc} from './_source/Rpc';
 import {default as SbisService} from './_source/SbisService';
 export {SbisService};

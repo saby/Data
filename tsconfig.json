@@ -16,7 +16,9 @@
       "Application/*": ["node_modules/wasaby-cli/store/_repos/wasaby-app/src/Application/*"],
       "Core/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/core/*"],
       "Lib/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/lib/*"],
-      "Transport/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/transport/*"]
+      "Transport/*": ["node_modules/wasaby-cli/store/_repos/sbis3-ws/WS.Core/transport/*"],
+      "RequireJsLoader/*": ["node_modules/wasaby-cli/store/_repos/wasaby-requirejs-loader/RequireJsLoader/*"],
+      "WasabyLoader/*": ["node_modules/wasaby-cli/store/_repos/wasaby-requirejs-loader/WasabyLoader/*"]
     },
     "types" : ["mocha", "requirejs"]
   },
