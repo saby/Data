@@ -5,9 +5,6 @@ import 'Core/polyfill/PromiseAPIDeferred';
 
 interface ITransportOptions {
     method: string;
-    headers?: {
-        [name: string]: string
-    };
     body?: string;
 }
 
@@ -41,7 +38,7 @@ class Https implements IAbstract {
     }
 
     constructor(options: IOptions) {
-        this._transport = options.transport || fetch;
+        this._transport = options.transport;
 
         if (typeof options.httpMethodBinding === 'object') {
             this._httpMethodBinding = {...this._httpMethodBinding, ...options.httpMethodBinding};
@@ -54,14 +51,20 @@ class Https implements IAbstract {
         }
     }
 
+    protected getTransport() {
+       return this._transport || fetch;
+    }
+
     protected getTransportOptions(method: string, args: object = {}): ITransportOptions {
-        return {
-            method,
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: method === 'GET' ? undefined : JSON.stringify(args)
+        const result = {
+            method
         };
+
+        if (method !== 'GET') {
+            (result as ITransportOptions).body = JSON.stringify(args);
+        }
+
+        return result;
     }
 
     protected buildUrl(name: string, arg?: object): string {
@@ -87,7 +90,7 @@ class Https implements IAbstract {
         const url = httpMethod === 'GET' ? this.buildUrl(name, args) : this.buildUrl(name);
 
         return new Promise<T>((resolve, reject) => {
-            this._transport(url, this.getTransportOptions(httpMethod, args)).then((response) => {
+            this.getTransport()(url, this.getTransportOptions(httpMethod, args)).then((response) => {
                 if (response.ok) {
                     response.json().then(resolve).catch(reject);
                 } else {
