@@ -5,9 +5,6 @@ import 'Core/polyfill/PromiseAPIDeferred';
 
 interface ITransportOptions {
     method: string;
-    headers?: {
-        [name: string]: string
-    };
     body?: string;
 }
 
@@ -41,7 +38,7 @@ class Https implements IAbstract {
     }
 
     constructor(options: IOptions) {
-        this._transport = options.transport || fetch;
+        this._transport = options.transport;
 
         if (typeof options.httpMethodBinding === 'object') {
             this._httpMethodBinding = {...this._httpMethodBinding, ...options.httpMethodBinding};
@@ -54,17 +51,23 @@ class Https implements IAbstract {
         }
     }
 
-    protected getTransportOptions(method: string, args: object = {}): ITransportOptions {
-        return {
-            method,
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: method === 'GET' ? undefined : JSON.stringify(args)
-        };
+    protected _getTransport() {
+       return this._transport || fetch;
     }
 
-    protected buildUrl(name: string, arg?: object): string {
+    protected _getTransportOptions(method: string, args: object = {}): ITransportOptions {
+        const result: ITransportOptions = {
+            method
+        };
+
+        if (method !== 'GET') {
+            result.body = JSON.stringify(args);
+        }
+
+        return result;
+    }
+
+    protected _buildUrl(name: string, arg?: object): string {
         const path = `${this._baseUrl}/${name}`;
 
         if (arg && Object.keys(arg).length) {
@@ -72,7 +75,7 @@ class Https implements IAbstract {
 
             for (const key of Object.keys(arg)) {
                 if (typeof arg[key] !== 'undefined') {
-                    parameters.push(`${key}=${JSON.stringify(arg[key])}`);
+                    parameters.push(`${key}=${typeof arg[key] === 'string' ? arg[key] : JSON.stringify(arg[key])}`);
                 }
             }
 
@@ -84,10 +87,10 @@ class Https implements IAbstract {
 
     call<T>(name: string, args: object, cache?: ICacheParameters, method?: string): Promise<T> {
         const httpMethod = method || this._httpMethodBinding[name];
-        const url = httpMethod === 'GET' ? this.buildUrl(name, args) : this.buildUrl(name);
+        const url = httpMethod === 'GET' ? this._buildUrl(name, args) : this._buildUrl(name);
 
         return new Promise<T>((resolve, reject) => {
-            this._transport(url, this.getTransportOptions(httpMethod, args)).then((response) => {
+            this._getTransport()(url, this._getTransportOptions(httpMethod, args)).then((response) => {
                 if (response.ok) {
                     response.json().then(resolve).catch(reject);
                 } else {

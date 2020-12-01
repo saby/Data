@@ -35,50 +35,44 @@ describe('Types/_source/Restful', () => {
                     return;
 
                 case 'api/foo/update':
-                    if (options.body === '{"data":{"firstName":"Sergey"}}') {
-                        resolve(getSuccessResponse(true));
-                        return;
-                    }
+                    resolve(getSuccessResponse(options.body === '{"data":{"firstName":"Sergey"}}'));
+                    return;
 
                 case 'api/foo/destroy':
-                    if (options.body === '{"keys":1234}') {
-                        resolve(getSuccessResponse(true));
-                        return;
-                    }
+                    resolve(getSuccessResponse(options.body === '{"keys":1234}'));
+                    return;
 
                 case 'api/foo/query':
                     if (options.body === '{"select":{},"from":"","where":{},"orderBy":[],"offset":0}') {
                         resolve(getSuccessResponse([{
                             firstName: 'Ivan'
                         }]));
-                        return;
+                    } else {
+                        resolve(getSuccessResponse({}));
                     }
+                    return;
 
                 case 'api/foo/merge':
-                    if (options.body === '{"from":"foo","to":"bar"}') {
-                        resolve(getSuccessResponse(true));
-                        return;
-                    }
+                    resolve(getSuccessResponse(options.body === '{"from":"foo","to":"bar"}'));
+                    return;
 
                 case 'api/foo/copy':
                     if (options.body === '{"key":1234}') {
                         resolve(getSuccessResponse({
                             firstName: 'Sergey'
                         }));
-                        return;
+                    } else {
+                        resolve(getSuccessResponse({}));
                     }
+                    return;
 
                 case 'api/foo/move':
-                    if (options.body === '{"from":"foo","to":"bar"}') {
-                        resolve(getSuccessResponse(true));
-                        return;
-                    }
+                    resolve(getSuccessResponse(options.body === '{"from":"foo","to":"bar"}'));
+                    return;
 
                 case 'api/foo/checkUser':
-                    if (options.body === '{"firstName":"Ivan","lastName":"Ivanov"}') {
-                        resolve(getSuccessResponse(true));
-                        return;
-                    }
+                    resolve(getSuccessResponse(options.body === '{"firstName":"Ivan","lastName":"Ivanov"}'));
+                    return;
 
                 case 'api/foo/register?id=1234':
                     resolve(getSuccessResponse(true));
