@@ -354,7 +354,7 @@ export default class Record<T = any> extends mixin<
     protected _$state: State;
 
     /**
-     * @cfg Режим кеширования
+     * @cfg Режим кеширования (по умолчанию - только объекты)
      */
     protected _$cacheMode: CacheMode;
 
