@@ -70,11 +70,10 @@ const defaultValidators = {
 };
 
 /**
- * Источник данных, который содержит предварительно выбранные данные и возвращает их при первом вызове любого метода для чтения данных.
+ * Источник данных, который содержит предварительно отобранные данные и возвращает их при первом вызове любого метода для чтения.
  * Второй и последующие вызовы будут переданы на целевой источник данных.
  * @remark
- * Давайте создадим источник данных с двумя списками: первый - это предварительно выбранные данные, а второй - таргет.
- * Источник памяти:
+ * Создадим источник данных с предварительно отобранными данными для метода query():
  * <pre>
  *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
  *
@@ -98,19 +97,38 @@ const defaultValidators = {
  *         })
  *     });
  *
- *     //First query will return prefetched data
+ *     // Первый запрос вернет предварительно отобранные данные
  *     fastFoods.query().then((spots) => {
  *         spots.getAll().forEach((spot) => {
  *             console.log(spot.get('name'));//'Mret a Panger', 'Cofta Cosfee', 'AET'
  *         });
  *     }, console.error);
  *
- *     //Second query will return real data from target source
+ *     // Второй запрос вернет данные, полученные из целевого источника
  *     fastFoods.query().then((spots) => {
  *         spots.getAll().forEach((spot) => {
  *             console.log(spot.get('name'));//'Kurger Bing', 'DcMonald's', 'CFK', 'Kuicq'
  *         });
  *     }, console.error);
+ * </pre>
+ *
+ * Создадим источник данных с пустым набором предварительно отобранных данных для метода query():
+ * <pre>
+ *     import {PrefetchProxy, Memory, DataSet} from 'Types/source';
+ *
+ *     const fastFoods = new PrefetchProxy({
+ *         data: {
+ *             query: new DataSet()
+ *         },
+ *         target: new Memory({
+ *             data: [
+ *                 {id: 1, name: 'Kurger Bing'},
+ *                 {id: 2, name: 'DcMonald\'s'},
+ *                 {id: 3, name: 'CFK'},
+ *                 {id: 4, name: 'Kuicq'}
+ *             ],
+ *         })
+ *     });
  * </pre>
  * @class Types/_source/PrefetchProxy
  * @implements Types/_source/IDecorator
