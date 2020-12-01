@@ -51,23 +51,23 @@ class Https implements IAbstract {
         }
     }
 
-    protected getTransport() {
+    protected _getTransport() {
        return this._transport || fetch;
     }
 
-    protected getTransportOptions(method: string, args: object = {}): ITransportOptions {
-        const result = {
+    protected _getTransportOptions(method: string, args: object = {}): ITransportOptions {
+        const result: ITransportOptions = {
             method
         };
 
         if (method !== 'GET') {
-            (result as ITransportOptions).body = JSON.stringify(args);
+            result.body = JSON.stringify(args);
         }
 
         return result;
     }
 
-    protected buildUrl(name: string, arg?: object): string {
+    protected _buildUrl(name: string, arg?: object): string {
         const path = `${this._baseUrl}/${name}`;
 
         if (arg && Object.keys(arg).length) {
@@ -75,7 +75,7 @@ class Https implements IAbstract {
 
             for (const key of Object.keys(arg)) {
                 if (typeof arg[key] !== 'undefined') {
-                    parameters.push(`${key}=${JSON.stringify(arg[key])}`);
+                    parameters.push(`${key}=${typeof arg[key] === 'string' ? arg[key] : JSON.stringify(arg[key])}`);
                 }
             }
 
@@ -87,10 +87,10 @@ class Https implements IAbstract {
 
     call<T>(name: string, args: object, cache?: ICacheParameters, method?: string): Promise<T> {
         const httpMethod = method || this._httpMethodBinding[name];
-        const url = httpMethod === 'GET' ? this.buildUrl(name, args) : this.buildUrl(name);
+        const url = httpMethod === 'GET' ? this._buildUrl(name, args) : this._buildUrl(name);
 
         return new Promise<T>((resolve, reject) => {
-            this.getTransport()(url, this.getTransportOptions(httpMethod, args)).then((response) => {
+            this._getTransport()(url, this._getTransportOptions(httpMethod, args)).then((response) => {
                 if (response.ok) {
                     response.json().then(resolve).catch(reject);
                 } else {
