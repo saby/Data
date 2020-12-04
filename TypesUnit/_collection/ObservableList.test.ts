@@ -814,6 +814,27 @@ describe('Types/_collection/ObservableList', () => {
             assert.strictEqual(args.oldItemsIndex, 0);
         });
 
+        it('should trigger CollectionChange with ACTION_CHANGE if single item changed many times', () => {
+            const items = [new Record(), new Record(), new Record()];
+            const list = new ObservableList({items});
+            let firedActions: string[];
+            const handler = (event, action) => {
+                firedActions.push(action);
+            };
+
+            list.subscribe('onCollectionChange', handler);
+            list.setEventRaising(false, true);
+
+            [0, 1, 2, 3, 4, 5, 6].forEach((value) => {
+                list.at(0).set('foo', value);
+            });
+
+            list.setEventRaising(true, true);
+            list.unsubscribe('onCollectionChange', handler);
+
+            assert.deepEqual(firedActions, [IBindCollection.ACTION_CHANGE]);
+        });
+
         it('should fire after wake up', () => {
             const list = new ObservableList({
                 items: items.slice()
