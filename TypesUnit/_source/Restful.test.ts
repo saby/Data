@@ -89,11 +89,11 @@ describe('Types/_source/Restful', () => {
 
     before(() => {
         stubCallProvider = stub(Restful.prototype, 'providerOptions');
-        stubCallProvider.get(() => {
+        stubCallProvider.get(function(): object {
             return {
                 httpMethodBinding: this._$httpMethodBinding,
                 transport: stubFetch
-            }
+            };
         });
     });
 
