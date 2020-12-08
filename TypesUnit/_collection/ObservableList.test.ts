@@ -817,7 +817,7 @@ describe('Types/_collection/ObservableList', () => {
         it('should trigger CollectionChange with ACTION_CHANGE if single item changed many times', () => {
             const items = [new Record(), new Record(), new Record()];
             const list = new ObservableList({items});
-            let firedActions: string[];
+            const firedActions: string[] = [];
             const handler = (event, action) => {
                 firedActions.push(action);
             };
