@@ -59,7 +59,7 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
     /*
      * Items changed during event raising was switched off
      */
-    protected _silentChangedItems: T[];
+    protected _silentChangedItems: Set<T>;
 
     constructor(options?: IListOptions<T>) {
         super(options);
@@ -247,7 +247,7 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
         // Если стрелять событиями до синхронизации то проекция не всегда сможет найти стрельнувший item или найдет
         // не тот
         if (enabled && analyze && this._silentChangedItems) {
-            if (this._silentChangedItems.length >= Math.min(this._resetChangesCount, this._$items.length)) {
+            if (this._silentChangedItems.size >= Math.min(this._resetChangesCount, this._$items.length)) {
                 // Если изменилось критическое число элементов, то генерируем reset
                 this._notifyCollectionChange(
                     IObservable.ACTION_RESET,
@@ -258,10 +258,13 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
                     'setEventRaising'
                 );
             } else {
+                const silentChangedItemsArray = [];
+                this._silentChangedItems.forEach((item) => silentChangedItemsArray.push(item));
+
                 // Собираем изменившиеся элементы в пачки
                 this._extractPacksByList(
                     this,
-                    this._silentChangedItems,
+                    silentChangedItemsArray,
                     (pack, index) => {
                         this._notifyCollectionChange(
                             IObservable.ACTION_CHANGE,
@@ -303,9 +306,9 @@ class ObservableList<T> extends List<T> implements relation.IReceiver {
             !this._eventRaising
         ) {
             if (!this._silentChangedItems) {
-                this._silentChangedItems = [];
+                this._silentChangedItems = new Set();
             }
-            this._silentChangedItems.push(item);
+            this._silentChangedItems.add(item);
         }
     }
 
