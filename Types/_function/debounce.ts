@@ -62,26 +62,26 @@ const MIN_DELAY = 5;
  * @author Мальцев А.А.
  */
 export default function debounce(original: Function, delay: number, first?: boolean): Function {
-    let timer;
+    let timers;
     let firstCalled = false;
     let sequentialCall = false;
 
     return function(...args: any[]): void {
         // Do the first call immediately if needed
-        if (first && !timer && delay > MIN_DELAY) {
+        if (first && !timers && delay > MIN_DELAY) {
             firstCalled = true;
             original.apply(this, args);
         }
 
         // Clear timeout if timer is still awaiting
-        if (timer) {
+        if (timers) {
             sequentialCall = true;
-            clearTimeout(timer);
+            clearTimeout(timers);
         }
 
         // Setup a new timer in which call the original function
-        timer = setTimeout(() => {
-            timer = null;
+        timers = setTimeout(() => {
+            timers = null;
             if (sequentialCall || !firstCalled) {
                 original.apply(this, args);
             }
