@@ -98,6 +98,9 @@ export default function debounce(
             if (states.sequentialCall || !states.firstCalled) {
                 original.apply(this, args);
             }
+
+            states.sequentialCall = false;
+            states.firstCalled = false;
         }, delay);
     };
 }
