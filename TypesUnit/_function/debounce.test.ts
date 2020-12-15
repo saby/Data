@@ -44,11 +44,11 @@ describe('Types/_formatter/debounce', () => {
 
     it('should call method once', () => {
         //sss
-        let value = 0;
-        const decorator = debounce(() => value++, 10);
+        let valude = 0;
+        const decorator = debounce(() => valude++, 10);
 
         decorator();
-        assert.equal(value, 1);
+        assert.equal(valude, 1);
     });
 
     it('should call method once if argument "first" is true', () => {
