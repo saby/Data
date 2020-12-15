@@ -1,5 +1,10 @@
 const MIN_DELAY = 5;
 
+interface IStates {
+    firstCalled: boolean,
+    sequentialCall: boolean
+}
+
 /**
  * Позволяет игноририровать вызовы функции до тех пор, пока пока они не перестанут повторяться в течение указанного периода.
  * @remark
@@ -61,30 +66,41 @@ const MIN_DELAY = 5;
  * @public
  * @author Мальцев А.А.
  */
-export default function debounce(original: Function, delay: number, first?: boolean): Function {
+export default function debounce(
+    original: Function,
+    delay: number,
+    first?: boolean,
+    seriesStates?: IStates): Function
+{
     let timer;
-    let firstCalled = false;
-    let sequentialCall = false;
+    const states = seriesStates || {
+        firstCalled: false,
+        sequentialCall: false
+    }
 
     return function(...args: any[]): void {
         // Do the first call immediately if needed
-        if (first && !timer && delay > MIN_DELAY) {
-            firstCalled = true;
+        if (!states.firstCalled && first && !timer && delay > MIN_DELAY) {
+            states.firstCalled = true;
             original.apply(this, args);
         }
 
         // Clear timeout if timer is still awaiting
         if (timer) {
-            sequentialCall = true;
+            states.sequentialCall = true;
             clearTimeout(timer);
         }
 
         // Setup a new timer in which call the original function
         timer = setTimeout(() => {
             timer = null;
-            if (sequentialCall || !firstCalled) {
+
+            if (states.sequentialCall || !states.firstCalled) {
                 original.apply(this, args);
             }
+
+            states.sequentialCall = false;
+            states.firstCalled = false;
         }, delay);
     };
 }
