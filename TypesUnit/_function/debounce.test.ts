@@ -74,7 +74,7 @@ describe('Types/_formatter/debounce', () => {
         assert.equal(value, 2);
     });
 
-    it('should set default state if series is finish', () => {
+    it('should call method once in second series if argument "first" is true', () => {
         let value = 0;
         const seriesState = {
             firstCalled: true,
@@ -84,7 +84,5 @@ describe('Types/_formatter/debounce', () => {
 
         decorator();
         assert.equal(value, 1);
-        assert.isFalse(seriesState.firstCalled);
-        assert.isFalse(seriesState.sequentialCall);
     });
 });
