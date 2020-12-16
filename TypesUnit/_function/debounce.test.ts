@@ -59,10 +59,32 @@ describe('Types/_formatter/debounce', () => {
 
     it('should call method twice in 1 series if argument "first" is true', () => {
         let value = 0;
-        const decorator = debounce(() => value++, 10, true);
+        const seriesState = {
+            firstCalled: false,
+            sequentialCall: false
+        };
+        const decorator = debounce(() => value++, 10, true, seriesState);
 
         decorator();
+
+        seriesState.firstCalled = true;
+        seriesState.sequentialCall = true;
+
         decorator();
         assert.equal(value, 2);
+    });
+
+    it('should set default state if series is finish', () => {
+        let value = 0;
+        const seriesState = {
+            firstCalled: true,
+            sequentialCall: true
+        };
+        const decorator = debounce(() => value++, 10, true, seriesState);
+
+        decorator();
+        assert.equal(value, 1);
+        assert.isFalse(seriesState.firstCalled);
+        assert.isFalse(seriesState.sequentialCall);
     });
 });
