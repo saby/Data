@@ -70,7 +70,8 @@ export default function debounce(
     original: Function,
     delay: number,
     first?: boolean,
-    seriesStates?: IStates): Function
+    seriesStates?: IStates // This argument is for unit testing only.
+): Function
 {
     let timer;
     const states = seriesStates || {
