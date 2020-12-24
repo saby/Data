@@ -162,7 +162,7 @@ export default interface IEnum<T> {
      *     });
      * </pre>
      */
-    getAsValue(): T;
+    getAsValue(localize?: boolean): T;
 
     /**
      * Устанавливает элемент с заданным значением в качестве выбранного. Если такой ключ не определен, генерирует исключение.
