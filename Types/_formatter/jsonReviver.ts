@@ -10,6 +10,7 @@ import {
     isInstantiable,
     resolve
 } from '../di';
+import { loadSync } from 'WasabyLoader/ModulesLoader';
 
 interface ISerializedLink {
     linkResolved?: boolean;
@@ -34,16 +35,6 @@ interface IConfig {
     resolveDates?: boolean;
 }
 
-interface IParsed {
-    name: string;
-    path: string[];
-}
-
-interface IEsModule<T> {
-    __esModule: boolean;
-    default?: T;
-}
-
 type JsonReviverFunction<T> = (name: string, value: ISignature | unknown) => T;
 
 const DATE_MATCH = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/;
@@ -53,26 +44,11 @@ const defaultConfig: IConfig = {
 };
 
 /**
- * Parses module declaration include library name name and path.
- * TODO: switch to wasaby-loader wnen it will be ready
- * @param name Module name like 'Library/Name:Path.To.Module' or just 'Module/Name'
- * @public
- */
-export function parse(name: string): IParsed {
-    const parts = String(name || '').split(':', 2);
-    return {
-        name: parts[0],
-        path: parts[1] ? parts[1].split('.') : []
-    };
-}
-
-/**
  * Resolves module by its name
- * TODO: switch to wasaby-loader wnen it will be ready
  * @param name Module name
  * @param loader Modules loader
  */
-function resolveModule<T>(name: string, loader: Require = requirejs): T {
+function resolveModule<T>(name: string, loader: (name: string) => T = loadSync): T {
     let module: unknown;
 
     // Try to use DI because it's way too much faster
@@ -82,27 +58,11 @@ function resolveModule<T>(name: string, loader: Require = requirejs): T {
 
     // Use RequireJS if module doesn't registered in DI
     if (!module) {
-        const parts = parse(name);
+        module = loader(name);
 
-        module = loader(parts.name);
         if (!module) {
-            throw new ReferenceError(`The module "${parts.name}" is not loaded yet. Please make sure it\'s included into application dependencies.`);
+            throw new ReferenceError(`The module "${name}" is not loaded yet. Please make sure it\'s included into application dependencies.`);
         }
-
-        // Extract default module in case of ES6 module
-        if (
-            (module as unknown as IEsModule<ISerializableConstructor>).__esModule &&
-            (module as unknown as IEsModule<ISerializableConstructor>).default
-        ) {
-            module = (module as unknown as IEsModule<ISerializableConstructor>).default;
-        }
-
-        parts.path.forEach((element, index) => {
-            if (!(element in (module as Object))) {
-                throw new Error(`The module "${parts.name}" doesn\'t export element "${parts.path.slice(0, index).join('.')}".`);
-            }
-            module = module[element];
-        });
     }
 
     return module as T;
