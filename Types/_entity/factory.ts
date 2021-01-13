@@ -325,7 +325,7 @@ export function cast<T = unknown>(value: unknown, type: ValueType, options?: ICa
             case 'link':
             case 'integer':
                 if (typeof value === 'number') {
-                    return value as unknown as T;
+                    return parseInt(value as unknown as string, 10) as unknown as T;
                 }
                 value = parseInt(value as string, 10);
                 if (Number.isNaN(value as number)) {
@@ -469,7 +469,7 @@ export function serialize<T>(value: unknown, options?: ISerializeOptions): T {
         case 'integer':
             value = toScalar(value);
             if (typeof value === 'number') {
-                return value as unknown as T;
+                return parseInt(value as unknown as string, 10) as unknown as T;
             }
             value = (value as number) - 0;
             if (Number.isNaN(value as number)) {
