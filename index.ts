@@ -18,8 +18,8 @@ export {
    entity,
    formatter,
    functionLib as function,
-   object,
+       object,
    shim,
    source,
    util
-};
+}
