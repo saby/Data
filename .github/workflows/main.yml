@@ -12,4 +12,4 @@ jobs:
         uses: mooyoul/tslint-actions@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: 'Types/**/*.ts'
+          pattern: 'Types/_chain/**/*.ts'
