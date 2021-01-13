@@ -501,6 +501,9 @@ export default abstract class Remote extends mixin<
 
     // region Statics
 
+    /**
+     * Типы поддерживаемой навигации.
+     */
     static get NAVIGATION_TYPE(): typeof NavigationTypes {
         return NavigationTypes;
     }

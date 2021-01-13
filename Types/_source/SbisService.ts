@@ -878,13 +878,13 @@ function oldMove(
  * </pre>
  * <b>Пример 5</b>. Выберем статьи, используя навигацию по курсору:
  * <pre>
- *     import {SbisService, Query, QueryNavigationType} from 'Types/source';
+ *     import {SbisService, Query} from 'Types/source';
  *
  *     const dataSource = new SbisService({
  *         endpoint: 'Article',
  *         keyProperty: 'id',
  *         options: {
- *             navigationType: QueryNavigationType.POSITION
+ *             navigationType: SbisService.NAVIGATION_TYPE.POSITION
  *         }
  *     });
  *
@@ -960,10 +960,10 @@ export default class SbisService extends Rpc {
      */
 
     /**
-     * @typedef {String} NavigationType
-     * @variant Page По номеру страницы: передается номер страницы выборки и количество записей на странице.
-     * @variant Offset По смещению: передается смещение от начала выборки и количество записей на странице.
-     * @variant Position По курсору: передается позиция курсора, количество записей на странице и направление обхода
+     * @typedef {String} NavigationTypes
+     * @variant PAGE По номеру страницы: передается номер страницы выборки и количество записей на странице.
+     * @variant OFFSET По смещению: передается смещение от начала выборки и количество записей на странице.
+     * @variant POSITION По курсору: передается позиция курсора, количество записей на странице и направление обхода
      * относительно курсора.
      */
 
