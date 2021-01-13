@@ -8,7 +8,7 @@ import * as functionLib from './Types/function';
 import * as object from './Types/object';
 import * as shim from './Types/shim';
 import * as source from './Types/source';
-import * as util from './Types/util';
+import * as util from './Types/util'
 
 export {
    chain,
