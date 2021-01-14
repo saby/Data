@@ -62,10 +62,16 @@ export default function debounce(
     original: Function,
     delay: number,
     first?: boolean,
-    seriesStates?: IStates // This argument is for unit testing only.
+    // seriesStates was added for unit-test only.
+    // This makes it possible to change the function call series state.
+    seriesStates?: IStates
 ): Function
 {
     let timer;
+
+    // Function call series state.
+    // firstCalled - was the first function call without delay.
+    // sequentialCall - was a repeat function call in a series.
     const states = seriesStates || {
         firstCalled: false,
         sequentialCall: false
