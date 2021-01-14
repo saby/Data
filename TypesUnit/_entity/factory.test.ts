@@ -56,6 +56,7 @@ describe('Types/_entity/factory', () => {
         context('for integer', () => {
             it('should return a Number', () => {
                 assert.strictEqual(cast(1, 'integer'), 1);
+                assert.strictEqual(cast(1.12345, 'integer'), 1);
                 assert.strictEqual(cast('1', 'integer'), 1);
                 assert.strictEqual(cast('1a', 'integer'), 1);
                 assert.strictEqual(cast('0890', 'integer'), 890);
@@ -581,6 +582,11 @@ describe('Types/_entity/factory', () => {
                 const format = getUniversalFormatMock('integer');
                 assert.strictEqual(
                     serialize(1, {format}),
+                    1
+                );
+
+                assert.strictEqual(
+                    serialize(1.12345, {format}),
                     1
                 );
 
