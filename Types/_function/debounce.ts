@@ -1,8 +1,8 @@
 const MIN_DELAY = 5;
 
 interface IStates {
-    firstCalled: boolean,
-    sequentialCall: boolean
+    firstCalled: boolean;
+    sequentialCall: boolean;
 }
 
 /**
@@ -65,8 +65,7 @@ export default function debounce(
     // seriesStates was added for unit-test only.
     // This makes it possible to change the function call series state.
     seriesStates?: IStates
-): Function
-{
+): (...args: any[]) => void {
     let timer;
 
     // Function call series state.
@@ -75,7 +74,7 @@ export default function debounce(
     const states = seriesStates || {
         firstCalled: false,
         sequentialCall: false
-    }
+    };
 
     return function(...args: any[]): void {
         // Do the first call immediately if needed
