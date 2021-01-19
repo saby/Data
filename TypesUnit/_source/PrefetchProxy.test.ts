@@ -338,6 +338,21 @@ describe('Types/_source/PrefetchProxy', () => {
             assert.equal(source.query() as any, '!query');
             assert.equal(source.query() as any, '!query');
         });
+
+        it('should return reject if query is error', () => {
+            const error = new Error('It is error');
+            const source = new PrefetchProxy({
+                target,
+                data: {
+                    query: error
+                }
+            });
+
+            return source.query().catch((data) => {
+                assert.instanceOf(data, Error);
+                assert.deepEqual(data, error);
+            });
+        });
     });
 
     describe('.merge()', () => {
