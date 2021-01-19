@@ -17,7 +17,7 @@ import { EntityMarker } from 'Types/_declarations';
 
 interface IData {
     read?: Model;
-    query?: DataSet;
+    query?: DataSet | Error;
     copy?: Model;
 }
 
@@ -35,7 +35,7 @@ type ITarget = ICrud | ICrudPlus;
 
 interface IValidators {
     read?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
-    query?: (data: DataSet, done?: IDone, query?: Query) => boolean;
+    query?: (data: DataSet | Error, done?: IDone, query?: Query) => boolean;
     copy?: (data: Record, done?: IDone, key?: EntityKey, meta?: object) => boolean;
 }
 
@@ -442,6 +442,9 @@ export default class PrefetchProxy extends mixin<
 
     query(query?: Query): Promise<DataSet> {
         if (this._validators.query(this._$data.query, this._done, query)) {
+            if (this._$data.query instanceof Error) {
+                return Promise.reject(this._$data.query);
+            }
             return Promise.resolve(this._$data.query);
         }
         return (this._$target as ICrud).query(query);
