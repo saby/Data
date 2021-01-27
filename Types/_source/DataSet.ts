@@ -5,13 +5,13 @@ import {
     AdapterDescriptor,
     Record,
     Model,
-    adapter
+    adapter,
+    ModelConstructor
 } from '../entity';
 import {create} from '../di';
 import {mixin} from '../util';
 import {IList, List, RecordSet} from '../collection';
 
-type ModelConstructor<T> = new() => Record<T>;
 type ListConstructor<T> = new() => List<T>;
 
 export interface IOptions<
