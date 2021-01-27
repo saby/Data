@@ -9,7 +9,7 @@ jobs:
       - name: Prepare environment
         run: npm ci
       - name: Lint
-        uses: saby/typescript@rc-21.2000
+        uses: mooyoul/tslint-actions@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pattern: '*.ts'
