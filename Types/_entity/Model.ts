@@ -1151,6 +1151,8 @@ Object.assign(Model.prototype, {
 
 export default Model;
 
+export type ModelConstructor<T> = new() => Model<T>;
+
 // FIXME: backward compatibility for Core/core-extend: Model should have exactly its own property 'produceInstance'
 // @ts-ignore
 Model.produceInstance = Record.produceInstance;

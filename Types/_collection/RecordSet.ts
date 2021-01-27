@@ -22,6 +22,7 @@ import {
     Record,
     RecordState,
     Model,
+    ModelConstructor,
     adapter
 } from '../entity';
 import { create, register } from '../di';
@@ -33,8 +34,8 @@ const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
 
-interface IOptions<T> extends IListOptions<T>, IFormattableOptions {
-    model?: Function | string;
+interface IOptions<TData = unknown, T = any> extends IListOptions<T>, IFormattableOptions {
+    model?: ModelConstructor<TData> | Function | string;
     keyProperty?: string;
     meta?: any;
     metaFormat?: FormatDescriptor;
@@ -159,7 +160,7 @@ class RecordSet<
      *     users.at(0).identify('editor', 'L1keABo$$');
      * </pre>
      */
-    protected _$model: Function | string;
+    protected _$model: ModelConstructor<TData> | Function | string;
 
     /**
      * @cfg Название свойства записи, содержащего первичный ключ.
@@ -1007,7 +1008,7 @@ class RecordSet<
      *     users.getModel() === User;//true
      * </pre>
      */
-    getModel(): Function | string {
+    getModel(): ModelConstructor<TData> | Function | string {
         return this._$model;
     }
 
