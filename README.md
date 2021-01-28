@@ -71,4 +71,4 @@ you can use these environment variables:
 - `test_server_port` - port for local HTTP server (`1025` by default);
 - `test_url_host` - hostname which HTTP server running on (`localhost` by default). You should setup this variable if Selenium grid on another host is used;
 - `test_url_port` - the same as `test_server_port`;
-- `test_report` - XUnit report filename to save report to `artifacts/xunit-report.xml` by default).
+- `test_report` - XUnit report filename to save report to `artifacts/xunit-report.xml` by default). 
