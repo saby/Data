@@ -19,10 +19,15 @@ const defaultOtions: IOptions = {
 
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
-const OBJECT_INTERFACE = '[Types/_entity/IObject]';
 
 function getPropertyMethodName(property: string, prefix: string): string {
     return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
+}
+
+function isImplementsIObject(obj: unknown): boolean {
+    const type = typeof obj;
+
+    return (type === 'object' || type === 'function') && '[Types/_entity/IObject]' in (obj as object);
 }
 
 /**
@@ -41,7 +46,7 @@ export function getPropertyValue<T>(obj: unknown | IObject, property: string): T
         return obj[checkedProperty];
     }
 
-    if (obj[OBJECT_INTERFACE]) {
+    if (isImplementsIObject(obj)) {
         return (obj as IObject).get(checkedProperty);
     }
 
@@ -71,7 +76,7 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
         return;
     }
 
-    if (obj[OBJECT_INTERFACE] && (obj as IObject).has(checkedProperty as string)) {
+    if (isImplementsIObject(obj) && (obj as IObject).has(checkedProperty as string)) {
         (obj as IObject).set(checkedProperty, value);
         return;
     }
@@ -104,7 +109,7 @@ export function extractValue<T>(
         }
 
         const name = path[i];
-        if (OBJECT_INTERFACE in (result as object) && (result as IObject).has(name)) {
+        if (isImplementsIObject(obj) && (result as IObject).has(name)) {
             result = (result as IObject).get(name);
         } else {
             /**
