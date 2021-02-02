@@ -19,6 +19,7 @@ const defaultOtions: IOptions = {
 
 const PLAIN_OBJECT_PROTOTYPE = Object.prototype;
 const PLAIN_OBJECT_STRINGIFIER = Object.prototype.toString;
+const OBJECT_INTERFACE = '[Types/_entity/IObject]';
 
 function getPropertyMethodName(property: string, prefix: string): string {
     return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
@@ -40,7 +41,7 @@ export function getPropertyValue<T>(obj: unknown | IObject, property: string): T
         return obj[checkedProperty];
     }
 
-    if (obj['[Types/_entity/IObject]']) {
+    if (obj[OBJECT_INTERFACE]) {
         return (obj as IObject).get(checkedProperty);
     }
 
@@ -70,7 +71,7 @@ export function setPropertyValue<T>(obj: unknown | IObject, property: string, va
         return;
     }
 
-    if (obj['[Types/_entity/IObject]'] && (obj as IObject).has(checkedProperty as string)) {
+    if (obj[OBJECT_INTERFACE] && (obj as IObject).has(checkedProperty as string)) {
         (obj as IObject).set(checkedProperty, value);
         return;
     }
@@ -103,7 +104,7 @@ export function extractValue<T>(
         }
 
         const name = path[i];
-        if (result['[Types/_entity/IObject]'] && (result as IObject).has(name)) {
+        if (OBJECT_INTERFACE in (result as object) && (result as IObject).has(name)) {
             result = (result as IObject).get(name);
         } else {
             /**
