@@ -109,7 +109,7 @@ export function extractValue<T>(
         }
 
         const name = path[i];
-        if (isImplementsIObject(obj) && (result as IObject).has(name)) {
+        if (isImplementsIObject(result) && (result as IObject).has(name)) {
             result = (result as IObject).get(name);
         } else {
             /**
