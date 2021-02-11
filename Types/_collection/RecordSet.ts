@@ -34,7 +34,7 @@ const DEFAULT_MODEL = 'Types/entity:Model';
 const RECORD_STATE = Record.RecordState;
 const developerMode = false;
 
-interface IOptions<TData = unknown, T = any> extends IListOptions<T>, IFormattableOptions {
+export interface IOptions<TData = unknown, T = any> extends IListOptions<T>, IFormattableOptions {
     model?: ModelConstructor<TData> | Function | string;
     keyProperty?: string;
     meta?: any;
