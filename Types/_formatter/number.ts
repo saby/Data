@@ -59,7 +59,9 @@ const FORMATS = {
 
 const groupSize = 3;
 
-const DEFAULT_MAXIMUM_FRACTION_DIGITS = 21;
+const DEFAULT_MAXIMUM_FRACTION_DIGITS = 3;
+const DEFAULT_MAXIMUM_SIGNIFICANT_DIGITS = 21;
+
 type FORMAT_STYLE = 'decimal' | 'percent';
 
 interface IFormat {
@@ -78,20 +80,20 @@ interface IPattern {
 }
 
 function formatNumberToString(numberFormat: IFormat, x: number): string {
-    if (numberFormat.hasOwnProperty('minimumSignificantDigits') &&
+    if (numberFormat.hasOwnProperty('minimumSignificantDigits') ||
         numberFormat.hasOwnProperty('maximumSignificantDigits')
     ) {
         return toRawPrecision(
             x,
-            numberFormat.minimumSignificantDigits,
-            numberFormat.maximumSignificantDigits
+            numberFormat.minimumSignificantDigits || 1,
+            numberFormat.maximumSignificantDigits || DEFAULT_MAXIMUM_SIGNIFICANT_DIGITS
         );
     }
 
     return toRawFixed(
         x,
-        numberFormat.minimumIntegerDigits || 1,
-        numberFormat.minimumFractionDigits || 0,
+        numberFormat.minimumIntegerDigits,
+        numberFormat.minimumFractionDigits,
         numberFormat.maximumFractionDigits
     );
 }
@@ -217,26 +219,29 @@ function partitionNumberPattern(numberFormat: IFormat, x: number): IPattern[] {
  * must be integers between 1 and 21) the following steps are taken:
  */
 function toRawPrecision(x: number, minPrecision: number, maxPrecision: number): string {
-    let result = x.toString();
+    const digit = x;
+    let digitStr = digit.toString();
+    const [int, fraction = '']: string[] = digitStr.split('.');
+    const lengthDigit = int.length + fraction.length;
 
-    if (result === '0') {
-        result = Array (maxPrecision + 1).join('0');
+    if (lengthDigit >= minPrecision && lengthDigit <= maxPrecision) {
+        return digitStr;
     }
 
-    if (result.indexOf('.') >= 0 && maxPrecision > minPrecision) {
-        let cut = maxPrecision - minPrecision;
-
-        while (cut > 0 && result.charAt(result.length - 1) === '0') {
-            result = result.slice(0, -1);
-            cut--;
-        }
-
-        if (result.charAt(result.length - 1) === '.') {
-            result = result.slice(0, -1);
-        }
+    if (lengthDigit < minPrecision) {
+        return digit.toFixed(minPrecision - int.length);
     }
 
-    return result;
+    const lengthDifference = lengthDigit - maxPrecision;
+
+    if (fraction.length >= lengthDifference) {
+        return digit.toFixed(maxPrecision - int.length);
+    }
+
+    const integerShift = lengthDifference - fraction.length;
+    digitStr = (digit / Math.pow(10, integerShift)).toFixed();
+
+    return digitStr.padEnd(int.length, '0');
 }
 
 /**
@@ -247,54 +252,32 @@ function toRawPrecision(x: number, minPrecision: number, maxPrecision: number): 
  * 20) the following steps are taken:
  */
 function toRawFixed(x: number, minInteger: number, minFraction: number, maxFraction: number): string {
-    // 1. Let f be maxFraction.
-    const n = Math.pow(10, maxFraction) * x; // diverging...
-    let result = (n === 0 ? '0' : String(Math.floor(n))); // divering...
+    const digit = x;
+    let digitStr = digit.toString();
+    const [int, fraction = '']: string[] = digitStr.split('.');
 
-    // this diversion is needed to take into consideration big numbers, e.g.:
-    // 1.2344501e+37 -> 12344501000000000000000000000000000000
-    let idx;
-    const exp = (idx = result.indexOf('e')) > -1 ? +result.slice(idx + 1) : 0;
-    if (exp) {
-        result = result.slice(0, idx).replace('.', '');
-        result += Array(exp - (result.length - 1) + 1).join('0');
+    if (fraction.length < minFraction) {
+        digitStr = digit.toFixed(minFraction);
     }
 
-    let int;
-    if (maxFraction !== 0) {
-        let length = result.length;
-        if (length <= maxFraction) {
-            const zero = Array(maxFraction + 1 - length + 1).join('0');
-            result = zero + result;
-            length = maxFraction + 1;
-        }
-        const a = result.substring(0, length - maxFraction);
-        const b = result.substring(length - maxFraction, result.length);
-        result = a + '.' + b;
-        int = a.length;
-    } else {
-        int = result.length;
+    if (fraction.length > maxFraction) {
+        digitStr = digit.toFixed(maxFraction);
     }
-    let cut = maxFraction - minFraction;
-    while (cut > 0 && result.slice(-1) === '0') {
-        result = result.slice(0, -1);
-        cut--;
+
+    if (int.length < minInteger) {
+        const [int, fraction = '']: string[] = digitStr.split('.');
+
+        return `${int.padStart(minInteger, '0')}${fraction ? '.' + fraction : ''}`;
     }
-    if (result.slice(-1) === '.') {
-        result = result.slice(0, -1);
-    }
-    if (int < minInteger) {
-        const zero = Array(minInteger - int + 1).join('0');
-        result = zero + result;
-    }
-    return result;
+
+    return digitStr;
 }
 
 function getNumberFormat(options: IFormat): IFormat {
     return {...{
         style: 'decimal',
         useGrouping: true,
-        minimumIntegerDigits: 0,
+        minimumIntegerDigits: 1,
         minimumFractionDigits: 0,
         maximumFractionDigits: DEFAULT_MAXIMUM_FRACTION_DIGITS
     }, ...options || {}};
