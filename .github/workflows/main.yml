@@ -3,13 +3,13 @@ on: [push]
 jobs:
   job:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v1
       - name: Prepare
         run: npm ci
       - name: Lint
-        uses: saby/typescript@rc-21.2000
+        uses: saby/github-actions/tslint@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: '*.ts'
+          pattern: '**/*.ts'
