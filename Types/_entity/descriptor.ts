@@ -1,37 +1,50 @@
-import {IHashMap} from '../_declarations';
-
 type Descriptor = string | Function | null | object;
 
-type ValidationResult<T> = T | TypeError;
-type ValidateFunc<T> = (value: T) => ValidationResult<T>;
+type OldValidateFunc = (value: unknown) => Error | undefined;
+// TODO: заэкспортить этот тип
+type NewValidateFunc = <T extends Record<string, unknown>>(
+   props: T,
+   propName: keyof T,
+   componentName: string
+) => Error | undefined;
+type ValidateFunc = OldValidateFunc | NewValidateFunc;
 
-interface IChained<T> {
-    required: RequiredValidator<T>;
-    oneOf: oneOfValidator<T>;
-    not: notValidator<T>;
-    arrayOf: arrayOfValidator<T>;
+function getValueFromArgs(args: unknown[]): unknown {
+    const refinedArgs = args as Parameters<ValidateFunc>;
+   if (refinedArgs.length === 1) {
+      return refinedArgs[0];
+   } else {
+      return refinedArgs[0][refinedArgs[1]];
+   }
 }
 
-export type DescriptorValidator<T> = ValidateFunc<T> & IChained<T>;
+interface IChained {
+   required: RequiredValidator;
+   oneOf: oneOfValidator;
+   not: notValidator;
+   arrayOf: arrayOfValidator;
+}
+
+export type DescriptorValidator = ValidateFunc & IChained;
 
 /**
  * Normalizes type name.
  */
 function normalizeType(type: Descriptor): Descriptor {
-    if (typeof type === 'function') {
-        switch (type) {
-            case Boolean:
-                type = 'boolean';
-                break;
-            case Number:
-                type = 'number';
-                break;
-            case String:
-                type = 'string';
-                break;
-        }
-    }
-    return type;
+   if (typeof type === 'function') {
+      switch (type) {
+         case Boolean:
+            type = 'boolean';
+            break;
+         case Number:
+            type = 'number';
+            break;
+         case String:
+            type = 'string';
+            break;
+      }
+   }
+   return type;
 }
 
 /**
@@ -43,33 +56,33 @@ function normalizeType(type: Descriptor): Descriptor {
  * Returns validator for composite type which must be suitable for one of given simple types
  * @param types Composite type descriptor
  */
-function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
-    const validators = types.map((type) => validate(type));
+function validateComposite(...types: Descriptor[]): ValidateFunc {
+   const validators = types.map((type) => validate(type));
 
-    return function validateCompoisiteFor(value: T): ValidationResult<T> {
-        let hasSuitable = false;
-        const errors: Error[] = [];
+   return function validateCompositeFor(
+      ...args: Parameters<ValidateFunc>
+   ): Error | undefined {
+      let hasSuitable = false;
+      const errors: Error[] = [];
 
-        for (let index = 0; index < validators.length; index++) {
-            const validator = validators[index];
-            const result = validator(value);
-            if (result instanceof Error) {
-                errors.push(result);
-            } else {
-                hasSuitable = true;
-                break;
-            }
-        }
+      for (let index = 0; index < validators.length; index++) {
+         const validator = validators[index];
+         const result = validator.apply(null, args);
+         if (result instanceof Error) {
+            errors.push(result);
+         } else {
+            hasSuitable = true;
+            break;
+         }
+      }
 
-        if (!hasSuitable) {
-            return new TypeError(
-                'There are following restrictions for composite type: ' +
-                errors.map((err) => `"${err.message}"`).join(' or ')
-            );
-        }
-
-        return value;
-    };
+      if (!hasSuitable) {
+         return new TypeError(
+            'There are following restrictions for composite type: ' +
+               errors.map((err) => `"${err.message}"`).join(' or ')
+         );
+      }
+   };
 }
 
 /**
@@ -81,54 +94,71 @@ function validateComposite<T>(...types: Descriptor[]): ValidateFunc<T> {
  * Returns validator for certain type.
  * @param type Type descriptor
  */
-function validate<T>(type: Descriptor): ValidateFunc<T> {
-    type = normalizeType(type);
-    const typeName = typeof type;
+function validate(type: Descriptor): ValidateFunc {
+   type = normalizeType(type);
+   const typeName = typeof type;
 
-    switch (type) {
-        case null:
-            return function validateNull(value: T): ValidationResult<T> {
-                if (value === null) {
-                    return value;
-                }
-                return new TypeError(`Value "${value}" should be null`);
-            };
-    }
+   if (type === null) {
+      return function validateNull(
+         ...args: Parameters<ValidateFunc>
+      ): Error | undefined {
+         const value = getValueFromArgs(args);
+         if (value === null) {
+            return;
+         }
+         return new TypeError(`Value "${value}" should be null`);
+      };
+   }
 
-    switch (typeName) {
-        case 'string':
-            return function validateTypeName(value: T): ValidationResult<T> {
-                if (value === undefined || typeof value === type || value instanceof String) {
-                    return value;
-                }
-                return new TypeError(`Value "${value}" should be type of ${type}`);
-            };
+   switch (typeName) {
+      case 'string':
+         return function validateTypeName(
+            ...args: Parameters<ValidateFunc>
+         ): Error | undefined {
+            const value = getValueFromArgs(args);
+            if (
+               value === undefined ||
+               typeof value === type ||
+               value instanceof String
+            ) {
+               return;
+            }
+            return new TypeError(`Value "${value}" should be type of ${type}`);
+         };
 
-        case 'function':
-            return function validateTypeInstance(value: T): ValidationResult<T> {
-                if (value === undefined || value instanceof (type as Function)) {
-                    return value;
-                }
-                return new TypeError(`Value "${value}" should be instance of ${type}`);
-            };
+      case 'function':
+         return function validateTypeInstance(
+            ...args: Parameters<ValidateFunc>
+         ): Error | undefined {
+            const value = getValueFromArgs(args);
+            if (value === undefined || value instanceof (type as Function)) {
+               return;
+            }
+            return new TypeError(
+               `Value "${value}" should be instance of ${type}`
+            );
+         };
 
-        case 'object':
-            return function validateTypeInterface(value: T): ValidationResult<T> {
-                if (value === undefined) {
-                    return value;
-                }
+      case 'object':
+         return function validateTypeInterface(
+            ...args: Parameters<ValidateFunc>
+         ): Error | undefined {
+            const value = getValueFromArgs(args);
+            if (value === undefined) {
+               return;
+            }
 
-                const mixins = value && (value as IHashMap<any>)._mixins;
-                if (mixins instanceof Array && mixins.indexOf(type) !== -1) {
-                    return value;
-                }
-                return new TypeError(`Value "${value}" should implement ${type}`);
-            };
-    }
+            const mixins = value && (value as Record<string, unknown>)._mixins;
+            if (mixins instanceof Array && mixins.indexOf(type) !== -1) {
+               return;
+            }
+            return new TypeError(`Value "${value}" should implement ${type}`);
+         };
+   }
 
-    throw new TypeError(
-         `Argument "type" should be one of following types: string, function or object but "${typeName}" received.`
-    );
+   throw new TypeError(
+      `Argument "type" should be one of following types: string, function or object but "${typeName}" received.`
+   );
 }
 
 /**
@@ -158,18 +188,21 @@ function validate<T>(type: Descriptor): ValidateFunc<T> {
  * console.log(descriptor(Number).required()()); // TypeError
  * </pre>
  */
-function required<T>(): DescriptorValidator<T> {
-    const prev: ValidateFunc<T> = this;
+function required(): DescriptorValidator {
+   const prev: ValidateFunc = this;
 
-    return chain(function isRequired(value: T): ValidationResult<T> {
-        if (value === undefined) {
-            return new TypeError('Value is required');
-        }
-        return prev(value);
-    });
+   return chain(function isRequired(
+      ...args: Parameters<ValidateFunc>
+   ): Error | undefined {
+      const value = getValueFromArgs(args);
+      if (value === undefined) {
+         return new TypeError('Value is required');
+      }
+      return prev.apply(null, args);
+   });
 }
 
-type RequiredValidator<T> = () => DescriptorValidator<T>;
+type RequiredValidator = () => DescriptorValidator;
 
 /**
  * Возвращает валидатор для ограничения «Один из».
@@ -200,22 +233,25 @@ type RequiredValidator<T> = () => DescriptorValidator<T>;
  * console.log(descriptor(String).oneOf(['foo', 'bar'])('baz')); // TypeError
  * </pre>
  */
-function oneOf<T>(values: T[]): DescriptorValidator<T> {
-    if (!(values instanceof Array)) {
-        throw new TypeError('Argument values should be an instance of Array');
-    }
+function oneOf(values: unknown[]): DescriptorValidator {
+   if (!(values instanceof Array)) {
+      throw new TypeError('Argument values should be an instance of Array');
+   }
 
-    const prev: ValidateFunc<T> = this;
+   const prev: ValidateFunc = this;
 
-    return chain(function isOneOf(value: T): ValidationResult<T> {
-        if (value !== undefined && values.indexOf(value) === -1) {
-            return new TypeError(`Invalid value ${value}`);
-        }
-        return prev(value);
-    });
+   return chain(function isOneOf(
+      ...args: Parameters<ValidateFunc>
+   ): Error | undefined {
+      const value = getValueFromArgs(args);
+      if (value !== undefined && values.indexOf(value) === -1) {
+         return new TypeError(`Invalid value ${value}`);
+      }
+      return prev.apply(null, args);
+   });
 }
 
-type oneOfValidator<T> = (values: T[]) => DescriptorValidator<T>;
+type oneOfValidator = (values: unknown[]) => DescriptorValidator;
 
 /**
  * Возвращает валидатор для ограничения «Не».
@@ -246,25 +282,28 @@ type oneOfValidator<T> = (values: T[]) => DescriptorValidator<T>;
  * console.log(descriptor(String).not('foo', 'bar')('bar')); // TypeError
  * </pre>
  */
-function not<T>(values: T[]): DescriptorValidator<T> {
-    if (!(values instanceof Array)) {
-        throw new TypeError('Argument values should be an instance of Array');
-    }
+function not(values: unknown[]): DescriptorValidator {
+   if (!(values instanceof Array)) {
+      throw new TypeError('Argument values should be an instance of Array');
+   }
 
-    const prev: ValidateFunc<T> = this;
+   const prev: ValidateFunc = this;
 
-    return chain(function isNot(value: T): ValidationResult<T> {
-        if (value !== undefined && values.indexOf(value) !== -1) {
-            return new TypeError(`Invalid value ${value}`);
-        }
-        return prev(value);
-    });
+   return chain(function isNot(
+      ...args: Parameters<ValidateFunc>
+   ): Error | undefined {
+      const value = getValueFromArgs(args);
+      if (value !== undefined && values.indexOf(value) !== -1) {
+         return new TypeError(`Invalid value ${value}`);
+      }
+      return prev.apply(null, args);
+   });
 }
 
-type notValidator<T> = (values: T[]) => DescriptorValidator<T>;
+type notValidator = (values: unknown[]) => DescriptorValidator;
 
 /**
- * Возвращает валидатор для ограничения Array <T>.
+ * Возвращает валидатор для ограничения Array.
  * @function
  * @name Types/_entity/descriptor#arrayOf
  * @param type Тип дескриптора.
@@ -279,7 +318,7 @@ type notValidator<T> = (values: T[]) => DescriptorValidator<T>;
  */
 
 /*
- * Returns validator for Array<T> restriction.
+ * Returns validator for Array restriction.
  * @function
  * @name Types/_entity/descriptor#arrayOf
  * @param type Type descriptor
@@ -292,29 +331,32 @@ type notValidator<T> = (values: T[]) => DescriptorValidator<T>;
  * console.log(descriptor(Array).arrayOf(Boolean)([0])); // TypeError
  * </pre>
  */
-function arrayOf<T>(type: Descriptor): DescriptorValidator<T> {
-    const prev: ValidateFunc<T> = this;
-    const validator = validate(type);
+function arrayOf(type: Descriptor): DescriptorValidator {
+   const prev: ValidateFunc = this;
+   const validator = validate(type) as OldValidateFunc;
 
-    return chain(function isArrayOf(value: T): ValidationResult<T> {
-        if (value !== undefined) {
-            if (!(value instanceof Array)) {
-                return new TypeError(`'Value "${value}" is not an Array`);
+   return chain(function isArrayOf(
+      ...args: Parameters<ValidateFunc>
+   ): Error | undefined {
+      const value = getValueFromArgs(args);
+      if (value !== undefined) {
+         if (!(value instanceof Array)) {
+            return new TypeError(`'Value "${value}" is not an Array`);
+         }
+         let valid;
+         for (let i = 0; i < value.length; i++) {
+            valid = validator(value[i]);
+            if (valid instanceof Error) {
+               return valid;
             }
-            let valid;
-            for (let i = 0; i < value.length; i++) {
-                valid = validator(value[i]);
-                if (valid instanceof Error) {
-                    return valid;
-                }
-            }
-        }
+         }
+      }
 
-        return prev(value);
-    });
+      return prev.apply(null, args);
+   });
 }
 
-type arrayOfValidator<T> = (type: Descriptor) => DescriptorValidator<T>;
+type arrayOfValidator = (type: Descriptor) => DescriptorValidator;
 
 /**
  * Создает элемент цепочки со всеми доступными валидаторами.
@@ -325,29 +367,29 @@ type arrayOfValidator<T> = (type: Descriptor) => DescriptorValidator<T>;
  * Creates chain element with all available validators.
  * @param parent Previous chain element
  */
-function chain<T>(parent: ValidateFunc<T>): DescriptorValidator<T> {
-    const wrapper = (...args) => parent.apply(this, args);
+function chain(parent: ValidateFunc): DescriptorValidator {
+   const wrapper = (...args) => parent.apply(this, args);
 
-    Object.defineProperties(wrapper, {
-        required: {
-            enumerable: true,
-            value: required
-        },
-        oneOf: {
-            enumerable: true,
-            value: oneOf
-        },
-        not: {
-            enumerable: true,
-            value: not
-        },
-        arrayOf: {
-            enumerable: true,
-            value: arrayOf
-        }
-    });
+   Object.defineProperties(wrapper, {
+      required: {
+         enumerable: true,
+         value: required
+      },
+      oneOf: {
+         enumerable: true,
+         value: oneOf
+      },
+      not: {
+         enumerable: true,
+         value: not
+      },
+      arrayOf: {
+         enumerable: true,
+         value: arrayOf
+      }
+   });
 
-    return wrapper as DescriptorValidator<T>;
+   return wrapper as DescriptorValidator;
 }
 
 /**
@@ -479,12 +521,15 @@ function chain<T>(parent: ValidateFunc<T>): DescriptorValidator<T> {
  * @public
  * @author Мальцев А.А.
  */
-export default function descriptor<T = any>(...types: Descriptor[]): DescriptorValidator<T> {
-    if (types.length === 0) {
-        throw new TypeError('You should specify one type descriptor at least');
-    }
+// FIXME: бесполезное T, но если его просто убрать, то попадают сборки
+export default function descriptor<T>(
+   ...types: Descriptor[]
+): DescriptorValidator {
+   if (types.length === 0) {
+      throw new TypeError('You should specify one type descriptor at least');
+   }
 
-    return chain(
-        types.length > 1 ? validateComposite<T>(...types) : validate<T>(types[0])
-    );
+   return chain(
+      types.length > 1 ? validateComposite(...types) : validate(types[0])
+   );
 }
