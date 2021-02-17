@@ -1,22 +1,10 @@
 type Descriptor = string | Function | null | object;
 
-type OldValidateFunc = (value: unknown) => Error | undefined;
-// TODO: заэкспортить этот тип
-type NewValidateFunc = <T extends Record<string, unknown>>(
+type ValidateFunc = <T>(
    props: T,
    propName: keyof T,
    componentName: string
 ) => Error | undefined;
-type ValidateFunc = OldValidateFunc | NewValidateFunc;
-
-function getValueFromArgs(args: unknown[]): unknown {
-    const refinedArgs = args as Parameters<ValidateFunc>;
-   if (refinedArgs.length === 1) {
-      return refinedArgs[0];
-   } else {
-      return refinedArgs[0][refinedArgs[1]];
-   }
-}
 
 interface IChained {
    required: RequiredValidator;
@@ -59,15 +47,17 @@ function normalizeType(type: Descriptor): Descriptor {
 function validateComposite(...types: Descriptor[]): ValidateFunc {
    const validators = types.map((type) => validate(type));
 
-   return function validateCompositeFor(
-      ...args: Parameters<ValidateFunc>
+   return function validateCompositeFor<T>(
+      props: T,
+      propName: keyof T,
+      componentName: string
    ): Error | undefined {
       let hasSuitable = false;
       const errors: Error[] = [];
 
       for (let index = 0; index < validators.length; index++) {
          const validator = validators[index];
-         const result = validator.apply(null, args);
+         const result = validator(props, propName, componentName);
          if (result instanceof Error) {
             errors.push(result);
          } else {
@@ -86,6 +76,24 @@ function validateComposite(...types: Descriptor[]): ValidateFunc {
 }
 
 /**
+ * Type guard для определения наличия миксинов в объекте
+ * @param value
+ */
+function valueWithMixins(
+   value: unknown
+): value is {
+   _mixins: unknown[];
+} {
+   return (
+      typeof value === 'object' &&
+      value !== null &&
+      !!(value as {
+         _mixins?: unknown[];
+      })._mixins
+   );
+}
+
+/**
  * Возвращает валидатор для определенного типа.
  * @param type Тип дескриптора.
  */
@@ -99,10 +107,11 @@ function validate(type: Descriptor): ValidateFunc {
    const typeName = typeof type;
 
    if (type === null) {
-      return function validateNull(
-         ...args: Parameters<ValidateFunc>
+      return function validateNull<T>(
+         props: T,
+         propName: keyof T
       ): Error | undefined {
-         const value = getValueFromArgs(args);
+         const value = props[propName];
          if (value === null) {
             return;
          }
@@ -112,10 +121,11 @@ function validate(type: Descriptor): ValidateFunc {
 
    switch (typeName) {
       case 'string':
-         return function validateTypeName(
-            ...args: Parameters<ValidateFunc>
+         return function validateTypeName<T>(
+            props: T,
+            propName: keyof T
          ): Error | undefined {
-            const value = getValueFromArgs(args);
+            const value = props[propName];
             if (
                value === undefined ||
                typeof value === type ||
@@ -127,10 +137,11 @@ function validate(type: Descriptor): ValidateFunc {
          };
 
       case 'function':
-         return function validateTypeInstance(
-            ...args: Parameters<ValidateFunc>
+         return function validateTypeInstance<T>(
+            props: T,
+            propName: keyof T
          ): Error | undefined {
-            const value = getValueFromArgs(args);
+            const value = props[propName];
             if (value === undefined || value instanceof (type as Function)) {
                return;
             }
@@ -140,15 +151,16 @@ function validate(type: Descriptor): ValidateFunc {
          };
 
       case 'object':
-         return function validateTypeInterface(
-            ...args: Parameters<ValidateFunc>
+         return function validateTypeInterface<T>(
+            props: T,
+            propName: keyof T
          ): Error | undefined {
-            const value = getValueFromArgs(args);
+            const value = props[propName];
             if (value === undefined) {
                return;
             }
 
-            const mixins = value && (value as Record<string, unknown>)._mixins;
+            const mixins = valueWithMixins(value) && value._mixins;
             if (mixins instanceof Array && mixins.indexOf(type) !== -1) {
                return;
             }
@@ -191,14 +203,16 @@ function validate(type: Descriptor): ValidateFunc {
 function required(): DescriptorValidator {
    const prev: ValidateFunc = this;
 
-   return chain(function isRequired(
-      ...args: Parameters<ValidateFunc>
+   return chain(function isRequired<T>(
+      props: T,
+      propName: keyof T,
+      componentName: string
    ): Error | undefined {
-      const value = getValueFromArgs(args);
+      const value = props[propName];
       if (value === undefined) {
          return new TypeError('Value is required');
       }
-      return prev.apply(null, args);
+      return prev(props, propName, componentName);
    });
 }
 
@@ -240,14 +254,16 @@ function oneOf(values: unknown[]): DescriptorValidator {
 
    const prev: ValidateFunc = this;
 
-   return chain(function isOneOf(
-      ...args: Parameters<ValidateFunc>
+   return chain(function isOneOf<T>(
+      props: T,
+      propName: keyof T,
+      componentName: string
    ): Error | undefined {
-      const value = getValueFromArgs(args);
+      const value = props[propName];
       if (value !== undefined && values.indexOf(value) === -1) {
          return new TypeError(`Invalid value ${value}`);
       }
-      return prev.apply(null, args);
+      return prev(props, propName, componentName);
    });
 }
 
@@ -289,14 +305,16 @@ function not(values: unknown[]): DescriptorValidator {
 
    const prev: ValidateFunc = this;
 
-   return chain(function isNot(
-      ...args: Parameters<ValidateFunc>
+   return chain(function isNot<T>(
+      props: T,
+      propName: keyof T,
+      componentName: string
    ): Error | undefined {
-      const value = getValueFromArgs(args);
+      const value = props[propName];
       if (value !== undefined && values.indexOf(value) !== -1) {
          return new TypeError(`Invalid value ${value}`);
       }
-      return prev.apply(null, args);
+      return prev(props, propName, componentName);
    });
 }
 
@@ -333,26 +351,28 @@ type notValidator = (values: unknown[]) => DescriptorValidator;
  */
 function arrayOf(type: Descriptor): DescriptorValidator {
    const prev: ValidateFunc = this;
-   const validator = validate(type) as OldValidateFunc;
+   const validator = validate(type);
 
-   return chain(function isArrayOf(
-      ...args: Parameters<ValidateFunc>
+   return chain(function isArrayOf<T>(
+      props: T,
+      propName: keyof T,
+      componentName: string
    ): Error | undefined {
-      const value = getValueFromArgs(args);
+      const value = props[propName];
       if (value !== undefined) {
          if (!(value instanceof Array)) {
             return new TypeError(`'Value "${value}" is not an Array`);
          }
          let valid;
          for (let i = 0; i < value.length; i++) {
-            valid = validator(value[i]);
+            valid = validator(value, i, componentName);
             if (valid instanceof Error) {
                return valid;
             }
          }
       }
 
-      return prev.apply(null, args);
+      return prev(props, propName, componentName);
    });
 }
 
