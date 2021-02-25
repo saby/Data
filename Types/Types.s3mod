@@ -7,6 +7,7 @@
       <module id="636177e5-4d75-44fa-9173-977dc90ff111" name="Env"/>
       <module id="832cda0a-e19c-4ffc-a1d1-47edbb6b7501" name="I18n"/>
       <module id="0df0fce3-53ba-47f8-987d-edf1fd078295" name="WS.Core"/>
+      <module id="f14959ca-c2ad-40fe-a083-50f341b373f1" name="TypesTest"/>
    </depends>
 
   <load_after/>

@@ -1,0 +1,9 @@
+{
+  "extends": "saby-typescript/configs/es5.json",
+  "compilerOptions": {
+    "noImplicitAny": true
+  },
+  "files": [
+    "./function.ts"
+  ]
+}

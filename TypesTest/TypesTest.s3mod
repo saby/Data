@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module for_cdn="0" id="f14959ca-c2ad-40fe-a083-50f341b373f1" kaizen_zone="0" name="TypesTest" package="Платформа" required="1" responsible="Колбешин Ф.А." responsible_uuid="a433a212-4d92-4900-bc18-dca37052b171" version="1.00">
+
+  <description>тестовый модуль</description>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <preload/>
+
+</ui_module>
