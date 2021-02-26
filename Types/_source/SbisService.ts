@@ -651,7 +651,7 @@ function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap
     return args;
 }
 
-interface IQueryResult {
+export interface IQueryResult {
     Фильтр: Record;
     Сортировка: RecordSet<unknown, Model<unknown>>;
     Навигация: Record<unknown> | RecordSet<unknown, Model<unknown>>;
@@ -901,7 +901,7 @@ function oldMove(
  *         // Do something with articles
  *     }).catch(onError);
  * </pre>
- * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
+ * <b>Пример 6</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
  * <pre>
  *     import {SbisService, Query} from 'Types/source';
  *     import {applied} from 'Types/entity';
