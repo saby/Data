@@ -41,7 +41,7 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
  *          {@link Types/_collection/IIndexedCollection}.
  *     </li>
  * </ul>
- * Создадим рекордсет, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
+ * Создадим список, в котором в качестве сырых данных используется plain JSON (адаптер для данных в таком формате используется по умолчанию):
  * <pre>
  *     import {List} from 'Types/collection';
  *

@@ -901,7 +901,7 @@ function oldMove(
  *         // Do something with articles
  *     }).catch(onError);
  * </pre>
- * <b>Пример 5</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
+ * <b>Пример 6</b>. Выберем статьи, используя множественную навигацию по нескольким разделам каталога:
  * <pre>
  *     import {SbisService, Query} from 'Types/source';
  *     import {applied} from 'Types/entity';
