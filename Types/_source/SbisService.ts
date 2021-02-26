@@ -651,7 +651,7 @@ function passDestroy(this: SbisService, keys: string | string[], meta?: IHashMap
     return args;
 }
 
-interface IQueryResult {
+export interface IQueryResult {
     Фильтр: Record;
     Сортировка: RecordSet<unknown, Model<unknown>>;
     Навигация: Record<unknown> | RecordSet<unknown, Model<unknown>>;

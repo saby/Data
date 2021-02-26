@@ -93,7 +93,8 @@ export { default as Restful } from './_source/Restful';
 export {SbisService};
 export {
     getQueryArguments as sbisServiceGetQueryArguments,
-    IOptions as ISbisServiceOptions
+    IOptions as ISbisServiceOptions,
+    IQueryResult as ISbisServiceQueryResult
 } from './_source/SbisService';
 
 import {register} from './di';
