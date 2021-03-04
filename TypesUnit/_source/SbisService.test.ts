@@ -431,7 +431,7 @@ describe('Types/_source/SbisService', () => {
                         assert.strictEqual(args.ИдО, SbisBusinessLogic.existsId);
                     });
                 });
- 
+
                 it('should generate request with additional fields if option passAddFieldsFromMeta is set', () => {
                     const service = new SbisService({
                         endpoint: 'USP',
@@ -1673,6 +1673,50 @@ describe('Types/_source/SbisService', () => {
                     ObjectId: ['1'],
                     DestinationId: '2',
                     Order: 'before',
+                    Sorting: null,
+                    ReadMethod: 'USP.Прочитать',
+                    UpdateMethod: 'USP.Записать'
+                };
+                assert.deepEqual(args, expected);
+            });
+        });
+
+        it('should call move with sorting', () => {
+            const query = new Query().orderBy('id');
+
+            return service.move([1], 2, {
+                parentProperty: 'parent',
+                position: 'before',
+                query
+            }).then(() => {
+                const args = SbisBusinessLogic.lastRequest.args;
+                const expected = {
+                    IndexNumber: 'ПорНомер',
+                    HierarchyName: 'parent',
+                    ObjectName: 'USP',
+                    ObjectId: ['1'],
+                    DestinationId: '2',
+                    Order: 'before',
+                    Sorting: {
+                        _type: 'recordset',
+                        d: [
+                            [false, 'id', true]
+                        ],
+                        s: [
+                            {
+                                t: 'Логическое',
+                                n: 'l'
+                            },
+                            {
+                                t: 'Строка',
+                                n: 'n'
+                            },
+                            {
+                                t: 'Логическое',
+                                n: 'o'
+                            }
+                        ]
+                    },
                     ReadMethod: 'USP.Прочитать',
                     UpdateMethod: 'USP.Записать'
                 };
@@ -1700,6 +1744,7 @@ describe('Types/_source/SbisService', () => {
                     ObjectId: ['1'],
                     DestinationId: '2',
                     Order: 'before',
+                    Sorting: null,
                     ReadMethod: 'Goods.Прочитать',
                     UpdateMethod: 'Goods.Записать'
                 };
@@ -1728,6 +1773,7 @@ describe('Types/_source/SbisService', () => {
                     ObjectId: ['1'],
                     DestinationId: '2',
                     Order: 'before',
+                    Sorting: null,
                     ReadMethod: 'Product.get',
                     UpdateMethod: 'Product.put'
                 };
@@ -1748,6 +1794,7 @@ describe('Types/_source/SbisService', () => {
                     ObjectId: ['1'],
                     DestinationId: '2',
                     Order: 'before',
+                    Sorting: null,
                     ReadMethod: 'Item.Прочитать',
                     UpdateMethod: 'Item.Записать'
                 };
