@@ -113,6 +113,10 @@ export class MapPolyfill<K, V> {
         return this;
     }
 
+    toString(): string {
+        return '[object Map]';
+    }
+
     _isObject(value: any): boolean {
         return SetPolyfill.prototype._isObject.call(this, value);
     }
