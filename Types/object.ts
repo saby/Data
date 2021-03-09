@@ -3,6 +3,7 @@
  * @library Types/object
  * @includes isEqual Types/_object/isEqual
  * @includes merge Types/_object/merge
+ * @includes isEmpty Types/_object/isEmpty
  * @public
  * @author Мальцев А.А.
  */
@@ -12,8 +13,10 @@
  * @library Types/object
  * @includes isEqual Types/_object/isEqual
  * @includes merge Types/_object/merge
+ * @includes isEmpty Types/_object/isEmpty
  * @public
  * @author Мальцев А.А.
  */
 export {default as isEqual} from './_object/isEqual';
 export {default as merge} from './_object/merge';
+export {default as isEmpty} from './_object/isEmpty';
