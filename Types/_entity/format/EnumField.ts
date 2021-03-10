@@ -12,6 +12,25 @@ import {register} from '../../di';
  *         dictionary: ['one', 'two', 'three']
  *     };
  * </pre>
+ * Измением значение поля enum.
+ * <pre>
+ *    import {Record} from 'Types/entity';
+ *
+ *    const record = new Record({
+ *        format: {
+ *            foo: {
+ *                type: 'enum',
+ *                dictionary: ['one', 'two', 'three']
+ *            }
+ *        },
+ *        rawData: {
+ *            foo: 1
+ *        }
+ *    });
+ *
+ *    record.get('foo').set(2);
+ *    record.get('foo').get(); // 2
+ * </pre>
  * @class Types/_entity/format/EnumField
  * @extends Types/_entity/format/DictionaryField
  * @public
