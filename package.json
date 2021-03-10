@@ -27,7 +27,7 @@
       "build:app": "wasaby-cli --tasks=build --watcher",
       "compile": "saby-typescript --compiler",
       "watch": "saby-typescript --compiler --watch",
-      "start": "wasaby-cli --tasks=startTest --server",
+      "start": "wasaby-cli --tasks=startTest",
       "test": "wasaby-cli --tasks=startTest --node --report=console",
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
       "lint": "saby-typescript --lint -q Types/**/*.ts"
