@@ -89,6 +89,7 @@ export interface IMoveMeta {
     parentProperty?: string;
     objectName?: string;
     position?: string;
+    query?: Query;
 }
 
 /**
@@ -735,6 +736,7 @@ interface IMoveResult {
     ObjectId: EntityKey | EntityKey[];
     DestinationId: EntityKey;
     Order: string;
+    Sorting: RecordSet<unknown, Model<unknown>>;
     ReadMethod: string;
     UpdateMethod: string;
 }
@@ -750,6 +752,7 @@ function passMove(this: SbisService, from: EntityKey | EntityKey[], to: EntityKe
         ObjectId: from,
         DestinationId: to,
         Order: meta.position,
+        Sorting: buildRecordSet(getSortingParams(meta.query), this._$adapter, this.getKeyProperty()),
         ReadMethod: buildBlMethodName(meta.objectName, this._$binding.read),
         UpdateMethod: buildBlMethodName(meta.objectName, this._$binding.update)
     };
