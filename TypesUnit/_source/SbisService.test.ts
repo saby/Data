@@ -1744,7 +1744,6 @@ describe('Types/_source/SbisService', () => {
                     ObjectId: ['1'],
                     DestinationId: '2',
                     Order: 'before',
-                    Sorting: null,
                     ReadMethod: 'Goods.Прочитать',
                     UpdateMethod: 'Goods.Записать'
                 };
