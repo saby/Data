@@ -1227,9 +1227,17 @@ export default class SbisService extends Rpc {
         const groups = getGroupsByComplexIds(items, this._$endpoint.contract);
         return  Promise.all(Object.keys(groups).map((name) => {
             meta.objectName = name;
+            const methodName = buildBlMethodName(this._$endpoint.moveContract, this._$binding.move);
+            const params = this._$passing.move.call(this, groups[name], target, meta);
+
+            // TODO Удалить в 21.2000, после того как поддержать параметр Sorting во всех реализациях метода  move.
+            if (methodName !== 'IndexNumber.Move') {
+                delete params.Sorting;
+            }
+
             return this._callProvider(
-                buildBlMethodName(this._$endpoint.moveContract, this._$binding.move),
-                this._$passing.move.call(this, groups[name], target, meta)
+                methodName,
+                params
             );
         })) as unknown as Promise<void>;
     }
