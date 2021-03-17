@@ -61,10 +61,16 @@ export enum Type {
 }
 
 const SEPARATOR = '-';
+const OPEN_PERIOD = '...';
 
 function generalPeriod(start: Date, finish: Date, format: string): string {
+    if (isOpenPeriod(start, finish)) {
+        return openPeriod(start, finish, format);
+    }
+
     const startLabel = dateFormat(start, format);
     const finishLabel = dateFormat(finish, format);
+
     if (startLabel === finishLabel) {
         return startLabel;
     } else {
@@ -74,11 +80,21 @@ function generalPeriod(start: Date, finish: Date, format: string): string {
 
 function digitalPeriod(start: Date, finish: Date): string {
     const format = dateFormat.FULL_DATE;
+
+    if (isOpenPeriod(start, finish)) {
+        return openPeriod(start, finish, format);
+    }
+
     return `${dateFormat(start, format)}${SEPARATOR}${dateFormat(finish, format)}`;
 }
 
 function datesPeriod(start: Date, finish: Date, type: Type): string {
     const format = type === Type.FullDate ? dateFormat.FULL_DATE_FULL_MONTH : dateFormat.FULL_DATE_SHORT_MONTH;
+
+    if (isOpenPeriod(start, finish)) {
+        return openPeriod(start, finish, format);
+    }
+
     const onlyMonthFormat = type === Type.FullDate
         ? dateFormat.FULL_DATE_FULL_MONTH
         : dateFormat.SHORT_DATE_SHORT_MONTH;
@@ -90,6 +106,7 @@ function datesPeriod(start: Date, finish: Date, type: Type): string {
     const finishDate = finish.getDate();
     const finishMonth = finish.getMonth();
     const finishYear = finish.getFullYear();
+
     if (startYear === finishYear) {
         // The same year
         if (startMonth === finishMonth) {
@@ -102,23 +119,30 @@ function datesPeriod(start: Date, finish: Date, type: Type): string {
         }
         return `${dateFormat(start, onlyMonthFormat)}${SEPARATOR}${dateFormat(finish, format)}`;
     }
+
     return `${dateFormat(start, format)}${SEPARATOR}${dateFormat(finish, format)}`;
 }
 
 function monthsPeriod(start: Date, finish: Date, type: Type): string {
     const format = type === Type.FullMonth ? dateFormat.FULL_MONTH : dateFormat.SHORT_MONTH;
-    const onlyMonthFormat = type === Type.FullMonth ? 'MMMM' : 'MMM';
 
+    if (isOpenPeriod(start, finish)) {
+        return openPeriod(start, finish, format);
+    }
+
+    const onlyMonthFormat = type === Type.FullMonth ? 'MMMM' : 'MMM';
     const startMonth = start.getMonth();
     const startYear = start.getFullYear();
     const finishMonth = finish.getMonth();
     const finishYear = finish.getFullYear();
+
     if (startYear === finishYear) {
         if (startMonth === finishMonth) {
             return dateFormat(start, format);
         }
         return `${dateFormat(start, onlyMonthFormat)}${SEPARATOR}${dateFormat(finish, format)}`;
     }
+
     return `${dateFormat(start, format)}${SEPARATOR}${dateFormat(finish, format)}`;
 }
 
@@ -142,6 +166,20 @@ function yearsPeriod(start: Date, finish: Date): string {
     return generalPeriod(start, finish, 'YYYY');
 }
 
+function openPeriod(start: Date, finish: Date, format: string): string {
+    if (!start) {
+        return `${OPEN_PERIOD}${SEPARATOR}${dateFormat(finish, format)}`;
+    }
+
+    if (!finish) {
+        return `${dateFormat(start, format)}${SEPARATOR}${OPEN_PERIOD}`;
+    }
+}
+
+function isOpenPeriod(start: Date, finish: Date): boolean {
+    return !(start instanceof Date && finish instanceof Date);
+}
+
 /**
  * Преобразует временной период в строку указанного формата {@link http://axure.tensor.ru/standarts/v7/форматы_дат_и_времени_01_2.html по стандарту}.
  * @example
@@ -161,11 +199,8 @@ function yearsPeriod(start: Date, finish: Date): string {
  */
 export default function period(start: Date, finish: Date, type: Type = Type.Auto): string {
     // Check arguments
-    if (!(start instanceof Date)) {
-        throw new TypeError('Argument "start" should be an instance of Date');
-    }
-    if (!(finish instanceof Date)) {
-        throw new TypeError('Argument "finish" should be an instance of Date');
+    if (!(start instanceof Date || finish instanceof Date)) {
+        throw new TypeError('Arguments "start" and "finish" should be an instance of Date');
     }
 
     // Auto detection

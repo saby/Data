@@ -86,9 +86,20 @@ describe('Types/_formatter/period', () => {
         });
     });
 
+    it('should format open period if start or finish is not Date', () => {
+        assert.strictEqual(period(null, anotherYear, Type.FullDate), '...-08 October\'19');
+        assert.strictEqual(period(commonStart, null, Type.FullDate), '02 February\'18-...');
+    });
+
     it('should throw TypeError for Auto type', () => {
         assert.throws(() => {
             period(new Date(), new Date(), Type.Auto);
+        }, TypeError);
+    });
+
+    it('should throw TypeError if start and finish is not Date', () => {
+        assert.throws(() => {
+            period(null, null, Type.Auto);
         }, TypeError);
     });
 });
