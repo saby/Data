@@ -28,7 +28,10 @@ export default (obj: any): boolean => {
 
     const tag = nativeStringifier.call(obj);
     if (tag === objectTag || obj instanceof Object) {
-        return Object.keys(obj).length === 0;
+        // tslint:disable-next-line: forin
+        for (const _key in obj) {
+            return false;
+        }
     }
 
     return true;
