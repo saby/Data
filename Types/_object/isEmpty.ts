@@ -21,7 +21,7 @@ const objectTag = '[object Object]';
  * @public
  * @author Кудярвцев И.С.
  */
-export default (obj: any): boolean => {
+export default function isEmpty(obj: any): boolean {
     if (obj === null || typeof obj !== 'object') {
         return false;
     }
@@ -32,4 +32,4 @@ export default (obj: any): boolean => {
     }
 
     return true;
-};
+}
