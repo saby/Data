@@ -29,7 +29,7 @@ import { IHashMap, EntityMarker } from '../../_declarations';
  * @implements Types/_entity/adapter/IRecord
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class RecordSetRecord extends mixin<
     DestroyableMixin,

@@ -5,7 +5,7 @@ import {register} from '../../di';
 /**
  * Конструирует формат полей по декларативному описанию
  * @param declaration Декларативное описание
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function factory(declaration: format.IFieldDeclaration[]): Format<format.Field> {
     if (!declaration || !(declaration instanceof Array)) {

@@ -152,7 +152,7 @@ interface IRawDataWithTotal {
  * @ignoreOptions totalProperty writable
  * @ignoreMethods getTotal getTotalProperty setTotalProperty
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class DataSet<
     TData = any,

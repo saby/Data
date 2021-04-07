@@ -195,7 +195,7 @@ function isOpenPeriod(start: Date, finish: Date): boolean {
  * @param type Тип периода.
  * @returns Период в в текстовом виде.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function period(start: Date, finish: Date, type: Type = Type.Auto): string {
     // Check arguments

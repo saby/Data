@@ -21,7 +21,7 @@ const storage = new WeakMap();
  * @param original Исходная функция, вызов которой нужно выполнить один раз
  * @returns Результирующая функция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function once(original: Function): Function {
     return function(...args: any[]): any {

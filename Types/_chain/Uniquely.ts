@@ -8,7 +8,7 @@ type ExtractFunc = (item: any, index: string|number) => string|number;
  * @class Types/_chain/Uniquely
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Uniquely<T> extends Abstract<T> {
     /**

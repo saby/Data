@@ -7,7 +7,7 @@ import { EntityMarker } from '../../_declarations';
  * @class Types/_collection/MapEnumerator
  * @implements Types/_collection/IEnumerator
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Mapwise<T> implements IEnumerator<T> {
     /**

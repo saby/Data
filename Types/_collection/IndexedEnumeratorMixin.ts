@@ -10,7 +10,7 @@ import { Object as EventObject } from 'Env/Event';
  * реализующих интерфейс Types/_collection/IEnumerator.
  * @mixin Types/_collection/IndexedEnumeratorMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class IndexedEnumeratorMixin<T> {
     readonly '[Types/_collection/IndexedEnumeratorMixin]': EntityMarker;

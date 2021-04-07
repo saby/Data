@@ -24,7 +24,7 @@ import { EntityMarker } from '../../_declarations';
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class JsonRecord extends mixin<
     DestroyableMixin,
@@ -63,7 +63,7 @@ export default class JsonRecord extends mixin<
 
         const name = format.getName();
         if (!this.has(name)) {
-            this.set(name, format.getDefaultValue());
+            this.set(name, format.getDefaultValue(true));
         }
     }
 

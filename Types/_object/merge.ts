@@ -47,7 +47,7 @@ function mergeInner<T, S>(path: Set<T>, target: T, ...sources: S[]): T & S {
  * @param target Объект, в который объединять
  * @param sources Объекты для объединения
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function merge<T = object, S = object>(target: T, ...sources: S[]): T & S {
     const path = new Set<T>();

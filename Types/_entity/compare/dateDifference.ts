@@ -61,7 +61,7 @@ function getYearsDifference(dateA: Date, dateB: Date): number {
  * @param [units] Единица расчета (если не передан, используются миллисекунды)
  * @returns Разница между датами в виде целого числа (дробная часть отбрасывается) в указанных единицах.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function dateDifference(dateA: Date, dateB: Date, units?: Units): number {
     let output: number;

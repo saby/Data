@@ -21,7 +21,7 @@ const $writable = protect('writable');
  * Подмешивается после Types/_entity/ObservableMixin и после Types/_entity/ManyToManyMixin, перекрывая часть их методов
  * @mixin Types/_entity/ReadWriteMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class ReadWriteMixin {
     '[Types/_entity/ReadWriteMixin]': EntityMarker;

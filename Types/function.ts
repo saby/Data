@@ -7,7 +7,7 @@
  * @includes once Types/_function/once
  * @includes throttle Types/_function/throttle
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -19,7 +19,7 @@
  * @includes once Types/_function/once
  * @includes throttle Types/_function/throttle
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as debounce} from './_function/debounce';

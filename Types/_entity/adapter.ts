@@ -12,7 +12,7 @@
  * @includes ITable Types/_entity/adapter/ITable
  * @includes RecordSet Types/_entity/adapter/RecordSet
  * @includes Sbis Types/_entity/adapter/Sbis
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -29,7 +29,7 @@
  * @includes ITable Types/_entity/adapter/ITable
  * @includes RecordSet Types/_entity/adapter/RecordSet
  * @includes Sbis Types/_entity/adapter/Sbis
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Abstract} from './adapter/Abstract';

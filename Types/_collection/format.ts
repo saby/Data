@@ -3,7 +3,7 @@
  * @library Types/_collection/format
  * @includes factory Types/_collection/format/factory
  * @includes Format Types/_collection/format/Format
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library Types/_collection/format
  * @includes factory Types/_collection/format/factory
  * @includes Format Types/_collection/format/Format
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as factory} from './format/factory';

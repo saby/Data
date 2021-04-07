@@ -99,7 +99,7 @@ class Logger implements ILogger {
 /**
  * Logger
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 const logger = new Logger();
 

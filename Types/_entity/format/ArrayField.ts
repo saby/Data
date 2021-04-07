@@ -19,7 +19,7 @@ interface IOptions extends IFieldOptions {
  * @class Types/_entity/format/ArrayField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class ArrayField extends Field {
     /**

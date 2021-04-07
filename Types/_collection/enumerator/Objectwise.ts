@@ -6,7 +6,7 @@ import { EntityMarker } from '../../_declarations';
  * @class Types/_collection/ObjectEnumerator
  * @implements Types/_collection/IEnumerator
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Objectwise<T> implements IEnumerator<T, string> {
     /**

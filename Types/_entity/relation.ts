@@ -3,7 +3,7 @@
  * @library Types/_entity/relation
  * @includes Hierarchy Types/_entity/relation/Hierarchy
  * @includes IReceiver Types/_entity/relation/IReceiver
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library Types/_entity/relation
  * @includes Hierarchy Types/_entity/relation/Hierarchy
  * @includes IReceiver Types/_entity/relation/IReceiver
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Hierarchy} from './relation/Hierarchy';

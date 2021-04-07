@@ -2,7 +2,7 @@
  * Возвращает оболочку для защищенного свойства.
  * @param property Наименование свойства.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 const isSymbolSupported = typeof Symbol !== 'undefined';
@@ -16,7 +16,7 @@ const isNativeSymbolSupported = isSymbolSupported ?
  * Returns wrapper for protected property
  * @param property Property name
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function protect(property: string): symbol | string {
     return isNativeSymbolSupported ? Symbol(property) : `$${property}`;

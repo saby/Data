@@ -4,7 +4,7 @@
  * @includes factory Types/_chain/factory
  * @includes Abstract Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes factory Types/_chain/factory
  * @includes Abstract Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 import {default as factory, registerFactory} from "./_chain/factory";

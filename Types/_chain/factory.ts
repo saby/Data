@@ -96,7 +96,7 @@ registerFactory();
  * @param source Коллекция, обрабатываемая цепочкой
  * @returns Коллекция для выполнения вызовов по цепочке
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function factory<T, U>(source: IEnumerable<T, U>): Enumerable<T, U>;
 export default function factory<T>(source: T[]): Arraywise<T>;

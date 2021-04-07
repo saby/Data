@@ -474,7 +474,7 @@ function chain(parent: ValidateFunc): DescriptorValidator {
  * @class Types/_entity/descriptor
  * @param types Desirable value types
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -539,7 +539,7 @@ function chain(parent: ValidateFunc): DescriptorValidator {
  * @class Types/_entity/descriptor
  * @param types Desirable value types
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 // FIXME: бесполезное T, но если его просто убрать, то попадают сборки
 export default function descriptor<T>(

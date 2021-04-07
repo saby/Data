@@ -4,7 +4,7 @@ import { EntityMarker } from '../_declarations';
  * Интерфейс уведомлений об изменении к свойств объекта.
  * @interface Types/_entity/IObservableObject
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IObservableObject {
     readonly '[Types/_entity/IObservableObject]': EntityMarker;

@@ -7,7 +7,7 @@ import {IEnumerable} from '../collection';
  * @class Types/_chain/Concatenated
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Concatenated<T> extends Abstract<T> {
     /**

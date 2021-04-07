@@ -24,7 +24,7 @@ export interface IOptions {
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Field extends mixin<
     DestroyableMixin, OptionsToPropertyMixin, SerializableMixin, CloneableMixin
@@ -149,7 +149,7 @@ export default abstract class Field extends mixin<
      * @see defaultValue
      * @see setDefaultValue
      */
-    getDefaultValue(): any {
+    getDefaultValue(serialize: boolean = false): any {
         return this._$defaultValue;
     }
 

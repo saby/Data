@@ -11,7 +11,7 @@ let counter = 0;
  * @mixin Types/_entity/InstantiableMixin
  * @implements Types/_entity/IInstantiable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class InstantiableMixin implements IInstantiable {
     '[Types/_entity/InstantiableMixin]': EntityMarker;

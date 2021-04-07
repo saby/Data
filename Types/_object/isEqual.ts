@@ -65,7 +65,7 @@ function isEqualObjects(obj1: object, obj2: object): boolean {
  * @param obj1 Первый объект
  * @param obj2 Второй объект
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function isEqual(obj1: any, obj2: any): boolean {
     // Deal with strict equal of any type

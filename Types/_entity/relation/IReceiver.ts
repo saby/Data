@@ -3,7 +3,7 @@ import { EntityMarker } from '../../_declarations';
 /**
  * Интерфейс сущности, взаимодействующей с посредником
  * @interface Types/_entity/relation/IReceiver
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IReceiver {
     readonly '[Types/_entity/relation/IReceiver]': EntityMarker;

@@ -25,7 +25,7 @@ export interface ICompute {
  * </pre>
  * @class Types/_entity/functor/Compute
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -49,7 +49,7 @@ export interface ICompute {
  * </pre>
  * @class Types/_entity/functor/Compute
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Compute<T> extends Abstract<T> implements ICompute {
    readonly properties: string[];

@@ -3,13 +3,13 @@ import {SetPolyfill} from './Set';
 /**
  * Ограниченная эмуляция стандартного встроенного объекта «Map», если он не поддерживается.
  * Перейдите по ссылке {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Map}, чтобы узнать подробности.
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Limited emulation of standard built-in object "Map" if it's not supported.
  * Follow {@link https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Map} for details.
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export class MapPolyfill<K, V> {
     protected _hash: object;

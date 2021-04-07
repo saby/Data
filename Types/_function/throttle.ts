@@ -52,7 +52,7 @@
  * @param first Выполнить последний вызов по окончании задержки
  * @returns Результирующая функция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function throttle(original: Function, delay: number, last?: boolean): Function {
     let state = true;

@@ -6,7 +6,7 @@ import { EntityMarker } from '../_declarations';
  * Работает соместно с {@link Types/_entity/ObservableMixin}.
  * @mixin Types/_entity/EventRaisingMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 class EventRaisingMixin {
     '[Types/_entity/EventRaisingMixin]': EntityMarker;

@@ -9,7 +9,7 @@ import {controller} from 'I18n/i18n';
  * @param feminine Использовать женский род (одна, две и т.д. вместо один, два и т.д.)
  * @returns Число прописью
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function numberWords(num: number | string, feminine: boolean = false): string {
     num = String(num);

@@ -6,7 +6,7 @@ import FlattenedEnumerator from './FlattenedEnumerator';
  * @class Types/_chain/Flattened
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Flattened<T> extends Abstract<T> {
     // region IEnumerable

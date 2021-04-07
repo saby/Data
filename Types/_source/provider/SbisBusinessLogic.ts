@@ -134,7 +134,7 @@ function getTimedOutResponse<T>(
  * @implements Types/_source/provider/IAbstract
  * @mixes Types/_entity/OptionsMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class SbisBusinessLogic extends OptionsToPropertyMixin implements IAbstract {
     readonly '[Types/_source/provider/IAbstract]': EntityMarker = true;

@@ -1,11 +1,11 @@
 /**
  * Библиотека деклараций.
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Declarations library
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export { IHashMap } from './_declarations';
 export { EntityMarker } from './_declarations';

@@ -4,7 +4,7 @@ import { EntityMarker } from '../../_declarations';
  * Интерфейс канала серверных событий
  * @interface Types/_source/provider/IChannel
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IChannel {
     readonly '[Types/_source/provider/IChannel]': EntityMarker;

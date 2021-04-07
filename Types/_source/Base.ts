@@ -19,7 +19,7 @@ export interface IOptions extends IDataOptions, IOptionsOptions {
  * @mixes Types/_source/DataMixin
  * @ignoreOptions options.writable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Base extends mixin<
     OptionsToPropertyMixin,

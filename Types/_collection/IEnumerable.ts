@@ -8,14 +8,14 @@ export type EnumeratorCallback<T, U = EnumeratorIndex> = (item: T, index: U) => 
  * Интерфейс коллекции, который предоставляет элементам коллекции простую итерацию один за другим.
  * @interface Types/_collection/IEnumerable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Interface of collection which provides their members through simple iteration one by one.
  * @interface Types/_collection/IEnumerable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IEnumerable<T, U = EnumeratorIndex> {
     readonly '[Types/_collection/IEnumerable]': EntityMarker;

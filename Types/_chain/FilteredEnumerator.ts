@@ -7,7 +7,7 @@ type CallbackFunc = (item: any, index: number) => boolean;
 /**
  * Фильтрующий энумератор.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class FilteredEnumerator<T> implements IEnumerator<T> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker = true;

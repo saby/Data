@@ -29,7 +29,7 @@ function prepareValue(value: any): IValue {
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -42,7 +42,7 @@ function prepareValue(value: any): IValue {
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Flags<T> extends mixin<
     Dictionary<any>,

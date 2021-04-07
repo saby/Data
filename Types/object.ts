@@ -5,7 +5,7 @@
  * @includes merge Types/_object/merge
  * @includes isEmpty Types/_object/isEmpty
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -15,7 +15,7 @@
  * @includes merge Types/_object/merge
  * @includes isEmpty Types/_object/isEmpty
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export {default as isEqual} from './_object/isEqual';
 export {default as merge} from './_object/merge';

@@ -46,7 +46,7 @@ export type EntityKey = number | string;
  * </pre>
  * @interface Types/_source/ICrud
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface ICrud {
     readonly '[Types/_source/ICrud]': EntityMarker;

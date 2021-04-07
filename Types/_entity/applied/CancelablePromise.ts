@@ -31,7 +31,7 @@ PromiseCanceledError.prototype = Object.create(Error.prototype);
  * </pre>
  * @class Types/_entity/applied/CancelablePromise
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -56,7 +56,7 @@ PromiseCanceledError.prototype = Object.create(Error.prototype);
  * </pre>
  * @class Types/_entity/applied/CancelablePromise
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class CancelablePromise<T> {
     readonly promise: Promise<T>;

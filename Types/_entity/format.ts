@@ -24,7 +24,7 @@
  * @includes TimeIntervalField Types/_entity/format/TimeIntervalField
  * @includes UuidField Types/_entity/format/UuidField
  * @includes XmlField Types/_entity/format/XmlField
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -53,7 +53,7 @@
  * @includes TimeIntervalField Types/_entity/format/TimeIntervalField
  * @includes UuidField Types/_entity/format/UuidField
  * @includes XmlField Types/_entity/format/XmlField
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Field} from './format/Field';

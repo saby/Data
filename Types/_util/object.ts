@@ -1,7 +1,7 @@
 /**
  * Набор утилит для работы с объектами
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 import { IObject, ICloneable } from '../entity';

@@ -948,7 +948,7 @@ function oldMove(
  * @class Types/_source/SbisService
  * @extends Types/_source/Rpc
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class SbisService extends Rpc {
     /**

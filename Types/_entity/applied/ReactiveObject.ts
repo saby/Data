@@ -65,7 +65,7 @@ import {Map} from '../../shim';
  * @class Types/_entity/applied/ReactiveObject
  * @extends Types/_entity/VersionableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -132,7 +132,7 @@ import {Map} from '../../shim';
  * @class Types/_entity/ReactiveObject
  * @extends Types/_entity/VersionableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 class ReactiveObject<T> extends VersionableMixin {
     private _nestedVersions: Map<string, number>;

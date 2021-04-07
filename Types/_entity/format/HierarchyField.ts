@@ -5,7 +5,7 @@ import {register} from '../../di';
  * Формат поля иерархии
  * @class Types/_entity/format/HierarchyField
  * @extends Types/_entity/format/Field
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class HierarchyField extends Field {
     /**

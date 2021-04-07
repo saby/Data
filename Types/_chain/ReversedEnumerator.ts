@@ -2,7 +2,7 @@ import IndexedEnumerator from './IndexedEnumerator';
 
 /**
  * Реверсивный энумератор
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class ReversedEnumerator<T, U> extends IndexedEnumerator<T, U> {
     _getItems(): Array<[U, T]> {

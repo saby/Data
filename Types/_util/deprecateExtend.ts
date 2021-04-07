@@ -3,13 +3,13 @@ import logger from './logger';
 /**
  * Возвращает оболочку для устаревшего метода extend().
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Returns wrapper for deprecate extend() method.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function deprecateExtend(
     subClass: any,

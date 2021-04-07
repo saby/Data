@@ -44,7 +44,7 @@ import { EntityMarker } from '../../_declarations';
  * @implements Types/_entity/ICloneable
  * @mixes Types/_entity/adapter/SbisFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class SbisTable extends mixin<
     DestroyableMixin,

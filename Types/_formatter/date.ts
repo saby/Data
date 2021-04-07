@@ -490,7 +490,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  * @param [timeZoneOffset] Смещение часового пояса, в котором требуется вывести значения. По умолчанию используется локальный.
  * @returns Дата в указанном формате.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 function format(date: Date, mask: string, timeZoneOffset?: number): string {
     const actualDate = timeZoneOffset === undefined ? date : getTzDate(date, timeZoneOffset);

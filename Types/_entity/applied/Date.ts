@@ -11,14 +11,14 @@ const ISO_FORMAT = 'YYYY-MM-DD';
  * Тип даты.
  * @class Types/_entity/applied/Date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Date type
  * @class Types/_entity/applied/Date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class TheDate extends DateTime {
     protected get _proto(): object {
