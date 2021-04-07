@@ -8,7 +8,7 @@ type CallbackFunc = (item: any, index: number) => boolean;
  * @class Types/_chain/Filtered
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Filtered<T> extends Abstract<T> {
     /**

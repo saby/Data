@@ -15,7 +15,7 @@ import { EntityMarker } from '../_declarations';
  * </pre>
  * @interface Types/_source/IRpc
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IRpc {
     readonly '[Types/_source/IRpc]': EntityMarker;

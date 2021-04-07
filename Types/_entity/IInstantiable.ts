@@ -4,7 +4,7 @@ import { EntityMarkerCompat as EntityMarker } from '../_declarations';
  * Интерфейс получения уникального идентификатора для экземпляра класса
  * @interface Types/_entity/IInstantiable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IInstantiable {
     readonly '[Types/_entity/IInstantiable]': EntityMarker;

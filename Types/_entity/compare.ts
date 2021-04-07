@@ -3,7 +3,7 @@
  * @library Types/_entity/compare
  * @includes dateDifference Types/_entity/compare/dateDifference
  * @includes DateUnits Types/_entity/compare/dateDifference#Units
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes DateUnits Types/_entity/compare/dateDifference#Units
  * @includes dateInterval Types/_entity/compare/dateInterval
  * @includes isFullInterval Types/_entity/compare/isFullInterval
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {

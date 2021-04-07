@@ -4,11 +4,11 @@ import {register} from '../../di';
  * Тип данных "Идентификатор".
  * @class Types/_entity/applied/Identity
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @example
  * <pre>
  *     import {Identity} from 'Types/entity';
- * 
+ *
  *     const id = new Identity([1, 'Employees']);
  *     console.log(id.getValue()); // 1
  *     console.log(id.getName()); // 'Employees'

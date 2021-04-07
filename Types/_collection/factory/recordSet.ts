@@ -9,7 +9,7 @@ import {create} from '../../di';
  * @param items Коллекция записей
  * @param options Опции конструктора рекордсета
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function recordSet(items: IEnumerable<Record>, options: IOptions = {}): RecordSet<unknown, Record> {
     if (!items || !(items['[Types/_collection/IEnumerable]'])) {

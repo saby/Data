@@ -137,7 +137,7 @@ const defaultValidators = {
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -190,7 +190,7 @@ const defaultValidators = {
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class PrefetchProxy extends mixin<
     OptionsToPropertyMixin,

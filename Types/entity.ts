@@ -18,7 +18,7 @@
  * @includes Record Types/_entity/Record
  * @includes relation Types/_entity/relation
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -41,7 +41,7 @@
  * @includes Record Types/_entity/Record
  * @includes relation Types/_entity/relation
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 import {register} from './di';

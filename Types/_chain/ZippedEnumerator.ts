@@ -4,7 +4,7 @@ import { EntityMarker } from '../_declarations';
 
 /**
  * Объединяющий энумератор
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class ZippedEnumerator<TResult, TSource1, TSource2> implements IEnumerator<TResult, number> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker = true;

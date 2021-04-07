@@ -8,7 +8,7 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
  * @param dateTime Дата и/или время в формате SQL.
  * @param defaultTimeZone Используйте данный часовой пояс для преобразования указанной даты (содержит смещение от UTC в минутах). Используется, если указанная дата не содержит информацию о часовом поясе.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -16,7 +16,7 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
  * @param dateTime Date and/or time in SQL format
  * @param defaultTimeZone Use given time zone to convert given date to (contains offset from UTC in minutes). Uses in case when given date doesn't contain information about time zone.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function dateFromSQL(dateTime: string, defaultTimeZone?: number): Date {
     let dateSep = dateTime.indexOf('-');

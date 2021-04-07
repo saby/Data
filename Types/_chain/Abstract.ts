@@ -31,7 +31,7 @@ type ReduceFunc<T, U> = (memo: any, item: T, index: U) => any;
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_collection/IEnumerable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Abstract<T, U = EnumeratorIndex> extends DestroyableMixin implements IEnumerable<T, U> {
     /**

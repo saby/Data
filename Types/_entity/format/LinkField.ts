@@ -14,7 +14,7 @@ import {register} from '../../di';
  * @class Types/_entity/format/LinkField
  * @extends Types/_entity/format/Field
  * @deprecated Модуль будет удален в 3.18.10
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class LinkField extends Field {
     protected _$defaultValue: number;

@@ -34,7 +34,7 @@ function getInsertPosition(items: number[], value: number): number {
  * Индексатор коллекции
  * @class Types/_collection/Indexer
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Indexer<T> {
     /**

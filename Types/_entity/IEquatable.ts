@@ -4,7 +4,7 @@ import { EntityMarker } from '../_declarations';
  * Интерфейс сравнения объектов.
  * @interface Types/_entity/IEquatable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IEquatable {
     readonly '[Types/_entity/IEquatable]': EntityMarker;

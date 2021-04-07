@@ -6,7 +6,7 @@ import {IEnumerator} from '../collection';
  * @class Types/_chain/Enumerable
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Enumerable<T, U> extends Abstract<T, U> {
     constructor(source: any) {

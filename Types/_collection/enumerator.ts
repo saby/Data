@@ -4,7 +4,7 @@
  * @includes Arraywise Types/_collection/enumerator/Arraywise
  * @includes Mapwise Types/_collection/enumerator/Mapwise
  * @includes Objectwise Types/_collection/enumerator/Objectwise
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes Arraywise Types/_collection/enumerator/Arraywise
  * @includes Mapwise Types/_collection/enumerator/Mapwise
  * @includes Objectwise Types/_collection/enumerator/Objectwise
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Arraywise} from './enumerator/Arraywise';

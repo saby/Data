@@ -13,7 +13,7 @@ import { EntityMarker } from '../../_declarations';
  * @mixes Types/_entity/DestroyableMixin
  * @implements Types/_entity/adapter/ITable
  * @implements Types/_entity/adapter/IDecorator
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class CowTable extends DestroyableMixin implements ITable, IDecorator {
     /**

@@ -6,7 +6,7 @@ import { EntityMarker } from '../_declarations';
  * Миксин, позволяющий сущности строить отношения "многие ко многим"
  * @mixin Types/_entity/ManyToManyMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class ManyToManyMixin {
     '[Types/_entity/ManyToManyMixin]': EntityMarker;

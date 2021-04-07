@@ -24,7 +24,7 @@ import isFullInterval from './isFullInterval';
  * @param unit Единица измерения интервала
  * @returns Количество единиц между датами
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export default function dateInterval(begin: Date, end: Date, unit: Units): number {

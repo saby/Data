@@ -5,7 +5,7 @@ import { EntityMarker } from '../_declarations';
  * Позволяет читать и записывать значения свойств, а также проверять их наличие.
  * @interface Types/_entity/IObject
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IObject<T = any> {
     readonly '[Types/_entity/IObject]': EntityMarker;

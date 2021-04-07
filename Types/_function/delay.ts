@@ -14,7 +14,7 @@ const hiddenName = getHiddenName();
  * @param original Исходная функция, вызов которой нужно асинхронно
  * @returns Результирующая функция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function delay(original: Function): void {
     if (win && win.requestAnimationFrame && !(hiddenName && doc[hiddenName])) {

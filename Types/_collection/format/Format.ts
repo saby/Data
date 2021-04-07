@@ -8,7 +8,7 @@ import { EntityMarker } from '../../_declarations';
  * @class Types/_collection/format/Format
  * @extends Types/_collection/List
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Format<T = format.Field> extends List<T> implements IEquatable {
     protected  _$items: any[];

@@ -18,7 +18,7 @@ export interface IOptions extends IRealFieldOptions {
  * @class Types/_entity/format/MoneyField
  * @extends Types/_entity/format/RealField
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class MoneyField extends RealField {
     /**

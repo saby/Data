@@ -17,7 +17,7 @@
  * @includes ObservableList Types/_collection/ObservableList
  * @includes RecordSet Types/_collection/RecordSet
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -39,7 +39,7 @@
  * @includes ObservableList Types/_collection/ObservableList
  * @includes RecordSet Types/_collection/RecordSet
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 import {register} from './di';

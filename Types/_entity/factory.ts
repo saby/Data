@@ -31,7 +31,7 @@ import {IHashMap} from '../_declarations';
  * Для корректной работы с зависимости сначала надо загрузить {@link Types/_entity/Model} и {@link Types/_source/RecordSet}, а уже потом {@link Types/_entity/factory}
  * @class Types/_entity/factory
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 type ValueType = string | Function | IProducible;

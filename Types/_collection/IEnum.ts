@@ -7,14 +7,14 @@ export type IIndex = number | string | null;
  * Это перечисляемая коллекция ключей и значений, один из которых может быть выбран или нет.
  * @interface Types/_collection/IEnum
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Enum type interface. It's an enumerable collection of keys and values and one of them can be selected or not.
  * @interface Types/_collection/IEnum
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IEnum<T> {
     readonly '[Types/_collection/IEnum]': EntityMarker;

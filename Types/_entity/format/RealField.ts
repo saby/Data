@@ -20,7 +20,7 @@ export interface IOptions extends IFieldOptions {
  * @class Types/_entity/format/RealField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class RealField extends Field {
     protected _$defaultValue: number;

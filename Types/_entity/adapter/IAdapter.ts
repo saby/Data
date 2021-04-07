@@ -7,7 +7,7 @@ import { EntityMarker } from '../../_declarations';
  * Назначение адаптера - предоставить общий интерфейс для работы различными форматами данных.
  * @interface Types/_entity/adapter/IAdapter
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IAdapter {
     readonly '[Types/_entity/adapter/IAdapter]': EntityMarker;

@@ -33,7 +33,7 @@ export type IMeta = IDateTimeMeta | IDictionaryMeta | IRealMeta | IMoneyMeta | I
 /**
  * Универсальное поле.
  * @class Types/_entity/format/UniversalField
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class UniversalField {
     /**

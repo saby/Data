@@ -15,7 +15,7 @@ import { EntityMarkerCompat as EntityMarker } from '../_declarations';
  * </ul>
  * @interface Types/_collection/IList
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IList<T> {
     readonly '[Types/_collection/IList]': EntityMarker;

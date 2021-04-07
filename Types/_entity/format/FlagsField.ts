@@ -15,7 +15,7 @@ import {register} from '../../di';
  * @class Types/_entity/format/FlagsField
  * @extends Types/_entity/format/DictionaryField
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class FlagsField extends DictionaryField {
 }

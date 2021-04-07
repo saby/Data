@@ -9,7 +9,7 @@ type MapFunc = (item: any, index: number) => any;
  * @class Types/_chain/Mapped
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Mapped<T> extends Abstract<T> {
     /**

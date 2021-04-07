@@ -5,7 +5,7 @@ import Abstract from './Abstract';
 
 /**
  * Сортирующий энумератор
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class SortedEnumerator<T, U> extends IndexedEnumerator<T, U> {
     private compareFunction: CompareFunction<T>;

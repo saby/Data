@@ -95,14 +95,14 @@ function jsonizeArray(arr: object[]): Array<object | string> {
  * Подготавливает данные перед отправкой в ​​удаленную службу путем преобразования определенных типов в упрощенное представление.
  * @class Types/_source/jsonize
  * @protected
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Prepares data before send to the remote service by transforming certain types into its simplified representation.
  * @class Types/_source/jsonize
  * @protected
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function jsonize<T = object>(data: T | object): T {
     /**

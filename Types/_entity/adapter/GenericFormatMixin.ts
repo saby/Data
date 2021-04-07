@@ -18,7 +18,7 @@ import { EntityMarker } from '../../_declarations';
  * Миксин для работы с форматом в адаптерах
  * @mixin Types/_entity/adapter/GenericFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class GenericFormatMixin {
     '[Types/_entity/adapter/GenericFormatMixin]': EntityMarker;

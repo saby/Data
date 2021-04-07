@@ -7,14 +7,14 @@ export type IValue = boolean | null;
  * Это перечисляемая коллекция ключей и значений, каждый из которых может быть выбран или нет.
  * @interface Types/_collection/IFlags
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Flags type interface. It's an enumerable collection of keys and values and every one of them can be selected or not.
  * @interface Types/_collection/IFlags
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IFlags<T> {
     readonly '[Types/_collection/IFlags]': EntityMarker;

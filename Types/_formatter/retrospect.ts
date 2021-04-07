@@ -47,7 +47,7 @@ function isThisDay(date: Date, thisDate: Date): boolean {
  * @param type Тип кванта
  * @returns Дата в текстовом виде
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function retrospect(date: Date, type: Type = Type.Auto): string {
     // Check arguments

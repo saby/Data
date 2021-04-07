@@ -6,7 +6,7 @@ import { EntityMarker } from '../_declarations';
  *
  * @interface Types/_source/IData
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IData {
     readonly '[Types/_source/IData]': EntityMarker;

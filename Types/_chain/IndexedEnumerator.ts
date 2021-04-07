@@ -4,7 +4,7 @@ import { EntityMarker } from '../_declarations';
 
 /**
  * Индексирующий энумератор
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class IndexedEnumerator<T, U> implements IEnumerator<T, U> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker = true;

@@ -13,7 +13,7 @@ interface IEventsQueue<T> extends Array<T> {
  * Примесь, позволяющая сущности возможность узнавать об изменении состояния объекта через события.
  * @class Types/_entity/ObservableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class ObservableMixin {
     /**

@@ -29,7 +29,7 @@
  *
  * </pre>
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 const SbisFieldType = {
     boolean: 'Логическое',

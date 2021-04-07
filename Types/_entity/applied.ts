@@ -13,7 +13,7 @@
  * @includes ReactiveObject Types/_entity/applied/ReactiveObject
  * @includes Time Types/_entity/applied/Time
  * @includes TimeInterval Types/_entity/applied/TimeInterval
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
  /*
@@ -31,7 +31,7 @@
  * @includes ReactiveObject Types/_entity/applied/ReactiveObject
  * @includes Time Types/_entity/applied/Time
  * @includes TimeInterval Types/_entity/applied/TimeInterval
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as CancelablePromise, PromiseCanceledError} from './applied/CancelablePromise';

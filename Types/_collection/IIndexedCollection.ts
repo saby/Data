@@ -3,7 +3,7 @@ import { EntityMarker } from '../_declarations';
 /**
  * Интерфейс коллекции с поиском элементов по значению свойств.
  * @interface Types/_collection/IIndexedCollection
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @public
  */
 export default interface IIndexedCollection {

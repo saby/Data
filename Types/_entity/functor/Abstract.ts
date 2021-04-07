@@ -6,14 +6,14 @@ const $functors = protect('functors');
  * Абстрактный функтор.
  * @class Types/_entity/functor/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Abstract functor.
  * @class Types/_entity/functor/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Abstract<T = Function> {
     /**

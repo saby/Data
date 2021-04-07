@@ -102,14 +102,14 @@ interface IDeprecated {
  * Миксин обеспечивает возможность определения формата полей и доступа к данным через специальный уровень абстракции, называемый адаптером.
  * @mixin Types/_entity/FormattableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * This mixin provides an aspect of defining of fields format and accessing data via special abstraction layer named as adapter.
  * @mixin Types/_entity/FormattableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class FormattableMixin {
     '[Types/_entity/FormattableMixin]': EntityMarker;

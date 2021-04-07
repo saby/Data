@@ -18,7 +18,7 @@ interface IOptions extends IFieldOptions {
  * @class Types/_entity/format/DateTimeField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class DateTimeField extends Field {
     /**

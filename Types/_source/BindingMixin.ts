@@ -20,7 +20,7 @@ export interface IOptions {
  * Миксин, позволяющий задавать привязку CRUD к контракту источника.
  * @mixin Types/_source/BindingMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class BindingMixin {
     readonly '[Types/_source/BindingMixin]': EntityMarker;

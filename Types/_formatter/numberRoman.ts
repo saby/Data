@@ -19,7 +19,7 @@ const boundaries = {
  * @param num Арабское число
  * @returns  Римское число
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function numberRoman(num: number): string {
     let result = '';

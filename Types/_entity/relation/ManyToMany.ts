@@ -21,14 +21,14 @@ function isAlive(entity: any): boolean {
  * Посредник, который обеспечивает модель отношений «many-to-manyм».
  * @class Types/_entity/relation/ManyToMany
  * @mixes Types/_entity/DestroyableMixin
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Mediator which provides "many-to-many" relationship model.
  * @class Types/_entity/relation/ManyToMany
  * @mixes Types/_entity/DestroyableMixin
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class ManyToMany extends DestroyableMixin {
     /**

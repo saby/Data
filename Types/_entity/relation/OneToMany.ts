@@ -12,7 +12,7 @@ function isAlive(item: any): boolean {
  * Посредник, реализующий отношения "один ко многим".
  * @class Types/_entity/relation/OneToMany
  * @mixes Types/_entity/DestroyableMixin
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class OneToMany extends DestroyableMixin {
     /**

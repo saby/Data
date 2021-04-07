@@ -150,7 +150,7 @@ addToken('a', setAmPm, AM_PM_MATCHER);
  * @param str Дата в строковом представлении
  * @param format Формат даты
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -158,7 +158,7 @@ addToken('a', setAmPm, AM_PM_MATCHER);
  * @param str Date in a string representation
  * @param format Date format
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function date(str: string, format: string): Date {
     const validStr = String(str);

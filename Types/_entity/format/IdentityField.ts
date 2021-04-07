@@ -14,7 +14,7 @@ import {register} from '../../di';
  * @class Types/_entity/format/IdentityField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class IdentityField extends Field {
     /**

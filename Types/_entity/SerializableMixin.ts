@@ -124,7 +124,7 @@ export interface ISerializable<T = unknown> {
  * </pre>
  * @mixin Types/_entity/SerializableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class SerializableMixin<T = any> {
     /**

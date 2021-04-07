@@ -6,7 +6,7 @@ import {enumerator} from '../collection';
  * @class Types/_chain/Array
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Arraywise<T> extends Abstract<T, number> {
     protected _source: T[];

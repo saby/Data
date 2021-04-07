@@ -12,7 +12,7 @@ import Deferred = require('Core/Deferred');
  * @extends Types/_source/Remote
  * @implements Types/_source/IRpc
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Rpc extends Remote implements IRpc {
 

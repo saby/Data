@@ -9,7 +9,7 @@ import { EntityMarker } from '../_declarations';
  * Миксин, совместно с DataMixin дающий возможность обобщить логику вызова CRUD.
  * @mixin Types/_source/DataCrudMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class DataCrudMixin extends mixin<DataMixin>(Object) {
     readonly '[Types/_source/DataCrudMixin]': EntityMarker;

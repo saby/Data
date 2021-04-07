@@ -18,7 +18,7 @@ export interface IOptions {
  * @mixin Types/_source/DataMixin
  * @implements Types/_source/IData
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class DataMixin implements IData {
     readonly '[Types/_source/DataMixin]': EntityMarker;

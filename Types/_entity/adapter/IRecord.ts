@@ -6,7 +6,7 @@ import { EntityMarker } from '../../_declarations';
  * Интерфейс адаптера для записи таблицы данных
  * @interface Types/_entity/adapter/IRecord
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IRecord {
     readonly '[Types/_entity/adapter/IRecord]': EntityMarker;

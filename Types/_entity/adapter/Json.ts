@@ -11,7 +11,7 @@ import {register} from '../../di';
  * @class Types/_entity/adapter/Json
  * @extends Types/_entity/adapter/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Json extends Abstract {
     forTable(data?: object[]): JsonTable {

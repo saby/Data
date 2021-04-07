@@ -24,7 +24,7 @@
  * @includes SbisService Types/_source/SbisService
  * @includes sbisServicePositionExpression Types/_source/SbisService#positionExpression
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -52,7 +52,7 @@
  * @includes Rpc Types/_source/Rpc
  * @includes SbisService Types/_source/SbisService
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Base} from './_source/Base';

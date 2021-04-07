@@ -11,7 +11,7 @@ type ValueFunc = (item: any) => any;
  * @class Types/_chain/Grouped
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Grouped<T> extends Abstract<T> {
     /**
