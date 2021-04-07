@@ -16,7 +16,7 @@ import { EntityMarker } from '../../_declarations';
  * @class Types/_entity/adapter/RecordSet
  * @extends Types/_entity/adapter/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class RecordSet<TData extends CollectionRecordSet = CollectionRecordSet>
     extends Abstract

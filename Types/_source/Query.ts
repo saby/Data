@@ -561,7 +561,7 @@ export class Order extends OptionsToPropertyMixin {
  * @class Types/_source/Query
  * @implements Types/_entity/ICloneable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -585,7 +585,7 @@ export class Order extends OptionsToPropertyMixin {
  * @class Types/_source/Query
  * @implements Types/_entity/ICloneable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Query<T = unknown> implements ICloneable {
     /**

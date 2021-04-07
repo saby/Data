@@ -6,7 +6,7 @@ import ReversedEnumerator from './ReversedEnumerator';
  * @class Types/_chain/Reversed
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Reversed<T, U> extends Abstract<T, U> {
     // IEnumerable

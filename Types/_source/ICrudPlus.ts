@@ -6,7 +6,7 @@ import { EntityMarkerCompat as EntityMarker } from '../_declarations';
  * Интерфейс источника данных, поддерживающего расширенный контракт CRUD - операции merge, copy и move.
  * @interface Types/_source/ICrudPlus
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface ICrudPlus {
     readonly '[Types/_source/ICrudPlus]': EntityMarker;

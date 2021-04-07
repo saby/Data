@@ -14,7 +14,7 @@ import {register} from '../../di';
  * @class Types/_entity/format/StringField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class StringField extends Field {
 }

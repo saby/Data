@@ -12,7 +12,7 @@ const $clone = protect('clone');
  * @mixin Types/_entity/CloneableMixin
  * @implements Types/_entity/ICloneable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class CloneableMixin implements ICloneable {
     // region Types/_entity/ICloneable

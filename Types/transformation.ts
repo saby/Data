@@ -3,7 +3,7 @@
  * @library Types/transformation
  * @includes date Types/_transformation/date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library Types/transformation
  * @includes date Types/_transformation/date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 import * as date from './_transformation/date';

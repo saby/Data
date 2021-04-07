@@ -32,7 +32,7 @@ type Data = IHashMap<any>;
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @mixes Types/_entity/adapter/JsonFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class JsonTable extends mixin<
     DestroyableMixin,
@@ -64,7 +64,7 @@ export default class JsonTable extends mixin<
         super.addField(format, at);
 
         const name = format.getName();
-        const value = format.getDefaultValue();
+        const value = format.getDefaultValue(true);
         let item;
         for (let i = 0; i < this._data.length; i++) {
             item = this._data[i];

@@ -6,7 +6,7 @@ import SlicedEnumerator from './SlicedEnumerator';
  * @class Types/_chain/Sliced
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Sliced<T> extends Abstract<T> {
     /**

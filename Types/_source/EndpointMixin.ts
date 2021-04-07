@@ -10,7 +10,7 @@ export interface IOptions {
  * Миксин, позволяющий задавать конечную точку доступа.
  * @mixin Types/_source/EndpointMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class EndpointMixin {
     readonly '[Types/_source/EndpointMixin]': EntityMarker;

@@ -122,7 +122,7 @@ function isValidStrInterval(intervalStr: string): boolean {
  *
  * @class Types/_entity/applied/TimeInterval
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class TimeInterval {
     private _normIntervalObj: IIntervalObject;

@@ -5,7 +5,7 @@ import { EntityMarker } from '../../_declarations';
  * Интерфейс адаптера для работы с метаданными
  * @interface Types/_entity/adapter/IMetaData
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IMetaData {
     readonly '[Types/_entity/adapter/IMetaData]': EntityMarker;

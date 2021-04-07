@@ -112,7 +112,7 @@ function checkNullId<T extends Record>(value: T, keyProperty: string): void {
  * @mixes Types/_entity/FormattableMixin
  * @mixes Types/_entity/InstantiableMixin
  * @ignoreOptions items
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @public
  */
 class RecordSet<

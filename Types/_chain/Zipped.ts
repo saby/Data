@@ -6,7 +6,7 @@ import ZippedEnumerator from './ZippedEnumerator';
  * @class Types/_chain/Zipped
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Zipped<TResult, TSource1, TSource2> extends Abstract<TResult> {
     /**

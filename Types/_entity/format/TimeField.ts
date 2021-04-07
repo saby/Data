@@ -15,17 +15,18 @@ import {register} from '../../di';
  * @class Types/_entity/format/TimeField
  * @extends Types/_entity/format/Field
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class TimeField extends Field {
     protected _$defaultValue: string | Date;
 
     // region Public methods
 
-    getDefaultValue(): string {
-        if (this._$defaultValue instanceof Date) {
+    getDefaultValue(serialize: boolean = false): string | Date {
+        if (serialize && this._$defaultValue instanceof Date) {
             return dateToSql(this._$defaultValue, TO_SQL_MODE.TIME);
         }
+
         return this._$defaultValue;
     }
 

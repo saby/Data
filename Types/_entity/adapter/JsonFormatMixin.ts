@@ -5,7 +5,7 @@ import { IHashMap, EntityMarker } from '../../_declarations';
  * Миксин для работы с JSON-форматом в адаптерах
  * @mixin Types/_entity/adapter/JsonFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class JsonFormatMixin {
     '[Types/_entity/adapter/GenericFormatMixin]': EntityMarker;

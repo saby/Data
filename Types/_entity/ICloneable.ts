@@ -4,7 +4,7 @@ import { EntityMarker } from '../_declarations';
  * Интерфейс клонирования объекта.
  * @interface Types/_entity/ICloneable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface ICloneable {
     readonly '[Types/_entity/ICloneable]': EntityMarker;

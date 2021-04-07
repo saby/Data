@@ -6,7 +6,7 @@
  * @includes mixin Types/_util/mixin
  * @includes protect Types/_util/protect
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 // tslint:disable-next-line:ban-comma-operator

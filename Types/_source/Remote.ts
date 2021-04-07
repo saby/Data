@@ -229,7 +229,7 @@ function passMove(from: EntityKey, to: string, meta?: object): any {
  * @mixes Types/_source/EndpointMixin
  * @ignoreOptions passing passing.create passing.read passing.update passing.destroy passing.query passing.copy passing.merge passing.move
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Remote extends mixin<
     Base,

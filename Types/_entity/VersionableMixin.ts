@@ -15,7 +15,7 @@ export interface IOptions {
  * @mixin Types/_entity/VersionableMixin
  * @implements Types/_entity/IVersionable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class VersionableMixin implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': EntityMarker;

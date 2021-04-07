@@ -65,7 +65,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @public
  */
 
@@ -110,7 +110,7 @@ interface ISerializableState extends IDefaultSerializableState {
  * @implements Types/_source/ICrud
  * @implements Types/_source/ICrudPlus
  * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @public
  */
 export default class HierarchicalMemory extends mixin<

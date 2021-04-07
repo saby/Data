@@ -260,7 +260,7 @@ export function makeSerializable(data: object): void {
  * Миксин для работы с СБИС-форматом в адаптерах
  * @mixin Types/_entity/adapter/SbisFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class SbisFormatMixin {
     readonly '[Types/_entity/adapter/SbisFormatMixin]': EntityMarker;

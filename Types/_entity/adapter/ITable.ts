@@ -6,7 +6,7 @@ import { EntityMarker } from '../../_declarations';
  * Интерфейс адаптера для таблицы данных
  * @interface Types/_entity/adapter/ITable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface ITable {
     readonly '[Types/_entity/adapter/ITable]': EntityMarker;

@@ -12,7 +12,7 @@
  * @includes retrospect Types/_formatter/retrospect
  * @includes template Types/_formatter/template
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -29,7 +29,7 @@
  * @includes retrospect Types/_formatter/retrospect
  * @includes template Types/_formatter/template
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as cyrTranslit} from './_formatter/cyrTranslit';

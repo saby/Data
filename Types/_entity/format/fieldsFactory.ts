@@ -48,7 +48,7 @@ export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | I
  * @param declaration Декларативное описание.
  * @returns Формат поля.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -56,7 +56,7 @@ export type FormatDeclaration = IDeclaration[] | IHashMap<IShortDeclaration> | I
  * @param declaration Declarative definition
  * @returns Field format.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function<T extends Field = Field>(declaration: IDeclaration): T {
      /**

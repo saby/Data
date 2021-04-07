@@ -9,7 +9,7 @@ type KeyFunc = (key: any) => string;
  * @class Types/_chain/Counted
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Counted<T> extends Abstract<T> {
     /**

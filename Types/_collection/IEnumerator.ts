@@ -2,14 +2,14 @@
  * Интерфейс объектов, поддерживающих простые итерации один за другим.
  * @interface Types/_collection/IEnumerator
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Interface of object which supports simple iteration one by one.
  * @interface Types/_collection/IEnumerator
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 import { EnumeratorIndex } from './IEnumerable';
 import { EntityMarkerCompat as EntityMarker } from '../_declarations';

@@ -7,7 +7,7 @@ import {IHashMap} from '../_declarations';
  * @class Types/_chain/Object
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Objectwise<T> extends Abstract<T, string> {
     protected _source: IHashMap<T>;

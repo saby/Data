@@ -3,7 +3,7 @@
  * @library Types/parser
  * @includes date Types/_parser/date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library Types/parser
  * @includes date Types/_parser/date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as date} from './_parser/date';

@@ -25,7 +25,7 @@ interface IProduceOptions {
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
  /*
@@ -38,7 +38,7 @@ interface IProduceOptions {
  * @mixes Types/_entity/SerializableMixin
  * @mixes Types/_entity/CloneableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export default class Enum<T> extends mixin<

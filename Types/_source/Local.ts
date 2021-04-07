@@ -77,7 +77,7 @@ type FilterFunction = (item: adapter.IRecord, query: object) => boolean;
  * @implements Types/_source/ICrudPlus
  * @mixes Types/_source/DataCrudMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Local<TData = unknown> extends mixin<
     Base,

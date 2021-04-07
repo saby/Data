@@ -13,7 +13,7 @@ type ResolveFunc<T> = (index: number) => T;
  * @implements Types/_collection/IEnumerator
  * @mixes Types/_collection/IndexedEnumeratorMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Arraywise<T> extends mixin<
     IndexedEnumeratorMixin<any>

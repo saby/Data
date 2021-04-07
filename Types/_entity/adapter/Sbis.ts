@@ -13,7 +13,7 @@ import {register} from '../../di';
  * @class Types/_entity/adapter/Sbis
  * @extends Types/_entity/adapter/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Sbis extends Abstract {
     forTable(data?: ITableFormat): SbisTable {

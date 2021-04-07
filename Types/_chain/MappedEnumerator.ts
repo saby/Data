@@ -6,7 +6,7 @@ type MapFunc = (item: any, index: number) => any;
 
 /**
  * Преобразующующий энумератор
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class MappedEnumerator<T> implements IEnumerator<T> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker = true;

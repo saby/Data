@@ -6,7 +6,7 @@ import List from '../List';
  * @class Types/_collection/factory/list
  * @param items Коллекция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function list<T>(items: IEnumerable<T>): List<T> {
     if (!items || !(items['[Types/_collection/IEnumerable]'])) {

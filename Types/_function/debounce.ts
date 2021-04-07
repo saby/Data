@@ -56,7 +56,7 @@ interface IStates {
  * @param first Выполнить первый вызов без задержки
  * @returns Результирующая функция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function debounce(
     original: Function,

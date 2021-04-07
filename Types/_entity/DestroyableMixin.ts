@@ -12,7 +12,7 @@ function dontTouchDeads(): void {
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
  * @mixin Types/_entity/DestroyableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class DestroyableMixin {
     /**

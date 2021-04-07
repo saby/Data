@@ -2,14 +2,14 @@
  * Тип GUID.
  * @class Types/_entity/applied/Guid
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Guid type
  * @class Types/_entity/applied/Guid
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Guid {
     /**

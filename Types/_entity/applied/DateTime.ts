@@ -45,7 +45,7 @@ function normalizeArguments(
  * @class Types/_entity/applied/DateTime
  * @extends Date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -53,7 +53,7 @@ function normalizeArguments(
  * @class Types/_entity/applied/DateTime
  * @extends Date
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class DateTime extends mixin(SerializableMixin) {
     protected get _proto(): object {

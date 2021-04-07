@@ -34,7 +34,7 @@ import {register} from '../../di';
  * @class Types/_entity/format/EnumField
  * @extends Types/_entity/format/DictionaryField
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class EnumField extends DictionaryField {
 }

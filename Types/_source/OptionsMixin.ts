@@ -13,7 +13,7 @@ export interface IOptions {
  * Миксин, позволяющий задавать опциональные настройки источника данных.
  * @mixin Types/_source/OptionsMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class OptionsMixin {
     readonly '[Types/_source/OptionsMixin]': EntityMarker;

@@ -3,7 +3,7 @@ import {IHashMap} from './_declarations';
 /**
  * Dependency Injection через Service Locator. Работает через алиасы.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  *
  */
 

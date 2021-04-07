@@ -7,7 +7,7 @@ import SortedEnumerator from './SortedEnumerator';
  * @class Types/_chain/Sorted
  * @extends Types/_chain/Abstract
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Sorted<T, U> extends Abstract<T, U> {
     /**

@@ -10,7 +10,7 @@ export interface IEndpoint {
  * Интерфейс источника данных, поддерживающиего абстракцию взаимодействия через провайдера удаленного доступа.
  * @interface Types/_source/IProvider
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IProvider {
     readonly '[Types/_source/IProvider]': EntityMarker;

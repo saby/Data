@@ -72,7 +72,7 @@ export interface IOptions<T> extends IReadWriteMixinOptions {
  * @mixes Types/_entity/ReadWriteMixin
  * @mixes Types/_entity/VersionableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class List<T> extends mixin<
     DestroyableMixin,

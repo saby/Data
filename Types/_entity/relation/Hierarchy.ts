@@ -58,7 +58,7 @@ import {mixin} from '../../util';
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Hierarchy extends mixin<
     DestroyableMixin, OptionsToPropertyMixin

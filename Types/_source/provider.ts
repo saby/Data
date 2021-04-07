@@ -5,7 +5,7 @@
  * @includes IChannel Types/_source/provider/IChannel
  * @includes INotify Types/_source/provider/INotify
  * @includes SbisBusinessLogic Types/_source/provider/SbisBusinessLogic
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -15,7 +15,7 @@
  * @includes IChannel Types/_source/provider/IChannel
  * @includes INotify Types/_source/provider/INotify
  * @includes SbisBusinessLogic Types/_source/provider/SbisBusinessLogic
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {IEndpoint as ISbisBusinessLogicEndPoint} from "./IProvider";

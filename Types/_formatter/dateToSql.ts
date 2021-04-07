@@ -22,7 +22,7 @@ const UNIX_EPOCH_START = new Date(0);
  * @param date Дата для сериализации.
  * @param mode Режим сериализации.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -30,7 +30,7 @@ const UNIX_EPOCH_START = new Date(0);
  * @param date Date to serialize
  * @param mode Serialization mode
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function dateToSQL(date: Date, mode: SerializationMode = MODE.DATETIME): string {
     let format = FORMAT[mode];

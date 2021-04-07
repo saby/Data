@@ -97,7 +97,7 @@ function resolve(expression: string, scope: unknown): unknown {
  * @param scope Данные для подстановки
  * @returns Отформатированная строка
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function template(str: string, scope: object): string {
     return compile(String(str))

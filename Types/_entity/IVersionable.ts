@@ -5,7 +5,7 @@ import { EntityMarker } from '../_declarations';
  * Позволяет быстро проверить изменилось ли что либо в объекте.
  * @interface Types/_entity/IVersionable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default interface IVersionable {
     readonly '[Types/_entity/IVersionable]': EntityMarker;

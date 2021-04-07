@@ -253,7 +253,7 @@ function getValueType(value: any): string | IShortDeclaration {
  * @ignoreOptions owner cloneChanged
  * @ignoreMethods detach
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Record<T = any> extends mixin<
     DestroyableMixin,

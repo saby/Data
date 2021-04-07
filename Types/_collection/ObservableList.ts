@@ -40,7 +40,7 @@ const arraySlice = Array.prototype.slice;
  * @mixes Types/_entity/ObservableMixin
  * @mixes Types/_collection/EventRaisingMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 class ObservableList<T> extends List<T> implements relation.IReceiver {
     /**

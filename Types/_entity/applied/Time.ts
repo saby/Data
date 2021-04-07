@@ -5,14 +5,14 @@ import {register} from '../../di';
  * Тип "время".
  * @class Types/_entity/applied/Time
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
  * Time type
  * @class Types/_entity/applied/Time
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Time extends DateTime {
     protected get _proto(): object {

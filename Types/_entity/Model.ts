@@ -153,7 +153,7 @@ const isCalculating = protect('isCalculating');
  * @mixes Types/_entity/InstantiableMixin
  * @public
  * @ignoreMethods getDefault
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 class Model<T = any> extends Record<T> implements IStateful {
    /**

@@ -9,7 +9,7 @@ const DeferredCanceledError = global.DeferredCanceledError;
  * Миксин, позволяющий загружать некоторые зависимости лениво.
  * @mixin Types/_source/LazyMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class LazyMixin {
     readonly '[Types/_source/LazyMixin]': EntityMarker;

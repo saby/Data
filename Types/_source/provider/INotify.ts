@@ -5,7 +5,7 @@ import { EntityMarker } from '../../_declarations';
  * Интерфейс провайдера c доступом к серверным событиям
  * @interface Types/_source/provider/INotify
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @example
  * <pre>
  *     import {DataSet} from 'Types/source';

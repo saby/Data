@@ -24,7 +24,7 @@ export type CollectionChangeHandler<T> = (
  * Позволяет узнавать об изменения, происходящих с элементами коллекции.
  * @interface Types/_collection/IObservable
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class IObservable {
     '[Types/_collection/IObservable]': EntityMarker;

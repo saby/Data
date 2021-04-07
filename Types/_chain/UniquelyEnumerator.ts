@@ -6,7 +6,7 @@ type ExtractFunc = (item: any, index: string|number) => string|number;
 
 /**
  * Энумератор уникальных элементов
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class UniquelyEnumerator<T> implements IEnumerator<T> {
     readonly '[Types/_collection/IEnumerator]': EntityMarker = true;

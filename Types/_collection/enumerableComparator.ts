@@ -332,7 +332,7 @@ function applyGroupChanges(groupName: string, changes: any, session: ISession): 
 /**
  * Позволяет сравнить две коллекции до и после набора изменений
  * @class Types/_collection/enumerableComparator
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 const enumerableComparator = {
     '[Types/_collection/enumerableComparator]': true,

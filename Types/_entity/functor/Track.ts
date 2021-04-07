@@ -22,7 +22,7 @@ export interface ITrack {
  * </pre>
  * @class Types/_entity/functor/Track
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -43,7 +43,7 @@ export interface ITrack {
  * </pre>
  * @class Types/_entity/functor/Track
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class Track<T> extends Abstract<T> implements ITrack {
     readonly propertyName: string;

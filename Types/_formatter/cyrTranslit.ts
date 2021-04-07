@@ -73,7 +73,7 @@ const charMap = {
  * @param str Исходная строка для преобразования.
  * @returns Транслитерированная строка.
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default function cyrTranslit(str: string): string {
     const result = [];

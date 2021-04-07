@@ -3,7 +3,7 @@
  * @library Types/shim
  * @includes Map Types/_shim/Map
  * @includes Set Types/_shim/Set
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  * @library Types/shim
  * @includes Map Types/_shim/Map
  * @includes Set Types/_shim/Set
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 
 export {default as Map} from './_shim/Map';

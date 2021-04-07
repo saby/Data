@@ -46,6 +46,6 @@ memoize.prototype = {_moduleName: 'Types/_function/memoize'};
  * @param cachedFuncName Имя метода в экземпляре объекта, которому он принадлежит.
  * @returns Результирующая функция
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default memoize;

@@ -63,7 +63,7 @@ function defineProperty(instance: object, proto: object, name: string, key: stri
  * </pre>
  * @class Types/_entity/OptionsToPropertyMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class OptionsToPropertyMixin {
     /**

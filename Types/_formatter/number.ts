@@ -319,7 +319,7 @@ function getNumberFormat(options: IFormat): IFormat {
  * @param x Число
  * @param options Опции
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @spec[tc39/ecma402/master/spec/numberformat.html]
  * @clause[sec-formatnumber]
  */
@@ -365,7 +365,7 @@ function getNumberFormat(options: IFormat): IFormat {
  * @param x Number
  * @param options Options
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @spec[tc39/ecma402/master/spec/numberformat.html]
  * @clause[sec-formatnumber]
  */

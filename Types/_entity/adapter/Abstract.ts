@@ -14,7 +14,7 @@ import { EntityMarker } from 'Types/_declarations';
  * @implements Types/_entity/adapter/IAdapter
  * @mixes Types/_entity/SerializableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default abstract class Abstract extends mixin<
     DestroyableMixin,

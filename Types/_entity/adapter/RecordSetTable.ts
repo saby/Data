@@ -37,7 +37,7 @@ interface IRecordSetOptions {
  * @implements Types/_entity/adapter/ITable
  * @mixes Types/_entity/adapter/GenericFormatMixin
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  */
 export default class RecordSetTable extends mixin<
     DestroyableMixin,

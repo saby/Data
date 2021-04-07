@@ -3,7 +3,7 @@
  * Представляет собой обертку, хранящую оригинальное значение.
  * @class Types/_entity/applied/PrimaryKey
  * @public
- * @author Мальцев А.А.
+ * @author Кудрявцев И.С.
  * @example
  * <pre>
  *     import {applied} from 'Types/entity';
