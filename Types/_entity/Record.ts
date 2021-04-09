@@ -68,16 +68,12 @@ const FIELD_RELATION_PREFIX = 'field.';
 
 /**
  * Режим кэширования
+ * @typedef {String} CacheMode
+ * @variant Objects Режим кэширования: только объекты
+ * @variant All Режим кэширования: все значения
  */
 enum CacheMode {
-    /**
-     * Режим кэширования: только объекты
-     */
     Objects = 'objects',
-
-    /**
-     * Режим кэширования: все значения
-     */
     All = 'all'
 }
 
