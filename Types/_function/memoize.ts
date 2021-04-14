@@ -32,11 +32,16 @@ class Memoize {
             }
         }
     }
+
+    getStorage(): Object{
+        return storage;
+    }
 }
 
 const instance = new Memoize();
 const memoize = instance.memoize.bind(instance);
 memoize.clear = instance.clear.bind(instance);
+memoize.getStorage = instance.getStorage;
 memoize.prototype = {_moduleName: 'Types/_function/memoize'};
 
 /**
