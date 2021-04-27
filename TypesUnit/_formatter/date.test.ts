@@ -270,7 +270,7 @@ describe('Types/_formatter/date', () => {
                 FULL_DATE_SHORT_MONTH_FULL_YEAR: 'fullDateShortMonthFullYearFormat',
                 FULL_HALF_YEAR: 'fullHalfYearFormat',
                 FULL_MONTH: 'fullMonthFormat',
-                FULL_QUATER: 'fullQuarterFormat',
+                FULL_QUARTER: 'fullQuarterFormat',
                 FULL_TIME: 'fullTimeFormat',
                 SHORT_DATE_DOW: 'shortDateDayOfWeekFormat',
                 SHORT_DATE: 'shortDateFormat',
@@ -278,7 +278,7 @@ describe('Types/_formatter/date', () => {
                 SHORT_DATE_SHORT_MONTH: 'shortDateShortMonthFormat',
                 SHORT_HALF_YEAR: 'shortHalfYearFormat',
                 SHORT_MONTH: 'shortMonthFormat',
-                SHORT_QUATER: 'shortQuarterFormat',
+                SHORT_QUARTER: 'shortQuarterFormat',
                 SHORT_TIME: 'shortTimeFormat'
             };
 
@@ -305,7 +305,7 @@ describe('Types/_formatter/date', () => {
                 DIGITAL_MONTH_FULL_YEAR: 'MM.YYYY',
                 DURATION_FULL_TIME: 'HHH:mm:ss',
                 DURATION_SHORT_TIME: 'HHH:mm',
-                FULL_DATETIME: 'DD MMM\'YY HH:mm',
+                FULL_DATETIME: 'D MMM\'YY HH:mm',
                 FULL_TIME_FRACTION: 'HH:mm:ss.SSS',
                 FULL_DATE_FULL_TIME: 'DD.MM.YY HH:mm:ss',
                 FULL_DATE_FULL_TIME_FRACTION: 'DD.MM.YY HH:mm:ss.SSS',
@@ -319,7 +319,7 @@ describe('Types/_formatter/date', () => {
                 SHORT_DATE_SHORT_TIME: 'DD.MM HH:mm',
                 SHORT_DATE_FULL_TIME: 'DD.MM HH:mm:ss',
                 SHORT_DATE_FULL_TIME_FRACTION: 'DD.MM HH:mm:ss.SSS',
-                SHORT_DATETIME: 'DD MMM HH:mm'
+                SHORT_DATETIME: 'D MMM HH:mm'
             };
 
             Object.keys(map).forEach((name) => {

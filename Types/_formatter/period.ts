@@ -1,8 +1,25 @@
 import dateFormat from './date';
+import * as configurations from './periodConfiguration';
+import detectPeriodType from './detectPeriodType';
 
-/**
- * Тип периода
- */
+const SEPARATOR = '-';
+const defaultOptions = {
+    configuration: 'Default',
+    short: false,
+    useToday: false
+};
+
+
+export interface IPeriodOptions {
+    configuration?: string;
+    type?: string;
+    undefinedPeriod?: string;
+    useToday?: boolean;
+    short?: boolean;
+}
+
+// Compatibility layer region start
+// TODO Для поддержка староой сигнатуры period. Удалить в 21.4000
 export enum Type {
     /**
      * Автоматически определить подходящий тип
@@ -60,12 +77,9 @@ export enum Type {
     Year
 }
 
-const SEPARATOR = '-';
-const OPEN_PERIOD = '...';
-
 function generalPeriod(start: Date, finish: Date, format: string): string {
     if (isOpenPeriod(start, finish)) {
-        return openPeriod(start, finish, format);
+        return openPeriod(start, finish, configurations.Default.full);
     }
 
     const startLabel = dateFormat(start, format);
@@ -82,7 +96,7 @@ function digitalPeriod(start: Date, finish: Date): string {
     const format = dateFormat.FULL_DATE;
 
     if (isOpenPeriod(start, finish)) {
-        return openPeriod(start, finish, format);
+        return openPeriod(start, finish, configurations.Default.full);
     }
 
     return `${dateFormat(start, format)}${SEPARATOR}${dateFormat(finish, format)}`;
@@ -92,13 +106,13 @@ function datesPeriod(start: Date, finish: Date, type: Type): string {
     const format = type === Type.FullDate ? dateFormat.FULL_DATE_FULL_MONTH : dateFormat.FULL_DATE_SHORT_MONTH;
 
     if (isOpenPeriod(start, finish)) {
-        return openPeriod(start, finish, format);
+        return openPeriod(start, finish, configurations.Default.full);
     }
 
     const onlyMonthFormat = type === Type.FullDate
         ? dateFormat.FULL_DATE_FULL_MONTH
         : dateFormat.SHORT_DATE_SHORT_MONTH;
-    const onlyDateFormat = type === Type.FullDate ? dateFormat.FULL_DATE_FULL_MONTH : 'DD';
+    const onlyDateFormat = type === Type.FullDate ? dateFormat.FULL_DATE_FULL_MONTH : 'D';
 
     const startDate = start.getDate();
     const startMonth = start.getMonth();
@@ -127,7 +141,7 @@ function monthsPeriod(start: Date, finish: Date, type: Type): string {
     const format = type === Type.FullMonth ? dateFormat.FULL_MONTH : dateFormat.SHORT_MONTH;
 
     if (isOpenPeriod(start, finish)) {
-        return openPeriod(start, finish, format);
+        return openPeriod(start, finish, configurations.Default.full);
     }
 
     const onlyMonthFormat = type === Type.FullMonth ? 'MMMM' : 'MMM';
@@ -150,7 +164,7 @@ function quartersPeriod(start: Date, finish: Date, type: Type): string {
     return generalPeriod(
         start,
         finish,
-        type === Type.FullQuarter ? dateFormat.FULL_QUATER : dateFormat.SHORT_QUATER
+        type === Type.FullQuarter ? dateFormat.FULL_QUARTER : dateFormat.SHORT_QUARTER
     );
 }
 
@@ -166,49 +180,11 @@ function yearsPeriod(start: Date, finish: Date): string {
     return generalPeriod(start, finish, 'YYYY');
 }
 
-function openPeriod(start: Date, finish: Date, format: string): string {
-    if (!start) {
-        return `${OPEN_PERIOD}${SEPARATOR}${dateFormat(finish, format)}`;
-    }
-
-    if (!finish) {
-        return `${dateFormat(start, format)}${SEPARATOR}${OPEN_PERIOD}`;
-    }
-}
-
 function isOpenPeriod(start: Date, finish: Date): boolean {
     return !(start instanceof Date && finish instanceof Date);
 }
 
-/**
- * Преобразует временной период в строку указанного формата {@link http://axure.tensor.ru/standarts/v7/форматы_дат_и_времени_01_2.html по стандарту}.
- * @example
- * Выведем период в формате короткой даты:
- * <pre>
- *     import {period, periodType} from 'Types/formatter';
- *     const start = new Date(2018, 4, 7);
- *     const finish = new Date(2019, 11, 3);
- *     console.log(period(start, finish, periodType.ShortDate)); // 7 май'18-3 дек'19
- * </pre>
- * @param start Дата начала периода.
- * @param finish Дата окончания периода.
- * @param type Тип периода.
- * @returns Период в в текстовом виде.
- * @public
- * @author Кудрявцев И.С.
- */
-export default function period(start: Date, finish: Date, type: Type = Type.Auto): string {
-    // Check arguments
-    if (!(start instanceof Date || finish instanceof Date)) {
-        throw new TypeError('Arguments "start" and "finish" should be an instance of Date');
-    }
-
-    // Auto detection
-    if (type === Type.Auto) {
-        throw new TypeError('Automatic period format is under construction');
-    }
-
-    // Digital period
+function buildCompatibleMode(start: Date, finish: Date, type: Type): string {
     if (type === Type.Digital) {
         return digitalPeriod(start, finish);
     }
@@ -235,4 +211,76 @@ export default function period(start: Date, finish: Date, type: Type = Type.Auto
 
     // Years period
     return yearsPeriod(start, finish);
+}
+// Compatibility layer region end
+
+function openPeriod(start: Date, finish: Date, formats: configurations.IPeriodFormats): string {
+    if (!start) {
+        const format = formats.openStartPeriod.split(' ')[1];
+
+        return formats.openStartPeriod.replace(format, dateFormat(finish, dateFormat[format]));
+    }
+
+    if (!finish) {
+        const format = formats.openFinishPeriod.split(' ')[1];
+
+        return formats.openFinishPeriod.replace(format, dateFormat(start, dateFormat[format]));
+    }
+}
+
+function getFormats(options: IPeriodOptions): configurations.IPeriodFormats {
+    const config = configurations[options.configuration || 'Default'];
+
+    return options.short ? config.short : config.full;
+}
+
+function build(start: Date, finish: Date, options: IPeriodOptions): string {
+    const formats = getFormats(options);
+
+    if (!(start || finish)) {
+        return options.undefinedPeriod || formats.allPeriod;
+    }
+
+    if (!(start && finish)) {
+        return openPeriod(start, finish, formats);
+    }
+
+    const type = options.type || detectPeriodType(start, finish);
+    const [startPeriod, finisPeriod] = formats[type];
+
+    if (type === 'oneDay' && options.useToday) {
+        return formats.today;
+    }
+
+    if (!finisPeriod) {
+        return dateFormat(start, dateFormat[startPeriod]);
+    }
+
+    return `${dateFormat(start, dateFormat[startPeriod])}${SEPARATOR}${dateFormat(finish, dateFormat[finisPeriod])}`;
+}
+
+/**
+ * Преобразует временной период в строку указанного формата {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html по стандарту}.
+ * @example
+ * Выведем период в формате короткой даты:
+ * <pre>
+ *     import {period, periodType} from 'Types/formatter';
+ *     const start = new Date(2018, 4, 7);
+ *     const finish = new Date(2019, 11, 3);
+ *     console.log(period(start, finish, periodType.ShortDate)); // 7 май'18-3 дек'19
+ * </pre>
+ * @param start Дата начала периода.
+ * @param finish Дата окончания периода.
+ * @param options Настройки для отображения периода.
+ * @returns Период в текстовом виде.
+ * @public
+ * @author Кудрявцев И.С.
+ */
+export default function period(start: Date, finish: Date, options: Type | IPeriodOptions = defaultOptions): string {
+    // TODO Для поддержка староой сигнатуры period. Удалить в 21.4000
+    if (typeof options === 'number') {
+        return buildCompatibleMode(start, finish, options);
+    }
+
+    return build(start, finish, options);
 }

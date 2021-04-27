@@ -25,7 +25,7 @@ const tokens = {};
 
 const getConfig = (): ILocale => {
     return controller.currentLocaleConfig;
-}
+};
 
 /**
  * Добавляет нули в начало числа.
@@ -343,6 +343,7 @@ addToken('YYhr', getHalfYearRomanMin);
 addToken('YYYY', 'getFullYear');
 addToken('YYYYhr', getHalfYearRomanLong);
 addToken('Q', getQuarter);
+addToken('Qr', getQuarterRoman);
 addToken('QQr', getQuarterRomanMin);
 addToken('QQQr', getQuarterRomanShort);
 addToken('QQQQr', getQuarterRomanLong);
@@ -366,7 +367,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
  *     <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
  *     <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
- *     <li>FULL_QUATER: полный квартал и год, "QQQQr 'YY" для "Ru-ru";</li>
+ *     <li>FULL_QUARTER: полный квартал и год, "QQQQr 'YY" для "Ru-ru";</li>
  *     <li>FULL_TIME: полное время, "HH:mm:ss" для "Ru-ru";</li>
  *     <li>SHORT_DATE: краткая дата, "DD.MM" для "Ru-ru";</li>
  *     <li>SHORT_DATE_DOW: краткая дата с днем недели, "DD MMMMlo, ddddl" для "Ru-ru";</li>
@@ -375,7 +376,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
  *     <li>SHORT_DATETIME: краткий формат даты и времени, "DD MMMl HH:mm" для "Ru-ru";</li>
  *     <li>SHORT_HALF_YEAR: краткое полугодие, "YYhr 'YY" для "Ru-ru";</li>
  *     <li>SHORT_MONTH: краткое название месяца и год, "MMM'YY" для "Ru-ru";</li>
- *     <li>SHORT_QUATER: краткий квартал и год, "QQr 'YY" для "Ru-ru";</li>
+ *     <li>SHORT_QUARTER: краткий квартал и год, "QQr 'YY" для "Ru-ru";</li>
  *     <li>SHORT_TIME: краткое время, "HH:mm" для "Ru-ru".</li>
  * </ul>
  *
@@ -521,6 +522,9 @@ class Constants {
     get FULL_DATE_DOW(): string {
         return getConfig().date.fullDateDayOfWeekFormat;
     }
+    get DAY(): string {
+        return 'D';
+    }
     get FULL_DATE(): string {
         return getConfig().date.fullDateFormat;
     }
@@ -566,8 +570,17 @@ class Constants {
     get FULL_MONTH(): string {
          return getConfig().date.fullMonthFormat;
     }
-    get FULL_QUATER(): string {
+    get MONTH(): string {
+        return 'MMMM';
+    }
+    get SHR_MONTH(): string {
+        return 'MMM';
+    }
+    get FULL_QUARTER(): string {
          return getConfig().date.fullQuarterFormat;
+    }
+    get QUARTER(): string {
+        return 'Qr';
     }
     get FULL_YEAR(): string {
         return 'YYYY';
@@ -614,7 +627,7 @@ class Constants {
     get SHORT_MONTH(): string {
          return getConfig().date.shortMonthFormat;
     }
-    get SHORT_QUATER(): string {
+    get SHORT_QUARTER(): string {
          return getConfig().date.shortQuarterFormat;
     }
     get SHORT_TIME(): string {
