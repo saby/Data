@@ -274,7 +274,7 @@ function build(start: Date, finish: Date, options: IPeriodParams): string {
     const type = options.type || detectPeriodType(start, finish);
     const [startPeriod, finisPeriod] = formats[type];
 
-    if (type === 'oneDay' && options.useToday) {
+    if (type === PeriodType.today || (type === PeriodType.oneDay && options.useToday)) {
         return formats.today;
     }
 
