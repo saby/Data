@@ -9,6 +9,7 @@
  * @includes numberWords Types/_formatter/numberWords
  * @includes number Types/_formatter/number
  * @includes period Types/_formatter/period
+ * @includes PeriodTypes Types/_formatter/period
  * @includes retrospect Types/_formatter/retrospect
  * @includes template Types/_formatter/template
  * @public
@@ -45,6 +46,12 @@ export {default as jsonReviver, getReviverWithStorage as getJsonReviverWithStora
 export {default as numberRoman} from './_formatter/numberRoman';
 export {default as numberWords} from './_formatter/numberWords';
 export {default as number} from './_formatter/number';
-export {default as period, Type as PeriodType} from './_formatter/period';
+export {default as period, Type as PeriodType, IPeriodParams} from './_formatter/period';
+export {
+    default as IConfigurationPeriod,
+    PeriodType as PeriodTypes,
+    IPeriodFormats,
+    ConfigurationType as PeriodConfigurationType
+} from './_formatter/_period/IConfiguration';
 export {default as retrospect, Type as RetrospectType} from './_formatter/retrospect';
 export {default as template} from './_formatter/template';
