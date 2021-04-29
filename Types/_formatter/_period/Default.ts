@@ -1,8 +1,8 @@
-import { IPeriodFormats } from './IConfiguration';
+import IConfiguration from './IConfiguration';
 import 'i18n!controller?';
 import { controller } from 'I18n/i18n';
 
-export class DefaultFull {
+export class DefaultFullFormats {
     static oneDay: string[] = ['FULL_DATE_FULL_MONTH'];
     static daysOneMonth: string[] = ['FULL_DATE', 'FULL_DATE'];
     static daysMonthsOneYear: string[] = ['FULL_DATE', 'FULL_DATE'];
@@ -43,7 +43,7 @@ export class DefaultFull {
     }
 }
 
-export class DefaultShort {
+export class DefaultShortFormats {
     static oneDay: string[] = ['FULL_DATE_SHORT_MONTH'];
     static daysOneMonth: string[] = ['FULL_DATE', 'FULL_DATE'];
     static daysMonthsOneYear: string[] = ['FULL_DATE', 'FULL_DATE'];
@@ -84,8 +84,10 @@ export class DefaultShort {
     }
 }
 
-export default class Default {
-    static full: IPeriodFormats = DefaultFull;
+const Default: IConfiguration = {
+    full: DefaultFullFormats,
+    short: DefaultShortFormats
+};
 
-    static short: IPeriodFormats = DefaultShort;
-}
+export default Default;
+

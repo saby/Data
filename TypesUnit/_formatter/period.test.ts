@@ -1,13 +1,14 @@
 import {assert} from 'chai';
 import {stub} from 'sinon';
-import period, {Type} from 'Types/_formatter/period';
+import period, { Type } from 'Types/_formatter/period';
+import { PeriodType, ConfigurationType } from 'Types/_formatter/_period/IConfiguration';
 import {controller} from 'I18n/i18n';
 import enUS from 'I18n/locales/en-US';
 
 type testingTupleComp = [Date, Date, Type, string];
-interface ITestingTuple {
-  [key: string]: [Date, Date, string];
-}
+type ITestingTuple = {
+    [name in PeriodType]: [Date, Date, string];
+};
 
 describe('Types/_formatter/period', () => {
     const startYear = 2021;
@@ -147,12 +148,20 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'I half year\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'I half year\'21-I half year\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 January\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 January\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
-                    assert.strictEqual(period(test[0], test[1], { type }), test[2]);
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
+                    const options = {
+                        type: key as PeriodType
+                    };
+
+                    assert.strictEqual(period(test[0], test[1], options), test[2]);
                 });
             }
         });
@@ -172,12 +181,21 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'I hy\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'I hy\'21-I hy\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 Jan\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 Jan\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
-                    assert.strictEqual(period(test[0], test[1], { short: true, type }), test[2]);
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
+                    const options = {
+                        type: key as PeriodType,
+                        short: true
+                    };
+
+                    assert.strictEqual(period(test[0], test[1], options), test[2]);
                 });
             }
         });
@@ -199,14 +217,18 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'January-June\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'January\'21-June\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 January\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 January\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
                     const options = {
-                        configuration: 'Text',
-                        type
+                        configuration: ConfigurationType.Text,
+                        type: key as PeriodType
                     };
 
                     assert.strictEqual(period(test[0], test[1], options), test[2]);
@@ -229,14 +251,18 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'Jan-Jun\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'Jan\'21-Jun\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 Jan\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 Jan\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
                     const options = {
-                        configuration: 'Text',
-                        type,
+                        configuration: ConfigurationType.Text,
+                        type: key as PeriodType,
                         short: true
                     };
 
@@ -262,14 +288,18 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'January-June\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'January\'21-June\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 January\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 January\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
                     const options = {
-                        configuration: 'Accounting',
-                        type
+                        configuration: ConfigurationType.Accounting,
+                        type: key as PeriodType
                     };
 
                     assert.strictEqual(period(test[0], test[1], options), test[2]);
@@ -292,14 +322,18 @@ describe('Types/_formatter/period', () => {
                 oneHalfYear: [start, finishOfHalfYear, 'Jan-Jun\'21'],
                 halfYearsYears: [start, finishOfHalfYearAnotherYear, 'Jan\'21-Jun\'22'],
                 oneYear: [start, start, '2021'],
-                years: [start, finishAnotherYear, '2021-2022']
+                years: [start, finishAnotherYear, '2021-2022'],
+                openStartPeriod: [null, finishAnotherDay, 'to 5 Jan\'21'],
+                openFinishPeriod: [finishAnotherDay, null, 'from 5 Jan\'21'],
+                allPeriod: [null, null, 'Whole period'],
+                today: [start, start, 'Today']
             };
 
-            for (const [type, test] of Object.entries(testCase)) {
-                it (`Type - ${type}`, () => {
+            for (const [key, test] of Object.entries(testCase)) {
+                it (`Type - ${key}`, () => {
                     const options = {
-                        configuration: 'Accounting',
-                        type,
+                        configuration: ConfigurationType.Accounting,
+                        type: key as PeriodType,
                         short: true
                     };
 

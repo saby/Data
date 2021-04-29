@@ -1,7 +1,7 @@
-import {DefaultFull, DefaultShort} from './Default';
-import { IPeriodFormats } from './IConfiguration';
+import {DefaultFullFormats, DefaultShortFormats} from './Default';
+import IConfiguration from './IConfiguration';
 
-class TextFull extends DefaultFull {
+class TextFullFormats extends DefaultFullFormats {
     static oneDay: string[] = ['FULL_DATE_FULL_MONTH'];
     static daysOneMonth: string[] = ['DAY', 'FULL_DATE_FULL_MONTH'];
     static daysMonthsOneYear: string[] = ['SHORT_DATE_FULL_MONTH', 'FULL_DATE_FULL_MONTH'];
@@ -15,7 +15,7 @@ class TextFull extends DefaultFull {
     static halfYearsYears: string[] = ['FULL_MONTH', 'FULL_MONTH'];
 }
 
-class TextShort extends DefaultShort {
+class TextShortFormats extends DefaultShortFormats {
     static oneDay: string[] = ['FULL_DATE_SHORT_MONTH'];
     static daysOneMonth: string[] = ['DAY', 'FULL_DATE_SHORT_MONTH'];
     static daysMonthsOneYear: string[] = ['SHORT_DATE_SHORT_MONTH', 'FULL_DATE_SHORT_MONTH'];
@@ -29,8 +29,9 @@ class TextShort extends DefaultShort {
     static halfYearsYears: string[] = ['SHORT_MONTH', 'SHORT_MONTH'];
 }
 
-export default class Text {
-    static full: IPeriodFormats = TextFull;
+const Text: IConfiguration = {
+    full: TextFullFormats,
+    short: TextShortFormats
+};
 
-    static short: IPeriodFormats = TextShort;
-}
+export default Text;

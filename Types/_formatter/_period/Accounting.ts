@@ -1,7 +1,7 @@
-import {DefaultFull, DefaultShort} from './Default';
-import { IPeriodFormats } from './IConfiguration';
+import {DefaultFullFormats, DefaultShortFormats} from './Default';
+import IConfiguration from './IConfiguration';
 
-class AccountingFull extends DefaultFull {
+class AccountingFullFormats extends DefaultFullFormats {
     static oneQuarter: string[] = ['MONTH', 'FULL_MONTH'];
     static quartersOneYear: string[] = ['MONTH', 'FULL_MONTH'];
     static quartersYears: string[] = ['FULL_MONTH', 'FULL_MONTH'];
@@ -10,7 +10,7 @@ class AccountingFull extends DefaultFull {
     static halfYearsYears: string[] = ['FULL_MONTH', 'FULL_MONTH'];
 }
 
-class AccountingShort extends DefaultShort {
+class AccountingShortFormats extends DefaultShortFormats {
     static oneQuarter: string[] = ['SHR_MONTH', 'SHORT_MONTH'];
     static quartersOneYear: string[] = ['SHR_MONTH', 'SHORT_MONTH'];
     static quartersYears: string[] = ['SHORT_MONTH', 'SHORT_MONTH'];
@@ -19,8 +19,9 @@ class AccountingShort extends DefaultShort {
     static halfYearsYears: string[] = ['SHORT_MONTH', 'SHORT_MONTH'];
 }
 
-export default class Accounting {
-    static full: IPeriodFormats = AccountingFull;
+const Accounting: IConfiguration = {
+    full: AccountingFullFormats,
+    short: AccountingShortFormats
+};
 
-    static short: IPeriodFormats = AccountingShort;
-}
+export default Accounting;

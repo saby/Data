@@ -1,22 +1,48 @@
 import dateFormat from './date';
-import * as configurations from './periodConfiguration';
+import Default from './_period/Default';
+import Accounting from './_period/Accounting';
+import Text from './_period/Text';
+import IConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } from './_period/IConfiguration';
 import detectPeriodType from './detectPeriodType';
 
+/**
+ * Настройки для отображения периода.
+ * @public
+ */
+export interface IPeriodParams {
+    /**
+     * Тип набора форматов для каждого типа периода. Можно передать свой набор.
+     */
+    configuration?: ConfigurationType | IConfiguration;
+    /**
+     * Тип периода. Если не указан, будет определён автоматически.
+     */
+    type?: PeriodType;
+    /**
+     * Выводимый текст, если период не задан.
+     */
+    undefinedPeriod?: string;
+    /**
+     * Использовать "Сегодня", если это один день.
+     */
+    useToday?: boolean;
+    /**
+     * Использвать сокращённые обозначения.
+     */
+    short?: boolean;
+}
+
 const SEPARATOR = '-';
+const configurations = {
+    Default,
+    Accounting,
+    Text
+};
 const defaultOptions = {
-    configuration: 'Default',
+    configuration: ConfigurationType.Default,
     short: false,
     useToday: false
 };
-
-
-export interface IPeriodOptions {
-    configuration?: string;
-    type?: string;
-    undefinedPeriod?: string;
-    useToday?: boolean;
-    short?: boolean;
-}
 
 // Compatibility layer region start
 // TODO Для поддержка староой сигнатуры period. Удалить в 21.4000
@@ -214,7 +240,7 @@ function buildCompatibleMode(start: Date, finish: Date, type: Type): string {
 }
 // Compatibility layer region end
 
-function openPeriod(start: Date, finish: Date, formats: configurations.IPeriodFormats): string {
+function openPeriod(start: Date, finish: Date, formats: IPeriodFormats): string {
     if (!start) {
         const format = formats.openStartPeriod.split(' ')[1];
 
@@ -228,14 +254,14 @@ function openPeriod(start: Date, finish: Date, formats: configurations.IPeriodFo
     }
 }
 
-function getFormats(options: IPeriodOptions): configurations.IPeriodFormats {
-    const config = configurations[options.configuration || 'Default'];
+function getFormats(configuration: ConfigurationType | IConfiguration, short: boolean): IPeriodFormats {
+    const formats = typeof configuration === 'object' ? configuration : configurations[configuration || 'Default'];
 
-    return options.short ? config.short : config.full;
+    return short ? formats.short : formats.full;
 }
 
-function build(start: Date, finish: Date, options: IPeriodOptions): string {
-    const formats = getFormats(options);
+function build(start: Date, finish: Date, options: IPeriodParams): string {
+    const formats = getFormats(options.configuration, options.short);
 
     if (!(start || finish)) {
         return options.undefinedPeriod || formats.allPeriod;
@@ -265,18 +291,25 @@ function build(start: Date, finish: Date, options: IPeriodOptions): string {
  * Выведем период в формате короткой даты:
  * <pre>
  *     import {period, periodType} from 'Types/formatter';
+ *
  *     const start = new Date(2018, 4, 7);
  *     const finish = new Date(2019, 11, 3);
- *     console.log(period(start, finish, periodType.ShortDate)); // 7 май'18-3 дек'19
+ *
+ *     // 7 май'18-3 дек'19
+ *     console.log(period(start, finish, {
+ *         configuration: 'Text',
+ *         short: true,
+ *         type: 'daysMonthsYears'
+ *     }));
  * </pre>
  * @param start Дата начала периода.
  * @param finish Дата окончания периода.
- * @param options Настройки для отображения периода.
+ * @param {IPeriodParams} options Настройки для отображения периода.
  * @returns Период в текстовом виде.
  * @public
  * @author Кудрявцев И.С.
  */
-export default function period(start: Date, finish: Date, options: Type | IPeriodOptions = defaultOptions): string {
+export default function period(start: Date, finish: Date, options: Type | IPeriodParams = defaultOptions): string {
     // TODO Для поддержка староой сигнатуры period. Удалить в 21.4000
     if (typeof options === 'number') {
         return buildCompatibleMode(start, finish, options);
