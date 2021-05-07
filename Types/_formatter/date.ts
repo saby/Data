@@ -105,6 +105,13 @@ function getMonthNameShort(date: Date): string {
 }
 
 /**
+ * Returns localized month name in short and ordinal notation
+ */
+function getMonthNameShortOrdinal(date: Date): string {
+    return getConfig().calendarEntities.shortOrdinalMonths[date.getMonth()];
+}
+
+/**
  * Returns localized month name in long notation
  */
 function getMonthNameLong(date: Date): string {
@@ -332,6 +339,8 @@ addToken('M', getHumanMonth);
 addToken('MM', getHumanMonth, {lead: 2});
 addToken('MMM', getMonthNameShort);
 addToken('MMMl', getMonthNameShort, {lower: true});
+addToken('MMMo', getMonthNameShortOrdinal);
+addToken('MMMlo', getMonthNameShortOrdinal, {lower: true});
 addToken('MMMM', getMonthNameLong);
 addToken('MMMMl', getMonthNameLong, {lower: true});
 addToken('MMMMo', getMonthOrdinal);
