@@ -367,22 +367,22 @@ addToken('ZZ', getTimeZone, {separator: ''});
  * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации.</h2>
  * <ul>
  *     <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
- *     <li>FULL_DATE_DOW: полная дата с днем недели, "DD MMMMlo'YY, ddddl" для "Ru-ru";</li>
- *     <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "DD MMMMlo'YY" для "Ru-ru";</li>
- *     <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "DD MMMMlo YYYY" для "Ru-ru";</li>
+ *     <li>FULL_DATE_DOW: полная дата с днем недели, "D MMMMlo'YY, ddddl" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_MONTH: полная дата с полным названием месяца, "D MMMMlo'YY" для "Ru-ru";</li>
+ *     <li>FULL_DATE_FULL_MONTH_FULL_YEAR: полная дата с полным названием месяца и полным годом, "D MMMMlo YYYY" для "Ru-ru";</li>
  *     <li>FULL_DATE_FULL_YEAR: полная дата с полным годом, "DD.MM.YYYY" для "Ru-ru";</li>
- *     <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "DD MMMl'YY" для "Ru-ru";</li>
- *     <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "DD MMMl YYYY" для "Ru-ru";</li>
- *     <li>FULL_DATETIME: полный формат даты и времени, "DD MMM'YY HH:mm" для "Ru-ru";</li>
+ *     <li>FULL_DATE_SHORT_MONTH: полная дата с кратким названием месяца, "D MMMlo'YY" для "Ru-ru";</li>
+ *     <li>FULL_DATE_SHORT_MONTH_FULL_YEAR: полная дата с кратким названием месяца и полным годом, "D MMMlo YYYY" для "Ru-ru";</li>
+ *     <li>FULL_DATETIME: полный формат даты и времени, "D MMMo'YY HH:mm" для "Ru-ru";</li>
  *     <li>FULL_HALF_YEAR: полное полугодие и год, "YYYYhr 'YY" для "Ru-ru";</li>
  *     <li>FULL_MONTH: полное название месяца и год, "MMMM'YY" для "Ru-ru";</li>
  *     <li>FULL_QUARTER: полный квартал и год, "QQQQr 'YY" для "Ru-ru";</li>
  *     <li>FULL_TIME: полное время, "HH:mm:ss" для "Ru-ru";</li>
  *     <li>SHORT_DATE: краткая дата, "DD.MM" для "Ru-ru";</li>
- *     <li>SHORT_DATE_DOW: краткая дата с днем недели, "DD MMMMlo, ddddl" для "Ru-ru";</li>
- *     <li>SHORT_DATE_FULL_MONTH: краткая дата с полным названием месяца, "DD MMMMlo" для "Ru-ru";</li>
- *     <li>SHORT_DATE_SHORT_MONTH: краткая дата с кратким названием месяца, "DD MMMl" для "Ru-ru";</li>
- *     <li>SHORT_DATETIME: краткий формат даты и времени, "DD MMMl HH:mm" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_DOW: краткая дата с днем недели, "D MMMMlo, ddddl" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_FULL_MONTH: краткая дата с полным названием месяца, "D MMMMlo" для "Ru-ru";</li>
+ *     <li>SHORT_DATE_SHORT_MONTH: краткая дата с кратким названием месяца, "D MMMlo" для "Ru-ru";</li>
+ *     <li>SHORT_DATETIME: краткий формат даты и времени, "D MMMl HH:mm" для "Ru-ru";</li>
  *     <li>SHORT_HALF_YEAR: краткое полугодие, "YYhr 'YY" для "Ru-ru";</li>
  *     <li>SHORT_MONTH: краткое название месяца и год, "MMM'YY" для "Ru-ru";</li>
  *     <li>SHORT_QUARTER: краткий квартал и год, "QQr 'YY" для "Ru-ru";</li>
