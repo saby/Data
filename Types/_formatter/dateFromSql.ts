@@ -18,7 +18,7 @@ const SQL_FORMAT = /([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?)([+-])([0-9]{2}
  * @public
  * @author Кудрявцев И.С.
  */
-export default function dateFromSQL(dateTime: string, defaultTimeZone?: number): Date {
+export default function dateFromSql(dateTime: string, defaultTimeZone?: number): Date {
     let dateSep = dateTime.indexOf('-');
     const timeSep = dateTime.indexOf(':');
     const millisecSep = dateTime.indexOf('.');
