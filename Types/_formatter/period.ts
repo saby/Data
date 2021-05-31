@@ -2,7 +2,7 @@ import dateFormat from './date';
 import Default from './_period/Default';
 import Accounting from './_period/Accounting';
 import Text from './_period/Text';
-import IConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } from './_period/IConfiguration';
+import IPeriodConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } from './_period/IConfiguration';
 import detectPeriodType from './detectPeriodType';
 
 /**
@@ -14,7 +14,7 @@ import detectPeriodType from './detectPeriodType';
  * @property {Boolean} [short=false] Использвать сокращённые обозначения.
  */
 export interface IPeriodParams {
-    configuration?: ConfigurationType | IConfiguration;
+    configuration?: ConfigurationType | IPeriodConfiguration;
     type?: PeriodType;
     undefinedPeriod?: string;
     useToday?: boolean;
@@ -243,7 +243,7 @@ function openPeriod(start: Date, finish: Date, formats: IPeriodFormats): string 
     }
 }
 
-function getFormats(configuration: ConfigurationType | IConfiguration, short: boolean): IPeriodFormats {
+function getFormats(configuration: ConfigurationType | IPeriodConfiguration, short: boolean): IPeriodFormats {
     const formats = typeof configuration === 'object' ? configuration : configurations[configuration || 'Default'];
 
     return short ? formats.short : formats.full;

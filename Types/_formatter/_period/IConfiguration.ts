@@ -11,11 +11,11 @@ export enum ConfigurationType {
 }
 
 /**
- * @typedef {Object} IConfigurationPeriod Настройки для отображения периода.
+ * @typedef {Object} IPeriodConfiguration Настройки для отображения периода.
  * @property {IPeriodFormats} short Набор форматов с сокращёнными названиями.
  * @property {IPeriodFormats} full Набор форматов без сокращений.
  */
-export default interface IConfigurationPeriod {
+export default interface IPeriodConfiguration {
     short: IPeriodFormats;
     full: IPeriodFormats;
 }
