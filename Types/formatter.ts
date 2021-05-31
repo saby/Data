@@ -48,7 +48,7 @@ export {default as numberWords} from './_formatter/numberWords';
 export {default as number} from './_formatter/number';
 export {default as period, Type as PeriodType, IPeriodParams} from './_formatter/period';
 export {
-    default as IConfigurationPeriod,
+    default as IPeriodConfiguration,
     PeriodType as PeriodTypes,
     IPeriodFormats,
     ConfigurationType as PeriodConfigurationType
