@@ -11,17 +11,12 @@ export enum ConfigurationType {
 }
 
 /**
- * public
+ * @typedef {Object} IPeriodConfiguration Настройки для отображения периода.
+ * @property {IPeriodFormats} short Набор форматов с сокращёнными названиями.
+ * @property {IPeriodFormats} full Набор форматов без сокращений.
  */
-export default interface IConfiguration {
-    /**
-     * Набор форматов с сокращёнными названиями.
-     */
+export default interface IPeriodConfiguration {
     short: IPeriodFormats;
-
-    /**
-     * Набор форматов без сокращений.
-     */
     full: IPeriodFormats;
 }
 
@@ -74,8 +69,25 @@ export enum PeriodType {
 }
 
 /**
- * Набор форматов для периода.
- * public
+ * @typedef {Object} IPeriodFormats Форматы отображения периода.
+ * @property {Array<String>} oneDay Один день.
+ * @property {Array<String>} daysOneMonth Дни в рамках одного месяца.
+ * @property {Array<String>} daysMonthsOneYear Дни в рамках одного года.
+ * @property {Array<String>} daysMonthsYears Дни в рамках некскольких лет.
+ * @property {Array<String>} oneMonth Один месяц.
+ * @property {Array<String>} monthsOneYear Месяцы в рамках года.
+ * @property {Array<String>} monthsYears Месяцы в рамках нескольких лет.
+ * @property {Array<String>} oneQuarter Один квартал.
+ * @property {Array<String>} quartersOneYear Кварталы в рамках одного года.
+ * @property {Array<String>} quartersYears Кварталы в рамках нескольких лет.
+ * @property {Array<String>} oneHalfYear Одно полугодие.
+ * @property {Array<String>} halfYearsYears Полугодия в рамках нескольких лет.
+ * @property {Array<String>} oneYear Один год.
+ * @property {Array<String>} years Несколько лет.
+ * @property {String} openStartPeriod Период с неуказанной начальной границей.
+ * @property {String} openFinishPeriod Период с неуказанной конечной границей.
+ * @property {String} allPeriod Период с неуказнными границами.
+ * @property {String} today Текущий день.
  */
 export interface IPeriodFormats {
     [PeriodType.oneDay]: string[];

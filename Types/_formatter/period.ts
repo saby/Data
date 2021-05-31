@@ -2,33 +2,22 @@ import dateFormat from './date';
 import Default from './_period/Default';
 import Accounting from './_period/Accounting';
 import Text from './_period/Text';
-import IConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } from './_period/IConfiguration';
+import IPeriodConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } from './_period/IConfiguration';
 import detectPeriodType from './detectPeriodType';
 
 /**
- * Настройки для отображения периода.
- * @public
+ * @typedef {Object} IPeriodParams Настройки для отображения периода.
+ * @property {ConfigurationType} [configuration='Default'] Тип набора форматов для каждого типа периода. Можно передать свой набор.
+ * @property {PeriodType} [type] Тип периода. Если не указан, будет определён автоматически.
+ * @property {String} [undefinedPeriod='Весь период'] Выводимый текст, если период не задан.
+ * @property {Boolean} [useToday=false] Использовать "Сегодня", если период это один день.
+ * @property {Boolean} [short=false] Использвать сокращённые обозначения.
  */
 export interface IPeriodParams {
-    /**
-     * Тип набора форматов для каждого типа периода. Можно передать свой набор.
-     */
-    configuration?: ConfigurationType | IConfiguration;
-    /**
-     * Тип периода. Если не указан, будет определён автоматически.
-     */
+    configuration?: ConfigurationType | IPeriodConfiguration;
     type?: PeriodType;
-    /**
-     * Выводимый текст, если период не задан.
-     */
     undefinedPeriod?: string;
-    /**
-     * Использовать "Сегодня", если это один день.
-     */
     useToday?: boolean;
-    /**
-     * Использвать сокращённые обозначения.
-     */
     short?: boolean;
 }
 
@@ -254,7 +243,7 @@ function openPeriod(start: Date, finish: Date, formats: IPeriodFormats): string 
     }
 }
 
-function getFormats(configuration: ConfigurationType | IConfiguration, short: boolean): IPeriodFormats {
+function getFormats(configuration: ConfigurationType | IPeriodConfiguration, short: boolean): IPeriodFormats {
     const formats = typeof configuration === 'object' ? configuration : configurations[configuration || 'Default'];
 
     return short ? formats.short : formats.full;
@@ -288,9 +277,27 @@ function build(start: Date, finish: Date, options: IPeriodParams): string {
 /**
  * Преобразует временной период в строку указанного формата {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html по стандарту}.
  * @example
- * Выведем период в формате короткой даты:
+ * Выведем период в полном формате из дефолтного набора. Тип формата будет определён автоматически:
  * <pre>
- *     import {period, periodType} from 'Types/formatter';
+ *     import {period} from 'Types/formatter';
+ *
+ *     // 2021
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 11, 31));
+ *     // I полугодие'21
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 5, 30));
+ *     // I-III квартал'21
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 8, 30));
+ *     // Январь-Апрель'21
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 3, 30));
+ *     // 01.01.21-10.01.21
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 0, 10));
+ *     // 1 января'21
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 0, 1));
+ * </pre>
+ *
+ * Выведем период в формате короткой даты в текстовом виде:
+ * <pre>
+ *     import {period} from 'Types/formatter';
  *
  *     const start = new Date(2018, 4, 7);
  *     const finish = new Date(2019, 11, 3);
@@ -302,10 +309,20 @@ function build(start: Date, finish: Date, options: IPeriodParams): string {
  *         type: 'daysMonthsYears'
  *     }));
  * </pre>
+ *
+ * Выведем "Сегодня", если период это один день:
+ * <pre>
+ *     import {period} from 'Types/formatter';
+ *
+ *     // Сегодня
+ *     console.log(period(new Date(2021, 0, 1), new Date(2021, 0, 1), {
+ *        useToday: true
+ *     });
+ * </pre>
  * @param start Дата начала периода.
  * @param finish Дата окончания периода.
- * @param {IPeriodParams} options Настройки для отображения периода.
- * @returns Период в текстовом виде.
+ * @param {IPeriodParams} [options] Настройки для отображения периода.
+ * @returns {String} Период в текстовом виде.
  * @public
  * @author Кудрявцев И.С.
  */
