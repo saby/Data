@@ -1,5 +1,5 @@
 import {DefaultFullFormats, DefaultShortFormats} from './Default';
-import IConfiguration from './IConfiguration';
+import IConfigurationPeriod from './IConfiguration';
 
 class AccountingFullFormats extends DefaultFullFormats {
     static oneQuarter: string[] = ['MONTH', 'FULL_MONTH'];
@@ -19,7 +19,7 @@ class AccountingShortFormats extends DefaultShortFormats {
     static halfYearsYears: string[] = ['SHORT_MONTH', 'SHORT_MONTH'];
 }
 
-const Accounting: IConfiguration = {
+const Accounting: IConfigurationPeriod = {
     full: AccountingFullFormats,
     short: AccountingShortFormats
 };

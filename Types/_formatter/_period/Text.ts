@@ -1,5 +1,5 @@
 import {DefaultFullFormats, DefaultShortFormats} from './Default';
-import IConfiguration from './IConfiguration';
+import IConfigurationPeriod from './IConfiguration';
 
 class TextFullFormats extends DefaultFullFormats {
     static oneDay: string[] = ['FULL_DATE_FULL_MONTH'];
@@ -29,7 +29,7 @@ class TextShortFormats extends DefaultShortFormats {
     static halfYearsYears: string[] = ['SHORT_MONTH', 'SHORT_MONTH'];
 }
 
-const Text: IConfiguration = {
+const Text: IConfigurationPeriod = {
     full: TextFullFormats,
     short: TextShortFormats
 };

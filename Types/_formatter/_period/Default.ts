@@ -1,4 +1,4 @@
-import IConfiguration from './IConfiguration';
+import IConfigurationPeriod from './IConfiguration';
 import 'i18n!controller?';
 import { controller } from 'I18n/i18n';
 
@@ -84,7 +84,7 @@ export class DefaultShortFormats {
     }
 }
 
-const Default: IConfiguration = {
+const Default: IConfigurationPeriod = {
     full: DefaultFullFormats,
     short: DefaultShortFormats
 };
