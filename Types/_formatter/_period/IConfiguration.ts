@@ -1,5 +1,6 @@
 /**
- * @typedef {String} ConfigurationType Типы наборов форматов для периода. Описание наборов в {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html спецификациях}.
+ * Типы наборов форматов для периода. Описание наборов в {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html спецификациях}.
+ * @typedef {String} ConfigurationType
  * @variant Default Набор форматов по умолчанию.
  * @variant Text Текстовый набор набор форматов.
  * @variant Accounting Бухгалтерский набор набор форматов.
@@ -11,7 +12,8 @@ export enum ConfigurationType {
 }
 
 /**
- * @typedef {Object} IPeriodConfiguration Настройки для отображения периода.
+ * Настройки для отображения периода.
+ * @typedef {Object} IPeriodConfiguration
  * @property {IPeriodFormats} short Набор форматов с сокращёнными названиями.
  * @property {IPeriodFormats} full Набор форматов без сокращений.
  */
@@ -21,7 +23,8 @@ export default interface IPeriodConfiguration {
 }
 
 /**
- * @typedef {String} PeriodType Типы периодов. Подробное описание типов в {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html спецификациях}.
+ * Типы периодов. Подробное описание типов в {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html спецификациях}.
+ * @typedef {String} PeriodType
  * @variant oneDay Один день.
  * @variant daysOneMonth Дни в рамках одного месяца.
  * @variant daysMonthsOneYear Дни в рамках одного года.
@@ -69,7 +72,8 @@ export enum PeriodType {
 }
 
 /**
- * @typedef {Object} IPeriodFormats Форматы отображения периода.
+ * Форматы отображения периода.
+ * @typedef {Object} IPeriodFormats
  * @property {Array<String>} oneDay Один день.
  * @property {Array<String>} daysOneMonth Дни в рамках одного месяца.
  * @property {Array<String>} daysMonthsOneYear Дни в рамках одного года.

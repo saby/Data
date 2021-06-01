@@ -6,7 +6,8 @@ import IPeriodConfiguration, { IPeriodFormats, PeriodType, ConfigurationType } f
 import detectPeriodType from './detectPeriodType';
 
 /**
- * @typedef {Object} IPeriodParams Настройки для отображения периода.
+ * Настройки для отображения периода.
+ * @typedef {Object} IPeriodParams
  * @property {ConfigurationType} [configuration='Default'] Тип набора форматов для каждого типа периода. Можно передать свой набор.
  * @property {PeriodType} [type] Тип периода. Если не указан, будет определён автоматически.
  * @property {String} [undefinedPeriod='Весь период'] Выводимый текст, если период не задан.
