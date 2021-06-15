@@ -59,6 +59,7 @@ describe('Types/_object/isEqual', () => {
     it('should return false for arrays', () => {
         assert.isFalse(isEqual([1, 2, '3'], [1, 2]));
         assert.isFalse(isEqual([1, 2, '3'], [1, 2, 3]));
+        assert.isFalse(isEqual(new Array(2), [1, 2]));
     });
 
     it('should return true for objects', () => {
