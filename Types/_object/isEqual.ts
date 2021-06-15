@@ -18,9 +18,13 @@ function isEqualArrays(arr1: any[], arr2: any[]): boolean {
         return false;
     }
 
-    return !arr1.some((item, index) => {
-        return !isEqual(item, arr2[index]);
-    });
+    for (let index = 0; index < arr1.length; index++) {
+        if (!isEqual(arr1[index], arr2[index])) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function isEqualObjects(obj1: object, obj2: object): boolean {
