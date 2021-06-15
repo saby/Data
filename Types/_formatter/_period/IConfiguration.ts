@@ -1,3 +1,9 @@
+// TODO убрать когда будет закрыта задача https://online.sbis.ru/opendoc.html?guid=08c63b19-78fc-4c31-a365-8c9074405b91
+/**
+ * @module
+ * @public
+ */
+
 /**
  * Типы наборов форматов для периода. Описание наборов в {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html спецификациях}.
  * @typedef {String} ConfigurationType
