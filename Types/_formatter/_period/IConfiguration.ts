@@ -20,8 +20,8 @@ export enum ConfigurationType {
 /**
  * Настройки для отображения периода.
  * @typedef {Object} IPeriodConfiguration
- * @property {IPeriodFormats} short Набор форматов с сокращёнными названиями.
- * @property {IPeriodFormats} full Набор форматов без сокращений.
+ * @property {Types/formatter/IPeriodFormats.typedef} short Набор форматов с сокращёнными названиями.
+ * @property {Types/formatter/IPeriodFormats.typedef} full Набор форматов без сокращений.
  */
 export default interface IPeriodConfiguration {
     short: IPeriodFormats;
