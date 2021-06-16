@@ -8,8 +8,8 @@ import detectPeriodType from './detectPeriodType';
 /**
  * Настройки для отображения периода.
  * @typedef {Object} IPeriodParams
- * @property {ConfigurationType} [configuration='Default'] Тип набора форматов для каждого типа периода. Можно передать свой набор.
- * @property {PeriodType} [type] Тип периода. Если не указан, будет определён автоматически.
+ * @property {Types/formatter/ConfigurationType.typedef} [configuration='Default'] Тип набора форматов для каждого типа периода. Можно передать свой набор.
+ * @property {Types/formatter/PeriodType.typedef} type периода. Если не указан, будет определён автоматически.
  * @property {String} [undefinedPeriod='Весь период'] Выводимый текст, если период не задан.
  * @property {Boolean} [useToday=false] Использовать "Сегодня", если период это один день.
  * @property {Boolean} [short=false] Использвать сокращённые обозначения.

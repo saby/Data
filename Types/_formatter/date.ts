@@ -364,7 +364,7 @@ addToken('ZZ', getTimeZone, {separator: ''});
 /**
  * Преобразует дату в строку указанного формата.
  * @remark
- * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/standarts/v7/форматы_дат_01.html по стандарту} с учетом локализации.</h2>
+ * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html по стандарту} с учетом локализации.</h2>
  * <ul>
  *     <li>FULL_DATE: полная дата, "DD.MM.YY" для "Ru-ru";</li>
  *     <li>FULL_DATE_DOW: полная дата с днем недели, "D MMMMlo'YY, ddddl" для "Ru-ru";</li>
