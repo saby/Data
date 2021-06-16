@@ -987,7 +987,7 @@ export default class Record<T = any> extends mixin<
 
     /**
      * Устанавливает текущее состояние записи.
-     * @param state Новое состояние записи.
+     * @param {RecordState} state Новое состояние записи.
      * @see state
      * @see getState
      * @example
