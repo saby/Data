@@ -24,11 +24,6 @@ export default class DictionaryField extends Field {
      */
     protected _$dictionary: Dictionary;
 
-    /**
-     * @cfg {Array.<String>} Локализованный словарь возможных значений
-     * @name Types/_entity/format/DictionaryField#localeDictionary
-     * @see getDictionary
-     */
     protected _$localeDictionary: Dictionary;
 
     constructor(options?: IOptions) {
@@ -45,11 +40,6 @@ export default class DictionaryField extends Field {
         return this._$dictionary;
     }
 
-    /**
-     * Возвращает словарь возможных значений
-     * @return {Array.<String>}
-     * @see dictionary
-     */
     getLocaleDictionary(): Dictionary {
         return this._$localeDictionary;
     }

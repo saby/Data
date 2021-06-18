@@ -60,15 +60,6 @@ export default abstract class Dictionary<T> extends mixin<
      */
     protected _$dictionary: DictionaryValues<T>;
 
-    /**
-     * @cfg Локализованная коллекция ключей и значений.
-     * @name Types/_collection/Dictionary#localeDictionary
-     */
-
-    /*
-     * @cfg Localized collection of keys and values
-     * @name Types/_collection/Dictionary#localeDictionary
-     */
     protected _$localeDictionary: DictionaryValues<T>;
 
     /**
@@ -184,14 +175,12 @@ export default abstract class Dictionary<T> extends mixin<
     /**
      * Возвращает ключ значения в словаре.
      * @param name Значение для поиска.
-     * @param [localize=false] Является ли локализованным значение.
      * @protected
      */
 
     /*
      * Returns key of the value in dictionary
      * @param name Value for lookup
-     * @param [localize=false] Is the localized value
      * @protected
      */
     protected _getIndex(name: T, localize?: boolean): IIndex {
@@ -207,14 +196,12 @@ export default abstract class Dictionary<T> extends mixin<
     /**
      * Возвращает значение ключа в словаре.
      * @param index Ключ для поиска.
-     * @param [localize=false] Должен вернуть локализованное значение.
      * @protected
      */
 
     /*
      * Returns value of the key in dictionary
      * @param index Key for lookup
-     * @param [localize=false] Should return the localized value
      * @protected
      */
     protected _getValue(index: IIndex, localize?: boolean): any {
