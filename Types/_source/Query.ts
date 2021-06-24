@@ -1067,42 +1067,62 @@ export default class Query<T = unknown> implements ICloneable {
      * @param expression Правила фильтрации данных.
      * @example
      * Давайте выберем приземлившиеся рейсы в московский аэропорт «Шереметьево» (SVO) из Нью-Йорка или Лос-Анджелеса:
-     * <pre>
-     *     import {Query} from 'Types/source';
-     *     const query = new Query()
-     *         .select()
-     *         .from('AirportsSchedule')
-     *         .where({
-     *             to: 'SVO',
-     *             state: 'Landed',
-     *             fromCity: ['New York', 'Los Angeles']
-     *         });
+     * <pre class="brush: js">
+     * // TypeScript
+     * import {Query} from 'Types/source';
+     * const query = new Query()
+     *     .select()
+     *     .from('AirportsSchedule')
+     *     .where({
+     *         to: 'SVO',
+     *         state: 'Landed',
+     *         fromCity: ['New York', 'Los Angeles']
+     *     });
      * </pre>
      * Выберем рейсы, прибывающие в московское "Шереметьево" (SVO) из нью-йоркского "JFK" с авиакомпанией "Delta" (DL) или из парижского "CDG" с авиакомпанией "Air France" (AF):
-     * <pre>
-     *     import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
-     *     const query = new Query()
-     *         .select()
-     *         .from('AirportsSchedule')
-     *         .where(queryAndExpression({
-     *             to: 'SVO',
-     *             state: 'Scheduled'
-     *         }, queryOrExpression(
-     *             {from: 'JFK', airline: 'DL'},
-     *             {from: 'CDG', airline: 'AF'}
-     *         )));
+     * <pre class="brush: js">
+     * // TypeScript
+     * import {Query, queryAndExpression, queryOrExpression} from 'Types/source';
+     * const query = new Query()
+     *     .select()
+     *     .from('AirportsSchedule')
+     *     .where(queryAndExpression({
+     *         to: 'SVO',
+     *         state: 'Scheduled'
+     *     }, queryOrExpression(
+     *         {from: 'JFK', airline: 'DL'},
+     *         {from: 'CDG', airline: 'AF'}
+     *     )));
      * </pre>
      * Давайте выберем 100 заказов в магазине за последние двадцать четыре часа и отсортируем их по возрастанию номера заказа:
-     * <pre>
-     *     import {Query} from 'Types/source';
-     *     const twentyFourHoursAgo = new Date();
-     *     twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
-     *     const dynamicQuery = new Query();
-     *         .select(['id', 'date', 'customerId'])
-     *         .from('Orders')
-     *         .where((order) => order.date - twentyFourHoursAgo >= 0)
-     *         .orderBy('id')
-     *         .limit(100);
+     * <pre class="brush: js">
+     * // TypeScript
+     * import {Query} from 'Types/source';
+     * const twentyFourHoursAgo = new Date();
+     * twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+     * const dynamicQuery = new Query();
+     *     .select(['id', 'date', 'customerId'])
+     *     .from('Orders')
+     *     .where((order) => order.date - twentyFourHoursAgo >= 0)
+     *     .orderBy('id')
+     *     .limit(100);
+     * </pre>
+     * 
+     * В следующем примере показан запрос с учетом {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor навигации по курсору}.
+     * Для этого в параметр expression передается объект с именем navigation, котором каждое свойство описывает {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-field поле, по которому работает курсор}.
+     * Имя свойства — это имя поля, а значение свойства — {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-position начальная позиция курсора}.
+     * {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-direction Направление выборки} задается в конце имени поля с помощью символов "<" (backward), ">" (forward) или "~" (bothways).
+     * <pre class="brush: js">
+     * // TypeScript
+     * ...
+     * const query = new Query();
+     * const navigation = {
+     *     'WorkplacesCount~': null,
+     *     '@RawApp~': null
+     * }
+     * const navigationLimit = 40;
+     * query.where({... navigation, ...filter}).limit(navigationLimit);
+     * ...
      * </pre>
      */
 
