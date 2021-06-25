@@ -1109,10 +1109,10 @@ export default class Query<T = unknown> implements ICloneable {
      * </pre>
      * 
      * В следующем примере показан запрос с учетом {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor навигации по курсору}.
-     * Для этого в параметр expression передается объект с именем navigation, котором каждое свойство описывает {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-field поле, по которому работает курсор}.
+     * Для этого в параметр expression передается объект с именем navigation, в котором каждое свойство описывает {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-field поле, по которому работает курсор}.
      * Имя свойства — это имя поля, а значение свойства — {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-position начальная позиция курсора}.
      * {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-direction Направление выборки} задается в конце имени поля с помощью символов "<" (backward), ">" (forward) или "~" (bothways).
-     * <pre class="brush: js">
+     * <pre class="brush: js; highlight: [4-7,9]">
      * // TypeScript
      * ...
      * const query = new Query();
