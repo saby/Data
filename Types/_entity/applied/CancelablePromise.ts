@@ -6,10 +6,15 @@ const $isCanceled = protect('isCanceled') as symbol;
  * Специальная ошибка, означающая, чтоб Promise завершён из-за отмены.
  * @public
  */
-export class PromiseCanceledError extends Error {
+export class PromiseCanceledError implements Error {
     readonly isCanceled: boolean = true;
     readonly name: string = 'PromiseCanceledError';
+
+    constructor(public readonly message: string) {}
 }
+
+// С наследованием от Error через tslib.__extends не работает instanceof
+PromiseCanceledError.prototype = Object.create(Error.prototype);
 
 /**
  * Обертка для функции Промис, которая позволяет разрешать её экземпляры, как отменённые.
