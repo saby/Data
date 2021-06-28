@@ -2,12 +2,14 @@ import {protect} from '../../util';
 
 const $isCanceled = protect('isCanceled') as symbol;
 
-export function PromiseCanceledError(message: string): void {
-    this.isCanceled = true;
-    this.name = 'PromiseCanceledError';
-    this.message = message;
+/**
+ * Специальная ошибка, означающая, чтоб Promise завершён из-за отмены.
+ * @public
+ */
+export class PromiseCanceledError extends Error {
+    readonly isCanceled: boolean = true;
+    readonly name: string = 'PromiseCanceledError';
 }
-PromiseCanceledError.prototype = Object.create(Error.prototype);
 
 /**
  * Обертка для функции Промис, которая позволяет разрешать её экземпляры, как отменённые.
