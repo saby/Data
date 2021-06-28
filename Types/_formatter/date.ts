@@ -1,3 +1,8 @@
+/**
+ * @module
+ * @public
+ */
+
 import toRoman from './numberRoman';
 import 'i18n!controller?';
 import {controller} from 'I18n/i18n';
@@ -363,6 +368,8 @@ addToken('ZZ', getTimeZone, {separator: ''});
 
 /**
  * Преобразует дату в строку указанного формата.
+ * @name Types/_formatter/date#date
+ * @function
  * @remark
  * <h2>Доступные константы для вывода дат {@link http://axure.tensor.ru/StandardsV8/форматы_дат_и_времени.html по стандарту} с учетом локализации.</h2>
  * <ul>

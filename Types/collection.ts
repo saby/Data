@@ -11,6 +11,7 @@
  * @includes IFlags Types/_collection/IFlags
  * @includes IEnumerable Types/_collection/IEnumerable
  * @includes IEnumerator Types/_collection/IEnumerator
+ * @includes IIndexedCollection Types/_collection/IIndexedCollection
  * @includes IList Types/_collection/IList
  * @includes IObservable Types/_collection/IObservable
  * @includes List Types/_collection/List
