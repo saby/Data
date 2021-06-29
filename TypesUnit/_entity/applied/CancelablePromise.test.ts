@@ -8,6 +8,23 @@ class TransparentCancelablePromise<T> extends CancelablePromise<T> {
 }
 
 describe('Types/_entity/applied/CancelablePromise', () => {
+    describe('PromiseCanceledError', () => {
+        const message = 'test-message';
+        const instance = new PromiseCanceledError(message);
+
+        it('extends Error', () => {
+            assert.instanceOf(instance, Error);
+        });
+
+        it('sets message in constructor', () => {
+            assert.strictEqual(instance.message, message);
+        });
+
+        it('isCanceled is true', () => {
+            assert.isTrue(instance.isCanceled);
+        });
+    });
+
     describe('promise', () => {
         it('should return instance of Promise', () => {
             const origin = new Promise<void>((resolve) => resolve());
