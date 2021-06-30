@@ -65,7 +65,11 @@ export interface IBinding extends IDefaultBinding {
 }
 
 /**
- * Extended _$options
+ * Дополнительные настройки источника данных бизнес-логики СБИС.
+ * @typedef {Object} OptionsOption
+ * @property {String} [hasMoreProperty='hasMore'] Название свойства мета-данных {@link Types/_source/Query#meta запроса}, в котором хранится значение поля HasMore аргумента Навигация, передаваемое в вызов {@link Types/_source/SbisService#query}.
+ * @property {Boolean} [passAddFieldsFromMeta=false] Передавать аргумент "ДопПоля" при вызове методов {@link Types/_source/SbisService#read} и {@link Types/_source/SbisService#update}, значение которых получено из метаданных {@link Types/_source/Query#meta запроса}.
+ * @property {Boolean} [updateOnlyChanged=false] При сохранении отправлять только измененные записи (если обновляется набор записей) или только измененые поля записи (если обновляется одна запись). Задавать опцию имеет смысл только если указано значение опции {@link Types/_source/Remote#keyProperty}, позволяющая отличить новые записи от уже существующих.
  */
 export interface IOptionsOption extends IRemoteOptionsOption {
     hasMoreProperty?: string;
@@ -1530,7 +1534,7 @@ Object.assign(SbisService.prototype, /** @lends Types/_source/SbisService.protot
     _$orderProperty: 'ПорНомер',
 
     /**
-     * @cfg {Object} Дополнительные настройки источника данных бизнес-логики СБИС.
+     * @cfg {OptionsOption} Дополнительные настройки источника данных бизнес-логики СБИС.
      * @name Types/_source/SbisService#options
      */
     _$options: getMergeableProperty<IOptionsOption>(OptionsMixin.addOptions<IOptionsOption>(Rpc, {

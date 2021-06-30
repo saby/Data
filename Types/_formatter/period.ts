@@ -322,7 +322,7 @@ function build(start: Date, finish: Date, options: IPeriodParams): string {
  * </pre>
  * @param start Дата начала периода.
  * @param finish Дата окончания периода.
- * @param {IPeriodParams} [options] Настройки для отображения периода.
+ * @param {Types/formatter/IPeriodParams.typedef} [options] Настройки для отображения периода.
  * @returns {String} Период в текстовом виде.
  * @public
  * @author Кудрявцев И.С.
