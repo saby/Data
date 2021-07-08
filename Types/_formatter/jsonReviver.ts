@@ -58,7 +58,7 @@ function resolveInstances(): void {
                 throw new Error(`The module "${name}" is not a constructor.`);
             }
             if (typeof Module.fromJSON !== 'function') {
-                throw new Error(`The prototype of module "${name}" don\'t have fromJSON() method.`);
+                throw new Error(`The prototype of module "${name}" doesn't have fromJSON() method.`);
             }
             instance = Module.fromJSON(item.value);
 
